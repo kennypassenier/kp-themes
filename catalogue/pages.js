@@ -83,6 +83,8 @@ export const PAGES = [
             { href: 'research/character-graph/demo.html', label: 'A network graph of its own, per theme' },
             // The character round, fifth demo (2026-10-05): the key figure's trend tile in 22 themes, two characters each.
             { href: 'research/character-trend/demo.html', label: 'A trend tile of its own, per theme' },
+            // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
+            { href: 'research/character-columns/demo.html', label: 'A key-figure strip of its own, per theme' },
         ],
     },
     {

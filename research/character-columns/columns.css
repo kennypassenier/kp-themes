@@ -1,0 +1,1470 @@
+/* research/character-columns: two characters of the key-figure strip
+   `.kp-kpis[data-kp-kpis-columns]` (one column per figure, its column count
+   kept by js/kpi.js attachKpiStrips()) per theme, in the theme's
+   kp.signature layer, so each can move into its register as it stands.
+   `[data-cl='a']` and `[data-cl='b']` are the demo's two options; in a
+   register the same rules read `[data-theme='<name>'] .kp-kpis`.
+
+   The contract every character keeps:
+   - The markup is the package's: the page writes the strip
+     (`.kp-kpis[data-kp-kpis-columns]`, `aria-busy` while it loads) and its
+     tiles (`.kp-kpi` with `.kp-kpi__label`, `.kp-kpi__value` and its
+     `small` unit, `.kp-kpi__trend` and in it `.kp-kpi__delta`); js/kpi.js
+     writes `--kp-kpis-columns` and `data-kp-kpis-span-last` on the strip.
+     Nothing here needs more than that.
+   - Surfaces to draw on: the strip (its plate, frame and padding,
+     `--cl-strip-*`), its ::before (under the tiles, `--cl-strip-under`) and
+     ::after (over them, `--cl-strip-over`); each tile (`--cl-plate`,
+     `--cl-pat`, `--cl-frame`, `--cl-shadow`), its ::before (an ornament,
+     `--cl-deco*`, which may hold a counter) and its ::after (the loading
+     picture, `--cl-load`, only while the strip is busy); the label (a plate,
+     a rule, a tag before it), the number (a window, `--cl-num-*`) and the
+     change (`.kp-kpi__delta`) as a plate. `--cl-hue` is a chart colour per
+     column (1 to 5, again from the sixth).
+   - Colour: tokens only (DI9), alpha and mixes of tokens. The label and the
+     words take `--cl-mute`, the number `--cl-ink`, both on the tile's
+     plate (or the label's or the number's own plate); every rule a
+     character draws is `--cl-rule`, at 3:1 or more on the plate. The
+     change carries a status pair, its plate and its own ink (fix-70),
+     never half of one.
+   - Width and height: the columns share the strip's width equally (the
+     package's grid); the label, the number and the words keep fixed line
+     boxes (one, one, two), so every tile and the strip keep one height in
+     every state and with every figure. The label never wraps and is never
+     cut: each character asks the strip for tiles at least `--cl-min` wide
+     (the package's own `--kp-kpi-min`, which attachKpiStrips() reads), and
+     sets its label to fit the widest label in the demo at that width.
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end, and only the loading picture moves;
+     nothing loops at rest. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis {
+        --cl-plate: var(--card);
+        --cl-ink: var(--card-foreground);
+        --cl-mute: color-mix(in oklch, var(--muted-foreground) 70%, var(--cl-ink));
+        --cl-rule: color-mix(in oklch, var(--cl-ink) 62%, var(--cl-plate));
+        --kp-kpi-min: var(--cl-min, 144px);
+        --kp-kpis-gap: var(--cl-gap, var(--kp-space-md, 1rem));
+        position: relative;
+        isolation: isolate;
+        overflow: var(--cl-strip-clip, visible);
+        padding: var(--cl-strip-pad, 0);
+        border: var(--cl-strip-frame, 0 solid transparent);
+        border-block-start: var(--cl-strip-top, var(--cl-strip-frame, 0 solid transparent));
+        border-block-end: var(--cl-strip-foot, var(--cl-strip-frame, 0 solid transparent));
+        border-radius: var(--cl-strip-radius, 0);
+        background: var(--cl-strip-pat, none);
+        background-color: var(--cl-strip-bg, transparent);
+        box-shadow: var(--cl-strip-shadow, none);
+        counter-reset: cl;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis::before,
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis::before {
+        z-index: -1;
+        background: var(--cl-strip-under, none);
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis::after {
+        z-index: 3;
+        background: var(--cl-strip-over, none);
+    }
+
+    /* A chart colour per column, for the characters that colour by column. */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi:nth-child(5n + 1) {
+        --cl-hue: var(--chart-1);
+    }
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi:nth-child(5n + 2) {
+        --cl-hue: var(--chart-2);
+    }
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi:nth-child(5n + 3) {
+        --cl-hue: var(--chart-3);
+    }
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi:nth-child(5n + 4) {
+        --cl-hue: var(--chart-4);
+    }
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi:nth-child(5n + 5) {
+        --cl-hue: var(--chart-5);
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi {
+        position: relative;
+        isolation: isolate;
+        counter-increment: cl;
+        padding: var(--cl-pad, var(--kp-space-md, 1rem));
+        padding-block-start: var(--cl-pad-top, var(--cl-pad, var(--kp-space-md, 1rem)));
+        border: var(--cl-frame, 1px solid var(--border));
+        border-block-start: var(--cl-frame-top, var(--cl-frame, 1px solid var(--border)));
+        border-radius: var(--cl-radius, var(--radius, 0.5rem));
+        background: var(--cl-pat, none);
+        background-color: var(--cl-tile-plate, var(--cl-plate));
+        box-shadow: var(--cl-shadow, none);
+        color: var(--cl-ink);
+        font-family: var(--cl-font, inherit);
+        transform: var(--cl-tilt, none);
+        clip-path: var(--cl-clip, none);
+        mask: var(--cl-mask, none);
+    }
+
+    /* The ornament: under the text, or a counter in a corner. */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi::before {
+        content: var(--cl-deco-content, '');
+        position: absolute;
+        inset: var(--cl-deco-inset, 0);
+        z-index: -1;
+        border: var(--cl-deco-border, 0 solid transparent);
+        border-radius: var(--cl-deco-radius, inherit);
+        background: var(--cl-deco, none);
+        color: var(--cl-mute);
+        font-family: var(--cl-num-font, inherit);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 700;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis[aria-busy='true'] > .kp-kpi::after {
+        background: var(--cl-load, none);
+    }
+
+    /* The label: one line, never cut, never wrapped (the package's narrow
+       tile lets it wrap; a character keeps it on one line by width). */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__label {
+        display: block;
+        block-size: 1lh;
+        margin-inline: var(--cl-label-bleed, 0);
+        padding: var(--cl-label-pad, 0);
+        overflow: hidden;
+        border-block-end: var(--cl-label-rule, 0 solid transparent);
+        border-radius: var(--cl-label-radius, 0);
+        background: var(--cl-label-bg, none);
+        box-shadow: var(--cl-label-shadow, none);
+        color: var(--cl-label-ink, var(--cl-mute));
+        font-family: var(--cl-label-font, inherit);
+        font-size: var(--cl-label-size, var(--kp-text-xs, 0.75rem));
+        font-style: var(--cl-label-style, normal);
+        font-variant-caps: var(--cl-label-caps, normal);
+        font-weight: var(--cl-label-weight, 500);
+        letter-spacing: var(--cl-label-track, 0.06em);
+        line-height: 1.5;
+        text-align: var(--cl-align, start);
+        text-overflow: clip;
+        text-transform: var(--cl-label-case, uppercase);
+        white-space: nowrap;
+        overflow-wrap: normal;
+        box-sizing: content-box;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__label::before {
+        content: var(--cl-tag, none);
+        display: inline-block;
+        min-inline-size: var(--cl-tag-size, auto);
+        margin-inline-end: 0.4em;
+        border: var(--cl-tag-border, 0 solid transparent);
+        border-radius: var(--cl-tag-radius, 0);
+        background: var(--cl-tag-bg, none);
+        color: var(--cl-tag-ink, inherit);
+        font-weight: 700;
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    /* The number: one line, its unit beside it, on its own window if the
+       character gives it one. */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__value {
+        flex-wrap: nowrap;
+        align-items: baseline;
+        justify-content: var(--cl-num-align, flex-start);
+        block-size: calc(var(--cl-num-size, 1.75rem) * 1.15);
+        margin-block: var(--cl-num-gap, 0.125rem);
+        padding: var(--cl-num-pad, 0);
+        overflow: hidden;
+        border-radius: var(--cl-num-radius, 0);
+        background: var(--cl-num-bg, none);
+        box-shadow: var(--cl-num-frame, none);
+        color: var(--cl-num-ink, var(--cl-ink));
+        font-family: var(--cl-num-font, inherit);
+        font-size: min(var(--cl-num-size, 1.75rem), var(--cl-num-fit, 14cqi));
+        font-weight: var(--cl-num-weight, 600);
+        letter-spacing: var(--cl-num-track, normal);
+        line-height: 1.15;
+        text-shadow: var(--cl-num-shadow, none);
+        white-space: nowrap;
+        clip-path: var(--cl-num-clip, none);
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__value small {
+        color: var(--cl-unit-ink, var(--cl-mute));
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__value > .kp-skeleton {
+        align-self: center;
+        block-size: 0.6lh;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-skeleton {
+        background: color-mix(in oklch, var(--cl-ink) 14%, var(--cl-plate));
+    }
+
+    /* The words under the number: two lines in every state. */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis > .kp-kpi > .kp-kpi__trend {
+        block-size: 2lh;
+        min-block-size: 0;
+        overflow: hidden;
+        color: var(--cl-mute);
+        font-family: var(--cl-words-font, inherit);
+        font-size: var(--cl-words-size, var(--kp-text-sm, 0.8125rem));
+        font-style: var(--cl-words-style, normal);
+        line-height: 1.35;
+        text-align: var(--cl-align, start);
+    }
+
+    /* The change carries its status pair: the plate and its own ink. */
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-kpi__delta {
+        display: inline-block;
+        padding: 0 0.35em;
+        border-radius: var(--cl-delta-radius, 999px);
+        /* A frame on the change is an outline: it takes no room, so the
+           words keep their two lines. */
+        outline: var(--cl-delta-border, 0 solid transparent);
+        background: var(--success);
+        box-shadow: var(--cl-delta-shadow, none);
+        color: var(--success-foreground);
+        font-style: var(--cl-delta-style, normal);
+        line-height: 1.3;
+    }
+
+    :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* The still characters: their skeletons do not move either. */
+    :is([data-theme='formal'], [data-theme='high-contrast'], [data-theme='retro']) :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-skeleton,
+    :is([data-theme='formal'], [data-theme='high-contrast'], [data-theme='retro']) :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-skeleton::before,
+    :is([data-theme='formal'], [data-theme='high-contrast'], [data-theme='retro']) :is([data-cl='a'], [data-cl='b']) .kp-kpis .kp-skeleton::after {
+        animation: none;
+    }
+
+    /* ══ formal ════════════════════════════════════════════════════════════ */
+    /* The ledger row: a double rule above, column rules, the figures set
+       right like an account book. */
+    [data-theme='formal'] [data-cl='a'] .kp-kpis {
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-top: 3px double var(--cl-rule);
+        --cl-strip-foot: 1px solid var(--cl-rule);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: -1px 0 0 var(--cl-rule);
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-caps: all-small-caps;
+        --cl-label-size: 0.875rem;
+        --cl-label-track: 0.05em;
+        --cl-label-rule: 1px solid var(--cl-rule);
+        --cl-num-font: var(--theme-font-display);
+        --cl-num-weight: 500;
+        --cl-num-align: flex-end;
+        --cl-words-style: italic;
+        --cl-words-font: var(--theme-font-display);
+        --cl-delta-radius: 0;
+        --cl-delta-border: 1px solid var(--cl-rule);
+    }
+
+    /* The booktabs table: a heavy rule above, a light one under the heads,
+       a heavy one at the foot; no verticals, every column centred. */
+    [data-theme='formal'] [data-cl='b'] .kp-kpis {
+        --cl-gap: var(--kp-space-lg, 1.5rem);
+        --cl-strip-top: 2px solid var(--cl-ink);
+        --cl-strip-foot: 2px solid var(--cl-ink);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-pad: var(--kp-space-sm, 0.5rem) 0;
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-caps: all-small-caps;
+        --cl-label-size: 0.875rem;
+        --cl-label-weight: 600;
+        --cl-label-rule: 1px solid var(--cl-rule);
+        --cl-num-font: var(--theme-font-body);
+        --cl-num-weight: 400;
+        --cl-delta-radius: 0;
+        --cl-delta-style: italic;
+    }
+
+    /* ══ light ═════════════════════════════════════════════════════════════ */
+    /* One card: the strip is a single lifted card, its columns parted by
+       short hairlines. */
+    [data-theme='light'] [data-cl='a'] .kp-kpis {
+        --cl-gap: 0px;
+        --cl-strip-bg: var(--card);
+        --cl-strip-radius: calc(var(--radius, 0.5rem) * 2);
+        --cl-strip-shadow:
+            0 0 0 1px color-mix(in oklch, var(--border) 60%, transparent), 0 12px 28px -14px color-mix(in oklch, var(--foreground) 35%, transparent),
+            0 1px 3px color-mix(in oklch, var(--foreground) 10%, transparent);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-pad: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+        --cl-deco: linear-gradient(var(--cl-rule), var(--cl-rule)) 0 50% / 1px 56% no-repeat;
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+    }
+
+    [data-theme='light'] [data-cl='a'] .kp-kpis > .kp-kpi:first-child {
+        --cl-deco: none;
+    }
+
+    /* The legend chips: each figure in a soft well, a dot in its column's
+       chart colour before the label. */
+    [data-theme='light'] [data-cl='b'] .kp-kpis {
+        --cl-plate: color-mix(in oklch, var(--primary) 7%, var(--card));
+        --cl-frame: 0 solid transparent;
+        --cl-radius: calc(var(--radius, 0.5rem) * 2);
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-tag: '';
+        --cl-tag-size: 0.6em;
+        --cl-tag-radius: 999px;
+        --cl-tag-bg: var(--cl-hue);
+    }
+
+    [data-theme='light'] [data-cl='b'] .kp-kpis > .kp-kpi > .kp-kpi__label::before {
+        block-size: 0.6em;
+        vertical-align: 0.05em;
+    }
+
+    /* ══ dark ══════════════════════════════════════════════════════════════ */
+    /* The departure board: the number in a split-flap window, a hinge line
+       across its middle, the label in mono capitals. */
+    [data-theme='dark'] [data-cl='a'] .kp-kpis {
+        --cl-plate: var(--background);
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-strip-bg: var(--background);
+        --cl-strip-pad: var(--kp-space-sm, 0.5rem);
+        --cl-strip-frame: 1px solid var(--cl-rule);
+        --cl-strip-radius: var(--radius, 0.5rem);
+        --cl-frame: 0 solid transparent;
+        --cl-pad: var(--kp-space-sm, 0.5rem);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-label-track: 0.03em;
+        --cl-num-font: var(--theme-font-mono);
+        --cl-num-pad: 0 0.3em;
+        --cl-num-radius: 3px;
+        --cl-num-bg:
+            linear-gradient(to bottom, transparent calc(50% - 1px), var(--cl-plate) calc(50% - 1px) calc(50% + 1px), transparent 0),
+            linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 4%, transparent) 50%, transparent 0),
+            color-mix(in oklch, var(--foreground) 9%, var(--background));
+        --cl-num-frame: inset 0 0 0 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(to bottom, transparent 30%, color-mix(in oklch, var(--foreground) 10%, transparent) 30% 36%, transparent 0) 0 0 /
+            100% 300% no-repeat;
+        --cl-load-anim: cl-flap 900ms steps(3) infinite;
+    }
+
+    /* The rack: each figure a rack unit with a screw at each corner and a
+       lit status lamp before its label. */
+    [data-theme='dark'] [data-cl='b'] .kp-kpis {
+        --cl-gap: var(--kp-space-xs, 0.25rem);
+        --cl-plate: color-mix(in oklch, var(--foreground) 5%, var(--card));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 2px;
+        --cl-pad: var(--kp-space-md, 1rem) 1.1rem;
+        --cl-deco:
+            radial-gradient(circle, var(--cl-rule) 0 2.5px, transparent 3px) 6px 6px / 8px 8px no-repeat,
+            radial-gradient(circle, var(--cl-rule) 0 2.5px, transparent 3px) calc(100% - 6px) 6px / 8px 8px no-repeat,
+            radial-gradient(circle, var(--cl-rule) 0 2.5px, transparent 3px) 6px calc(100% - 6px) / 8px 8px no-repeat,
+            radial-gradient(circle, var(--cl-rule) 0 2.5px, transparent 3px) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat;
+        --cl-label-font: var(--theme-font-mono);
+        --cl-label-track: 0;
+        --cl-label-size: 0.6875rem;
+        --cl-tag: '';
+        --cl-tag-size: 0.55em;
+        --cl-tag-radius: 999px;
+        --cl-tag-bg: var(--success);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-delta-radius: 2px;
+    }
+
+    [data-theme='dark'] [data-cl='b'] .kp-kpis > .kp-kpi > .kp-kpi__label::before {
+        block-size: 0.55em;
+        box-shadow: 0 0 6px var(--success);
+    }
+
+    /* ══ cyberpunk ═════════════════════════════════════════════════════════ */
+    /* The ticker rail: neon rails above and below, the columns parted by a
+       `//` in the label, the figures in tech mono. */
+    [data-theme='cyberpunk'] [data-cl='a'] .kp-kpis {
+        --cl-plate: var(--background);
+        --cl-gap: 0px;
+        --cl-strip-bg: var(--background);
+        --cl-strip-top: 2px solid var(--primary);
+        --cl-strip-foot: 2px solid var(--primary);
+        --cl-strip-shadow: 0 -4px 10px -6px var(--primary), 0 4px 10px -6px var(--primary);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-label-font: var(--theme-font-mono);
+        --cl-tag: '//';
+        --cl-tag-ink: var(--cl-mute);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-num-shadow: 0 0 8px color-mix(in oklch, var(--accent) 55%, transparent);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(90deg, transparent, var(--primary), transparent) -50% 100% / 30% 2px no-repeat;
+        --cl-load-anim: cl-slide 1300ms linear infinite;
+    }
+
+    /* The data shards: each figure a shard with two cut corners and a neon
+       edge, its label on a primary tab. */
+    [data-theme='cyberpunk'] [data-cl='b'] .kp-kpis {
+        --cl-plate: color-mix(in oklch, var(--primary) 6%, var(--background));
+        --cl-frame: 1px solid var(--primary);
+        --cl-radius: 0;
+        --cl-clip: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+        --cl-deco:
+            linear-gradient(225deg, var(--primary) 0 10px, transparent 10px) 100% 0 / 20px 20px no-repeat,
+            linear-gradient(45deg, var(--primary) 0 10px, transparent 10px) 0 100% / 20px 20px no-repeat;
+        --cl-label-font: var(--theme-font-mono);
+        --cl-label-bg: var(--primary);
+        --cl-label-ink: var(--primary-foreground);
+        --cl-label-pad: 0 0.4em;
+        --cl-label-bleed: 0 auto;
+        --cl-num-font: var(--theme-font-mono);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(90deg, transparent 0 40%, color-mix(in oklch, var(--accent) 35%, transparent) 40% 44%, transparent 44%) 0 0 / 300%
+            100%;
+        --cl-load-anim: cl-glitch 700ms steps(4) infinite;
+    }
+
+    [data-theme='cyberpunk'] [data-cl='b'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        inline-size: fit-content;
+        max-inline-size: 100%;
+    }
+
+    /* ══ synthwave ═════════════════════════════════════════════════════════ */
+    /* The cassette counter: each number in a sunken counter window, the
+       label on a cassette label strip between two pink stripes. */
+    [data-theme='synthwave'] [data-cl='a'] .kp-kpis {
+        --cl-plate: var(--card);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 6px;
+        --cl-label-font: var(--theme-font-mono);
+        --cl-label-bg: var(--muted);
+        --cl-label-ink: var(--muted-foreground);
+        --cl-label-pad: 0 0.4em;
+        --cl-label-shadow: inset 0 2px 0 var(--primary), inset 0 -2px 0 var(--accent);
+        --cl-label-radius: 2px;
+        --cl-num-font: var(--theme-font-display);
+        --cl-num-fit: 12cqi;
+        --cl-num-pad: 0 0.35em;
+        --cl-num-radius: 4px;
+        --cl-num-bg: var(--background);
+        --cl-num-ink: var(--foreground);
+        --cl-unit-ink: color-mix(in oklch, var(--muted-foreground) 70%, var(--foreground));
+        --cl-num-frame: inset 0 2px 6px color-mix(in oklch, var(--background) 80%, transparent), inset 0 0 0 1px var(--cl-rule);
+        --cl-delta-radius: 2px;
+        --cl-load: repeating-linear-gradient(90deg, color-mix(in oklch, var(--primary) 22%, transparent) 0 2px, transparent 2px 10px) 0 0 / 40px 100%;
+        --cl-load-anim: cl-march 600ms linear infinite;
+    }
+
+    /* The arcade scoreboard: a rank before every label, the figures lit in
+       cyan, a pink rule under the heads, all on the night sky. */
+    [data-theme='synthwave'] [data-cl='b'] .kp-kpis {
+        --cl-plate: var(--background);
+        --cl-strip-bg: var(--background);
+        --cl-strip-pad: var(--kp-space-sm, 0.5rem);
+        --cl-strip-radius: var(--radius, 0.5rem);
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-frame: 0 solid transparent;
+        --cl-label-font: var(--theme-font-mono);
+        --cl-label-track: 0.12em;
+        --cl-label-rule: 2px solid var(--primary);
+        --cl-tag: counter(cl, decimal-leading-zero);
+        --cl-tag-ink: var(--cl-mute);
+        --cl-num-font: var(--theme-font-display);
+        --cl-num-shadow: 0 0 10px color-mix(in oklch, var(--accent) 60%, transparent);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--accent) 22%, transparent), transparent) 0 -100% / 100% 40%
+            no-repeat;
+        --cl-load-anim: cl-roll 1400ms linear infinite;
+    }
+
+    /* ══ pastel ════════════════════════════════════════════════════════════ */
+    /* The paint swatches: each figure a paint chip with a band of its
+       column's colour across the top. */
+    [data-theme='pastel'] [data-cl='a'] .kp-kpis {
+        --cl-frame: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+        --cl-radius: calc(var(--radius, 0.5rem) * 1.5);
+        --cl-pad-top: 2.25rem;
+        --cl-deco: linear-gradient(color-mix(in oklch, var(--cl-hue) 70%, var(--card)), color-mix(in oklch, var(--cl-hue) 70%, var(--card))) 0 0 /
+            100% 1.25rem no-repeat;
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-label-weight: 600;
+        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--card) 60%, transparent), transparent) -50% 0 / 40% 1.25rem no-repeat;
+        --cl-load-anim: cl-slide 1500ms ease-in-out infinite;
+    }
+
+    /* The sticky notes: each figure on a note of its column's tint, set a
+       little askew, the corner folded. */
+    [data-theme='pastel'] [data-cl='b'] .kp-kpis {
+        --cl-gap: var(--kp-space-lg, 1.5rem);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 2px;
+        --cl-tile-plate: color-mix(in oklch, var(--cl-hue) 22%, var(--card));
+        --cl-shadow: 3px 4px 0 color-mix(in oklch, var(--foreground) 12%, transparent);
+        --cl-deco: linear-gradient(315deg, var(--card) 0 10px, color-mix(in oklch, var(--cl-hue) 45%, var(--card)) 10px 14px, transparent 14px) 100%
+            100% / 20px 20px no-repeat;
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-label-weight: 600;
+        --cl-mute: color-mix(in oklch, var(--muted-foreground) 50%, var(--cl-ink));
+        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--card) 55%, transparent), transparent) -50% 0 / 40% 100% no-repeat;
+        --cl-load-anim: cl-slide 1600ms ease-in-out infinite;
+    }
+
+    [data-theme='pastel'] [data-cl='b'] .kp-kpis > .kp-kpi:nth-child(odd) {
+        --cl-tilt: rotate(-0.8deg);
+    }
+
+    [data-theme='pastel'] [data-cl='b'] .kp-kpis > .kp-kpi:nth-child(even) {
+        --cl-tilt: rotate(0.7deg);
+    }
+
+    /* ══ terminal ══════════════════════════════════════════════════════════ */
+    /* The df -h table: a framed text table, column rules, a dashed rule
+       under the heads, everything in the mono. */
+    [data-theme='terminal'] [data-cl='a'] .kp-kpis {
+        --cl-plate: var(--background);
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-bg: var(--background);
+        --cl-strip-frame: 1px solid var(--cl-rule);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: -1px 0 0 var(--cl-rule);
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-track: 0.02em;
+        --cl-label-rule: 1px dashed var(--cl-rule);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(var(--primary), var(--primary)) 1rem 3.1rem / 0.6em 1.1em no-repeat;
+        --cl-load-anim: cl-blink 1000ms steps(1) infinite;
+    }
+
+    /* The tmux status bar: the strip a run of reverse-video segments with
+       arrow ends, every other one in the second colour. */
+    [data-theme='terminal'] [data-cl='b'] .kp-kpis {
+        --cl-gap: 3px;
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-track: 0.02em;
+        --cl-pad: var(--kp-space-md, 1rem) 1.5rem;
+        --cl-clip: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(90deg, transparent 0 45%, color-mix(in oklch, var(--background) 30%, transparent) 45% 55%, transparent 55%) 0 0 /
+            200% 100%;
+        --cl-load-anim: cl-march-wide 900ms steps(6) infinite;
+    }
+
+    [data-theme='terminal'] [data-cl='b'] .kp-kpis > .kp-kpi:nth-child(odd) {
+        --cl-plate: var(--primary);
+        --cl-ink: var(--primary-foreground);
+        --cl-mute: var(--primary-foreground);
+        --cl-rule: var(--primary-foreground);
+    }
+
+    [data-theme='terminal'] [data-cl='b'] .kp-kpis > .kp-kpi:nth-child(even) {
+        --cl-plate: var(--secondary);
+        --cl-ink: var(--secondary-foreground);
+        --cl-mute: var(--secondary-foreground);
+        --cl-rule: var(--secondary-foreground);
+    }
+
+    /* ══ forest ════════════════════════════════════════════════════════════ */
+    /* The trail markers: each figure a wooden post with a painted blaze in
+       its column's colour, standing on a line of soil. */
+    [data-theme='forest'] [data-cl='a'] .kp-kpis {
+        --cl-strip-foot: 3px solid var(--cl-rule);
+        --cl-strip-pad: 0 0 var(--kp-space-xs, 0.25rem);
+        --cl-plate: color-mix(in oklch, var(--secondary) 35%, var(--card));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 1rem 1rem 2px 2px;
+        --cl-pad-top: 1.75rem;
+        --cl-deco: linear-gradient(var(--cl-hue), var(--cl-hue)) 50% 0.5rem / 0.75rem 0.75rem no-repeat;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-style: italic;
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-delta-radius: 3px;
+        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 18%, transparent), transparent) -50% 0 / 40% 100% no-repeat;
+        --cl-load-anim: cl-slide 1800ms ease-in-out infinite;
+    }
+
+    /* The specimen mounts: each figure a herbarium sheet held by four photo
+       corners, its label in a ruled specimen box. */
+    [data-theme='forest'] [data-cl='b'] .kp-kpis {
+        --cl-plate: color-mix(in oklch, var(--foreground) 3%, var(--background));
+        --cl-frame: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+        --cl-radius: 0;
+        --cl-deco:
+            linear-gradient(135deg, var(--cl-rule) 0 9px, transparent 9px) 0 0 / 14px 14px no-repeat,
+            linear-gradient(225deg, var(--cl-rule) 0 9px, transparent 9px) 100% 0 / 14px 14px no-repeat,
+            linear-gradient(45deg, var(--cl-rule) 0 9px, transparent 9px) 0 100% / 14px 14px no-repeat,
+            linear-gradient(315deg, var(--cl-rule) 0 9px, transparent 9px) 100% 100% / 14px 14px no-repeat;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-caps: all-small-caps;
+        --cl-label-size: 0.875rem;
+        --cl-label-track: 0.04em;
+        --cl-label-pad: 0 0.4em;
+        --cl-label-shadow: inset 0 0 0 1px var(--cl-rule);
+        --cl-label-bleed: 0 auto;
+        --cl-num-font: var(--theme-font-display);
+        --cl-words-style: italic;
+        --cl-delta-radius: 2px;
+        --cl-load: radial-gradient(circle, color-mix(in oklch, var(--primary) 30%, transparent) 0 3px, transparent 4px) -10% 85% / 10% 30% no-repeat;
+        --cl-load-anim: cl-slide 1600ms steps(8) infinite;
+    }
+
+    [data-theme='forest'] [data-cl='b'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 0.8em);
+    }
+
+    /* ══ high-contrast ═════════════════════════════════════════════════════ */
+    /* The ruled grid: one 2px frame, 2px column rules, a 2px rule under the
+       heads. */
+    [data-theme='high-contrast'] [data-cl='a'] .kp-kpis {
+        --cl-rule: var(--foreground);
+        --cl-plate: var(--background);
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-bg: var(--background);
+        --cl-strip-frame: 2px solid var(--cl-rule);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: -2px 0 0 var(--cl-rule);
+        --cl-label-weight: 700;
+        --cl-label-rule: 2px solid var(--cl-rule);
+        --cl-mute: var(--foreground);
+        --cl-num-weight: 800;
+        --cl-delta-radius: 0;
+        --cl-delta-border: 2px solid var(--cl-rule);
+    }
+
+    /* The inverse heads: each label an ink band across the top of its
+       framed tile, the figure heavy on the paper under it. */
+    [data-theme='high-contrast'] [data-cl='b'] .kp-kpis {
+        --cl-rule: var(--foreground);
+        --cl-plate: var(--background);
+        --cl-frame: 2px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-pad-top: 0;
+        --cl-pad: var(--kp-space-md, 1rem) 0.75rem;
+        --cl-label-bg: var(--foreground);
+        --cl-label-ink: var(--background);
+        --cl-label-weight: 700;
+        --cl-label-track: 0;
+        --cl-label-size: 0.6875rem;
+        --cl-words-size: var(--kp-text-xs, 0.75rem);
+        --cl-label-pad: 0.15em 0.75rem;
+        --cl-label-bleed: 0 -0.75rem;
+        --cl-mute: var(--foreground);
+        --cl-num-weight: 800;
+        --cl-num-gap: 0.5rem 0.125rem;
+        --cl-delta-radius: 0;
+        --cl-delta-border: 2px solid var(--cl-rule);
+    }
+
+    /* ══ sepia ═════════════════════════════════════════════════════════════ */
+    /* The typewriter tab stops: the typewriter's scale along the top of the
+       strip, a tab stop over every column, the figures typed. */
+    [data-theme='sepia'] [data-cl='a'] .kp-kpis {
+        --cl-strip-pad: 1.1rem 0 0;
+        --cl-strip-under:
+            repeating-linear-gradient(90deg, var(--cl-rule) 0 1px, transparent 1px 0.5rem) 0 0 / 100% 0.35rem no-repeat,
+            repeating-linear-gradient(90deg, var(--cl-rule) 0 1px, transparent 1px 2.5rem) 0 0 / 100% 0.7rem no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 0 / 100% 1px no-repeat;
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-pad: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem) var(--kp-space-md, 1rem);
+        --cl-deco: conic-gradient(from 150deg at 50% 0, var(--cl-rule) 0 60deg, transparent 0) 0.75rem -0.5rem / 0.7rem 0.5rem no-repeat;
+        --cl-deco-inset: -0.5rem 0 0 0;
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-case: none;
+        --cl-label-track: 0;
+        --cl-label-size: var(--kp-text-xs, 0.75rem);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(var(--cl-rule), var(--cl-rule)) -10% 3.1rem / 0.15rem 1.1em no-repeat;
+        --cl-load-anim: cl-slide 1400ms steps(10) infinite;
+    }
+
+    [data-theme='sepia'] [data-cl='a'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+    }
+
+    /* The card-catalogue drawers: each figure a drawer front, its label in a
+       brass label holder, a pull ring beside it. */
+    [data-theme='sepia'] [data-cl='b'] .kp-kpis {
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-plate: color-mix(in oklch, var(--secondary) 55%, var(--card));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 3px;
+        --cl-shadow: inset 0 0 0 4px var(--cl-plate), inset 0 0 0 5px color-mix(in oklch, var(--cl-rule) 50%, transparent);
+        --cl-label-bg: var(--card);
+        --cl-label-ink: color-mix(in oklch, var(--muted-foreground) 70%, var(--card-foreground));
+        --cl-label-pad: 0 0.4em;
+        --cl-label-shadow: inset 0 0 0 1px var(--cl-rule);
+        --cl-label-radius: 2px;
+        --cl-label-bleed: 0 auto;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-caps: all-small-caps;
+        --cl-label-size: 0.875rem;
+        --cl-num-font: var(--theme-font-display);
+        --cl-deco: radial-gradient(circle, transparent 0 4px, var(--cl-rule) 4px 6px, transparent 6.5px) calc(100% - 0.6rem) 0.6rem / 14px 14px
+            no-repeat;
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(color-mix(in oklch, var(--card) 40%, transparent), color-mix(in oklch, var(--card) 40%, transparent));
+        --cl-load-anim: cl-pulse 1600ms ease-in-out infinite;
+    }
+
+    [data-theme='sepia'] [data-cl='b'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 1.8rem);
+    }
+
+    /* ══ blueprint ═════════════════════════════════════════════════════════ */
+    /* The dimension chain: a dimension line with end ticks over every
+       column, chained across the strip, the heads in technical capitals. */
+    [data-theme='blueprint'] [data-cl='a'] .kp-kpis {
+        --cl-strip-pad: 1rem 0 0;
+        --cl-gap: 0.5rem;
+        --cl-plate: var(--background);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-deco-inset: -0.9rem 0 auto 0;
+        --cl-deco:
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(45deg, transparent 45%, var(--cl-rule) 45% 55%, transparent 55%) 0 50% / 8px 8px no-repeat,
+            linear-gradient(45deg, transparent 45%, var(--cl-rule) 45% 55%, transparent 55%) 100% 50% / 8px 8px no-repeat;
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-track: 0.04em;
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(90deg, var(--cl-rule) 50%, transparent 0) 0 calc(100% - 3px) / 10px 1px repeat-x;
+        --cl-load-anim: cl-march 800ms linear infinite;
+    }
+
+    [data-theme='blueprint'] [data-cl='a'] .kp-kpis > .kp-kpi::before {
+        block-size: 0.6rem;
+    }
+
+    /* The bill of materials: a parts table, each head with its item number
+       in a balloon, the columns parted by rules. */
+    [data-theme='blueprint'] [data-cl='b'] .kp-kpis {
+        --cl-plate: var(--background);
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-bg: var(--background);
+        --cl-strip-frame: 1px solid var(--cl-rule);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: -1px 0 0 var(--cl-rule);
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-track: 0;
+        --cl-label-rule: 1px solid var(--cl-rule);
+        --cl-tag: counter(cl);
+        --cl-tag-size: 1.2em;
+        --cl-tag-border: 1px solid var(--cl-rule);
+        --cl-tag-radius: 999px;
+        --cl-tag-ink: var(--cl-ink);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 14%, transparent), transparent) -50% 0 / 30% 100%
+            no-repeat;
+        --cl-load-anim: cl-slide 1500ms linear infinite;
+    }
+
+    /* ══ solstice ══════════════════════════════════════════════════════════ */
+    /* The horizon: the figures stand on a warm horizon line that glows, the
+       light rising from it behind each column. */
+    [data-theme='solstice'] [data-cl='a'] .kp-kpis {
+        --cl-strip-foot: 2px solid var(--primary);
+        --cl-strip-shadow: 0 6px 14px -8px var(--primary);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-plate: var(--background);
+        --cl-strip-bg: var(--background);
+        --cl-pat: radial-gradient(ellipse 70% 55% at 50% 100%, color-mix(in oklch, var(--primary) 16%, transparent), transparent);
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-track: 0.02em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 999px;
+        --cl-load: radial-gradient(ellipse 70% 55% at 50% 100%, color-mix(in oklch, var(--primary) 20%, transparent), transparent);
+        --cl-load-anim: cl-pulse 2000ms ease-in-out infinite;
+    }
+
+    /* The lanterns: a string across the top of the strip, each figure a
+       lantern hung from it, glowing warm from its top. */
+    [data-theme='solstice'] [data-cl='b'] .kp-kpis {
+        --cl-strip-pad: 0.9rem 0 0;
+        --cl-strip-under: linear-gradient(var(--cl-rule), var(--cl-rule)) 0 0.25rem / 100% 1px no-repeat;
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0.9rem;
+        --cl-plate: var(--card);
+        --cl-pat: radial-gradient(ellipse 60% 70% at 50% 0, color-mix(in oklch, var(--primary) 18%, transparent), transparent);
+        --cl-deco-inset: -0.65rem 0 auto 0;
+        --cl-deco: linear-gradient(var(--cl-rule), var(--cl-rule)) 50% 0 / 1px 100% no-repeat;
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-track: 0.02em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 999px;
+        --cl-load: radial-gradient(ellipse 60% 70% at 50% 0, color-mix(in oklch, var(--primary) 22%, transparent), transparent);
+        --cl-load-anim: cl-pulse 1700ms ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] [data-cl='b'] .kp-kpis > .kp-kpi::before {
+        block-size: 0.65rem;
+    }
+
+    /* ══ brutalism ═════════════════════════════════════════════════════════ */
+    /* The poster grid: the columns butted together under thick black rules,
+       every other one on the accent plate. */
+    [data-theme='brutalism'] [data-cl='a'] .kp-kpis {
+        --cl-rule: var(--foreground);
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-frame: 3px solid var(--cl-rule);
+        --cl-strip-shadow: 6px 6px 0 var(--cl-rule);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: -3px 0 0 var(--cl-rule);
+        --cl-label-weight: 800;
+        --cl-label-track: 0.08em;
+        --cl-words-size: var(--kp-text-xs, 0.75rem);
+        --cl-num-weight: 800;
+        --cl-delta-radius: 0;
+        --cl-delta-border: 2px solid var(--cl-rule);
+        --cl-load: linear-gradient(var(--cl-rule), var(--cl-rule)) 0 100% / 100% 6px no-repeat;
+        --cl-load-anim: cl-stamp 900ms steps(2) infinite;
+    }
+
+    [data-theme='brutalism'] [data-cl='a'] .kp-kpis {
+        overflow: visible;
+    }
+
+    [data-theme='brutalism'] [data-cl='a'] .kp-kpis > .kp-kpi:nth-child(even) {
+        --cl-plate: var(--accent);
+        --cl-ink: var(--accent-foreground);
+        --cl-mute: var(--accent-foreground);
+    }
+
+    /* The ticket stubs: each figure a ticket with notches bitten out of its
+       sides and a perforated edge, in a heavy outline. */
+    [data-theme='brutalism'] [data-cl='b'] .kp-kpis {
+        --cl-rule: var(--foreground);
+        --cl-frame: 3px solid var(--cl-rule);
+        --cl-frame-top: 3px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-pad: var(--kp-space-md, 1rem) 0.75rem var(--kp-space-md, 1rem) 1.4rem;
+        --cl-mask:
+            radial-gradient(circle at 0 50%, transparent 0.55rem, var(--foreground) 0.6rem) 0 0 / 51% 100% no-repeat,
+            radial-gradient(circle at 100% 50%, transparent 0.55rem, var(--foreground) 0.6rem) 100% 0 / 51% 100% no-repeat;
+        --cl-deco: repeating-linear-gradient(to bottom, var(--cl-rule) 0 6px, transparent 6px 11px) 0.75rem 0 / 3px 100% no-repeat;
+        --cl-label-weight: 800;
+        --cl-label-track: 0;
+        --cl-label-size: 0.6875rem;
+        --cl-words-size: var(--kp-text-xs, 0.75rem);
+        --cl-num-weight: 800;
+        --cl-delta-radius: 0;
+        --cl-delta-border: 2px solid var(--cl-rule);
+        --cl-load: linear-gradient(color-mix(in oklch, var(--accent) 45%, transparent), color-mix(in oklch, var(--accent) 45%, transparent)) 0 0 /
+            100% 100% no-repeat;
+        --cl-load-anim: cl-stamp 1000ms steps(2) infinite;
+    }
+
+    /* ══ deco ══════════════════════════════════════════════════════════════ */
+    /* The floor indicator: a gold arc over every figure like a lift's dial,
+       the heads in the display face's capitals, centred. */
+    [data-theme='deco'] [data-cl='a'] .kp-kpis {
+        --cl-rule: var(--primary);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-pad-top: 1.6rem;
+        --cl-deco:
+            radial-gradient(circle at 50% 100%, transparent 0 2.2rem, var(--cl-rule) 2.2rem calc(2.2rem + 1px), transparent calc(2.2rem + 1.5px)) 50%
+                0 / 5rem 1.2rem no-repeat,
+            repeating-conic-gradient(from -60deg at 50% 1.2rem, color-mix(in oklch, var(--primary) 30%, transparent) 0 2deg, transparent 2deg 15deg)
+                50% 0 / 4rem 1.2rem no-repeat;
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-track: 0.14em;
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 30%, transparent) 50%, transparent 60%) -150% 0 / 250%
+            100% no-repeat;
+        --cl-load-anim: cl-glint 1800ms ease-in-out infinite;
+    }
+
+    /* The colonnade: fluted gold pilasters in the gaps between the columns,
+       each figure under a stepped capital. */
+    [data-theme='deco'] [data-cl='b'] .kp-kpis {
+        --cl-rule: var(--primary);
+        --cl-gap: 1rem;
+        --cl-strip-pat: repeating-linear-gradient(90deg, var(--cl-rule) 0 1px, transparent 1px 4px);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-frame-top: 4px double var(--cl-rule);
+        --cl-radius: 0;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-track: 0.12em;
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 30%, transparent) 50%, transparent 60%) -150% 0 / 250%
+            100% no-repeat;
+        --cl-load-anim: cl-glint 2000ms ease-in-out infinite;
+    }
+
+    /* ══ phantom ═══════════════════════════════════════════════════════════ */
+    /* The red-string board: each figure a card pinned to the board, a red
+       string running from pin to pin across the strip. */
+    [data-theme='phantom'] [data-cl='a'] .kp-kpis {
+        --cl-strip-pad: 0.5rem 0 0;
+        --cl-strip-under: linear-gradient(var(--destructive), var(--destructive)) 0 0.95rem / 100% 2px no-repeat;
+        --cl-gap: var(--kp-space-lg, 1.5rem);
+        --cl-plate: var(--card);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-pad-top: 1.5rem;
+        --cl-shadow: 2px 3px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
+        --cl-deco: radial-gradient(circle, var(--destructive) 0 4px, transparent 5px) 50% 0.15rem / 12px 12px no-repeat;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-track: 0.08em;
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 0;
+        --cl-load: radial-gradient(circle, color-mix(in oklch, var(--destructive) 45%, transparent) 0 6px, transparent 7px) 50% 0.15rem / 14px 14px
+            no-repeat;
+        --cl-load-anim: cl-pulse 900ms ease-in-out infinite;
+    }
+
+    [data-theme='phantom'] [data-cl='a'] .kp-kpis > .kp-kpi:nth-child(odd) {
+        --cl-tilt: rotate(-0.6deg);
+    }
+
+    [data-theme='phantom'] [data-cl='a'] .kp-kpis > .kp-kpi:nth-child(even) {
+        --cl-tilt: rotate(0.5deg);
+    }
+
+    /* The case files: each figure a folder with a tab standing up from its
+       top, the file number on the tab. */
+    [data-theme='phantom'] [data-cl='b'] .kp-kpis {
+        --cl-strip-pad: 1.15rem 0 0;
+        --cl-plate: color-mix(in oklch, var(--secondary) 45%, var(--card));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0 3px 3px 3px;
+        --cl-deco-content: 'FILE ' counter(cl, decimal-leading-zero);
+        --cl-deco-inset: -1.15rem auto auto -1px;
+        --cl-deco-border: 1px solid var(--cl-rule);
+        --cl-deco-radius: 3px 3px 0 0;
+        --cl-deco: var(--cl-plate);
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-track: 0.08em;
+        --cl-label-skew: none;
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 0;
+        --cl-load: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0 2px, transparent 2px 6px) 0 0 / 34px 34px;
+        --cl-load-anim: cl-march 900ms linear infinite;
+    }
+
+    [data-theme='phantom'] [data-cl='b'] .kp-kpis > .kp-kpi::before {
+        z-index: 0;
+        padding: 0.2rem 0.6rem;
+        border-block-end: 0;
+        letter-spacing: 0.08em;
+    }
+
+    /* ══ shade-light ═══════════════════════════════════════════════════════ */
+    /* The window blinds: slatted light falling across every column. */
+    [data-theme='shade-light'] [data-cl='a'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-pat: repeating-linear-gradient(170deg, color-mix(in oklch, var(--foreground) 5%, transparent) 0 0.6rem, transparent 0.6rem 1.4rem);
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-delta-radius: 999px;
+        --cl-load: repeating-linear-gradient(170deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 0.6rem, transparent 0.6rem 1.4rem) 0 0 /
+            100% 200%;
+        --cl-load-anim: cl-roll 2400ms linear infinite;
+    }
+
+    /* The paper cut-outs: each figure a sheet laid on two more, their edges
+       showing below and to the right. */
+    [data-theme='shade-light'] [data-cl='b'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
+        --cl-gap: var(--kp-space-lg, 1.5rem);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 2px;
+        --cl-shadow:
+            4px 4px 0 -1px var(--card), 4px 4px 0 0 color-mix(in oklch, var(--foreground) 22%, transparent), 8px 8px 0 -1px var(--card),
+            8px 8px 0 0 color-mix(in oklch, var(--foreground) 14%, transparent);
+        --cl-label-case: none;
+        --cl-label-track: 0.01em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(color-mix(in oklch, var(--background) 45%, transparent), color-mix(in oklch, var(--background) 45%, transparent));
+        --cl-load-anim: cl-pulse 1800ms ease-in-out infinite;
+    }
+
+    /* ══ shade-dark ════════════════════════════════════════════════════════ */
+    /* The gallery wall: each figure a framed piece under its own picture
+       light. */
+    [data-theme='shade-dark'] [data-cl='a'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
+        --cl-gap: var(--kp-space-lg, 1.5rem);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-shadow: inset 0 0 0 5px var(--cl-plate), inset 0 0 0 6px color-mix(in oklch, var(--cl-rule) 45%, transparent);
+        --cl-pat: radial-gradient(ellipse 55% 60% at 50% 0, color-mix(in oklch, var(--foreground) 9%, transparent), transparent);
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-label-case: none;
+        --cl-label-track: 0.02em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-delta-radius: 0;
+        --cl-load: radial-gradient(ellipse 55% 60% at 50% 0, color-mix(in oklch, var(--foreground) 10%, transparent), transparent);
+        --cl-load-anim: cl-pulse 1800ms ease-in-out infinite;
+    }
+
+    /* The velvet tray: each figure set into a recessed well of the tray,
+       the columns parted by raised ridges. */
+    [data-theme='shade-dark'] [data-cl='b'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
+        --cl-gap: 6px;
+        --cl-strip-bg: var(--muted);
+        --cl-strip-pad: 6px;
+        --cl-strip-radius: var(--radius, 0.5rem);
+        --cl-plate: var(--card);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: calc(var(--radius, 0.5rem) * 0.75);
+        --cl-shadow: inset 0 3px 8px color-mix(in oklch, var(--background) 70%, transparent);
+        --cl-num-pad: 0 0.3em;
+        --cl-num-radius: 4px;
+        --cl-num-bg: color-mix(in oklch, var(--background) 60%, var(--card));
+        --cl-num-frame: inset 0 2px 5px color-mix(in oklch, var(--background) 80%, transparent);
+        --cl-label-case: none;
+        --cl-label-track: 0.02em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-delta-radius: 4px;
+        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 8%, transparent), transparent) -50% 0 / 40% 100%
+            no-repeat;
+        --cl-load-anim: cl-slide 2000ms ease-in-out infinite;
+    }
+
+    /* ══ retro ═════════════════════════════════════════════════════════════ */
+    /* The status bar: a raised grey bar holding a sunken pane per figure. */
+    [data-theme='retro'] [data-cl='a'] .kp-kpis {
+        --cl-gap: 3px;
+        --cl-strip-bg: var(--muted);
+        --cl-strip-pad: 3px;
+        --cl-strip-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--background) 70%, var(--card)),
+            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, var(--muted));
+        --cl-plate: var(--muted);
+        --cl-ink: var(--foreground);
+        --cl-mute: var(--foreground);
+        --cl-rule: color-mix(in oklch, var(--foreground) 60%, var(--muted));
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-shadow: inset 1px 1px 0 var(--cl-rule), inset -1px -1px 0 color-mix(in oklch, var(--background) 70%, var(--card));
+        --cl-label-case: none;
+        --cl-label-track: 0;
+        --cl-label-size: var(--kp-text-sm, 0.8125rem);
+        --cl-label-weight: 400;
+        --cl-delta-radius: 0;
+    }
+
+    /* The list view: each head a raised column-header button, the figure in
+       the white list under it, the whole set in a sunken frame. */
+    [data-theme='retro'] [data-cl='b'] .kp-kpis {
+        --cl-gap: 0px;
+        --cl-strip-clip: clip;
+        --cl-strip-bg: var(--card);
+        --cl-strip-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 55%, var(--muted)),
+            inset -1px -1px 0 color-mix(in oklch, var(--background) 70%, var(--card));
+        --cl-strip-pad: 2px;
+        --cl-plate: var(--card);
+        --cl-rule: color-mix(in oklch, var(--foreground) 60%, var(--muted));
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-pad-top: 0;
+        --cl-label-bg: var(--muted);
+        --cl-label-ink: var(--foreground);
+        --cl-label-shadow: inset 1px 1px 0 color-mix(in oklch, var(--background) 70%, var(--card)), inset -1px -1px 0 var(--cl-rule);
+        --cl-label-pad: 0.1em var(--kp-space-md, 1rem);
+        --cl-label-bleed: 0 calc(-1 * var(--kp-space-md, 1rem));
+        --cl-label-case: none;
+        --cl-label-track: 0;
+        --cl-label-size: var(--kp-text-sm, 0.8125rem);
+        --cl-label-weight: 400;
+        --cl-num-gap: 0.4rem 0.125rem;
+        --cl-delta-radius: 0;
+    }
+
+    /* ══ grotesk ═══════════════════════════════════════════════════════════ */
+    /* The numbered grid: a heavy rule over the strip, a column number in
+       each corner, the figures bold and flush left. */
+    [data-theme='grotesk'] [data-cl='a'] .kp-kpis {
+        --cl-strip-top: 4px solid var(--cl-ink);
+        --cl-gap: var(--kp-space-md, 1rem);
+        --cl-frame: 0 solid transparent;
+        --cl-frame-top: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-pad: var(--kp-space-md, 1rem) 0;
+        --cl-deco-content: counter(cl, decimal-leading-zero);
+        --cl-deco-inset: var(--kp-space-md, 1rem) 0 auto auto;
+        --cl-label-weight: 700;
+        --cl-label-track: 0.02em;
+        --cl-num-weight: 800;
+        --cl-num-track: -0.02em;
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(var(--cl-ink), var(--cl-ink)) -50% 0 / 30% 1px no-repeat;
+        --cl-load-anim: cl-slide 1000ms linear infinite;
+    }
+
+    [data-theme='grotesk'] [data-cl='a'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        padding-inline-end: 1.8rem;
+    }
+
+    /* The line colours: each figure topped by a thick block in its
+       column's colour, like the lines on a transit map. */
+    [data-theme='grotesk'] [data-cl='b'] .kp-kpis {
+        --cl-gap: 2px;
+        --cl-frame: 0 solid transparent;
+        --cl-frame-top: 0.6rem solid var(--cl-hue);
+        --cl-radius: 0;
+        --cl-plate: color-mix(in oklch, var(--foreground) 4%, var(--card));
+        --cl-label-weight: 700;
+        --cl-label-case: none;
+        --cl-label-track: 0;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-num-weight: 800;
+        --cl-num-track: -0.02em;
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(var(--cl-hue), var(--cl-hue)) 0 0 / 0 100% no-repeat;
+        --cl-load-anim: cl-fill 1200ms steps(4) infinite;
+    }
+
+    /* ══ lapis ═════════════════════════════════════════════════════════════ */
+    /* The arcade: each figure under a pointed arch, framed in a double gold
+       rule. */
+    [data-theme='lapis'] [data-cl='a'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--accent) 55%, var(--cl-ink));
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 50% 50% 3px 3px / 1.6rem 1.6rem 3px 3px;
+        --cl-shadow: inset 0 0 0 3px var(--cl-plate), inset 0 0 0 4px color-mix(in oklch, var(--cl-rule) 60%, transparent);
+        --cl-pad-top: 1.6rem;
+        --cl-align: center;
+        --cl-num-align: center;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-track: 0.08em;
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--accent) 28%, transparent) 50%, transparent 60%) -150% 0 / 250%
+            100% no-repeat;
+        --cl-load-anim: cl-glint 2000ms ease-in-out infinite;
+    }
+
+    /* The illuminated band: a ribbon of gold lattice across the top of the
+       strip, the figures on vellum panels under it. */
+    [data-theme='lapis'] [data-cl='b'] .kp-kpis {
+        --cl-rule: color-mix(in oklch, var(--accent) 55%, var(--cl-ink));
+        --cl-strip-pad: 1rem 0 0;
+        --cl-strip-under:
+            repeating-linear-gradient(45deg, var(--cl-rule) 0 1px, transparent 1px 7px) 0 0 / 100% 0.65rem no-repeat,
+            repeating-linear-gradient(-45deg, var(--cl-rule) 0 1px, transparent 1px 7px) 0 0 / 100% 0.65rem no-repeat;
+        --cl-plate: color-mix(in oklch, var(--foreground) 4%, var(--card));
+        --cl-frame: 1px solid color-mix(in oklch, var(--cl-rule) 70%, transparent);
+        --cl-radius: 2px;
+        --cl-label-font: var(--theme-font-display);
+        --cl-label-case: none;
+        --cl-label-style: italic;
+        --cl-label-track: 0.02em;
+        --cl-label-size: var(--kp-text-sm, 0.875rem);
+        --cl-label-rule: 1px solid var(--cl-rule);
+        --cl-num-font: var(--theme-font-display);
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--accent) 25%, transparent) 50%, transparent 60%) -150% 0 / 250%
+            100% no-repeat;
+        --cl-load-anim: cl-glint 2200ms ease-in-out infinite;
+    }
+
+    /* ══ nostromo ══════════════════════════════════════════════════════════ */
+    /* The readout bank: each figure a screen segment, its head on an inverse
+       tape, corner brackets on the glass. */
+    [data-theme='nostromo'] [data-cl='a'] .kp-kpis {
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-plate: var(--background);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-deco:
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 0 / 12px 2px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 0 / 2px 12px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 100% 0 / 12px 2px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 100% 0 / 2px 12px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 100% / 12px 2px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 0 100% / 2px 12px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 100% 100% / 12px 2px no-repeat,
+            linear-gradient(var(--cl-rule), var(--cl-rule)) 100% 100% / 2px 12px no-repeat;
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-bg: var(--foreground);
+        --cl-label-ink: var(--background);
+        --cl-label-pad: 0 0.4em;
+        --cl-label-bleed: 0 auto;
+        --cl-label-track: 0.02em;
+        --cl-delta-radius: 0;
+        --cl-load: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--foreground) 14%, transparent), transparent) 0 -100% / 100% 30%
+            no-repeat;
+        --cl-load-anim: cl-roll 1500ms linear infinite;
+    }
+
+    [data-theme='nostromo'] [data-cl='a'] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        inline-size: fit-content;
+        max-inline-size: 100%;
+    }
+
+    /* The bulkhead: hazard chevrons along the foot of the strip, each
+       figure on a riveted plate, the heads stencilled. */
+    [data-theme='nostromo'] [data-cl='b'] .kp-kpis {
+        --cl-strip-pad: 0 0 0.9rem;
+        --cl-strip-under: repeating-linear-gradient(-45deg, var(--warning) 0 8px, var(--foreground) 8px 16px) 0 100% / 100% 0.5rem no-repeat;
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-plate: var(--card);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 2px;
+        --cl-deco:
+            radial-gradient(circle, var(--cl-rule) 0 2px, transparent 2.5px) 6px 6px / 6px 6px no-repeat,
+            radial-gradient(circle, var(--cl-rule) 0 2px, transparent 2.5px) calc(100% - 6px) 6px / 6px 6px no-repeat;
+        --cl-font: var(--theme-font-mono);
+        --cl-label-font: var(--theme-font-mono);
+        --cl-num-font: var(--theme-font-mono);
+        --cl-label-weight: 800;
+        --cl-label-track: 0.03em;
+        --cl-delta-radius: 0;
+        --cl-load: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--warning) 25%, transparent) 0 8px, transparent 8px 16px) 0 0 / 46px 46px;
+        --cl-load-anim: cl-march 900ms linear infinite;
+    }
+
+    /* ══ titanium ══════════════════════════════════════════════════════════ */
+    /* The anodised bars: a brushed plate per figure with an anodised edge
+       in its column's colour. */
+    [data-theme='titanium'] [data-cl='a'] .kp-kpis {
+        --cl-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 3px);
+        --cl-frame: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+        --cl-radius: 3px;
+        --cl-shadow: inset 4px 0 0 var(--cl-hue);
+        --cl-pad: var(--kp-space-md, 1rem) var(--kp-space-md, 1rem) var(--kp-space-md, 1rem) 1.25rem;
+        --cl-label-caps: all-small-caps;
+        --cl-label-case: none;
+        --cl-label-size: 0.8125rem;
+        --cl-label-track: 0.03em;
+        --cl-num-font: var(--theme-font-mono);
+        --cl-num-fit: 12cqi;
+        --cl-delta-radius: 2px;
+        --cl-load: linear-gradient(var(--cl-hue), var(--cl-hue)) 0 -50% / 4px 30% no-repeat;
+        --cl-load-anim: cl-rise 1300ms linear infinite;
+    }
+
+    /* The machined bezels: each figure set behind a chamfered bezel with an
+       inner shadow, the columns cut from one plate. */
+    [data-theme='titanium'] [data-cl='b'] .kp-kpis {
+        --cl-gap: var(--kp-space-sm, 0.5rem);
+        --cl-plate: var(--background);
+        --cl-frame: 1px solid var(--cl-rule);
+        --cl-radius: 0;
+        --cl-clip: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+        --cl-deco:
+            linear-gradient(135deg, var(--cl-rule) 0 6px, transparent 6px) 0 0 / 9px 9px no-repeat,
+            linear-gradient(225deg, var(--cl-rule) 0 6px, transparent 6px) 100% 0 / 9px 9px no-repeat,
+            linear-gradient(45deg, var(--cl-rule) 0 6px, transparent 6px) 0 100% / 9px 9px no-repeat,
+            linear-gradient(315deg, var(--cl-rule) 0 6px, transparent 6px) 100% 100% / 9px 9px no-repeat;
+        --cl-label-caps: all-small-caps;
+        --cl-label-case: none;
+        --cl-label-size: 0.875rem;
+        --cl-num-font: var(--theme-font-mono);
+        --cl-num-fit: 11cqi;
+        --cl-num-pad: 0 0.35em;
+        --cl-num-bg: color-mix(in oklch, var(--foreground) 6%, var(--background));
+        --cl-num-frame: inset 0 2px 4px color-mix(in oklch, var(--foreground) 20%, transparent), inset 0 0 0 1px var(--cl-rule);
+        --cl-num-clip: polygon(
+            5px 0,
+            calc(100% - 5px) 0,
+            100% 5px,
+            100% calc(100% - 5px),
+            calc(100% - 5px) 100%,
+            5px 100%,
+            0 calc(100% - 5px),
+            0 5px
+        );
+        --cl-delta-radius: 0;
+        --cl-load: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0 1px, transparent 1px 3px) 0 0 / 30px
+            100%;
+        --cl-load-anim: cl-march 1200ms linear infinite;
+    }
+}
+
+/* ── Motion: only here, only while loading ───────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        :is([data-cl='a'], [data-cl='b']) .kp-kpis[aria-busy='true'] > .kp-kpi::after {
+            animation: var(--cl-load-anim, none);
+        }
+    }
+}
+
+@keyframes cl-slide {
+    from {
+        background-position-x: -50%;
+    }
+    to {
+        background-position-x: 150%;
+    }
+}
+
+@keyframes cl-glint {
+    from {
+        background-position-x: 150%;
+    }
+    to {
+        background-position-x: -50%;
+    }
+}
+
+@keyframes cl-march {
+    to {
+        background-position-x: 40px;
+    }
+}
+
+@keyframes cl-march-wide {
+    to {
+        background-position-x: 100%;
+    }
+}
+
+@keyframes cl-roll {
+    from {
+        background-position-y: -100%;
+    }
+    to {
+        background-position-y: 200%;
+    }
+}
+
+@keyframes cl-rise {
+    from {
+        background-position-y: 150%;
+    }
+    to {
+        background-position-y: -50%;
+    }
+}
+
+@keyframes cl-flap {
+    from {
+        background-position-y: 0;
+    }
+    to {
+        background-position-y: 100%;
+    }
+}
+
+@keyframes cl-pulse {
+    50% {
+        opacity: 0.35;
+    }
+}
+
+@keyframes cl-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes cl-stamp {
+    50% {
+        opacity: 0.2;
+    }
+}
+
+@keyframes cl-glitch {
+    0% {
+        background-position-x: 10%;
+    }
+    25% {
+        background-position-x: 70%;
+    }
+    50% {
+        background-position-x: 30%;
+    }
+    75% {
+        background-position-x: 90%;
+    }
+}
+
+@keyframes cl-fill {
+    to {
+        background-size: 100% 100%;
+    }
+}

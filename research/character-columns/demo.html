@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-columns">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a key-figure strip of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="columns.css" />
+    </head>
+    <body>
+        <main class="cl-page">
+            <header class="cl-intro">
+                <h1>A key-figure strip of its own, per theme</h1>
+                <p>
+                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
+                    chart, the month heatmap, the network graph and the trend tile comes the strip of key figures, one column per figure, its column
+                    count kept by <code>js/kpi.js</code>. Today <code>.kp-kpis</code> has the same shape in every theme (a card per figure in equal
+                    columns, the label in small capitals, the number, a line of words), drawn in the theme's colours only. Here every theme gets two
+                    strips of its own, drawn in the theme's own material, beside the plain strip as it is today. Pick one of the three per theme.
+                </p>
+                <p class="cl-motion" data-cl-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
+                    the system settings to judge the motion.
+                </p>
+                <p class="cl-meta">
+                    Each strip holds the key figures of pump house 1 at a fixed now (20/10/2026 14:40 in Brussels). The strips are the package's own:
+                    <code>attachKpiStrips()</code> picks the column count from the strip's own width (all, 3, 2 or 1, never one tile alone on a row);
+                    a character only restyles them from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>columns.css</code>),
+                    and keeps one height in every state. This theme: <b data-cl-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Under review is one variant of the key figure, the strip with
+                 its columns; the toggle tile, the meter and the trend tile are
+                 components of their own in the character round. -->
+            <section
+                class="cl-sec"
+                data-review-item="columns"
+                data-review-components="kpi--columns"
+                data-review-title="The key-figure strip"
+                aria-labelledby="h-columns"
+            >
+                <div class="cl-sec__head">
+                    <h2 id="h-columns">The key-figure strip in <span data-cl-theme-name>this theme</span></h2>
+                    <p>
+                        Two characters drawn in this theme's world, and the plain strip as it is today, each at desk width and at phone width. Use the
+                        buttons below for every state and every kind of strip: the columns stay equal and the strip keeps its height.
+                    </p>
+                </div>
+                <div class="cl-controls">
+                    <div class="cl-actions" role="group" aria-label="State of every strip">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="ready" aria-pressed="true">Drawn</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="empty" aria-pressed="false">Nothing to show</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-live>Live update (ten minutes later)</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="The figures in every strip">
+                        <b>Figures:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-data="five" aria-pressed="true">Five figures</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-data="long" aria-pressed="false">A long label</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-data="wide" aria-pressed="false">A wide value</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-data="many" aria-pressed="false">Many columns (eight)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-data="two" aria-pressed="false">Two columns</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="cl-trio">
+                    <div class="cl-col" data-cl="a" data-cl-pick="a">
+                        <div class="cl-words">
+                            <p class="cl-label"><span class="cl-label__no">Character 1</span> <span data-cl-name="a">…</span></p>
+                            <p class="cl-desc" data-cl-desc="a"></p>
+                        </div>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="all 3 2 1"
+                            role="group"
+                            aria-label="Pump house 1 right now"
+                            data-cl-strip="desk"
+                        ></div>
+                        <p class="cl-pane-name">At phone width (334 px):</p>
+                        <div class="cl-phone">
+                            <div
+                                class="kp-kpis"
+                                data-kp-kpis-columns="all 3 2 1"
+                                role="group"
+                                aria-label="Pump house 1 right now, phone width"
+                                data-cl-strip="phone"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="cl-col" data-cl="b" data-cl-pick="b">
+                        <div class="cl-words">
+                            <p class="cl-label"><span class="cl-label__no">Character 2</span> <span data-cl-name="b">…</span></p>
+                            <p class="cl-desc" data-cl-desc="b"></p>
+                        </div>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="all 3 2 1"
+                            role="group"
+                            aria-label="Pump house 1 right now"
+                            data-cl-strip="desk"
+                        ></div>
+                        <p class="cl-pane-name">At phone width (334 px):</p>
+                        <div class="cl-phone">
+                            <div
+                                class="kp-kpis"
+                                data-kp-kpis-columns="all 3 2 1"
+                                role="group"
+                                aria-label="Pump house 1 right now, phone width"
+                                data-cl-strip="phone"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="cl-col" data-cl="plain" data-cl-pick="plain">
+                        <div class="cl-words">
+                            <p class="cl-label"><span class="cl-label__no">Today</span> The plain strip</p>
+                            <p class="cl-desc">
+                                The package's strip as it ships: a card per figure in equal columns, the label in small capitals, the number with its
+                                unit, a line of words, grey skeletons while it loads; the same shape in every theme.
+                            </p>
+                        </div>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="all 3 2 1"
+                            role="group"
+                            aria-label="Pump house 1 right now"
+                            data-cl-strip="desk"
+                        ></div>
+                        <p class="cl-pane-name">At phone width (334 px):</p>
+                        <div class="cl-phone">
+                            <div
+                                class="kp-kpis"
+                                data-kp-kpis-columns="all 3 2 1"
+                                role="group"
+                                aria-label="Pump house 1 right now, phone width"
+                                data-cl-strip="phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -1,0 +1,133 @@
+/* The page: a centred column, and one section with its controls in one row
+   of groups and the three options under each other (character 1,
+   character 2, the plain strip of today), each holding the same strip of key
+   figures at desk width and under it at phone width. A strip is a
+   wide thing: side by side, three strips would have a third of the width
+   each and could never show many columns. The strips' own drawing is in
+   columns.css. */
+.cl-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 1536px;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.cl-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cl-intro h1,
+.cl-intro p {
+    margin: 0;
+}
+
+.cl-meta,
+.cl-motion {
+    color: var(--muted-foreground);
+}
+
+.cl-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-cl-state][aria-pressed='true'],
+[data-cl-data][aria-pressed='true'],
+[data-cl-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.cl-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.cl-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cl-sec__head h2,
+.cl-sec__head p {
+    margin: 0;
+}
+
+.cl-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* The three options, one under the other: the words, the strip at desk
+   width (the section's full width), and the same strip at phone width. */
+.cl-trio {
+    display: grid;
+    gap: var(--kp-space-2xl, 3rem);
+}
+
+.cl-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.cl-words {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    max-inline-size: 72rem;
+}
+
+.cl-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.cl-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cl-desc,
+.cl-pane-name {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.cl-pane-name {
+    margin-block: var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem);
+}
+
+/* The phone pane: the strip at 334 px, as on a 390 px phone with the
+   page's margins. */
+.cl-phone > .kp-kpis {
+    inline-size: 334px;
+    max-inline-size: 100%;
+}
+
+.cl-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 8px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
