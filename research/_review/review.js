@@ -21,7 +21,10 @@
 //     { "id": "space", "label": "When the space closes", "once": true, "options": […] }]'>
 //
 // A choice is asked per theme, or with `"once": true` a single time for the
-// whole demo (shown in every theme, the same answer everywhere). Approving
+// whole demo (shown in every theme, the same answer everywhere). A group may
+// carry `"default"`: one value, or { "<theme>": value }, ticked for the
+// reviewer and counted as answered until he picks otherwise (an approved
+// shape is not asked again; Kenny, 2026-10-05). Approving
 // needs every choice answered; ticking one fires `review:choice` on the
 // section ({ id, value }), so the demo can show what was picked.
 //
@@ -202,7 +205,10 @@ const verdictOf = (pair) => state[pair.key]?.verdict;
 const noteOf = (pair) => state[pair.key]?.note || '';
 /** Where a choice's answer is kept: on the pair, or once for the demo. */
 const onceKey = (item, choice) => `once|${item.id}|${choice.id}`;
-const choiceOf = (pair, choice) => (choice.once ? state[onceKey(pair.item, choice)]?.value : state[pair.key]?.choices?.[choice.id]) || '';
+/** A choice group's `default` (a value, or { theme: value }) counts as the answer until the reviewer picks otherwise. */
+const defaultOf = (pair, choice) => (typeof choice.default === 'object' && choice.default ? choice.default[pair.theme] : choice.default) || '';
+const choiceOf = (pair, choice) =>
+    (choice.once ? state[onceKey(pair.item, choice)]?.value : state[pair.key]?.choices?.[choice.id]) || defaultOf(pair, choice);
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
 const stepOpen = (step) => step.pairs.some(isOpen);

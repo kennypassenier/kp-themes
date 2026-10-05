@@ -1659,6 +1659,9 @@ section.setAttribute(
             id,
             label,
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+            // The shape Kenny approved in round 1 (and formal's shape 1, his
+            // 18:45 verdict) is ticked for him; he only ticks what is open.
+            ...(id === 'shape' ? { default: Object.fromEntries([...APPROVED, 'formal'].map((theme) => [theme, '1'])) } : {}),
         })),
     ),
 );
