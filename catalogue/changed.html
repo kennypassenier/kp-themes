@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>What changed · kp-themes catalogue</title>
+        <title>To judge · kp-themes catalogue</title>
         <link rel="stylesheet" href="./deps.css" />
     </head>
     <body>
@@ -15,17 +15,48 @@
         </header>
 
         <main id="main" class="cat-main">
-            <h1 data-cat-changed-title>What changed since my last verdicts</h1>
-            <p class="cat-intro">
-                Only the blocks that wait for a verdict in the theme on screen: never judged in it, judged on markup that changed since, an approval
-                whose pixels moved (catalogue/pixel-checks.json), or a block with a review note that asks for another look. Everything already judged
-                stays away, so this page is the shortest way through a round. Pick another theme in the menu and the page gathers that theme's blocks.
-            </p>
-            <p class="cat-intro">
-                The blocks are the same as on <a href="./index.html">Every component, one page</a>, with the same verdicts, notes, prompt and review
-                dialog. <b>Play</b> presses a block's try-buttons in turn; <b>K</b> lists the keys.
-            </p>
-            <div data-cat-compose="changed"></div>
+            <div class="cat-hub__head">
+                <div class="cat-hub__lead">
+                    <h1>To judge</h1>
+                    <p class="cat-intro">
+                        Everything that waits for your verdict, in one list and in the order to take it: the research demos first, then the catalogue
+                        blocks still open in the theme on screen. <b>Start</b> (<b>Continue</b> once you have begun) opens the first unfinished item;
+                        a demo opens its review dialog by itself, and once every theme in it is judged, one button copies the answer and brings you
+                        back here for the next one.
+                    </p>
+                </div>
+                <div class="cat-hub__go">
+                    <button type="button" class="kp-button kp-button--primary cat-hub__start" data-cat-hub-start disabled>Start</button>
+                    <p class="cat-note cat-hub__next" data-cat-hub-next>Opens the first item that still waits.</p>
+                </div>
+            </div>
+            <p class="cat-hub__totals" role="status" aria-live="polite" data-cat-hub-totals>Gathering what waits for a verdict…</p>
+
+            <section class="cat-hub__part" aria-labelledby="cat-hub-demos-title">
+                <h2 id="cat-hub-demos-title">1 · Research demos</h2>
+                <p class="cat-intro">
+                    First, because a demo decides how a component looks: the catalogue blocks of a component whose demo is still open would be judged
+                    again once the pick is built. Each demo walks its themes in one dialog; the state here is read from the same storage the dialog
+                    writes.
+                </p>
+                <ol class="cat-hub__list" data-cat-hub-demos></ol>
+                <details class="cat-hub__decided" data-cat-hub-decided hidden>
+                    <summary>Decided <span data-cat-hub-decided-count></span></summary>
+                    <p class="cat-note">Judged in every theme. Open one again to copy its answer or to change a verdict.</p>
+                    <ol class="cat-hub__list" data-cat-hub-decided-list></ol>
+                </details>
+            </section>
+
+            <section class="cat-hub__part" id="cat-hub-blocks" aria-labelledby="cat-hub-blocks-title">
+                <h2 id="cat-hub-blocks-title" data-cat-changed-title>2 · Catalogue blocks in this theme</h2>
+                <p class="cat-intro">
+                    Second: only the blocks that wait for a verdict in the theme on screen: never judged in it, judged on markup that changed since,
+                    an approval whose pixels moved, or a block with a review note that asks for another look. Pick another theme in the menu and the
+                    page gathers that theme's blocks. The blocks, verdicts, notes, prompt and review dialog are the same as on
+                    <a href="./index.html">Every component, one page</a>; <b>Play</b> presses a block's try-buttons in turn, <b>K</b> lists the keys.
+                </p>
+                <div data-cat-compose="changed"></div>
+            </section>
         </main>
 
         <script type="module" src="../js/auto.js"></script>

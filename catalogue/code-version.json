@@ -13,7 +13,7 @@
             "digest": "81975bb4c92dc2c7",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
-        "js/datatable.js": { "digest": "5fad0d90051a163a", "when": "[data-kp-datatable]" },
+        "js/datatable.js": { "digest": "08c5f76836c92e0b", "when": "[data-kp-datatable]" },
         "js/datepicker.js": { "digest": "4f5ec0d8a5274638", "when": "[data-kp-datepicker]" },
         "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/freshness.js": { "digest": "9d733e1e8379a795", "when": "[data-kp-ago]" },
@@ -23,7 +23,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "575b73e5195e0851", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "1dbb732a78097d4e",
+            "digest": "8c058aee3a1bb6c1",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },

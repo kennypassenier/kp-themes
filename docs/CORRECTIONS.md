@@ -5819,3 +5819,5 @@ component: whether a theme's own tile keeps the plates and the strip's
 column step, or draws its own; and when a strip without
 `data-kp-kpis-columns` holds a trend tile, which the column step does not
 reach (its tiles keep the package's auto-fit).
+
+**Approved by Kenny, 2026-10-05** (form v22: Klopt).

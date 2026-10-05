@@ -40,14 +40,31 @@
 // step, Left/Right move between steps outside a note, Escape closes. After the
 // last open step the dialog closes and the answer waits at the foot.
 //
-// Verdicts and notes live in this browser only (localStorage, per demo id);
-// the answer at the foot of the page is what reaches the conversation.
+// Verdicts and notes live in this browser only (localStorage, per demo id,
+// under progress.js storeKey(), which the hub reads too); the answer at the
+// foot of the page is what reaches the conversation.
+//
+// Opened from the hub (catalogue/changed.html, the one page Kenny starts
+// from), the address carries `?next=<hub>` and `review=open`: the dialog opens
+// by itself, the bar has a way back, and once everything is judged one button
+// copies the answer and returns to the hub, which opens the next item.
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
+import { storeKey } from './progress.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
-const STORE = `kp-demo-review:${DEMO}`;
+const STORE = storeKey(DEMO);
+const params = new URLSearchParams(location.search);
+/** Where to go once the demo is judged: the hub, on this site only. */
+const NEXT = (() => {
+    try {
+        const url = new URL(params.get('next') || '', location.href);
+        return params.has('next') && url.origin === location.origin ? url.href : '';
+    } catch {
+        return '';
+    }
+})();
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const ORDER = root.dataset.reviewThemes
     ? root.dataset.reviewThemes
@@ -209,6 +226,15 @@ bar.innerHTML = `
     <span class="rv-bar__spacer"></span>
     <button type="button" class="kp-button kp-button--primary" data-rv-open>Review in a dialog</button>
     <button type="button" class="kp-button" data-rv-copy>Copy answer</button>`;
+if (NEXT) {
+    const back = document.createElement('a');
+    back.className = 'kp-button kp-button--ghost';
+    back.href = NEXT;
+    back.setAttribute('data-rv-hub', '');
+    back.textContent = '← To judge';
+    back.title = 'Back to the list of everything waiting for a verdict';
+    bar.prepend(back);
+}
 // Inside the page's main column: on a page the catalogue shell wraps, the body
 // is a grid and a bar beside main would become a cell of its own.
 main.prepend(bar);
@@ -222,6 +248,7 @@ foot.innerHTML = `
     <pre class="rv-answer__text" data-rv-answer></pre>
     <p class="rv-answer__actions">
         <button type="button" class="kp-button" data-rv-copy>Copy answer</button>
+        <button type="button" class="kp-button kp-button--primary" data-rv-next hidden>Copy answer, on to the next item</button>
         <button type="button" class="kp-button kp-button--ghost" data-rv-clear>Clear all verdicts</button>
         <span class="rv-meta" role="status" aria-live="polite" data-rv-status></span>
     </p>`;
@@ -266,29 +293,39 @@ function render() {
             ? 'Look again in the dialog'
             : 'Continue in the dialog'
         : 'Review in a dialog';
+    nextButton.hidden = !NEXT || judged < pairs.length;
 }
 
 const say = (message) => {
     foot.querySelector('[data-rv-status]').textContent = message;
 };
 
-for (const copy of document.querySelectorAll('[data-rv-copy]')) {
-    copy.addEventListener('click', async () => {
-        const { text } = answer();
-        try {
-            await navigator.clipboard.writeText(text);
-            say('Copied. Paste it into the conversation.');
-        } catch {
-            const pre = foot.querySelector('[data-rv-answer]');
-            pre.scrollIntoView({ block: 'center' });
-            const range = document.createRange();
-            range.selectNodeContents(pre);
-            getSelection()?.removeAllRanges();
-            getSelection()?.addRange(range);
-            say('Selected. Press Ctrl+C to copy.');
-        }
-    });
+/** Copy the answer; true when it reached the clipboard, else it is selected. */
+async function copyAnswer() {
+    const { text } = answer();
+    try {
+        await navigator.clipboard.writeText(text);
+        say('Copied. Paste it into the conversation.');
+        return true;
+    } catch {
+        const pre = foot.querySelector('[data-rv-answer]');
+        pre.scrollIntoView({ block: 'center' });
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        getSelection()?.removeAllRanges();
+        getSelection()?.addRange(range);
+        say('Selected. Press Ctrl+C to copy.');
+        return false;
+    }
 }
+for (const copy of document.querySelectorAll('[data-rv-copy]')) copy.addEventListener('click', copyAnswer);
+
+// The hand-off to the hub: shown once nothing is open; a copy that only
+// selected the text stays here, so the answer is not lost on the way.
+const nextButton = foot.querySelector('[data-rv-next]');
+nextButton.addEventListener('click', async () => {
+    if (await copyAnswer()) location.assign(NEXT);
+});
 
 foot.querySelector('[data-rv-clear]').addEventListener('click', () => {
     if (!confirm('Clear every verdict and note on this demo, in every theme?')) return;
@@ -547,7 +584,12 @@ function approveStep() {
     if (next < 0) {
         dialog.close();
         foot.scrollIntoView({ block: 'start' });
-        say('Everything is judged. Copy the answer and paste it into the conversation.');
+        say(
+            NEXT
+                ? 'Everything is judged. Copy the answer on to the next item, then paste it into the conversation.'
+                : 'Everything is judged. Copy the answer and paste it into the conversation.',
+        );
+        if (NEXT) nextButton.focus();
     } else show(next);
 }
 
@@ -594,3 +636,5 @@ window.addEventListener('storage', (event) => {
 });
 
 render();
+// From the hub, the dialog opens at the first open step by itself.
+if (NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();

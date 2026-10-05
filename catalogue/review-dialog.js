@@ -114,7 +114,8 @@ export function mountReviewDialog({ items, record, refresh, themeOf, hashOf, ref
     const bar = document.querySelector('.cat-bar');
     const opener = document.createElement('button');
     opener.type = 'button';
-    opener.className = 'kp-button kp-button--primary';
+    // On the hub (changed.html) Start is the one primary button; this opener steps back.
+    opener.className = document.querySelector('[data-cat-hub-start]') ? 'kp-button' : 'kp-button kp-button--primary';
     opener.setAttribute('data-cat-dialog-open', '');
     opener.textContent = 'Review in a dialog';
     const spacer = bar?.querySelector('.cat-bar__spacer');

@@ -11,7 +11,7 @@ export const PAGES = [
         group: 'Review',
         pages: [
             { href: 'catalogue/index.html', label: 'Every component, one page' },
-            { href: 'catalogue/changed.html', label: 'What changed since my last verdicts' },
+            { href: 'catalogue/changed.html', label: 'To judge: start here' },
             { href: 'catalogue/compare.html', label: 'Compare two themes' },
         ],
     },

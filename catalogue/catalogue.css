@@ -1041,4 +1041,113 @@
         border-inline-start: 3px solid var(--success-foreground, var(--primary));
         background: var(--muted);
     }
+
+    /* "To judge" (changed.html): the one page Kenny starts from. A head with
+       the lead on the left and Start on the right; the demos as rows whose
+       title, state and button share three columns from row to row (subgrid),
+       stacked on a phone. */
+    .cat-hub__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(12rem, max-content);
+        gap: var(--kp-space-md) var(--kp-space-xl);
+        align-items: end;
+    }
+
+    .cat-hub__go {
+        display: grid;
+        gap: var(--kp-space-xs);
+        justify-items: stretch;
+    }
+
+    .cat-hub__next {
+        margin: 0;
+        max-inline-size: 22rem;
+    }
+
+    .cat-hub__totals {
+        margin-block: var(--kp-space-lg) 0;
+        padding-block: var(--kp-space-sm);
+        border-block: 1px solid var(--border);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .cat-hub__part {
+        margin-block-start: var(--kp-space-2xl);
+    }
+
+    .cat-hub__list {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) max-content max-content;
+        gap: 0 var(--kp-space-lg);
+        margin: var(--kp-space-md) 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .cat-hub__row,
+    .cat-hub__list > .cat-changed-done {
+        grid-column: 1 / -1;
+    }
+
+    .cat-hub__row {
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        padding-block: var(--kp-space-md);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .cat-hub__title {
+        margin: 0;
+        font-size: 1.05rem;
+    }
+
+    .cat-hub__ask {
+        margin: var(--kp-space-xs) 0 0;
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
+    }
+
+    .cat-hub__state {
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .cat-hub__open {
+        justify-self: stretch;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .cat-hub__decided {
+        margin-block-start: var(--kp-space-lg);
+    }
+
+    .cat-hub__decided > summary {
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    @media (max-width: 40rem) {
+        .cat-hub__head {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .cat-hub__next {
+            max-inline-size: none;
+        }
+
+        /* A row stacks: what it is on top, its state and its button under it. */
+        .cat-hub__list {
+            grid-template-columns: minmax(0, 1fr) max-content;
+        }
+
+        .cat-hub__row {
+            row-gap: var(--kp-space-sm);
+        }
+
+        .cat-hub__what {
+            grid-column: 1 / -1;
+        }
+    }
 }

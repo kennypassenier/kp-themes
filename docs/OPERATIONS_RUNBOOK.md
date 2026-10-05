@@ -893,7 +893,7 @@ steps only remove clicks.
 
 ### Procedure 9.1 — judge what is open
 
-1. Open **What changed since my last verdicts** (`catalogue/changed.html`).
+1. Open **To judge: start here** (`catalogue/changed.html`).
    It gathers only the blocks open in the theme on screen — never judged,
    judged on markup that changed, an approval whose pixels moved
    (`catalogue/pixel-checks.json`), or a review note asking again — page by
