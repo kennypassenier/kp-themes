@@ -748,8 +748,12 @@ dialog.addEventListener('keydown', (event) => {
         dialog.close();
         return;
     }
-    // Inside a note the arrows move the caret.
-    if (/** @type {HTMLElement} */ (event.target).matches('textarea')) return;
+    // Inside a note the arrows move the caret. Inside the demo on stage and
+    // its mirrored controls they scroll, walk a chart or move a day; there
+    // the step keys stay off, so a key meant for the demo never approves or
+    // switches the theme [fix-103].
+    const from = /** @type {HTMLElement} */ (event.target);
+    if (event.defaultPrevented || from.matches('textarea') || stage.contains(from) || controlsBox.contains(from)) return;
     if (event.key === 'ArrowUp') {
         event.preventDefault();
         approveStep();
