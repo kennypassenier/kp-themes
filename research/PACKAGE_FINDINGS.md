@@ -1,0 +1,19 @@
+- sepia: every .kp-button has scrollWidth 12 px above clientWidth (sepia register, also without any demo CSS; formal fine). Check for a cut label; candidate correction.
+- chart: lapis and nostromo plain tooltip swatch under 3:1 against the popover; high-contrast info/warning event tones are white on white paper.
+- strip: a stamp arrival scales the figure past its tile for 200-450 ms (demo only).
+- calendar: the plain calendar needs 322-352 px; in a 334 px pane it overflows in every theme (package minimum day width).
+- attention: the plain band item hairline (var(--border)) reads 1.1-1.4:1 against the plate in every theme.
+- menu: in pastel the longest menu hint ("Stop and start both pumps, one after the other.") wraps to two lines in the plain menu (package/pastel font), also without demo CSS.
+- kpi: the plain key-figure tile changes height between ready and loading (formal 103.7 to 112.2 px): the skeleton replaces value and trend with a different height.
+- actions: in synthwave every row button in the plain action list is about 4 px too narrow (Rajdhani versus the column width js/actions.js measures): labels cut, also without demo CSS.
+- actions: dark --border-strong reads 2.11:1 against the panel (known DI1 finding for dark).
+- dark --border-strong itself reads ~2.1:1 against card/panel plates (DI1 finding, dark and titanium).
+- menu: the plain destructive menu label (var(--destructive) on --popover) reads under 4.5:1 in solstice 3.74, deco 3.88, phantom 4.32.
+- actions: button labels "Open" (high-contrast) and "Acknowledge"/"Open" (sepia, blueprint) overflow their button in height in the plain action list (scrollHeight > clientHeight), also without demo CSS.
+- SYNTHWAVE BUTTONS (important): .kp-button labels are cut in synthwave in general (scrollWidth > clientWidth), e.g. "Export readings", "Schedule a visit", "More ▾" in the plain page header, also the action list; Rajdhani metrics versus the button box. Same class as the sepia 12 px button overflow.
+- state word: plain dots in --success / --warning read ~1.0-2.9:1 against the card in retro and lapis (and others per group b); the package dot should use the -foreground ink or a ring.
+- datatable busy overlay: drawOverlay() removes the overlay synchronously and the failed alert toggles [hidden] (display:none !important), so no leave can play; arrival works. A mirrored leave needs a leave() hand-off in js/datatable.js (package finding, Kenny rule: opposites mirror).
+- tiles: plain .kp-card edge under 3:1 in light, cyberpunk, synthwave, pastel, titanium (2.58), nostromo; evenTileSet() floors per redraw, so a tile changes height between ready/loading/empty/error (10-25 px).
+- kpi: the plain tile edge reads ~1.2-2.3:1; lapis good/bad delta 3.96:1 on the plain tile (.kp-kpi__delta[data-kp-tone]).
+- menu: plain destructive/disabled-reason ink under 4.5:1 in nine themes (cyberpunk, synthwave, sepia, blueprint, solstice, deco, phantom, lapis, titanium); --border-strong under 3:1 against the popover in formal 2.97, dark 2.11, titanium 1.97.
+- drawer: .kp-drawer__head / foot divider is var(--border) (under 3:1) in the package.
