@@ -5609,6 +5609,9 @@ in docs/MINI_ROUNDS.md.
 component: whether a theme's own tooltip keeps the knob and the ring, or
 draws its own.
 
+**Approved by Kenny, 2026-10-05** (form v21: Klopt).
+
+
 ## fix-98 · The month heatmap: a ring that hid, dimmed figures, a wrapping title (2026-10-05)
 
 **1 · What went wrong.** The character-calendar demo showed five faults of
@@ -5695,3 +5698,124 @@ nav goes on two rows in every theme below the widest theme's width.
 component: whether a theme's own calendar keeps the knob and the ring, or
 draws its own; and when a locale with longer month names or button
 labels is used, since the twelve values are measured in English.
+
+**Approved by Kenny, 2026-10-05** (form v21: Klopt).
+
+
+## fix-99 · The trend tile: a figure and a change on half a pair, a label that moved the tile (2026-10-05)
+
+**1 · What went wrong.** The character-trend demo's measurement showed
+three faults of the plain trend tile (`.kp-kpi--trend`, scope-143). The
+figure in the warning tone was coloured `--warning-foreground` on the
+card, half a status pair (fix-70): 1.00:1 in high-contrast, 1.04:1 in
+shade-light, 1.27:1 in shade-dark, 1.17:1 in nostromo; the figure in the
+destructive tone `--destructive` on the card, 4.11:1 (solstice) to 4.47:1
+(synthwave) in six themes (synthwave, blueprint, solstice, deco, lapis,
+shade-dark). The change (`.kp-kpi__delta`) was the same:
+`--success-foreground` on the card read 1.00:1 in high-contrast,
+shade-light and grotesk, 1.25:1 in shade-dark, 1.17:1 in nostromo, 1.45:1
+in retro, and `--destructive` on the card 4.11:1 (solstice) to 4.47:1
+(synthwave). And the label wrapped between words, so a longer label made
+its tile taller: in retro the demo's long label ("Pressure, far end of the
+ring · avg 15 min") went from one line to two and the tile from 187.2 to
+205.2 px; on catalogue/data.html#kpi-trend it took three lines in terminal
+and deco (205.2 to 223.2 px wide, 224.7 to 242.7 px in terminal's phone
+pane). The inks were taken from the alert's tokens without the plate under
+them; the label's height was judged with the catalogue's own labels in
+formal only; and a wrapping label broke Kenny's rule that a label never
+wraps and is never cut.
+
+**2 · Which gate let it through.** `gates/check-contrast.mjs` holds the
+status pairs on their own plates, not a half on the card; the
+severity-contrast tests read alerts and toasts, not the key figure.
+tests/kpi-trend.spec.mjs checks one height per strip and state, and that
+a label is never cut, but in formal and with the catalogue's labels only;
+nothing swept the tile across themes or put a longer label in it.
+
+**3 · Where else the same fault sits.** A text ink that is half a pair:
+`grep -n "color: var(--\(success\|warning\|info\|destructive\)-foreground)" css/components.css`
+finds 25; `grep -n -B4 "color: var(--\(success\|warning\|info\)-foreground)" css/components.css | grep -v "background\|^--$" | grep "{"`
+leaves, besides the two fixed here, none without its plate (the chart's
+change, the log's level, the copied button and the calendar's swatch
+carry the pair). `grep -n "color: var(--destructive);" css/components.css`
+finds 17, among them the key figure in the destructive tone
+(`.kp-kpi[data-kp-tone='destructive'] .kp-kpi__value`), measured here at
+4.11:1 (solstice) to 4.47:1 (synthwave) in six themes and fixed here with
+the warning figure. Non-text halves:
+`grep -n "var(--\(success\|warning\|info\)-foreground)" css/components.css | grep -v "color: var"`
+finds nine marks (the warning tile's stripe, the meter's fill, the
+chart's tone and event line, the attention band's tone), held at 3:1, not
+measured here. A label that wraps and moves its box: the trend tile's
+alone; the plain `.kp-kpi__label` is one line with an ellipsis, and wraps
+only in a narrow tile.
+
+**4 · How we prevent recurrence.** The change with a tone carries its
+pair: `--success` under `--success-foreground`, `--destructive` under
+`--destructive-foreground`, with inline padding only so the line keeps
+its height (4.51:1 or more, forest lowest). The figure in a tone sits on
+that tone's pair, one rule for every tone (the plate hugging the figure,
+`justify-self: start`, its unit and note in the plate's ink) and one
+line per tone naming the pair: warning on `--warning` in
+`--warning-foreground`, 4.55:1 or more (shade-light lowest; formal takes
+the same twentieth of `--foreground` in that ink as its warning alert,
+4.78:1), destructive on `--destructive` in `--destructive-foreground`,
+4.79:1 or more (deco lowest; solstice 4.11 to 5.00:1). The trend tile's
+label follows Kenny's rule, one line, never wrapped and never cut: it is
+`nowrap`, steps down with the tile's width like the calendar's title in
+fix-98 (`clamp(0.875 × --kp-text-xs, 5cqi, --kp-text-xs)`, 10.5 to 12 px),
+and where it still does not fit, the tile grows to it. The tile is a size
+container (its container queries and the label's `cqi`), so its content
+cannot widen it from CSS: `min-inline-size: fit-content` and a
+`minmax(max-content, 1fr)` track both left it at 228.5 px with the label
+over its edge, measured. So the strip does it: `fitKpiStrip()`
+(js/kpi.js) takes the next allowed column count while a trend label does
+not fit its tile, every tile in the row the same width, and fits again on
+a theme change and when fonts load. Measured in Firefox before (the
+working tree as fix-99 left it) and after on catalogue/data.html#kpi-trend,
+22 themes, wide and in the 334 px phone pane, with the catalogue's labels
+and the long label put in the first tile: every label one line and uncut,
+no tile or strip over its edge, one height per strip. Plus the third test
+in tests/kpi-trend.spec.mjs: in 22 themes, wide and phone, the warning and
+destructive figures and both changes at 4.5:1 or more and every label one
+line, `nowrap`, uncut, the tiles one height; run by its own logic in
+Firefox, 364 misses on the old CSS (352 label lines, 12 destructive
+figures), none on the new.
+
+**5 · What the remedy costs.** No knob (AR21 count 314, read count 311),
+five rules and two longer comments in components.css, one rule in
+formal-register.css, about twenty lines in js/kpi.js, one test of about
+120 lines. Where a label needs it the strip has fewer, wider tiles: on the
+catalogue's trend strip (four tiles, columns "4 2 1") the catalogue's own
+labels ("Flow into the network · avg 15 min") take two columns of 469 px
+(terminal 451, retro 473) in 16 themes, where it was four of 228.5 px;
+cyberpunk, synthwave, phantom, shade-light, shade-dark and nostromo keep
+four at 228.5 px with the label at 10.5 px (nostromo's second strip takes
+two); the long label takes two columns in every theme; the phone pane
+goes from two columns of 174 px to one of 360 px, so the narrow tile with
+↗ alone in its corner no longer shows there (E7.4's corner assert holds
+for a tile of 12rem or less). The tiles are lower: 187.2 px (184.9 to
+185.0 at four columns), were 205.2 px (223.2 in terminal and deco, 242.7 in
+terminal's second strip and in every phone pane). The figures and the
+change are plates (a new look, to judge).
+
+**6 · Who enforces it.** Code: the assert in tests/kpi-trend.spec.mjs, at
+the 9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next judging of the trend block in each
+theme: the warning figure and the changes readable on their plates, and
+the tiles one height with a long label. Queued as fix-99-M1 in
+docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** The figure and the change
+take `--card-foreground` (fix-70's quieter answer) and the tone is told
+by the stripe and the arrow alone; and if a strip of fewer, wider tiles
+reads worse than the label rule is worth, the label's floor goes down a
+step or the link's corner gives up its word earlier, before any label
+wraps.
+
+**9 · When we review the measure.** At the character round's trend
+component: whether a theme's own tile keeps the plates and the strip's
+column step, or draws its own; and when a strip without
+`data-kp-kpis-columns` holds a trend tile, which the column step does not
+reach (its tiles keep the package's auto-fit).

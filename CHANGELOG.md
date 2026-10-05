@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- **The trend tile: a figure and a change on half a pair, a label that
+  moved the tile** [fix-99, 2026-10-05]: a key figure's change with a tone
+  carries its status pair (`--success` under `--success-foreground`,
+  `--destructive` under `--destructive-foreground`), 4.51:1 or more in all
+  22 themes (was 1.00:1 in high-contrast, shade-light and grotesk, 4.11:1
+  in solstice); the figure in a tone sits on that tone's pair, one rule for
+  both tones, the plate hugging the figure with its unit and note in the
+  plate's ink: warning 4.55:1 or more (was 1.00:1 in high-contrast, 1.04:1
+  in shade-light), destructive 4.79:1 or more (was 4.11:1 in solstice to
+  4.47:1 in synthwave, six themes under 4.5:1); and the trend tile's label
+  is one line, never wrapped and never cut: it steps down with the tile's
+  width (`--kp-text-xs` to seven eighths of it, `5cqi`), and where it still
+  does not fit, the strip (`attachKpiStrips()`) takes its next allowed
+  column count, so the tile grows to its label and the row stays aligned
+  (the catalogue's trend strip: two columns of 469 px in 16 themes, four of
+  228.5 px in six; the phone pane one column of 360 px; tiles 187.2 px
+  tall, were 205.2 to 242.7 px).
 - **The month heatmap: a ring that hid, dimmed figures, a wrapping title**
   [fix-98, 2026-10-05]: today's ring is drawn in the day's own ink
   (`currentColor`), 4.51:1 or more on every tone in all 22 themes (was

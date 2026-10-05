@@ -5453,12 +5453,24 @@
         white-space: nowrap;
     }
 
+    /* A change with a tone carries its status pair, the plate and its own
+ * ink, never one half on the card [fix-70, fix-99]: as an ink alone
+ * `--success-foreground` read 1.00:1 in high-contrast, shade-light and
+ * grotesk, `--destructive` 4.11:1 in solstice. Inline padding only, so the
+ * line keeps its height. */
+    .kp-kpi__delta[data-kp-tone] {
+        padding-inline: 0.3em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
     .kp-kpi__delta[data-kp-tone='good'] {
+        background: var(--success);
         color: var(--success-foreground);
     }
 
     .kp-kpi__delta[data-kp-tone='bad'] {
-        color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 
     .kp-kpi__delta[data-kp-direction='up']::before {
@@ -5496,8 +5508,30 @@
         box-shadow: inset 3px 0 0 var(--warning-foreground);
     }
 
+    /* The figure in a tone sits on that tone's status pair, the plate and
+ * its own ink, one rule for every tone [fix-70, fix-99]: as an ink alone on
+ * the card `--warning-foreground` read 1.00:1 in high-contrast and 1.04:1
+ * in shade-light, `--destructive` 4.11:1 in solstice to 4.47:1 in
+ * synthwave. The plate hugs the figure (its unit and note take the plate's
+ * ink too); inline padding only, so the line keeps its height. */
+    .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        justify-self: start;
+        padding-inline: 0.25em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: inherit;
+    }
+
     .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
+        background: var(--warning);
         color: var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='destructive'] .kp-kpi__value {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 
     .kp-kpi[data-kp-tone='warning'] {
@@ -5508,10 +5542,6 @@
         --kp-kpi-meter-fill: var(--destructive);
         border-color: color-mix(in oklab, var(--destructive) 55%, var(--border));
         box-shadow: inset 3px 0 0 var(--destructive);
-    }
-
-    .kp-kpi[data-kp-tone='destructive'] .kp-kpi__value {
-        color: var(--destructive);
     }
 
     /* A tile that is a link to its detail, or a filter toggle on this page. */
@@ -5810,21 +5840,22 @@
         outline-offset: 2px;
     }
 
-    /* The label wraps between words and is never cut: its first line keeps
- * clear of the link in the corner (a float as tall as one line, so the
- * lines under it take the tile's whole width), and the note moves to the
- * next line as one unit when it does not fit beside the name. */
+    /* The label is one line, never wrapped and never cut [fix-99]: the
+ * name and its note stay on the tile's first line, clear of the link in
+ * the corner, and step down with the tile's width (container query units,
+ * from `--kp-text-xs` to seven eighths of it, as the calendar's title does
+ * [fix-98]). Where it still does not fit, the tile grows: attachKpiStrips()
+ * (js/kpi.js) takes the strip to its next allowed column count until every
+ * trend label fits. The tile is a size container, so its content cannot
+ * widen it from CSS: `min-inline-size: fit-content` and a `max-content`
+ * track both left it at 228.5 px with the label over its edge. */
     .kp-kpi--trend > .kp-kpi__label {
+        min-inline-size: 0;
+        padding-inline-end: 4.5rem;
         overflow: visible;
+        font-size: clamp(calc(var(--kp-text-xs, 0.75rem) * 0.875), 5cqi, var(--kp-text-xs, 0.75rem));
         text-overflow: clip;
-        white-space: normal;
-    }
-
-    .kp-kpi--trend > .kp-kpi__label::before {
-        content: '';
-        float: inline-end;
-        inline-size: 4.5rem;
-        block-size: 1lh;
+        white-space: nowrap;
     }
 
     /* Every state as tall as filled: the value line keeps its height under
@@ -5885,8 +5916,8 @@
             white-space: nowrap;
         }
 
-        .kp-kpi--trend > .kp-kpi__label::before {
-            inline-size: 1.5rem;
+        .kp-kpi--trend > .kp-kpi__label {
+            padding-inline-end: 1.5rem;
         }
 
         .kp-kpi--trend > .kp-kpi__trend {
@@ -50213,6 +50244,12 @@
        [fix-98]: its count read 4.51:1 by the tokens and 4.44:1 on screen,
        under the paper grain; 4.78:1 by the tokens now. */
     [data-theme='formal'] .kp-calendar__day[data-kp-tone='warn'] {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
+    /* A key figure in the warning tone, the same plate and the same nudge
+       [fix-99]: 4.51:1 by the tokens, under the paper grain on screen. */
+    [data-theme='formal'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
         color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
     }
 

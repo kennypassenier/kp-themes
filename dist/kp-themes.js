@@ -13141,6 +13141,9 @@ function lengthPx(el2, text, fallback2) {
   if (m[2] === "em") return n * parseFloat(view?.getComputedStyle(el2).fontSize || "16");
   return n;
 }
+function trendLabelsFit(strip) {
+  return [...strip.querySelectorAll(TREND_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
+}
 function fitKpiStrip(strip, width) {
   const view = strip.ownerDocument.defaultView;
   if (!view) return;
@@ -13149,13 +13152,17 @@ function fitKpiStrip(strip, width) {
   if (!(inner > 0)) return;
   const n = [...strip.children].filter((tile) => !/** @type {HTMLElement} */
   tile.hidden).length;
-  const { columns, spanLast } = kpiColumns(n, inner, {
-    allowed: strip.getAttribute("data-kp-kpis-columns") || "all 3 2 1",
-    minTilePx: lengthPx(strip, style.getPropertyValue("--kp-kpi-min"), 144),
-    gapPx: parseFloat(style.columnGap) || 0
-  });
-  strip.style.setProperty("--kp-kpis-columns", String(columns));
-  strip.toggleAttribute("data-kp-kpis-span-last", spanLast);
+  const allowed = strip.getAttribute("data-kp-kpis-columns") || "all 3 2 1";
+  const gapPx = parseFloat(style.columnGap) || 0;
+  let minTilePx = lengthPx(strip, style.getPropertyValue("--kp-kpi-min"), 144);
+  for (let last = Infinity; ; ) {
+    const { columns, spanLast } = kpiColumns(n, inner, { allowed, minTilePx, gapPx });
+    strip.style.setProperty("--kp-kpis-columns", String(columns));
+    strip.toggleAttribute("data-kp-kpis-span-last", spanLast);
+    if (columns <= 1 || columns >= last || trendLabelsFit(strip)) return;
+    last = columns;
+    minTilePx = (inner - (columns - 1) * gapPx) / columns + 1;
+  }
 }
 function attachKpiStrips(root = document) {
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
@@ -13195,14 +13202,17 @@ function attachKpiStrips(root = document) {
     subtree: true,
     childList: true,
     attributes: true,
-    attributeFilter: ["hidden", "data-kp-kpis-columns"]
+    // A theme's type changes how wide a trend label is [fix-99].
+    attributeFilter: ["hidden", "data-kp-kpis-columns", "data-theme"]
   });
+  doc.fonts?.addEventListener("loadingdone", scan);
   return () => {
     sizes.disconnect();
     changes.disconnect();
+    doc.fonts?.removeEventListener("loadingdone", scan);
   };
 }
-var SPARK, numbersIn, KPI_TOGGLE, KPI_TOGGLE_EVENT, FLIPPED, METER, KPI_STRIP;
+var SPARK, numbersIn, KPI_TOGGLE, KPI_TOGGLE_EVENT, FLIPPED, METER, KPI_STRIP, TREND_LABEL;
 var init_kpi = __esm({
   "js/kpi.js"() {
     "use strict";
@@ -13214,6 +13224,7 @@ var init_kpi = __esm({
     FLIPPED = /* @__PURE__ */ new WeakSet();
     METER = ".kp-meter, .kp-kpi__meter";
     KPI_STRIP = ".kp-kpis[data-kp-kpis-columns]";
+    TREND_LABEL = ":scope > .kp-kpi--trend:not([hidden]) > .kp-kpi__label";
   }
 });
 

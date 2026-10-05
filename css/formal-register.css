@@ -558,6 +558,12 @@
         color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
     }
 
+    /* A key figure in the warning tone, the same plate and the same nudge
+       [fix-99]: 4.51:1 by the tokens, under the paper grain on screen. */
+    [data-theme='formal'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='formal'] .kp-toasts {
         gap: var(--kp-space-sm);
     }

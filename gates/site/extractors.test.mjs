@@ -270,6 +270,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-97 added --kp-chart-delta-width, the floor of the tooltip's change column: 312 + 1.
     // fix-98 added --kp-calendar-nav-fit, the width below which the month heatmap's
     // title takes a row of its own: 313 + 1.
+    // fix-99 added --kp-kpi-trend-label-lines and its correction took it out
+    // again (a label is one line; the tile grows to it): 314.
     assert.equal(result.expected, 314, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
@@ -318,6 +320,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the deco review round's three: 305 + 3. And the motion-symmetry
     // round's --kp-sidenav-ease-back: 308 + 1. And fix-97's
     // --kp-chart-delta-width: 309 + 1. And fix-98's --kp-calendar-nav-fit: 310 + 1.
+    // fix-99's --kp-kpi-trend-label-lines came and went: 311.
     assert.equal(result.readCount, 311);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].

@@ -9,6 +9,7 @@
 // axis readout option is gone), with the README's fallback for a chip too
 // wide for the trend.
 import { expect, test } from '@playwright/test';
+import { ALL_THEMES } from './helpers/sweep-themes.mjs';
 
 const PAGE = '/catalogue/data.html#kpi-trend';
 /** 04/10/2026 14:40 in Brussels. */
@@ -184,6 +185,130 @@ test(
         expect(at.value).toMatch(/\d bar$/);
         expect(at).toMatchObject({ inside: true, cut: false });
         expect(at.height).toBeCloseTo(before, 1);
-        expect(await page.locator(`${narrow} .kp-kpi__link-word`).evaluate((w) => w.getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+        // The corner says ↗ alone in a tile of 12rem or less; the phone pane's tiles are wider since a
+        // label never wraps and the strip takes one column to hold it [fix-99].
+        const corner = await page.locator(narrow).evaluate((t) => ({
+            narrow: t.getBoundingClientRect().width <= 12 * parseFloat(getComputedStyle(document.documentElement).fontSize),
+            word: /** @type {HTMLElement} */ (t.querySelector('.kp-kpi__link-word')).getBoundingClientRect().width,
+        }));
+        if (corner.narrow) expect(corner.word).toBeLessThanOrEqual(1);
+    },
+);
+
+test(
+    'in 22 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
+    { tag: ['@component:data'] },
+    async ({ page }) => {
+        await ready(page);
+        // fix-99: the warning tone's figure sat on --warning-foreground alone
+        // (1.00:1 in high-contrast, 1.04:1 in shade-light), the destructive
+        // tone's on --destructive alone (4.11:1 in solstice to 4.47:1 in
+        // synthwave), the change on --success-foreground or --destructive
+        // alone (1.00:1 in three themes, 4.11:1 in solstice); and the label
+        // wrapped, so a longer one made its tile taller. A label is one line
+        // and never cut (Kenny's rule): where it does not fit, the strip takes
+        // fewer columns and the tile grows to it.
+        const misses = [];
+        for (const theme of ALL_THEMES) {
+            await page.evaluate((t) => {
+                document.documentElement.dataset.theme = t;
+            }, theme);
+            await page.evaluate(() => document.fonts.ready);
+            for (const strip of ['main', 'phone']) {
+                /** Every trend label in the strip one line and uncut, every tile uncut, one height. @param {boolean} long */
+                const labels = (long) =>
+                    page.locator(`[data-cat-trend-strip="${strip}"]`).evaluate(async (s, long) => {
+                        const label = /** @type {HTMLElement} */ (s.querySelector(':scope > .kp-kpi .kp-kpi__label'));
+                        const keep = label.innerHTML;
+                        if (long) label.innerHTML = 'Pressure, far end of the ring <span class="kp-kpi__label-note">avg 15 min</span>';
+                        // The strip takes its column count again on the next frame.
+                        await new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+                        const tiles = /** @type {HTMLElement[]} */ ([...s.querySelectorAll(':scope > .kp-kpi')]);
+                        const out = tiles.map((tile) => {
+                            const l = /** @type {HTMLElement} */ (tile.querySelector('.kp-kpi__label'));
+                            const r = document.createRange();
+                            r.selectNodeContents(l);
+                            return {
+                                lines: new Set([...r.getClientRects()].filter((b) => b.width > 0).map((b) => Math.round(b.top))).size,
+                                nowrap: getComputedStyle(l).whiteSpace === 'nowrap',
+                                cut: l.scrollWidth > l.clientWidth + 0.5 || tile.scrollWidth > tile.clientWidth + 0.5,
+                                height: Math.round(tile.getBoundingClientRect().height * 10) / 10,
+                            };
+                        });
+                        label.innerHTML = keep;
+                        return { out, over: s.scrollWidth > s.clientWidth + 0.5 };
+                    }, long);
+                for (const long of [false, true]) {
+                    const { out, over } = await labels(long);
+                    const at = `${theme} ${strip}${long ? ' (long label)' : ''}`;
+                    if (over) misses.push(`${at}: the strip overflows`);
+                    out.forEach((t, i) => {
+                        if (t.lines !== 1 || !t.nowrap) misses.push(`${at}: label ${i + 1} on ${t.lines} lines`);
+                        if (t.cut) misses.push(`${at}: label ${i + 1} or its tile cut`);
+                    });
+                    const hs = out.map((t) => t.height);
+                    if (Math.max(...hs) - Math.min(...hs) > 0.5) misses.push(`${at}: tiles of ${Math.min(...hs)} to ${Math.max(...hs)} px`);
+                }
+                const got = await page.locator(tile(strip, 1)).evaluate((t1) => {
+                    const cv = document.createElement('canvas');
+                    cv.width = cv.height = 1;
+                    const cx = /** @type {CanvasRenderingContext2D} */ (cv.getContext('2d', { willReadFrequently: true }));
+                    /** @param {string} c */
+                    const rgba = (c) => {
+                        cx.clearRect(0, 0, 1, 1);
+                        cx.fillStyle = c;
+                        cx.fillRect(0, 0, 1, 1);
+                        const d = cx.getImageData(0, 0, 1, 1).data;
+                        return [d[0], d[1], d[2], d[3] / 255];
+                    };
+                    /** @param {number[]} top @param {number[]} under */
+                    const over = (top, under) => [0, 1, 2].map((i) => top[i] * top[3] + under[i] * (1 - top[3]));
+                    /** The plate under an element: its own and its ancestors' backgrounds, composited. @param {Element} el */
+                    const plate = (el) => {
+                        const layers = [];
+                        for (let n = /** @type {Element | null} */ (el); n; n = n.parentElement) {
+                            const c = rgba(getComputedStyle(n).backgroundColor);
+                            if (c[3] > 0) layers.push(c);
+                            if (c[3] >= 1) break;
+                        }
+                        return layers.reverse().reduce((acc, l) => over(l, acc), [255, 255, 255]);
+                    };
+                    /** @param {number[]} c */
+                    const lum = (c) => {
+                        const [r, g, b] = c.map((v) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+                        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                    };
+                    /** @param {Element} el */
+                    const ratio = (el) => {
+                        const bg = plate(el);
+                        const a = lum(over(rgba(getComputedStyle(el).color), bg));
+                        const b = lum(bg);
+                        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+                    };
+                    const value = /** @type {HTMLElement} */ (t1.querySelector('.kp-kpi__value'));
+                    const words = /** @type {HTMLElement} */ (t1.querySelector('.kp-kpi__trend'));
+                    const keep = words.innerHTML;
+                    /** @type {Record<string, number>} */
+                    const figure = {};
+                    for (const tone of ['warning', 'destructive']) {
+                        t1.setAttribute('data-kp-tone', tone);
+                        const unit = value.querySelector('small');
+                        figure[tone] = Math.min(ratio(value), unit ? ratio(unit) : 99);
+                    }
+                    t1.removeAttribute('data-kp-tone');
+                    words.innerHTML =
+                        '<span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">0.05 bar</span> ' +
+                        '<span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">0.08 bar</span> in the hour';
+                    const [good, bad] = [...words.querySelectorAll('.kp-kpi__delta')].map(ratio);
+                    words.innerHTML = keep;
+                    return { figure, good, bad };
+                });
+                const at = `${theme} ${strip}`;
+                for (const [tone, r] of Object.entries(got.figure)) if (r < 4.5) misses.push(`${at}: the ${tone} figure ${r.toFixed(2)}:1`);
+                if (got.good < 4.5) misses.push(`${at}: the good change ${got.good.toFixed(2)}:1`);
+                if (got.bad < 4.5) misses.push(`${at}: the bad change ${got.bad.toFixed(2)}:1`);
+            }
+        }
+        expect(misses).toEqual([]);
     },
 );
