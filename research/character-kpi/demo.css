@@ -1,0 +1,202 @@
+/* The page: a centred column, one section with its controls, a preview
+   row, five aspect rows of three options each (a plain, a link and a
+   toggle tile together), the plain tile of today at the foot. The tiles'
+   own drawing is in kpi.css / kpi-a.css … kpi-d.css. */
+.kf-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.kf-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kf-intro h1,
+.kf-intro p {
+    margin: 0;
+}
+
+.kf-meta,
+.kf-motion,
+.kf-log {
+    color: var(--muted-foreground);
+}
+
+.kf-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-kf-state][aria-pressed='true'],
+[data-kf-tone][aria-pressed='true'],
+[data-kf-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.kf-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.kf-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.kf-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kf-sec__head h2,
+.kf-sec__head p {
+    margin: 0;
+}
+
+.kf-sec__head p {
+    color: var(--muted-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+/* Three columns (shape/loading/tone/interactive/live options), one under
+   the other below 60rem. Each column holds a plain, a link and a toggle
+   tile stacked in `.kf-strip`. */
+.kf-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .kf-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kf-col {
+        grid-row: auto;
+        grid-template-rows: auto auto 1fr;
+    }
+}
+
+.kf-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.kf-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.kf-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.kf-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* A strip of three tiles (plain, link, toggle) stacked one column wide,
+   so every state (hover, focus, press, tone, loading) has its own
+   surface in every row. */
+.kf-strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kf-col > .kf-strip {
+    align-self: start;
+}
+
+.kf-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* The combination at the top, the five rows of options, the plain tile
+   below them for reference. */
+.kf-preview,
+.kf-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The preview's and the reference's strip is as wide as a row's column. */
+.kf-preview > .kf-strip,
+.kf-reference > .kf-strip {
+    inline-size: calc((100% - 2 * var(--kp-space-lg, 1.5rem)) / 3);
+}
+
+@media (max-width: 60rem) {
+    .kf-preview > .kf-strip,
+    .kf-reference > .kf-strip {
+        inline-size: auto;
+    }
+}
+
+.kf-preview__head h3,
+.kf-preview__head p,
+.kf-aspect__head h3,
+.kf-aspect__head p {
+    margin: 0;
+}
+
+.kf-preview__head p,
+.kf-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.kf-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.kf-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.kf-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}

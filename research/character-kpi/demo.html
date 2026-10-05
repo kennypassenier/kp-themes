@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-kpi">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a key figure of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="kpi.css" />
+        <link rel="stylesheet" href="kpi-a.css" />
+        <link rel="stylesheet" href="kpi-b.css" />
+        <link rel="stylesheet" href="kpi-c.css" />
+        <link rel="stylesheet" href="kpi-d.css" />
+    </head>
+    <body>
+        <main class="kf-page">
+            <header class="kf-intro">
+                <h1>A key figure of its own, per theme: one pick per aspect</h1>
+                <p>
+                    Phase 1 (Kenny, 2026-10-05): the plain key figure tile (<code>.kp-kpi</code>), without the 24-hour trend
+                    (<code>.kp-kpi--trend</code>, research/character-trend) or the column-count strip (<code>data-kp-kpis-columns</code>,
+                    research/character-columns), each its own demo already. Per theme you pick the shape, the loading picture, the tone and the
+                    change, hover/focus/press, and the live update, each from three options and each on its own.
+                </p>
+                <p class="kf-motion" data-kf-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture shows its still frame and a live
+                    update lands at once. Turn it off in the system settings to judge the motion.
+                </p>
+                <p class="kf-meta">
+                    Every row shows a plain tile, a link tile (a filled detail) and a toggle tile (a filter): the package's own markup (<code
+                        >js/kpi.js</code
+                    >
+                    is not changed); an option only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer
+                    (<code>kpi.css</code>, and the four group files for the other 20 themes), one attribute per aspect, and keeps the tile's height in
+                    every state. This theme: <b data-kf-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Phase 1 builds formal and titanium only; kpi-a.css … kpi-d.css
+                 (each `@layer kp.signature {}`, empty) are where the other
+                 twenty themes' CSS lands, group by group. -->
+            <section
+                class="kf-sec"
+                data-review-item="kpi"
+                data-review-components="kpi--interactive"
+                data-review-title="The key figure tile"
+                aria-labelledby="h-kpi"
+            >
+                <div class="kf-sec__head">
+                    <h2 id="h-kpi">The key figure tile in <span data-kf-theme-name>this theme</span></h2>
+                    <p>
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Loading</b> shows the loading picture, a tone shows how a warning or
+                        destructive figure reads, <b>Hover, focus, press</b> covers the link tile and the toggle tile, and <b>Live update</b> swaps
+                        the number. Move the pointer over a tile, or tab to it.
+                    </p>
+                </div>
+                <div class="kf-controls" data-review-controls>
+                    <div class="kf-actions" role="group" aria-label="State of every tile">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-state="ready" aria-pressed="true">Drawn</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-live>Live update</button>
+                    </div>
+                    <div class="kf-actions" role="group" aria-label="Tone of every tile">
+                        <b>Tone:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-tone="" aria-pressed="true">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-tone="destructive" aria-pressed="false">Destructive</button>
+                    </div>
+                    <div class="kf-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="kf-log" data-kf-log aria-live="polite">The link tile goes nowhere here; a click says where it would go.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="kf-preview">
+                    <div class="kf-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-kf-picks>…</p>
+                    </div>
+                    <div
+                        class="kp-kpis kf-strip"
+                        data-kf
+                        data-kf-preview
+                        data-kf-shape="1"
+                        data-kf-loading="1"
+                        data-kf-tone="1"
+                        data-kf-interactive="1"
+                        data-kf-live="1"
+                    >
+                        <div class="kp-kpi" data-kf-tile>
+                            <span class="kp-kpi__label">Readings today</span>
+                            <span class="kp-kpi__value" data-kf-value>18 240</span>
+                            <span class="kp-kpi__trend" data-kf-trend
+                                ><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span
+                            >
+                        </div>
+                        <a class="kp-kpi" href="#h-kpi" data-kf-tile>
+                            <span class="kp-kpi__label">Flow now</span>
+                            <span class="kp-kpi__value" data-kf-value>412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+                            <span class="kp-kpi__trend" data-kf-trend
+                                ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                            >
+                        </a>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" data-kf-tile aria-pressed="false">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value" data-kf-value>3</span>
+                            <span class="kp-kpi__trend" data-kf-trend>2 new today</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="kf-aspects" data-kf-aspects></div>
+                <div class="kf-reference">
+                    <div class="kf-aspect__head">
+                        <h3>For reference: the plain tile, as today</h3>
+                        <p>
+                            The package's key figure as it ships, not an option: a card with the label in small capitals, the number with its unit and
+                            note, a line of words with the change as a status chip, grey skeletons while it loads; the same shape in every theme.
+                        </p>
+                    </div>
+                    <div class="kp-kpis kf-strip">
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Readings today</span>
+                            <span class="kp-kpi__value">18 240</span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span
+                            >
+                        </div>
+                        <a class="kp-kpi" href="#h-kpi">
+                            <span class="kp-kpi__label">Flow now</span>
+                            <span class="kp-kpi__value">412<small>m³/h</small><span class="kp-kpi__note">avg 15 min</span></span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                            >
+                        </a>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__hint" aria-hidden="true"
+                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span
+                            >
+                            <span class="kp-kpi__value">3</span>
+                            <span class="kp-kpi__trend">2 new today</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Phase 1: no theme has been judged yet; this round's full reopen
+             list is written once every theme has its CSS (phase 2+). -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-05-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

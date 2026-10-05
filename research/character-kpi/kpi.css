@@ -1,0 +1,497 @@
+/* research/character-kpi, phase 1 (Kenny, 2026-10-05): the plain key figure
+   tile `.kp-kpi` (no `.kp-kpi--trend`, no `data-kp-kpis-columns`: those are
+   research/character-trend and research/character-columns) has five
+   aspects, each picked on its own from three options, composed freely on
+   the strip that wraps the row's tiles (`[data-kf]`, a `.kp-kpis` strip
+   which carries the five aspects):
+
+     data-kf-shape="1|2|3"       the plate, the frame, the label, the
+                                  number, the unit, the note, the delta's
+                                  shape
+     data-kf-loading="1|2|3"     the picture while the figure is busy
+                                  (`[data-kp-loading]`, `aria-busy`); it
+                                  always moves, nothing fades
+     data-kf-tone="1|2|3"        the delta's plate, and how a warning or
+                                  destructive figure (`[data-kp-tone]`) reads
+     data-kf-interactive="1|2|3" hover, focus-visible and :active on a link
+                                  tile (`a.kp-kpi`) and a toggle tile
+                                  (`.kp-kpi--toggle`)
+     data-kf-live="1|2|3"        what `.kf-flash` (one trigger, added by
+                                  demo.js on Live update) does to the number
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. Phase 1 builds formal and titanium; kpi-a.css
+   … kpi-d.css (`@layer kp.signature {}`, empty) hold the other twenty
+   themes, five each, added group by group. In a register the
+   `[data-kf…]` parts drop out of every selector.
+
+   The contract every option keeps:
+   - The markup is the package's: `.kp-kpi` (or `a.kp-kpi`, or
+     `button.kp-kpi--toggle`) with `.kp-kpi__label`, `.kp-kpi__value`
+     (`small` for the unit, `.kp-kpi__note`), `.kp-kpi__trend` (words, with
+     `.kp-kpi__delta` for the change). `js/kpi.js` is not changed.
+   - Surfaces: the tile's background (`--kf-plate`, `--kf-pat`) and its
+     ::after (`--kf-over`, and in a tone `--kf-tone-over` above it); the
+     delta's plate (`--kf-delta-bg`, `--kf-delta-ink`); the note's plate.
+   - Colour: tokens only (DI9). The label and the words take `--kf-mute`,
+     the number `--kf-ink`, both on `--kf-plate`. The change, the note and
+     a toned number carry a status pair, the plate and its own ink
+     (fix-70), never half of one.
+   - Height: one height per tile in every state, figure and tone: the
+     label, the number and the words keep fixed line boxes, the label
+     never wraps and is never cut, and nothing a state adds takes room
+     (motion only moves and clips, never grows the box).
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end; nothing fades (no opacity anywhere);
+     nothing loops at rest, only the loading picture; a live update plays
+     once per `.kf-flash` retrigger, never loops. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    [data-kf] .kp-kpi {
+        --kf-plate: var(--card);
+        --kf-ink: var(--card-foreground);
+        --kf-mute: color-mix(in oklch, var(--muted-foreground) 70%, var(--kf-ink));
+        position: relative;
+        isolation: isolate;
+        border: var(--kf-frame, 1px solid color-mix(in oklab, var(--border-strong) 85%, var(--foreground) 15%));
+        border-radius: var(--kf-radius, var(--radius, 0.5rem));
+        background: var(--kf-pat, none);
+        background-color: var(--kf-plate);
+        box-shadow: var(--kf-shadow, none);
+        color: var(--kf-ink);
+        font-family: var(--kf-font, inherit);
+        transition: var(--kf-transition, none);
+    }
+
+    [data-kf] .kp-kpi::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        pointer-events: none;
+        background: var(--kf-over, none);
+    }
+
+    [data-kf] .kp-kpi > .kp-kpi__label {
+        block-size: 1lh;
+        border-block-end: var(--kf-label-rule, 0);
+        background: var(--kf-label-bg, none);
+        box-shadow: var(--kf-label-shadow, none);
+        color: var(--kf-mute);
+        font-family: var(--kf-label-font, inherit);
+        font-size: var(--kf-label-size, var(--kp-text-xs, 0.75rem));
+        font-style: var(--kf-label-style, normal);
+        font-weight: var(--kf-label-weight, 500);
+        letter-spacing: var(--kf-label-track, 0.06em);
+        line-height: 1.5;
+        text-transform: var(--kf-label-case, uppercase);
+        white-space: nowrap;
+    }
+
+    [data-kf] .kp-kpi > .kp-kpi__value,
+    [data-kf] .kp-kpi[data-kp-tone] > .kp-kpi__value {
+        flex-wrap: nowrap;
+        align-items: center;
+        block-size: 1lh;
+        color: var(--kf-ink);
+        font-family: var(--kf-num-font, inherit);
+        font-size: var(--kf-num-size, 1.75rem);
+        font-weight: var(--kf-num-weight, 600);
+        letter-spacing: var(--kf-num-track, normal);
+        text-shadow: var(--kf-num-shadow, none);
+        white-space: nowrap;
+    }
+
+    [data-kf] .kp-kpi > .kp-kpi__value small {
+        color: var(--kf-mute);
+    }
+
+    [data-kf] .kp-kpi > .kp-kpi__value > .kp-kpi__note {
+        border-radius: var(--kf-note-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kf-note-bg, none);
+        color: var(--kf-mute);
+    }
+
+    [data-kf] .kp-kpi > .kp-kpi__trend {
+        min-block-size: 1.4em;
+        color: var(--kf-mute);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-kf] .kp-kpi .kp-kpi__delta {
+        border-radius: var(--kf-delta-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kf-delta-bg, var(--kp-kpi-delta-bg, transparent));
+        color: var(--kf-delta-ink, inherit);
+        box-shadow: var(--kf-delta-shadow, none);
+    }
+
+    [data-kf] .kp-kpi[data-kp-tone='warning'],
+    [data-kf] .kp-kpi[data-kp-tone='destructive'] {
+        box-shadow: var(--kf-tone-shadow, none), var(--kf-shadow, none);
+    }
+
+    [data-kf] .kp-kpi[data-kp-tone] > .kp-kpi__value {
+        justify-self: start;
+        padding-inline: var(--kf-tone-pad, 0.25em);
+        border-radius: var(--kf-tone-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kf-tone-bg, none);
+        color: var(--kf-tone-ink, inherit);
+    }
+
+    [data-kf] .kp-kpi[data-kp-tone] > .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: inherit;
+    }
+
+    /* A link tile (the detail) and a toggle tile (the filter) under the
+       pointer, the keyboard and a click: the character's own hover/focus/
+       press, never the package default alone. */
+    [data-kf] a.kp-kpi,
+    [data-kf] .kp-kpi--toggle {
+        cursor: pointer;
+    }
+
+    [data-kf] a.kp-kpi:hover,
+    [data-kf] .kp-kpi--toggle:hover {
+        border-color: var(--kf-hover-border, var(--ring));
+        background-color: var(--kf-hover-plate, var(--kf-plate));
+    }
+
+    [data-kf] a.kp-kpi:focus-visible,
+    [data-kf] .kp-kpi--toggle:focus-visible {
+        outline: var(--kf-focus-outline, 2px solid var(--focus-ring));
+        outline-offset: var(--kf-focus-offset, 2px);
+    }
+
+    [data-kf] a.kp-kpi:active,
+    [data-kf] .kp-kpi--toggle:active {
+        background-color: var(--kf-press-plate, var(--kf-plate));
+    }
+
+    [data-kf] .kp-kpi--toggle[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 9%, var(--kf-plate));
+    }
+
+    /* ── formal ─────────────────────────────────────────────────────────
+       The brass-plate engraving (1), the annual report (2), the share
+       certificate (3): a rule, a serif number, a plate change. */
+
+    [data-theme='formal'] [data-kf-shape='1'] .kp-kpi {
+        --kf-frame: 2px double var(--border-strong);
+        --kf-num-font: var(--font-serif, serif);
+        --kf-label-case: uppercase;
+    }
+
+    [data-theme='formal'] [data-kf-shape='2'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-label-rule: 2px solid var(--border-strong);
+        --kf-num-font: var(--font-serif, serif);
+        --kf-num-size: 1.9rem;
+    }
+
+    [data-theme='formal'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 1px solid var(--primary);
+        --kf-num-font: var(--font-serif, serif);
+        --kf-label-case: uppercase;
+        --kf-label-track: 0.08em;
+    }
+
+    /* The dotted leader: a leader-dot rule drifts under the figure. */
+    [data-theme='formal'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 10px);
+    }
+
+    /* The ledger is ruled: a single solid rule is drawn, as a clerk ruling a fresh line. */
+    [data-theme='formal'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 1px;
+        background: var(--border-strong);
+    }
+
+    /* The seal is pressed: a small wax-seal disc travels along the foot of the plate. */
+    [data-theme='formal'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: var(--kp-space-md, 1rem);
+        inset-block-end: calc(var(--kp-space-sm, 0.5rem) - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: var(--border-strong);
+        --kf-delta-ink: var(--foreground);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        font-style: italic;
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: var(--kf-ink);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: var(--destructive);
+        border-inline-start: 2px solid var(--destructive);
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='formal'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='formal'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-hover-border: var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='formal'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+    }
+
+    [data-theme='formal'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='formal'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-hover-plate: color-mix(in oklab, var(--primary) 5%, var(--card));
+    }
+
+    [data-theme='formal'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='formal'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-hover-border: var(--primary);
+        --kf-press-plate: color-mix(in oklab, var(--primary) 12%, var(--card));
+    }
+
+    /* ── titanium ───────────────────────────────────────────────────────
+       The milled plate (1), the instrument dial (2), the anodised badge
+       (3): a brushed grain, an instrument mono number, a machined tab
+       change. */
+
+    [data-theme='titanium'] [data-kf-shape='1'] .kp-kpi {
+        --kf-pat: repeating-linear-gradient(100deg, color-mix(in oklab, var(--foreground) 3%, transparent) 0 1px, transparent 1px 4px);
+        --kf-num-font: var(--font-mono, monospace);
+        --kf-frame: 1px solid color-mix(in oklab, var(--border-strong) 85%, var(--foreground) 15%);
+    }
+
+    [data-theme='titanium'] [data-kf-shape='2'] .kp-kpi {
+        --kf-radius: 0.25rem;
+        --kf-num-font: var(--font-mono, monospace);
+        --kf-frame: 1px solid color-mix(in oklab, var(--border-strong) 85%, var(--foreground) 15%);
+        --kf-label-rule: 3px solid var(--primary);
+    }
+
+    [data-theme='titanium'] [data-kf-shape='3'] .kp-kpi {
+        --kf-radius: 999px;
+        --kf-frame: 1px solid var(--primary);
+        --kf-num-font: var(--font-mono, monospace);
+    }
+
+    /* The milled plate: a brushed-metal bar slides along the foot of the plate. */
+    [data-theme='titanium'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 2px;
+        border-radius: 999px;
+        background: color-mix(in oklab, var(--primary) 70%, transparent);
+    }
+
+    /* The instrument dial: a single tick, as a dial's pointer, sweeps the foot of the plate. */
+    [data-theme='titanium'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: var(--kp-space-md, 1rem);
+        inset-block-end: calc(var(--kp-space-sm, 0.5rem) - 0.25rem);
+        inline-size: 2px;
+        block-size: 0.5rem;
+        border-radius: 1px;
+        background: var(--primary);
+    }
+
+    /* The lathe: a wider cut of swarf-coloured gradient travels the foot of the plate. */
+    [data-theme='titanium'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 3px;
+        background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 80%, transparent) 50%, transparent);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: var(--secondary);
+        --kf-delta-ink: var(--secondary-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: var(--kf-ink);
+        border: 1px solid var(--border-strong);
+        border-radius: 0.25rem;
+    }
+
+    [data-theme='titanium'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: var(--secondary);
+        --kf-delta-ink: var(--secondary-foreground);
+        border-block-start: 2px solid var(--primary);
+        border-radius: 0;
+    }
+
+    [data-theme='titanium'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        box-shadow: inset 0 2px 0 var(--warning-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        box-shadow: inset 0 2px 0 var(--destructive-foreground);
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='titanium'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-hover-border: var(--primary);
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='titanium'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-hover-plate: color-mix(in oklab, var(--primary) 6%, var(--card));
+        --kf-press-plate: color-mix(in oklab, var(--primary) 14%, var(--card));
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='titanium'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-hover-border: var(--primary);
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 3px;
+    }
+
+    /* ── Live update (both themes): one trigger per `.kf-flash`, never a
+       loop. Option 1 needs nothing extra (the number is simply replaced
+       in the DOM by demo.js; there is no number swap in this still frame
+       of phase 1, so option 1 is silent by design). Options 2 and 3 play
+       a short highlight on the value, scaling and moving only. */
+    [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value,
+    [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kf-loading] .kp-kpi[data-kp-loading]::before {
+            animation: kf-loading-sweep calc(1.1s / var(--kf-speed, 1)) linear infinite;
+        }
+
+        @keyframes kf-loading-sweep {
+            0% {
+                transform: translateX(-30%) scaleX(0.4);
+            }
+            50% {
+                transform: translateX(30%) scaleX(0.9);
+            }
+            100% {
+                transform: translateX(-30%) scaleX(0.4);
+            }
+        }
+
+        [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-live-jolt calc(0.4s / var(--kf-speed, 1)) ease-out;
+        }
+
+        [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-live-swell calc(0.5s / var(--kf-speed, 1)) ease-out;
+        }
+
+        @keyframes kf-live-jolt {
+            0% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-15%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes kf-live-swell {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.12);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+}

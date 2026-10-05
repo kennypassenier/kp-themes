@@ -1,0 +1,1528 @@
+/* research/character-kpi, group a: light, dark, cyberpunk, synthwave,
+   pastel. Five aspects, each picked on its own from three options
+   (data-kf-shape|loading|tone|interactive|live), composed on the
+   package's own `.kp-kpi` markup (see kpi.css for the shared contract:
+   tokens only, @layer kp.signature, one rule names one aspect, every
+   loading option animates at full motion and stands still under
+   reduced motion, nothing fades, one height per tile in every state).
+   No arrival/leave aspect on this component (README.md). */
+
+@layer kp.signature {
+    /* ════════════════════════════════ LIGHT ═══════════════════════════ */
+
+    /* ── light · shape ──────────────────────────────────────────────── */
+
+    /* The soft card: lifted on a soft shadow, a wide radius, a rounded number. */
+    [data-theme='light'] [data-kf-shape='1'] .kp-kpi {
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 24%, var(--foreground));
+        --kf-radius: 1.1rem;
+        --kf-shadow: 0 0.5rem 1.25rem color-mix(in oklch, var(--foreground) 12%, transparent);
+        --kf-num-font: var(--theme-font-body, inherit);
+        --kf-num-weight: 700;
+    }
+
+    /* The soft outline: a pale sky wash behind the number, a warm glow in the corner. */
+    [data-theme='light'] [data-kf-shape='2'] .kp-kpi {
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 24%, var(--foreground));
+        --kf-pat: linear-gradient(to bottom, color-mix(in oklch, var(--primary) 9%, var(--card)), var(--card) 65%);
+        --kf-over: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--warning) 45%, transparent) 0%, transparent 55%);
+        --kf-num-font: var(--theme-font-body, inherit);
+    }
+
+    /* The coloured tab: a sheet of paper with a lifted corner folded at the top right. */
+    [data-theme='light'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 22%, var(--foreground));
+        --kf-radius: 0.3rem;
+        --kf-pat: linear-gradient(
+            135deg,
+            transparent calc(100% - 0.85rem),
+            color-mix(in oklch, var(--primary) 28%, var(--card)) calc(100% - 0.85rem)
+        );
+        --kf-num-font: var(--theme-font-body, inherit);
+    }
+
+    [data-theme='light'] [data-kf-shape='3'] .kp-kpi {
+        clip-path: polygon(0 0, calc(100% - 0.85rem) 0, 100% 0.85rem, 100% 100%, 0 100%);
+    }
+
+    /* ── light · while loading ──────────────────────────────────────── */
+
+    /* The dashed baseline drifts to the right under the label. */
+    [data-theme='light'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 2px;
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 6px, transparent 6px 12px);
+    }
+
+    /* Daylight: a slow band of light crosses the card. */
+    [data-theme='light'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(100deg, transparent 20%, color-mix(in oklch, var(--primary) 30%, transparent) 45%, transparent 70%);
+        background-size: 250% 100%;
+    }
+
+    /* A cloud passes: its soft shadow drifts across the number. */
+    [data-theme='light'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 20%;
+        inset-inline-start: -35%;
+        inline-size: 45%;
+        block-size: 55%;
+        border-radius: 50%;
+        background: color-mix(in oklch, var(--foreground) 14%, transparent);
+        filter: blur(6px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-light-dash 1.2s linear infinite;
+        }
+
+        @keyframes kf-light-dash {
+            to {
+                background-position: 12px 0;
+            }
+        }
+
+        [data-theme='light'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-light-daylight 1.8s ease-in-out infinite;
+        }
+
+        @keyframes kf-light-daylight {
+            0% {
+                background-position: 0% 0;
+            }
+            100% {
+                background-position: -150% 0;
+            }
+        }
+
+        [data-theme='light'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-light-cloud 2.4s ease-in-out infinite;
+        }
+
+        @keyframes kf-light-cloud {
+            0% {
+                inset-inline-start: -35%;
+            }
+            100% {
+                inset-inline-start: 110%;
+            }
+        }
+    }
+
+    /* ── light · tone and change ──────────────────────────────────────── */
+
+    /* The soft card: the change as a soft pill. */
+    [data-theme='light'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 16%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        border-radius: 999px;
+    }
+
+    [data-theme='light'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 999px;
+    }
+
+    [data-theme='light'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 999px;
+    }
+
+    /* The soft outline: the change drawn in a soft outline of its own ink. */
+    [data-theme='light'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: var(--kf-ink);
+        border: 1px solid color-mix(in oklch, var(--kf-ink) 45%, transparent);
+        border-radius: 999px;
+    }
+
+    [data-theme='light'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--warning);
+        box-shadow: inset 0 0 0 1px var(--warning);
+    }
+
+    [data-theme='light'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    /* The coloured tab: a soft drop shadow on the pill; a band of colour along the top for a toned figure. */
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 14%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 14%, transparent);
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-tone-shadow: inset 0 3px 0 var(--warning);
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: color-mix(in oklch, var(--warning) 16%, var(--card));
+        --kf-tone-ink: var(--warning-foreground, var(--kf-ink));
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-tone-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: color-mix(in oklch, var(--destructive) 16%, var(--card));
+        --kf-tone-ink: var(--destructive-foreground, var(--kf-ink));
+    }
+
+    /* ── light · hover, focus, press ──────────────────────────────────── */
+
+    /* The lift: the card lifts a shade on hover, a soft indigo ring on focus, settles when pressed. */
+    [data-theme='light'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='light'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-hover-border: color-mix(in oklch, var(--primary) 45%, var(--border));
+        --kf-hover-plate: color-mix(in oklch, var(--primary) 4%, var(--card));
+        --kf-press-plate: color-mix(in oklch, var(--primary) 2%, var(--card));
+        --kf-transition: box-shadow 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    [data-theme='light'] [data-kf-interactive='1'] a.kp-kpi:hover,
+    [data-theme='light'] [data-kf-interactive='1'] .kp-kpi--toggle:hover {
+        box-shadow: 0 0.6rem 1.4rem color-mix(in oklch, var(--foreground) 16%, transparent);
+    }
+
+    [data-theme='light'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='light'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 2px;
+    }
+
+    /* The warm glow: the sun's glow brightens on hover, a soft halo on focus, dims when pressed. */
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-over: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--warning) 45%, transparent) 0%, transparent 55%);
+        --kf-transition: filter 0.15s ease, background-color 0.15s ease;
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:hover,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:hover {
+        --kf-over: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--warning) 70%, transparent) 0%, transparent 65%);
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 3px solid color-mix(in oklch, var(--warning) 70%, var(--primary));
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:active,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
+        --kf-over: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--warning) 22%, transparent) 0%, transparent 55%);
+    }
+
+    /* The paper curls: the folded corner lifts on hover, an indigo rule on focus, flattens when pressed. */
+    [data-theme='light'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='light'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-transition: clip-path 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    [data-theme='light'] [data-kf-interactive='3'] a.kp-kpi:hover,
+    [data-theme='light'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
+        clip-path: polygon(0 0, calc(100% - 1.3rem) 0, 100% 1.3rem, 100% 100%, 0 100%);
+        box-shadow: 0 0.4rem 0.8rem color-mix(in oklch, var(--foreground) 16%, transparent);
+    }
+
+    [data-theme='light'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
+    [data-theme='light'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 3px;
+    }
+
+    [data-theme='light'] [data-kf-interactive='3'] a.kp-kpi:active,
+    [data-theme='light'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
+        clip-path: polygon(0 0, calc(100% - 0.3rem) 0, 100% 0.3rem, 100% 100%, 0 100%);
+    }
+
+    /* ── light · live update ──────────────────────────────────────────── */
+
+    /* A soft swell: the number swells once and settles. kpi.css's shared `.kf-flash .kp-kpi` selector never
+       matches (`.kf-flash` lands on the `.kp-kpi` element itself, not an ancestor of it), so every option here
+       that would otherwise lean on the shared swell/jolt gets its own compound-selector rule instead. */
+    [data-theme='light'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: center;
+    }
+
+    /* The page turns: the old figure slides off to the left and the new one slides in from the right, slowing as it lands. */
+    [data-theme='light'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-light-swell 0.5s ease-out;
+        }
+
+        @keyframes kf-light-swell {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.12);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        [data-theme='light'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-light-page-turn 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
+
+        @keyframes kf-light-page-turn {
+            0% {
+                transform: translateX(14%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+    }
+
+    /* ════════════════════════════════ DARK ════════════════════════════ */
+
+    /* ── dark · shape ──────────────────────────────────────────────── */
+
+    /* The status board: a black operations board, the number lit in ticker mono, a fine bevel. */
+    [data-theme='dark'] [data-kf-shape='1'] .kp-kpi {
+        --kf-plate: color-mix(in oklch, var(--card) 85%, black);
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 32%, var(--foreground));
+        --kf-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent), inset 0 -1px 0 black;
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-num-shadow: 0 0 8px color-mix(in oklch, var(--primary) 55%, transparent);
+    }
+
+    /* The machined tab: a machined black panel with a fine bevel, the label in mono capitals. */
+    [data-theme='dark'] [data-kf-shape='2'] .kp-kpi {
+        --kf-plate: color-mix(in oklch, var(--card) 88%, black);
+        --kf-radius: 0.3rem;
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 30%, var(--foreground));
+        --kf-label-font: var(--theme-font-mono, monospace);
+        --kf-label-rule: 3px solid var(--primary);
+        --kf-num-font: var(--theme-font-mono, monospace);
+    }
+
+    /* The alarm lamp: a scope screen in a black panel, a lit rim. */
+    [data-theme='dark'] [data-kf-shape='3'] .kp-kpi {
+        --kf-plate: color-mix(in oklch, var(--card) 80%, black);
+        --kf-pat:
+            linear-gradient(color-mix(in oklch, var(--border-strong) 30%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--border-strong) 30%, transparent) 1px, transparent 1px);
+        --kf-frame: 1px solid var(--primary);
+        --kf-shadow: 0 0 10px color-mix(in oklch, var(--primary) 35%, transparent);
+        --kf-num-font: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='dark'] [data-kf-shape='3'] .kp-kpi {
+        background-size: 9px 9px;
+    }
+
+    /* ── dark · while loading ─────────────────────────────────────────── */
+
+    /* The ticker baseline ticks along like ticker tape. */
+    [data-theme='dark'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 2px;
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 5px, transparent 5px 10px);
+        box-shadow: 0 0 4px color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+
+    /* The slot is scanned: a lit band sweeps across the card. */
+    [data-theme='dark'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block: 0;
+        inset-inline-start: -20%;
+        inline-size: 20%;
+        background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 40%, transparent), transparent);
+    }
+
+    /* The status lamps: a lamp steps between three places on the panel. */
+    [data-theme='dark'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inset-inline-start: var(--kp-space-md, 1rem);
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 6px color-mix(in oklch, var(--primary) 85%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-dark-ticker 0.9s steps(6) infinite;
+        }
+
+        @keyframes kf-dark-ticker {
+            to {
+                background-position: 10px 0;
+            }
+        }
+
+        [data-theme='dark'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-dark-scan 1.1s linear infinite;
+        }
+
+        @keyframes kf-dark-scan {
+            0% {
+                inset-inline-start: -20%;
+            }
+            100% {
+                inset-inline-start: 100%;
+            }
+        }
+
+        [data-theme='dark'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-dark-lamp 1.5s steps(1) infinite;
+        }
+
+        @keyframes kf-dark-lamp {
+            0%,
+            32% {
+                inset-inline-start: var(--kp-space-md, 1rem);
+            }
+            33%,
+            65% {
+                inset-inline-start: calc(50% - 0.25rem);
+            }
+            66%,
+            100% {
+                inset-inline-start: calc(100% - var(--kp-space-md, 1rem) - 0.5rem);
+            }
+        }
+    }
+
+    /* ── dark · tone and change ───────────────────────────────────────── */
+
+    /* The status board: the change as a lit square chip. */
+    [data-theme='dark'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 25%, black);
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 0.15rem;
+    }
+
+    [data-theme='dark'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 0.15rem;
+    }
+
+    [data-theme='dark'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 0.15rem;
+    }
+
+    /* The machined tab: a flat tab with a square corner and a lit top edge. */
+    [data-theme='dark'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: var(--kf-ink);
+        --kf-delta-radius: 0;
+        border: 1px solid color-mix(in oklch, var(--border-strong) 32%, var(--foreground));
+        border-block-start: 2px solid var(--primary);
+    }
+
+    [data-theme='dark'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--warning);
+        --kf-tone-radius: 0;
+        box-shadow: inset 0 2px 0 var(--warning);
+    }
+
+    [data-theme='dark'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--destructive);
+        --kf-tone-radius: 0;
+        box-shadow: inset 0 2px 0 var(--destructive);
+    }
+
+    /* The alarm lamp: the change as a round lit lamp; a toned figure lights its number like an alarm lamp. */
+    [data-theme='dark'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 25%, black);
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 999px;
+        --kf-delta-shadow: inset 0 0 0 1px color-mix(in oklch, var(--border-strong) 70%, transparent);
+    }
+
+    [data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--warning);
+        --kf-num-shadow: 0 0 10px color-mix(in oklch, var(--warning) 80%, transparent);
+    }
+
+    [data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--destructive);
+        --kf-num-shadow: 0 0 10px color-mix(in oklch, var(--destructive) 80%, transparent);
+    }
+
+    /* ── dark · hover, focus, press ───────────────────────────────────── */
+
+    /* The panel lights: the bevel brightens on hover, a lit cyan ring on focus, dims when pressed. */
+    [data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-hover-border: var(--primary);
+        --kf-hover-plate: color-mix(in oklch, var(--primary) 6%, var(--kf-plate, var(--card)));
+        --kf-press-plate: color-mix(in oklch, black 25%, var(--kf-plate, var(--card)));
+        --kf-transition: border-color 0.12s ease, background-color 0.12s ease;
+    }
+
+    [data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 2px;
+    }
+
+    /* The scope glows: the number's glow widens on hover, a scan-line ring on focus, flattens when pressed. */
+    [data-theme='dark'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='dark'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-num-shadow: 0 0 6px color-mix(in oklch, var(--primary) 45%, transparent);
+        --kf-transition: filter 0.12s ease, background-color 0.12s ease;
+    }
+
+    [data-theme='dark'] [data-kf-interactive='2'] a.kp-kpi:hover .kp-kpi__value,
+    [data-theme='dark'] [data-kf-interactive='2'] .kp-kpi--toggle:hover .kp-kpi__value {
+        text-shadow: 0 0 14px color-mix(in oklch, var(--primary) 85%, transparent);
+    }
+
+    [data-theme='dark'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='dark'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px dashed var(--primary);
+        --kf-focus-offset: 3px;
+    }
+
+    [data-theme='dark'] [data-kf-interactive='2'] a.kp-kpi:active .kp-kpi__value,
+    [data-theme='dark'] [data-kf-interactive='2'] .kp-kpi--toggle:active .kp-kpi__value {
+        text-shadow: none;
+    }
+
+    /* The lamp switches: a status lamp lights on hover, switches colour on focus, clicks off when pressed. */
+    [data-theme='dark'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='dark'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-transition: box-shadow 0.12s ease, background-color 0.12s ease;
+    }
+
+    [data-theme='dark'] [data-kf-interactive='3'] a.kp-kpi:hover,
+    [data-theme='dark'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
+        box-shadow: inset 0.6rem 0 0 -0.45rem var(--primary);
+    }
+
+    [data-theme='dark'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
+    [data-theme='dark'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
+        box-shadow: inset 0.6rem 0 0 -0.45rem var(--warning);
+        --kf-focus-outline: 2px solid var(--warning);
+    }
+
+    [data-theme='dark'] [data-kf-interactive='3'] a.kp-kpi:active,
+    [data-theme='dark'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
+        box-shadow: none;
+    }
+
+    /* ── dark · live update ───────────────────────────────────────────── */
+
+    /* The trace jumps: the number jolts once, as a needle does, in 2 hard steps. */
+    [data-theme='dark'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    /* The trace flares: the number flares with light once, slowing as it lands. */
+    [data-theme='dark'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-dark-jolt 0.3s steps(2);
+        }
+
+        @keyframes kf-dark-jolt {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-18%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        [data-theme='dark'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-dark-flare 0.55s ease-out;
+        }
+
+        @keyframes kf-dark-flare {
+            0% {
+                text-shadow: 0 0 0 transparent;
+            }
+            35% {
+                text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 90%, transparent);
+            }
+            100% {
+                text-shadow: 0 0 0 transparent;
+            }
+        }
+    }
+
+    /* ═════════════════════════════ CYBERPUNK ═══════════════════════════ */
+
+    /* ── cyberpunk · shape ─────────────────────────────────────────────── */
+
+    /* The neon trace: a circuit grid, the number in tech mono with a cyan halo, cut corners. */
+    [data-theme='cyberpunk'] [data-kf-shape='1'] .kp-kpi {
+        --kf-pat:
+            linear-gradient(color-mix(in oklch, var(--primary) 12%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--primary) 12%, transparent) 1px, transparent 1px);
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 36%, var(--foreground));
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-num-shadow: 0 0 10px color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-shape='1'] .kp-kpi {
+        background-size: 12px 12px;
+        clip-path: polygon(0.55rem 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
+    }
+
+    /* The glitch HUD: yellow corner brackets, an RGB-split number. */
+    [data-theme='cyberpunk'] [data-kf-shape='2'] .kp-kpi {
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 36%, var(--foreground));
+        --kf-radius: 0.1rem;
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-num-shadow:
+            2px 0 0 color-mix(in oklch, var(--destructive) 75%, transparent),
+            -2px 0 0 color-mix(in oklch, var(--success, var(--primary)) 75%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-shape='2'] .kp-kpi::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+        border-block-start: 2px solid var(--warning);
+        border-inline-start: 2px solid var(--warning);
+    }
+
+    /* The hazard frame: a holographic cyan rim with its glow. */
+    [data-theme='cyberpunk'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 1px solid var(--primary);
+        --kf-radius: 0.3rem;
+        --kf-shadow:
+            inset 0 0 10px color-mix(in oklch, var(--primary) 40%, transparent), 0 0 10px color-mix(in oklch, var(--primary) 28%, transparent);
+        --kf-num-font: var(--theme-font-mono, monospace);
+    }
+
+    /* ── cyberpunk · while loading ────────────────────────────────────── */
+
+    /* The neon trace: a packet of light runs along the baseline under the label. */
+    [data-theme='cyberpunk'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: 0;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inline-size: 18%;
+        block-size: 2px;
+        background: var(--primary);
+        box-shadow: 0 0 6px color-mix(in oklch, var(--primary) 85%, transparent);
+    }
+
+    /* The glitch HUD: a glitch bar jumps across the card. */
+    [data-theme='cyberpunk'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 40%;
+        inset-inline-start: 10%;
+        inline-size: 35%;
+        block-size: 0.4rem;
+        background: var(--warning);
+    }
+
+    /* Packet rain: packets fall down the card in a column. */
+    [data-theme='cyberpunk'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: -20%;
+        inset-inline-start: 65%;
+        inline-size: 2px;
+        block-size: 30%;
+        background: color-mix(in oklch, var(--success, var(--primary)) 80%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-cp-packet 1s linear infinite;
+        }
+
+        @keyframes kf-cp-packet {
+            0% {
+                inset-inline-start: -18%;
+            }
+            100% {
+                inset-inline-start: 100%;
+            }
+        }
+
+        [data-theme='cyberpunk'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-cp-glitch 0.9s steps(5) infinite;
+        }
+
+        @keyframes kf-cp-glitch {
+            0% {
+                inset-inline-start: 5%;
+            }
+            25% {
+                inset-inline-start: 55%;
+            }
+            50% {
+                inset-inline-start: 20%;
+            }
+            75% {
+                inset-inline-start: 65%;
+            }
+            100% {
+                inset-inline-start: 5%;
+            }
+        }
+
+        [data-theme='cyberpunk'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-cp-rain 0.8s linear infinite;
+        }
+
+        @keyframes kf-cp-rain {
+            0% {
+                inset-block-start: -20%;
+            }
+            100% {
+                inset-block-start: 110%;
+            }
+        }
+    }
+
+    /* ── cyberpunk · tone and change ──────────────────────────────────── */
+
+    /* The neon trace: a cut-corner chip. */
+    [data-theme='cyberpunk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 0;
+    }
+
+    /* The glitch HUD: the change on its status plate; a toned figure shows the note on the tone's plate. */
+    [data-theme='cyberpunk'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--warning) 22%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-shadow: inset 0 0 0 1px color-mix(in oklch, var(--warning) 55%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    /* The hazard frame: a slanted chip; a toned figure is boxed in a frame of its colour all round the card. */
+    [data-theme='cyberpunk'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        transform: skewX(-8deg);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-frame: 2px solid var(--warning);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--warning);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-frame: 2px solid var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--destructive);
+    }
+
+    /* ── cyberpunk · hover, focus, press ──────────────────────────────── */
+
+    /* Jacked in: the cyan halo widens on hover, yellow brackets snap in on focus, glitches once when pressed. */
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-num-shadow: 0 0 8px color-mix(in oklch, var(--primary) 60%, transparent);
+        --kf-transition: filter 0.1s linear, background-color 0.1s linear;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] a.kp-kpi:hover .kp-kpi__value,
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] .kp-kpi--toggle:hover .kp-kpi__value {
+        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--warning);
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] a.kp-kpi:active,
+    [data-theme='cyberpunk'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
+        transform: translateX(2px);
+    }
+
+    /* The HUD locks: corner brackets light on hover, an RGB split flashes on focus, settles when pressed. */
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-transition: box-shadow 0.1s linear, background-color 0.1s linear;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] a.kp-kpi:hover,
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] .kp-kpi--toggle:hover {
+        box-shadow: inset 0 0 0 1px var(--warning);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] a.kp-kpi:focus-visible .kp-kpi__value,
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible .kp-kpi__value {
+        text-shadow:
+            2px 0 0 color-mix(in oklch, var(--destructive) 75%, transparent),
+            -2px 0 0 color-mix(in oklch, var(--primary) 75%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='cyberpunk'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+    }
+
+    /* The hazard tape: hazard tape glows on hover, a cut-corner outline on focus, cuts in hard when pressed. */
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-transition: box-shadow 0.1s linear;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] a.kp-kpi:hover,
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
+        box-shadow: inset 0 3px 0 var(--warning);
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--warning);
+        --kf-focus-offset: 0px;
+    }
+
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] a.kp-kpi:active,
+    [data-theme='cyberpunk'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    /* ── cyberpunk · live update ──────────────────────────────────────── */
+
+    /* Packet in: the number glitches sideways for a moment, in hard jumps. */
+    [data-theme='cyberpunk'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    /* The trace burns: the number flares with light once, slowing as it lands. */
+    [data-theme='cyberpunk'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-cp-glitch-live 0.35s steps(4);
+        }
+
+        @keyframes kf-cp-glitch-live {
+            0% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-6%);
+            }
+            50% {
+                transform: translateX(4%);
+            }
+            75% {
+                transform: translateX(-2%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        [data-theme='cyberpunk'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-cp-burn 0.55s ease-out;
+        }
+
+        @keyframes kf-cp-burn {
+            0% {
+                text-shadow: 0 0 0 transparent;
+            }
+            35% {
+                text-shadow: 0 0 18px color-mix(in oklch, var(--primary) 95%, transparent);
+            }
+            100% {
+                text-shadow: 0 0 0 transparent;
+            }
+        }
+    }
+
+    /* ═════════════════════════════ SYNTHWAVE ═══════════════════════════ */
+
+    /* ── synthwave · shape ─────────────────────────────────────────────── */
+
+    /* The grid-floor horizon: a perspective grid under a pink horizon, VT323 numerals. */
+    [data-theme='synthwave'] [data-kf-shape='1'] .kp-kpi {
+        --kf-pat:
+            repeating-linear-gradient(to right, color-mix(in oklch, var(--primary) 30%, transparent) 0 1px, transparent 1px 12%),
+            linear-gradient(to bottom, color-mix(in oklch, var(--primary) 10%, var(--card)), var(--card) 60%);
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 36%, var(--foreground));
+        --kf-num-font: var(--theme-font-display, monospace);
+    }
+
+    [data-theme='synthwave'] [data-kf-shape='1'] .kp-kpi {
+        background-position: bottom, top;
+        background-size:
+            100% 55%,
+            100% 100%;
+        background-repeat: repeat-x, no-repeat;
+    }
+
+    /* The VCR display: an OSD on black, numerals, scanlines over the tile. */
+    [data-theme='synthwave'] [data-kf-shape='2'] .kp-kpi {
+        --kf-plate: color-mix(in oklch, var(--card) 85%, black);
+        --kf-pat: repeating-linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 6%, transparent) 0 1px, transparent 1px 3px);
+        --kf-frame: 1px solid color-mix(in oklch, var(--border-strong) 36%, var(--foreground));
+        --kf-radius: 0.1rem;
+        --kf-label-font: var(--theme-font-display, monospace);
+        --kf-num-font: var(--theme-font-display, monospace);
+    }
+
+    /* The arcade warning: a pink frame with a glow, display face with a pink drop. */
+    [data-theme='synthwave'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 2px solid var(--primary);
+        --kf-radius: 0.4rem;
+        --kf-shadow: 0 0 12px color-mix(in oklch, var(--primary) 45%, transparent);
+        --kf-num-font: var(--theme-font-display, monospace);
+        --kf-num-shadow: 0 2px 0 color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+
+    /* ── synthwave · while loading ────────────────────────────────────── */
+
+    /* The grid-floor horizon: the grid floor drives toward you under the label. */
+    [data-theme='synthwave'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: var(--kp-space-md, 1rem);
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        block-size: 2px;
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 10px);
+    }
+
+    /* The VCR display: the tracking band rolls down the card. */
+    [data-theme='synthwave'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: -15%;
+        block-size: 15%;
+        background: color-mix(in oklch, var(--foreground) 12%, transparent);
+    }
+
+    /* The sun rises: a striped sun swells up over the horizon at the foot of the card and sinks again. */
+    [data-theme='synthwave'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: 50%;
+        inset-block-end: -0.5rem;
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        border-radius: 50%;
+        background: repeating-linear-gradient(to bottom, var(--primary) 0 3px, transparent 3px 6px);
+        transform: translateX(-50%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-sw-drive 0.9s linear infinite;
+        }
+
+        @keyframes kf-sw-drive {
+            to {
+                background-position: 10px 0;
+            }
+        }
+
+        [data-theme='synthwave'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-sw-tracking 1.3s linear infinite;
+        }
+
+        @keyframes kf-sw-tracking {
+            0% {
+                inset-block-start: -15%;
+            }
+            100% {
+                inset-block-start: 110%;
+            }
+        }
+
+        [data-theme='synthwave'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-sw-sunrise 1.8s ease-in-out infinite;
+        }
+
+        @keyframes kf-sw-sunrise {
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0.4rem);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-0.5rem);
+            }
+        }
+    }
+
+    /* ── synthwave · tone and change ──────────────────────────────────── */
+
+    /* The grid-floor horizon: the change on a glass chip. */
+    [data-theme='synthwave'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-shadow: inset 0 0 0 1px color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+    }
+
+    /* The VCR display: the change as an inverse block. */
+    [data-theme='synthwave'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: var(--foreground);
+        --kf-delta-ink: var(--background);
+        --kf-delta-radius: 0;
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 0;
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 0;
+    }
+
+    /* The arcade warning: a glass chip with a glow; a toned figure flashes its plate like an arcade score. */
+    [data-theme='synthwave'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--primary) 16%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-shadow: 0 0 6px color-mix(in oklch, var(--primary) 55%, transparent);
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-shadow: 0 0 10px color-mix(in oklch, var(--warning) 60%, transparent);
+    }
+
+    [data-theme='synthwave'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-shadow: 0 0 10px color-mix(in oklch, var(--destructive) 60%, transparent);
+    }
+
+    /* ── synthwave · hover, focus, press ──────────────────────────────── */
+
+    /* Over the horizon: the pink horizon brightens on hover, a laser-pink ring on focus, dims when pressed. */
+    [data-theme='synthwave'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='synthwave'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-transition: filter 0.12s ease, background-color 0.12s ease;
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='1'] a.kp-kpi:hover,
+    [data-theme='synthwave'] [data-kf-interactive='1'] .kp-kpi--toggle:hover {
+        --kf-pat:
+            repeating-linear-gradient(to right, color-mix(in oklch, var(--primary) 55%, transparent) 0 1px, transparent 1px 12%),
+            linear-gradient(to bottom, color-mix(in oklch, var(--primary) 18%, var(--card)), var(--card) 60%);
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='synthwave'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='1'] a.kp-kpi:active,
+    [data-theme='synthwave'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
+        --kf-pat:
+            repeating-linear-gradient(to right, color-mix(in oklch, var(--primary) 18%, transparent) 0 1px, transparent 1px 12%),
+            linear-gradient(to bottom, color-mix(in oklch, var(--primary) 5%, var(--card)), var(--card) 60%);
+    }
+
+    /* The OSD blinks: the OSD numerals flash on hover, scanlines tighten on focus, the tracking rolls once when pressed. */
+    [data-theme='synthwave'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='synthwave'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-transition: background-color 0.12s ease;
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='2'] a.kp-kpi:hover .kp-kpi__value,
+    [data-theme='synthwave'] [data-kf-interactive='2'] .kp-kpi--toggle:hover .kp-kpi__value {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='synthwave'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-pat: repeating-linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 14%, transparent) 0 1px, transparent 1px 2px);
+        --kf-focus-outline: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='2'] a.kp-kpi:active,
+    [data-theme='synthwave'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
+        --kf-pat: repeating-linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 20%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    /* The marquee lights: the marquee glow widens on hover, a cyan outline on focus, flashes once when pressed. */
+    [data-theme='synthwave'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='synthwave'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-transition: box-shadow 0.12s ease;
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='3'] a.kp-kpi:hover,
+    [data-theme='synthwave'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
+        box-shadow: 0 0 20px color-mix(in oklch, var(--primary) 65%, transparent);
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
+    [data-theme='synthwave'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid color-mix(in oklch, var(--secondary) 70%, var(--primary));
+    }
+
+    [data-theme='synthwave'] [data-kf-interactive='3'] a.kp-kpi:active,
+    [data-theme='synthwave'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
+        box-shadow: 0 0 2px color-mix(in oklch, var(--primary) 30%, transparent);
+    }
+
+    /* ── synthwave · live update ──────────────────────────────────────── */
+
+    /* The tracking jumps: the number jolts once, as a needle does, in 2 hard steps. */
+    [data-theme='synthwave'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    /* The laser flares: the number flares with light once, slowing as it lands. */
+    [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-sw-jolt 0.3s steps(2);
+        }
+
+        @keyframes kf-sw-jolt {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-16%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-sw-laser 0.55s ease-out;
+        }
+
+        @keyframes kf-sw-laser {
+            0% {
+                text-shadow: 0 0 0 transparent;
+            }
+            35% {
+                text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
+            }
+            100% {
+                text-shadow: 0 0 0 transparent;
+            }
+        }
+    }
+
+    /* ═══════════════════════════════ PASTEL ════════════════════════════ */
+
+    /* ── pastel · shape ────────────────────────────────────────────────── */
+
+    /* The sticker chart: a candy card with a flat sticker shadow, a rounded face. */
+    [data-theme='pastel'] [data-kf-shape='1'] .kp-kpi {
+        --kf-frame: 2px solid color-mix(in oklch, var(--border-strong) 32%, var(--foreground));
+        --kf-radius: 1rem;
+        --kf-shadow: 0.25rem 0.25rem 0 color-mix(in oklch, var(--border-strong) 55%, transparent);
+        --kf-num-font: var(--theme-font-body, inherit);
+        --kf-num-weight: 700;
+    }
+
+    /* The washi planner: a dotted planner pad with a strip of washi tape across the top. */
+    [data-theme='pastel'] [data-kf-shape='2'] .kp-kpi {
+        --kf-frame: 1px dashed color-mix(in oklch, var(--border-strong) 32%, var(--foreground));
+        --kf-radius: 0.6rem;
+    }
+
+    [data-theme='pastel'] [data-kf-shape='2'] .kp-kpi::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: -0.3rem;
+        inset-inline-start: 12%;
+        inline-size: 32%;
+        block-size: 0.6rem;
+        background: color-mix(in oklch, var(--primary) 45%, var(--card));
+        transform: rotate(-3deg);
+    }
+
+    /* The heart sticker: a soft cloud, a wide round card with a dashed candy outline. */
+    [data-theme='pastel'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 2px dashed var(--primary);
+        --kf-radius: 1.4rem;
+        --kf-num-font: var(--theme-font-body, inherit);
+    }
+
+    /* ── pastel · while loading ───────────────────────────────────────── */
+
+    /* The sticker chart: a candy dot hops under the label. */
+    [data-theme='pastel'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inset-inline-start: var(--kp-space-md, 1rem);
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    /* The washi planner: the tape drifts. */
+    [data-theme='pastel'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: -0.3rem;
+        inset-inline-start: 12%;
+        inline-size: 32%;
+        block-size: 0.6rem;
+        background: color-mix(in oklch, var(--secondary) 55%, var(--card));
+    }
+
+    /* Sprinkles: sprinkles in two colours hop along the card. */
+    [data-theme='pastel'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inset-inline-start: var(--kp-space-md, 1rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 1.1rem -0.3rem 0 0 color-mix(in oklch, var(--secondary) 80%, var(--card));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-pas-hop 1.1s ease-in-out infinite;
+        }
+
+        @keyframes kf-pas-hop {
+            0%,
+            100% {
+                inset-inline-start: var(--kp-space-md, 1rem);
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-0.4rem);
+            }
+            50% {
+                inset-inline-start: calc(100% - var(--kp-space-md, 1rem) - 0.55rem);
+            }
+            75% {
+                transform: translateY(-0.4rem);
+            }
+        }
+
+        [data-theme='pastel'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-pas-tape 1.6s ease-in-out infinite;
+        }
+
+        @keyframes kf-pas-tape {
+            0%,
+            100% {
+                transform: rotate(-3deg) translateX(0);
+            }
+            50% {
+                transform: rotate(3deg) translateX(0.4rem);
+            }
+        }
+
+        [data-theme='pastel'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+            animation: kf-pas-sprinkle 1s ease-in-out infinite;
+        }
+
+        @keyframes kf-pas-sprinkle {
+            0%,
+            100% {
+                inset-inline-start: var(--kp-space-md, 1rem);
+            }
+            50% {
+                inset-inline-start: calc(100% - var(--kp-space-md, 1rem) - 1.6rem);
+            }
+        }
+    }
+
+    /* ── pastel · tone and change ─────────────────────────────────────── */
+
+    /* The sticker chart: the change as a sticker with its own flat shadow. */
+    [data-theme='pastel'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 16%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 999px;
+        --kf-delta-shadow: 0.1rem 0.1rem 0 color-mix(in oklch, var(--border-strong) 45%, transparent);
+    }
+
+    [data-theme='pastel'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 999px;
+    }
+
+    [data-theme='pastel'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 999px;
+    }
+
+    /* The washi planner: the change as a taped label. */
+    [data-theme='pastel'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--secondary) 55%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 0.2rem;
+        transform: rotate(-2deg);
+    }
+
+    [data-theme='pastel'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: var(--warning);
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-tone-radius: 0.2rem;
+    }
+
+    [data-theme='pastel'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: var(--destructive);
+        --kf-tone-ink: var(--destructive-foreground);
+        --kf-tone-radius: 0.2rem;
+    }
+
+    /* The heart sticker: a round sticker turned a little; a toned figure gets a candy band along the top. */
+    [data-theme='pastel'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: color-mix(in oklch, var(--muted-foreground) 16%, var(--card));
+        --kf-delta-ink: var(--card-foreground);
+        --kf-delta-radius: 999px;
+        transform: rotate(4deg);
+    }
+
+    [data-theme='pastel'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-tone-shadow: inset 0 3px 0 var(--warning);
+    }
+
+    [data-theme='pastel'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: color-mix(in oklch, var(--warning) 20%, var(--card));
+        --kf-tone-ink: var(--warning-foreground, var(--kf-ink));
+        --kf-tone-radius: 999px;
+    }
+
+    [data-theme='pastel'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-tone-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    [data-theme='pastel'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: color-mix(in oklch, var(--destructive) 20%, var(--card));
+        --kf-tone-ink: var(--destructive-foreground, var(--kf-ink));
+        --kf-tone-radius: 999px;
+    }
+
+    /* ── pastel · hover, focus, press ─────────────────────────────────── */
+
+    /* The sticker peels: the sticker shadow lifts on hover, a candy outline on focus, flattens when pressed. */
+    [data-theme='pastel'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='pastel'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-transition: box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='1'] a.kp-kpi:hover,
+    [data-theme='pastel'] [data-kf-interactive='1'] .kp-kpi--toggle:hover {
+        box-shadow: 0.4rem 0.4rem 0 color-mix(in oklch, var(--border-strong) 60%, transparent);
+        transform: translate(-0.1rem, -0.1rem);
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='pastel'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px dashed var(--primary);
+        --kf-focus-offset: 3px;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='1'] a.kp-kpi:active,
+    [data-theme='pastel'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
+        box-shadow: 0 0 0 color-mix(in oklch, var(--border-strong) 60%, transparent);
+        transform: translate(0, 0);
+    }
+
+    /* The tape lifts: the washi tape lifts a corner on hover, a dashed outline on focus, settles when pressed. */
+    [data-theme='pastel'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='pastel'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-transition: background-color 0.15s ease;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='2'] a.kp-kpi:hover::before,
+    [data-theme='pastel'] [data-kf-interactive='2'] .kp-kpi--toggle:hover::before {
+        transform: rotate(-10deg) translateY(-0.15rem);
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='pastel'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px dashed var(--secondary);
+        --kf-focus-offset: 3px;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='2'] a.kp-kpi:active::before,
+    [data-theme='pastel'] [data-kf-interactive='2'] .kp-kpi--toggle:active::before {
+        transform: rotate(-3deg) translateY(0);
+    }
+
+    /* The cloud bounces: the cloud card bounces a hair on hover, a candy ring on focus, squishes when pressed. */
+    [data-theme='pastel'] [data-kf-interactive='3'] a.kp-kpi,
+    [data-theme='pastel'] [data-kf-interactive='3'] .kp-kpi--toggle {
+        --kf-transition: transform 0.15s ease;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='3'] a.kp-kpi:hover,
+    [data-theme='pastel'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
+        transform: translateY(-0.15rem);
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
+    [data-theme='pastel'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 3px solid var(--primary);
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='pastel'] [data-kf-interactive='3'] a.kp-kpi:active,
+    [data-theme='pastel'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
+        transform: scaleY(0.94);
+    }
+
+    /* ── pastel · live update ─────────────────────────────────────────── */
+
+    /* A happy hop: the number jolts once, as a needle does, overshooting once. */
+    [data-theme='pastel'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-pas-hophop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes kf-pas-hophop {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            45% {
+                transform: translateY(-20%) scale(1.08);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+    }
+
+    /* Squished: the number swells once and settles. */
+    [data-theme='pastel'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        transform-origin: center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kf-pas-squish 0.5s ease-out;
+        }
+
+        @keyframes kf-pas-squish {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.12);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+}
