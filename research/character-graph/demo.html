@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-graph">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a network graph of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="graphs.css" />
+    </head>
+    <body>
+        <main class="gr-page">
+            <header class="gr-intro">
+                <h1>A network graph of its own, per theme</h1>
+                <p>
+                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
+                    chart and the month heatmap comes the network graph. Today <code>.kp-graph</code> has the same shape in every theme (a hub in the
+                    middle, the other sites on a ring, round nodes with a ring and a core in their own hue, links by kind in a colour and a dash,
+                    labels with a halo, the kinds as pills above the picture), drawn in the theme's colours only. Here every theme gets two graphs of
+                    its own, drawn in the theme's own material, beside the plain graph as it is today. Pick one of the three per theme.
+                </p>
+                <p class="gr-motion" data-gr-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
+                    the system settings to judge the motion.
+                </p>
+                <p class="gr-meta">
+                    Each column is the northern water network: a control centre, six pump houses (number 6 still being built, number 5 set differently
+                    on site than in the plan), two reservoirs, a treatment plant, and two addresses outside the network (the weather service and the
+                    energy supplier). Telemetry, remote control, the radio spare path and the planned links each have their kind. Every graph is the
+                    package's own (<code>js/graph.js</code> draws it, so hovering, picking, the arrow keys, the kinds and Show all work); a character
+                    only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>graphs.css</code>), and keeps the
+                    picture's height in every state. This theme: <b data-gr-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="gr-sec"
+                data-review-item="graph"
+                data-review-components="graph"
+                data-review-title="The network graph"
+                aria-labelledby="h-graph"
+            >
+                <div class="gr-sec__head">
+                    <h2 id="h-graph">The network graph in <span data-gr-theme-name>this theme</span></h2>
+                    <p>
+                        Two characters drawn in this theme's world, and the plain graph as it is today. Use the buttons below for every state and
+                        every kind of network; hover a node, click one, or tab into the picture and walk it with the arrow keys: the graph behaves the
+                        same in all three columns.
+                    </p>
+                </div>
+                <div class="gr-controls">
+                    <div class="gr-actions" role="group" aria-label="State of every graph">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-state="ready" aria-pressed="true">Drawn</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-state="empty" aria-pressed="false">Nothing to draw</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-live>Live update</button>
+                    </div>
+                    <div class="gr-actions" role="group" aria-label="The network in every graph">
+                        <b>Network:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-toggle="long" aria-pressed="false">Fifteen long names</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-toggle="weights" aria-pressed="false">Size by flow</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-toggle="pick" aria-pressed="false">
+                            Pick a node (Pump house 3)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-toggle="hide" aria-pressed="false">
+                            Hide a kind (Telemetry)
+                        </button>
+                    </div>
+                    <div class="gr-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="gr-log" data-gr-log aria-live="polite">Nothing picked. Every kind of link is shown.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="gr-trio">
+                    <div class="gr-col" data-gr="a" data-gr-pick="a">
+                        <p class="gr-label"><span class="gr-label__no">Character 1</span> <span data-gr-name="a">…</span></p>
+                        <p class="gr-desc" data-gr-desc="a"></p>
+                        <figure class="kp-graph" data-kp-graph data-kp-key="network-a" aria-label="The northern network, character 1"></figure>
+                    </div>
+                    <div class="gr-col" data-gr="b" data-gr-pick="b">
+                        <p class="gr-label"><span class="gr-label__no">Character 2</span> <span data-gr-name="b">…</span></p>
+                        <p class="gr-desc" data-gr-desc="b"></p>
+                        <figure class="kp-graph" data-kp-graph data-kp-key="network-b" aria-label="The northern network, character 2"></figure>
+                    </div>
+                    <div class="gr-col" data-gr="plain" data-gr-pick="plain">
+                        <p class="gr-label"><span class="gr-label__no">Today</span> The plain graph</p>
+                        <p class="gr-desc">
+                            The package's network graph as it ships: a hub in the middle and the sites on a ring, round nodes with a ring and a core
+                            in their own hue, links by kind in a colour and a dash, labels with a halo in the page's colour, the kinds as pills above
+                            the picture, a pulsing ring while it loads; the same shape in every theme.
+                        </p>
+                        <figure
+                            class="kp-graph"
+                            data-kp-graph
+                            data-kp-key="network-plain"
+                            aria-label="The northern network, the plain graph"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

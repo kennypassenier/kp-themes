@@ -79,6 +79,8 @@ export const PAGES = [
             { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
             // The character round, third demo (2026-10-05): the month heatmap in 22 themes, two characters each.
             { href: 'research/character-calendar/demo.html', label: 'A month heatmap of its own, per theme' },
+            // The character round, fourth demo (2026-10-05): the network graph in 22 themes, two characters each.
+            { href: 'research/character-graph/demo.html', label: 'A network graph of its own, per theme' },
         ],
     },
     {

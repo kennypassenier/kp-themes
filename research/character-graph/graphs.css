@@ -1,0 +1,1488 @@
+/* research/character-graph: two characters of the network graph `.kp-graph`
+   per theme, in the theme's kp.signature layer, so each can move into its
+   register as it stands. `[data-gr='a']` and `[data-gr='b']` are the demo's
+   two columns; in a register the same rules read
+   `[data-theme='<name>'] .kp-graph`.
+
+   The contract every character keeps:
+   - The markup is the package's: js/graph.js builds every part, and nothing
+     here needs more than the classes and attributes it already writes:
+     `.kp-graph` (`data-kp-state`, `data-kp-focus`), `.kp-graph__bar`,
+     `.kp-graph__kinds` with `.kp-graph__kind` (`aria-pressed`) and its
+     `.kp-graph__sample line` (`data-kp-style`), `.kp-graph__show-all`,
+     `.kp-graph__box` holding `.kp-graph__svg` and `.kp-graph__note`, the
+     edges `.kp-graph__edge` (`data-kp-style`, `data-kp-kind`, `is-on`,
+     `is-dim`, `is-hidden`), the nodes `.kp-graph__node` (`--hub`,
+     `--external`, `is-on`, `is-dim`, `is-picked`, `--kp-graph-hue`) with
+     `.kp-graph__ring`, `.kp-graph__core`, `.kp-graph__flag` and
+     `.kp-graph__label`, the loading `.kp-graph__skeleton`.
+   - Surfaces to draw on: the box's background (the paper and its pattern,
+     `--gr-paper`, `--gr-pat`), its ::before (under the picture: a sweep, a
+     pool of light) and ::after (over it: scanlines, a halftone); the strokes
+     and fills of the SVG parts; the chips of the kinds.
+   - Colour: tokens only. A link takes its kind's colour mixed toward the
+     label ink (`--gr-edge-mix`), a node keeps `--kp-graph-hue` at the
+     character's mix toward the ink (`--gr-node-mix`), so both hold 3:1 on
+     the character's paper; labels are `--gr-label` on a `--gr-halo` halo.
+   - Height: the package's `--kp-graph-h` in every state; nothing here adds
+     height to the box, and a frame is a border of the same 1px or drawn
+     inside (box-shadow inset).
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end; nothing loops at rest, only the loading
+     picture (and nostromo 1's sweep while loading). */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph {
+        --gr-paper: var(--background);
+        --gr-label: var(--foreground);
+        --gr-halo: var(--gr-paper);
+        --kp-graph-dim: var(--gr-dim, 0.08);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__box {
+        isolation: isolate;
+        overflow: clip;
+        border: var(--gr-frame, 1px solid var(--border));
+        border-radius: var(--gr-radius, var(--radius, 0.5rem));
+        background-color: var(--gr-paper);
+        background-image: var(--gr-pat, none);
+        background-size: var(--gr-pat-size, auto);
+        background-position: var(--gr-pat-at, 0 0);
+        box-shadow: var(--gr-shadow, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::before,
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        pointer-events: none;
+        background: var(--gr-under, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::after {
+        z-index: 1;
+        background: var(--gr-over, none);
+        background-size: var(--gr-over-size, auto);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__note {
+        color: var(--gr-label);
+        font-family: var(--gr-font, inherit);
+        text-transform: var(--gr-case, none);
+        letter-spacing: var(--gr-track, normal);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__edge {
+        stroke: color-mix(in oklch, var(--kp-graph-edge-colour, var(--chart-3)) var(--gr-edge-mix, 75%), var(--gr-label));
+        stroke-width: var(--gr-edge-w, 1.6);
+        stroke-linecap: var(--gr-cap, butt);
+        filter: var(--gr-edge-glow, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__sample line {
+        stroke: color-mix(in oklch, var(--kp-graph-edge-colour, var(--chart-3)) var(--gr-edge-mix, 75%), var(--gr-label));
+        stroke-width: var(--gr-sample-w, 2);
+        stroke-linecap: var(--gr-cap, butt);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__edge.is-on {
+        stroke-width: var(--gr-edge-on-w, 2.6);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='dash'] {
+        stroke-dasharray: var(--gr-dash, 6 3);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='dot'] {
+        stroke-dasharray: var(--gr-dot, 2 4);
+        stroke-linecap: round;
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='long-dash'] {
+        stroke-dasharray: var(--gr-long, 12 4);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__node {
+        --kp-graph-node-colour: color-mix(
+            in oklch,
+            oklch(from var(--chart-1) l max(c, 0.12) var(--kp-graph-hue, 210)) var(--gr-node-mix, 80%),
+            var(--gr-label)
+        );
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__ring {
+        fill: var(--gr-ring-fill, var(--gr-paper));
+        stroke: var(--gr-ring, var(--kp-graph-node-colour));
+        stroke-width: var(--gr-ring-w, 2.5);
+        stroke-dasharray: var(--gr-ring-dash, none);
+        stroke-linecap: var(--gr-ring-cap, butt);
+        filter: var(--gr-node-glow, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__core {
+        fill: var(--gr-core, var(--kp-graph-node-colour));
+        opacity: var(--gr-core-op, 1);
+        stroke: var(--gr-core-edge, none);
+        stroke-width: var(--gr-core-edge-w, 0);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__node--hub .kp-graph__ring {
+        fill: var(--gr-hub-fill, var(--gr-ring-fill, var(--gr-paper)));
+        stroke: var(--gr-hub, var(--gr-ring, var(--kp-graph-node-colour)));
+        stroke-width: var(--gr-hub-w, var(--gr-ring-w, 2.5));
+        stroke-dasharray: var(--gr-hub-dash, var(--gr-ring-dash, none));
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__node--external .kp-graph__ring {
+        fill: var(--gr-ext-fill, var(--gr-paper));
+        stroke: var(--gr-ext, color-mix(in oklch, var(--muted-foreground) 50%, var(--gr-label)));
+        stroke-width: var(--gr-ext-w, 2);
+        stroke-dasharray: var(--gr-ext-dash, 3 3);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__flag {
+        stroke: var(--gr-flag, color-mix(in oklch, var(--warning) 55%, var(--gr-label)));
+        stroke-width: 2;
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__node.is-picked .kp-graph__ring {
+        stroke: var(--gr-pick, var(--gr-ring, var(--kp-graph-node-colour)));
+        stroke-width: var(--gr-pick-w, 5);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__node.is-dim {
+        opacity: var(--gr-node-dim, 0.3);
+        filter: var(--gr-dim-filter, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__label {
+        fill: var(--gr-label);
+        stroke: var(--gr-halo);
+        stroke-width: var(--gr-halo-w, 4px);
+        font-family: var(--gr-font, inherit);
+        font-size: var(--gr-size, 12px);
+        font-weight: var(--gr-weight, 500);
+        font-style: var(--gr-italic, normal);
+        font-variant-caps: var(--gr-caps, normal);
+        letter-spacing: var(--gr-track, normal);
+        text-transform: var(--gr-case, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__kind {
+        border: var(--gr-chip-border, 1px solid var(--border));
+        border-radius: var(--gr-chip-radius, 999px);
+        background: var(--gr-chip-bg, var(--card));
+        color: var(--gr-chip-fg, var(--foreground));
+        font-family: var(--gr-chip-font, var(--gr-font, inherit));
+        text-transform: var(--gr-chip-case, none);
+        letter-spacing: var(--gr-chip-track, normal);
+        box-shadow: var(--gr-chip-shadow, none);
+        clip-path: var(--gr-chip-clip, none);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__kind[aria-pressed='false'] {
+        background: var(--gr-chip-off-bg, var(--gr-chip-bg, var(--card)));
+        box-shadow: var(--gr-chip-off-shadow, var(--gr-chip-shadow, none));
+        color: var(--muted-foreground);
+    }
+
+    :is([data-gr='a'], [data-gr='b']) .kp-graph__skeleton {
+        stroke: var(--gr-skel, color-mix(in oklch, var(--gr-label) 30%, var(--gr-paper)));
+        stroke-width: var(--gr-skel-w, 10);
+        stroke-dasharray: var(--gr-skel-dash, none);
+        stroke-linecap: var(--gr-skel-cap, butt);
+    }
+
+    /* ══ formal ═══════════════════════════════════════════════════════════ */
+
+    [data-theme='formal'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-font: var(--theme-font-display);
+        --gr-caps: all-small-caps;
+        --gr-track: 0.04em;
+        --gr-size: 13px;
+        --gr-edge-w: 1;
+        --gr-edge-on-w: 2;
+        --gr-edge-mix: 55%;
+        --gr-ring-w: 1.25;
+        --gr-core-op: 0.35;
+        --gr-hub-w: 3;
+        --gr-ring-dash: none;
+        --gr-node-mix: 45%;
+        --gr-dim-filter: grayscale(1);
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
+        --gr-chip-off-shadow: none;
+        --gr-chip-case: none;
+        --gr-skel-w: 2;
+        --gr-skel-dash: 1 6;
+        --gr-skel-cap: round;
+    }
+
+    [data-theme='formal'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-frame: 1px solid var(--foreground);
+        --gr-shadow: inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--border-strong, var(--border));
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-display);
+        --gr-italic: italic;
+        --gr-size: 13px;
+        --gr-edge-w: 1.1;
+        --gr-edge-mix: 50%;
+        --gr-node-mix: 50%;
+        --gr-ring-w: 1;
+        --gr-ring-dash: none;
+        --gr-hub-w: 2;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--foreground);
+        --gr-chip-bg: var(--card);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 1 4;
+    }
+
+    [data-theme='formal'] [data-gr='b'] .kp-graph__core {
+        r: 5px;
+    }
+
+    /* ══ light ════════════════════════════════════════════════════════════ */
+
+    [data-theme='light'] [data-gr='a'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--primary) 4%, var(--background));
+        --gr-halo: var(--card);
+        --gr-ring-fill: var(--card);
+        --gr-node-glow: drop-shadow(0 2px 3px color-mix(in oklch, var(--foreground) 18%, transparent));
+        --gr-ring-w: 2;
+        --gr-core-op: 0.9;
+        --gr-cap: round;
+        --gr-edge-w: 2;
+        --gr-edge-on-w: 3;
+        --gr-node-dim: 0.22;
+        --gr-dim: 0.12;
+        --gr-chip-border: 0;
+        --gr-chip-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 16%, transparent);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 8 6;
+    }
+
+    [data-theme='light'] [data-gr='a'] .kp-graph__core {
+        r: 4px;
+    }
+
+    [data-theme='light'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under: radial-gradient(circle at 50% 45%, color-mix(in oklch, var(--warning) 14%, transparent), transparent 60%);
+        --gr-ring-fill: var(--card);
+        --gr-ring-w: 5;
+        --gr-node-mix: 70%;
+        --gr-core-op: 0;
+        --gr-hub: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+        --gr-hub-w: 6;
+        --gr-cap: round;
+        --gr-edge-w: 2.4;
+        --gr-edge-on-w: 3.4;
+        --gr-chip-bg: var(--card);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 60 400;
+        --gr-skel-cap: round;
+        --gr-skel: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    /* ══ dark ═════════════════════════════════════════════════════════════ */
+
+    [data-theme='dark'] [data-gr='a'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 70%, oklch(from var(--background) 0 0 h));
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11.5px;
+        --gr-ring-fill: var(--gr-paper);
+        --gr-ring-w: 2;
+        --gr-core-op: 0.85;
+        --gr-edge-w: 1.2;
+        --gr-edge-on-w: 2.2;
+        --gr-node-mix: 70%;
+        --gr-dim-filter: grayscale(1);
+        --gr-node-dim: 0.35;
+        --gr-chip-radius: 2px;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 4 6;
+    }
+
+    [data-theme='dark'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-shadow:
+            inset 0 1px 0 color-mix(in oklch, var(--foreground) 12%, transparent),
+            inset 0 -2px 6px color-mix(in oklch, oklch(from var(--background) 0 0 h) 50%, transparent);
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-track: 0.06em;
+        --gr-size: 10.5px;
+        --gr-ring-fill: color-mix(in oklch, var(--card) 60%, oklch(from var(--background) 0 0 h));
+        --gr-ring-w: 4;
+        --gr-core-op: 0.75;
+        --gr-node-glow: drop-shadow(0 1px 0 color-mix(in oklch, var(--foreground) 25%, transparent));
+        --gr-edge-w: 1.4;
+        --gr-chip-radius: 3px;
+        --gr-chip-bg: color-mix(in oklch, var(--card) 70%, oklch(from var(--background) 0 0 h));
+        --gr-chip-case: uppercase;
+        --gr-chip-track: 0.05em;
+        --gr-skel-w: 4;
+    }
+
+    /* ══ cyberpunk ════════════════════════════════════════════════════════ */
+
+    [data-theme='cyberpunk'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat:
+            linear-gradient(color-mix(in oklch, var(--primary) 8%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--primary) 8%, transparent) 1px, transparent 1px);
+        --gr-pat-size: 24px 24px;
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-track: 0.06em;
+        --gr-edge-mix: 90%;
+        --gr-edge-w: 2;
+        --gr-edge-on-w: 3;
+        --gr-edge-glow: drop-shadow(0 0 3px var(--kp-graph-edge-colour, var(--chart-3)));
+        --gr-ring-fill: var(--background);
+        --gr-core-op: 0.35;
+        --gr-hub: var(--primary);
+        --gr-hub-w: 3.5;
+        --gr-dim-filter: grayscale(1);
+        --gr-chip-radius: 0;
+        --gr-chip-clip: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+        --gr-chip-bg: var(--background);
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 30 300;
+        --gr-skel-cap: square;
+        --gr-skel-anim: gr-march 1400ms linear infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='cyberpunk'] [data-gr='a'] .kp-graph__node {
+        --gr-node-glow: drop-shadow(0 0 4px var(--kp-graph-node-colour));
+    }
+
+    [data-theme='cyberpunk'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 80%, oklch(from var(--background) 0 0 h));
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-size: 12px;
+        --gr-cap: square;
+        --gr-edge-w: 2.2;
+        --gr-edge-mix: 85%;
+        --gr-ring-w: 4;
+        --gr-ring-dash: 9 4;
+        --gr-hub-dash: 14 4;
+        --gr-core-op: 0.6;
+        --gr-dim-filter: grayscale(1) brightness(0.8);
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-border: 2px solid var(--primary);
+        --gr-chip-case: uppercase;
+        --gr-chip-font: var(--theme-font-display);
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 26 10;
+        --gr-skel-anim: gr-march 900ms linear infinite;
+    }
+
+    /* ══ synthwave ════════════════════════════════════════════════════════ */
+
+    [data-theme='synthwave'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under:
+            linear-gradient(to top, color-mix(in oklch, var(--primary) 22%, transparent), transparent 30%),
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 14%, transparent) 0 1px, transparent 1px 40px) bottom / 100% 26%
+                no-repeat,
+            repeating-linear-gradient(to top, color-mix(in oklch, var(--accent) 14%, transparent) 0 1px, transparent 1px 18px) bottom / 100% 26%
+                no-repeat;
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 15px;
+        --gr-edge-w: 1.2;
+        --gr-edge-mix: 80%;
+        --gr-edge-glow: drop-shadow(0 0 2px var(--kp-graph-edge-colour, var(--chart-3)));
+        --gr-ring-fill: var(--background);
+        --gr-ring-w: 2;
+        --gr-node-mix: 70%;
+        --gr-chip-bg: color-mix(in oklch, var(--card) 70%, transparent);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-anim: gr-pulse 1600ms ease-in-out infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='synthwave'] [data-gr='a'] .kp-graph__node {
+        --gr-node-glow: drop-shadow(0 0 6px var(--kp-graph-node-colour));
+    }
+
+    [data-theme='synthwave'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 75%, oklch(from var(--background) 0 0 h));
+        --gr-over: repeating-linear-gradient(
+            to bottom,
+            color-mix(in oklch, oklch(from var(--background) 0 0 h) 22%, transparent) 0 1px,
+            transparent 1px 3px
+        );
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 15px;
+        --gr-edge-mix: 85%;
+        --gr-edge-glow: drop-shadow(0 0 3px var(--kp-graph-edge-colour, var(--chart-3)));
+        --gr-ring-fill: var(--gr-paper);
+        --gr-core-op: 0;
+        --gr-ring-w: 2.5;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-border: 1px solid var(--accent);
+        --gr-chip-radius: 0;
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--accent);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 80 40;
+        --gr-skel-anim: gr-march 2000ms linear infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='synthwave'] [data-gr='b'] .kp-graph__node {
+        --gr-node-glow: drop-shadow(0 0 3px var(--kp-graph-node-colour));
+    }
+
+    /* ══ pastel ═══════════════════════════════════════════════════════════ */
+
+    [data-theme='pastel'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-cap: round;
+        --gr-edge-w: 3.5;
+        --gr-edge-on-w: 5;
+        --gr-edge-mix: 70%;
+        --gr-dash: 8 7;
+        --gr-dot: 0.5 7;
+        --gr-long: 16 8;
+        --gr-ring-w: 3;
+        --gr-node-mix: 72%;
+        --gr-core: var(--card);
+        --gr-core-op: 0.55;
+        --gr-weight: 700;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-shadow: 2px 2px 0 var(--foreground);
+        --gr-chip-off-shadow: none;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 12;
+        --gr-skel-dash: 0.5 26;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1800ms steps(9) infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='pastel'] [data-gr='a'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    [data-theme='pastel'] [data-gr='a'] .kp-graph__core {
+        r: 4px;
+        transform: translate(-3px, -3px);
+    }
+
+    [data-theme='pastel'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1.5px);
+        --gr-pat-size: 14px 14px;
+        --gr-cap: round;
+        --gr-edge-w: 2.2;
+        --gr-dash: 5 5;
+        --gr-ring-w: 3;
+        --gr-ring-dash: 4 3;
+        --gr-ring-cap: round;
+        --gr-core-op: 0.5;
+        --gr-chip-radius: 2px;
+        --gr-chip-border: 0;
+        --gr-chip-bg: repeating-linear-gradient(
+            -45deg,
+            color-mix(in oklch, var(--primary) 18%, var(--card)) 0 6px,
+            color-mix(in oklch, var(--primary) 9%, var(--card)) 6px 12px
+        );
+        --gr-skel: var(--accent);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 10 8;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 3000ms linear infinite;
+    }
+
+    /* ══ terminal ═════════════════════════════════════════════════════════ */
+
+    [data-theme='terminal'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-frame: 1px solid var(--foreground);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 12px;
+        --gr-weight: 400;
+        --gr-cap: square;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 60%;
+        --gr-node-mix: 55%;
+        --gr-ring-w: 2;
+        --gr-ring-dash: 6 3;
+        --gr-core-op: 1;
+        --gr-node-dim: 0.45;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 12 12;
+        --gr-skel-anim: gr-march 1000ms steps(4) infinite;
+    }
+
+    [data-theme='terminal'] [data-gr='a'] .kp-graph__kind::before {
+        content: '[x]';
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] [data-gr='a'] .kp-graph__kind[aria-pressed='false']::before {
+        content: '[ ]';
+    }
+
+    [data-theme='terminal'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-dash: 2 3;
+        --gr-dot: 1 3;
+        --gr-long: 4 3;
+        --gr-edge-mix: 55%;
+        --gr-node-mix: 50%;
+        --gr-ring-w: 1;
+        --gr-core: var(--background);
+        --gr-hub-fill: var(--foreground);
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 10;
+        --gr-skel-anim: gr-march 800ms linear infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='terminal'] [data-gr='b'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    /* ══ forest ═══════════════════════════════════════════════════════════ */
+
+    [data-theme='forest'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under: repeating-radial-gradient(circle at 30% 70%, transparent 0 22px, color-mix(in oklch, var(--primary) 10%, transparent) 22px 23px);
+        --gr-font: var(--theme-font-display);
+        --gr-italic: italic;
+        --gr-size: 13px;
+        --gr-cap: round;
+        --gr-edge-w: 2;
+        --gr-dash: 7 5;
+        --gr-long: 14 6;
+        --gr-ring-w: 4;
+        --gr-ring-dash: 7 2;
+        --gr-node-mix: 65%;
+        --gr-core-op: 0.75;
+        --gr-hub-w: 6;
+        --gr-hub-dash: none;
+        --gr-chip-radius: 3px 10px 10px 3px;
+        --gr-chip-bg: color-mix(in oklch, var(--primary) 10%, var(--card));
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 8 7;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    [data-theme='forest'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--primary) 6%, var(--background));
+        --gr-cap: round;
+        --gr-edge-w: 3;
+        --gr-edge-on-w: 4.2;
+        --gr-edge-mix: 60%;
+        --gr-ring-w: 2;
+        --gr-node-mix: 60%;
+        --gr-core-op: 0.85;
+        --gr-chip-radius: 999px 2px 999px 2px;
+        --gr-chip-bg: color-mix(in oklch, var(--primary) 12%, var(--card));
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='forest'] [data-gr='b'] .kp-graph__node {
+        --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 22%, var(--gr-paper));
+    }
+
+    /* ══ high-contrast ════════════════════════════════════════════════════ */
+
+    [data-theme='high-contrast'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-frame: 2px solid var(--foreground);
+        --gr-weight: 700;
+        --gr-size: 13px;
+        --gr-edge-w: 2.5;
+        --gr-edge-on-w: 4;
+        --gr-edge-mix: 60%;
+        --gr-dash: 10 4;
+        --gr-dot: 2 5;
+        --gr-long: 18 4 2 4;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-node-mix: 70%;
+        --gr-pick: var(--ring);
+        --gr-pick-w: 6;
+        --gr-node-dim: 0.4;
+        --gr-dim: 0.15;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-radius: 0;
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 10 4;
+    }
+
+    /* The cores' shapes tell the nodes apart without their hue. */
+    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 1) .kp-graph__core {
+        clip-path: inset(15%);
+    }
+
+    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 2) .kp-graph__core {
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 3) .kp-graph__core {
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    [data-theme='high-contrast'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-weight: 700;
+        --gr-size: 13px;
+        --gr-edge-w: 3;
+        --gr-edge-on-w: 4.5;
+        --gr-edge-mix: 30%;
+        --gr-dash: 10 4;
+        --gr-dot: 2 5;
+        --gr-long: 18 4 2 4;
+        --gr-ring: var(--foreground);
+        --gr-ring-fill: var(--foreground);
+        --gr-core: var(--background);
+        --gr-ring-w: 2;
+        --gr-hub-w: 5;
+        --gr-pick: var(--ring);
+        --gr-pick-w: 6;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--background);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 4;
+    }
+
+    /* ══ sepia ════════════════════════════════════════════════════════════ */
+
+    [data-theme='sepia'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under: radial-gradient(ellipse at 50% 50%, transparent 55%, color-mix(in oklch, var(--foreground) 8%, transparent));
+        --gr-font: var(--theme-font-display);
+        --gr-italic: italic;
+        --gr-size: 13px;
+        --gr-edge-w: 1.1;
+        --gr-edge-mix: 45%;
+        --gr-cap: round;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1.3;
+        --gr-core-op: 0.55;
+        --gr-node-mix: 50%;
+        --gr-hub-w: 3;
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: sepia(1);
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
+        --gr-chip-off-shadow: none;
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 3000ms ease-in-out infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='sepia'] [data-gr='a'] .kp-graph__node {
+        --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 18%, var(--card));
+    }
+
+    [data-theme='sepia'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 6%, transparent) 0.6px, transparent 1px);
+        --gr-pat-size: 5px 5px;
+        --gr-font: var(--theme-font-display);
+        --gr-caps: all-small-caps;
+        --gr-track: 0.05em;
+        --gr-size: 13px;
+        --gr-edge-w: 2.2;
+        --gr-edge-mix: 55%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-ring-fill: color-mix(in oklch, var(--foreground) 10%, var(--card));
+        --gr-core-op: 0.7;
+        --gr-node-mix: 45%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px double var(--foreground);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 6;
+        --gr-skel-anim: gr-pulse 1800ms ease-in-out infinite;
+    }
+
+    /* ══ blueprint ════════════════════════════════════════════════════════ */
+
+    [data-theme='blueprint'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat:
+            linear-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
+        --gr-pat-size: 10px 10px;
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 10.5px;
+        --gr-track: 0.05em;
+        --gr-cap: square;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 40%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1.2;
+        --gr-core: var(--foreground);
+        --gr-hub: var(--accent);
+        --gr-hub-w: 3;
+        --gr-node-mix: 50%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--foreground);
+        --gr-chip-bg: var(--background);
+        --gr-chip-case: uppercase;
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--accent);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 14 4 2 4;
+        --gr-skel-anim: gr-march 2000ms linear infinite;
+    }
+
+    [data-theme='blueprint'] [data-gr='a'] .kp-graph__core {
+        r: 3.5px;
+    }
+
+    [data-theme='blueprint'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat:
+            linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px);
+        --gr-pat-size: 40px 40px;
+        --gr-frame: 1px solid var(--foreground);
+        --gr-shadow: inset 0 0 0 6px var(--background), inset 0 0 0 7px color-mix(in oklch, var(--foreground) 60%, transparent);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11px;
+        --gr-edge-mix: 45%;
+        --gr-dash: 14 3 2 3;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1.4;
+        --gr-ring-dash: 10 3 2 3;
+        --gr-core-op: 0.5;
+        --gr-node-mix: 50%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--foreground);
+        --gr-chip-bg: var(--background);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 10 6;
+        --gr-skel-anim: gr-march 1200ms linear infinite;
+    }
+
+    /* ══ solstice ═════════════════════════════════════════════════════════ */
+
+    [data-theme='solstice'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under: radial-gradient(ellipse 80% 45% at 50% 105%, color-mix(in oklch, var(--primary) 26%, transparent), transparent 70%);
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-cap: round;
+        --gr-edge-mix: 70%;
+        --gr-edge-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 60%, transparent));
+        --gr-ring-w: 2;
+        --gr-node-mix: 75%;
+        --gr-chip-bg: color-mix(in oklch, var(--primary) 12%, var(--card));
+        --gr-skel: var(--primary);
+        --gr-skel-w: 4;
+        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='solstice'] [data-gr='a'] .kp-graph__node {
+        --gr-node-glow: drop-shadow(0 0 5px var(--kp-graph-node-colour));
+        --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 25%, var(--background));
+    }
+
+    [data-theme='solstice'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 85%, oklch(from var(--background) 0 0 h));
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-cap: round;
+        --gr-edge-w: 2.2;
+        --gr-dash: 10 4;
+        --gr-dot: 0.5 5;
+        --gr-edge-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--destructive) 50%, transparent));
+        --gr-ring: color-mix(in oklch, var(--warning) 70%, var(--foreground));
+        --gr-ring-w: 2.5;
+        --gr-ring-fill: color-mix(in oklch, var(--destructive) 18%, var(--gr-paper));
+        --gr-hub: var(--destructive);
+        --gr-hub-w: 4;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent);
+        --gr-skel: color-mix(in oklch, var(--destructive) 60%, var(--warning));
+        --gr-skel-w: 6;
+        --gr-skel-anim: gr-pulse 2800ms ease-in-out infinite;
+    }
+
+    /* ══ brutalism ════════════════════════════════════════════════════════ */
+
+    [data-theme='brutalism'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-frame: 3px solid var(--foreground);
+        --gr-radius: 0;
+        --gr-weight: 800;
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-cap: square;
+        --gr-edge-w: 4;
+        --gr-edge-on-w: 6;
+        --gr-edge-mix: 50%;
+        --gr-dash: 10 6;
+        --gr-dot: 0.5 8;
+        --gr-long: 20 6;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 4;
+        --gr-node-glow: drop-shadow(3px 3px 0 var(--foreground));
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 6;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-shadow: 3px 3px 0 var(--foreground);
+        --gr-chip-off-shadow: none;
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 14;
+        --gr-skel-dash: 40 20;
+        --gr-skel-anim: gr-march 900ms steps(3) infinite;
+    }
+
+    [data-theme='brutalism'] [data-gr='a'] .kp-graph__node.is-picked .kp-graph__ring {
+        fill: var(--warning);
+    }
+
+    [data-theme='brutalism'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--accent) 22%, var(--background));
+        --gr-halo: var(--background);
+        --gr-frame: 3px solid var(--foreground);
+        --gr-radius: 0;
+        --gr-weight: 800;
+        --gr-size: 12px;
+        --gr-cap: square;
+        --gr-edge-w: 3;
+        --gr-edge-mix: 35%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-core-op: 0;
+        --gr-node-mix: 85%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-bg: var(--background);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 8;
+        --gr-skel-anim: gr-drop 1200ms ease-in infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='brutalism'] [data-gr='b'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    [data-theme='brutalism'] [data-gr='b'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
+        rotate: -2deg;
+    }
+
+    [data-theme='brutalism'] [data-gr='b'] .kp-graph__kinds li:nth-child(even) .kp-graph__kind {
+        rotate: 1.5deg;
+    }
+
+    /* ══ deco ═════════════════════════════════════════════════════════════ */
+
+    [data-theme='deco'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under: repeating-conic-gradient(
+            from 0deg at 50% 46%,
+            color-mix(in oklch, var(--primary) 7%, transparent) 0 4deg,
+            transparent 4deg 15deg
+        );
+        --gr-frame: 1px solid var(--primary);
+        --gr-shadow: inset 0 0 0 4px var(--background), inset 0 0 0 5px var(--primary);
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-track: 0.08em;
+        --gr-size: 11px;
+        --gr-edge-w: 1.1;
+        --gr-edge-mix: 40%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 2.5;
+        --gr-hub-w: 5;
+        --gr-node-mix: 70%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--background);
+        --gr-chip-case: uppercase;
+        --gr-chip-track: 0.08em;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 40 160;
+        --gr-skel-anim: gr-march 2200ms linear infinite;
+    }
+
+    [data-theme='deco'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 85%, oklch(from var(--background) 0 0 h));
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-track: 0.08em;
+        --gr-size: 11px;
+        --gr-cap: round;
+        --gr-edge-w: 3;
+        --gr-edge-mix: 60%;
+        --gr-dash: 0.1 6;
+        --gr-dot: 0.1 9;
+        --gr-long: 0.1 4;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 3.5;
+        --gr-ring-dash: 0.1 5;
+        --gr-ring-cap: round;
+        --gr-node-glow: drop-shadow(0 0 2px var(--primary));
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px solid var(--primary);
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 0.1 18;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 700ms steps(2) infinite;
+    }
+
+    [data-theme='deco'] [data-gr='b'] .kp-graph [data-kp-style='solid'] {
+        stroke-dasharray: 0.1 5;
+    }
+
+    /* ══ phantom ══════════════════════════════════════════════════════════ */
+
+    [data-theme='phantom'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-label: var(--card-foreground);
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-italic: italic;
+        --gr-size: 12px;
+        --gr-weight: 700;
+        --gr-edge-w: 1.6;
+        --gr-edge-mix: 40%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 3;
+        --gr-ring-dash: 12 2 3 2;
+        --gr-ring-fill: var(--card);
+        --gr-node-mix: 60%;
+        --gr-dim-filter: grayscale(1);
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--card);
+        --gr-chip-fg: var(--card-foreground);
+        --gr-chip-border: 2px solid var(--card-foreground);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-anim: gr-pulse 1400ms steps(2) infinite;
+    }
+
+    [data-theme='phantom'] [data-gr='a'] .kp-graph__edge[data-kp-kind='telemetry'] {
+        stroke: color-mix(in oklch, var(--primary) 85%, var(--card-foreground));
+    }
+
+    [data-theme='phantom'] [data-gr='a'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'] [data-gr='b'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--background) 80%, oklch(from var(--background) 0 0 h));
+        --gr-label: var(--foreground);
+        --gr-over: radial-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1.6px);
+        --gr-over-size: 6px 6px;
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-size: 12px;
+        --gr-weight: 700;
+        --gr-edge-mix: 30%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 4;
+        --gr-ring-fill: color-mix(in oklch, oklch(from var(--background) 0 0 h) 70%, var(--gr-paper));
+        --gr-core-op: 0.8;
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-border: 2px solid var(--primary);
+        --gr-chip-clip: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+        --gr-chip-case: uppercase;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 20 8;
+        --gr-skel-anim: gr-march 1000ms steps(5) infinite;
+    }
+
+    /* ══ shade-light ══════════════════════════════════════════════════════ */
+
+    [data-theme='shade-light'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 6px);
+        --gr-cap: round;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 45%;
+        --gr-ring: color-mix(in oklch, var(--foreground) 70%, var(--card));
+        --gr-ring-w: 1.4;
+        --gr-ring-fill: var(--card);
+        --gr-node-glow: drop-shadow(0 3px 4px color-mix(in oklch, var(--foreground) 22%, transparent));
+        --gr-core-op: 0.75;
+        --gr-node-mix: 60%;
+        --gr-chip-border: 0;
+        --gr-chip-shadow: 0 2px 5px color-mix(in oklch, var(--foreground) 18%, transparent);
+        --gr-skel: color-mix(in oklch, var(--foreground) 40%, var(--card));
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 3;
+        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
+    }
+
+    [data-theme='shade-light'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under:
+            radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 6%, transparent) 0 40px, transparent 41px),
+            radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--foreground) 5%, transparent) 0 60px, transparent 61px),
+            radial-gradient(circle at 60% 20%, color-mix(in oklch, var(--foreground) 4%, transparent) 0 30px, transparent 31px);
+        --gr-cap: round;
+        --gr-edge-mix: 50%;
+        --gr-ring-w: 3;
+        --gr-node-mix: 60%;
+        --gr-hub: color-mix(in oklch, var(--warning) 50%, var(--foreground));
+        --gr-chip-bg: var(--card);
+        --gr-skel-w: 10;
+        --gr-skel: color-mix(in oklch, var(--foreground) 20%, var(--card));
+        --gr-skel-anim: gr-pulse 3000ms ease-in-out infinite;
+    }
+
+    /* ══ shade-dark ═══════════════════════════════════════════════════════ */
+
+    [data-theme='shade-dark'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-edge-w: 1;
+        --gr-edge-on-w: 2;
+        --gr-edge-mix: 45%;
+        --gr-ring: color-mix(in oklch, var(--foreground) 85%, var(--background));
+        --gr-ring-w: 1.3;
+        --gr-ring-fill: color-mix(in oklch, oklch(from var(--background) 0 0 h) 30%, var(--background));
+        --gr-core-op: 0.8;
+        --gr-node-mix: 60%;
+        --gr-chip-bg: transparent;
+        --gr-chip-border: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
+        --gr-skel: color-mix(in oklch, var(--foreground) 50%, var(--background));
+        --gr-skel-w: 1;
+        --gr-skel-dash: 2 2;
+        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
+    }
+
+    [data-theme='shade-dark'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under: radial-gradient(ellipse 45% 50% at 50% 46%, color-mix(in oklch, var(--warning) 14%, transparent), transparent 75%);
+        --gr-cap: round;
+        --gr-edge-mix: 55%;
+        --gr-ring-w: 2.5;
+        --gr-node-mix: 70%;
+        --gr-hub: color-mix(in oklch, var(--warning) 70%, var(--foreground));
+        --gr-chip-bg: var(--card);
+        --gr-skel: color-mix(in oklch, var(--warning) 40%, var(--background));
+        --gr-skel-w: 10;
+        --gr-skel-anim: gr-pulse 3000ms ease-in-out infinite;
+    }
+
+    /* ══ retro ════════════════════════════════════════════════════════════ */
+
+    [data-theme='retro'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-frame: 2px solid;
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-weight: 400;
+        --gr-size: 12px;
+        --gr-edge-w: 1;
+        --gr-edge-on-w: 2;
+        --gr-edge-mix: 55%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-ring-fill: var(--muted);
+        --gr-node-mix: 85%;
+        --gr-node-glow: drop-shadow(-1px -1px 0 var(--card)) drop-shadow(1px 1px 0 var(--muted-foreground));
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: var(--muted);
+        --gr-chip-fg: var(--foreground);
+        --gr-chip-shadow: inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--card);
+        --gr-chip-off-shadow: inset 1px 1px 0 var(--foreground), inset -1px -1px 0 var(--card);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--muted-foreground);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 1 1;
+    }
+
+    [data-theme='retro'] [data-gr='a'] .kp-graph__box {
+        border-color: var(--muted-foreground) var(--card) var(--card) var(--muted-foreground);
+    }
+
+    [data-theme='retro'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-weight: 400;
+        --gr-edge-w: 2;
+        --gr-edge-mix: 80%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1;
+        --gr-core-op: 0;
+        --gr-node-mix: 90%;
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--muted);
+        --gr-chip-border: 1px solid var(--foreground);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 4 4;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='retro'] [data-gr='b'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    /* ══ grotesk ══════════════════════════════════════════════════════════ */
+
+    [data-theme='grotesk'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-weight: 700;
+        --gr-size: 12.5px;
+        --gr-cap: round;
+        --gr-edge-w: 5;
+        --gr-edge-on-w: 7;
+        --gr-edge-mix: 85%;
+        --gr-dash: 10 6;
+        --gr-dot: 0.5 9;
+        --gr-long: 18 6;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-ring-fill: var(--background);
+        --gr-core-op: 0;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-sample-w: 5;
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 60 30;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1600ms linear infinite;
+    }
+
+    [data-theme='grotesk'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-weight: 700;
+        --gr-size: 12.5px;
+        --gr-edge-w: 1.2;
+        --gr-edge-mix: 30%;
+        --gr-ring: var(--foreground);
+        --gr-ring-fill: var(--foreground);
+        --gr-core-op: 0;
+        --gr-ring-w: 1;
+        --gr-hub: var(--destructive);
+        --gr-hub-fill: var(--destructive);
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-bg: var(--background);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 16;
+        --gr-skel-dash: 16 40;
+        --gr-skel-anim: gr-march 1200ms steps(3) infinite;
+    }
+
+    /* ══ lapis ════════════════════════════════════════════════════════════ */
+
+    [data-theme='lapis'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat:
+            repeating-linear-gradient(60deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 28px),
+            repeating-linear-gradient(-60deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 28px),
+            repeating-linear-gradient(0deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 24px);
+        --gr-frame: 1px solid var(--primary);
+        --gr-shadow: inset 0 0 0 3px var(--background), inset 0 0 0 4px var(--primary);
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-edge-mix: 50%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 2.5;
+        --gr-ring-fill: color-mix(in oklch, var(--card) 70%, var(--background));
+        --gr-hub-w: 5;
+        --gr-node-mix: 75%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--background);
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 30 200;
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    [data-theme='lapis'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-label: var(--card-foreground);
+        --gr-font: var(--theme-font-display);
+        --gr-italic: italic;
+        --gr-size: 13px;
+        --gr-edge-mix: 45%;
+        --gr-ring: color-mix(in oklch, var(--primary) 75%, var(--card-foreground));
+        --gr-ring-w: 2.5;
+        --gr-ring-fill: color-mix(in oklch, var(--background) 65%, var(--card));
+        --gr-core-op: 0.6;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--card);
+        --gr-chip-fg: var(--card-foreground);
+        --gr-skel: var(--primary);
+        --gr-skel-w: 4;
+        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
+    }
+
+    /* ══ nostromo ═════════════════════════════════════════════════════════ */
+
+    [data-theme='nostromo'] [data-gr='a'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--foreground) 6%, oklch(from var(--background) 0 0 h));
+        --gr-label: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
+        --gr-frame: 1px solid var(--border);
+        --gr-shadow: 0 0 0 4px var(--card), inset 0 0 40px color-mix(in oklch, oklch(from var(--background) 0 0 h) 60%, transparent);
+        --gr-radius: 12px;
+        --gr-over: repeating-linear-gradient(
+            to bottom,
+            color-mix(in oklch, oklch(from var(--background) 0 0 h) 30%, transparent) 0 1px,
+            transparent 1px 3px
+        );
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-edge-mix: 25%;
+        --gr-edge-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--success) 60%, transparent));
+        --gr-ring: var(--gr-label);
+        --gr-ring-w: 1.5;
+        --gr-ring-fill: var(--gr-paper);
+        --gr-node-mix: 40%;
+        --gr-node-glow: drop-shadow(0 0 3px var(--gr-label));
+        --gr-chip-radius: 2px;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-fg: var(--gr-label);
+        --gr-chip-border: 1px solid var(--gr-label);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+        --gr-skel: color-mix(in oklch, var(--gr-label) 50%, var(--gr-paper));
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 3 5;
+    }
+
+    /* The radar sweep turns while the network is read. */
+    [data-theme='nostromo'] [data-gr='a'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+        inset: -40%;
+        background: conic-gradient(from 0deg, color-mix(in oklch, var(--success) 40%, transparent), transparent 70deg);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    [data-theme='nostromo'] [data-gr='a'] .kp-graph__kind[aria-pressed='false'] {
+        color: color-mix(in oklch, var(--gr-label) 60%, var(--gr-paper));
+    }
+
+    [data-theme='nostromo'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-shadow:
+            inset 0 2px 0 color-mix(in oklch, oklch(from var(--background) 1 0 h) 30%, transparent),
+            inset 0 -2px 0 color-mix(in oklch, oklch(from var(--background) 0 0 h) 25%, transparent);
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 10.5px;
+        --gr-weight: 700;
+        --gr-halo: var(--background);
+        --gr-halo-w: 4px;
+        --gr-edge-w: 2.4;
+        --gr-edge-mix: 45%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 4;
+        --gr-node-mix: 85%;
+        --gr-chip-radius: 3px;
+        --gr-chip-border: 0;
+        --gr-chip-bg: var(--muted);
+        --gr-chip-shadow: 0 2px 0 var(--foreground);
+        --gr-chip-off-shadow: inset 0 2px 0 var(--foreground);
+        --gr-chip-case: uppercase;
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 10;
+        --gr-skel-dash: 0.1 30;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1200ms steps(6) infinite;
+    }
+
+    /* Knobs that read the node's own colour are set on the node. */
+    [data-theme='nostromo'] [data-gr='b'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+        --gr-core: color-mix(in oklch, var(--kp-graph-node-colour) 40%, oklch(from var(--background) 1 0 h));
+    }
+
+    [data-theme='nostromo'] [data-gr='b'] .kp-graph__core {
+        r: 4px;
+    }
+
+    /* ══ titanium ═════════════════════════════════════════════════════════ */
+
+    [data-theme='titanium'] [data-gr='a'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 3px);
+        --gr-shadow:
+            inset 0 1px 0 color-mix(in oklch, oklch(from var(--background) 1 0 h) 40%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, oklch(from var(--background) 0 0 h) 20%, transparent);
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11.5px;
+        --gr-edge-w: 1.3;
+        --gr-edge-mix: 50%;
+        --gr-ring: color-mix(in oklch, var(--foreground) 80%, var(--card));
+        --gr-ring-w: 3;
+        --gr-ring-dash: 0.1 4.6;
+        --gr-ring-cap: round;
+        --gr-ring-fill: color-mix(in oklch, var(--foreground) 6%, var(--card));
+        --gr-hub: var(--primary);
+        --gr-hub-dash: none;
+        --gr-hub-w: 4;
+        --gr-node-mix: 65%;
+        --gr-chip-radius: 3px;
+        --gr-chip-bg: color-mix(in oklch, var(--foreground) 5%, var(--card));
+        --gr-chip-shadow: inset 0 1px 0 color-mix(in oklch, oklch(from var(--background) 1 0 h) 50%, transparent);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 20 180;
+        --gr-skel-anim: gr-march 1800ms linear infinite;
+    }
+
+    [data-theme='titanium'] [data-gr='b'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11.5px;
+        --gr-edge-w: 1;
+        --gr-edge-on-w: 2;
+        --gr-edge-mix: 45%;
+        --gr-ring-w: 3.5;
+        --gr-ring-fill: color-mix(in oklch, oklch(from var(--background) 0 0 h) 12%, var(--background));
+        --gr-node-mix: 70%;
+        --gr-core-op: 0.85;
+        --gr-hub-dash: 1.5 1.5;
+        --gr-hub-w: 6;
+        --gr-chip-radius: 999px;
+        --gr-chip-bg: var(--card);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 1.5 1.5;
+        --gr-skel-anim: gr-march 3000ms linear infinite;
+    }
+
+    [data-theme='titanium'] [data-gr='b'] .kp-graph__core {
+        r: 5px;
+    }
+}
+
+/* ── Motion: only here, only while loading ───────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        :is([data-gr='a'], [data-gr='b']) .kp-graph__skeleton {
+            animation: var(--gr-skel-anim, none);
+        }
+
+        [data-theme='nostromo'] [data-gr='a'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+            animation: gr-sweep 3000ms linear infinite;
+        }
+    }
+}
+
+@keyframes gr-march {
+    to {
+        stroke-dashoffset: -400;
+    }
+}
+
+@keyframes gr-pulse {
+    50% {
+        opacity: 0.4;
+    }
+}
+
+@keyframes gr-write {
+    from {
+        stroke-dashoffset: 1400;
+    }
+    70%,
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes gr-drop {
+    from {
+        transform: translateY(-12px);
+        opacity: 0.3;
+    }
+    40%,
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes gr-sweep {
+    to {
+        rotate: 360deg;
+    }
+}

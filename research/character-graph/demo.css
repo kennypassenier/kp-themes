@@ -1,0 +1,144 @@
+/* The page: a centred column, and one section with its controls in one row
+   of groups and three columns side by side (character 1, character 2, the
+   plain graph of today), each holding the same network. The graphs' own
+   drawing is in graphs.css. */
+.gr-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.gr-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gr-intro h1,
+.gr-intro p {
+    margin: 0;
+}
+
+.gr-meta,
+.gr-motion,
+.gr-log {
+    color: var(--muted-foreground);
+}
+
+.gr-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gr-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-gr-state][aria-pressed='true'],
+[data-gr-toggle][aria-pressed='true'],
+[data-gr-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.gr-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.gr-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.gr-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.gr-sec__head h2,
+.gr-sec__head p {
+    margin: 0;
+}
+
+.gr-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 60rem. The columns share the
+   trio's rows (a subgrid), so the three graphs start on one line however
+   long each description is. */
+.gr-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .gr-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .gr-col {
+        grid-row: auto;
+        grid-template-rows: auto auto 1fr;
+    }
+}
+
+.gr-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.gr-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.gr-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.gr-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* Each graph keeps its own height: the column's row is as tall as the
+   tallest graph. */
+.gr-col > .kp-graph {
+    align-self: start;
+}
+
+.gr-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
