@@ -27,6 +27,9 @@
    `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
 
     [data-theme='titanium'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 22rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;

@@ -39,6 +39,9 @@
    The only loops: none. Every animation here runs once and stops. */
 
     [data-theme='deco'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-redact-stagger: 140ms;

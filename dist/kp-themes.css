@@ -12447,8 +12447,9 @@
  * own detail of the picked day (`.kp-calendar-layout`); under it on a
  * narrow page. Knobs: --kp-calendar-aside (16rem, the detail's width),
  * --kp-calendar-gap (6px, between days), --kp-calendar-cell-height
- * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)) and
- * --kp-calendar-title-size (1.125rem). */
+ * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)),
+ * --kp-calendar-title-size (1.125rem) and --kp-calendar-nav-fit (20.5rem,
+ * the nav's width below which the title takes a row of its own). */
     .kp-calendar-layout {
         container: kp-calendar-layout / inline-size;
         display: grid;
@@ -12463,25 +12464,66 @@
         }
     }
 
+    /* The rows sit at the top [fix-98]: a calendar stretched taller than its
+ * content (a grid cell, a set height) kept its rows `normal`, and the extra
+ * height went into the nav's row and the table's weekday row (18 px grew
+ * to 48 px). The busy dim of layout.css is off [fix-98]: dimmed to 0.7, a
+ * loading day's figure read 2.65:1 to 4.81:1; the loading look already says
+ * the month is busy (the menu's loading plate does the same). */
     .kp-calendar {
+        --kp-busy-opacity: 1;
         display: grid;
+        align-content: start;
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
 
+    /* The nav: ‹ Prev, the month's title, Next ›, Today, every one a label on
+ * one line [fix-98]. The title was free to wrap and squeezed the buttons:
+ * in a 334 px calendar it took up to six lines in nostromo, five in
+ * synthwave, four in brutalism, and a button up to four, so the calendar's
+ * height changed with the month. Under a 334 px nav the title steps down
+ * with the nav's width (5.4cqi, towards the theme's --kp-text-sm). Where
+ * the four still do not fit, the title takes a row of its own over the
+ * three buttons, the same row in every month: below --kp-calendar-nav-fit
+ * (20.5rem, which holds formal's widest month in English); a register
+ * whose type is wider sets its own, measured with its widest month. The
+ * nav is a container so its children can compare the two (100cqi). */
     .kp-calendar__nav {
+        container: kp-calendar-nav / inline-size;
         display: grid;
-        grid-template-columns: auto minmax(0, max-content) auto auto;
+        grid-template-columns: auto max-content auto auto;
         justify-content: start;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
     }
 
+    .kp-calendar__nav > * {
+        white-space: nowrap;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-prev] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: 1;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-next] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(3 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-today] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(4 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
     .kp-calendar__title {
+        grid-row: 1;
+        grid-column: calc(2 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
         margin: 0;
-        font-size: var(--kp-calendar-title-size, 1.125rem);
+        font-size: clamp(var(--kp-text-sm, 0.8125rem), 5.4cqi, var(--kp-calendar-title-size, 1.125rem));
         text-align: center;
-        overflow-wrap: anywhere;
     }
 
     .kp-calendar__state {
@@ -12679,10 +12721,12 @@
         }
     }
 
-    /* Today: an inner ring in the text colour. Picked: an outer ring in the
- * primary colour. The focus: the house ring, further out. */
+    /* Today: an inner ring in the day's own ink, the text colour of its
+ * plate [fix-98] (the page's text read 1.29:1 on shade-light's amber
+ * plate, 1.45:1 in shade-dark, 2.50:1 in nostromo). Picked: an outer ring
+ * in the primary colour. The focus: the house ring, further out. */
     .kp-calendar__day[data-kp-today] {
-        box-shadow: inset 0 0 0 2px var(--foreground);
+        box-shadow: inset 0 0 0 2px currentColor;
     }
 
     td[aria-selected='true'] > .kp-calendar__day {
@@ -13169,6 +13213,9 @@
    yellow, and the same rule paints the other way round. */
 
     [data-theme='cyberpunk'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-button-notch: var(--fx-notch, 14px);
         --kp-button-slit: 10px;
@@ -15996,6 +16043,9 @@
    opposing changes anywhere. */
 
     [data-theme='retro'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 21rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 320ms;
@@ -19052,6 +19102,9 @@
    drifts one cell per six seconds and never changes luminance. */
 
     [data-theme='synthwave'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 31.75rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-nav-enter: 520ms;
         --kp-nav-enter-delay: 80ms;
@@ -21605,6 +21658,9 @@
    was measured and refused (DI5). */
 
     [data-theme='phantom'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 23.75rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 260ms;
@@ -24169,6 +24225,9 @@
    never moves. */
 
     [data-theme='terminal'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 24.5rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.5;
         --kp-reveal-stagger: 320ms;
@@ -26508,6 +26567,9 @@
    TIMINGS; everything else runs once. */
 
     [data-theme='brutalism'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 28.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 320ms;
@@ -28809,6 +28871,9 @@
    `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
 
     [data-theme='titanium'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 22rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -37288,6 +37353,9 @@
    The only loops: none. Every animation here runs once and stops. */
 
     [data-theme='deco'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-redact-stagger: 140ms;
@@ -40840,6 +40908,9 @@
    conflict — see the anatomy's closing section. */
 
     [data-theme='grotesk'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 22.5rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 200ms;
@@ -45151,6 +45222,9 @@
    reveal here plays once. Full inventory in reports/di5.md. */
 
     [data-theme='nostromo'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 31.5rem;
         /* The configuration surface [AR43], the demo's own values. */
         --kp-reveal-threshold: 0.5;
         --kp-reveal-stagger: 90ms;
@@ -47169,6 +47243,9 @@
    `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
 
     [data-theme='dark'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -50129,6 +50206,13 @@
        text in it reads 4.78 [alert-contrast-M1]. The band's items are left
        alone: they keep the page's text on a soft tint. */
     [data-theme='formal'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
+    /* The month heatmap's amber day, the same plate and the same nudge
+       [fix-98]: its count read 4.51:1 by the tokens and 4.44:1 on screen,
+       under the paper grain; 4.78:1 by the tokens now. */
+    [data-theme='formal'] .kp-calendar__day[data-kp-tone='warn'] {
         color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
     }
 
@@ -55388,6 +55472,9 @@
    contrast table). */
 
     [data-theme='high-contrast'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 21.25rem;
         /* The configuration surface [AR43], the demo's own values. */
         --kp-headline-wipe: 550ms;
         --kp-rule-wipe: 400ms;

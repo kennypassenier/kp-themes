@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **The month heatmap: a ring that hid, dimmed figures, a wrapping title**
+  [fix-98, 2026-10-05]: today's ring is drawn in the day's own ink
+  (`currentColor`), 4.51:1 or more on every tone in all 22 themes (was
+  1.29:1 in shade-light, 1.45:1 in shade-dark, 2.50:1 in nostromo);
+  `.kp-calendar` sets `--kp-busy-opacity: 1`, so a loading day's figure
+  reads 4.52:1 or more (was 2.65:1 to 4.81:1 under the 0.7 dim); formal's
+  amber day takes a twentieth of `--foreground` in its ink, 4.78:1 (was
+  4.51:1, 4.44:1 under the paper grain); the nav's title and buttons stay
+  on one line, the title stepping down under a 334 px nav and taking a
+  row of its own over the buttons below the new knob
+  `--kp-calendar-nav-fit` (20.5rem; twelve registers set their own), so
+  the calendar keeps one height in every month (the title took up to six
+  lines in nostromo's phone pane); and a stretched calendar keeps its
+  rows at the top (`align-content: start`; the weekday row grew from 18
+  to 48 px).
 - **The time chart's tooltip: a change that wrapped, a dot that hid**
   [fix-97, 2026-10-05]: the change column is no longer a fixed 4.5rem but
   at least `--kp-chart-delta-width` (default 5.5rem) and as wide as its

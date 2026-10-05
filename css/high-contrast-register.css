@@ -35,6 +35,9 @@
    contrast table). */
 
     [data-theme='high-contrast'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 21.25rem;
         /* The configuration surface [AR43], the demo's own values. */
         --kp-headline-wipe: 550ms;
         --kp-rule-wipe: 400ms;

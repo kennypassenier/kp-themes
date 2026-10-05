@@ -551,6 +551,13 @@
         color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
     }
 
+    /* The month heatmap's amber day, the same plate and the same nudge
+       [fix-98]: its count read 4.51:1 by the tokens and 4.44:1 on screen,
+       under the paper grain; 4.78:1 by the tokens now. */
+    [data-theme='formal'] .kp-calendar__day[data-kp-tone='warn'] {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
     [data-theme='formal'] .kp-toasts {
         gap: var(--kp-space-sm);
     }

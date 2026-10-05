@@ -268,7 +268,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // that collapses, a panel that closes and a group that folds: 310 + 1.
     // The menu's opaque loading plate sets --kp-busy-opacity itself (2026-10-05): 311 + 1.
     // fix-97 added --kp-chart-delta-width, the floor of the tooltip's change column: 312 + 1.
-    assert.equal(result.expected, 313, 'AR21 counted the --kp-* properties in css/components.css');
+    // fix-98 added --kp-calendar-nav-fit, the width below which the month heatmap's
+    // title takes a row of its own: 313 + 1.
+    assert.equal(result.expected, 314, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -315,8 +317,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And round two's twenty-seven, every one read through var(): 278 + 27.
     // And the deco review round's three: 305 + 3. And the motion-symmetry
     // round's --kp-sidenav-ease-back: 308 + 1. And fix-97's
-    // --kp-chart-delta-width: 309 + 1.
-    assert.equal(result.readCount, 310);
+    // --kp-chart-delta-width: 309 + 1. And fix-98's --kp-calendar-nav-fit: 310 + 1.
+    assert.equal(result.readCount, 311);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);

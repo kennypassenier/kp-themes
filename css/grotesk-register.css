@@ -32,6 +32,9 @@
    conflict — see the anatomy's closing section. */
 
     [data-theme='grotesk'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 22.5rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-reveal-stagger: 200ms;

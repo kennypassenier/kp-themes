@@ -5608,3 +5608,90 @@ in docs/MINI_ROUNDS.md.
 **9 · When we review the measure.** At the character round's chart
 component: whether a theme's own tooltip keeps the knob and the ring, or
 draws its own.
+
+## fix-98 · The month heatmap: a ring that hid, dimmed figures, a wrapping title (2026-10-05)
+
+**1 · What went wrong.** The character-calendar demo showed five faults of
+the plain month heatmap (`.kp-calendar`, scope-143). Today's inner ring was
+drawn in `--foreground` whatever the day's plate: on the amber plate it
+read 1.29:1 in shade-light, 1.45:1 in shade-dark and 2.50:1 in nostromo
+(3:1 is the floor for a ring), and on other tones as low as 1.15:1. While
+the month loaded, layout.css dimmed the grid (`[aria-busy]`, 0.7), so a
+loading day's figure read 2.65:1 (nostromo) to 4.81:1 (deco), in 21 of
+22 themes under 4.5:1. Formal's amber count read 4.51:1 by its tokens and
+4.44:1 on screen under the paper grain. The month's title was free to
+wrap (`overflow-wrap: anywhere` in a `minmax(0, max-content)` column): in
+the 334 px phone pane of catalogue/data.html it took up to six lines in
+nostromo, five in synthwave, four in brutalism, and the buttons beside it
+wrapped too, so the calendar's height moved with the month in seven
+themes (nostromo 567 to 607 px). And a calendar stretched taller than its
+content handed the extra height to its rows: the weekday row grew from
+18 to 48 px, the nav from 28 to 58 px. The ring and the nav were judged
+in formal at full width only; nobody measured the ring on a coloured
+plate, the busy dim on text, or the nav in the phone pane of another
+theme.
+
+**2 · Which gate let it through.** tests/calendar.spec.mjs checks six
+rows of one height per month in formal; no test swept the calendar
+across themes, measured the ring, or looked at the nav's lines. The
+severity-contrast tests read plates and words of alerts and toasts, not
+the calendar's days.
+
+**3 · Where else the same fault sits.** An inset ring in `--foreground`:
+`grep -n "inset 0 0 0 [0-9.]*px var(--foreground)" css/components.css`
+finds none besides this one. The busy dim on text: `[aria-busy]` is also
+set by js/chart.js (the plot, the chart tile), js/kpi.js (a loading key
+figure), js/datatable.js (the wrapper, which has its own tbody opacity)
+and js/forms.js (a busy button); none was measured here. A title free to
+wrap beside buttons: `.kp-alarm__title` and `.kp-menu__label` carry
+`overflow-wrap: anywhere` but sit alone on their line.
+
+**4 · How we prevent recurrence.** Today's ring is drawn in
+`currentColor`, the ink of the day's own plate (4.51:1 or more on every
+tone in 22 themes). `.kp-calendar` sets `--kp-busy-opacity: 1`, as the
+menu's loading plate does: a loading figure reads 4.52:1 or more
+(nostromo lowest). Formal's amber day takes the same nudge as its
+warning alert, a twentieth of `--foreground` in the warning ink: 4.78:1.
+The nav's four are labels on one line (`white-space: nowrap`); under a
+334 px nav the title steps down with the nav's width (`5.4cqi`, towards
+`--kp-text-sm`), and where the four still do not fit the title takes a
+row of its own over the three buttons, the same in every month: below
+the new knob `--kp-calendar-nav-fit` (20.5rem, which holds formal's
+widest month), set by the twelve registers whose type is wider (dark
+25rem, cyberpunk 25.25, synthwave 31.75, terminal 24.5, high-contrast
+21.25, brutalism 28.25, deco 25.25, phantom 23.75, retro 21, grotesk
+22.5, nostromo 31.5, titanium 22), measured in Firefox with each theme's
+widest month and the three buttons. `.kp-calendar` sets
+`align-content: start`, so a stretched calendar keeps its rows (weekday
+row 18 px, nav 28 px). Measured in Firefox before and after on
+catalogue/data.html#calendar in all 22 themes. Plus one assert in
+tests/calendar.spec.mjs, extended in its first test: in 22 themes, wide
+and in the phone pane, today's ring at 3:1 or more and, in August,
+September and October, every part of the nav on one line and the
+calendar one height; run by its own logic in Firefox, 39 misses on the
+old CSS, none on the new.
+
+**5 · What the remedy costs.** One knob (AR21 count 313 + 1, read count
+310 + 1), five rules and a longer comment in components.css, one rule in
+formal-register.css, one line in twelve registers, about 60 lines of
+test. The phone pane in twelve themes gets a two-row nav (a new look,
+to judge), and formal's ring on a coloured plate is now the plate's own
+ink rather than near-black.
+
+**6 · Who enforces it.** Code: the assert in tests/calendar.spec.mjs, at
+the 9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next judging of the calendar block in each
+theme: today's ring visible, the figures readable while loading, the nav
+on one row (or the title over the buttons in the twelve) in every month.
+Queued as fix-98-M1 in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** Today gets a ring in the
+outer ring's place (an outline in `--foreground` over the page), and the
+nav goes on two rows in every theme below the widest theme's width.
+
+**9 · When we review the measure.** At the character round's calendar
+component: whether a theme's own calendar keeps the knob and the ring, or
+draws its own; and when a locale with longer month names or button
+labels is used, since the twelve values are measured in English.

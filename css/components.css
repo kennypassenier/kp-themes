@@ -8144,8 +8144,9 @@
  * own detail of the picked day (`.kp-calendar-layout`); under it on a
  * narrow page. Knobs: --kp-calendar-aside (16rem, the detail's width),
  * --kp-calendar-gap (6px, between days), --kp-calendar-cell-height
- * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)) and
- * --kp-calendar-title-size (1.125rem). */
+ * (3.25rem), --kp-calendar-cell-font (clamp(0.85rem, 1.4vw, 1.15rem)),
+ * --kp-calendar-title-size (1.125rem) and --kp-calendar-nav-fit (20.5rem,
+ * the nav's width below which the title takes a row of its own). */
     .kp-calendar-layout {
         container: kp-calendar-layout / inline-size;
         display: grid;
@@ -8160,25 +8161,66 @@
         }
     }
 
+    /* The rows sit at the top [fix-98]: a calendar stretched taller than its
+ * content (a grid cell, a set height) kept its rows `normal`, and the extra
+ * height went into the nav's row and the table's weekday row (18 px grew
+ * to 48 px). The busy dim of layout.css is off [fix-98]: dimmed to 0.7, a
+ * loading day's figure read 2.65:1 to 4.81:1; the loading look already says
+ * the month is busy (the menu's loading plate does the same). */
     .kp-calendar {
+        --kp-busy-opacity: 1;
         display: grid;
+        align-content: start;
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
 
+    /* The nav: ‹ Prev, the month's title, Next ›, Today, every one a label on
+ * one line [fix-98]. The title was free to wrap and squeezed the buttons:
+ * in a 334 px calendar it took up to six lines in nostromo, five in
+ * synthwave, four in brutalism, and a button up to four, so the calendar's
+ * height changed with the month. Under a 334 px nav the title steps down
+ * with the nav's width (5.4cqi, towards the theme's --kp-text-sm). Where
+ * the four still do not fit, the title takes a row of its own over the
+ * three buttons, the same row in every month: below --kp-calendar-nav-fit
+ * (20.5rem, which holds formal's widest month in English); a register
+ * whose type is wider sets its own, measured with its widest month. The
+ * nav is a container so its children can compare the two (100cqi). */
     .kp-calendar__nav {
+        container: kp-calendar-nav / inline-size;
         display: grid;
-        grid-template-columns: auto minmax(0, max-content) auto auto;
+        grid-template-columns: auto max-content auto auto;
         justify-content: start;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
     }
 
+    .kp-calendar__nav > * {
+        white-space: nowrap;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-prev] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: 1;
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-next] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(3 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
+    .kp-calendar__nav > [data-kp-calendar-today] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+        grid-column: calc(4 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
+    }
+
     .kp-calendar__title {
+        grid-row: 1;
+        grid-column: calc(2 - max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-fit, 20.5rem) - 100cqi)));
         margin: 0;
-        font-size: var(--kp-calendar-title-size, 1.125rem);
+        font-size: clamp(var(--kp-text-sm, 0.8125rem), 5.4cqi, var(--kp-calendar-title-size, 1.125rem));
         text-align: center;
-        overflow-wrap: anywhere;
     }
 
     .kp-calendar__state {
@@ -8376,10 +8418,12 @@
         }
     }
 
-    /* Today: an inner ring in the text colour. Picked: an outer ring in the
- * primary colour. The focus: the house ring, further out. */
+    /* Today: an inner ring in the day's own ink, the text colour of its
+ * plate [fix-98] (the page's text read 1.29:1 on shade-light's amber
+ * plate, 1.45:1 in shade-dark, 2.50:1 in nostromo). Picked: an outer ring
+ * in the primary colour. The focus: the house ring, further out. */
     .kp-calendar__day[data-kp-today] {
-        box-shadow: inset 0 0 0 2px var(--foreground);
+        box-shadow: inset 0 0 0 2px currentColor;
     }
 
     td[aria-selected='true'] > .kp-calendar__day {

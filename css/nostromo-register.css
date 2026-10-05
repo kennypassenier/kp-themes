@@ -31,6 +31,9 @@
    reveal here plays once. Full inventory in reports/di5.md. */
 
     [data-theme='nostromo'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 31.5rem;
         /* The configuration surface [AR43], the demo's own values. */
         --kp-reveal-threshold: 0.5;
         --kp-reveal-stagger: 90ms;
