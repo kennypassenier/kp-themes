@@ -22,7 +22,21 @@
 // height changed, so a refresh that redraws the same tiles writes nothing,
 // and its own write never wakes it again. A skeleton tile counts as a tile.
 //
+// A change the reader caused (a tile's content, a fold opened or closed)
+// moves the tiles at the theme's size motion rather than in one jump (Kenny,
+// 2026-10-05: "animation isn't smooth at all for opening and closing the
+// tile, and growing it is too abrupt … We have grow/shrink elements already
+// so take a look at those"): every visible tile of the set eases from the
+// height it was drawn at to the set's new one, together, on the duration and
+// curve js/motion.js gives a growing box in that theme (sizeMotion), before
+// a frame of the jump is painted. A fold that closes lets its tiles go as it
+// starts to fold (`data-kp-folding`), so the rest of the board shrinks with
+// it instead of after it. A width change, a font arriving or a theme switch
+// still takes the new height at once, as the rest of the page does.
+//
 // Nothing runs on import; attachTileSets(root) returns a detach.
+
+import { sizeMotion } from './motion.js';
 
 /** The marker of a board whose grids share one tile height. */
 export const TILES_SET = '[data-kp-tiles-set]';
@@ -33,7 +47,8 @@ export const TILE_ROW_MIN = '--kp-tile-row-min';
 /** @param {Element} tile */
 const visible = (tile) => {
     if (tile instanceof HTMLElement && tile.hidden) return false;
-    const fold = tile.closest('details:not([open])');
+    // A fold that is folding shut counts as shut from its first frame.
+    const fold = tile.closest('details:not([open]), details[data-kp-folding]');
     if (fold && !tile.closest('summary')) return false;
     return tile.getClientRects().length > 0;
 };
@@ -107,7 +122,69 @@ export function attachTileSets(root = document) {
     /** @type {Set<Element>} */
     const observed = new Set();
     let queued = 0;
-    const run = () => {
+    /** The height each tile was last drawn at, where its next move starts. @type {WeakMap<Element, number>} */
+    const drawn = new WeakMap();
+    /** The sets whose tiles are moving now, with their moves. @type {Map<unknown, Animation[]>} */
+    const moving = new Map();
+    /** @param {HTMLElement[]} grids */
+    const shown = (grids) => grids.flatMap((grid) => [...grid.children].filter(visible));
+    /** @param {Element[]} tiles */
+    const remember = (tiles) => {
+        for (const tile of tiles) drawn.set(tile, tile.getBoundingClientRect().height);
+    };
+    /**
+     * Even one set; with `move`, ease its tiles from where they were drawn
+     * to where they now stand.
+     * @param {unknown} key @param {HTMLElement[]} grids @param {boolean} move
+     */
+    const even = (key, grids, move) => {
+        const busy = moving.get(key);
+        // A resize during a move is the move's own frames; the move's end
+        // looks again.
+        if (busy && !move) return;
+        /** @type {Map<Element, number>} */
+        const from = new Map();
+        if (busy) {
+            // A change during a move continues from where each tile stands.
+            for (const tile of shown(grids)) from.set(tile, tile.getBoundingClientRect().height);
+            moving.delete(key);
+            for (const grid of grids) grid.removeAttribute('data-kp-tiles-easing');
+            for (const animation of busy) animation.cancel();
+        }
+        const floor = evenTileSet(grids);
+        const tiles = shown(grids);
+        if (!move) return remember(tiles);
+        for (const tile of tiles) if (!from.has(tile) && drawn.has(tile)) from.set(tile, /** @type {number} */ (drawn.get(tile)));
+        /** @type {Map<Element, number>} */
+        const to = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect().height]));
+        const change = Math.max(0, ...tiles.map((tile) => Math.abs((to.get(tile) ?? 0) - (from.get(tile) ?? to.get(tile) ?? 0))));
+        const first = grids[0];
+        const { duration, easing } = change >= 1 && first ? sizeMotion(first, floor - (from.get(tiles[0]) ?? floor)) : { duration: 0, easing: '' };
+        if (duration <= 0) return remember(tiles);
+        // Rows follow the tiles while they move: each tile is held at its
+        // eased height (`[data-kp-tiles-easing]`, css/components.css), all of
+        // them on one curve, so the rows of every grid stay one height.
+        for (const grid of grids) grid.setAttribute('data-kp-tiles-easing', '');
+        const moves = tiles.map((tile) => {
+            const end = /** @type {number} */ (to.get(tile));
+            const start = from.get(tile) ?? end;
+            return tile.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration, easing, fill: 'forwards' });
+        });
+        moving.set(key, moves);
+        void Promise.all(moves.map((m) => m.finished)).then(
+            () => {
+                if (moving.get(key) !== moves) return;
+                moving.delete(key);
+                for (const grid of grids) grid.removeAttribute('data-kp-tiles-easing');
+                for (const m of moves) m.cancel();
+                remember(tiles);
+                queue();
+            },
+            () => undefined,
+        );
+    };
+    const run = (move = false) => {
+        if (queued) view.cancelAnimationFrame(queued);
         queued = 0;
         const sets = tileSets(root);
         /** @type {Set<Element>} */
@@ -121,28 +198,38 @@ export function attachTileSets(root = document) {
         for (const el of now) if (!observed.has(el)) sizes.observe(el);
         observed.clear();
         for (const el of now) observed.add(el);
-        for (const grids of sets.values()) evenTileSet(grids);
+        for (const [key, grids] of sets) even(key, grids, move);
     };
     const queue = () => {
-        if (!queued) queued = view.requestAnimationFrame(run);
+        if (!queued) queued = view.requestAnimationFrame(() => run());
     };
     const sizes = new view.ResizeObserver(queue);
-    /** @param {Node} node */
-    const inSet = (node) => {
-        const el = node instanceof view.Element ? node : node.parentElement;
-        return el !== null && (el.closest(TILES_SET) !== null || el.querySelector(TILES_SET) !== null);
-    };
     const changes = new view.MutationObserver((records) => {
         const grid = `.kp-tiles, ${TILES_SET}`;
         const leaves = (/** @type {Node} */ n) => n instanceof view.Element && (n.matches(grid) || n.querySelector(grid) !== null);
-        if (records.some((r) => inSet(r.target) || [...r.removedNodes].some(leaves))) queue();
+        /** @param {MutationRecord} r */
+        const counts = (r) => {
+            const el = r.target instanceof view.Element ? r.target : r.target.parentElement;
+            if (!el) return false;
+            // Anything inside a set.
+            if (el.closest(TILES_SET)) return true;
+            // Above a set, only a set or grid that comes or goes, or a fold or
+            // `hidden` that shows or hides one: a probe another module draws
+            // for an instant beside the board is not a change to the board
+            // (js/motion.js reads the theme's motion that way, and a move
+            // that answered its own probe never ended).
+            if (r.type === 'childList') return [...r.addedNodes, ...r.removedNodes].some(leaves);
+            return el.querySelector(TILES_SET) !== null;
+        };
+        // In the same task as the change, before a frame of it is drawn.
+        if (records.some(counts)) run(true);
     });
     changes.observe(root instanceof Document ? root.documentElement : /** @type {Node} */ (root), {
         childList: true,
         subtree: true,
         characterData: true,
         attributes: true,
-        attributeFilter: ['hidden', 'open', 'class', 'data-kp-tiles-set'],
+        attributeFilter: ['hidden', 'open', 'class', 'data-kp-tiles-set', 'data-kp-folding'],
     });
     // A fold's `toggle` does not bubble; caught on the way down.
     const target = /** @type {EventTarget} */ (/** @type {unknown} */ (root));
@@ -155,5 +242,7 @@ export function attachTileSets(root = document) {
         target.removeEventListener('toggle', queue, true);
         doc.fonts?.removeEventListener?.('loadingdone', queue);
         if (queued) view.cancelAnimationFrame(queued);
+        for (const moves of moving.values()) for (const m of moves) m.cancel();
+        moving.clear();
     };
 }

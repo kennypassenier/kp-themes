@@ -525,8 +525,7 @@
                     Acknowledge leaves that slot empty; nothing is measured, the list is a subgrid. Press <b>Longer label</b>: the whole Assign column
                     widens, on every row. In the table the buttons are named by role (<code>data-kp-action</code>) and measured by
                     <code>attachActionColumns()</code>, so <b>Open</b> stays under Open even on the rows without Recalibrate. In the phone pane the
-                    buttons go under the row's text, side by side and spread over the full width in equal columns, so each role still lines up from
-                    row to row; nothing is pushed to the right edge.
+                    buttons go under the row's text, one per line, each centred in the pane, and every label stays whole on one line.
                 </div>
                 <p class="cat-live__bar">
                     <button type="button" class="kp-button kp-button--sm" data-cat-longer aria-pressed="false">Longer label</button>
@@ -673,7 +672,7 @@
                 <h2>Row buttons on a narrow screen</h2>
                 <div class="cat-look">
                     <b>Look at:</b> three panes of a phone's width and less. In the first two, a narrow <code>.kp-action-list</code> (under 30rem)
-                    stacks its buttons under the row's text, one per line on one left edge, each label on a single line:
+                    stacks its buttons under the row's text, one per line, each centred in the pane, each label on a single line:
                     <b>Review and update all 4…</b> is neither cut nor wrapped (Kenny's UI rule), and a row with fewer buttons simply has fewer lines.
                     In the third, a plain <code>&lt;table&gt;</code> without the <code>.kp-table</code> class, inside the table wrapper: its row
                     buttons stack in one column as wide as the widest, and the names and sizes keep their cells. A table outside any wrapper does the

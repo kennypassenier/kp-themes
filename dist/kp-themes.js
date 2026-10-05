@@ -2687,6 +2687,7 @@ __export(motion_exports, {
   leave: () => leave,
   motionWatchCount: () => motionWatchCount,
   repaintedIn: () => repaintedIn,
+  sizeMotion: () => sizeMotion,
   themeMotion: () => themeMotion,
   withoutOvershoot: () => withoutOvershoot
 });
@@ -2824,11 +2825,23 @@ function sizeEase(box, ease, change, plain = false) {
   }
   return withoutOvershoot(ease);
 }
+function layoutHeight(el2) {
+  const whole = el2.offsetHeight;
+  const drawn = el2.getBoundingClientRect().height;
+  return Math.abs(drawn - whole) < 1 ? drawn : whole;
+}
+function sizeMotion(box, change) {
+  const { size, ease } = themeMotion(box);
+  if (size <= 0 || switching) return { duration: 0, easing: "linear" };
+  return { duration: size, easing: sizeEase(box, ease, change) };
+}
 function glide(box, from, to, duration, easing, plain = false) {
   box.style.setProperty("overflow", "clip");
   box.style.setProperty("box-sizing", "border-box");
   box.style.setProperty("--kp-resize-dur", `${Math.round(duration)}ms`);
   if (!plain) box.setAttribute("data-kp-resizing", to > from ? "grow" : "shrink");
+  const flow = getComputedStyle(box);
+  if (/flex/.test(flow.display) && flow.flexDirection.startsWith("column")) box.setAttribute("data-kp-gliding", "column");
   const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
   const own = (
     /** @type {any} */
@@ -2842,6 +2855,7 @@ function glide(box, from, to, duration, easing, plain = false) {
     box.style.removeProperty("box-sizing");
     box.style.removeProperty("--kp-resize-dur");
     box.removeAttribute("data-kp-resizing");
+    box.removeAttribute("data-kp-gliding");
   };
   mine.addEventListener("cancel", done);
   return { animation: mine, done };
@@ -3014,6 +3028,24 @@ async function leaveOne(el2, hide, exited) {
       paddingBottom: style.paddingBottom
     };
     const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
+    const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
+    if (gapOf > 0) {
+      const inFlow = (n) => {
+        if (!n) return false;
+        const s2 = getComputedStyle(n);
+        return s2.display !== "none" && s2.position !== "absolute" && s2.position !== "fixed";
+      };
+      const near = (way) => {
+        let n = el2[way];
+        while (n && !inFlow(n)) n = n[way];
+        return n;
+      };
+      const rtl = sideways && style.direction === "rtl";
+      const start = sideways ? rtl ? "marginRight" : "marginLeft" : "marginTop";
+      const end = sideways ? rtl ? "marginLeft" : "marginRight" : "marginBottom";
+      if (near("previousElementSibling")) to[start] = `${-gapOf}px`;
+      else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
+    }
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
     const folding = el2.animate([from, to], {
@@ -3089,6 +3121,16 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   let running = null;
   const settle = () => {
     if (!box.isConnected) return;
+    const effect = (
+      /** @type {KeyframeEffect | null} */
+      running?.effect ?? null
+    );
+    if (running && effect) {
+      effect.target = null;
+      const natural = box.offsetHeight;
+      effect.target = box;
+      if (Math.abs(natural - last) < 1) return;
+    }
     const from = running ? box.offsetHeight : last;
     running?.finish();
     running = null;
@@ -3105,9 +3147,13 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
       if (running === mine) running = null;
     }).catch(() => void 0);
   };
-  const sizes = new ResizeObserver(settle);
+  const sizes = new ResizeObserver((entries) => {
+    if (entries.some((entry) => entry.target !== box)) settle();
+    else if (!running) last = box.offsetHeight;
+  });
   const watch = () => {
     sizes.disconnect();
+    sizes.observe(box);
     for (const child of box.children) sizes.observe(child);
   };
   watch();
@@ -3156,21 +3202,25 @@ function attachFold(details) {
   watching += 1;
   let running = null;
   let folding = false;
-  const onClick = (event) => {
-    const { size, ease } = themeMotion(details);
-    if (size <= 0) return;
-    event.preventDefault();
-    const from = details.offsetHeight;
-    running?.finish();
-    const opening = !details.open || folding;
-    folding = !opening;
-    details.open = true;
-    const full = details.offsetHeight;
-    const shut = (
+  let shown2 = false;
+  requestAnimationFrame(() => shown2 = true);
+  const shutHeight = () => {
+    const style = getComputedStyle(details);
+    return layoutHeight(
       /** @type {HTMLElement} */
-      summary.offsetHeight + parseFloat(getComputedStyle(details).borderBlockStartWidth || "0") + parseFloat(getComputedStyle(details).borderBlockEndWidth || "0")
-    );
-    const to = opening ? full : shut;
+      summary
+    ) + parseFloat(style.borderBlockStartWidth || "0") + parseFloat(style.borderBlockEndWidth || "0");
+  };
+  const setOpen = (value) => {
+    details.open = value;
+    watcher.takeRecords();
+  };
+  const move = (opening, from, size, ease) => {
+    running?.finish();
+    folding = !opening;
+    setOpen(true);
+    const to = opening ? layoutHeight(details) : shutHeight();
+    details.toggleAttribute("data-kp-folding", folding);
     const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
     running = mine;
     mine.finished.then(() => {
@@ -3179,17 +3229,42 @@ function attachFold(details) {
       running = null;
       if (folding) {
         folding = false;
-        details.open = false;
+        setOpen(false);
       }
+      details.removeAttribute("data-kp-folding");
     }).catch(() => void 0);
   };
+  const onClick = (event) => {
+    const { size, ease } = themeMotion(details);
+    if (size <= 0) return;
+    event.preventDefault();
+    move(!details.open || folding, layoutHeight(details), size, ease);
+  };
+  const watcher = new MutationObserver((records) => {
+    const was = records[0].oldValue !== null;
+    const now = details.open;
+    if (!shown2 || was === now || !details.isConnected) return;
+    const { size, ease } = themeMotion(details);
+    if (size <= 0) return;
+    let from;
+    if (running) from = layoutHeight(details);
+    else if (now) from = shutHeight();
+    else {
+      setOpen(true);
+      from = layoutHeight(details);
+    }
+    move(now, from, size, ease);
+  });
+  watcher.observe(details, { attributes: true, attributeFilter: ["open"], attributeOldValue: true });
   summary.addEventListener("click", onClick);
   return () => {
     if (!own.__kpFold) return;
     watching -= 1;
+    watcher.disconnect();
     summary.removeEventListener("click", onClick);
     running?.cancel();
     details.style.removeProperty("overflow");
+    details.removeAttribute("data-kp-folding");
     delete own.__kpFold;
   };
 }
@@ -3406,12 +3481,18 @@ function setAttention(band, items) {
     paintItem(el2, item);
     wanted.push(el2);
   }
-  for (const [key, el2] of shown2) if (!seen.has(key)) void leave(el2);
+  const going = /* @__PURE__ */ new Set();
+  for (const [key, el2] of shown2)
+    if (!seen.has(key)) {
+      going.add(el2);
+      void leave(el2);
+    }
   const order = wanted.map((el2, at) => ({ el: el2, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
   let before = null;
   for (const { el: el2 } of order) {
     let prev = el2.isConnected && el2.parentElement === band ? el2.previousElementSibling : null;
-    while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving"))) prev = prev.previousElementSibling;
+    while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving") || going.has(prev)))
+      prev = prev.previousElementSibling;
     const inPlace = el2.parentElement === band && prev === before;
     if (!inPlace) {
       if (before) before.after(el2);
@@ -12766,7 +12847,59 @@ function attachTileSets(root = document) {
   }
   const observed = /* @__PURE__ */ new Set();
   let queued = 0;
-  const run = () => {
+  const drawn = /* @__PURE__ */ new WeakMap();
+  const moving = /* @__PURE__ */ new Map();
+  const shown2 = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
+  const remember2 = (tiles) => {
+    for (const tile of tiles) drawn.set(tile, tile.getBoundingClientRect().height);
+  };
+  const even = (key, grids, move) => {
+    const busy = moving.get(key);
+    if (busy && !move) return;
+    const from = /* @__PURE__ */ new Map();
+    if (busy) {
+      for (const tile of shown2(grids)) from.set(tile, tile.getBoundingClientRect().height);
+      moving.delete(key);
+      for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
+      for (const animation of busy) animation.cancel();
+    }
+    const floor = evenTileSet(grids);
+    const tiles = shown2(grids);
+    if (!move) return remember2(tiles);
+    for (const tile of tiles) if (!from.has(tile) && drawn.has(tile)) from.set(
+      tile,
+      /** @type {number} */
+      drawn.get(tile)
+    );
+    const to = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect().height]));
+    const change = Math.max(0, ...tiles.map((tile) => Math.abs((to.get(tile) ?? 0) - (from.get(tile) ?? to.get(tile) ?? 0))));
+    const first = grids[0];
+    const { duration, easing } = change >= 1 && first ? sizeMotion(first, floor - (from.get(tiles[0]) ?? floor)) : { duration: 0, easing: "" };
+    if (duration <= 0) return remember2(tiles);
+    for (const grid2 of grids) grid2.setAttribute("data-kp-tiles-easing", "");
+    const moves = tiles.map((tile) => {
+      const end = (
+        /** @type {number} */
+        to.get(tile)
+      );
+      const start = from.get(tile) ?? end;
+      return tile.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration, easing, fill: "forwards" });
+    });
+    moving.set(key, moves);
+    void Promise.all(moves.map((m) => m.finished)).then(
+      () => {
+        if (moving.get(key) !== moves) return;
+        moving.delete(key);
+        for (const grid2 of grids) grid2.removeAttribute("data-kp-tiles-easing");
+        for (const m of moves) m.cancel();
+        remember2(tiles);
+        queue();
+      },
+      () => void 0
+    );
+  };
+  const run = (move = false) => {
+    if (queued) view.cancelAnimationFrame(queued);
     queued = 0;
     const sets = tileSets(root);
     const now = /* @__PURE__ */ new Set();
@@ -12779,20 +12912,23 @@ function attachTileSets(root = document) {
     for (const el2 of now) if (!observed.has(el2)) sizes.observe(el2);
     observed.clear();
     for (const el2 of now) observed.add(el2);
-    for (const grids of sets.values()) evenTileSet(grids);
+    for (const [key, grids] of sets) even(key, grids, move);
   };
   const queue = () => {
-    if (!queued) queued = view.requestAnimationFrame(run);
+    if (!queued) queued = view.requestAnimationFrame(() => run());
   };
   const sizes = new view.ResizeObserver(queue);
-  const inSet = (node) => {
-    const el2 = node instanceof view.Element ? node : node.parentElement;
-    return el2 !== null && (el2.closest(TILES_SET) !== null || el2.querySelector(TILES_SET) !== null);
-  };
   const changes = new view.MutationObserver((records) => {
     const grid2 = `.kp-tiles, ${TILES_SET}`;
     const leaves = (n) => n instanceof view.Element && (n.matches(grid2) || n.querySelector(grid2) !== null);
-    if (records.some((r) => inSet(r.target) || [...r.removedNodes].some(leaves))) queue();
+    const counts = (r) => {
+      const el2 = r.target instanceof view.Element ? r.target : r.target.parentElement;
+      if (!el2) return false;
+      if (el2.closest(TILES_SET)) return true;
+      if (r.type === "childList") return [...r.addedNodes, ...r.removedNodes].some(leaves);
+      return el2.querySelector(TILES_SET) !== null;
+    };
+    if (records.some(counts)) run(true);
   });
   changes.observe(root instanceof Document ? root.documentElement : (
     /** @type {Node} */
@@ -12802,7 +12938,7 @@ function attachTileSets(root = document) {
     subtree: true,
     characterData: true,
     attributes: true,
-    attributeFilter: ["hidden", "open", "class", "data-kp-tiles-set"]
+    attributeFilter: ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"]
   });
   const target = (
     /** @type {EventTarget} */
@@ -12818,17 +12954,20 @@ function attachTileSets(root = document) {
     target.removeEventListener("toggle", queue, true);
     doc.fonts?.removeEventListener?.("loadingdone", queue);
     if (queued) view.cancelAnimationFrame(queued);
+    for (const moves of moving.values()) for (const m of moves) m.cancel();
+    moving.clear();
   };
 }
 var TILES_SET, TILE_ROW_MIN, visible;
 var init_tiles = __esm({
   "js/tiles.js"() {
     "use strict";
+    init_motion();
     TILES_SET = "[data-kp-tiles-set]";
     TILE_ROW_MIN = "--kp-tile-row-min";
     visible = (tile) => {
       if (tile instanceof HTMLElement && tile.hidden) return false;
-      const fold = tile.closest("details:not([open])");
+      const fold = tile.closest("details:not([open]), details[data-kp-folding]");
       if (fold && !tile.closest("summary")) return false;
       return tile.getClientRects().length > 0;
     };
@@ -14627,11 +14766,13 @@ var menu_button_exports = {};
 __export(menu_button_exports, {
   MENU_BUTTON: () => MENU_BUTTON,
   MENU_CLOSE_EVENT: () => MENU_CLOSE_EVENT,
+  MENU_GUTTER: () => MENU_GUTTER,
   MENU_OPEN_EVENT: () => MENU_OPEN_EVENT,
   MENU_SELECT_EVENT: () => MENU_SELECT_EVENT,
   attachMenuButtons: () => attachMenuButtons,
   closeMenu: () => closeMenu,
   menuKeyTarget: () => menuKeyTarget,
+  menuPlacement: () => menuPlacement,
   menuSignature: () => menuSignature,
   openMenu: () => openMenu,
   setMenu: () => setMenu
@@ -14743,13 +14884,136 @@ function setEmpty(s2, empty, strings) {
     s2.button.removeAttribute("title");
   }
 }
+function menuPlacement({ button, menu, height, gap, room }) {
+  const width = menu.right - menu.left;
+  const across = room.right - room.left;
+  const fits = (x) => x >= room.left - 0.5 && x + width <= room.right + 0.5;
+  let left = menu.left;
+  let capWidth = null;
+  if (width > across) {
+    left = room.left;
+    capWidth = across;
+  } else if (!fits(left)) {
+    const start = button.left;
+    const end = button.right - width;
+    left = fits(start) ? start : fits(end) ? end : Math.min(Math.max(left, room.left), room.right - width);
+  }
+  const below = room.bottom - (button.bottom + gap);
+  const above = button.top - gap - room.top;
+  let side = "below";
+  let capHeight = null;
+  if (height > below + 0.5) {
+    if (height <= above + 0.5) side = "above";
+    else {
+      side = above > below ? "above" : "below";
+      capHeight = Math.max(0, Math.floor(side === "above" ? above : below));
+    }
+  }
+  const tall = capHeight ?? height;
+  const top = side === "below" ? button.bottom + gap : button.top - gap - tall;
+  return { left, top, width: capWidth, height: capHeight, side };
+}
+function coveredEdges(view, wrapper, skip) {
+  const doc = view.document;
+  const html = doc.documentElement;
+  const width = html.clientWidth;
+  const height = html.clientHeight;
+  const pad = view.getComputedStyle(doc.scrollingElement ?? html);
+  const px = (v) => Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0;
+  const box = wrapper.getBoundingClientRect();
+  const x = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
+  const barAt = (y) => {
+    for (const hit of doc.elementsFromPoint(x, y)) {
+      if (skip?.contains(hit)) continue;
+      for (let el2 = (
+        /** @type {Element | null} */
+        hit
+      ); el2 && el2 !== html && el2 !== doc.body; el2 = el2.parentElement) {
+        const { position } = view.getComputedStyle(el2);
+        if (position !== "fixed" && position !== "sticky") continue;
+        if (el2.contains(wrapper) || wrapper.contains(el2)) return null;
+        const r = el2.getBoundingClientRect();
+        return r.width >= width / 2 ? r : null;
+      }
+      return null;
+    }
+    return null;
+  };
+  let top = 0;
+  for (let bar = barAt(0.5), n = 0; bar && n < 4; n += 1) {
+    if (bar.bottom <= top + 0.5) break;
+    top = bar.bottom;
+    bar = top < height ? barAt(top + 0.5) : null;
+  }
+  let bottom = 0;
+  for (let bar = barAt(height - 0.5), n = 0; bar && n < 4; n += 1) {
+    if (height - bar.top <= bottom + 0.5) break;
+    bottom = height - bar.top;
+    bar = bottom < height ? barAt(height - bottom - 0.5) : null;
+  }
+  return { top: Math.max(top, px(pad.scrollPaddingTop)), bottom: Math.max(bottom, px(pad.scrollPaddingBottom)) };
+}
+function unplaceMenu(menu) {
+  for (const name of PLACED) menu.style.removeProperty(name);
+  menu.removeAttribute("data-kp-menu-side");
+}
+function placeMenu(s2, view, covered) {
+  const { menu } = s2;
+  unplaceMenu(menu);
+  const html = view.document.documentElement;
+  const room = {
+    left: MENU_GUTTER,
+    right: html.clientWidth - MENU_GUTTER,
+    top: covered.top + MENU_GUTTER,
+    bottom: html.clientHeight - covered.bottom - MENU_GUTTER
+  };
+  const button = s2.button.getBoundingClientRect();
+  const box = menu.getBoundingClientRect();
+  const style = view.getComputedStyle(menu);
+  const cap = parseFloat(style.maxBlockSize);
+  const borders = box.height - menu.clientHeight;
+  const whole = menu.scrollHeight + borders;
+  const height = Number.isFinite(cap) ? Math.min(whole, cap) : whole;
+  const at = menuPlacement({ button, menu: box, height, gap: Math.max(0, box.top - button.bottom), room });
+  if (Math.abs(at.left - box.left) > 0.5 || at.width != null) {
+    const usedLeft = parseFloat(style.left);
+    menu.style.setProperty("left", `${(Number.isFinite(usedLeft) ? usedLeft : menu.offsetLeft) + at.left - box.left}px`);
+    menu.style.setProperty("right", "auto");
+    menu.style.setProperty("width", `${at.width ?? box.width}px`);
+  }
+  if (Math.abs(at.top - box.top) > 0.5) {
+    const usedTop = parseFloat(style.top);
+    menu.style.setProperty("top", `${(Number.isFinite(usedTop) ? usedTop : menu.offsetTop) + at.top - box.top}px`);
+    menu.style.setProperty("bottom", "auto");
+  }
+  if (at.width != null) menu.style.setProperty("max-inline-size", `${at.width}px`);
+  if (at.height != null) menu.style.setProperty("max-block-size", `${at.height}px`);
+  menu.setAttribute("data-kp-menu-side", at.side);
+}
 function openMenu(wrapper, { focus = "first" } = {}) {
   const s2 = menus.get(wrapper);
   if (!s2 || s2.open || s2.empty) return;
   const doc = s2.menu.ownerDocument;
   const view = doc.defaultView;
   s2.open = true;
+  const covered = view ? coveredEdges(view, s2.wrapper) : null;
   s2.menu.hidden = false;
+  if (view && covered) {
+    placeMenu(s2, view, covered);
+    let frame = 0;
+    const again = () => {
+      if (frame) return;
+      frame = view.requestAnimationFrame(() => {
+        frame = 0;
+        if (s2.open) placeMenu(s2, view, coveredEdges(view, s2.wrapper, s2.menu));
+      });
+    };
+    view.addEventListener("resize", again);
+    s2.off.push(() => {
+      view.removeEventListener("resize", again);
+      if (frame) view.cancelAnimationFrame(frame);
+    });
+  }
   s2.button.setAttribute("aria-expanded", "true");
   const outside = (event) => {
     if (!s2.wrapper.contains(
@@ -14781,6 +15045,7 @@ function closeMenu(wrapper, { focus = false } = {}) {
   s2.menu.hidden = true;
   s2.button.setAttribute("aria-expanded", "false");
   for (const off of s2.off.splice(0)) off();
+  unplaceMenu(s2.menu);
   if (focus) s2.button.focus();
   if (s2.pending) {
     const next = s2.pending;
@@ -14924,7 +15189,7 @@ function attachMenuButtons(root = document, { decorate, strings } = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, decorateButton, attached;
+var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, decorateButton, attached;
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
@@ -14971,6 +15236,8 @@ var init_menu_button = __esm({
       if (text != null) el2.textContent = text;
       return el2;
     };
+    MENU_GUTTER = 8;
+    PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size"];
     decorateButton = (s2) => {
       if (!s2.decorate) return;
       const info = { kind: "menu-button", host: s2.wrapper };
@@ -15165,7 +15432,10 @@ function attachCalendars(root = document, options = {}) {
         button.type = "button";
         const num = make2(doc, "span", "kp-calendar__num");
         const count = make2(doc, "span", "kp-calendar__count", "\xA0");
-        button.append(num, count);
+        const busy2 = make2(doc, "span", "kp-calendar__day-busy");
+        busy2.setAttribute("aria-hidden", "true");
+        busy2.append(make2(doc, "span", "kp-spinner"));
+        button.append(num, count, busy2);
         const pad = make2(doc, "span", "kp-calendar__pad");
         pad.setAttribute("aria-hidden", "true");
         td.append(button, pad);
@@ -15177,7 +15447,10 @@ function attachCalendars(root = document, options = {}) {
     grid2.append(head, body);
     const legend = make2(doc, "ul", "kp-calendar__legend");
     legend.hidden = true;
-    el2.replaceChildren(nav, stateLine, grid2, legend);
+    const busy = make2(doc, "div", "kp-calendar__busy");
+    busy.setAttribute("aria-hidden", "true");
+    busy.append(make2(doc, "span", "kp-spinner"));
+    el2.replaceChildren(nav, stateLine, grid2, busy, legend);
     if (!el2.hasAttribute("aria-labelledby") && !el2.hasAttribute("aria-label")) el2.setAttribute("aria-labelledby", title.id);
     const c = {
       el: el2,
@@ -17135,6 +17408,7 @@ export {
   MEMO_PREFIX,
   MENU_BUTTON,
   MENU_CLOSE_EVENT,
+  MENU_GUTTER,
   MENU_OPEN_EVENT,
   MENU_SELECT_EVENT,
   METER,
@@ -17388,6 +17662,7 @@ export {
   memoryFor,
   menu_button_exports as menuButtonExports,
   menuKeyTarget,
+  menuPlacement,
   menuSignature,
   mergeRoles,
   meterParts,
@@ -17465,6 +17740,7 @@ export {
   sidenav_exports as sidenavExports,
   sidenavGroups,
   sidenavOf,
+  sizeMotion,
   skipTo,
   sortAttention,
   sparkPaths,

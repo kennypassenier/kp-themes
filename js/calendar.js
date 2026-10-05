@@ -10,8 +10,10 @@
 //   tones    `ok`, `warn` and `bad` as text on their own status plate,
 //            `muted` (nothing to do), `future` and `before` dashed, `none`
 //            (nothing known), and `loading` (a pulse, at rest under reduced
-//            motion); a tone is never the only carrier, the day's words say
-//            it too
+//            motion; `.kp-calendar--busy-days` puts a spinner in each
+//            loading day instead, `.kp-calendar--busy-whole` one spinner
+//            over the grid); a tone is never the only carrier, the day's
+//            words say it too
 //   grid     always six week rows, so the page does not jump from month to
 //            month; the 42 cells are built once and updated in place, and
 //            the neighbouring months' days show their numbers, quiet and
@@ -342,7 +344,11 @@ export function attachCalendars(root = document, options = {}) {
                 button.type = 'button';
                 const num = make(doc, 'span', 'kp-calendar__num');
                 const count = make(doc, 'span', 'kp-calendar__count', ' ');
-                button.append(num, count);
+                // A spinner for a loading day, shown only by `.kp-calendar--busy-days`.
+                const busy = make(doc, 'span', 'kp-calendar__day-busy');
+                busy.setAttribute('aria-hidden', 'true');
+                busy.append(make(doc, 'span', 'kp-spinner'));
+                button.append(num, count, busy);
                 const pad = make(doc, 'span', 'kp-calendar__pad');
                 pad.setAttribute('aria-hidden', 'true');
                 td.append(button, pad);
@@ -354,7 +360,11 @@ export function attachCalendars(root = document, options = {}) {
         grid.append(head, body);
         const legend = make(doc, 'ul', 'kp-calendar__legend');
         legend.hidden = true;
-        el.replaceChildren(nav, stateLine, grid, legend);
+        // One spinner over the whole grid while it loads, shown only by `.kp-calendar--busy-whole`.
+        const busy = make(doc, 'div', 'kp-calendar__busy');
+        busy.setAttribute('aria-hidden', 'true');
+        busy.append(make(doc, 'span', 'kp-spinner'));
+        el.replaceChildren(nav, stateLine, grid, busy, legend);
         if (!el.hasAttribute('aria-labelledby') && !el.hasAttribute('aria-label')) el.setAttribute('aria-labelledby', title.id);
         /** @type {CalendarModel} */
         const c = {

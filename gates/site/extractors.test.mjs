@@ -261,8 +261,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // the graph's three (--kp-graph-h, -label-size, -dim), the rich menu's
     // three (--kp-menu-rich-min, -rich-max, -max-height) and the drawer,
     // help and tour's (--kp-drawer-width, --kp-help-term, --kp-tour-width):
-    // 280 + 27.
-    assert.equal(result.expected, 307, 'AR21 counted the --kp-* properties in css/components.css');
+    // 280 + 27. The deco review round (2026-10-05) added three more
+    // (the meter's over signs and the tile set's easing): 307 + 3.
+    assert.equal(result.expected, 310, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -307,7 +308,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-resize-dur is read through var() too: 248 + 1. So are
     // scope-143's nineteen: 249 + 19. And the homelab port's seven: 268 + 7.
     // And round two's twenty-seven, every one read through var(): 278 + 27.
-    assert.equal(result.readCount, 305);
+    // And the deco review round's three: 305 + 3.
+    assert.equal(result.readCount, 308);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-chart-height', '--kp-steps']);

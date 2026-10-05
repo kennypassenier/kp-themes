@@ -108,6 +108,13 @@ test(
         // A refill while open waits until the menu closes; decorate is handed the button and the new entries.
         await button.click();
         const row = (await items.first().boundingBox())?.height ?? 0;
+        // Kenny, 2026-10-05: the menu of a button at the left edge opened off the screen; now all of it is on it.
+        const onScreen = await page.evaluate((selector) => {
+            const m = /** @type {Element} */ (document.querySelector(`${selector} > [role="menu"]`)).getBoundingClientRect();
+            const html = document.documentElement;
+            return m.left >= 0 && m.right <= html.clientWidth && m.top >= 0 && m.bottom <= html.clientHeight;
+        }, OWN);
+        expect(onScreen, 'the open menu lies whole on the screen').toBe(true);
         const decorated = await page.evaluate(
             (selector) =>
                 import('/js/menu-button.js').then(({ attachMenuButtons, setMenu }) => {

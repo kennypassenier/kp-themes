@@ -623,18 +623,18 @@
                     </figure>
                     <figure class="sc-example" id="more-motion-size-selector">
                         <figcaption class="kp-fw-semibold">Boxes named by a selector, and let go</figcaption>
-                        <p class="kp-text-muted">The cards here carry no <code>data-kp-size-motion</code>: this block attaches <code>attachMotion(block, { size: '.kp-card' })</code>, so every card in it eases, including cards built after the attach. Press <b>Grow</b>: the first card glides to its new height. <b>Rebuild 100 cards</b> throws the cards away and builds a hundred new ones, ten times over, as a page that redraws itself on every navigation does: the count of boxes motion watches must come back to where it was, because a box that leaves the page is let go rather than watched forever.</p>
+                        <p class="kp-text-muted">The cards here carry no <code>data-kp-size-motion</code>: this block attaches <code>attachMotion(block, { size: '.kp-card' })</code>, so every card in it eases, including cards built after the attach. Press <b>Grow</b>: the first card glides to its new height, and the new line arrives the theme's way. <b>Rebuild the cards 100 times</b> throws both cards away and builds them anew, one rebuild a frame, as a page that redraws itself on every navigation does. Each new card carries the key of the one it replaces (<code>data-kp-key</code>) and the grid says <code>data-kp-arrive="new"</code>, so a redrawn card is the same card: the board must not flash or move while it runs. The count of boxes motion watches must then come back to where it was, because a box that leaves the page is let go rather than watched forever.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div class="kp-autogrid" data-cat-size-selector>
-    <div class="kp-card kp-stack"><p>Reservoir North · 71 %</p></div>
-    <div class="kp-card kp-stack"><p>Reservoir South · 64 %</p></div>
+<div class="kp-autogrid" data-cat-size-selector data-kp-arrive="new">
+    <div class="kp-card kp-stack" data-kp-key="reservoir-north"><p>Reservoir North · 71 %</p></div>
+    <div class="kp-card kp-stack" data-kp-key="reservoir-south"><p>Reservoir South · 64 %</p></div>
 </div>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span> <span class="kp-code__keyword">data-cat-size-selector</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir North · 71 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir South · 64 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-autogrid&quot;</span> <span class="kp-code__keyword">data-cat-size-selector</span> <span class="kp-code__keyword">data-kp-arrive</span><span class="kp-code__string">=&quot;new&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;reservoir-north&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir North · 71 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-stack&quot;</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;reservoir-south&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Reservoir South · 64 %&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
                     <figure class="sc-example" id="more-motion-leave-options">

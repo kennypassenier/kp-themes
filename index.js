@@ -135,11 +135,13 @@ export {
 export {
     MENU_BUTTON,
     MENU_CLOSE_EVENT,
+    MENU_GUTTER,
     MENU_OPEN_EVENT,
     MENU_SELECT_EVENT,
     attachMenuButtons,
     closeMenu,
     menuKeyTarget,
+    menuPlacement,
     menuSignature,
     openMenu,
     setMenu,

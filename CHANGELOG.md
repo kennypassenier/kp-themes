@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **Kenny's deco review, round one (2026-10-05)** [scope-143]: the rich menu
+  always opens fully on screen (`menuPlacement()`: the other edge, above the
+  button, or clamped, clear of sticky bars; 144 of 144 cases measured); the
+  meter's share past the end is offered in four signs on the catalogue
+  (`.kp-meter--over-hatch`, `--over-spill`, `--over-break` beside the ▸);
+  the month heatmap's loading in three looks (`.kp-calendar--busy-days`,
+  `--busy-whole` beside the pulse) and its live update named; the action
+  list's stacked buttons under 30rem are centred; `setAttention` no longer
+  moves the items under a leaving one; `easeSize` no longer restarts a
+  glide every frame when the box is a flex column (`data-kp-gliding`),
+  keeps fractional heights, and watches the box itself; `attachFold` glides
+  an `open` set from outside (`data-kp-folding`); `.kp-tiles` ease every
+  tile together (`data-kp-tiles-easing`, `sizeMotion()`); `leave()` closes
+  the flex gap it leaves. Research demo `research/open-reverse`: opening as
+  the reverse of close, in formal, cyberpunk and titanium.
+
 - **Menu button with a rich menu** [scope-143, port spec B]:
   `.kp-menu-button` with a `.kp-menu.kp-menu--rich`, on the package's own
   `.kp-menu` and `.kp-menu__item`, wired by the new `js/menu-button.js`

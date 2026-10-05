@@ -760,14 +760,33 @@
                     <b>Look at:</b> <code>.kp-meter</code>, a used-of-total bar that works anywhere: in a table cell, at the bottom of a key figure
                     (<code>.kp-kpi__meter</code>), at the start of a line of words (<code>.kp-meter--inline</code>). <code>--kp-value</code> is the
                     share and <code>--kp-mark</code> an optional tick across the bar (a target, a limit, what is booked), which sticks out a little
-                    above and below without making the meter any taller. A share past the end fills the bar and puts a small ▸ at its end
-                    (<code>data-kp-over</code>); a mark past the end stops just short of the end with the ▸ after it. The red tile's meter is red, the
+                    above and below without making the meter any taller. A share past the end fills the bar and carries a sign
+                    (<code>data-kp-over</code>); a mark past the end stops just short of the end with a ▸ after it. The red tile's meter is red, the
                     warning row's amber. The third column is what a screen reader hears: the real share, past 100 % too. Press <b>Book more</b>: the
-                    capacity tile's mark moves past the end and its words say 130 %, through <code>setMeter()</code>. <b>Loading</b> pulses the tracks
-                    (still under reduced motion), with no fill and no mark. The phone pane shows the same tiles two to a row.
+                    capacity tile's mark moves past the end and its words say 130 %, through <code>setMeter()</code>. Press <b>Run past the end</b>:
+                    the capacity tile's own share goes to 112 %, so the sign shows in a tile and in the phone pane too. <b>Loading</b> pulses the
+                    tracks (still under reduced motion), with no fill and no mark. The phone pane shows the same tiles two to a row. <br /><br />
+                    <b>Pick the sign for a share past the end</b> (the row <b>The share past the end</b>, and the tile after <b>Run past the end</b>):
+                    <b>A ▸ at the end</b> is today's small triangle, the text colour on the bar's last pixels.
+                    <b>The end hatched</b> (<code>.kp-meter--over-hatch</code>) cuts stripes of the surface colour into the last rem of the fill, so
+                    the bar's end looks overfull. <b>A red piece past the end</b> (<code>.kp-meter--over-spill</code>, recommended, preset) puts a
+                    short pill in the destructive colour half a rem past the end, after a 2px gap: the bar is full and something spills over, in the
+                    colour that means "too much", and its shape says it without the colour too. <b>The bar runs past the end</b>
+                    (<code>.kp-meter--over-break</code>) lets the fill itself run half a rem past the track, in its own colour, with a cut where the
+                    track ends. The last two reach past the meter's box into the padding around it, never into the next cell or the words after an
+                    inline meter, and no meter gets taller. The real share stays in the words beside the meter: there is no room for a number on the
+                    bar without moving what is next to it.
+                </div>
+                <div class="cat-live__bar cat-options" role="group" aria-label="Pick the sign for a share past the end" data-cat-option="meter-over">
+                    <span class="cat-note">Past the end:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="arrow" aria-pressed="false">A ▸ at the end</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="hatch" aria-pressed="false">The end hatched</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="spill" aria-pressed="true">A red piece past the end</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="break" aria-pressed="false">The bar runs past the end</button>
                 </div>
                 <p class="cat-live__bar">
                     <button type="button" class="kp-button kp-button--sm" data-cat-meter="book" aria-pressed="false">Book more</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-meter="over" aria-pressed="false">Run past the end</button>
                     <button type="button" class="kp-button kp-button--sm" data-cat-meter="loading" aria-pressed="false">Loading</button>
                 </p>
                 <div class="cat-stage cat-stage--block">
@@ -987,7 +1006,7 @@
                         </div>
                         <div class="kp-kpi" data-kp-tone="destructive">
                             <span class="kp-kpi__label">Pump capacity</span>
-                            <span class="kp-kpi__value">93<small>%</small></span>
+                            <span class="kp-kpi__value"><span data-cat-meter-figure>93</span><small>%</small></span>
                             <span class="kp-kpi__trend" data-cat-meter-words>running · the mark is what is booked tonight</span>
                             <span
                                 class="kp-kpi__meter"
@@ -1031,11 +1050,12 @@
                     <b>Look at:</b> <code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which
                     every tile is at least <code>--kp-kpi-min</code> wide, measured by the strip's own width (not the window's). If that leaves one
                     tile alone on the last row, it steps down to a count that does not; only when none exists (seven at 700 px, five at phone width)
-                    does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the line
-                    under the buttons says what <code>attachKpiStrips()</code> chose. Before the script runs, a strip keeps the package's auto-fit.
-                    The table under the phone pane is the spec's own list of cases.
+                    does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the
+                    picked button carries a ring, tiles come and go one at a time while the block's height follows, and the line under the buttons
+                    says what <code>attachKpiStrips()</code> chose. A width wider than the block can be in this window is greyed, and its title says
+                    why. Before the script runs, a strip keeps the package's auto-fit. The table under the phone pane is the spec's own list of cases.
                 </div>
-                <p class="cat-live__bar" role="group" aria-label="How many tiles" data-cat-kpis-count>
+                <p class="cat-live__bar cat-options" role="group" aria-label="How many tiles" data-cat-kpis-count>
                     <span class="cat-note">Tiles:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="1" aria-pressed="false">1</button>
                     <button type="button" class="kp-button kp-button--sm" data-value="2" aria-pressed="false">2</button>
@@ -1046,7 +1066,7 @@
                     <button type="button" class="kp-button kp-button--sm" data-value="7" aria-pressed="false">7</button>
                     <button type="button" class="kp-button kp-button--sm" data-value="8" aria-pressed="false">8</button>
                 </p>
-                <p class="cat-live__bar" role="group" aria-label="How wide the strip is" data-cat-kpis-width>
+                <p class="cat-live__bar cat-options" role="group" aria-label="How wide the strip is" data-cat-kpis-width>
                     <span class="cat-note">Strip width:</span>
                     <button type="button" class="kp-button kp-button--sm" data-value="full" aria-pressed="true">The full block</button>
                     <button type="button" class="kp-button kp-button--sm" data-value="700" aria-pressed="false">700 px</button>
@@ -1055,7 +1075,7 @@
                 </p>
                 <p class="cat-note" role="status" data-cat-kpis-log>5 tiles.</p>
                 <div class="cat-stage cat-stage--block">
-                    <div data-cat-kpis-stage>
+                    <div data-cat-kpis-stage data-kp-size-motion>
                         <div
                             class="kp-kpis"
                             data-kp-kpis-columns="all 3 2 1"
@@ -1527,12 +1547,27 @@
                     Today, 04/10, has a dark inner ring (today is the day in Brussels); the picked day an outer ring, and the detail beside it lists
                     every service's own night. The grid is always six weeks tall: press <b>‹ Prev</b> twice and back, and it keeps its height in every
                     month. One tab stop: the arrows move a day or a week, Home and End go to the week's ends, Page Up and Page Down change the month
-                    (with Shift, the year), Enter picks. Try the states above the stage: <b>Loading</b> pulses every day in place,
-                    <b>Nothing to check</b> and <b>Could not read</b> stop the pulse and say why (the error after a red dot), and
-                    <b>The late copies arrive</b> fills in today's two missing services without moving the focus or the pick. In the phone pane the
-                    detail goes under the grid. The sample's clock stands at 04/10/2026 14:40, so the block reads the same on every day it is opened.
+                    (with Shift, the year), Enter picks. Try the states above the stage: <b>Loading</b> shows every day as loading, in place,
+                    <b>Nothing to check</b> and <b>Could not read</b> stop it and say why (the error after a red dot), and
+                    <b>Live update: today's late copies arrive</b> is what an app does when new counts come in while the page is open: today's plate
+                    first shows it is loading (two of its nine copies were still running at 14:40), and 1.5 seconds later it fills in to 9/9, green.
+                    Only that plate changes; the grid is repainted in place, so the focus and the picked day stay where they were (pick 04/10 first
+                    and its detail updates too). In the phone pane the detail goes under the grid. The sample's clock stands at 04/10/2026 14:40, so
+                    the block reads the same on every day it is opened. <br /><br />
+                    <b>Pick how loading shows</b> (press <b>Loading</b> or the live update after picking): <b>A pulse</b> is today's: every loading
+                    plate fades in and out. <b>A spinner in each day</b> (<code>.kp-calendar--busy-days</code>) puts the theme's own spinner on the
+                    count's line of every day that is loading, the day's number kept. <b>One spinner for the calendar</b>
+                    (<code>.kp-calendar--busy-whole</code>, recommended, preset) puts one larger spinner on a card in the middle of the grid while the
+                    whole month loads, the plates still; a day that loads on its own, as in the live update, gets its own spinner. None of the three
+                    changes the grid's height, and under reduced motion none of them moves.
                 </div>
-                <div class="cat-live__bar" role="group" aria-label="The calendar's state">
+                <div class="cat-live__bar cat-options" role="group" aria-label="Pick how loading shows" data-cat-option="calendar-busy">
+                    <span class="cat-note">Loading:</span>
+                    <button type="button" class="kp-button kp-button--sm" data-value="pulse" aria-pressed="false">A pulse</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="days" aria-pressed="false">A spinner in each day</button>
+                    <button type="button" class="kp-button kp-button--sm" data-value="whole" aria-pressed="true">One spinner for the calendar</button>
+                </div>
+                <div class="cat-live__bar cat-options" role="group" aria-label="The calendar's state">
                     <span class="cat-note">State:</span>
                     <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="ready" aria-pressed="true">Read</button>
                     <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="loading" aria-pressed="false">Loading</button>
@@ -1540,7 +1575,9 @@
                         Nothing to check
                     </button>
                     <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="error" aria-pressed="false">Could not read</button>
-                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="live">The late copies arrive</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-calendar-state="live">
+                        Live update: today's late copies arrive
+                    </button>
                 </div>
                 <div class="cat-stage cat-stage--block" data-cat-calendar>
                     <template>

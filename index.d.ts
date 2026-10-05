@@ -44,7 +44,7 @@ export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration,
 export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
 export type ChartData = import('./js/chart.js').ChartData;
 /** @typedef {import('./js/chart.js').ChartData} ChartData */
-export { MENU_BUTTON, MENU_CLOSE_EVENT, MENU_OPEN_EVENT, MENU_SELECT_EVENT, attachMenuButtons, closeMenu, menuKeyTarget, menuSignature, openMenu, setMenu, } from './js/menu-button.js';
+export { MENU_BUTTON, MENU_CLOSE_EVENT, MENU_GUTTER, MENU_OPEN_EVENT, MENU_SELECT_EVENT, attachMenuButtons, closeMenu, menuKeyTarget, menuPlacement, menuSignature, openMenu, setMenu, } from './js/menu-button.js';
 export type MenuGroup = import('./js/menu-button.js').MenuGroup;
 export type MenuItem = import('./js/menu-button.js').MenuItem;
 /** @typedef {import('./js/menu-button.js').MenuGroup} MenuGroup */

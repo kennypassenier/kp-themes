@@ -343,6 +343,18 @@ document.addEventListener('kp-kpi-toggle', (event) => {
     line.textContent = `kp-kpi-toggle: pressed ${pressed}. ${on.length ? `Filtering the list: ${[...new Set(on)].join(' and ')} only.` : 'No filter on.'}`;
 });
 
+// Options to compare (`[data-cat-option="name"]` groups of `[data-value]`
+// buttons, one pressed): a press marks it and tells its block through a
+// `cat-option` event, `{ name, value }`; the block's own code shows it.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-option] [data-value]') : null;
+    const group = button?.closest('[data-cat-option]');
+    if (!button || !group) return;
+    for (const other of group.querySelectorAll('[data-value]')) other.setAttribute('aria-pressed', String(other === button));
+    const detail = { name: group.getAttribute('data-cat-option') ?? '', value: button.getAttribute('data-value') ?? '' };
+    (group.closest('.cat-block') ?? group).dispatchEvent(new CustomEvent('cat-option', { bubbles: true, detail }));
+});
+
 // catalogue/data.html#meter: Book more and Loading drive the meters through
 // setMeter(); the phone pane is a copy of the tiles. The table's meters are
 // written in the markup the way setMeter() writes them, so the page reads
@@ -373,7 +385,18 @@ if (document.getElementById('meter')) {
             { loading: true },
         ];
         let booked = false;
+        let over = false;
         let loading = false;
+        /** The sign for a share past the end, picked above the stage: one modifier on every meter of the block. @param {string} value */
+        const signOver = (value) => {
+            for (const meter of block.querySelectorAll('.kp-meter, .kp-kpi__meter'))
+                for (const sign of ['hatch', 'spill', 'break']) meter.classList.toggle(`kp-meter--over-${sign}`, value === sign);
+        };
+        block.addEventListener('cat-option', (event) => {
+            const { name, value } = /** @type {CustomEvent<{ name: string, value: string }>} */ (event).detail;
+            if (name === 'meter-over') signOver(value);
+        });
+        signOver(block.querySelector('[data-cat-option="meter-over"] [aria-pressed="true"]')?.getAttribute('data-value') ?? 'arrow');
         const paint = () => {
             block.querySelectorAll('[data-cat-meter-rows] tr').forEach((row, i) => {
                 const meter = /** @type {HTMLElement | null} */ (row.querySelector('.kp-meter'));
@@ -387,9 +410,10 @@ if (document.getElementById('meter')) {
                 if (loading) setMeter(meter, { loading: true });
                 else if (which === 'reservoir') setMeter(meter, { value: 0.62, mark: 0.8, label: 'full', markLabel: 'the target level' });
                 else if (which === 'booked')
-                    setMeter(meter, { value: 0.93, mark: booked ? 1.3 : 0.8, label: 'running', markLabel: 'booked for tonight' });
+                    setMeter(meter, { value: over ? 1.12 : 0.93, mark: booked ? 1.3 : 0.8, label: 'running', markLabel: 'booked for tonight' });
                 else if (which === 'plant') setMeter(meter, { value: 0.41, mark: 0.55, label: "of today's plan", markLabel: 'planned by now' });
             }
+            for (const figure of block.querySelectorAll('[data-cat-meter-figure]')) figure.textContent = over ? '112' : '93';
             for (const words of block.querySelectorAll('[data-cat-meter-words]'))
                 words.textContent = booked ? 'running · 130 % of it booked tonight' : 'running · the mark is what is booked tonight';
         };
@@ -398,7 +422,9 @@ if (document.getElementById('meter')) {
             if (!button) return;
             const on = button.getAttribute('aria-pressed') !== 'true';
             button.setAttribute('aria-pressed', String(on));
-            if (button.getAttribute('data-cat-meter') === 'book') booked = on;
+            const what = button.getAttribute('data-cat-meter');
+            if (what === 'book') booked = on;
+            else if (what === 'over') over = on;
             else loading = on;
             paint();
         });
@@ -415,6 +441,15 @@ if (document.getElementById('kpi-columns')) {
     const log = block.querySelector('[data-cat-kpis-log]');
     const all = strip ? [...strip.children, ...(more ? [...more.content.children] : [])].map((tile) => tile.cloneNode(true)) : [];
     let count = strip?.children.length ?? 0;
+    /** The strip width asked for, in px; 0 for the full block. */
+    let asked = 0;
+    /** How wide the block lets the strip be, in px. */
+    const room = () => {
+        const box = stage?.parentElement;
+        if (!box) return Infinity;
+        const style = getComputedStyle(box);
+        return box.clientWidth - parseFloat(style.paddingInlineStart) - parseFloat(style.paddingInlineEnd);
+    };
     const describe = () =>
         requestAnimationFrame(() => {
             if (!strip || !log) return;
@@ -427,19 +462,69 @@ if (document.getElementById('kpi-columns')) {
                 `${rows.length === 1 ? 'one row' : `rows ${rows.join(' + ')}`}` +
                 (strip.hasAttribute('data-kp-kpis-span-last')
                     ? '; no allowed count avoids a lone tile, so the last one spans its row.'
-                    : ', no tile alone.');
+                    : ', no tile alone.') +
+                (asked > width + 1 ? ` (${asked} px asked: the block is only ${width} px wide in this window.)` : '');
         });
-    if (strip) new ResizeObserver(describe).observe(strip);
+    // A width the block cannot give in this window is greyed and says why,
+    // so a press never looks as if it did nothing.
+    const widths = /** @type {HTMLButtonElement[]} */ ([...block.querySelectorAll('[data-cat-kpis-width] [data-value]')]);
+    const offer = () => {
+        const most = Math.floor(room());
+        for (const button of widths) {
+            const px = Number(button.getAttribute('data-value'));
+            const out = Number.isFinite(px) && px > most;
+            if (out) button.setAttribute('aria-disabled', 'true');
+            else button.removeAttribute('aria-disabled');
+            button.title = out ? `The block is ${most} px wide in this window: widen the window to see a ${px} px strip.` : '';
+        }
+        describe();
+    };
+    if (strip) {
+        new ResizeObserver(describe).observe(strip);
+        // A tile that left one by one, or a new count of columns, without a
+        // change of size: the line is written again all the same.
+        new MutationObserver(describe).observe(strip, { childList: true, attributes: true, attributeFilter: ['style', 'data-kp-kpis-span-last'] });
+    }
+    if (stage?.parentElement) new ResizeObserver(offer).observe(stage.parentElement);
+    /** Tiles come and go one at a time, the theme's way (js/motion.js), and the block's height follows (`data-kp-size-motion`). @param {number} n */
+    const setCount = (n) => {
+        if (!strip) return;
+        const shown = /** @type {HTMLElement[]} */ (
+            [...strip.children].filter((tile) => !tile.hasAttribute('data-kp-leaving') && !tile.hasAttribute('data-cat-going'))
+        );
+        if (n > shown.length) strip.append(...all.slice(shown.length, n).map((tile) => tile.cloneNode(true)));
+        else if (n < shown.length) {
+            // The last first, each once the one after it is gone and the
+            // block has glided to its new height: a strip takes fewer
+            // columns as a tile goes (seven at 950 px are three rows, six
+            // are one), and a glide that a next leave cut short would
+            // finish in one frame (329 to 121 px, measured).
+            const going = shown.slice(n).reverse();
+            for (const tile of going) tile.setAttribute('data-cat-going', '');
+            const frame = () => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+            void import('../js/motion.js').then(async ({ leave }) => {
+                for (const tile of going) {
+                    await leave(tile);
+                    await frame();
+                    await Promise.all((stage?.getAnimations() ?? []).map((glide) => glide.finished.catch(() => undefined)));
+                }
+            });
+        }
+    };
     block.addEventListener('click', (event) => {
-        const button = event.target instanceof Element ? event.target.closest('[data-value]') : null;
+        const button =
+            event.target instanceof Element ? event.target.closest('[data-cat-kpis-count] [data-value], [data-cat-kpis-width] [data-value]') : null;
         const group = button?.parentElement;
-        if (!button || !group) return;
+        if (!button || !group || button.getAttribute('aria-disabled') === 'true') return;
         for (const sibling of group.querySelectorAll('[aria-pressed]')) sibling.setAttribute('aria-pressed', String(sibling === button));
         const value = button.getAttribute('data-value') ?? '';
         if (group.hasAttribute('data-cat-kpis-count')) {
             count = Number(value);
-            strip?.replaceChildren(...all.slice(0, count).map((tile) => tile.cloneNode(true)));
-        } else stage?.style.setProperty('max-inline-size', value === 'full' ? 'none' : `${value}px`);
+            setCount(count);
+        } else {
+            asked = value === 'full' ? 0 : Number(value);
+            stage?.style.setProperty('max-inline-size', asked ? `${asked}px` : 'none');
+        }
         describe();
     });
 }
@@ -686,9 +771,38 @@ const LIVE_PROBLEMS = {
         text: "It fixes the flow meter's drift after a power cut.",
         fix: 'Plan the update',
     },
+    // Only in the server's answer to every second refresh of four: a new
+    // problem that arrives in its place, and is resolved two refreshes on.
+    'res-n': {
+        severity: 'critical',
+        title: 'Reservoir North is above its overflow mark',
+        text: 'The inlet valve did not close at 98 %.',
+        fix: 'Close the inlet',
+    },
 };
-/** @type {WeakMap<Element, { keys: string[], polls: ReturnType<typeof setInterval> | null }>} */
+/** @type {WeakMap<Element, { keys: string[], polls: ReturnType<typeof setInterval> | null, refreshes: number }>} */
 const liveBands = new WeakMap();
+/**
+ * What one paint did to the band, read off the elements themselves: which
+ * problems arrived, which left, and how many stayed the same element.
+ * @param {Element} band @param {() => void} paint
+ */
+const paintAndRead = (band, paint) => {
+    const items = () =>
+        new Map(
+            [...band.querySelectorAll(':scope > .kp-attention__item:not([data-kp-leaving])')].map((el) => [el.getAttribute('data-kp-key') ?? '', el]),
+        );
+    const before = items();
+    paint();
+    // An item told to leave is marked a microtask later: the keys asked for decide.
+    const wanted = new Set(liveBands.get(band)?.keys ?? []);
+    const after = new Map([...items()].filter(([key]) => wanted.has(key)));
+    const title = (/** @type {string} */ key) => `“${LIVE_PROBLEMS[key]?.title ?? key}”`;
+    const added = [...after.keys()].filter((key) => !before.has(key));
+    const gone = [...before.keys()].filter((key) => !after.has(key));
+    const kept = [...after].filter(([key, el]) => before.get(key) === el).length;
+    return { added, gone, kept, title, after };
+};
 /** @param {Element} band */
 const paintLive = (band) => {
     const state = liveBands.get(band);
@@ -713,17 +827,25 @@ document.addEventListener('click', (event) => {
     const what = control.getAttribute('data-cat-attention-live');
     let band = host.querySelector('.kp-attention');
     if (!band) {
-        if (what !== 'build') return;
+        if (what !== 'build') {
+            const said = block.querySelector('[data-cat-attention-live-said]');
+            if (said) said.textContent = 'There is no band yet: press Build the band first.';
+            if (what === 'poll') /** @type {HTMLInputElement} */ (control).checked = false;
+            return;
+        }
         band = document.createElement('div');
         band.className = 'kp-attention';
         band.setAttribute('role', 'region');
         band.setAttribute('aria-label', 'Needs attention, built after load');
-        liveBands.set(band, { keys: ['fw-4.2', 'ph-7', 'inc-4471'], polls: null });
+        liveBands.set(band, { keys: ['fw-4.2', 'ph-7', 'inc-4471'], polls: null, refreshes: 0 });
         let inserted = 0;
         const count = block.querySelector('[data-cat-attention-live-count]');
         new MutationObserver((records) => {
             for (const record of records)
-                for (const node of record.addedNodes) if (node instanceof Element && node.getAttribute('role') === 'alert') inserted += 1;
+                for (const node of record.addedNodes)
+                    // A theme's leave may draw a hidden stand-in of the item: not an alert.
+                    if (node instanceof Element && node.getAttribute('role') === 'alert' && node.getAttribute('aria-hidden') !== 'true')
+                        inserted += 1;
             if (count) count.textContent = `Alerts put into the page: ${inserted}`;
         }).observe(band, { childList: true });
         // On the component page attachAttention() already watches the
@@ -735,11 +857,32 @@ document.addEventListener('click', (event) => {
     }
     const state = liveBands.get(band);
     if (!state) return;
+    const said = block.querySelector('[data-cat-attention-live-said]');
+    const live = /** @type {Element} */ (band);
+    // A refresh asks the made-up server again. Its answer runs in a round
+    // of four: the same problems; a new critical one; the same four; the
+    // new one resolved. The line under the band says what that answer did.
+    const refresh = () => {
+        state.refreshes += 1;
+        const step = state.refreshes % 4;
+        if (step === 2 && !state.keys.includes('res-n')) state.keys = [...state.keys, 'res-n'];
+        if (step === 0) state.keys = state.keys.filter((k) => k !== 'res-n');
+        const { added, gone, kept, title, after } = paintAndRead(live, () => paintLive(live));
+        const n = `Refresh ${state.refreshes}`;
+        const keptWords = `${kept} of ${after.size} kept as the same element${kept === 1 ? '' : 's'}`;
+        let words;
+        if (added.length)
+            words = `${n}: the server reports a new problem, ${added.map(title).join(', ')}. It takes its place worst first, under the other critical one; ${keptWords}.`;
+        else if (gone.length) words = `${n}: ${gone.map(title).join(', ')} is resolved at the source, so it leaves the band; ${keptWords}.`;
+        else words = `${n}: the server sends the same ${after.size} problems; ${keptWords}, so nothing moves and nothing is announced again.`;
+        if (said) said.textContent = words;
+    };
     if (what === 'poll') {
         if (state.polls !== null) clearInterval(state.polls);
-        state.polls = /** @type {HTMLInputElement} */ (control).checked ? setInterval(() => paintLive(/** @type {Element} */ (band)), 2000) : null;
+        state.polls = /** @type {HTMLInputElement} */ (control).checked ? setInterval(refresh, 2000) : null;
         return;
     }
+    if (what === 'refresh') return refresh();
     if (what === 'reword')
         LIVE_PROBLEMS['ph-7'].text = LIVE_PROBLEMS['ph-7'].text.endsWith('restart.')
             ? 'Still no reading; the modem was restarted at 09:10.'
@@ -751,11 +894,43 @@ document.addEventListener('click', (event) => {
 
 /* ------------------------------------------------- how old the data is */
 
-// catalogue/feedback.html#freshness: each line's moment, set from the
-// page's load so the words are worth reading (`data-cat-ago` seconds).
-for (const line of document.querySelectorAll('[data-cat-ago]')) {
-    setAgo(/** @type {HTMLElement} */ (line), Date.now() + Number(line.getAttribute('data-cat-ago')) * 1000);
-}
+// catalogue/feedback.html#freshness: each line's moment (`data-cat-ago`
+// seconds before now), set again the moment its block comes on screen, so
+// the reader sees the minute turn and the stale plate arrive rather than
+// finding them long done (Kenny, 2026-10-05: "Nothing seems to tick or
+// change?"). The review page gathers its blocks after this module ran, so
+// the lines are looked for again once it says they are in (`cat-composed`):
+// before that, its lines had no moment at all and read "not updated yet".
+/** @param {Element} block */
+const startAgo = (block) => {
+    for (const line of block.querySelectorAll('[data-cat-ago]'))
+        setAgo(/** @type {HTMLElement} */ (line), Date.now() + Number(line.getAttribute('data-cat-ago')) * 1000);
+};
+const agoSeen = new IntersectionObserver((entries) => {
+    for (const entry of entries)
+        if (entry.isIntersecting) {
+            agoSeen.unobserve(entry.target);
+            startAgo(entry.target);
+        }
+});
+/** @type {WeakSet<Element>} */
+const agoBlocks = new WeakSet();
+const findAgo = () => {
+    for (const line of document.querySelectorAll('[data-cat-ago]')) {
+        const block = line.closest('.cat-block') ?? line.parentElement;
+        if (!block || agoBlocks.has(block)) continue;
+        agoBlocks.add(block);
+        startAgo(block);
+        agoSeen.observe(block);
+    }
+};
+findAgo();
+document.addEventListener('cat-composed', findAgo);
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-cat-ago-restart]') : null;
+    const block = button?.closest('.cat-block');
+    if (block) startAgo(block);
+});
 
 /* --------------------------------------- tiles of one height, a board */
 
@@ -990,8 +1165,20 @@ const CAL_SERVICES = [
 const CAL_OLDEST = '2026-08-10';
 const CAL_TODAY = dayKey(CAL_NOW);
 const calTime = numericTime();
-/** Has the block's "The late copies arrive" been pressed? @type {WeakSet<Element>} */
+/** Has the block's live update been pressed? @type {WeakSet<Element>} */
 const calLate = new WeakSet();
+/** Each block's latest state press, so a live update that is still reading gives way to a newer press. @type {WeakMap<Element, number>} */
+const calTurn = new WeakMap();
+/** How loading shows, picked above the stage: `pulse` (no modifier), `days` or `whole`. @param {Element} block @param {string} value */
+const calBusySign = (block, value) => {
+    for (const calendar of block.querySelectorAll('[data-kp-calendar]')) {
+        calendar.classList.toggle('kp-calendar--busy-days', value === 'days');
+        calendar.classList.toggle('kp-calendar--busy-whole', value === 'whole');
+    }
+};
+/** @param {Element} block */
+const calBusyPicked = (block) =>
+    block.querySelector('[data-cat-option="calendar-busy"] [aria-pressed="true"]')?.getAttribute('data-value') ?? 'pulse';
 /** The night each calendar has picked. @type {WeakMap<Element, string>} */
 const calPicked = new WeakMap();
 
@@ -1085,7 +1272,15 @@ function stampCalendar(host) {
         setCalendarDays(calendar, calHistory(late));
     }
     for (const aside of copy.querySelectorAll('[data-cat-calendar-detail]')) calDetail(aside, null, late);
+    const block = host.closest('.cat-block');
+    if (block) calBusySign(block, calBusyPicked(block));
 }
+
+document.addEventListener('cat-option', (event) => {
+    const block = event.target instanceof Element ? event.target : null;
+    const { name, value } = /** @type {CustomEvent<{ name: string, value: string }>} */ (event).detail;
+    if (block && name === 'calendar-busy') calBusySign(block, value);
+});
 
 function settleCalendars() {
     for (const host of document.querySelectorAll('[data-cat-calendar]:not([data-cat-calendar-ready])')) stampCalendar(host);
@@ -1112,14 +1307,32 @@ document.addEventListener('click', (event) => {
     const what = button.getAttribute('data-cat-calendar-state');
     const calendars = block.querySelectorAll('[data-cat-calendar] [data-kp-calendar]');
     const n = CAL_SERVICES.length;
+    const turn = (calTurn.get(block) ?? 0) + 1;
+    calTurn.set(block, turn);
     if (what === 'live') {
-        // A live update: today's two late copies arrive; the focus and the pick stay.
-        calLate.add(block);
+        // A live update, in two calls of setCalendarDays() as an app would make
+        // them: today's plate first says its two late copies are being read
+        // (loading, as the picked sign shows it), then they arrive and today
+        // reads 9/9. The grid repaints in place; the focus and the pick stay.
+        for (const other of block.querySelectorAll('[data-cat-calendar-state]:not([data-cat-calendar-state="live"])'))
+            other.setAttribute('aria-pressed', String(other.getAttribute('data-cat-calendar-state') === 'ready'));
+        const reading = {
+            ...calHistory(calLate.has(block)),
+            [CAL_TODAY]: { tone: /** @type {const} */ ('loading'), label: 'the two late copies are being read' },
+        };
         for (const calendar of calendars) {
-            setCalendarDays(calendar, calHistory(true));
-            const aside = calendar.closest('.kp-calendar-layout')?.querySelector('[data-cat-calendar-detail]');
-            if (aside) calDetail(aside, calPicked.get(calendar) ?? null, true);
+            setCalendarState(calendar, 'ready');
+            setCalendarDays(calendar, reading);
         }
+        setTimeout(() => {
+            if (calTurn.get(block) !== turn) return;
+            calLate.add(block);
+            for (const calendar of calendars) {
+                setCalendarDays(calendar, calHistory(true));
+                const aside = calendar.closest('.kp-calendar-layout')?.querySelector('[data-cat-calendar-detail]');
+                if (aside) calDetail(aside, calPicked.get(calendar) ?? null, true);
+            }
+        }, 1500);
         return;
     }
     for (const other of block.querySelectorAll('[data-cat-calendar-state]:not([data-cat-calendar-state="live"])'))

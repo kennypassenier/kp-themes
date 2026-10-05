@@ -1,0 +1,126 @@
+/* The page: a centred column of sections, each a card with its head, its
+   look-at note and two columns side by side (the reverse of close, today's
+   open), the controls in one grid so nothing moves between states. */
+.or-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 64rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.or-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.or-intro h1,
+.or-intro p {
+    margin: 0;
+}
+
+.or-meta,
+.or-motion {
+    color: var(--muted-foreground);
+}
+
+.or-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.or-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.or-sec__head h2,
+.or-sec__head p {
+    margin: 0;
+}
+
+.or-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.or-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.or-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 40rem) {
+    .or-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.or-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.or-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* The room the card opens and closes in: the dashed line under it shows
+   the space opening and closing. */
+.or-room {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.or-card h3,
+.or-card p {
+    margin: 0;
+}
+
+.or-card {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.or-under {
+    margin: 0;
+    padding: 0.5rem 0;
+    border-top: 2px dashed var(--border-strong);
+    color: var(--muted-foreground);
+}
+
+.or-timing {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.or-dialog {
+    inline-size: min(28rem, calc(100vw - 2rem));
+}
+
+[data-or-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.or-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}

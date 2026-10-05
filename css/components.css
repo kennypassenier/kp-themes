@@ -1052,6 +1052,19 @@
         align-items: start;
     }
 
+    /* While the tiles of a set move to a new height (js/tiles.js eases each
+ * one at the theme's size motion), the rows follow the tiles rather than
+ * the floor, and a tile clips what it has not yet grown to show. */
+    .kp-tiles[data-kp-tiles-easing] {
+        grid-auto-rows: auto;
+        align-items: start;
+    }
+
+    .kp-tiles[data-kp-tiles-easing] > * {
+        overflow: clip;
+        box-sizing: border-box;
+    }
+
     /* --- Key figures: the KPI strip and tile [scope-143] ------------------- */
 
     /* A row of key figures. Every tile is as tall as the tallest, on every row
@@ -1296,8 +1309,9 @@
         background: var(--kp-meter-fill-colour);
     }
 
-    /* The share itself past the end: a ▸ at the bar's end. */
-    :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+    /* The share itself past the end: a ▸ at the bar's end, unless a sign
+ * below is asked for. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-over]:not(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)::after {
         content: '▸';
         position: absolute;
         inset-block-start: 50%;
@@ -1309,6 +1323,68 @@
         text-shadow:
             0 0 1px var(--kp-meter-halo, var(--card)),
             0 0 2px var(--kp-meter-halo, var(--card));
+    }
+
+    /* Other signs for a share past the end, one modifier each [fault 2026-10-05]:
+ * `--over-hatch` cuts stripes of the surface colour into the fill's last
+ * rem; `--over-spill` puts a short piece in the destructive colour past the
+ * end, a 2px gap after the full bar; `--over-break` lets the fill itself
+ * run past the end, with a cut of the surface colour where the track ends.
+ * The two that reach past the end take `--kp-meter-over-overhang`
+ * (0.5rem) beyond the box, inside a cell's or a tile's padding; an inline
+ * meter keeps that room after it in every state, so the words never move. */
+    :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        pointer-events: none;
+    }
+
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-hatch[data-kp-over]::after {
+        inset-inline-end: 0;
+        inline-size: min(1rem, 35%);
+        border-start-end-radius: 999px;
+        border-end-end-radius: 999px;
+        background: repeating-linear-gradient(-45deg, var(--kp-meter-halo, var(--card)) 0 1.5px, transparent 1.5px 4px);
+    }
+
+    /* The piece past the end is 2px taller above and below than the bar, as
+ * the mark is, so it reads as overflow, not as more bar; it takes no room. */
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-spill[data-kp-over]::after {
+        inset-block: -2px;
+        inset-inline-start: calc(100% + 2px);
+        inline-size: var(--kp-meter-over-overhang, 0.5rem);
+        border-radius: 999px;
+        background: var(--destructive);
+    }
+
+    /* The fill's own colour runs on past the end, after a 2px cut of the
+ * surface colour where the track stops. */
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-break[data-kp-over]::after {
+        inset-block: -2px;
+        inset-inline-start: calc(100% - 2px);
+        inline-size: calc(var(--kp-meter-over-overhang, 0.5rem) + 2px);
+        box-sizing: border-box;
+        border-inline-start: 2px solid var(--kp-meter-halo, var(--card));
+        border-start-end-radius: 999px;
+        border-end-end-radius: 999px;
+        background: var(--kp-meter-fill-colour);
+    }
+
+    .kp-meter--inline:is(.kp-meter--over-spill, .kp-meter--over-break) {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-meter-over-overhang, 0.5rem) + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+            transition: opacity var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        @starting-style {
+            :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+                opacity: 0;
+            }
+        }
     }
 
     :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
@@ -3219,11 +3295,13 @@
     }
 
     /* On a narrow list (under 30rem) the row's text takes the whole line
-     * and its buttons stack under it, one per line on one left edge, each
-     * label on a single line: a label is never wrapped or cut (Kenny's UI
-     * rule; the equal columns of the wider list cut "Review and update all
-     * 4…" by 20 px on the dashboard's Inbox, action-columns-narrow-M1). The
-     * wider list keeps the equal columns Kenny approved (2026-10-04). */
+     * and its buttons stack under it, one per line, each centred under the
+     * row (Kenny, 2026-10-05: "the phone view can center the buttons, left
+     * alignment doesn't look nice"), each label on a single line: a label is
+     * never wrapped or cut (Kenny's UI rule; the equal columns of the wider
+     * list cut "Review and update all 4…" by 20 px on the dashboard's Inbox,
+     * action-columns-narrow-M1). The wider list keeps the equal columns
+     * Kenny approved (2026-10-04). */
     @container kp-action-list (max-width: 30rem) {
         .kp-action-list > li {
             grid-template-columns: minmax(0, 1fr);
@@ -3235,15 +3313,15 @@
         }
 
         .kp-action-list .kp-row-actions {
-            grid-template-columns: minmax(0, max-content);
+            grid-template-columns: minmax(0, 1fr);
             grid-auto-flow: row;
-            justify-content: start;
+            justify-content: stretch;
             row-gap: var(--kp-space-xs, 0.25rem);
         }
 
         .kp-action-list .kp-row-actions > * {
             grid-column: 1;
-            justify-self: start;
+            justify-self: center;
             inline-size: auto;
             white-space: nowrap;
         }
@@ -4421,6 +4499,15 @@
                 filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out;
             outline: 0 solid transparent;
         }
+    }
+
+    /* While a column of flex items glides (`[data-kp-gliding='column']`, set
+       by js/motion.js), the box clips its items instead of squeezing them:
+       a squeezed data table scrolled inside itself and restarted its own
+       glide on every frame (Kenny, 2026-10-05). Over the moment the glide
+       lasts, an item keeps the size its content gives it. */
+    [data-kp-gliding='column'] > * {
+        flex: none !important;
     }
 
     /* --- Dialog ---------------------------------------------------------- */
@@ -8155,6 +8242,71 @@
         }
     }
 
+    /* Loading with a spinner instead of the pulse [fault 2026-10-05]:
+ * `.kp-calendar--busy-days` puts the theme's `.kp-spinner` in every
+ * loading day, on the count's line; `.kp-calendar--busy-whole` puts one,
+ * on a card, over the middle of the grid while the whole grid loads
+ * (setCalendarState 'loading'), and a day's own spinner in a day that
+ * loads on its own. Both lie over what is there (absolute, or in the
+ * grid's own grid area), so no day and no calendar changes size; the
+ * spinners stop under reduced motion as every `.kp-spinner` does. Knobs:
+ * --kp-calendar-spinner (0.75rem, a day's) and --kp-calendar-busy-spinner
+ * (2.5rem, the whole's). */
+    .kp-calendar__day-busy,
+    .kp-calendar__busy {
+        display: none;
+        pointer-events: none;
+    }
+
+    :is(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'] {
+        position: relative;
+        animation: none;
+    }
+
+    :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+        .kp-calendar__day[data-kp-tone='loading']
+        > .kp-calendar__day-busy {
+        --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0.125rem;
+        display: flex;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    .kp-calendar--busy-whole > :is(.kp-calendar__grid, .kp-calendar__busy) {
+        grid-area: 3 / 1;
+    }
+
+    .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+        z-index: 1;
+        display: grid;
+        place-self: center;
+        place-items: center;
+        padding: var(--kp-space-md, 1rem);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        box-shadow: 0 0 0 1px var(--border);
+        line-height: 0;
+    }
+
+    /* Both come in with an opacity fade on the theme's own timing. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-calendar__day-busy,
+        .kp-calendar__busy {
+            transition: opacity var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        @starting-style {
+            .kp-calendar__day-busy,
+            .kp-calendar__busy {
+                opacity: 0;
+            }
+        }
+    }
+
     /* Today: an inner ring in the text colour. Picked: an outer ring in the
  * primary colour. The focus: the house ring, further out. */
     .kp-calendar__day[data-kp-today] {
@@ -8228,7 +8380,10 @@
  * width. An action that cannot be used now stays in the list (and in the
  * keyboard's reach), keeps its hint, and says why under it, in italics. The
  * menu hangs under its button at the button's end edge; in a page header
- * on a phone it spans the header's buttons. Knobs: --kp-menu-rich-min
+ * on a phone it spans the header's buttons. Where that would leave part of
+ * it off the screen, the script moves it (js/menu-button.js,
+ * menuPlacement()): to the button's start edge, over the button, or
+ * scrolling inside itself, clear of a bar stuck over the screen's edge. Knobs: --kp-menu-rich-min
  * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
  * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
  * scrolls inside itself. */

@@ -11,7 +11,7 @@
 // Run: node --test gates/menu-button.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { menuKeyTarget, menuSignature } from '../js/menu-button.js';
+import { menuKeyTarget, menuPlacement, menuSignature } from '../js/menu-button.js';
 
 /** @type {import('../js/menu-button.js').MenuGroup[]} */
 const MENU = [
@@ -89,4 +89,29 @@ test('↓ ↑ wrap, Home and End go to the ends, a letter jumps to the next entr
     assert.equal(menuKeyTarget({ key: 'r', metaKey: true }, 0, LABELS), null);
     assert.equal(menuKeyTarget({ key: 'r', altKey: true }, 0, LABELS), null);
     assert.equal(menuKeyTarget({ key: 'ArrowDown' }, 0, []), null, 'an empty menu answers nothing');
+});
+
+test('an open menu lies whole on the screen: its other edge, over the button, or scrolling inside (Kenny 2026-10-05) [scope-143]', () => {
+    const room = { left: 8, top: 108, right: 382, bottom: 792 };
+    /** A button at x..x+80, y..y+36; the stylesheet's menu hangs under it at its end edge, 4 px down. @param {number} x @param {number} y @param {number} width */
+    const at = (x, y, width, height = 300) => {
+        const button = { left: x, right: x + 80, top: y, bottom: y + 36 };
+        const menu = { left: x + 80 - width, right: x + 80, top: y + 40, bottom: y + 40 + height };
+        return menuPlacement({ button, menu, height, gap: 4, room });
+    };
+    // Room on every side: the stylesheet's place stays.
+    assert.deepEqual(at(300, 200, 280), { left: 100, top: 240, width: null, height: null, side: 'below' });
+    // A button at the left edge (Kenny's case: the menu opened 226 px off the screen): its start edge.
+    assert.equal(at(16, 200, 351).left, 16);
+    // Neither edge fits: pushed inside the room.
+    assert.equal(at(150, 200, 351).left, 8);
+    // Wider than the room: the room's width.
+    assert.deepEqual([at(16, 200, 500).left, at(16, 200, 500).width], [8, 374]);
+    // No room under it: over the button.
+    assert.deepEqual([at(300, 700, 280).side, at(300, 700, 280).top], ['above', 700 - 4 - 300]);
+    // No room for all of it either side: the roomier side, at that side's height.
+    const tall = at(300, 400, 280, 600);
+    assert.deepEqual([tall.side, tall.height, tall.top], ['below', 792 - 440, 440]);
+    const tallLow = at(300, 600, 280, 600);
+    assert.deepEqual([tallLow.side, tallLow.height, tallLow.top], ['above', 600 - 4 - 108, 108]);
 });

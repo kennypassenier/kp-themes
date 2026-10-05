@@ -138,7 +138,7 @@ const sizeBlocks = new WeakSet();
 const attachSizeBlock = (block) => {
     if (sizeBlocks.has(block)) return;
     sizeBlocks.add(block);
-    attachMotion(block, { size: '.kp-card' });
+    attachMotion(block, { size: '.kp-card', arrive: 'new' });
 };
 /** @param {Element | null} block */
 const showCount = (block) => {
@@ -166,31 +166,28 @@ document.addEventListener('click', (event) => {
         grid.firstElementChild?.append(line);
         return;
     }
-    const keep = [...grid.children].map((card) => card.cloneNode(true));
+    // A page that redraws itself on every navigation builds the same cards
+    // anew: a hundred times, one rebuild a frame, each card a new element
+    // under the key of the one it replaces. The block is attached with
+    // `arrive: 'new'` (and marked `data-kp-arrive="new"`), so a card redrawn
+    // under its key is the same card: nothing arrives, nothing moves, and
+    // the board does not flash (Kenny, 2026-10-05: "rebuild 100 cards only
+    // flashes"). Every replaced card is let go.
     const before = motionWatchCount();
     let round = 0;
+    let built = 0;
     const rebuild = () => {
-        grid.replaceChildren(
-            ...Array.from({ length: 100 }, (_, at) => {
-                const card = document.createElement('div');
-                card.className = 'kp-card kp-stack';
-                card.textContent = `Card ${at + 1}`;
-                return card;
-            }),
-        );
+        const fresh = [...grid.children].map((card) => /** @type {Element} */ (card.cloneNode(true)));
+        built += fresh.length;
+        grid.replaceChildren(...fresh);
         round += 1;
-        if (round < 10) requestAnimationFrame(rebuild);
+        if (round < 100) requestAnimationFrame(rebuild);
         else
+            // Let go a microtask after they left; read the count after that.
             requestAnimationFrame(() => {
-                grid.replaceChildren(...keep);
-                // Let go a microtask after they left; read the count after that.
-                queueMicrotask(() =>
-                    queueMicrotask(() => {
-                        showCount(block);
-                        const line = block.querySelector('[data-cat-size-count]');
-                        if (line) line.textContent += ` (it was ${before} before the rebuild)`;
-                    }),
-                );
+                showCount(block);
+                const line = block.querySelector('[data-cat-size-count]');
+                if (line) line.textContent += ` (it was ${before} before the rebuild; ${built} cards were built and let go)`;
             });
     };
     rebuild();

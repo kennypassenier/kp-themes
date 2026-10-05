@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="open-reverse" data-review-themes="formal,cyberpunk,titanium">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — opening as the reverse of closing</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="or-page">
+            <header class="or-intro">
+                <h1>Opening as the reverse of closing</h1>
+                <p>
+                    Kenny, 2026-10-05, on the catalogue's leave options: "can we also see the opposite of close() with the reverse animation of close?
+                    So when it grows it's the opposite? give a demo with formal, cyberpunk and titanium". Each section below opens the same element
+                    two ways, side by side: on the left it opens as its theme's close played backwards, frame for frame and in the close's own time;
+                    on the right it opens the way the package opens it today. Both close the same way, with the theme's close.
+                </p>
+                <p class="or-motion" data-or-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing moves on this page: both sides open and close at once. Turn it off in the
+                    system settings to judge the motion.
+                </p>
+                <p class="or-meta">
+                    Nothing here has a speed of its own. A dialog closes as its entrance backwards, in two thirds of the entrance's time (at most 600
+                    ms), so the reverse of its close is the entrance played forwards in the close's time. A card closes with its theme's leave
+                    (<code>leave()</code>: the register's exit on <code>[data-kp-leaving]</code> while its space folds shut), so the reverse of its
+                    close is that exit played backwards while the space unfolds, on the same timeline turned around. This theme:
+                    <b data-or-theme-timing>…</b>
+                </p>
+                <div class="or-actions" role="group" aria-label="Animation speed">
+                    <b>Speed of every animation on this page:</b>
+                    <button type="button" class="kp-button kp-button--sm" data-or-speed="1" aria-pressed="false">Full</button>
+                    <button type="button" class="kp-button kp-button--sm" data-or-speed="0.5" aria-pressed="false">½</button>
+                    <button type="button" class="kp-button kp-button--sm" data-or-speed="0.25" aria-pressed="true">¼</button>
+                </div>
+            </header>
+
+            <section
+                class="or-sec"
+                data-review-item="dialog"
+                data-review-components="dialog"
+                data-review-title="A dialog opening"
+                aria-labelledby="h-dialog"
+                data-review-choices='[{ "id": "open", "label": "How the dialog opens", "options": [
+                    { "value": "reverse", "label": "Reverse of close", "hints": {
+                        "formal": "The sheet rises the 14 px it sank and fades in, in 200 ms instead of 300 ms: the entrance, a third faster.",
+                        "cyberpunk": "The CRT switches on (the line, then the picture) in 600 ms instead of 1520 ms: the entrance at the speed you turned down on 2026-10-03.",
+                        "titanium": "The cutter runs down and the panel is cut open in 160 ms instead of 240 ms: the entrance, a third faster." } },
+                    { "value": "today", "label": "Today&#39;s open", "hints": {
+                        "formal": "Recommended: the entrance you approved, at its own 300 ms; a dialog closes faster than it opens, as the close is meant to.",
+                        "cyberpunk": "Recommended: the CRT switch-on at the quarter speed you picked (1520 ms).",
+                        "titanium": "Recommended: the approved cut at its own 240 ms." } }] }]'
+            >
+                <div class="or-sec__head">
+                    <h2 id="h-dialog">A dialog opening</h2>
+                    <p>
+                        The dialog's close is its entrance played backwards, faster. Played backwards once more, that close is the entrance again,
+                        forwards, at the close's speed: the same frames, in two thirds of the time.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open each dialog and close it with <b>Close</b>. On the left the sheet rises and fades in exactly as it later sinks and fades
+                        out (both 200 ms); on the right it rises at the entrance's 300 ms. Judge whether a dialog that opens as fast as it closes
+                        feels right, or rushed.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Open each dialog and close it with <b>Close</b>. On the left the CRT switches on in 600 ms, the exact reverse of how it
+                        switches off; on the right it switches on at its approved 1520 ms. Judge whether the picture still reads as a CRT coming on at
+                        the faster pace.
+                    </p>
+                    <p data-for="titanium">
+                        Open each dialog and close it with <b>Close</b>. On the left the cutter cuts the panel open in 160 ms, the close turned
+                        around; on the right it cuts at the entrance's 240 ms, on the same even, linear pace.
+                    </p>
+                </div>
+                <div class="or-pair">
+                    <div class="or-col" data-or-pick="reverse">
+                        <p class="or-label">Reverse of close</p>
+                        <p class="or-actions">
+                            <button type="button" class="kp-button kp-button--primary" data-or-dialog="reverse">Open: reverse of close</button>
+                        </p>
+                    </div>
+                    <div class="or-col" data-or-pick="today">
+                        <p class="or-label">Today's open</p>
+                        <p class="or-actions">
+                            <button type="button" class="kp-button" data-or-dialog="today">Open: today's open</button>
+                        </p>
+                    </div>
+                </div>
+                <p class="or-timing" data-or-timing="dialog">…</p>
+            </section>
+
+            <section
+                class="or-sec"
+                data-review-item="card"
+                data-review-components="card"
+                data-review-title="A card opening"
+                aria-labelledby="h-card"
+                data-review-choices='[{ "id": "open", "label": "How the card opens", "options": [
+                    { "value": "reverse", "label": "Reverse of close", "hints": {
+                        "formal": "Recommended: the letter unfolds from its top edge downwards as its space opens, the fold you picked, turned around.",
+                        "cyberpunk": "Recommended: the glitch plays backwards: the slices come together, the cyan and magenta copies close in and the text settles.",
+                        "titanium": "Recommended: it fades in under the anodised colours, which run back across it and then cool away to plain metal." } },
+                    { "value": "today", "label": "Today&#39;s open", "hints": {
+                        "formal": "The line is written in from left to right, like ink, while the room glides open: the arrival, unrelated to the fold.",
+                        "cyberpunk": "It slices in from the top in one step while the room glides open: the arrival, unrelated to the glitch.",
+                        "titanium": "It slides in like a drawer while the room glides open: the arrival, unrelated to the anodised exit." } }] }]'
+            >
+                <div class="or-sec__head">
+                    <h2 id="h-card">A card opening</h2>
+                    <p>
+                        A card that is closed with <code>leave(card, { hide: true })</code> and opened again: on the left its theme's leave runs
+                        backwards while its space unfolds, on the timeline of the leave turned around; on the right it is shown and arrives the way a
+                        shown element arrives today. The dashed line under each card shows the space opening and closing.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press <b>Close</b> on both sides, then open each. On the left the card unfolds downwards from its top edge, exactly undoing
+                        how it folded up; on the right the room glides open and the text is inked in from the left.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Press <b>Close</b> on both sides, then open each. On the left the glitch plays backwards: the slices gather, the colour copies
+                        close in and the text comes to rest; on the right the room glides open and the card slices in.
+                    </p>
+                    <p data-for="titanium">
+                        Press <b>Close</b> on both sides, then open each. On the left the card fades in through the anodised colours and cools to
+                        plain metal, the close turned around; on the right the room glides open and the card slides in like a drawer.
+                    </p>
+                </div>
+                <div class="or-pair">
+                    <div class="or-col" data-or-pick="reverse" data-or-card="reverse">
+                        <p class="or-label">Reverse of close</p>
+                        <div class="or-room" data-kp-size-motion>
+                            <article class="kp-card or-card" data-or-target>
+                                <h3>Pump house 3</h3>
+                                <p>Pressure below 2.1 bar for forty minutes; the second pump started at 08:12.</p>
+                            </article>
+                            <p class="or-under">Everything under the card moves with it.</p>
+                        </div>
+                        <p class="or-actions">
+                            <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-or-card-act="close">Close</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-or-card-act="open">
+                                Open: reverse of close
+                            </button>
+                        </p>
+                    </div>
+                    <div class="or-col" data-or-pick="today" data-or-card="today">
+                        <p class="or-label">Today's open</p>
+                        <div class="or-room" data-kp-size-motion>
+                            <article class="kp-card or-card" data-or-target>
+                                <h3>Pump house 3</h3>
+                                <p>Pressure below 2.1 bar for forty minutes; the second pump started at 08:12.</p>
+                            </article>
+                            <p class="or-under">Everything under the card moves with it.</p>
+                        </div>
+                        <p class="or-actions">
+                            <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-or-card-act="close">Close</button>
+                            <button type="button" class="kp-button kp-button--sm" data-or-card-act="open">Open: today's open</button>
+                        </p>
+                    </div>
+                </div>
+                <p class="or-timing" data-or-timing="card">…</p>
+            </section>
+        </main>
+
+        <template data-or-template="dialog">
+            <dialog class="kp-dialog or-dialog" aria-labelledby="or-dialog-t" aria-describedby="or-dialog-d">
+                <h2 class="kp-dialog__title" id="or-dialog-t">Close incident INC-4471?</h2>
+                <p class="kp-dialog__description" id="or-dialog-d">The day shift sees your note first.</p>
+                <div class="kp-dialog__actions">
+                    <button type="button" class="kp-button kp-button--primary" data-or-close>Close</button>
+                </div>
+            </dialog>
+        </template>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

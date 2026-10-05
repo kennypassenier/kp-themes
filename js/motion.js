@@ -309,6 +309,35 @@ function sizeEase(box, ease, change, plain = false) {
 }
 
 /**
+ * A box's layout height to the fraction: its border box as drawn when that
+ * is the layout height rounded (a fold of 75.5 px glided to 76 and then
+ * clicked half a pixel back, in formal), and `offsetHeight` when a
+ * transform scales what is drawn (an entrance that zooms the box).
+ * @param {HTMLElement} el
+ */
+function layoutHeight(el) {
+    const whole = el.offsetHeight;
+    const drawn = el.getBoundingClientRect().height;
+    return Math.abs(drawn - whole) < 1 ? drawn : whole;
+}
+
+/**
+ * The size motion of the theme `box` wears, for a box this module does not
+ * glide itself (the tiles of a set, js/tiles.js): the duration and the curve
+ * a change of `change` px runs on, with the theme's own size character
+ * (`--kp-size-ease`, `--kp-size-steps`). A duration of 0 means: take the
+ * new size at once (reduced motion, a theme without an entrance, or a theme
+ * switch in progress).
+ * @param {HTMLElement} box @param {number} change in px
+ * @returns {{ duration: number, easing: string }}
+ */
+export function sizeMotion(box, change) {
+    const { size, ease } = themeMotion(box);
+    if (size <= 0 || switching) return { duration: 0, easing: 'linear' };
+    return { duration: size, easing: sizeEase(box, ease, change) };
+}
+
+/**
  * Glide `box` from one height to another. During the glide the box clips
  * what overflows it and measures its border box, so the last frame is the
  * size it keeps (a card with padding read its padding twice and then
@@ -324,6 +353,14 @@ function glide(box, from, to, duration, easing, plain = false) {
     // that glows, a rule that draws, a shadow that lengthens) [scope-142].
     box.style.setProperty('--kp-resize-dur', `${Math.round(duration)}ms`);
     if (!plain) box.setAttribute('data-kp-resizing', to > from ? 'grow' : 'shrink');
+    // A column of flex items would be squeezed by the gliding height rather
+    // than clipped by it: the data table's scroll box shrank every frame,
+    // which read as new content and restarted the glide from where it
+    // stood, so a group of rows took five seconds to open and the squeezed
+    // box scrolled on its own (Kenny, 2026-10-05). Meanwhile the items keep
+    // their own size (`[data-kp-gliding='column'] > *`, css/components.css).
+    const flow = getComputedStyle(box);
+    if (/flex/.test(flow.display) && flow.flexDirection.startsWith('column')) box.setAttribute('data-kp-gliding', 'column');
     const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
     const own = /** @type {any} */ (box);
     own.__kpGlide = mine;
@@ -335,6 +372,7 @@ function glide(box, from, to, duration, easing, plain = false) {
         box.style.removeProperty('box-sizing');
         box.style.removeProperty('--kp-resize-dur');
         box.removeAttribute('data-kp-resizing');
+        box.removeAttribute('data-kp-gliding');
     };
     mine.addEventListener('cancel', done);
     return { animation: mine, done };
@@ -601,6 +639,29 @@ async function leaveOne(el, hide, exited) {
                   paddingBottom: style.paddingBottom,
               };
         const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
+        // The gap a flex box keeps between its items stays until the item is
+        // taken out, so a column of rows folded every row to nothing and then
+        // jumped by a gap at each removal (15 px, measured in the leave
+        // options' cards, 2026-10-05). A negative margin towards the
+        // neighbour swallows the gap as the space closes.
+        const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
+        if (gapOf > 0) {
+            const inFlow = (/** @type {Element | null} */ n) => {
+                if (!n) return false;
+                const s = getComputedStyle(n);
+                return s.display !== 'none' && s.position !== 'absolute' && s.position !== 'fixed';
+            };
+            const near = (/** @type {'previousElementSibling' | 'nextElementSibling'} */ way) => {
+                let n = el[way];
+                while (n && !inFlow(n)) n = n[way];
+                return n;
+            };
+            const rtl = sideways && style.direction === 'rtl';
+            const start = sideways ? (rtl ? 'marginRight' : 'marginLeft') : 'marginTop';
+            const end = sideways ? (rtl ? 'marginLeft' : 'marginRight') : 'marginBottom';
+            if (near('previousElementSibling')) to[start] = `${-gapOf}px`;
+            else if (near('nextElementSibling')) to[end] = `${-gapOf}px`;
+        }
         // The space closes slower than a plain resize, so the eye can follow
         // what closes up (Kenny, 2026-10-04: "ik zou het graag iets trager
         // zien gaan, zodat de animatie zichtbaar is"). `--kp-leave-fold`
@@ -729,6 +790,19 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
     let running = null;
     const settle = () => {
         if (!box.isConnected) return;
+        // During a glide a child may change size only because the box's
+        // height moves (a stretched or squeezed item): the size the content
+        // asks for is the same, so the glide goes on. Restarting it there
+        // started it again from where it stood on every frame, and the box
+        // crept towards its size for seconds. The effect is lifted off the
+        // box for one read, which leaves its timing alone.
+        const effect = /** @type {KeyframeEffect | null} */ (running?.effect ?? null);
+        if (running && effect) {
+            effect.target = null;
+            const natural = box.offsetHeight;
+            effect.target = box;
+            if (Math.abs(natural - last) < 1) return;
+        }
         const from = running ? box.offsetHeight : last;
         // Finished rather than cancelled: a page that awaits every
         // animation's `finished` must not see an AbortError for a glide a
@@ -757,9 +831,22 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
     // moves during a glide. Heights are layout heights (offsetHeight), not
     // painted ones: a theme's entrance that scales the box would otherwise
     // be read as its size (retro's zoom read 57px for a 227px dialog).
-    const sizes = new ResizeObserver(settle);
+    //
+    // The box itself is watched too, but only to keep `last` true: a box
+    // stretched by its neighbours (cards in one grid row) or emptied by
+    // rows that folded themselves shut changes size with no child of its
+    // own changing, and a `last` left behind made the next change glide
+    // from a height the reader never saw, or not glide at all (the leave
+    // options' "Bring them back": one card jumped, one glided from 83 px
+    // while it stood at 34; Kenny, 2026-10-05). A child's change in the
+    // same callback goes first, so it still glides from what was painted.
+    const sizes = new ResizeObserver((entries) => {
+        if (entries.some((entry) => entry.target !== box)) settle();
+        else if (!running) last = box.offsetHeight;
+    });
     const watch = () => {
         sizes.disconnect();
+        sizes.observe(box);
         for (const child of box.children) sizes.observe(child);
     };
     watch();
@@ -821,21 +908,37 @@ function attachFold(details) {
     /** @type {Animation | null} */
     let running = null;
     let folding = false;
-    const onClick = (/** @type {Event} */ event) => {
-        const { size, ease } = themeMotion(details);
-        if (size <= 0) return;
-        event.preventDefault();
-        const from = details.offsetHeight;
+    // A fold drawn for the first time takes the state it is given at once: a
+    // page that rebuilds its groups paints each one's remembered state before
+    // the first frame (port spec J3), and that is not a change to glide.
+    let shown = false;
+    requestAnimationFrame(() => (shown = true));
+    const shutHeight = () => {
+        const style = getComputedStyle(details);
+        return (
+            layoutHeight(/** @type {HTMLElement} */ (summary)) +
+            parseFloat(style.borderBlockStartWidth || '0') +
+            parseFloat(style.borderBlockEndWidth || '0')
+        );
+    };
+    /** `open` set by the fold itself, which the watcher below does not answer. @param {boolean} value */
+    const setOpen = (value) => {
+        details.open = value;
+        watcher.takeRecords();
+    };
+    /**
+     * Glide open or shut from the height the fold stands at now. While it
+     * folds shut it carries `data-kp-folding`, so what counts only what is
+     * shown (a tile set, js/tiles.js) lets it go at the start of the fold
+     * rather than at its end.
+     * @param {boolean} opening @param {number} from @param {number} size @param {string} ease
+     */
+    const move = (opening, from, size, ease) => {
         running?.finish();
-        const opening = !details.open || folding;
         folding = !opening;
-        details.open = true;
-        const full = details.offsetHeight;
-        const shut =
-            /** @type {HTMLElement} */ (summary).offsetHeight +
-            parseFloat(getComputedStyle(details).borderBlockStartWidth || '0') +
-            parseFloat(getComputedStyle(details).borderBlockEndWidth || '0');
-        const to = opening ? full : shut;
+        setOpen(true);
+        const to = opening ? layoutHeight(details) : shutHeight();
+        details.toggleAttribute('data-kp-folding', folding);
         // The accordion keeps the motion Kenny approved in every theme: the
         // entrance's curve, without a theme's size character.
         const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
@@ -847,18 +950,47 @@ function attachFold(details) {
                 running = null;
                 if (folding) {
                     folding = false;
-                    details.open = false;
+                    setOpen(false);
                 }
+                details.removeAttribute('data-kp-folding');
             })
             .catch(() => undefined);
     };
+    const onClick = (/** @type {Event} */ event) => {
+        const { size, ease } = themeMotion(details);
+        if (size <= 0) return;
+        event.preventDefault();
+        move(!details.open || folding, layoutHeight(details), size, ease);
+    };
+    // `open` set from outside (a page that opens every group while a search
+    // runs, a memory painted back when the search ends) glides too: it
+    // jumped, the one jump left on the remembered board (Kenny, 2026-10-05:
+    // "animation is too chunky, should be smooth").
+    const watcher = new MutationObserver((records) => {
+        const was = records[0].oldValue !== null;
+        const now = details.open;
+        if (!shown || was === now || !details.isConnected) return;
+        const { size, ease } = themeMotion(details);
+        if (size <= 0) return;
+        let from;
+        if (running) from = layoutHeight(details);
+        else if (now) from = shutHeight();
+        else {
+            setOpen(true);
+            from = layoutHeight(details);
+        }
+        move(now, from, size, ease);
+    });
+    watcher.observe(details, { attributes: true, attributeFilter: ['open'], attributeOldValue: true });
     summary.addEventListener('click', onClick);
     return () => {
         if (!own.__kpFold) return;
         watching -= 1;
+        watcher.disconnect();
         summary.removeEventListener('click', onClick);
         running?.cancel();
         details.style.removeProperty('overflow');
+        details.removeAttribute('data-kp-folding');
         delete own.__kpFold;
     };
 }

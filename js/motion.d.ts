@@ -49,6 +49,20 @@ export declare function closeDialog(dialog: HTMLDialogElement, returnValue?: str
  */
 export declare function withoutOvershoot(ease: string): string;
 /**
+ * The size motion of the theme `box` wears, for a box this module does not
+ * glide itself (the tiles of a set, js/tiles.js): the duration and the curve
+ * a change of `change` px runs on, with the theme's own size character
+ * (`--kp-size-ease`, `--kp-size-steps`). A duration of 0 means: take the
+ * new size at once (reduced motion, a theme without an entrance, or a theme
+ * switch in progress).
+ * @param {HTMLElement} box @param {number} change in px
+ * @returns {{ duration: number, easing: string }}
+ */
+export declare function sizeMotion(box: HTMLElement, change: number): {
+    duration: number;
+    easing: string;
+};
+/**
  * Let `el` leave the theme's way, then take it out [scope-142; Kenny,
  * 2026-10-04: "die grow/shrink bewegingen moeten ook zijn als er opeens
  * nieuwe elementen bijkomen of weggaan"]: it plays its arrival backwards

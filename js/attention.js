@@ -173,7 +173,17 @@ export function setAttention(band, items) {
         paintItem(el, item);
         wanted.push(el);
     }
-    for (const [key, el] of shown) if (!seen.has(key)) void leave(el);
+    // An item told to leave is marked `data-kp-leaving` only a microtask
+    // later (leave() batches); until then it is skipped by hand, or the
+    // items under it read as out of place and were moved, which took the
+    // focus off a fix button in them.
+    /** @type {Set<Element>} */
+    const going = new Set();
+    for (const [key, el] of shown)
+        if (!seen.has(key)) {
+            going.add(el);
+            void leave(el);
+        }
     // Worst first, stable within a severity, then moved only where out of place.
     const order = wanted.map((el, at) => ({ el, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
     /** @type {HTMLElement | null} */
@@ -181,7 +191,8 @@ export function setAttention(band, items) {
     for (const { el } of order) {
         /** @type {Element | null} */
         let prev = el.isConnected && el.parentElement === band ? el.previousElementSibling : null;
-        while (prev && (!prev.classList.contains('kp-attention__item') || prev.hasAttribute('data-kp-leaving'))) prev = prev.previousElementSibling;
+        while (prev && (!prev.classList.contains('kp-attention__item') || prev.hasAttribute('data-kp-leaving') || going.has(prev)))
+            prev = prev.previousElementSibling;
         const inPlace = el.parentElement === band && prev === before;
         if (!inPlace) {
             if (before) before.after(el);

@@ -28,6 +28,10 @@
 // button. A click outside closes it. A pick fires `kp-menu-select`, which a
 // page may cancel to keep the menu open.
 //
+// The open menu is always whole on the screen (menuPlacement()): it moves
+// to the button's other edge, or over the button, or scrolls inside itself,
+// and stays clear of a bar the page has stuck over the screen's edge.
+//
 // Every word is in the dictionary (`menuLoading`, `menuEmpty` in
 // js/strings.js). `decorate(part, info)` is called with the button and with
 // every entry, each time one is built, so a consumer can mark them. Nothing
@@ -303,6 +307,169 @@ function setEmpty(s, empty, strings) {
     }
 }
 
+/** The space an open menu keeps from the screen's edges, in px. */
+export const MENU_GUTTER = 8;
+
+/** @typedef {{ left: number, top: number, right: number, bottom: number }} Edges */
+
+/**
+ * Where an open menu goes so that all of it is on the screen (Kenny,
+ * 2026-10-05: a menu under a button at the left edge opened off the
+ * screen). Pure: boxes in, box out, all in viewport px.
+ *
+ * Across, the place the stylesheet gave it (under the button, at its end
+ * edge; spanning the header's buttons on a phone) is kept when it fits;
+ * else it lines up with the button's start edge, else with its end edge,
+ * else it is pushed inside the room. Down, it hangs under the button when
+ * it fits there, else over it when it fits there, else on the roomier side
+ * at that side's height, scrolling inside itself.
+ *
+ * @param {object} at
+ * @param {Edges} at.button the button's box
+ * @param {Edges} at.menu where the stylesheet put the menu
+ * @param {number} at.height the menu's whole height, within the stylesheet's own cap
+ * @param {number} at.gap the space between the button and the menu
+ * @param {Edges} at.room the screen less its gutter and what is stuck over its edges
+ * @returns {{ left: number, top: number, width: number | null, height: number | null, side: 'below' | 'above' }}
+ *   `width` and `height` are the caps to set, null where the menu fits whole
+ */
+export function menuPlacement({ button, menu, height, gap, room }) {
+    const width = menu.right - menu.left;
+    const across = room.right - room.left;
+    const fits = (/** @type {number} */ x) => x >= room.left - 0.5 && x + width <= room.right + 0.5;
+    let left = menu.left;
+    let capWidth = null;
+    if (width > across) {
+        left = room.left;
+        capWidth = across;
+    } else if (!fits(left)) {
+        const start = button.left;
+        const end = button.right - width;
+        left = fits(start) ? start : fits(end) ? end : Math.min(Math.max(left, room.left), room.right - width);
+    }
+    const below = room.bottom - (button.bottom + gap);
+    const above = button.top - gap - room.top;
+    /** @type {'below' | 'above'} */
+    let side = 'below';
+    let capHeight = null;
+    if (height > below + 0.5) {
+        if (height <= above + 0.5) side = 'above';
+        else {
+            side = above > below ? 'above' : 'below';
+            capHeight = Math.max(0, Math.floor(side === 'above' ? above : below));
+        }
+    }
+    const tall = capHeight ?? height;
+    const top = side === 'below' ? button.bottom + gap : button.top - gap - tall;
+    return { left, top, width: capWidth, height: capHeight, side };
+}
+
+/**
+ * How far in from the screen's top and bottom edges a menu must stay: what
+ * the page declares as covered (its scrolling box's `scroll-padding`, which
+ * the package's sticky nav writes), or a bar stuck (fixed or sticky) across
+ * the screen at that edge, whichever reaches further. A bar the menu button
+ * lives in does not count, nor a small floating control (narrower than half
+ * the screen).
+ * @param {Window} view
+ * @param {Element} wrapper
+ * @param {Element} [skip] an element to see through (the open menu)
+ * @returns {{ top: number, bottom: number }}
+ */
+function coveredEdges(view, wrapper, skip) {
+    const doc = view.document;
+    const html = doc.documentElement;
+    const width = html.clientWidth;
+    const height = html.clientHeight;
+    const pad = view.getComputedStyle(doc.scrollingElement ?? html);
+    const px = (/** @type {string} */ v) => (Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0);
+    const box = wrapper.getBoundingClientRect();
+    const x = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
+    /** The stuck bar at this height, if any. @param {number} y */
+    const barAt = (y) => {
+        for (const hit of doc.elementsFromPoint(x, y)) {
+            if (skip?.contains(hit)) continue;
+            for (let el = /** @type {Element | null} */ (hit); el && el !== html && el !== doc.body; el = el.parentElement) {
+                const { position } = view.getComputedStyle(el);
+                if (position !== 'fixed' && position !== 'sticky') continue;
+                if (el.contains(wrapper) || wrapper.contains(el)) return null;
+                const r = el.getBoundingClientRect();
+                return r.width >= width / 2 ? r : null;
+            }
+            return null;
+        }
+        return null;
+    };
+    let top = 0;
+    for (let bar = barAt(0.5), n = 0; bar && n < 4; n += 1) {
+        if (bar.bottom <= top + 0.5) break;
+        top = bar.bottom;
+        bar = top < height ? barAt(top + 0.5) : null;
+    }
+    let bottom = 0;
+    for (let bar = barAt(height - 0.5), n = 0; bar && n < 4; n += 1) {
+        if (height - bar.top <= bottom + 0.5) break;
+        bottom = height - bar.top;
+        bar = bottom < height ? barAt(height - bottom - 0.5) : null;
+    }
+    return { top: Math.max(top, px(pad.scrollPaddingTop)), bottom: Math.max(bottom, px(pad.scrollPaddingBottom)) };
+}
+
+/** The inline properties placeMenu() writes, undone when the menu closes. */
+const PLACED = ['left', 'right', 'top', 'bottom', 'width', 'max-block-size', 'max-inline-size'];
+
+/** @param {HTMLElement} menu */
+function unplaceMenu(menu) {
+    for (const name of PLACED) menu.style.removeProperty(name);
+    menu.removeAttribute('data-kp-menu-side');
+}
+
+/**
+ * Put the open menu where menuPlacement() says: one read of the boxes, then
+ * one write, before the frame is painted, so it never shows in the wrong
+ * place first.
+ * @param {MenuState} s
+ * @param {Window} view
+ * @param {{ top: number, bottom: number }} covered
+ */
+function placeMenu(s, view, covered) {
+    const { menu } = s;
+    unplaceMenu(menu);
+    const html = view.document.documentElement;
+    const room = {
+        left: MENU_GUTTER,
+        right: html.clientWidth - MENU_GUTTER,
+        top: covered.top + MENU_GUTTER,
+        bottom: html.clientHeight - covered.bottom - MENU_GUTTER,
+    };
+    const button = s.button.getBoundingClientRect();
+    const box = menu.getBoundingClientRect();
+    const style = view.getComputedStyle(menu);
+    const cap = parseFloat(style.maxBlockSize);
+    const borders = box.height - menu.clientHeight;
+    const whole = menu.scrollHeight + borders;
+    const height = Number.isFinite(cap) ? Math.min(whole, cap) : whole;
+    const at = menuPlacement({ button, menu: box, height, gap: Math.max(0, box.top - button.bottom), room });
+    // Only what moves is written: the used left or top (px for a positioned
+    // box) moved by the difference, so whichever box contains the menu it
+    // lands at `at`. A menu the stylesheet sized by its two edges (the
+    // phone header's span) keeps its width when it moves across.
+    if (Math.abs(at.left - box.left) > 0.5 || at.width != null) {
+        const usedLeft = parseFloat(style.left);
+        menu.style.setProperty('left', `${(Number.isFinite(usedLeft) ? usedLeft : menu.offsetLeft) + at.left - box.left}px`);
+        menu.style.setProperty('right', 'auto');
+        menu.style.setProperty('width', `${at.width ?? box.width}px`);
+    }
+    if (Math.abs(at.top - box.top) > 0.5) {
+        const usedTop = parseFloat(style.top);
+        menu.style.setProperty('top', `${(Number.isFinite(usedTop) ? usedTop : menu.offsetTop) + at.top - box.top}px`);
+        menu.style.setProperty('bottom', 'auto');
+    }
+    if (at.width != null) menu.style.setProperty('max-inline-size', `${at.width}px`);
+    if (at.height != null) menu.style.setProperty('max-block-size', `${at.height}px`);
+    menu.setAttribute('data-kp-menu-side', at.side);
+}
+
 /**
  * Open a menu button's menu and put the focus on its first (or last) entry;
  * `none` leaves the focus where it is (a page showing the menu on its own,
@@ -316,7 +483,28 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
     const doc = s.menu.ownerDocument;
     const view = doc.defaultView;
     s.open = true;
+    // What the page has stuck over the screen's edges is read while the
+    // menu is still hidden, so the probe cannot hit the menu itself.
+    const covered = view ? coveredEdges(view, s.wrapper) : null;
     s.menu.hidden = false;
+    if (view && covered) {
+        placeMenu(s, view, covered);
+        // A turned phone or a resized window: the menu is placed again,
+        // once a frame at most.
+        let frame = 0;
+        const again = () => {
+            if (frame) return;
+            frame = view.requestAnimationFrame(() => {
+                frame = 0;
+                if (s.open) placeMenu(s, view, coveredEdges(view, s.wrapper, s.menu));
+            });
+        };
+        view.addEventListener('resize', again);
+        s.off.push(() => {
+            view.removeEventListener('resize', again);
+            if (frame) view.cancelAnimationFrame(frame);
+        });
+    }
     s.button.setAttribute('aria-expanded', 'true');
     /** @param {MouseEvent} event */
     const outside = (event) => {
@@ -356,6 +544,7 @@ export function closeMenu(wrapper, { focus = false } = {}) {
     s.menu.hidden = true;
     s.button.setAttribute('aria-expanded', 'false');
     for (const off of s.off.splice(0)) off();
+    unplaceMenu(s.menu);
     if (focus) s.button.focus();
     if (s.pending) {
         const next = s.pending;

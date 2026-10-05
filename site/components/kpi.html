@@ -511,10 +511,10 @@
                     </figure>
                     <figure class="sc-example" id="more-data-kpi-columns">
                         <figcaption class="kp-fw-semibold">Key figures that never leave one alone</figcaption>
-                        <p class="kp-text-muted"><code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile is at least <code>--kp-kpi-min</code> wide, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it steps down to a count that does not; only when none exists (seven at 700 px, five at phone width) does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the line under the buttons says what <code>attachKpiStrips()</code> chose. Before the script runs, a strip keeps the package's auto-fit. The table under the phone pane is the spec's own list of cases.</p>
+                        <p class="kp-text-muted"><code>.kp-kpis[data-kp-kpis-columns="all 3 2 1"]</code>: the strip takes the first count in the list at which every tile is at least <code>--kp-kpi-min</code> wide, measured by the strip's own width (not the window's). If that leaves one tile alone on the last row, it steps down to a count that does not; only when none exists (seven at 700 px, five at phone width) does the last tile span the whole row. Every tile in a row has the same height. Pick a number of tiles and a strip width: the picked button carries a ring, tiles come and go one at a time while the block's height follows, and the line under the buttons says what <code>attachKpiStrips()</code> chose. A width wider than the block can be in this window is greyed, and its title says why. Before the script runs, a strip keeps the package's auto-fit. The table under the phone pane is the spec's own list of cases.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage">
-<div data-cat-kpis-stage>
+<div data-cat-kpis-stage data-kp-size-motion>
     <div
     class="kp-kpis"
     data-kp-kpis-columns="all 3 2 1"
@@ -660,7 +660,7 @@
 </table>
 </div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-cat-kpis-stage</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-cat-kpis-stage</span> <span class="kp-code__keyword">data-kp-size-motion</span>&gt;
     &lt;<span class="kp-code__keyword">div</span>
     <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span>
     <span class="kp-code__keyword">data-kp-kpis-columns</span><span class="kp-code__string">=&quot;all 3 2 1&quot;</span>

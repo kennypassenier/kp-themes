@@ -112,6 +112,49 @@ export declare function menuKeyTarget(event: {
     metaKey?: boolean;
     altKey?: boolean;
 }, at: number, labels: readonly string[]): number | null;
+/** The space an open menu keeps from the screen's edges, in px. */
+export declare const MENU_GUTTER = 8;
+export type Edges = {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+};
+/** @typedef {{ left: number, top: number, right: number, bottom: number }} Edges */
+/**
+ * Where an open menu goes so that all of it is on the screen (Kenny,
+ * 2026-10-05: a menu under a button at the left edge opened off the
+ * screen). Pure: boxes in, box out, all in viewport px.
+ *
+ * Across, the place the stylesheet gave it (under the button, at its end
+ * edge; spanning the header's buttons on a phone) is kept when it fits;
+ * else it lines up with the button's start edge, else with its end edge,
+ * else it is pushed inside the room. Down, it hangs under the button when
+ * it fits there, else over it when it fits there, else on the roomier side
+ * at that side's height, scrolling inside itself.
+ *
+ * @param {object} at
+ * @param {Edges} at.button the button's box
+ * @param {Edges} at.menu where the stylesheet put the menu
+ * @param {number} at.height the menu's whole height, within the stylesheet's own cap
+ * @param {number} at.gap the space between the button and the menu
+ * @param {Edges} at.room the screen less its gutter and what is stuck over its edges
+ * @returns {{ left: number, top: number, width: number | null, height: number | null, side: 'below' | 'above' }}
+ *   `width` and `height` are the caps to set, null where the menu fits whole
+ */
+export declare function menuPlacement({ button, menu, height, gap, room }: {
+    button: Edges;
+    menu: Edges;
+    height: number;
+    gap: number;
+    room: Edges;
+}): {
+    left: number;
+    top: number;
+    width: number | null;
+    height: number | null;
+    side: 'below' | 'above';
+};
 /**
  * Open a menu button's menu and put the focus on its first (or last) entry;
  * `none` leaves the focus where it is (a page showing the menu on its own,
