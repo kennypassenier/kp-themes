@@ -40,6 +40,31 @@ export declare function themeMotion(scope?: Element): {
  * @returns {Promise<void>} settled once the dialog is closed
  */
 export declare function closeDialog(dialog: HTMLDialogElement, returnValue?: string): Promise<void>;
+/** The attribute playEntranceBackwards() sets while it turns an entrance around. */
+export declare const REVERSING_ATTRIBUTE = "data-kp-reversing";
+/**
+ * Play the CSS entrance `el` wears now backwards, then settle: a tooltip
+ * that slid in slides out, a tour card that faded in fades out, each in its
+ * entrance's own time on its curve turned around, so frame t of the going
+ * is frame (T - t) of the coming (Kenny, 2026-10-05: "find out where else
+ * there is a discrepancy between opening/closing"). The entrance is
+ * restarted reversed on the element and its pseudo-elements
+ * (`[data-kp-reversing]`, css/components.css), whatever its fill, so one
+ * that already played out is turned around too. With no entrance (reduced
+ * motion, a theme without one) it settles at once. The caller hides the
+ * element when it settles true and then calls stopReversing(), which also
+ * stops it early when the element is wanted back meanwhile.
+ * @param {HTMLElement} el
+ * @returns {Promise<boolean>} true once played out, false when there was nothing to play or it was stopped
+ */
+export declare function playEntranceBackwards(el: HTMLElement): Promise<boolean>;
+/**
+ * Stop a playEntranceBackwards() on `el` (it is wanted back), or tidy up
+ * after one that played out: a running one settles false, and the entrance
+ * is the element's own again.
+ * @param {HTMLElement} el
+ */
+export declare function stopReversing(el: HTMLElement): void;
 /**
  * The entrance's curve without its overshoot: a size goes to its new value
  * and stops there (Kenny, 2026-10-04: pastel's and synthwave's cards "grow
@@ -48,6 +73,18 @@ export declare function closeDialog(dialog: HTMLDialogElement, returnValue?: str
  * @param {string} ease
  */
 export declare function withoutOvershoot(ease: string): string;
+/**
+ * A timing function turned around: the curve that plays a motion backwards
+ * as `direction: reverse` would, so a close, a shrink or a fold that runs
+ * on it is its opening frame for frame in the other order. A cubic-bezier
+ * is rotated half a turn (an ease-out becomes an ease-in, an overshoot past
+ * the end becomes one before the start), steps that jump at the end jump at
+ * the start, a `linear()` list runs from its other end; `linear` and the
+ * symmetric curves stay themselves.
+ * @param {string} ease a CSS easing function
+ * @returns {string}
+ */
+export declare function reversedEase(ease: string): string;
 /**
  * The size motion of the theme `box` wears, for a box this module does not
  * glide itself (the tiles of a set, js/tiles.js): the duration and the curve
@@ -61,6 +98,23 @@ export declare function withoutOvershoot(ease: string): string;
 export declare function sizeMotion(box: HTMLElement, change: number): {
     duration: number;
     easing: string;
+};
+/**
+ * Play backwards the arrival arrive() gives `el` in a theme where it does
+ * not arrive as a leave turned around (a table row; Kenny, 2026-10-05: the
+ * rows of a group unfolded the theme's way and folded away at once): the
+ * register's own `[data-kp-arriving]`, else the theme's toast entrance, in
+ * its own time on its curve turned around. The caller hides `el` once it
+ * settles. Settles at once when there is no arrival to turn around.
+ * @param {HTMLElement} el
+ * @returns {Promise<void>}
+ */
+export declare function playArrivalBackwards(el: HTMLElement): Promise<void>;
+export type Arriving = {
+    el: HTMLElement;
+    plays: Animation[];
+    total: number;
+    lag: number;
 };
 /**
  * Let `el` leave the theme's way, then take it out [scope-142; Kenny,

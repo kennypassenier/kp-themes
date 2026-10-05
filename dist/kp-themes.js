@@ -1882,7 +1882,7 @@ function attachEffects(root = document, options = {}) {
   const installed = {};
   let ctx;
   const use = (name) => installed[name] ??= loaders[name]().then((module) => module.install(ctx));
-  const arriving = [];
+  const arriving2 = [];
   let present = null;
   const run = (name, fn) => {
     state.pending++;
@@ -1895,7 +1895,7 @@ function attachEffects(root = document, options = {}) {
       state.pending = Math.max(0, state.pending - 1);
       done();
     });
-    arriving.push(arrived);
+    arriving2.push(arrived);
   };
   const startOne = (el2) => {
     if (started.has(el2)) return;
@@ -2035,7 +2035,7 @@ function attachEffects(root = document, options = {}) {
     // moment the code is in, which a caller that reads straight after
     // attach — a test, a wrapper counting listeners — waits for.
     get ready() {
-      return Promise.all(arriving).then(() => void 0);
+      return Promise.all(arriving2).then(() => void 0);
     },
     detach() {
       if (state.detached) return;
@@ -2679,6 +2679,7 @@ var motion_exports = {};
 __export(motion_exports, {
   ARRIVE_KEYS: () => ARRIVE_KEYS,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
+  REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
   SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
   SIZE_SELECTOR: () => SIZE_SELECTOR,
   attachMotion: () => attachMotion,
@@ -2686,8 +2687,12 @@ __export(motion_exports, {
   easeSize: () => easeSize,
   leave: () => leave,
   motionWatchCount: () => motionWatchCount,
+  playArrivalBackwards: () => playArrivalBackwards,
+  playEntranceBackwards: () => playEntranceBackwards,
   repaintedIn: () => repaintedIn,
+  reversedEase: () => reversedEase,
   sizeMotion: () => sizeMotion,
+  stopReversing: () => stopReversing,
   themeMotion: () => themeMotion,
   withoutOvershoot: () => withoutOvershoot
 });
@@ -2725,14 +2730,30 @@ function themeMotion(scope = document.documentElement) {
 }
 function rememberEntrance(dialog) {
   getComputedStyle(dialog).animationName;
-  const kept = dialog.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.effect instanceof KeyframeEffect).map((a) => {
+  const kept = entranceOf(dialog).map((a) => {
     const effect = (
       /** @type {KeyframeEffect} */
       a.effect
     );
-    return { keyframes: effect.getKeyframes(), easing: String(effect.getTiming().easing ?? "linear"), pseudoElement: effect.pseudoElement };
+    return {
+      target: (
+        /** @type {Element} */
+        effect.target
+      ),
+      keyframes: effect.getKeyframes(),
+      easing: String(effect.getTiming().easing ?? "linear"),
+      pseudoElement: effect.pseudoElement
+    };
   });
   entrances.set(dialog, kept);
+}
+function entranceOf(dialog) {
+  return (
+    /** @type {CSSAnimation[]} */
+    dialog.getAnimations({ subtree: true }).filter(
+      (a) => a instanceof CSSAnimation && a.effect instanceof KeyframeEffect && a.effect.target !== null && Number.isFinite(Number(a.effect.getComputedTiming().activeDuration))
+    )
+  );
 }
 async function closeDialog(dialog, returnValue) {
   const close = () => nativeClose?.call(dialog, returnValue);
@@ -2742,10 +2763,10 @@ async function closeDialog(dialog, returnValue) {
   if (duration <= 0) return void close();
   closing.add(dialog);
   const out = [];
-  for (const { keyframes, easing, pseudoElement } of kept) {
+  for (const { target, keyframes, easing, pseudoElement } of kept) {
     try {
       out.push(
-        dialog.animate(keyframes, {
+        target.animate(keyframes, {
           duration,
           easing,
           direction: "reverse",
@@ -2756,7 +2777,7 @@ async function closeDialog(dialog, returnValue) {
     } catch {
     }
   }
-  if (!kept.some((one) => one.pseudoElement === "::backdrop")) {
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
     try {
       out.push(
         dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" })
@@ -2775,10 +2796,10 @@ function openAsReversedClose(dialog) {
   const { close: duration } = themeMotion(dialog);
   const kept = entrances.get(dialog) ?? [];
   if (duration <= 0) return;
-  for (const a of dialog.getAnimations({ subtree: true })) if (a instanceof CSSAnimation) a.cancel();
-  for (const { keyframes, easing, pseudoElement } of kept) {
+  for (const a of entranceOf(dialog)) a.cancel();
+  for (const { target, keyframes, easing, pseudoElement } of kept) {
     try {
-      dialog.animate(keyframes, { duration, easing, fill: "backwards", ...pseudoElement ? { pseudoElement } : {} });
+      target.animate(keyframes, { duration, easing, fill: "backwards", ...pseudoElement ? { pseudoElement } : {} });
     } catch {
     }
   }
@@ -2786,7 +2807,7 @@ function openAsReversedClose(dialog) {
     /** @type {Keyframe[]} */
     [{ opacity: 1 }, { opacity: 0 }]
   );
-  if (!kept.some((one) => one.pseudoElement === "::backdrop")) {
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
     try {
       dialog.animate(fade, { duration, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
     } catch {
@@ -2833,6 +2854,59 @@ function attachClose(dialog) {
     delete own.__kpMotion;
   };
 }
+function playEntranceBackwards(el2) {
+  stopReversing(el2);
+  if (reduced() || !el2.isConnected) return Promise.resolve(false);
+  const named = (pseudo) => {
+    const name = getComputedStyle(el2, pseudo).animationName;
+    return Boolean(name) && name !== "none";
+  };
+  if (![null, "::before", "::after"].some(named)) return Promise.resolve(false);
+  el2.setAttribute(REVERSING_ATTRIBUTE, "reset");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el2, pseudo).animationName;
+  el2.setAttribute(REVERSING_ATTRIBUTE, "play");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el2, pseudo).animationName;
+  const plays = el2.getAnimations({ subtree: true }).filter(
+    (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+    a.effect?.target === el2 && a.effect?.getComputedTiming().iterations !== Infinity
+  );
+  if (plays.length === 0) {
+    el2.removeAttribute(REVERSING_ATTRIBUTE);
+    return Promise.resolve(false);
+  }
+  return new Promise((resolve) => {
+    const own = (
+      /** @type {any} */
+      el2
+    );
+    own.__kpReversing = () => {
+      for (const a of plays) {
+        if (a.playState !== "running" || a.currentTime === null) continue;
+        const end = Number(a.effect?.getComputedTiming().endTime) || 0;
+        a.currentTime = Math.max(0, end - Number(a.currentTime));
+      }
+      resolve(false);
+    };
+    void Promise.all(plays.map((a) => a.finished)).then(
+      () => {
+        if (own.__kpReversing === void 0) return;
+        delete own.__kpReversing;
+        resolve(true);
+      },
+      () => void 0
+    );
+  });
+}
+function stopReversing(el2) {
+  const own = (
+    /** @type {any} */
+    el2
+  );
+  const stop = own.__kpReversing;
+  delete own.__kpReversing;
+  stop?.();
+  el2.removeAttribute(REVERSING_ATTRIBUTE);
+}
 function withoutOvershoot(ease) {
   const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
   if (!m) return ease;
@@ -2841,15 +2915,48 @@ function withoutOvershoot(ease) {
   return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
 }
 function sizeEase(box, ease, change, plain = false) {
+  const way = (curve) => withoutOvershoot(change < 0 ? reversedEase(curve) : curve);
+  if (plain) return way(ease);
   const style = getComputedStyle(box);
-  if (plain) return withoutOvershoot(ease);
   const own = style.getPropertyValue("--kp-size-ease").trim();
   if (own) ease = own;
   if (style.getPropertyValue("--kp-size-steps").trim() === "line") {
     const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
-    return `steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`;
+    return way(`steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`);
   }
-  return withoutOvershoot(ease);
+  return way(ease);
+}
+function reversedEase(ease) {
+  const curve = NAMED_EASES[ease.trim()] ?? ease.trim();
+  const bezier = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(curve);
+  if (bezier) {
+    const [x1, y1, x2, y2] = bezier.slice(1).map(Number);
+    const r = (n) => Math.round(n * 1e4) / 1e4;
+    return `cubic-bezier(${r(1 - x2)}, ${r(1 - y2)}, ${r(1 - x1)}, ${r(1 - y1)})`;
+  }
+  const steps = /^steps\(\s*(\d+)\s*(?:,\s*([a-z-]+)\s*)?\)$/.exec(curve);
+  if (steps) {
+    const flip = (
+      /** @type {Record<string, string>} */
+      {
+        start: "jump-end",
+        "jump-start": "jump-end",
+        end: "jump-start",
+        "jump-end": "jump-start"
+      }
+    );
+    const position = steps[2] ?? "jump-end";
+    return `steps(${steps[1]}, ${flip[position] ?? position})`;
+  }
+  const list = /^linear\((.*)\)$/.exec(curve);
+  if (list) {
+    const stops = list[1].split(",").map((stop) => stop.trim().split(/\s+/));
+    if (stops.every((s2) => s2.length === 1))
+      return `linear(${stops.reverse().map(([y]) => String(Math.round((1 - Number(y)) * 1e4) / 1e4)).join(", ")})`;
+    if (stops.every((s2) => s2.length === 2 && s2[1].endsWith("%")))
+      return `linear(${stops.reverse().map(([y, x]) => `${Math.round((1 - Number(y)) * 1e4) / 1e4} ${Math.round((100 - parseFloat(x)) * 100) / 100}%`).join(", ")})`;
+  }
+  return curve;
 }
 function layoutHeight(el2) {
   const whole = el2.offsetHeight;
@@ -2918,6 +3025,27 @@ function arrive(el2, motion) {
     el2.removeAttribute("data-kp-arriving");
   };
   void playedOut(el2, 1500).then(end);
+}
+async function playArrivalBackwards(el2) {
+  if (reduced() || !el2.isConnected || el2.hasAttribute("data-kp-leaving")) return;
+  const arriving2 = el2.hasAttribute("data-kp-arriving");
+  el2.setAttribute("data-kp-arriving", "");
+  const own = getComputedStyle(el2).animationName;
+  let lent = false;
+  if (!own || own === "none") {
+    const motion = arrival(el2);
+    if (motion) {
+      el2.style.animation = motion;
+      lent = true;
+    }
+  }
+  if (arriving2) {
+    for (const a of el2.getAnimations()) if (a instanceof CSSAnimation) a.finish();
+  }
+  await playEntranceBackwards(el2);
+  stopReversing(el2);
+  if (lent) el2.style.removeProperty("animation");
+  el2.removeAttribute("data-kp-arriving");
 }
 function partway(el2, share, done) {
   const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
@@ -3048,9 +3176,9 @@ function arriveAsReversedLeave(el2) {
     const timing = effect.getTiming();
     return {
       keyframes: effect.getKeyframes(),
-      duration: Number(timing.duration) || 0,
-      delay: Number(timing.delay) || 0,
-      easing: String(timing.easing ?? "linear"),
+      timing,
+      // The whole of it, every iteration, from the leave's start.
+      end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
       pseudoElement: effect.pseudoElement
     };
   });
@@ -3062,16 +3190,26 @@ function arriveAsReversedLeave(el2) {
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
   const foldFor = size > 0 ? Math.max(size, lasts) * 1.25 : 0;
   const foldAt = after ? lasts + pause : lasts / 3;
-  const total = Math.max(lasts, foldFor ? foldAt + foldFor : 0);
+  const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
   for (const exit of exits) {
+    const { iterations = 1, direction = "normal", easing = "linear", duration } = exit.timing;
+    const even = Number(iterations) % 2 === 0;
+    const turned = {
+      normal: "reverse",
+      reverse: "normal",
+      alternate: even ? "alternate" : "alternate-reverse",
+      "alternate-reverse": even ? "alternate-reverse" : "alternate"
+    };
+    const back = turned[direction] ?? "reverse";
     try {
       plays.push(
         actor.animate(exit.keyframes, {
-          duration: exit.duration,
-          delay: total - exit.delay - exit.duration,
-          easing: exit.easing,
-          direction: "reverse",
+          duration: Number(duration) || 0,
+          iterations: Number(iterations),
+          delay: finiteMs(total - exit.end),
+          easing: String(easing),
+          direction: back,
           fill: "both",
           ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
         })
@@ -3079,13 +3217,16 @@ function arriveAsReversedLeave(el2) {
     } catch {
     }
   }
+  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
+  const stagger = Number.isNaN(set) ? 0.5 : set;
+  const lag = lasts <= 0 ? 0 : stagger > 0 && stagger < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, stagger))) : Math.max(lasts, ...exits.map((exit) => exit.end));
   if (foldFor > 0) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
     plays.push(
       el2.animate(foldFrames(el2, style), {
         duration: foldFor,
-        delay: total - foldAt - foldFor,
+        delay: finiteMs(total - foldAt - foldFor),
         easing: withoutOvershoot(ease),
         direction: "reverse",
         fill: "backwards"
@@ -3107,7 +3248,53 @@ function arriveAsReversedLeave(el2) {
   };
   entering.set(el2, stop);
   void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(stop);
+  if (!arriving) {
+    arriving = [];
+    queueMicrotask(() => {
+      const items = (
+        /** @type {Arriving[]} */
+        arriving
+      );
+      arriving = null;
+      arriveInTurn(items);
+    });
+  }
+  arriving.push({ el: el2, plays, total, lag });
   return true;
+}
+function arriveInTurn(items) {
+  if (items.length < 2) return;
+  items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
+  if (items.length < 2) return;
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  let start = 0;
+  const ends = items.map((item) => {
+    const end = start + item.total;
+    start += item.lag;
+    return end;
+  });
+  const last = Math.max(...ends);
+  items.forEach((item, k) => {
+    const later = last - ends[k];
+    if (later <= 0) return;
+    for (const play of item.plays) {
+      const effect = play.effect;
+      if (!effect) continue;
+      effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
+    }
+  });
+}
+function reaches(timing, end, share) {
+  if (!Number.isFinite(end)) return 0;
+  if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
+  const effect = new KeyframeEffect(null, null, timing);
+  const probe = new Animation(effect, null);
+  for (let t = 0; t < end; t += 1) {
+    probe.currentTime = t;
+    const now = effect.getComputedTiming();
+    if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
+  }
+  return end;
 }
 function leave(el2, { hide = false } = {}) {
   return new Promise((resolve) => {
@@ -3307,13 +3494,22 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     const any = records.some((record) => modeOf(record.target) !== "none");
     const motion = records.length && any ? arrival(box) : null;
     let repainted = null;
+    const hiddenBefore = /* @__PURE__ */ new Map();
+    const moved = /* @__PURE__ */ new Set();
+    for (const record of records) {
+      if (record.type === "attributes" && !hiddenBefore.has(record.target)) hiddenBefore.set(record.target, record.oldValue !== null);
+      if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
+    }
     for (const record of records) {
       const mode = modeOf(record.target);
       if (mode === "none") continue;
-      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden) arrive(record.target, motion);
+      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden && hiddenBefore.get(record.target)) {
+        hiddenBefore.delete(record.target);
+        arrive(record.target, motion);
+      }
       if (record.type === "childList")
         for (const node of record.addedNodes) {
-          if (!(node instanceof HTMLElement)) continue;
+          if (!(node instanceof HTMLElement) || moved.has(node)) continue;
           if (mode === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
           arrive(node, motion);
         }
@@ -3321,7 +3517,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     watch();
     settle();
   });
-  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
+  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
   return () => {
     if (!own.__kpSize) return;
     watching -= 1;
@@ -3465,7 +3661,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, entering, batch, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, NAMED_EASES, entering, arriving, finiteMs, batch, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -3516,7 +3712,19 @@ var init_motion = __esm({
         requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     }
+    REVERSING_ATTRIBUTE = "data-kp-reversing";
+    NAMED_EASES = /** @type {Record<string, string>} */
+    {
+      ease: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      "ease-in": "cubic-bezier(0.42, 0, 1, 1)",
+      "ease-out": "cubic-bezier(0, 0, 0.58, 1)",
+      "ease-in-out": "cubic-bezier(0.42, 0, 0.58, 1)",
+      "step-start": "steps(1, jump-start)",
+      "step-end": "steps(1, jump-end)"
+    };
     entering = /* @__PURE__ */ new WeakMap();
+    arriving = null;
+    finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
     batch = null;
     arriveMode = (el2, fallback2) => el2.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
   }
@@ -4324,13 +4532,16 @@ function toast(content, { ms = TOAST_MS, region = null, live: live2, className =
   let timer2 = 0;
   el2.dismiss = () => {
     clearTimeout(timer2);
-    if (!el2.isConnected) return;
-    el2.remove();
-    host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el2 } }));
+    if (!el2.isConnected || goingToasts.has(el2)) return;
+    goingToasts.add(el2);
+    void leave(el2).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el2 } })));
   };
   host.append(el2);
-  if (max !== void 0)
-    while (host.children.length > max) host.firstElementChild?.dismiss?.();
+  if (max !== void 0) {
+    const staying = [...host.children].filter((child) => !goingToasts.has(child));
+    for (const old of staying.slice(0, Math.max(0, staying.length - max)))
+      old.dismiss?.();
+  }
   host.dispatchEvent(
     new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el2, text: typeof content === "string" ? content : el2.textContent } })
   );
@@ -4355,8 +4566,9 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
         return;
       }
       const region = toastEl.parentElement;
-      toastEl.remove();
-      region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } }));
+      if (goingToasts.has(toastEl)) return;
+      goingToasts.add(toastEl);
+      void leave(toastEl).then(() => region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } })));
       return;
     }
     const alert = (
@@ -4408,10 +4620,26 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
     const closeDelay = number(anchor.dataset.kpCloseDelay, closeDelayMs);
     const escapes = anchor.dataset.kpCloseOnEscape === void 0 ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== "false";
     let timer2 = 0;
+    let going = false;
     const set = (open) => {
       clearTimeout(timer2);
-      if (tooltip.hidden === !open) return;
-      tooltip.hidden = !open;
+      if (open && going) {
+        going = false;
+        stopReversing(tooltip);
+        anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
+        return;
+      }
+      if (going || tooltip.hidden === !open) return;
+      if (open) tooltip.hidden = false;
+      else {
+        going = true;
+        void playEntranceBackwards(tooltip).then(() => {
+          if (!going) return;
+          going = false;
+          tooltip.hidden = true;
+          stopReversing(tooltip);
+        });
+      }
       anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
     };
     const schedule = (open, delay) => {
@@ -4436,6 +4664,8 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
     document.addEventListener("keydown", onKey);
     cleanups.push(() => {
       clearTimeout(timer2);
+      going = false;
+      stopReversing(tooltip);
       anchor.removeEventListener("pointerenter", onEnter);
       anchor.removeEventListener("pointerleave", onLeave);
       anchor.removeEventListener("focusin", onFocusIn);
@@ -4570,11 +4800,12 @@ function attachScrollbars(root = document) {
     watched.clear();
   };
 }
-var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, handles, TABS_OVERFLOW, ALERT_DISMISS_EVENT, DISMISS_OWNED, dismissHandled, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES, scrollbarsWatched, closeLabel;
+var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, handles, TABS_OVERFLOW, goingToasts, ALERT_DISMISS_EVENT, DISMISS_OWNED, dismissHandled, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES, scrollbarsWatched, closeLabel;
 var init_overlays = __esm({
   "js/overlays.js"() {
     "use strict";
     init_strings();
+    init_motion();
     TOAST_MS = 5e3;
     DIALOG_OPEN_EVENT = "kp-dialog-open";
     TAB_CHANGE_EVENT = "kp-tab-change";
@@ -4582,6 +4813,7 @@ var init_overlays = __esm({
     TOAST_HIDE_EVENT = "kp-toast-hide";
     handles = /* @__PURE__ */ new WeakMap();
     TABS_OVERFLOW = "data-kp-tabs-overflow";
+    goingToasts = /* @__PURE__ */ new WeakSet();
     ALERT_DISMISS_EVENT = "kp-alert-dismiss";
     DISMISS_OWNED = "[data-kp-dismiss-owner]";
     dismissHandled = /* @__PURE__ */ new WeakSet();
@@ -5307,6 +5539,12 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     const mode = () => read(OPTIONS.mode) ?? "side";
     const isOpen = () => panel.getAttribute(OPTIONS.open) !== "false" && (mode() === "side" || panel.getAttribute(OPTIONS.open) === "true");
     const covering = () => mode() === "over";
+    const turnEase = () => {
+      const style = getComputedStyle(panel);
+      const ease = style.getPropertyValue("--kp-sidenav-ease").trim() || style.getPropertyValue("--fx-ease").trim() || "ease";
+      panel.style.setProperty("--kp-sidenav-ease-back", reversedEase(ease));
+    };
+    turnEase();
     const togglers = () => [...doc.querySelectorAll("[data-kp-sidenav-toggle]")].filter(
       (t) => (t.getAttribute("aria-controls") ?? "") === panel.id || t.getAttribute("aria-controls") === null
     );
@@ -5367,6 +5605,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       }
     };
     const set = (open2, moveFocus2 = true, save = true) => {
+      turnEase();
       panel.setAttribute(OPTIONS.open, String(open2));
       say(open2);
       const offset = offsetContent(open2);
@@ -5405,6 +5644,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     };
     const setSlim = (collapsed) => {
       if (read(OPTIONS.slim) === null) return;
+      turnEase();
       const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
       panel.toggleAttribute(OPTIONS.slimCollapsed, next);
       saySlim(next);
@@ -5430,6 +5670,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       const category = toggle.closest(".kp-sidenav__category");
       if (!category) return;
       const expanded = category.hasAttribute(OPTIONS.expanded);
+      turnEase();
       if (!expanded && on(OPTIONS.accordion, false)) {
         for (const other of panel.querySelectorAll(".kp-sidenav__category[data-kp-sidenav-expanded]")) {
           other.removeAttribute(OPTIONS.expanded);
@@ -5542,6 +5783,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       /** @type {EventListener} */
       onTrap
     );
+    panel.addEventListener("pointerenter", turnEase);
     const handle = {
       element: panel,
       open,
@@ -5576,6 +5818,8 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         /** @type {EventListener} */
         onTrap
       );
+      panel.removeEventListener("pointerenter", turnEase);
+      panel.style.removeProperty("--kp-sidenav-ease-back");
       dropBackdrop();
       offsetContent(false);
       if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = "";
@@ -5608,6 +5852,7 @@ var init_sidenav = __esm({
     "use strict";
     init_strings();
     init_remember();
+    init_motion();
     SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
     SIDENAV_SLIM_EVENT = "kp-sidenav-slim";
     SIDENAV_MODE_EVENT = "kp-sidenav-mode";
@@ -8033,6 +8278,10 @@ function attachDataTables(root = document, {
     const id = `kp-datatable-${instances}`;
     const added = [];
     const undo = [];
+    if (!wrap.closest("[data-kp-arrive]")) {
+      wrap.setAttribute("data-kp-arrive", "new");
+      undo.push(() => wrap.removeAttribute("data-kp-arrive"));
+    }
     const s0 = getStrings();
     if (regions) cleanups.push(attachTableRegions(wrap));
     const search = (
@@ -8727,6 +8976,7 @@ function attachDataTables(root = document, {
     const visibleColumns = () => headers.filter((_, at) => !hiddenColumns.has(at)).length;
     const groups = /* @__PURE__ */ new Map();
     const folded = /* @__PURE__ */ new Set();
+    const departing = /* @__PURE__ */ new Set();
     const seenGroups = /* @__PURE__ */ new Set();
     let blockOrder = [];
     const blockOf = /* @__PURE__ */ new Map();
@@ -9104,7 +9354,7 @@ function attachDataTables(root = document, {
       const from = page * size;
       pageRows = serverMode || pager === null ? shownRows : shownRows.slice(from, from + size);
       for (const row of all) row.hidden = true;
-      for (const row of pageRows) row.hidden = groups.size > 0 && isFolded(row);
+      for (const row of pageRows) row.hidden = groups.size > 0 && isFolded(row) && !departing.has(row);
       if (blockOrder.length > 0) placeGroups();
       else
         for (const row of shownRows) {
@@ -9993,8 +10243,23 @@ function attachDataTables(root = document, {
     };
     const setFolded = (key, fold) => {
       if (fold === folded.has(key)) return;
+      const going = fold ? pageRows.filter((row) => groupOf2(row) === key && !row.hidden) : [];
       if (fold) folded.add(key);
-      else folded.delete(key);
+      else {
+        folded.delete(key);
+        for (const row of [...departing])
+          if (groupOf2(row) === key) {
+            departing.delete(row);
+            stopReversing(row);
+          }
+      }
+      for (const row of going) departing.add(row);
+      if (going.length)
+        void Promise.all(going.map((row) => playArrivalBackwards(row))).then(() => {
+          let held2 = false;
+          for (const row of going) if (departing.delete(row)) held2 = true;
+          if (held2) render();
+        });
       render();
       wrap.dispatchEvent(
         new CustomEvent(GROUP_EVENT, {
@@ -10747,6 +11012,7 @@ var init_datatable = __esm({
     init_datepicker();
     init_combobox();
     init_remember();
+    init_motion();
     TABLE = "[data-kp-datatable]";
     SEARCH = "[data-kp-datatable-search]";
     SCOPE = "[data-kp-datatable-scope]";
@@ -17209,6 +17475,7 @@ __export(tour_exports, {
   tourRemembered: () => tourRemembered,
   tourStepsOnPage: () => tourStepsOnPage
 });
+init_motion();
 init_remember();
 init_strings();
 var TOUR_GUTTER = 16;
@@ -17382,8 +17649,12 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     if (ended) return;
     ended = true;
     unmark();
-    if (card.open) card.close();
-    card.remove();
+    card.inert = true;
+    void playEntranceBackwards(card).then(() => {
+      if (card.open) card.close();
+      card.remove();
+      stopReversing(card);
+    });
     view.removeEventListener("keydown", onKey, true);
     view.removeEventListener("resize", onMove);
     doc.removeEventListener("scroll", onMove, true);
@@ -17598,6 +17869,7 @@ export {
   REVEALS,
   REVEAL_EVENT,
   REVEAL_STATE,
+  REVERSING_ATTRIBUTE,
   ROOT_ATTRIBUTE,
   ROUTINES,
   ROW_ACTIONS,
@@ -17843,6 +18115,8 @@ export {
   placeDatePanel,
   placeNavMenu,
   placeNavPanel,
+  playArrivalBackwards,
+  playEntranceBackwards,
   pointsOf,
   progressbar_exports as progressbarExports,
   raiseDatePanel,
@@ -17858,6 +18132,7 @@ export {
   resolveStrings,
   restoreRemembered,
   revealTab,
+  reversedEase,
   rgbToHsl,
   ringOf,
   rowRoles,
@@ -17893,6 +18168,7 @@ export {
   sparkPaths,
   startTour,
   stickyNav,
+  stopReversing,
   storeTheme,
   storedTheme,
   strings_exports as stringsExports,

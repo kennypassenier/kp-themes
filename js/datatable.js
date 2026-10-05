@@ -115,6 +115,7 @@ import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
 import { attachSelect, drawsSelect } from './combobox.js';
 import { columnId, paintRemembered } from './remember.js';
+import { playArrivalBackwards, stopReversing } from './motion.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -787,6 +788,15 @@ export function attachDataTables(
         const added = [];
         /** @type {(() => void)[]} */
         const undo = [];
+        // The table redraws its own chrome (the group toggles, the pager, the
+        // card sort) on every render; under js/motion.js each redraw arrived
+        // again, held the box's glide and made a group's fold wait seconds
+        // for them (Kenny, 2026-10-05). Unless the page says otherwise, only
+        // what is new arrives [port spec G]; rows shown again still do.
+        if (!wrap.closest('[data-kp-arrive]')) {
+            wrap.setAttribute('data-kp-arrive', 'new');
+            undo.push(() => wrap.removeAttribute('data-kp-arrive'));
+        }
         const s0 = getStrings();
 
         // The scroll box is a region a keyboard can reach [TH95]. Here as
@@ -1619,6 +1629,8 @@ export function attachDataTables(
         const groups = new Map();
         /** The group keys folded now; kept by key, so they outlive a refresh. @type {Set<string>} */
         const folded = new Set();
+        /** Rows of a folding group held shown while their arrival plays backwards. @type {Set<HTMLTableRowElement>} */
+        const departing = new Set();
         /** Every group key seen, so a heading's data-kp-folded counts the first time only. @type {Set<string>} */
         const seenGroups = new Set();
         /** The blocks in the order they stand: a group, or a run of rows outside every group. @type {string[]} */
@@ -2032,7 +2044,7 @@ export function attachDataTables(
             pageRows = serverMode || pager === null ? shownRows : shownRows.slice(from, from + size);
             for (const row of all) row.hidden = true;
             // A row of a folded group stays on its page, hidden [J2].
-            for (const row of pageRows) row.hidden = groups.size > 0 && isFolded(row);
+            for (const row of pageRows) row.hidden = groups.size > 0 && isFolded(row) && !departing.has(row);
             // Reordering by appending: the rows are the same elements, so
             // anything a consumer attached to them survives a sort. A row's
             // detail travels directly under it.
@@ -2901,8 +2913,27 @@ export function attachDataTables(
         /** @param {string} key @param {boolean} fold */
         const setFolded = (key, fold) => {
             if (fold === folded.has(key)) return;
+            // A group folds as it unfolded, turned around: its rows play
+            // their arrival backwards (js/motion.js) and are hidden once it
+            // has played; they unfolded the theme's way and folded away at
+            // once (Kenny, 2026-10-05). Unfolded meanwhile, they turn round.
+            const going = fold ? pageRows.filter((row) => groupOf(row) === key && !row.hidden) : [];
             if (fold) folded.add(key);
-            else folded.delete(key);
+            else {
+                folded.delete(key);
+                for (const row of [...departing])
+                    if (groupOf(row) === key) {
+                        departing.delete(row);
+                        stopReversing(row);
+                    }
+            }
+            for (const row of going) departing.add(row);
+            if (going.length)
+                void Promise.all(going.map((row) => playArrivalBackwards(row))).then(() => {
+                    let held = false;
+                    for (const row of going) if (departing.delete(row)) held = true;
+                    if (held) render();
+                });
             render();
             wrap.dispatchEvent(
                 new CustomEvent(GROUP_EVENT, {

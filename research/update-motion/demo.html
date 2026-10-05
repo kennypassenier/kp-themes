@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="update-motion" data-review-themes="formal,cyberpunk,titanium">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — information that updates in place</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="uu-page">
+            <header class="uu-intro">
+                <h1>Information that updates in place</h1>
+                <p>
+                    Kenny, 2026-10-05 11:29: "think about an 'update' or 'refresh' type of animation that updates info the 'theme way'". Below, the
+                    same small board three times: a key figure, a trend chart, and a table with a state word and a time. <b>Update</b> changes four
+                    things at once: the figure 3.26 → 3.41 bar, the chart's last point, the state word Running → Restarting and the reading time 08:12
+                    → 08:27. Each column plays one idea of this theme on every changed value, once. Press it again to change back.
+                </p>
+                <p class="uu-motion" data-uu-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing moves on this page: the values change at once. Turn it off in the system
+                    settings to judge the motion.
+                </p>
+                <p class="uu-meta">
+                    The new value is written at the first frame and stays readable throughout: no idea hides it, cuts it or changes its size, and the
+                    box keeps its space. The time is the theme's own: a box's resize time from <code>themeMotion()</code> times 1.25, the same stretch
+                    <code>leave()</code> gives the fold of a space. This theme: <b data-uu-theme-timing>…</b>
+                </p>
+                <div class="uu-actions" role="group" aria-label="Animation speed">
+                    <b>Speed of every animation on this page:</b>
+                    <button type="button" class="kp-button kp-button--sm" data-uu-speed="1" aria-pressed="false">Full</button>
+                    <button type="button" class="kp-button kp-button--sm" data-uu-speed="0.5" aria-pressed="false">½</button>
+                    <button type="button" class="kp-button kp-button--sm" data-uu-speed="0.25" aria-pressed="true">¼</button>
+                </div>
+            </header>
+
+            <section
+                class="uu-sec"
+                data-review-item="update"
+                data-review-components="kpi,chart,table"
+                data-review-title="Values that update"
+                aria-labelledby="h-update"
+                data-review-choices='[{ "id": "update", "label": "How a value updates in this theme", "options": [
+                    { "value": "1", "label": "Idea 1", "hints": {
+                        "formal": "Recommended. Fresh ink: the new value is written in the primary ink and dries to the page&#39;s ink, while a pen rule is drawn under it from left to right and lifts off.",
+                        "cyberpunk": "Scanline rewrite: a bright scan line runs down over the value with a glowing trail, as if the screen rewrote that line; the value glows and cools.",
+                        "titanium": "Recommended. Re-cut: the cutter runs across the value at titanium&#39;s even pace and leaves the digits engraved, sharp-edged, before they settle back to plain metal." } },
+                    { "value": "2", "label": "Idea 2", "hints": {
+                        "formal": "Ledger turn: the value turns over on its top edge like a ledger leaf, a soft fold shadow lifting off it (on the chart only the shadow passes over the last point).",
+                        "cyberpunk": "Recommended. Glitch and settle: the value tears into cyan and magenta copies and jitters for a beat, a torn line runs through, then it locks in place.",
+                        "titanium": "Brushed sweep: a band of brushed metal with a sheen slides across the changed digits, like light over a freshly brushed plate." } },
+                    { "value": "3", "label": "Idea 3", "hints": {
+                        "formal": "Checked stamp: a rubber-stamp frame lands round the value, slightly askew, and fades as if the ink soaked in.",
+                        "cyberpunk": "Neon re-ignite: the value flickers like a neon tube striking again, its glow surging and dying down.",
+                        "titanium": "Heat tint: the anodised colours of titanium&#39;s leave (gold, violet, blue) run across the value and cool away to plain metal." } }] }]'
+            >
+                <div class="uu-sec__head">
+                    <h2 id="h-update">Values that update</h2>
+                    <p>
+                        Each column is one idea for this theme. The value is set at once; the idea is drawn on top of it and around it, once per
+                        update. <b>Update all three</b> plays them side by side.
+                    </p>
+                    <p class="uu-actions">
+                        <button type="button" class="kp-button kp-button--primary" data-uu-update="all">Update all three</button>
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press <b>Update</b> in each column. Look at the figure, the chart's last point, the state word and the time: does the change
+                        read as ink on paper (fresh ink drying, a leaf turned, a stamp), and does the value stay readable from the first frame?
+                    </p>
+                    <p data-for="cyberpunk">
+                        Press <b>Update</b> in each column. Look at the figure, the chart's last point, the state word and the time: does the change
+                        read as a screen rewriting itself (a scan line, a glitch, a neon tube), and does the value stay readable from the first frame?
+                    </p>
+                    <p data-for="titanium">
+                        Press <b>Update</b> in each column. Look at the figure, the chart's last point, the state word and the time: does the change
+                        read as machined metal (a cutter, a brushed sheen, the anodised colours), and does the value stay readable from the first
+                        frame?
+                    </p>
+                </div>
+                <div class="uu-cols">
+                    <div class="uu-col" data-uu-idea="1" data-uu-pick="1"></div>
+                    <div class="uu-col" data-uu-idea="2" data-uu-pick="2"></div>
+                    <div class="uu-col" data-uu-idea="3" data-uu-pick="3"></div>
+                </div>
+                <p class="uu-timing" data-uu-timing>…</p>
+            </section>
+        </main>
+
+        <template data-uu-template="board">
+            <p class="uu-label"><span data-uu-name>…</span></p>
+            <div class="kp-kpi uu-kpi">
+                <span class="kp-kpi__label">Pressure, pump house 3</span>
+                <span class="kp-kpi__value"><span class="uu-num" data-uu-part="figure">3.26</span><small>bar</small></span>
+                <span class="kp-kpi__trend">Last 24 hours</span>
+                <span class="uu-spark" data-uu-part="chart-box">
+                    <svg class="kp-kpi__spark" data-uu-part="chart"></svg>
+                    <span class="uu-head" aria-hidden="true"></span>
+                </span>
+            </div>
+            <div class="kp-table-wrap">
+                <table class="kp-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Site</th>
+                            <th scope="col">State</th>
+                            <th scope="col" class="kp-text-end">Reading</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pump house 1</td>
+                            <td><span class="kp-state-word" data-kp-words="Running&#10;Restarting">Running</span></td>
+                            <td class="kp-text-end kp-numeric">08:10</td>
+                        </tr>
+                        <tr>
+                            <td>Pump house 3</td>
+                            <td>
+                                <span class="kp-state-word" data-kp-words="Running&#10;Restarting" data-uu-part="state">Running</span>
+                            </td>
+                            <td class="kp-text-end kp-numeric"><span class="uu-cell" data-uu-part="time">08:12</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="uu-actions">
+                <button type="button" class="kp-button kp-button--sm" data-uu-update="one">Update</button>
+            </p>
+        </template>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

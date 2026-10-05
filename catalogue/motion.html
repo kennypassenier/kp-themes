@@ -178,24 +178,40 @@ for (const row of selected) leave(row);</code></pre>
                 <div class="cat-look">
                     <b>Look at:</b> the cards here carry no <code>data-kp-size-motion</code>: this block attaches
                     <code>attachMotion(block, { size: '.kp-card' })</code>, so every card in it eases, including cards built after the attach. Press
-                    <b>Grow</b>: the first card glides to its new height, and the new line arrives the theme's way.
-                    <b>Rebuild the cards 100 times</b> throws both cards away and builds them anew, one rebuild a frame, as a page that redraws itself
-                    on every navigation does. Each new card carries the key of the one it replaces (<code>data-kp-key</code>) and the grid says
-                    <code>data-kp-arrive="new"</code>, so a redrawn card is the same card: the board must not flash or move while it runs. The count
-                    of boxes motion watches must then come back to where it was, because a box that leaves the page is let go rather than watched
-                    forever.
+                    <b>Add a reading</b> a few times: the first card glides to its new height with the theme's ease, and the new line arrives the
+                    theme's way. Then press <b>Rebuild the cards 100 times</b>: it builds both cards anew from their sample data, one rebuild a frame,
+                    as a page that redraws itself from the server on every navigation does. Rebuild throws away what you added: a card you grew eases
+                    back to its three readings; a card you left alone does not move. Each card is rebuilt under its key (<code>data-kp-key</code>) and
+                    the grid says <code>data-kp-arrive="new"</code>, so nothing arrives and nothing flashes while it runs. The count of boxes motion
+                    watches must then be where it was before. <b>Remove the second card</b> lets it leave the theme's way, and motion lets its box go:
+                    the count drops by one. <b>Bring it back</b> builds it anew under its key; it arrives the theme's way (the grid itself carries
+                    <code>data-kp-size-motion</code>, so what is added to it arrives) and the count is back where it was.
                 </div>
                 <div class="cat-stage cat-stage--block">
-                    <div class="kp-autogrid" data-cat-size-selector data-kp-arrive="new">
-                        <div class="kp-card kp-stack" data-kp-key="reservoir-north"><p>Reservoir North · 71 %</p></div>
-                        <div class="kp-card kp-stack" data-kp-key="reservoir-south"><p>Reservoir South · 64 %</p></div>
+                    <div class="kp-autogrid" style="align-items: start" data-cat-size-selector data-kp-size-motion data-kp-arrive="new">
+                        <div class="kp-card kp-stack" data-kp-key="reservoir-north">
+                            <p>Reservoir North · 71 %</p>
+                            <p>Reading 1: level steady.</p>
+                            <p>Reading 2: level steady.</p>
+                            <p>Reading 3: level steady.</p>
+                        </div>
+                        <div class="kp-card kp-stack" data-kp-key="reservoir-south">
+                            <p>Reservoir South · 64 %</p>
+                            <p>Reading 1: level steady.</p>
+                            <p>Reading 2: level steady.</p>
+                            <p>Reading 3: level steady.</p>
+                        </div>
                     </div>
                 </div>
                 <p class="kp-row">
-                    <button type="button" class="kp-button kp-button--sm" data-cat-size-selector="grow">Grow</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cat-size-selector="grow">Add a reading</button>
                     <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-size-selector="rebuild">
                         Rebuild the cards 100 times
                     </button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-cat-size-selector="remove">
+                        Remove the second card
+                    </button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-cat-size-selector="back">Bring it back</button>
                 </p>
                 <p class="cat-note" data-cat-size-count aria-live="polite">Boxes watched on this page: …</p>
             </section>

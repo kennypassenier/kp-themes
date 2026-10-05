@@ -15986,6 +15986,15 @@
                     "given": "2026-10-05",
                     "ratio": 2
                 }
+            },
+            "phantom": {
+                "firefox": {
+                    "verdict": "approved",
+                    "hash": "c0a87a1ef6a69d09f96960dfa4773a3d1372dacbadf8977b6400bc5b24f969f1",
+                    "commit": "cadaed4e992c6eeefe17f6a552c56bac1d4e3dd4",
+                    "given": "2026-10-05",
+                    "ratio": 2
+                }
             }
         },
         "motion--dialog-close": {
@@ -16508,10 +16517,10 @@
             },
             "phantom": {
                 "firefox": {
-                    "verdict": "approved",
-                    "hash": "05b0652ccef125b8d366ee6eb1515f3ffe52ad2473c8e77730eae928f0e0de18",
-                    "commit": "a9efa14fa02a72d7ce7c8d62c210e505efb1161e",
-                    "given": "2026-10-04",
+                    "verdict": "rejected",
+                    "hash": "c733fee697330814ea118d613a31cdd01443ea966e15c55e7ba9ec1863ecd18a",
+                    "commit": "cadaed4e992c6eeefe17f6a552c56bac1d4e3dd4",
+                    "given": "2026-10-05",
                     "ratio": 2
                 }
             },
@@ -16709,9 +16718,9 @@
             "phantom": {
                 "firefox": {
                     "verdict": "approved",
-                    "hash": "09dbe74c209d29846bacfa1faba5b7d5b088f89c7841ecd709dbc1c47195196d",
-                    "commit": "8db4fee402b1a5a1f6bb28ea3c945318a47cb829",
-                    "given": "2026-10-04",
+                    "hash": "4bfd01205a9fdb6f65ecece9c5b90a2f2ed96a51b56e3c6afc52a3ea9976a268",
+                    "commit": "cadaed4e992c6eeefe17f6a552c56bac1d4e3dd4",
+                    "given": "2026-10-05",
                     "ratio": 2
                 }
             },
@@ -16992,8 +17001,8 @@
             "deco": {
                 "firefox": {
                     "verdict": "rejected",
-                    "hash": "8a71c57642dbf753c1ca397e452a873fc72789979a5be2a3aff54421a871a9ee",
-                    "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
+                    "hash": "11dbdc42b9602a67ee9ce7e7c76db4c72f88e4e7f396a68452a679450f20b5c1",
+                    "commit": "cadaed4e992c6eeefe17f6a552c56bac1d4e3dd4",
                     "given": "2026-10-05",
                     "ratio": 2
                 }

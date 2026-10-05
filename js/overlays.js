@@ -23,6 +23,7 @@
 // what attach changed.
 
 import { getStrings } from './strings.js';
+import { leave, playEntranceBackwards, stopReversing } from './motion.js';
 
 /** How long a toast stays before it removes itself. An operational knob; per toast as `ms`. */
 export const TOAST_MS = 5000;
@@ -339,6 +340,9 @@ export function toastRegion({ region = null, role = 'status', live = 'polite', c
     return found;
 }
 
+/** The toasts dismissed and leaving now, which a stack's `max` no longer counts. @type {WeakSet<Element>} */
+const goingToasts = new WeakSet();
+
 /**
  * Show a toast in the page's toast region, creating the region if it is
  * not there. role="status" rather than role="alert" by default: a toast
@@ -377,13 +381,21 @@ export function toast(content, { ms = TOAST_MS, region = null, live, className =
     let timer = 0;
     el.dismiss = () => {
         clearTimeout(timer);
-        if (!el.isConnected) return;
-        el.remove();
-        host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el } }));
+        if (!el.isConnected || goingToasts.has(el)) return;
+        goingToasts.add(el);
+        // It leaves the theme's way (js/motion.js), the way it arrived turned
+        // around where the theme opens so: it popped out at once while it
+        // came in with the theme's motion (Kenny, 2026-10-05). The event
+        // comes once it is gone.
+        void leave(el).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el } })));
     };
     host.append(el);
-    if (max !== undefined)
-        while (host.children.length > max) /** @type {HTMLElement & { dismiss?: () => void }} */ (host.firstElementChild)?.dismiss?.();
+    if (max !== undefined) {
+        // The oldest beyond `max`, not counting those already on their way out.
+        const staying = [...host.children].filter((child) => !goingToasts.has(child));
+        for (const old of staying.slice(0, Math.max(0, staying.length - max)))
+            /** @type {HTMLElement & { dismiss?: () => void }} */ (old).dismiss?.();
+    }
     host.dispatchEvent(
         new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el, text: typeof content === 'string' ? content : el.textContent } }),
     );
@@ -412,8 +424,9 @@ const dismissHandled = new WeakSet();
  * layout class) after ALERT_DISMISS_EVENT, which a consumer may cancel to
  * keep it or to animate it out first — setting `hidden = false` brings it
  * back. A toast leaves through its own `dismiss()` when `toast()` made it,
- * so TOAST_HIDE_EVENT fires as it does on a timeout; otherwise it is
- * removed and the same event is dispatched on its region.
+ * so TOAST_HIDE_EVENT fires as it does on a timeout; otherwise it
+ * leaves the theme's way (js/motion.js leave()) and the same event is
+ * dispatched on its region once it is gone.
  *
  * @param {ParentNode} root
  * @param {{ ownedBy?: string }} [options] `ownedBy: ''` wires even the buttons another channel marked
@@ -436,8 +449,9 @@ export function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = 
                 return;
             }
             const region = toastEl.parentElement;
-            toastEl.remove();
-            region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } }));
+            if (goingToasts.has(toastEl)) return;
+            goingToasts.add(toastEl);
+            void leave(toastEl).then(() => region?.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: toastEl } })));
             return;
         }
         const alert = /** @type {HTMLElement | null} */ (button.closest('.kp-alert'));
@@ -509,11 +523,31 @@ export function attachTooltips(root = document, { openDelayMs = 300, closeDelayM
         const escapes = anchor.dataset.kpCloseOnEscape === undefined ? closeOnEscape : anchor.dataset.kpCloseOnEscape !== 'false';
 
         let timer = 0;
+        // Going, it plays its entrance backwards before it is hidden, so it
+        // leaves as it came (Kenny, 2026-10-05: no discrepancy between
+        // opening and closing); wanted back meanwhile, it turns round.
+        let going = false;
         /** @param {boolean} open */
         const set = (open) => {
             clearTimeout(timer);
-            if (tooltip.hidden === !open) return;
-            tooltip.hidden = !open;
+            if (open && going) {
+                going = false;
+                stopReversing(tooltip);
+                anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
+                return;
+            }
+            if (going || tooltip.hidden === !open) return;
+            if (open) tooltip.hidden = false;
+            else {
+                going = true;
+                void playEntranceBackwards(tooltip).then(() => {
+                    // Wanted back meanwhile: set(true) took it over.
+                    if (!going) return;
+                    going = false;
+                    tooltip.hidden = true;
+                    stopReversing(tooltip);
+                });
+            }
             anchor.dispatchEvent(new CustomEvent(TOOLTIP_EVENT, { bubbles: true, detail: { open, tooltip } }));
         };
         /** @param {boolean} open @param {number} delay */
@@ -542,6 +576,8 @@ export function attachTooltips(root = document, { openDelayMs = 300, closeDelayM
 
         cleanups.push(() => {
             clearTimeout(timer);
+            going = false;
+            stopReversing(tooltip);
             anchor.removeEventListener('pointerenter', onEnter);
             anchor.removeEventListener('pointerleave', onLeave);
             anchor.removeEventListener('focusin', onFocusIn);

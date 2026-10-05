@@ -2294,6 +2294,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── terminal: the block cursor glides back over the line, deleting it as it goes ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='terminal'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='terminal'] [data-kp-leaving] {
             position: relative;
             overflow: clip;

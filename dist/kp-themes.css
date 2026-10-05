@@ -8493,6 +8493,19 @@
                 translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease)),
                 inline-size var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
+
+        /* Closing and collapsing are the opening played backwards: a
+           transition takes the curve of the state it goes to, so the panel
+           going away and the rail going slim take the theme's curve turned
+           around, which js/sidenav.js writes as --kp-sidenav-ease-back
+           (Kenny, 2026-10-05: no discrepancy between opening and closing). */
+        .kp-sidenav:is(
+                [data-kp-sidenav-open='false'],
+                [data-kp-sidenav-slim-collapsed]:not(:hover),
+                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+            ) {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
     }
 
     /* The slim rail: icons stay, labels go. `--slim-hide` and `--slim-show`
@@ -8698,6 +8711,13 @@
         .kp-sidenav__submenu {
             transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
+
+        /* A group folding shut is its unfolding played backwards, as the
+           rail's collapse is (above). */
+        .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+        .kp-sidenav__category-toggle[aria-expanded='false']::after {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
     }
 
     .kp-sidenav__submenu .kp-sidenav__link {
@@ -8773,6 +8793,28 @@
            that does not take this class is the consumer's to place. */
         position: relative;
         z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+    }
+
+    /* --- An entrance played backwards ------------------------------------ */
+
+    /* js/motion.js playEntranceBackwards(): what came in with a CSS
+       entrance (a tooltip, the tour's card) goes out as that entrance played
+       backwards, in its own time on its curve turned around. `reset` drops
+       the entrance for one style read, `play` starts it again reversed and
+       held at its first frame, so one that already played out turns around
+       too. Important, because the entrance is each register's, in later
+       layers. */
+    [data-kp-reversing='reset'],
+    [data-kp-reversing='reset']::before,
+    [data-kp-reversing='reset']::after {
+        animation-name: none !important;
+    }
+
+    [data-kp-reversing='play'],
+    [data-kp-reversing='play']::before,
+    [data-kp-reversing='play']::after {
+        animation-direction: reverse !important;
+        animation-fill-mode: both !important;
     }
 
     /* --- Growing and shrinking [scope-142] ------------------------------- */
@@ -18831,6 +18873,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── retro: shrunk away in four pixel steps ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='retro'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='retro'] [data-kp-leaving] {
             animation: kp-sig-retro-leave 280ms steps(4, jump-end) forwards;
         }
@@ -21343,6 +21392,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── synthwave: sunset: the striped retro sun rises behind it from below until it is gone in the glow ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='synthwave'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='synthwave'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -23906,6 +23962,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── phantom: see-through and wavering, it rises a little and dissolves ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='phantom'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='phantom'] [data-kp-leaving] {
             animation: kp-sig-phantom-leave 650ms ease-in forwards;
         }
@@ -26237,6 +26300,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── terminal: the block cursor glides back over the line, deleting it as it goes ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='terminal'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='terminal'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -28558,6 +28628,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── brutalism: slammed out to the left in two hard steps ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='brutalism'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='brutalism'] [data-kp-leaving] {
             animation: kp-sig-brutalism-leave 240ms steps(2, jump-end) forwards;
         }
@@ -32998,6 +33075,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── pastel: a balloon let go: it floats up with a little tilt ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='pastel'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='pastel'] [data-kp-leaving] {
             animation: kp-sig-pastel-leave 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
         }
@@ -34981,6 +35065,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── shade-light: lifted off the page: its shadow grows, then it fades ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='shade-light'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='shade-light'] [data-kp-leaving] {
             animation: kp-sig-shade-light-leave 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
         }
@@ -36941,6 +37032,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── forest: blown off by the wind, to the right ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='forest'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='forest'] [data-kp-leaving] {
             animation: kp-sig-forest-leave 560ms ease-in forwards;
         }
@@ -38957,6 +39055,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── deco: it closes like a fan, folding to its centre ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='deco'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='deco'] [data-kp-leaving] {
             animation: kp-sig-deco-leave 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -40486,6 +40591,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── light: it rises into the light and is gone in the glare ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='light'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='light'] [data-kp-leaving] {
             animation: kp-sig-light-leave 420ms ease-in forwards;
         }
@@ -42517,6 +42629,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── grotesk: colour bands: accent, ink and paper sweep across like a Swiss poster and take it with them ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='grotesk'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='grotesk'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -44756,6 +44875,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── blueprint: hatched out like a wall marked for demolition on a plan, then lifted off the sheet ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='blueprint'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='blueprint'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -46791,6 +46917,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── nostromo: it scrolls off the top of the monitor ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='nostromo'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='nostromo'] [data-kp-leaving] {
             animation: kp-sig-nostromo-leave 480ms ease-in forwards;
         }
@@ -49231,6 +49364,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── dark: it slips left into shadow ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='dark'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='dark'] [data-kp-leaving] {
             animation: kp-sig-dark-leave 460ms ease-in forwards;
         }
@@ -53206,6 +53346,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── sepia: burned: the edges brown and char inward like paper held to a candle ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='sepia'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='sepia'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -54935,6 +55082,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── solstice: an eclipse: a circle closes over it ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='solstice'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='solstice'] [data-kp-leaving] {
             animation: kp-sig-solstice-leave 540ms ease-in forwards;
         }
@@ -56685,6 +56839,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── high-contrast: announced: a REMOVED caption, ink on yellow, is laid across it the way a screen reader would say it, then it is gone in one step ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='high-contrast'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='high-contrast'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -58750,6 +58911,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── lapis: gold leaf is laid over it with one shimmer, then the gilded piece flakes off from the corner ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='lapis'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='lapis'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -60624,6 +60792,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── shade-dark: lifted off the page: its shadow grows, then it fades ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='shade-dark'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='shade-dark'] [data-kp-leaving] {
             animation: kp-sig-shade-dark-leave 440ms cubic-bezier(0.4, 0, 1, 1) forwards;
         }

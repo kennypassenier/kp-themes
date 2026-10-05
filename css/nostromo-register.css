@@ -1990,6 +1990,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── nostromo: it scrolls off the top of the monitor ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='nostromo'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='nostromo'] [data-kp-leaving] {
             animation: kp-sig-nostromo-leave 480ms ease-in forwards;
         }

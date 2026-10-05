@@ -132,7 +132,7 @@ document.addEventListener('click', (event) => {
 
 // catalogue/motion.html#size-selector: this block's cards ease because the
 // block is attached with a selector, not because each card is marked; a
-// rebuild of a hundred cards, ten times, leaves the watch count where it was.
+// hundred rebuilds from the sample data leave the watch count where it was.
 const sizeBlocks = new WeakSet();
 /** @param {Element} block */
 const attachSizeBlock = (block) => {
@@ -152,42 +152,79 @@ for (const grid of document.querySelectorAll('[data-cat-size-selector]')) {
         showCount(block);
     }
 }
-let grown = 0;
+// The cards as the server sends them: three readings each. A rebuild draws
+// every card from this again, so a reading added on the page is thrown away.
+const SIZE_SAMPLE = /** @type {const} */ ([
+    ['reservoir-north', 'Reservoir North · 71 %', 3],
+    ['reservoir-south', 'Reservoir South · 64 %', 3],
+]);
+/** One card's lines, built anew. @param {string} title @param {number} readings */
+const sizeCardLines = (title, readings) => {
+    const lines = [title, ...Array.from({ length: readings }, (_, i) => `Reading ${i + 1}: level steady.`)];
+    return lines.map((text) => {
+        const line = document.createElement('p');
+        line.textContent = text;
+        return line;
+    });
+};
 document.addEventListener('click', (event) => {
     const button = event.target instanceof Element ? event.target.closest('button[data-cat-size-selector]') : null;
     const block = button?.closest('.cat-block');
     const grid = block?.querySelector('div[data-cat-size-selector]');
     if (!button || !block || !grid) return;
     attachSizeBlock(block);
-    if (button.getAttribute('data-cat-size-selector') === 'grow') {
-        grown += 1;
-        const line = document.createElement('p');
-        line.textContent = `Reading ${grown}: level steady.`;
-        grid.firstElementChild?.append(line);
+    const act = button.getAttribute('data-cat-size-selector');
+    // The second card leaves the theme's way and attachMotion lets its box
+    // go (the count drops by one); brought back under its key, it is a new
+    // card to this grid, so it arrives and is watched again.
+    const [southKey, southTitle, southReadings] = SIZE_SAMPLE[1];
+    const south = grid.querySelector(`:scope > [data-kp-key="${southKey}"]`);
+    if (act === 'remove') {
+        if (south instanceof HTMLElement && !south.hasAttribute('data-kp-leaving'))
+            void leave(south).then(() => requestAnimationFrame(() => showCount(block)));
         return;
     }
-    // A page that redraws itself on every navigation builds the same cards
-    // anew: a hundred times, one rebuild a frame, each card a new element
-    // under the key of the one it replaces. The block is attached with
-    // `arrive: 'new'` (and marked `data-kp-arrive="new"`), so a card redrawn
-    // under its key is the same card: nothing arrives, nothing moves, and
-    // the board does not flash (Kenny, 2026-10-05: "rebuild 100 cards only
-    // flashes"). Every replaced card is let go.
+    if (act === 'back') {
+        if (south) return;
+        const card = document.createElement('div');
+        card.className = 'kp-card kp-stack';
+        card.setAttribute('data-kp-key', southKey);
+        card.append(...sizeCardLines(southTitle, southReadings));
+        grid.append(card);
+        requestAnimationFrame(() => showCount(block));
+        return;
+    }
+    if (act === 'grow') {
+        const card = grid.firstElementChild;
+        if (!card) return;
+        const line = document.createElement('p');
+        line.textContent = `Reading ${card.children.length}: level steady.`;
+        card.append(line);
+        return;
+    }
+    // A page that redraws itself from the server on every navigation: a
+    // hundred times, one rebuild a frame, every card drawn anew from the
+    // sample data and matched to the card on the page by its key, as a keyed
+    // renderer does. The card under a key stays the box motion watches and
+    // only its lines are new, so a card grown on the page eases back to its
+    // three readings while one left alone does not move; the block is
+    // attached with `arrive: 'new'` (and marked `data-kp-arrive="new"`), so a
+    // redrawn line is a repaint and nothing arrives (Kenny, 2026-10-05:
+    // "rebuild the cards doesn't throw anything away?").
     const before = motionWatchCount();
     let round = 0;
-    let built = 0;
     const rebuild = () => {
-        const fresh = [...grid.children].map((card) => /** @type {Element} */ (card.cloneNode(true)));
-        built += fresh.length;
-        grid.replaceChildren(...fresh);
+        for (const [key, title, readings] of SIZE_SAMPLE) {
+            const card = grid.querySelector(`:scope > [data-kp-key="${key}"]`);
+            if (card) card.replaceChildren(...sizeCardLines(title, readings));
+        }
         round += 1;
         if (round < 100) requestAnimationFrame(rebuild);
         else
-            // Let go a microtask after they left; read the count after that.
             requestAnimationFrame(() => {
                 showCount(block);
                 const line = block.querySelector('[data-cat-size-count]');
-                if (line) line.textContent += ` (it was ${before} before the rebuild; ${built} cards were built and let go)`;
+                if (line) line.textContent += ` (it was ${before} before the rebuild; the cards were drawn anew ${round} times)`;
             });
     };
     rebuild();

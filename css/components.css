@@ -4190,6 +4190,19 @@
                 translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease)),
                 inline-size var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
+
+        /* Closing and collapsing are the opening played backwards: a
+           transition takes the curve of the state it goes to, so the panel
+           going away and the rail going slim take the theme's curve turned
+           around, which js/sidenav.js writes as --kp-sidenav-ease-back
+           (Kenny, 2026-10-05: no discrepancy between opening and closing). */
+        .kp-sidenav:is(
+                [data-kp-sidenav-open='false'],
+                [data-kp-sidenav-slim-collapsed]:not(:hover),
+                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+            ) {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
     }
 
     /* The slim rail: icons stay, labels go. `--slim-hide` and `--slim-show`
@@ -4395,6 +4408,13 @@
         .kp-sidenav__submenu {
             transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
         }
+
+        /* A group folding shut is its unfolding played backwards, as the
+           rail's collapse is (above). */
+        .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+        .kp-sidenav__category-toggle[aria-expanded='false']::after {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
     }
 
     .kp-sidenav__submenu .kp-sidenav__link {
@@ -4470,6 +4490,28 @@
            that does not take this class is the consumer's to place. */
         position: relative;
         z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+    }
+
+    /* --- An entrance played backwards ------------------------------------ */
+
+    /* js/motion.js playEntranceBackwards(): what came in with a CSS
+       entrance (a tooltip, the tour's card) goes out as that entrance played
+       backwards, in its own time on its curve turned around. `reset` drops
+       the entrance for one style read, `play` starts it again reversed and
+       held at its first frame, so one that already played out turns around
+       too. Important, because the entrance is each register's, in later
+       layers. */
+    [data-kp-reversing='reset'],
+    [data-kp-reversing='reset']::before,
+    [data-kp-reversing='reset']::after {
+        animation-name: none !important;
+    }
+
+    [data-kp-reversing='play'],
+    [data-kp-reversing='play']::before,
+    [data-kp-reversing='play']::after {
+        animation-direction: reverse !important;
+        animation-fill-mode: both !important;
     }
 
     /* --- Growing and shrinking [scope-142] ------------------------------- */

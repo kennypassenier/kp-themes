@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **Every opposite motion is a mirror** [scope-143; Kenny, 2026-10-05]: in
+  all 22 themes a dialog opens as its close played backwards and a card
+  arrives as its leave played backwards (`--kp-open: reverse-close` in
+  every register; several arrive one by one top first, the mirror of the
+  leave's bottom-first stagger); a shrink runs on the grow's curve turned
+  around (`sizeEase`, for easeSize, attachFold and tile sets); the sidenav
+  rail and its submenus collapse on their expand curve turned around; a
+  tooltip and the tour card hide by playing their entrance backwards; a
+  toast leaves through `leave()` (`TOAST_HIDE_EVENT` fires once it is
+  gone); a data table's group rows fold by playing their arrival backwards,
+  and the table no longer replays arrivals on a sort or a rebuilt pager.
+  The catalogue's size-selector block rebuilds its cards from the sample
+  data (a grown card eases back) and lets a removed card's box go.
+  Research demo `research/update-motion`: information updating in place,
+  three ideas per theme for formal, cyberpunk and titanium.
+
 - **Opening as the reverse of close** [scope-143]: in formal, cyberpunk and
   titanium a dialog opens, and a card arrives, as its theme's close and
   leave played backwards (`--kp-open: reverse-close` in the register,

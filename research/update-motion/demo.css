@@ -1,0 +1,547 @@
+/* The page: a centred column, one section with three columns side by side
+   (one idea each), the controls in one grid so nothing moves between
+   states. Below the page's own rules, the update ideas as the registers
+   would carry them. Colours are tokens only. */
+.uu-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.uu-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.uu-intro h1,
+.uu-intro p {
+    margin: 0;
+}
+
+.uu-meta,
+.uu-motion,
+.uu-timing {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.uu-timing {
+    font-variant-numeric: tabular-nums;
+}
+
+.uu-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.uu-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.uu-sec__head h2,
+.uu-sec__head p {
+    margin: 0;
+}
+
+.uu-sec__head > p:not(.uu-actions) {
+    color: var(--muted-foreground);
+}
+
+.uu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.uu-cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 56rem) {
+    .uu-cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.uu-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.uu-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* The chart: the key figure's own spark, taller, with a head on its last
+   point so the point is seen to move. */
+.uu-spark {
+    position: relative;
+    display: block;
+    --kp-kpi-spark-height: 3.5rem;
+}
+
+.uu-head {
+    position: absolute;
+    inset-inline-start: 100%;
+    top: var(--uu-y, 50%);
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    margin: -0.25rem 0 0 -0.25rem;
+    border-radius: 50%;
+    background: var(--chart-1);
+    pointer-events: none;
+}
+
+.uu-num,
+.uu-cell {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+}
+
+[data-uu-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.uu-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* ================================================================
+   The update ideas, as the registers would carry them.
+
+   js/motion.js's update(el, next) writes the value, then marks the
+   element `data-kp-updating="<idea>"` with `--kp-update-duration` and
+   `--kp-update-ease` from themeMotion() for as long as these keyframes
+   play. A register picks its idea with `--kp-update: <idea>`; this demo
+   sets it per column instead. Everything sits under no-preference, so
+   reduced motion plays nothing; no idea hides, cuts or resizes the value.
+   ================================================================ */
+@media (prefers-reduced-motion: no-preference) {
+    /* The demo's columns: one idea each, per theme. */
+    [data-theme='formal'] [data-uu-idea='1'] {
+        --kp-update: ink;
+    }
+    [data-theme='formal'] [data-uu-idea='2'] {
+        --kp-update: turn;
+    }
+    [data-theme='formal'] [data-uu-idea='3'] {
+        --kp-update: stamp;
+    }
+    [data-theme='cyberpunk'] [data-uu-idea='1'] {
+        --kp-update: scan;
+    }
+    [data-theme='cyberpunk'] [data-uu-idea='2'] {
+        --kp-update: glitch;
+    }
+    [data-theme='cyberpunk'] [data-uu-idea='3'] {
+        --kp-update: neon;
+    }
+    [data-theme='titanium'] [data-uu-idea='1'] {
+        --kp-update: recut;
+    }
+    [data-theme='titanium'] [data-uu-idea='2'] {
+        --kp-update: brushed;
+    }
+    [data-theme='titanium'] [data-uu-idea='3'] {
+        --kp-update: anodise;
+    }
+
+    /* Shared by every idea: the element is the box an overlay is drawn in. */
+    [data-kp-updating] {
+        position: relative;
+    }
+
+    [data-kp-updating]::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* A chart changes at its last point: the overlay covers its last part. */
+    .uu-spark[data-kp-updating]::before {
+        inset: -0.25rem -0.5rem -0.25rem 72%;
+    }
+
+    /* ── formal 1 · fresh ink: written in the primary ink, drying to the page's ink, a pen rule drawn under it ── */
+    [data-theme='formal'] [data-kp-updating='ink'],
+    [data-theme='formal'] [data-kp-updating='ink'] .kp-kpi__spark {
+        animation: kp-sig-formal-update-ink var(--kp-update-duration) var(--kp-update-ease);
+    }
+
+    [data-theme='formal'] [data-kp-updating='ink']::before,
+    [data-theme='formal'] .uu-spark[data-kp-updating='ink']::before {
+        inset-block: auto -0.15em;
+        block-size: 1.5px;
+        background: var(--primary);
+        transform-origin: left center;
+        animation: kp-sig-formal-update-rule var(--kp-update-duration) var(--kp-update-ease) both;
+    }
+
+    @keyframes kp-sig-formal-update-ink {
+        from {
+            color: var(--primary);
+        }
+    }
+
+    @keyframes kp-sig-formal-update-rule {
+        from {
+            transform: scaleX(0);
+            opacity: 1;
+        }
+
+        55% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleX(1);
+            opacity: 0;
+        }
+    }
+
+    /* ── formal 2 · ledger turn: the value turns over on its top edge like a ledger leaf, a fold shadow lifting off ── */
+    [data-theme='formal'] [data-kp-updating='turn']:not(.uu-spark) {
+        transform-origin: 50% 0;
+        animation: kp-sig-formal-update-turn var(--kp-update-duration) var(--kp-update-ease);
+    }
+
+    [data-theme='formal'] [data-kp-updating='turn']::before {
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.22), transparent);
+        animation: kp-sig-formal-update-fold var(--kp-update-duration) var(--kp-update-ease) both;
+    }
+
+    @keyframes kp-sig-formal-update-turn {
+        from {
+            transform: perspective(12em) rotateX(-55deg);
+        }
+    }
+
+    @keyframes kp-sig-formal-update-fold {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* ── formal 3 · checked stamp: a stamp's frame lands round the value, askew, and soaks in ── */
+    [data-theme='formal'] [data-kp-updating='stamp']::before {
+        inset: -0.15em -0.35em;
+        border: 1.5px solid var(--primary);
+        border-radius: calc(var(--radius, 0.25rem) * 0.5);
+        animation: kp-sig-formal-update-stamp var(--kp-update-duration) var(--kp-update-ease) both;
+    }
+
+    [data-theme='formal'] .uu-spark[data-kp-updating='stamp']::before {
+        inset: -0.25rem -0.5rem -0.25rem 72%;
+    }
+
+    @keyframes kp-sig-formal-update-stamp {
+        0% {
+            opacity: 0;
+            transform: scale(1.3) rotate(-5deg);
+        }
+
+        25% {
+            opacity: 0.9;
+            transform: scale(1) rotate(-2deg);
+        }
+
+        65% {
+            opacity: 0.6;
+            transform: scale(1) rotate(-2deg);
+        }
+
+        to {
+            opacity: 0;
+            transform: scale(1) rotate(-2deg);
+        }
+    }
+
+    /* ── cyberpunk 1 · scanline rewrite: a bright line runs down over the value with a glowing trail ── */
+    [data-theme='cyberpunk'] [data-kp-updating='scan'],
+    [data-theme='cyberpunk'] [data-kp-updating='scan'] .kp-kpi__spark {
+        animation: kp-sig-cyberpunk-update-glow var(--kp-update-duration) var(--kp-update-ease);
+    }
+
+    [data-theme='cyberpunk'] [data-kp-updating='scan']::before {
+        background: linear-gradient(
+                to bottom,
+                transparent 33.3%,
+                hsl(from var(--accent) h s l / 0.08) 45%,
+                hsl(from var(--accent) h s l / 0.3) 62%,
+                var(--accent) 65.4%,
+                transparent 66.7%
+            )
+            0 100% / 100% 300% no-repeat;
+        mix-blend-mode: screen;
+        animation: kp-sig-cyberpunk-update-scan var(--kp-update-duration) linear both;
+    }
+
+    @keyframes kp-sig-cyberpunk-update-scan {
+        from {
+            background-position-y: 100%;
+        }
+
+        to {
+            background-position-y: 0%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-update-glow {
+        from {
+            filter: drop-shadow(0 0 6px var(--accent));
+        }
+
+        to {
+            filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0));
+        }
+    }
+
+    /* ── cyberpunk 2 · glitch and settle: cyan and magenta copies tear off, it jitters, a torn line runs through, it locks ── */
+    [data-theme='cyberpunk'] [data-kp-updating='glitch'] {
+        animation: kp-sig-cyberpunk-update-glitch var(--kp-update-duration) linear;
+    }
+
+    [data-theme='cyberpunk'] [data-kp-updating='glitch']::before {
+        background: linear-gradient(to bottom, transparent 47%, hsl(from var(--accent) h s l / 0.35) 47% 53%, transparent 53%) 0 0 / 100% 100%
+            no-repeat;
+        mix-blend-mode: screen;
+        animation: kp-sig-cyberpunk-update-tear var(--kp-update-duration) steps(1, end) both;
+    }
+
+    @keyframes kp-sig-cyberpunk-update-glitch {
+        0% {
+            transform: translateX(2px) skewX(-8deg);
+            filter: drop-shadow(3px -2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-3px 2px 0 hsl(from var(--chart-3) h s l / 0.85));
+        }
+
+        12% {
+            transform: translateX(-2px);
+            filter: drop-shadow(-4px 1px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(4px -1px 0 hsl(from var(--chart-3) h s l / 0.85));
+        }
+
+        24% {
+            transform: translateX(3px) skewX(6deg);
+            filter: drop-shadow(2px 2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-2px -2px 0 hsl(from var(--chart-3) h s l / 0.85));
+        }
+
+        36% {
+            transform: translateX(-1px);
+            filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.7)) drop-shadow(2px 0 0 hsl(from var(--chart-3) h s l / 0.7));
+        }
+
+        52% {
+            transform: translateX(1px);
+            filter: drop-shadow(1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(-1px 0 0 hsl(from var(--chart-3) h s l / 0.5));
+        }
+
+        64%,
+        to {
+            transform: none;
+            filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--chart-3) h s l / 0));
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-update-tear {
+        0% {
+            background-position-y: 20%;
+            opacity: 1;
+        }
+
+        12% {
+            background-position-y: 80%;
+        }
+
+        24% {
+            background-position-y: 40%;
+        }
+
+        36% {
+            background-position-y: 65%;
+        }
+
+        52%,
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* ── cyberpunk 3 · neon re-ignite: it flickers like a neon tube striking, the glow surging and dying down ── */
+    [data-theme='cyberpunk'] [data-kp-updating='neon'] {
+        animation: kp-sig-cyberpunk-update-neon var(--kp-update-duration) linear;
+    }
+
+    @keyframes kp-sig-cyberpunk-update-neon {
+        0% {
+            opacity: 0.55;
+            filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0));
+        }
+
+        8% {
+            opacity: 1;
+            filter: drop-shadow(0 0 8px var(--accent));
+        }
+
+        15% {
+            opacity: 0.6;
+            filter: drop-shadow(0 0 2px hsl(from var(--accent) h s l / 0.4));
+        }
+
+        24% {
+            opacity: 1;
+            filter: drop-shadow(0 0 10px var(--accent));
+        }
+
+        31% {
+            opacity: 0.7;
+        }
+
+        40% {
+            opacity: 1;
+            filter: drop-shadow(0 0 12px var(--accent));
+        }
+
+        to {
+            opacity: 1;
+            filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0));
+        }
+    }
+
+    /* ── titanium 1 · re-cut: the cutter runs across at an even pace and leaves the digits engraved, then plain ── */
+    [data-theme='titanium'] [data-kp-updating='recut'],
+    [data-theme='titanium'] [data-kp-updating='recut'] .kp-kpi__spark {
+        animation: kp-sig-titanium-update-engrave var(--kp-update-duration) linear;
+    }
+
+    [data-theme='titanium'] [data-kp-updating='recut']::before {
+        background:
+            linear-gradient(var(--ring), var(--ring)) 0 0 / 2px 100% no-repeat,
+            linear-gradient(90deg, transparent, hsl(from var(--ring) h s l / 0.22)) 0 0 / 40% 100% no-repeat;
+        animation: kp-sig-titanium-update-cutter var(--kp-update-duration) linear both;
+    }
+
+    @keyframes kp-sig-titanium-update-cutter {
+        from {
+            background-position-x:
+                0%,
+                -70%;
+            opacity: 1;
+        }
+
+        85% {
+            background-position-x: 100%, 100%;
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 100%, 100%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-update-engrave {
+        0%,
+        70% {
+            filter: drop-shadow(0 1px 0 hsl(from var(--background) h s l / 0.9)) drop-shadow(0 -1px 0 hsl(from var(--foreground) h s l / 0.45));
+        }
+
+        to {
+            filter: drop-shadow(0 0 0 hsl(from var(--background) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    /* ── titanium 2 · brushed sweep: a band of brushed metal with a sheen slides across the changed digits ── */
+    [data-theme='titanium'] [data-kp-updating='brushed']::before {
+        background:
+            linear-gradient(
+                    105deg,
+                    transparent 38%,
+                    hsl(from var(--background) h s l / 0.5) 48%,
+                    hsl(from var(--foreground) h s l / 0.14) 53%,
+                    transparent 62%
+                )
+                0 0 / 300% 100% no-repeat,
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.08) 0 1px, transparent 1px 3px);
+        animation: kp-sig-titanium-update-brushed var(--kp-update-duration) var(--kp-update-ease) both;
+    }
+
+    @keyframes kp-sig-titanium-update-brushed {
+        from {
+            background-position-x: 100%, 0;
+            opacity: 0;
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        80% {
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 0%, 0;
+            opacity: 0;
+        }
+    }
+
+    /* ── titanium 3 · heat tint: the anodised colours of the leave run across the value and cool away ── */
+    [data-theme='titanium'] [data-kp-updating='anodise']::before {
+        background: linear-gradient(
+                110deg,
+                transparent 15%,
+                var(--warning-foreground),
+                var(--chart-2),
+                var(--chart-1),
+                var(--chart-3),
+                transparent 85%
+            )
+            0 0 / 300% 100% no-repeat;
+        mix-blend-mode: color;
+        animation: kp-sig-titanium-update-anodise var(--kp-update-duration) var(--kp-update-ease) both;
+    }
+
+    @keyframes kp-sig-titanium-update-anodise {
+        from {
+            background-position-x: 100%;
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        75% {
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 0%;
+            opacity: 0;
+        }
+    }
+}

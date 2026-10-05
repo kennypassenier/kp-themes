@@ -35,6 +35,7 @@
 // `decorate(part, info)` is called with the card's three buttons each time a
 // tour builds them. Nothing runs on import.
 
+import { playEntranceBackwards, stopReversing } from './motion.js';
 import { REMEMBER_ATTRIBUTE, memoryFor } from './remember.js';
 import { resolveStrings } from './strings.js';
 
@@ -318,8 +319,15 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         if (ended) return;
         ended = true;
         unmark();
-        if (card.open) card.close();
-        card.remove();
+        // The card goes as it came: its entrance played backwards, then it
+        // is closed and taken out (Kenny, 2026-10-05: it faded in and
+        // vanished at once).
+        card.inert = true;
+        void playEntranceBackwards(card).then(() => {
+            if (card.open) card.close();
+            card.remove();
+            stopReversing(card);
+        });
         view.removeEventListener('keydown', onKey, true);
         view.removeEventListener('resize', onMove);
         doc.removeEventListener('scroll', onMove, true);

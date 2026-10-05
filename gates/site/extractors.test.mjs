@@ -262,8 +262,11 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // three (--kp-menu-rich-min, -rich-max, -max-height) and the drawer,
     // help and tour's (--kp-drawer-width, --kp-help-term, --kp-tour-width):
     // 280 + 27. The deco review round (2026-10-05) added three more
-    // (the meter's over signs and the tile set's easing): 307 + 3.
-    assert.equal(result.expected, 310, 'AR21 counted the --kp-* properties in css/components.css');
+    // (the meter's over signs and the tile set's easing): 307 + 3. The
+    // motion-symmetry round (2026-10-05) added --kp-sidenav-ease-back, the
+    // theme's curve turned around that js/sidenav.js writes for a rail
+    // that collapses, a panel that closes and a group that folds: 310 + 1.
+    assert.equal(result.expected, 311, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -308,8 +311,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-resize-dur is read through var() too: 248 + 1. So are
     // scope-143's nineteen: 249 + 19. And the homelab port's seven: 268 + 7.
     // And round two's twenty-seven, every one read through var(): 278 + 27.
-    // And the deco review round's three: 305 + 3.
-    assert.equal(result.readCount, 308);
+    // And the deco review round's three: 305 + 3. And the motion-symmetry
+    // round's --kp-sidenav-ease-back: 308 + 1.
+    assert.equal(result.readCount, 309);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-chart-height', '--kp-steps']);

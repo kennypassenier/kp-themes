@@ -71,7 +71,10 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [],
+        pages: [
+            // Kenny, 2026-10-05 11:29: an 'update' or 'refresh' animation the theme's way; three ideas each in formal, cyberpunk and titanium.
+            { href: 'research/update-motion/demo.html', label: 'Information that updates in place' },
+        ],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

@@ -1999,6 +1999,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── deco: it closes like a fan, folding to its centre ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='deco'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='deco'] [data-kp-leaving] {
             animation: kp-sig-deco-leave 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
