@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-chart">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a time chart of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="charts.css" />
+    </head>
+    <body>
+        <main class="cc-page">
+            <header class="cc-intro">
+                <h1>A time chart of its own, per theme</h1>
+                <p>
+                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter comes the
+                    time chart. Today <code>.kp-chart</code> has the same shape in every theme (a clear plot, three grid lines, the lines over a soft
+                    area, the popover as its tooltip, round legend buttons), drawn in the theme's colours only. Here every theme gets two charts of
+                    its own, drawn in the theme's own material, beside the plain chart as it is today. Pick one of the three per theme.
+                </p>
+                <p class="cc-motion" data-cc-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading chart shows its still frame. Turn it off
+                    in the system settings to judge the motion.
+                </p>
+                <p class="cc-meta">
+                    Each column is one chart group: its range buttons and zoom chip, the pressure of the pump houses over the last 24 hours (the alarm
+                    level as a dashed line, three events above the plot), and two of the group's spark lines. Every chart is the package's own (<code
+                        >js/chart.js</code
+                    >
+                    draws it, so hover, drag to zoom, click to pin, the keys and the legend all work); a character only restyles it from the theme's
+                    tokens, in the theme's <code>kp.signature</code> layer (<code>charts.css</code>), and keeps the plot's height in every state. This
+                    theme: <b data-cc-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="cc-sec"
+                data-review-item="chart"
+                data-review-components="chart"
+                data-review-title="The time chart"
+                aria-labelledby="h-chart"
+            >
+                <div class="cc-sec__head">
+                    <h2 id="h-chart">The time chart in <span data-cc-theme-name>this theme</span></h2>
+                    <p>
+                        Two characters drawn in this theme's world, and the plain chart as it is today. Use the buttons below for every state; point
+                        at a plot, drag across it, press a legend button: the chart behaves the same in all three columns.
+                    </p>
+                </div>
+                <div class="cc-controls">
+                    <div class="cc-actions" role="group" aria-label="State of every chart">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-state="filled" aria-pressed="true">Readings</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-state="empty" aria-pressed="false">No readings</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-state="error" aria-pressed="false">Error</button>
+                    </div>
+                    <div class="cc-actions" role="group" aria-label="Sources in every chart">
+                        <b>Sources:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-sources="1" aria-pressed="false">One</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-sources="2" aria-pressed="true">Two</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-sources="3" aria-pressed="false">Three</button>
+                    </div>
+                    <div class="cc-actions" role="group" aria-label="What every chart shows">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-toggle="pin" aria-pressed="true">The tooltip, pinned</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-toggle="zoom" aria-pressed="false">Zoomed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-toggle="press" aria-pressed="false">A source pressed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-toggle="hot" aria-pressed="false">A source singled out</button>
+                    </div>
+                    <div class="cc-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="cc-trio">
+                    <div class="cc-col" data-cc="a" data-cc-pick="a">
+                        <p class="cc-label"><span class="cc-label__no">Character 1</span> <span data-cc-name="a">…</span></p>
+                        <p class="cc-desc" data-cc-desc="a"></p>
+                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
+                            <div class="kp-chart-group__bar">
+                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                </div>
+                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                            </div>
+                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
+                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                            </figure>
+                            <div class="cc-sparks">
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cc-col" data-cc="b" data-cc-pick="b">
+                        <p class="cc-label"><span class="cc-label__no">Character 2</span> <span data-cc-name="b">…</span></p>
+                        <p class="cc-desc" data-cc-desc="b"></p>
+                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
+                            <div class="kp-chart-group__bar">
+                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                </div>
+                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                            </div>
+                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
+                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                            </figure>
+                            <div class="cc-sparks">
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cc-col" data-cc="plain" data-cc-pick="plain">
+                        <p class="cc-label"><span class="cc-label__no">Today</span> The plain chart</p>
+                        <p class="cc-desc">
+                            The package's time chart as it ships: a clear plot with three grid lines, the lines in the theme's chart colours over a
+                            soft area, the popover as the tooltip, round legend buttons, a pulsing block while it loads, the same shape in every
+                            theme.
+                        </p>
+                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
+                            <div class="kp-chart-group__bar">
+                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                </div>
+                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                            </div>
+                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
+                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                            </figure>
+                            <div class="cc-sparks">
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
+                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

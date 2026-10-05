@@ -1,0 +1,4689 @@
+/* research/character-chart: two characters of the time chart `.kp-chart` per
+   theme, in the theme's kp.signature layer, so each can move into its
+   register as it stands. `[data-cc='a']` and `[data-cc='b']` are the demo's
+   two columns; in a register the same rules read `[data-theme='<name>']
+   .kp-chart` (and `.kp-chart-zoom`, `.kp-chart-group`).
+
+   The contract every character keeps:
+   - The markup is the package's: js/chart.js builds every part, and nothing
+     here needs more than the classes and attributes it already writes:
+     `.kp-chart__plot` (with `aria-busy` while loading), its `svg` with
+     `.kp-chart__grid`, `.kp-chart__tick`, `.kp-chart__series[data-kp-series]`
+     > `.kp-chart__area` / `.kp-chart__line`, `.kp-chart__threshold`,
+     `.kp-chart__event-line`, `.kp-chart__mark[data-kp-tone]`,
+     `.kp-chart__crosshair`, `.kp-chart__snap`, `.kp-chart__brush`; the
+     tooltip `.kp-chart__tip` (`data-kp-pinned`, `data-kp-side`); the legend
+     `.kp-chart__source` (`aria-pressed`, `data-kp-off`); the states
+     `.kp-chart__state[data-kp-state]`; the zoom chip `.kp-chart-zoom`; the
+     spark `.kp-chart--spark`.
+   - Surfaces to draw on: the plot's background, border and shadows (the
+     paper), its ::before (under the lines: a sun, a floor, a stamp) and
+     ::after (over them: scanlines, a glitch, corners); the tooltip and its
+     pseudo-elements; the legend buttons; the state box and its
+     pseudo-elements.
+   - Height: the plot takes no padding (js/chart.js sizes the drawing from
+     its clientWidth), so a character frames it with a border or shadows
+     only; js/chart.js gives the state box the plot's height, so every state
+     keeps it.
+   - Knobs: `--cc-paper` (the plot's background), `--cc-frame` (its border),
+     `--cc-radius`, `--cc-paper-shadow`, `--cc-on-paper` (the ring of a dot
+     on the paper), `--cc-grid`, `--cc-grid-w`, `--cc-grid-dash`, `--cc-tick`,
+     `--cc-tick-font`, `--cc-tick-weight`, `--cc-tick-track`, `--cc-line-w`,
+     `--cc-line-cap`, `--cc-line-join`, `--cc-line-filter`, `--cc-area-k`
+     (the area's opacity, times today's), `--cc-area-mask`, `--cc-cross`,
+     `--cc-cross-w`, `--cc-cross-op`, `--cc-cross-dash`, `--cc-s1` to
+     `--cc-s5` (a source's colour, where the paper needs others).
+   - Colour: tokens only (DI9), alpha and lightness as relative colours of
+     tokens; a mask paints in `--foreground`, only its alpha counts.
+   - Motion: every animation sits in `prefers-reduced-motion:
+     no-preference`; without motion each loading picture is a still frame.
+     The SVG is drawn again on every pointer move, so nothing inside it
+     loops: a loop lives on the plot's or the state box's pseudo-elements. */
+
+@property --cc-de-fan {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart {
+        --kp-chart-series: var(--cc-s1, var(--chart-1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart [data-kp-series='1'] {
+        --kp-chart-series: var(--cc-s1, var(--chart-1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart [data-kp-series='2'] {
+        --kp-chart-series: var(--cc-s2, var(--chart-2));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart [data-kp-series='3'] {
+        --kp-chart-series: var(--cc-s3, var(--chart-3));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart [data-kp-series='4'] {
+        --kp-chart-series: var(--cc-s4, var(--chart-4));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart [data-kp-series='5'] {
+        --kp-chart-series: var(--cc-s5, var(--chart-5));
+    }
+
+    /* The paper: no padding, ever (the drawing is as wide as the plot's
+       content box). */
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__plot:not(.kp-chart__spark-plot) {
+        /* A character's loading picture says the plot is busy; the page's
+           busy dim (layout.css) would grey its paper. */
+        --kp-busy-opacity: 1;
+        isolation: isolate;
+        border: var(--cc-frame, 0 solid transparent);
+        border-radius: var(--cc-radius, calc(var(--radius, 0.5rem) * 0.5));
+        background: var(--cc-paper, transparent);
+        box-shadow: var(--cc-paper-shadow, none);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__plot:not(.kp-chart__spark-plot)::before,
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        z-index: -1;
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        z-index: 1;
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__grid {
+        stroke: var(--cc-grid, var(--border));
+        stroke-width: var(--cc-grid-w, 1px);
+        stroke-dasharray: var(--cc-grid-dash, none);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tick {
+        fill: var(--cc-tick, var(--muted-foreground));
+        font-family: var(--cc-tick-font, inherit);
+        font-weight: var(--cc-tick-weight, 400);
+        letter-spacing: var(--cc-tick-track, normal);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__line {
+        stroke-width: var(--cc-line-w, 2px);
+        stroke-linecap: var(--cc-line-cap, round);
+        stroke-linejoin: var(--cc-line-join, round);
+        filter: var(--cc-line-filter, none);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__series[data-kp-state='hot'] .kp-chart__line {
+        stroke-width: calc(var(--cc-line-w, 2px) * 1.4);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__area {
+        fill-opacity: calc(0.06 * var(--cc-area-k, 1));
+        mask: var(--cc-area-mask, none);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__area--alone {
+        fill-opacity: calc(0.12 * var(--cc-area-k, 1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__area--stacked {
+        fill-opacity: calc(0.22 * var(--cc-area-k, 1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__series[data-kp-state='dim'] .kp-chart__area {
+        fill-opacity: calc(0.02 * var(--cc-area-k, 1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__crosshair {
+        stroke: var(--cc-cross, var(--foreground));
+        stroke-width: var(--cc-cross-w, 1px);
+        stroke-dasharray: var(--cc-cross-dash, none);
+        opacity: var(--cc-cross-op, 0.35);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__crosshair--pinned {
+        stroke-width: calc(var(--cc-cross-w, 1px) * 1.5);
+        opacity: var(--cc-cross-pin-op, 0.8);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) :is(.kp-chart__snap, .kp-chart__mark-dot) {
+        stroke: var(--cc-on-paper, var(--card));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__brush {
+        fill: hsl(from var(--cc-brush, var(--chart-1)) h s l / 0.16);
+        stroke: var(--cc-brush, var(--chart-1));
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__spark-line {
+        stroke-width: var(--cc-spark-w, 1.6);
+        filter: var(--cc-line-filter, none);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__spark-area {
+        opacity: calc(0.12 * var(--cc-area-k, 1));
+        mask: var(--cc-area-mask, none);
+    }
+
+    /* The tooltip's change column is 4.5rem for the body font; a character
+       whose type is wider gives it `--cc-delta-w` (and the tooltip
+       `--cc-tip-max`), so a change never wraps. */
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tip {
+        --kp-chart-tip-max: var(--cc-tip-max, 17.5rem);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tip-row {
+        grid-template-columns: 10px minmax(0, 1fr) auto var(--cc-delta-w, 4.5rem);
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__delta {
+        white-space: nowrap;
+    }
+
+    /* An event's dot on a tooltip that is a coloured plate is ringed in the
+       plate's ink (`--cc-dot-ring: currentColor`), so a red dot on a red
+       plate still shows. */
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tip .kp-chart__dot {
+        box-shadow: 0 0 0 1.5px var(--cc-dot-ring, transparent);
+    }
+
+    /* The tooltip is positioned by js/chart.js: a character may draw on it
+       and its pseudo-elements, never move it. */
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tip::before,
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__tip::after {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    /* The states: the paper shows through, each character draws its own
+       loading picture instead of the pulse. */
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__state {
+        position: relative;
+        overflow: clip;
+        border: 0;
+        border-radius: inherit;
+        background: transparent;
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__state[data-kp-state='loading'] {
+        animation: none;
+    }
+
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__state::before,
+    :is([data-cc='a'], [data-cc='b']) .kp-chart__state::after {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* ══ formal ═════════════════════════════════════════════════════════ */
+
+    /* ── formal · 1 · the annual report ───────────────────────────────── */
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart {
+        --cc-paper: var(--card);
+        --cc-radius: 0;
+        --cc-paper-shadow: inset 0 2px 0 var(--primary), inset 0 -1px 0 var(--border-strong);
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border-strong);
+        --cc-grid-dash: 1 3;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-w: 1.75px;
+        --cc-area-k: 0.6;
+        --cc-cross: var(--primary);
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__tick {
+        font-variant-numeric: oldstyle-nums tabular-nums;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__tip {
+        border: 0;
+        border-block-start: 2px solid var(--primary);
+        border-radius: 0;
+        box-shadow:
+            0 1px 0 var(--border),
+            0 6px 18px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    [data-theme='formal'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-width: 0 0 2px;
+        border-style: solid;
+        border-color: transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__source:is(:hover, :focus-visible) {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__show-all {
+        border-bottom-style: dotted;
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__swatch {
+        inline-size: 14px;
+        block-size: 2px;
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart-zoom {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+    }
+
+    /* A dotted leader, "to be entered", still. */
+    [data-theme='formal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 8% 50% / 5px 1px repeat-x;
+        background-clip: content-box;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        inline-size: auto;
+        block-size: auto;
+        background: none;
+        color: var(--destructive);
+        font-style: normal;
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot::before {
+        content: '†';
+    }
+
+    [data-theme='formal'] [data-cc='a'] .kp-chart__spark-plot {
+        box-shadow: inset 0 -1px 0 var(--border-strong);
+    }
+
+    /* ── formal · 2 · the ledger graph ────────────────────────────────── */
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart {
+        --cc-paper: linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 10% 100%, var(--card);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.55);
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-w: 1.5px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 1px, transparent 1px 4px);
+        --cc-cross: var(--primary);
+        --cc-cross-dash: 3 2;
+    }
+
+    /* The baseline (the first grid line drawn) closed with the double rule. */
+    [data-theme='formal'] [data-cc='b'] .kp-chart__grid:nth-of-type(1) {
+        stroke: var(--primary);
+        filter: drop-shadow(0 3px 0 var(--primary));
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        border-inline-start: 3px double var(--primary);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(to bottom, transparent 0 calc(1.5em - 1px), hsl(from var(--primary) h s l / 0.12) calc(1.5em - 1px) 1.5em),
+            var(--popover);
+        box-shadow: 0 4px 12px hsl(from var(--foreground) h s l / 0.1);
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='formal'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border-strong);
+        border-block-end-color: transparent;
+        border-radius: 0.25rem 0.25rem 0 0;
+        box-shadow: inset 0 -1px 0 var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__show-all {
+        border-style: dashed;
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart-zoom {
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Loading: the empty ruled page, still. */
+    [data-theme='formal'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: repeating-linear-gradient(to bottom, transparent 0 21px, hsl(from var(--primary) h s l / 0.14) 21px 22px);
+    }
+
+    [data-theme='formal'] [data-cc='b'] .kp-chart__spark-plot {
+        box-shadow:
+            inset 0 -1px 0 var(--primary),
+            inset 0 -3px 0 var(--card),
+            inset 0 -4px 0 var(--primary);
+    }
+
+    /* ══ light ══════════════════════════════════════════════════════════ */
+
+    /* ── light · 1 · the seam ─────────────────────────────────────────── */
+
+    [data-theme='light'] [data-cc='a'] .kp-chart {
+        --cc-s2: hsl(from var(--chart-2) h s calc(l - 6));
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border);
+        --cc-tick-weight: 500;
+        --cc-line-w: 2.25px;
+        --cc-area-k: 2.5;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.45;
+    }
+
+    [data-theme='light'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 30px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    /* The divider's open circle, as the card's pin. */
+    [data-theme='light'] [data-cc='a'] .kp-chart__tip::before {
+        content: '';
+        inset-block-start: 14px;
+        inset-inline-start: -5px;
+        inline-size: 9px;
+        block-size: 9px;
+        box-sizing: border-box;
+        border: 1.5px solid var(--primary);
+        border-radius: 50%;
+        background: var(--popover);
+    }
+
+    /* On the side the crosshair is. */
+    [data-theme='light'] [data-cc='a'] .kp-chart__tip[data-kp-side='start']::before {
+        inset-inline: auto -5px;
+    }
+
+    [data-theme='light'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: hsl(from var(--primary) h s l / 0.35);
+        background: hsl(from var(--primary) h s l / 0.08);
+        box-shadow: none;
+    }
+
+    /* Loading: the seam dashed, still. */
+    [data-theme='light'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--border-strong) 50%, transparent 0) 0 50% / 8px 1px repeat-x;
+    }
+
+    [data-theme='light'] [data-cc='a'] .kp-chart__spark-area {
+        mask: linear-gradient(to bottom, var(--foreground), transparent);
+        opacity: 0.3;
+    }
+
+    /* ── light · 2 · daylight ─────────────────────────────────────────── */
+
+    [data-theme='light'] [data-cc='b'] .kp-chart {
+        --cc-s2: hsl(from var(--chart-2) h s calc(l - 6));
+        --cc-paper:
+            radial-gradient(circle at 100% 0, hsl(from var(--accent) h s l / 0.95), transparent 42%),
+            linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.6), transparent 72%), var(--card);
+        --cc-radius: 0.75rem;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.35);
+        --cc-line-w: 2.25px;
+        --cc-line-filter: drop-shadow(0 4px 2.5px hsl(from var(--foreground) h s l / 0.16));
+        --cc-area-k: 1.6;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+    }
+
+    [data-theme='light'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid hsl(from var(--border) h s l / 0.9);
+        border-radius: 0.75rem;
+        background: hsl(from var(--popover) h s l / 0.78);
+        box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
+        backdrop-filter: blur(10px) saturate(1.4);
+    }
+
+    [data-theme='light'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        box-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='light'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: hsl(from var(--primary) h s l / 0.4);
+        background: hsl(from var(--accent) h s l / 0.7);
+        box-shadow: 0 2px 6px hsl(from var(--primary) h s l / 0.18);
+    }
+
+    [data-theme='light'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        background: linear-gradient(100deg, transparent 35%, hsl(from var(--accent) h s l / 0.95) 50%, transparent 65%) 0 0 / 300% 100%;
+    }
+
+    [data-theme='light'] [data-cc='b'] .kp-chart__spark-line {
+        filter: drop-shadow(0 2px 1.5px hsl(from var(--foreground) h s l / 0.16));
+    }
+
+    /* ══ dark ═══════════════════════════════════════════════════════════ */
+
+    /* ── dark · 1 · the spectrometer ──────────────────────────────────── */
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper:
+            linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 0 0 / 10% 6px repeat-x,
+            linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / 2% 3px repeat-x,
+            linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 0 100% / 10% 6px repeat-x,
+            linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 100% / 2% 3px repeat-x, var(--background);
+        --cc-frame: 1px solid var(--border);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border-strong);
+        --cc-grid-dash: 2 4;
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-w: 1.75px;
+        --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--kp-chart-series) h s l / 0.6));
+        --cc-area-k: 2;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: 0 10px 24px hsl(from var(--background) h s l / 0.8);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The oxide film along the slab's top edge. */
+    [data-theme='dark'] [data-cc='a'] .kp-chart__tip::before {
+        content: '';
+        inset: -1px -1px auto;
+        block-size: 2px;
+        background: linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3));
+    }
+
+    [data-theme='dark'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Brackets always in place, lit only when pressed, so nothing moves. */
+    [data-theme='dark'] [data-cc='a'] .kp-chart__source::before {
+        content: '[';
+        color: transparent;
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__source::after {
+        content: ']';
+        color: transparent;
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__source[aria-pressed='true']::before,
+    [data-theme='dark'] [data-cc='a'] .kp-chart__source[aria-pressed='true']::after {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+        block-size: 2px;
+        box-shadow: 0 0 4px var(--kp-chart-series);
+    }
+
+    /* Loading: the calibration spectrum, faint and still. */
+    [data-theme='dark'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(
+                90deg,
+                hsl(from var(--chart-1) h s l / 0.22),
+                hsl(from var(--chart-2) h s l / 0.22),
+                hsl(from var(--chart-3) h s l / 0.22),
+                hsl(from var(--chart-4) h s l / 0.22),
+                hsl(from var(--chart-5) h s l / 0.22)
+            )
+            50% 50% / 84% 6px no-repeat;
+    }
+
+    [data-theme='dark'] [data-cc='a'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px hsl(from var(--chart-1) h s l / 0.6));
+    }
+
+    /* ── dark · 2 · the machined pocket ───────────────────────────────── */
+
+    [data-theme='dark'] [data-cc='b'] .kp-chart {
+        --cc-paper: var(--background);
+        --cc-radius: 0;
+        --cc-paper-shadow: inset 0 2px 3px hsl(from var(--background) h s l / 0.9), inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.16);
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-filter: drop-shadow(0 1px 0 var(--background));
+        --cc-area-k: 1.5;
+    }
+
+    [data-theme='dark'] [data-cc='b'] .kp-chart__grid {
+        filter: drop-shadow(0 1px 0 hsl(from var(--foreground) h s l / 0.12));
+    }
+
+    [data-theme='dark'] [data-cc='b'] .kp-chart__tick {
+        filter: drop-shadow(0 -1px 0 var(--background));
+    }
+
+    /* The pocket's corners cut at forty-five degrees, over the lines. */
+    [data-theme='dark'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        background:
+            linear-gradient(135deg, var(--card) 7px, var(--border-strong) 7px 8px, transparent 8px) top left / 12px 12px no-repeat,
+            linear-gradient(225deg, var(--card) 7px, var(--border-strong) 7px 8px, transparent 8px) top right / 12px 12px no-repeat,
+            linear-gradient(315deg, var(--card) 7px, var(--border-strong) 7px 8px, transparent 8px) bottom right / 12px 12px no-repeat,
+            linear-gradient(45deg, var(--card) 7px, var(--border-strong) 7px 8px, transparent 8px) bottom left / 12px 12px no-repeat;
+    }
+
+    /* A chamfered plate: the corners cut in its own background, the edge a
+       shadow that follows the cut. */
+    [data-theme='dark'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, transparent 6px, var(--popover) 6px) top left / 51% 51% no-repeat,
+            linear-gradient(225deg, transparent 6px, var(--popover) 6px) top right / 51% 51% no-repeat,
+            linear-gradient(315deg, transparent 6px, var(--popover) 6px) bottom right / 51% 51% no-repeat,
+            linear-gradient(45deg, transparent 6px, var(--popover) 6px) bottom left / 51% 51% no-repeat;
+        box-shadow: none;
+        filter: drop-shadow(0 0 0.75px var(--border-strong)) drop-shadow(0 8px 12px hsl(from var(--background) h s l / 0.7));
+    }
+
+    [data-theme='dark'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: none;
+        filter: drop-shadow(0 0 1px var(--ring)) drop-shadow(0 8px 12px hsl(from var(--background) h s l / 0.7));
+    }
+
+    [data-theme='dark'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, transparent 4px, var(--border) 4px 5px, transparent 5px) top left / 50% 50% no-repeat,
+            linear-gradient(315deg, transparent 4px, var(--border) 4px 5px, transparent 5px) bottom right / 50% 50% no-repeat;
+    }
+
+    [data-theme='dark'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background:
+            linear-gradient(135deg, transparent 4px, var(--accent) 4px) top left / 51% 51% no-repeat,
+            linear-gradient(225deg, var(--accent) 0 0) top right / 51% 51% no-repeat,
+            linear-gradient(315deg, transparent 4px, var(--accent) 4px) bottom right / 51% 51% no-repeat,
+            linear-gradient(45deg, var(--accent) 0 0) bottom left / 51% 51% no-repeat;
+        box-shadow: none;
+        filter: drop-shadow(0 0 0.75px var(--foreground));
+    }
+
+    /* Loading: the empty pocket and its engraved scale, still. */
+    [data-theme='dark'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 8% 50% / 7% 7px repeat-x,
+            linear-gradient(var(--border), var(--border)) 50% calc(50% + 4px) / 84% 1px no-repeat;
+        background-clip: content-box;
+    }
+
+    /* ══ cyberpunk ══════════════════════════════════════════════════════ */
+
+    /* ── cyberpunk · 1 · the neon HUD ─────────────────────────────────── */
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper: repeating-linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.06) 0 1px, transparent 1px 4px), var(--background);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--accent) h s l / 0.35);
+        --cc-grid-dash: 2 3;
+        --cc-tick: var(--accent);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 11px;
+        --cc-line-filter: drop-shadow(0 0 2px var(--kp-chart-series)) drop-shadow(0 0 6px hsl(from var(--kp-chart-series) h s l / 0.6));
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(to bottom, var(--foreground) 0 1px, transparent 1px 3px);
+        --cc-cross: var(--accent);
+        --cc-cross-op: 0.6;
+        --cc-brush: var(--accent);
+    }
+
+    /* HUD brackets in the four corners, under the lines. */
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        background:
+            linear-gradient(var(--primary), var(--primary)) top left / 14px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top left / 2px 14px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 14px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) top right / 2px 14px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) bottom left / 14px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) bottom left / 2px 14px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) bottom right / 14px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) bottom right / 2px 14px no-repeat;
+    }
+
+    /* The glitch: a torn band, cyan and red, shown for a frame every 3.2 s. */
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        opacity: 0;
+        background:
+            linear-gradient(hsl(from var(--accent) h s l / 0.55), hsl(from var(--accent) h s l / 0.55)) 6% 38% / 70% 2px no-repeat,
+            linear-gradient(hsl(from var(--destructive) h s l / 0.55), hsl(from var(--destructive) h s l / 0.55)) 30% 41% / 55% 3px no-repeat,
+            linear-gradient(hsl(from var(--accent) h s l / 0.35), hsl(from var(--accent) h s l / 0.35)) 64% 72% / 30% 1px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__tick {
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow:
+            inset 3px 0 0 var(--primary),
+            0 0 16px hsl(from var(--accent) h s l / 0.18);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The notch, drawn over the corner (a clip would cut the ✕'s focus ring). */
+    [data-theme='cyberpunk'] [data-cc='a'] :is(.kp-chart__tip, .kp-chart__source, .kp-chart__show-all)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-end: -1px;
+        inline-size: 9px;
+        block-size: 9px;
+        background: linear-gradient(225deg, var(--card) 50%, var(--border-strong) 50% calc(50% + 1px), transparent calc(50% + 1px));
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        position: relative;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+        box-shadow: 0 0 4px var(--kp-chart-series);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart-zoom {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    /* Loading: the rail and its packets; the packets run with motion. */
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(hsl(from var(--accent) h s l / 0.3), hsl(from var(--accent) h s l / 0.3)) 50% 50% / 88% 1px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 1.5px) 6%;
+        background: repeating-linear-gradient(90deg, var(--accent) 0 10px, transparent 10px 60px) 0 0 / 60px 3px repeat-x;
+        filter: drop-shadow(0 0 3px var(--accent));
+    }
+
+    [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px var(--chart-1));
+    }
+
+    /* ── cyberpunk · 2 · the hazard terminal ──────────────────────────── */
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper: repeating-linear-gradient(-45deg, var(--primary) 0 6px, var(--background) 6px 12px) top / 100% 4px no-repeat, var(--card);
+        --cc-frame: 2px solid var(--primary);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--accent);
+        --cc-grid-w: 1.5px;
+        --cc-grid-dash: 1.5 4.5;
+        --cc-tick: var(--primary);
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 700;
+        --cc-tick-track: 0.03em;
+        --kp-chart-tick-size: 12.5px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-area-k: 3.5;
+        --cc-area-mask: repeating-linear-gradient(45deg, var(--foreground) 0 1.5px, transparent 1.5px 6px);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.7;
+        --cc-cross-dash: 4 2;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 4px 4px 0 var(--background);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 2px var(--accent),
+            4px 4px 0 var(--background);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip::before {
+        content: '';
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: 10px;
+        block-size: 10px;
+        background: linear-gradient(135deg, var(--card) 50%, transparent 50%);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--primary-foreground) h s l / 0.4);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: var(--background);
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: inset 0 -3px 0 var(--primary);
+    }
+
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the hazard stripes, crawling with motion. */
+    [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.16) 0 10px, transparent 10px 20px) 0 0 / 28.28px 100%;
+    }
+
+    /* ══ synthwave ══════════════════════════════════════════════════════ */
+
+    /* ── synthwave · 1 · the grid floor horizon ───────────────────────── */
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 5rem;
+        --cc-tip-max: 18rem;
+        --cc-paper:
+            linear-gradient(to bottom, var(--background) 0%, hsl(from var(--primary) h s l / 0.16) 57%, var(--background) 57%) 0 0 / 100% 100%,
+            var(--background);
+        --cc-radius: 2px;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--accent) h s l / 0.3);
+        --cc-grid-dash: 3 5;
+        --cc-tick: var(--accent);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 15px;
+        --cc-line-filter: drop-shadow(0 0 1.5px var(--kp-chart-series)) drop-shadow(0 0 5px var(--kp-chart-series));
+        --cc-area-k: 2;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+        --cc-cross: var(--accent);
+        --cc-cross-op: 0.6;
+    }
+
+    /* The light core of each tube, the colour in its glow. */
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__line {
+        stroke: color-mix(in oklab, var(--kp-chart-series) 62%, var(--foreground));
+    }
+
+    /* The floor: rays from a vanishing point above the horizon, and lines
+       that close up as they near it; the horizon glows pink. */
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        inset: 57% 0 0;
+        border-block-start: 1px solid var(--primary);
+        border-radius: 0;
+        box-shadow: 0 -2px 10px hsl(from var(--primary) h s l / 0.7);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.4), hsl(from var(--primary) h s l / 0.4)) 0 7% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.45), hsl(from var(--primary) h s l / 0.45)) 0 20% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.5), hsl(from var(--primary) h s l / 0.5)) 0 40% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.55), hsl(from var(--primary) h s l / 0.55)) 0 68% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 90deg at 50% -120%, transparent 0 4.6deg, hsl(from var(--primary) h s l / 0.38) 4.6deg 5deg);
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid;
+        border-image: linear-gradient(90deg, var(--primary), var(--accent)) 1;
+        border-radius: 0;
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: var(--border-strong);
+        border-radius: 2px;
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+        box-shadow:
+            0 0 8px hsl(from var(--primary) h s l / 0.55),
+            inset 0 0 6px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__swatch {
+        box-shadow: 0 0 4px var(--kp-chart-series);
+    }
+
+    /* Loading: the floor, its lines driving towards the reader with motion. */
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 57% 0 0;
+        background: repeating-linear-gradient(to bottom, transparent 0 13px, hsl(from var(--accent) h s l / 0.5) 13px 14px) 0 0 / 100% 14px;
+        mask: linear-gradient(to bottom, transparent, var(--foreground));
+    }
+
+    [data-theme='synthwave'] [data-cc='a'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px var(--chart-1));
+    }
+
+    /* ── synthwave · 2 · the VHS playback ─────────────────────────────── */
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart {
+        --cc-delta-w: 6.25rem;
+        --cc-tip-max: 21rem;
+        --cc-paper: linear-gradient(to bottom, var(--background), var(--sidebar-background));
+        --cc-radius: 2px;
+        --cc-frame: 1px solid var(--border);
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.14);
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 15px;
+        --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--kp-chart-series) h s l / 0.7));
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.5;
+    }
+
+    /* The striped sun, setting behind the plot. */
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        inset: auto 9% 0 auto;
+        inline-size: 9rem;
+        block-size: 4.5rem;
+        border-radius: 4.5rem 4.5rem 0 0;
+        background: linear-gradient(to bottom, var(--chart-3), var(--primary) 80%);
+        opacity: 0.45;
+        mask:
+            linear-gradient(var(--foreground), var(--foreground)) top / 100% 40% no-repeat,
+            repeating-linear-gradient(to bottom, var(--foreground) 0 5px, transparent 5px 9px);
+    }
+
+    /* The tracking band under the top, faint; it rolls while loading. */
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        inset: 4% 0 auto;
+        block-size: 9px;
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(
+                90deg,
+                hsl(from var(--foreground) h s l / 0.12) 0 3px,
+                transparent 3px 5px,
+                hsl(from var(--foreground) h s l / 0.06) 5px 11px
+            ),
+            linear-gradient(to bottom, transparent, hsl(from var(--foreground) h s l / 0.08), transparent);
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: hsl(from var(--sidebar-background) h s l / 0.9);
+        box-shadow: none;
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        line-height: 1.05;
+        text-transform: uppercase;
+        text-shadow: 1px 1px 0 var(--sidebar-background);
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__tip-head > b {
+        color: var(--accent);
+        font-weight: 400;
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        background: hsl(from var(--sidebar-background) h s l / 0.9);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
+
+    /* The OSD's play mark: always in place, lit when pressed. */
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__source::before {
+        content: '▶';
+        color: transparent;
+        font-size: 0.75em;
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: hsl(from var(--sidebar-background) h s l / 0.9);
+        color: var(--primary);
+        box-shadow: none;
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__source[aria-pressed='true']::before {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > b {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart-zoom {
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.04) 0 2px, transparent 2px 4px);
+    }
+
+    /* ══ pastel ═════════════════════════════════════════════════════════ */
+
+    /* ── pastel · 1 · candy ───────────────────────────────────────────── */
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart {
+        --cc-paper: linear-gradient(160deg, var(--background), hsl(from var(--accent) h s l / 0.6));
+        --cc-radius: 1rem;
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border-strong);
+        --cc-grid-w: 2.5px;
+        --cc-grid-dash: 0 7;
+        --cc-tick-weight: 600;
+        --cc-line-w: 3.25px;
+        --cc-line-filter: drop-shadow(2px 2px 0 hsl(from var(--foreground) h s l / 0.2));
+        --cc-area-k: 3.5;
+        --cc-area-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 5px, transparent 5px 10px);
+        --cc-cross: var(--foreground);
+        --cc-cross-w: 2px;
+        --cc-cross-dash: 0 5;
+    }
+
+    [data-theme='pastel'] [data-cc='a'] :is(.kp-chart__grid, .kp-chart__crosshair) {
+        stroke-linecap: round;
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        border-radius: 1rem;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            3px 3px 0 var(--foreground),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    [data-theme='pastel'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid transparent;
+        background: hsl(from var(--kp-chart-series) h s l / 0.14);
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__show-all {
+        border: 2px dashed var(--border-strong);
+        background: none;
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: hsl(from var(--kp-chart-series) h s l / 0.28);
+        box-shadow: 2px 2px 0 var(--foreground);
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__swatch {
+        inline-size: 9px;
+        block-size: 9px;
+        border-radius: 50%;
+    }
+
+    /* Loading: three candy dots, and a mint one hopping along them. */
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            radial-gradient(circle, var(--primary) 5px, transparent 5.5px) calc(50% - 24px) 50% / 12px 12px no-repeat,
+            radial-gradient(circle, var(--primary) 5px, transparent 5.5px) 50% 50% / 12px 12px no-repeat,
+            radial-gradient(circle, var(--primary) 5px, transparent 5.5px) calc(50% + 24px) 50% / 12px 12px no-repeat;
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 22px) auto auto calc(50% - 30px);
+        inline-size: 12px;
+        block-size: 12px;
+        border: 2px solid var(--foreground);
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    [data-theme='pastel'] [data-cc='a'] .kp-chart__spark-line {
+        stroke-width: 2.5;
+        filter: drop-shadow(1px 1px 0 hsl(from var(--foreground) h s l / 0.2));
+    }
+
+    /* ── pastel · 2 · washi tape and riso ─────────────────────────────── */
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart {
+        --cc-paper: radial-gradient(hsl(from var(--foreground) h s l / 0.07) 0.6px, transparent 0.9px) 0 0 / 4px 4px, var(--card);
+        --cc-radius: 2px;
+        --cc-paper-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--chart-3) h s l / 0.45);
+        --cc-line-w: 2.5px;
+        --cc-line-filter: drop-shadow(1.5px 1px 0 hsl(from var(--chart-3) h s l / 0.55));
+        --cc-area-k: 6;
+        --cc-area-mask: radial-gradient(circle, var(--foreground) 1.1px, transparent 1.4px) 0 0 / 4px 4px;
+    }
+
+    /* Two strips of washi tape on the top corners, under the lines. */
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::before,
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        z-index: -1;
+        inset: -7px auto auto -14px;
+        inline-size: 64px;
+        block-size: 16px;
+        border-radius: 1px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.5) 0 4px, hsl(from var(--primary) h s l / 0.3) 4px 8px);
+        rotate: -8deg;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        inset: -7px -14px auto auto;
+        background: repeating-linear-gradient(
+            90deg,
+            hsl(from var(--accent) h s calc(l - 25) / 0.55) 0 4px,
+            hsl(from var(--accent) h s calc(l - 25) / 0.3) 4px 8px
+        );
+        rotate: 7deg;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__line {
+        mix-blend-mode: multiply;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 2px 8px hsl(from var(--foreground) h s l / 0.14);
+        rotate: -1deg;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__tip::before {
+        content: '';
+        inset-block-start: -8px;
+        inset-inline-start: calc(50% - 26px);
+        inline-size: 52px;
+        block-size: 14px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.45) 0 4px, hsl(from var(--primary) h s l / 0.25) 4px 8px);
+        rotate: 3deg;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 1px;
+        background: repeating-linear-gradient(
+            90deg,
+            hsl(from var(--kp-chart-series) h s l / 0.16) 0 4px,
+            hsl(from var(--kp-chart-series) h s l / 0.08) 4px 8px
+        );
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__show-all {
+        background: repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.2) 0 4px, transparent 4px 8px);
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        background: repeating-linear-gradient(
+            90deg,
+            hsl(from var(--kp-chart-series) h s l / 0.38) 0 4px,
+            hsl(from var(--kp-chart-series) h s l / 0.24) 4px 8px
+        );
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.2);
+        rotate: -2deg;
+    }
+
+    [data-theme='pastel'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.1) 0 8px, transparent 8px 16px) 0 50% / 22.63px 22px repeat-x;
+    }
+
+    /* ══ terminal ═══════════════════════════════════════════════════════ */
+
+    /* ── terminal · 1 · the braille plot ──────────────────────────────── */
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 6.25rem;
+        --cc-tip-max: 21rem;
+        --cc-paper: var(--background);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border-strong);
+        --cc-grid-dash: 4 2;
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 4px;
+        --cc-line-cap: butt;
+        --cc-area-k: 6;
+        --cc-area-mask: radial-gradient(circle, var(--foreground) 0.85px, transparent 1.15px) 0 0 / 3px 4px;
+        --cc-cross-dash: 2 2;
+        --cc-cross-op: 0.6;
+        --cc-cross: var(--primary);
+    }
+
+    /* A line of braille dots: two to a cell across, four down. */
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__line {
+        mask: radial-gradient(circle, var(--foreground) 1.05px, transparent 1.35px) 0 0 / 3px 3px;
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        background: repeating-linear-gradient(to bottom, hsl(from var(--background) h s l / 0.22) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__tip {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+        box-shadow: none;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        border-color: var(--primary);
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__source::before {
+        content: '[ ]';
+        color: var(--muted-foreground);
+        white-space: pre;
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__source[aria-pressed='true']::before {
+        content: '[x]';
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__source:is(:hover, :focus-visible) {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: a row of dim cells, a lit one walking it, the caret after. */
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.16) 0 8px, transparent 8px 10px) calc(50% - 5px) 50% / 120px
+            14px no-repeat;
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::before {
+        content: '';
+        inset: calc(50% - 7px) auto auto calc(50% - 65px);
+        inline-size: 8px;
+        block-size: 14px;
+        background: var(--primary);
+    }
+
+    [data-theme='terminal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 7px) auto auto calc(50% + 62px);
+        inline-size: 8px;
+        block-size: 14px;
+        background: var(--foreground);
+    }
+
+    /* ── terminal · 2 · the oscilloscope ──────────────────────────────── */
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart {
+        --cc-delta-w: 6.25rem;
+        --cc-tip-max: 21rem;
+        --cc-paper:
+            radial-gradient(ellipse at center, transparent 55%, hsl(from var(--sidebar-background) h s l / 0.85)),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.3) 1px, transparent 1px) 0 calc(50% + 0.5px) / 2% 5px repeat-x,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 1px, transparent 1px) calc(50% + 0.5px) 0 / 5px 2.5% repeat-y,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.13) 1px, transparent 1px) 0 0 / 10% 100%,
+            linear-gradient(hsl(from var(--primary) h s l / 0.13) 1px, transparent 1px) 0 0 / 100% 12.5%, var(--sidebar-background);
+        --cc-frame: 2px solid var(--border);
+        --cc-radius: 0.375rem;
+        --cc-on-paper: var(--sidebar-background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.25);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 1.75px;
+        --cc-line-filter: drop-shadow(0 0 2px var(--kp-chart-series)) drop-shadow(0 0 6px hsl(from var(--kp-chart-series) h s l / 0.5));
+        --cc-area-k: 2;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent 85%);
+        --cc-cross: var(--accent);
+        --cc-cross-op: 0.85;
+        --cc-cross-pin-op: 1;
+        --cc-cross-dash: 6 3;
+        --cc-brush: var(--accent);
+    }
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        background: hsl(from var(--sidebar-background) h s l / 0.92);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.2);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__tip-head > b {
+        color: var(--accent);
+    }
+
+    [data-theme='terminal'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border-strong);
+        border-radius: 3px;
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--kp-chart-series);
+        background: hsl(from var(--kp-chart-series) h s l / 0.12);
+        box-shadow:
+            inset 0 0 0 1px var(--kp-chart-series),
+            0 0 8px hsl(from var(--kp-chart-series) h s l / 0.5);
+    }
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+        box-shadow: 0 0 4px var(--kp-chart-series);
+    }
+
+    /* Loading: the beam at rest on the left; it sweeps with motion. */
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 0 auto 0 0;
+        inline-size: 30%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--primary) h s l / 0.12) 70%,
+            hsl(from var(--primary) h s l / 0.55) 99%,
+            var(--primary)
+        );
+        translate: -100% 0;
+    }
+
+    [data-theme='terminal'] [data-cc='b'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px var(--chart-1));
+    }
+
+    /* ══ forest ═════════════════════════════════════════════════════════ */
+
+    /* ── forest · 1 · the ranger's logbook ────────────────────────────── */
+
+    [data-theme='forest'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            linear-gradient(
+                90deg,
+                transparent 3px,
+                hsl(from var(--chart-2) h s l / 0.55) 3px 4px,
+                transparent 4px 6px,
+                hsl(from var(--chart-2) h s l / 0.55) 6px 7px,
+                transparent 7px
+            ),
+            repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--chart-3) h s l / 0.2) 19px 20px),
+            repeating-linear-gradient(83deg, hsl(from var(--foreground) h s l / 0.03) 0 1px, transparent 1px 7px),
+            repeating-linear-gradient(-71deg, hsl(from var(--foreground) h s l / 0.025) 0 1px, transparent 1px 11px),
+            linear-gradient(hsl(from var(--accent) h s l / 0.35), hsl(from var(--accent) h s l / 0.35)), var(--card);
+        --cc-radius: 2px;
+        --cc-paper-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--chart-3) h s l / 0.45);
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-w: 1.75px;
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(-50deg, var(--foreground) 0 0.8px, transparent 0.8px 4px);
+    }
+
+    [data-theme='forest'] [data-cc='a'] .kp-chart__tick {
+        font-style: italic;
+    }
+
+    /* A luggage tag: its punched hole, ringed. */
+    [data-theme='forest'] [data-cc='a'] .kp-chart__tip {
+        padding-inline-start: 1.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 3px 8px 8px 3px;
+        background: linear-gradient(hsl(from var(--accent) h s l / 0.45), hsl(from var(--accent) h s l / 0.45)), var(--popover);
+    }
+
+    [data-theme='forest'] [data-cc='a'] .kp-chart__tip::before {
+        content: '';
+        inset-block-start: 10px;
+        inset-inline-start: 6px;
+        inline-size: 8px;
+        block-size: 8px;
+        box-sizing: border-box;
+        border: 1.5px solid var(--chart-2);
+        border-radius: 50%;
+        background: var(--card);
+    }
+
+    [data-theme='forest'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border);
+        border-radius: 3px 6px 6px 3px;
+    }
+
+    [data-theme='forest'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--chart-2);
+        background: hsl(from var(--accent) h s l / 0.7);
+        box-shadow: none;
+    }
+
+    /* Loading: the ruled page shows through; a leaf drifts across it. */
+    [data-theme='forest'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 40% auto auto 8%;
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 0 100%;
+        background: var(--primary);
+        rotate: 30deg;
+    }
+
+    /* ── forest · 2 · the contour map ─────────────────────────────────── */
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            repeating-radial-gradient(ellipse at 28% 125%, transparent 0 15px, hsl(from var(--primary) h s l / 0.13) 15px 16px),
+            repeating-radial-gradient(ellipse at 88% -25%, transparent 0 19px, hsl(from var(--chart-2) h s l / 0.12) 19px 20px), var(--card);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--chart-2) h s l / 0.7);
+        --cc-grid-w: 1.25px;
+        --cc-grid-dash: 6 4;
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 600;
+        --cc-tick-track: 0.06em;
+        --kp-chart-tick-size: 10.5px;
+        --cc-area-k: 1.6;
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.6;
+    }
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart__area {
+        fill: var(--chart-3);
+    }
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart__tip {
+        border: 3px double var(--foreground);
+        border-radius: 0;
+        box-shadow: 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart__tip-head > b {
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='forest'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 0;
+        letter-spacing: 0.03em;
+    }
+
+    /* A trail blaze: the paint mark on a tree. */
+    [data-theme='forest'] [data-cc='b'] .kp-chart__source > .kp-chart__swatch {
+        inline-size: 6px;
+        block-size: 11px;
+        border-radius: 1px;
+    }
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: hsl(from var(--accent) h s l / 0.6);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='forest'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--chart-2) 6px, transparent 6px) 0 50% / 10px 1.5px repeat-x;
+    }
+
+    /* ══ high-contrast ══════════════════════════════════════════════════ */
+
+    /* ── high-contrast · 1 · the ink frame ────────────────────────────── */
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart {
+        --cc-paper: var(--background);
+        --cc-frame: 2px solid var(--foreground);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--foreground);
+        --cc-grid-dash: 2 4;
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 3px;
+        --cc-line-join: miter;
+        --cc-area-k: 3.5;
+        --cc-area-mask: repeating-linear-gradient(45deg, var(--foreground) 0 1.5px, transparent 1.5px 5px);
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+        --cc-cross-w: 1.5px;
+    }
+
+    /* Told by pattern too: dashed, dotted; cross-hatched, dotted. */
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__series[data-kp-series='2'] .kp-chart__line {
+        stroke-dasharray: 8 4;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__series[data-kp-series='3'] .kp-chart__line {
+        stroke-dasharray: 0.1 5;
+        stroke-linecap: round;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__series[data-kp-series='2'] .kp-chart__area {
+        mask:
+            repeating-linear-gradient(45deg, var(--foreground) 0 1.5px, transparent 1.5px 6px),
+            repeating-linear-gradient(-45deg, var(--foreground) 0 1.5px, transparent 1.5px 6px);
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__series[data-kp-series='3'] .kp-chart__area {
+        mask: radial-gradient(circle, var(--foreground) 1.2px, transparent 1.5px) 0 0 / 5px 5px;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__swatch {
+        inline-size: 16px;
+        block-size: 3px;
+        border-radius: 0;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__swatch[data-kp-series='2'],
+    [data-theme='high-contrast'] [data-cc='a'] [data-kp-series='2'] > .kp-chart__swatch {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 5px, transparent 5px 7px);
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__swatch[data-kp-series='3'],
+    [data-theme='high-contrast'] [data-cc='a'] [data-kp-series='3'] > .kp-chart__swatch {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 3px, transparent 3px 5px);
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: none;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__show-all {
+        border-style: dashed;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: none;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+
+    /* Loading: three ink squares, still. */
+    [data-theme='high-contrast'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% - 20px) 50% / 10px 10px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 10px 10px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% + 20px) 50% / 10px 10px no-repeat;
+    }
+
+    /* ── high-contrast · 2 · the inverse plate ────────────────────────── */
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper: var(--foreground);
+        --cc-frame: 2px solid var(--foreground);
+        --cc-radius: 0;
+        --cc-on-paper: var(--foreground);
+        --cc-s1: var(--background);
+        --cc-s2: var(--background);
+        --cc-s3: var(--background);
+        --cc-s4: var(--background);
+        --cc-s5: var(--background);
+        --cc-grid: var(--background);
+        --cc-grid-dash: 1 5;
+        --cc-tick: var(--background);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 2.5px;
+        --cc-line-join: miter;
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(45deg, var(--foreground) 0 1px, transparent 1px 5px);
+        --cc-cross: var(--accent);
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+        --cc-cross-w: 2px;
+        --cc-brush: var(--accent);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__series[data-kp-series='2'] .kp-chart__line {
+        stroke-dasharray: 8 4;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__series[data-kp-series='3'] .kp-chart__line {
+        stroke-dasharray: 0.1 5;
+        stroke-linecap: round;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__series[data-kp-series='2'] .kp-chart__area {
+        mask:
+            repeating-linear-gradient(45deg, var(--foreground) 0 1px, transparent 1px 6px),
+            repeating-linear-gradient(-45deg, var(--foreground) 0 1px, transparent 1px 6px);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__threshold {
+        stroke: var(--accent);
+        opacity: 1;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__event-line {
+        stroke: var(--background);
+        opacity: 1;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__mark-dot {
+        stroke: var(--background);
+        stroke-width: 2;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__snap {
+        stroke: var(--accent);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__state {
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__state .kp-chart__dot {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: var(--accent-foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__swatch {
+        inline-size: 16px;
+        block-size: 4px;
+        border-radius: 0;
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] [data-kp-series='2'] > .kp-chart__swatch,
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__swatch[data-kp-series='2'] {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 5px, var(--foreground) 5px 7px);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] [data-kp-series='3'] > .kp-chart__swatch,
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__swatch[data-kp-series='3'] {
+        background: repeating-linear-gradient(90deg, var(--kp-chart-series) 0 3px, var(--foreground) 3px 5px);
+    }
+
+    /* The tooltip's swatches on the yellow: drawn in ink, the pattern kept. */
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        --kp-chart-series: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: inset 0 0 0 1px var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__source > b {
+        color: inherit;
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__source[data-kp-off] > .kp-chart__swatch {
+        background: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__spark-plot {
+        background: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--background) 8px, transparent 8px) 0 50% / 14px 2px repeat-x;
+        background-clip: content-box;
+    }
+
+    /* ══ sepia ══════════════════════════════════════════════════════════ */
+
+    /* ── sepia · 1 · a nib on laid paper ──────────────────────────────── */
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.035) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 0 1px, transparent 1px 26px), var(--card);
+        --cc-radius: 2px;
+        --cc-paper-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.1);
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border-strong);
+        --cc-grid-w: 0.75px;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 13px;
+        --cc-line-w: 1.6px;
+        --cc-line-filter: drop-shadow(0 0 0.6px var(--kp-chart-series));
+        --cc-area-k: 2;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent 90%);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.5;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__tick {
+        font-style: italic;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 400;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__tip {
+        border: 3px double hsl(from var(--foreground) h s l / 0.6);
+        border-radius: 2px;
+        box-shadow: 0 6px 16px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        font-style: italic;
+        font-weight: 400;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__source-label {
+        text-decoration: underline 1px dotted var(--border-strong);
+        text-underline-offset: 3px;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__source-label {
+        text-decoration: underline 2px solid var(--primary);
+    }
+
+    /* Loading: a pencilled guide, and the pen's stroke along it. */
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 50% calc(50% + 4px) / 4px 1px repeat-x;
+        background-clip: content-box;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 1px) 12% auto;
+        block-size: 2px;
+        border-radius: 1px;
+        background: var(--primary);
+        filter: drop-shadow(0 0 0.6px var(--primary));
+        transform-origin: left;
+        scale: 0.3 1;
+    }
+
+    [data-theme='sepia'] [data-cc='a'] .kp-chart__spark-area {
+        mask: linear-gradient(to bottom, var(--foreground), transparent);
+    }
+
+    /* ── sepia · 2 · the letterpress specimen ─────────────────────────── */
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart {
+        --cc-paper: var(--background);
+        --cc-radius: 3px;
+        --cc-paper-shadow: inset 0 1px 3px hsl(from var(--foreground) h s l / 0.28), inset 0 -1px 0 var(--card);
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.22);
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-track: 0.05em;
+        --kp-chart-tick-size: 12.5px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: butt;
+        --cc-area-k: 4;
+        --cc-area-mask:
+            radial-gradient(circle at 30% 30%, var(--foreground) 0.7px, transparent 1px) 0 0 / 4px 4px,
+            radial-gradient(circle at 70% 80%, var(--foreground) 0.6px, transparent 0.9px) 0 0 / 5px 5px;
+        --cc-cross: var(--foreground);
+    }
+
+    /* Inked type: speckled where the ink did not take. */
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__line {
+        mask:
+            radial-gradient(circle at 40% 40%, transparent 0.55px, var(--foreground) 0.9px) 0 0 / 5px 4px,
+            linear-gradient(var(--foreground), var(--foreground));
+        mask-composite: intersect;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 0 2px 6px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* The fleuron, set on the slip's top rule. */
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__tip::before {
+        content: '❧';
+        inset-block-start: -0.7em;
+        inset-inline-start: calc(50% - 0.6em);
+        padding-inline: 0.15em;
+        background: var(--popover);
+        color: var(--primary);
+        font-size: 0.9375rem;
+        line-height: 1.2;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        letter-spacing: 0.03em;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__source::before {
+        content: '¶';
+        color: transparent;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__source[aria-pressed='true']::before {
+        color: var(--primary);
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+        block-size: 4px;
+    }
+
+    [data-theme='sepia'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        box-shadow: inset 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* ══ blueprint ══════════════════════════════════════════════════════ */
+
+    /* ── blueprint · 1 · the millimetre paper ─────────────────────────── */
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px) 0 0 / 40px 40px,
+            linear-gradient(hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px) 0 0 / 40px 40px,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.07) 1px, transparent 1px) 0 0 / 4px 4px,
+            linear-gradient(hsl(from var(--primary) h s l / 0.07) 1px, transparent 1px) 0 0 / 4px 4px, var(--background);
+        --cc-frame: 1px solid hsl(from var(--primary) h s l / 0.45);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.55);
+        --cc-tick: var(--primary);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-w: 1.75px;
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 1px, transparent 1px 5px);
+        --cc-cross: var(--accent);
+        --cc-cross-op: 0.9;
+        --cc-cross-pin-op: 1;
+        --cc-cross-dash: 10 3 2 3;
+        --cc-brush: var(--accent);
+    }
+
+    /* The title block. */
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__tip {
+        border: 1.5px solid var(--primary);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 hsl(from var(--background) h s l / 0.7);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__tip-head {
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 1px solid var(--primary);
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__tip-event {
+        border-color: hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid hsl(from var(--primary) h s l / 0.55);
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__show-all {
+        border-style: dashed;
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.16);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+        block-size: 2px;
+    }
+
+    /* Loading: the plotter's pen at rest at the left; it runs with motion. */
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(hsl(from var(--primary) h s l / 0.25), hsl(from var(--primary) h s l / 0.25)) 50% 50% / 84% 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 1px) 8%;
+        block-size: 2px;
+        background: linear-gradient(var(--primary), var(--primary)) 0 0 / 40px 2px no-repeat;
+    }
+
+    /* ── blueprint · 2 · the drawing frame ────────────────────────────── */
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 0 0 / 12.5% 5px repeat-x,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 0 100% / 12.5% 5px repeat-x,
+            linear-gradient(hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 0 0 / 5px 25% repeat-y,
+            linear-gradient(hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 100% 0 / 5px 25% repeat-y, var(--card);
+        --cc-frame: 3px double hsl(from var(--primary) h s l / 0.75);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-s1: var(--foreground);
+        --cc-grid: hsl(from var(--primary) h s l / 0.45);
+        --cc-grid-w: 0.75px;
+        --cc-grid-dash: 8 3;
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-area-k: 1.5;
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.7;
+        --cc-cross-dash: 8 3;
+    }
+
+    /* Registration marks in the four corners. */
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        inset: 4px;
+        background:
+            radial-gradient(circle, transparent 2px, hsl(from var(--primary) h s l / 0.8) 2px 2.8px, transparent 3.2px) 0 0 / 9px 9px no-repeat,
+            radial-gradient(circle, transparent 2px, hsl(from var(--primary) h s l / 0.8) 2px 2.8px, transparent 3.2px) 100% 0 / 9px 9px no-repeat,
+            radial-gradient(circle, transparent 2px, hsl(from var(--primary) h s l / 0.8) 2px 2.8px, transparent 3.2px) 0 100% / 9px 9px no-repeat,
+            radial-gradient(circle, transparent 2px, hsl(from var(--primary) h s l / 0.8) 2px 2.8px, transparent 3.2px) 100% 100% / 9px 9px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 0 4px / 9px 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 4px 0 / 1px 9px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 100% 4px / 9px 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) calc(100% - 4px) 0 / 1px 9px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 0 calc(100% - 4px) / 9px 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 4px 100% / 1px 9px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 100% calc(100% - 4px) / 9px 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) calc(100% - 4px) 100% / 1px 9px no-repeat;
+    }
+
+    /* A callout: its leader runs to the side the crosshair is on. */
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        box-shadow: 0 6px 16px hsl(from var(--background) h s l / 0.6);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__tip::before {
+        content: '';
+        inset-block-start: 14px;
+        inset-inline-start: -14px;
+        inline-size: 13px;
+        block-size: 1px;
+        background: var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__tip::after {
+        content: '';
+        inset-block-start: 11px;
+        inset-inline-start: -15px;
+        border-block: 3.5px solid transparent;
+        border-inline-end: 7px solid var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__tip[data-kp-side='start']::before {
+        inset-inline: auto -14px;
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__tip[data-kp-side='start']::after {
+        inset-inline: auto -15px;
+        border-inline-start: 7px solid var(--primary);
+        border-inline-end: 0;
+    }
+
+    /* Dimension labels: an extension line at each end. */
+    [data-theme='blueprint'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid transparent;
+        border-inline-color: var(--primary);
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__show-all {
+        border-inline-style: dashed;
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        border-inline-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.16);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the frame's outline dashed; the dash marches with motion. */
+    [data-theme='blueprint'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 12px;
+        background:
+            linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 0 / 12px 1px repeat-x,
+            linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 100% / 12px 1px repeat-x,
+            linear-gradient(var(--primary) 50%, transparent 0) 0 0 / 1px 12px repeat-y,
+            linear-gradient(var(--primary) 50%, transparent 0) 100% 0 / 1px 12px repeat-y;
+    }
+
+    /* ══ solstice ═══════════════════════════════════════════════════════ */
+
+    /* ── solstice · 1 · the low sun ───────────────────────────────────── */
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            radial-gradient(ellipse 70% 90% at 0% 115%, hsl(from var(--primary) h s l / 0.26), transparent 70%),
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.1), transparent 50%), var(--card);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--background) h s l / 0.9);
+        --cc-grid-w: 3px;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 13px;
+        --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--kp-chart-series) h s l / 0.45));
+        --cc-area-k: 2.5;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.55;
+    }
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid hsl(from var(--primary) h s l / 0.45);
+        background: var(--background);
+        box-shadow:
+            0 0 14px hsl(from var(--primary) h s l / 0.2),
+            0 10px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: var(--border);
+        background: var(--muted);
+    }
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__show-all {
+        background: none;
+    }
+
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--muted);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    /* Loading: a dawn at the horizon, rising and fading with motion. */
+    [data-theme='solstice'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        background: radial-gradient(ellipse 60% 70% at 50% 110%, hsl(from var(--primary) h s l / 0.35), transparent 70%);
+        opacity: 0.6;
+    }
+
+    /* ── solstice · 2 · the embers ────────────────────────────────────── */
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            radial-gradient(1.5px 1.5px at 12% 78%, hsl(from var(--primary) h s l / 0.6), transparent),
+            radial-gradient(1.5px 1.5px at 34% 90%, hsl(from var(--accent) h s l / 0.6), transparent),
+            radial-gradient(1.2px 1.2px at 57% 84%, hsl(from var(--primary) h s l / 0.5), transparent),
+            radial-gradient(1.5px 1.5px at 81% 93%, hsl(from var(--accent) h s l / 0.55), transparent),
+            radial-gradient(1.2px 1.2px at 93% 72%, hsl(from var(--primary) h s l / 0.45), transparent),
+            radial-gradient(ellipse at 50% 125%, hsl(from var(--accent) h s l / 0.2), transparent 60%),
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.025) 0 1px, transparent 1px 5px), var(--background);
+        --cc-frame: 1px solid var(--border);
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border);
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 1.75px;
+        --cc-line-filter: drop-shadow(0 0 2px var(--kp-chart-series)) drop-shadow(0 0 6px hsl(from var(--accent) h s l / 0.5));
+        --cc-area-k: 5;
+        --cc-area-mask:
+            radial-gradient(circle at 20% 30%, var(--foreground) 0.8px, transparent 1.1px) 0 0 / 5px 5px,
+            radial-gradient(circle at 70% 60%, var(--foreground) 0.6px, transparent 0.9px) 0 0 / 7px 6px;
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.5;
+    }
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__line {
+        stroke: color-mix(in oklab, var(--kp-chart-series) 75%, var(--foreground));
+    }
+
+    /* An iron plate with four rivets. */
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__tip {
+        padding-inline: 0.875rem;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background:
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, transparent 2.2px) top left / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, transparent 2.2px) top right / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, transparent 2.2px) bottom left / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, transparent 2.2px) bottom right / 10px 10px no-repeat,
+            var(--popover);
+        box-shadow: 0 10px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='solstice'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        background: var(--popover);
+    }
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__show-all {
+        border-style: dashed;
+        background: none;
+    }
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--popover);
+        box-shadow:
+            inset 0 -2px 0 var(--primary),
+            0 0 8px hsl(from var(--accent) h s l / 0.35);
+    }
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            radial-gradient(circle at 30% 40%, hsl(from var(--primary) h s l / 0.5) 1px, transparent 1.6px) 0 0 / 9px 7px,
+            radial-gradient(circle at 60% 70%, hsl(from var(--accent) h s l / 0.45) 1px, transparent 1.6px) 0 0 / 13px 9px;
+        background-clip: content-box;
+        opacity: 0.6;
+    }
+
+    [data-theme='solstice'] [data-cc='b'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px var(--chart-1));
+    }
+
+    /* ══ brutalism ══════════════════════════════════════════════════════ */
+
+    /* ── brutalism · 1 · the slab ─────────────────────────────────────── */
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart {
+        --cc-paper: var(--card);
+        --cc-frame: 3px solid var(--foreground);
+        --cc-radius: 0;
+        --cc-paper-shadow: 5px 5px 0 var(--foreground);
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--foreground);
+        --cc-grid-w: 1.5px;
+        --cc-grid-dash: 6 4;
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 3.5px;
+        --cc-line-cap: square;
+        --cc-line-join: miter;
+        --cc-area-k: 3.5;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+        --cc-cross-w: 2px;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__tip {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 5px 5px 0 var(--accent);
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--accent);
+        box-shadow: none;
+        translate: 3px 3px;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__swatch {
+        inline-size: 12px;
+        block-size: 12px;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-sizing: border-box;
+    }
+
+    /* Loading: the tape, at rest; it runs with motion. */
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 11px) 0 auto;
+        block-size: 22px;
+        border-block: 3px solid var(--foreground);
+        background: repeating-linear-gradient(-45deg, var(--sidebar-primary) 0 10px, var(--foreground) 10px 20px) 0 0 / 28.28px 100%;
+    }
+
+    [data-theme='brutalism'] [data-cc='a'] .kp-chart__spark-line {
+        stroke-width: 2.5;
+    }
+
+    /* ── brutalism · 2 · the sticker sheet ────────────────────────────── */
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper: var(--accent);
+        --cc-frame: 3px solid var(--foreground);
+        --cc-radius: 0;
+        --cc-on-paper: var(--foreground);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.45);
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 3.5px;
+        --cc-line-filter: drop-shadow(1.5px 0 0 var(--foreground)) drop-shadow(-1.5px 0 0 var(--foreground)) drop-shadow(0 1.5px 0 var(--foreground))
+            drop-shadow(0 -1.5px 0 var(--foreground));
+        --cc-area-k: 3;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+        --cc-cross-w: 2px;
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__state {
+        color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__area {
+        stroke: var(--foreground);
+        stroke-width: 1.5px;
+        stroke-opacity: 0.6;
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: 5px 5px 0 var(--accent);
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 2px var(--sidebar-primary),
+            5px 5px 0 var(--accent);
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--background) h s l / 0.35);
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--sidebar-primary);
+        box-shadow: 2px 2px 0 var(--foreground);
+        rotate: -2deg;
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__swatch {
+        inline-size: 10px;
+        block-size: 10px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    /* Loading: three blocks in the box; they drop in one by one with motion. */
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 14px) calc(50% - 50px);
+        background:
+            linear-gradient(var(--sidebar-primary), var(--sidebar-primary)) 0 0 / 28px 28px no-repeat,
+            linear-gradient(var(--card), var(--card)) 50% 0 / 28px 28px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 28px 28px no-repeat;
+        filter: drop-shadow(2px 2px 0 var(--foreground));
+    }
+
+    [data-theme='brutalism'] [data-cc='b'] .kp-chart__spark-line {
+        stroke-width: 2.5;
+        filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground));
+    }
+
+    /* ══ deco ═══════════════════════════════════════════════════════════ */
+
+    /* ── deco · 1 · the gilt rules ────────────────────────────────────── */
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 3px / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(100% - 3px) / 100% 1px no-repeat, var(--background);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.45);
+        --cc-grid-dash: 10 2 2 2;
+        --cc-tick: var(--primary);
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 700;
+        --cc-tick-track: 0.04em;
+        --kp-chart-tick-size: 12px;
+        --cc-area-k: 2.5;
+        --cc-area-mask: repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 5px);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.7;
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* A panel in a double gold border, its corners stepped. */
+    [data-theme='deco'] [data-cc='a'] .kp-chart__tip {
+        border: 3px double var(--primary);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: none;
+        clip-path: polygon(
+            0 5px,
+            5px 5px,
+            5px 0,
+            calc(100% - 5px) 0,
+            calc(100% - 5px) 5px,
+            100% 5px,
+            100% calc(100% - 5px),
+            calc(100% - 5px) calc(100% - 5px),
+            calc(100% - 5px) 100%,
+            5px 100%,
+            5px calc(100% - 5px),
+            0 calc(100% - 5px)
+        );
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__tip-head > b {
+        letter-spacing: 0.08em;
+    }
+
+    [data-theme='deco'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid hsl(from var(--primary) h s l / 0.6);
+        border-radius: 0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: a gilt rule across the plot; the glint runs along it. */
+    [data-theme='deco'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 84% 1px no-repeat;
+    }
+
+    [data-theme='deco'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 1.5px) 8%;
+        background: linear-gradient(90deg, transparent, var(--foreground), transparent) 0 0 / 40px 3px no-repeat;
+    }
+
+    /* ── deco · 2 · the sunburst ──────────────────────────────────────── */
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper:
+            repeating-conic-gradient(from -90deg at 50% 100%, hsl(from var(--primary) h s l / 0.1) 0 3deg, transparent 3deg 9deg),
+            radial-gradient(ellipse 50% 40% at 50% 100%, hsl(from var(--primary) h s l / 0.14), transparent), var(--background);
+        --cc-frame: 1px solid var(--primary);
+        --cc-radius: 32px 32px 0 0 / 18px 18px 0 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.3);
+        --kp-chart-tick-size: 11px;
+        --cc-area-k: 1.5;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.6;
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__title {
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    /* An emerald plaque between two gold rules. */
+    [data-theme='deco'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-block: 2px solid var(--primary);
+        border-radius: 0;
+        background: hsl(from var(--accent) h s calc(l - 12));
+        color: var(--popover-foreground);
+        box-shadow: 0 10px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--popover-foreground);
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* Jewelled lamps: lit when pressed. */
+    [data-theme='deco'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__show-all {
+        border: 1px dashed hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__source > .kp-chart__swatch {
+        inline-size: 9px;
+        block-size: 9px;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1.5px var(--background),
+            0 0 0 2.5px var(--primary);
+        opacity: 0.6;
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        color: var(--primary);
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+
+    [data-theme='deco'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow:
+            0 0 0 1.5px var(--background),
+            0 0 0 2.5px var(--primary),
+            0 0 8px var(--kp-chart-series);
+        opacity: 1;
+    }
+
+    /* Loading: the fan, half open; it opens and closes with motion. */
+    [data-theme='deco'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        --cc-de-fan: 90deg;
+        background: repeating-conic-gradient(from -90deg at 50% 100%, hsl(from var(--primary) h s l / 0.35) 0 3deg, transparent 3deg 9deg);
+        mask: conic-gradient(from -90deg at 50% 100%, var(--foreground) var(--cc-de-fan), transparent 0);
+    }
+
+    /* ══ phantom ════════════════════════════════════════════════════════ */
+
+    /* ── phantom · 1 · the stamped ledger ─────────────────────────────── */
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper:
+            linear-gradient(
+                90deg,
+                transparent 3px,
+                hsl(from var(--primary) h s l / 0.7) 3px 4px,
+                transparent 4px 6px,
+                hsl(from var(--primary) h s l / 0.7) 6px 7px,
+                transparent 7px
+            ),
+            repeating-linear-gradient(to bottom, transparent 0 21px, hsl(from var(--foreground) h s l / 0.1) 21px 22px), var(--card);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.35);
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 600;
+        --kp-chart-tick-size: 12.5px;
+        --cc-line-w: 2.5px;
+        --cc-area-k: 1.2;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.6;
+    }
+
+    /* Stamp ink: grainy where the stamp did not take. */
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__line {
+        mask:
+            radial-gradient(circle at 40% 40%, transparent 0.5px, var(--foreground) 0.85px) 0 0 / 4px 3px,
+            linear-gradient(var(--foreground), var(--foreground));
+        mask-composite: intersect;
+    }
+
+    /* The rubber stamp's frame, pressed at a slant in the corner. */
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        inset: auto auto 34px 56px;
+        inline-size: 72px;
+        block-size: 30px;
+        border: 3px solid hsl(from var(--primary) h s l / 0.5);
+        border-radius: 3px;
+        box-shadow:
+            inset 0 0 0 3px transparent,
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.4);
+        rotate: -8deg;
+        mask: radial-gradient(circle at 30% 60%, transparent 0.7px, var(--foreground) 1.2px) 0 0 / 5px 4px;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* A white index card with a red stamp line. */
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: 0 10px 24px hsl(from var(--background) h s l / 0.8);
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip-head {
+        padding-block-end: 3px;
+        border-block-end: 2px solid var(--primary);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 10px 24px hsl(from var(--background) h s l / 0.8);
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__tip-event {
+        border-color: hsl(from var(--background) h s l / 0.25);
+    }
+
+    [data-theme='phantom'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1.5px solid hsl(from var(--foreground) h s l / 0.5);
+        border-radius: 0;
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the halftone screen; it slides with motion. */
+    [data-theme='phantom'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.16) 1.4px, transparent 1.9px) 0 0 / 7px 7px;
+    }
+
+    /* ── phantom · 2 · the calling card ───────────────────────────────── */
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper: var(--background);
+        --cc-frame: 1px solid var(--border);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.3);
+        --cc-grid-dash: 1 3;
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12.5px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-line-filter: drop-shadow(2px 2px 0 hsl(from var(--sidebar-background) h s l / 0.85));
+        --cc-area-k: 1.4;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.6;
+    }
+
+    /* The halftone screen, under the lines, fading off to one side. */
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.16) 1.2px, transparent 1.7px) 0 0 / 6px 6px;
+        mask: linear-gradient(115deg, var(--foreground), transparent 70%);
+    }
+
+    /* A slash of red across the plot's foot, at the theme's slant. */
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        z-index: -1;
+        inset: auto 0 0;
+        block-size: 6px;
+        border-radius: 0;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 70%, 100% 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+        font-style: italic;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* A cut-paper ransom note at a slant. */
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: 4px 4px 0 var(--primary);
+        rotate: -2deg;
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            4px 4px 0 var(--primary),
+            0 0 0 2px var(--background);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip-head {
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--background) h s l / 0.25);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        rotate: -1.5deg;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__source:nth-child(even) {
+        rotate: 2deg;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__source > b {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__source .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.2) 1.2px, transparent 1.7px) 0 0 / 6px 6px;
+    }
+
+    [data-theme='phantom'] [data-cc='b'] .kp-chart__spark-line {
+        filter: drop-shadow(1.5px 1.5px 0 hsl(from var(--sidebar-background) h s l / 0.85));
+    }
+
+    /* ══ shade-light ════════════════════════════════════════════════════ */
+
+    /* ── shade-light · 1 · pencil in the shade ────────────────────────── */
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart {
+        --cc-paper: var(--card);
+        --cc-radius: 3px;
+        --cc-paper-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.55);
+        --cc-grid-w: 0.75px;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-filter: drop-shadow(0 3px 2.5px hsl(from var(--foreground) h s l / 0.22));
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(-55deg, var(--foreground) 0 0.75px, transparent 0.75px 4px);
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__tick {
+        font-style: italic;
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        box-shadow:
+            0 1px 2px hsl(from var(--foreground) h s l / 0.12),
+            0 12px 24px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__source-label {
+        text-decoration: underline 1px dotted var(--border-strong);
+        text-underline-offset: 3px;
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__source-label {
+        text-decoration: underline 2px solid var(--primary);
+    }
+
+    /* Loading: the plot hatched in pencil; with motion it is hatched in once. */
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 12%;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--border-strong) h s l / 0.35) 0 1px, transparent 1px 6px);
+    }
+
+    [data-theme='shade-light'] [data-cc='a'] .kp-chart__spark-line {
+        filter: drop-shadow(0 2px 1.5px hsl(from var(--foreground) h s l / 0.2));
+    }
+
+    /* ── shade-light · 2 · the leaf shade ─────────────────────────────── */
+
+    [data-theme='shade-light'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            radial-gradient(ellipse 22% 30% at 18% 30%, hsl(from var(--foreground) h s l / 0.11), transparent),
+            radial-gradient(ellipse 18% 24% at 46% 70%, hsl(from var(--foreground) h s l / 0.1), transparent),
+            radial-gradient(ellipse 26% 22% at 72% 24%, hsl(from var(--foreground) h s l / 0.11), transparent),
+            radial-gradient(ellipse 16% 28% at 90% 78%, hsl(from var(--foreground) h s l / 0.1), transparent),
+            radial-gradient(ellipse 12% 14% at 33% 88%, hsl(from var(--foreground) h s l / 0.09), transparent), var(--card);
+        --cc-radius: 6px;
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border);
+        --cc-line-w: 2.25px;
+        --cc-area-k: 1.4;
+    }
+
+    [data-theme='shade-light'] [data-cc='b'] .kp-chart__tip {
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        box-shadow: 0 8px 20px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-theme='shade-light'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: var(--border);
+        box-shadow: 0 2px 4px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='shade-light'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.1);
+        box-shadow: 0 2px 4px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* Loading: the shade of a cloud on the paper; it passes with motion. */
+    [data-theme='shade-light'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: -10% auto -10% 10%;
+        inline-size: 45%;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.1), transparent);
+    }
+
+    /* ══ shade-dark ═════════════════════════════════════════════════════ */
+
+    /* ── shade-dark · 1 · silverpoint ─────────────────────────────────── */
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart {
+        --cc-paper: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.05) 0 1px, transparent 1px 5px), var(--card);
+        --cc-radius: 3px;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.22);
+        --cc-grid-w: 0.75px;
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-filter: drop-shadow(0 -1px 0 hsl(from var(--foreground) h s l / 0.45));
+        --cc-area-k: 3;
+        --cc-area-mask: repeating-linear-gradient(-55deg, var(--foreground) 0 0.75px, transparent 0.75px 4px);
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__tick {
+        font-style: italic;
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid hsl(from var(--foreground) h s l / 0.4);
+        border-radius: 4px;
+        box-shadow: 0 12px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__source-label {
+        text-decoration: underline 1px dotted hsl(from var(--foreground) h s l / 0.5);
+        text-underline-offset: 3px;
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__source-label {
+        text-decoration: underline 2px solid var(--foreground);
+    }
+
+    [data-theme='shade-dark'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 12%;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.25) 0 1px, transparent 1px 6px);
+    }
+
+    /* ── shade-dark · 2 · the reading lamp ────────────────────────────── */
+
+    [data-theme='shade-dark'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            radial-gradient(ellipse 55% 75% at 62% 38%, hsl(from var(--foreground) h s l / 0.13), transparent 70%),
+            radial-gradient(ellipse at center, transparent 45%, hsl(from var(--background) h s l / 0.85)), var(--card);
+        --cc-radius: 4px;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.16);
+        --cc-tick: var(--foreground);
+        --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--foreground) h s l / 0.25));
+        --cc-area-k: 1.6;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+    }
+
+    [data-theme='shade-dark'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 4px;
+        box-shadow:
+            0 0 0 1px hsl(from var(--foreground) h s l / 0.18),
+            0 0 30px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-dark'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: var(--border);
+    }
+
+    [data-theme='shade-dark'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: hsl(from var(--foreground) h s l / 0.4);
+        background: radial-gradient(circle at 50% 0, hsl(from var(--foreground) h s l / 0.2), transparent 75%), var(--popover);
+        box-shadow: 0 0 10px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* Loading: a pool of light; it slides across the page with motion. */
+    [data-theme='shade-dark'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 5% auto 5% 10%;
+        inline-size: 40%;
+        background: radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.16), transparent);
+    }
+
+    /* ══ retro ══════════════════════════════════════════════════════════ */
+
+    /* ── retro · 1 · the plotter on fanfold paper ─────────────────────── */
+
+    [data-theme='retro'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            radial-gradient(circle, var(--card) 2px, var(--border) 2.4px, transparent 2.9px) 0 6px / 7px 12px repeat-y,
+            radial-gradient(circle, var(--card) 2px, var(--border) 2.4px, transparent 2.9px) 100% 6px / 7px 12px repeat-y,
+            linear-gradient(var(--border) 50%, transparent 0) 8px 0 / 1px 4px repeat-y,
+            linear-gradient(var(--border) 50%, transparent 0) calc(100% - 8px) 0 / 1px 4px repeat-y,
+            repeating-linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.13) 0 22px, transparent 22px 44px), var(--primary-foreground);
+        --cc-radius: 0;
+        --cc-paper-shadow: 1px 1px 0 var(--foreground);
+        --cc-on-paper: var(--primary-foreground);
+        --cc-grid: var(--border);
+        --cc-grid-dash: 1 2;
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 1.5px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-area-k: 1;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.6;
+        --cc-cross-dash: 1 1;
+    }
+
+    /* A 1995 tooltip: a plain box, a 1px black line. */
+    [data-theme='retro'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: none;
+    }
+
+    [data-theme='retro'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 2px 2px 0 var(--foreground);
+    }
+
+    /* Raised bevelled buttons; pressed, they sink. */
+    [data-theme='retro'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow:
+            inset -1px -1px 0 var(--foreground),
+            inset 1px 1px 0 var(--primary-foreground),
+            inset -2px -2px 0 var(--border),
+            inset 2px 2px 0 var(--card);
+    }
+
+    [data-theme='retro'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--card);
+        box-shadow:
+            inset 1px 1px 0 var(--foreground),
+            inset -1px -1px 0 var(--primary-foreground),
+            inset 2px 2px 0 var(--border),
+            inset -2px -2px 0 var(--card);
+    }
+
+    [data-theme='retro'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > * {
+        translate: 1px 1px;
+    }
+
+    [data-theme='retro'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the bands and a row of plotter dots, still: nothing blinks. */
+    [data-theme='retro'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(90deg, var(--foreground) 2px, transparent 2px) 50% 50% / 8px 2px repeat-x;
+        background-clip: content-box;
+        padding-inline: 20%;
+    }
+
+    /* ── retro · 2 · the spreadsheet chart of 1995 ────────────────────── */
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper: var(--background);
+        --cc-radius: 0;
+        --cc-paper-shadow:
+            inset 1px 1px 0 var(--border), inset -1px -1px 0 var(--primary-foreground), inset 2px 2px 0 var(--foreground),
+            inset -2px -2px 0 var(--card);
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--foreground);
+        --cc-tick: var(--foreground);
+        --kp-chart-tick-size: 11px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-area-k: 7.5;
+        --cc-area-mask: conic-gradient(var(--foreground) 25%, transparent 0 50%, var(--foreground) 0 75%, transparent 0) 0 0 / 2px 2px;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.8;
+        --cc-cross-dash: 1 1;
+    }
+
+    /* A little window: its title bar is the tooltip's head. */
+    [data-theme='retro'] [data-cc='b'] .kp-chart__tip {
+        padding-block-start: 2px;
+        padding-inline: 2px;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow:
+            inset -1px -1px 0 var(--foreground),
+            inset 1px 1px 0 var(--primary-foreground),
+            inset -2px -2px 0 var(--border),
+            inset 2px 2px 0 var(--card);
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__tip > :not(.kp-chart__tip-head) {
+        margin-inline: 0.5rem;
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__tip > :last-child {
+        margin-block-end: 0.375rem;
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__tip-head {
+        align-items: center;
+        padding: 2px 2px 2px 0.375rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__release {
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow:
+            inset -1px -1px 0 var(--foreground),
+            inset 1px 1px 0 var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    /* The legend in a raised frame. */
+    [data-theme='retro'] [data-cc='b'] .kp-chart__legend {
+        justify-self: start;
+        padding: 4px;
+        background: var(--card);
+        box-shadow:
+            inset -1px -1px 0 var(--foreground),
+            inset 1px 1px 0 var(--primary-foreground),
+            inset -2px -2px 0 var(--border);
+    }
+
+    [data-theme='retro'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px dotted transparent;
+        border-radius: 0;
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='retro'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+        block-size: 6px;
+        inline-size: 12px;
+    }
+
+    /* Loading: the plot filled with the 50 % dither, still. */
+    [data-theme='retro'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: conic-gradient(var(--border) 25%, transparent 0 50%, var(--border) 0 75%, transparent 0) 0 0 / 2px 2px;
+        background-clip: content-box;
+        padding: 3px;
+    }
+
+    /* ══ grotesk ════════════════════════════════════════════════════════ */
+
+    /* ── grotesk · 1 · the Swiss grid ─────────────────────────────────── */
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper: var(--card);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border);
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+    }
+
+    /* The baseline (the first grid line drawn), heavy and black. */
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__grid:nth-of-type(1) {
+        stroke: var(--foreground);
+        stroke-width: 3px;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__title {
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: none;
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 0 0 0 3px var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip-head > b {
+        font-size: 0.8125rem;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__tip-event {
+        border-color: hsl(from var(--background) h s l / 0.3);
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: transparent;
+        border-radius: 0;
+        padding-inline: 0 var(--kp-space-sm, 0.5rem);
+        color: var(--foreground);
+        font-weight: 500;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__show-all {
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--foreground);
+    }
+
+    /* A red square before the pressed one, its room always kept. */
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__source::before {
+        content: '';
+        inline-size: 8px;
+        block-size: 8px;
+        background: transparent;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: transparent;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__source[aria-pressed='true']::before {
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: three black squares, cut in one after another with motion. */
+    [data-theme='grotesk'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% - 24px) 50% / 16px 16px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 16px 16px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% + 24px) 50% / 16px 16px no-repeat;
+    }
+
+    /* ── grotesk · 2 · the zebra scale ────────────────────────────────── */
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-paper:
+            linear-gradient(90deg, var(--foreground) 50%, transparent 50%) 0 100% / calc(100% / 6) 4px repeat-x,
+            linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / calc(100% / 12) 100%, var(--card);
+        --cc-frame: 1px solid var(--foreground);
+        --cc-radius: 0;
+        --cc-on-paper: var(--card);
+        --cc-s1: var(--chart-2);
+        --cc-s2: var(--chart-1);
+        --cc-grid: var(--border);
+        --kp-chart-tick-size: 11px;
+        --cc-tick-weight: 500;
+        --cc-line-w: 2.25px;
+        --cc-line-cap: butt;
+        --cc-line-join: miter;
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.9;
+        --cc-cross-pin-op: 1;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--primary-foreground) h s l / 0.4);
+    }
+
+    /* The legend numbered 01, 02, 03. */
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__legend {
+        counter-reset: cc-gr-source;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__source {
+        counter-increment: cc-gr-source;
+        border-radius: 0;
+        border-color: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__source::before {
+        content: counter(cc-gr-source, decimal-leading-zero);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__show-all {
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the zebra across the plot; it hops one column with motion. */
+    [data-theme='grotesk'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 5px) 0 auto;
+        block-size: 10px;
+        background: linear-gradient(90deg, var(--foreground) 50%, transparent 50%) 0 0 / calc(100% / 6) 10px repeat-x;
+    }
+
+    /* ══ lapis ══════════════════════════════════════════════════════════ */
+
+    /* ── lapis · 1 · lapis on vellum ──────────────────────────────────── */
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(97deg, hsl(from var(--background) h s l / 0.025) 0 1px, transparent 1px 9px),
+            radial-gradient(ellipse at 30% 20%, transparent 50%, hsl(from var(--primary) h s l / 0.12)), var(--foreground);
+        --cc-frame: 1px solid var(--primary);
+        --cc-radius: 2px;
+        --cc-paper-shadow: 0 0 0 3px var(--card), 0 0 0 4px hsl(from var(--primary) h s l / 0.7);
+        --cc-on-paper: var(--foreground);
+        --cc-s1: var(--background);
+        --cc-s2: hsl(from var(--accent) h s calc(l - 17));
+        --cc-s3: hsl(from var(--chart-3) h s calc(l - 22));
+        --cc-grid: hsl(from var(--primary) h s l / 0.75);
+        --cc-tick: var(--background);
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 13px;
+        --cc-area-k: 1.6;
+        --cc-cross: var(--background);
+        --cc-cross-op: 0.55;
+        --cc-brush: var(--background);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__state {
+        color: var(--background);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--primary);
+        border-radius: 2px;
+        box-shadow:
+            inset 0 0 0 2px var(--popover),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.6),
+            0 10px 24px hsl(from var(--background) h s l / 0.5);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            inset 0 0 0 2px var(--popover),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.6),
+            0 0 0 2px var(--ring),
+            0 10px 24px hsl(from var(--background) h s l / 0.5);
+    }
+
+    /* A source in lapis ink is ringed in ivory off the vellum. */
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid hsl(from var(--primary) h s l / 0.6);
+        border-radius: 999px;
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.16);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* The spark lines on their own strip of vellum. */
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__spark-plot {
+        border-radius: 2px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px hsl(from var(--primary) h s l / 0.7);
+    }
+
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__spark .kp-chart__crosshair {
+        stroke: var(--background);
+    }
+
+    /* Loading: a burnisher's glint across the vellum, at rest in a corner. */
+    [data-theme='lapis'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: 0 auto 0 0;
+        inline-size: 35%;
+        background: linear-gradient(110deg, transparent 20%, hsl(from var(--primary) h s l / 0.4) 50%, transparent 80%);
+    }
+
+    /* ── lapis · 2 · the gilt lattice ─────────────────────────────────── */
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(60deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 18px),
+            repeating-linear-gradient(-60deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 18px),
+            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 15.6px), var(--background);
+        --cc-frame: 3px double var(--primary);
+        --cc-radius: 2px;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.4);
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 13px;
+        --cc-line-w: 2.25px;
+        --cc-line-filter: drop-shadow(0 0 2.5px hsl(from var(--primary) h s calc(l + 20) / 0.55));
+        --cc-area-k: 3;
+        --cc-area-mask:
+            repeating-linear-gradient(45deg, var(--foreground) 0 1px, transparent 1px 6px),
+            repeating-linear-gradient(-45deg, var(--foreground) 0 1px, transparent 1px 6px);
+        --cc-cross: var(--primary);
+        --cc-cross-op: 0.6;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A toranj: the pointed cartouche, its gold edge its own ground. */
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__tip {
+        padding-inline: 1.375rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--primary);
+        box-shadow: none;
+        clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0 50%);
+        filter: drop-shadow(0 10px 14px hsl(from var(--background) h s l / 0.6));
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__tip::before {
+        content: '';
+        z-index: -1;
+        inset: 1.5px;
+        background: var(--popover);
+        clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 13px 100%, 0 50%);
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: none;
+        background: var(--ring);
+    }
+
+    [data-theme='lapis'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--primary);
+        border-radius: 999px;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    /* Loading: a glint on the frame's gold, at rest at its left. */
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 84% 1px no-repeat;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 2px) 8%;
+        background: linear-gradient(90deg, transparent, var(--foreground), transparent) 0 0 / 36px 4px no-repeat;
+    }
+
+    [data-theme='lapis'] [data-cc='b'] .kp-chart__spark-line {
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s calc(l + 20) / 0.5));
+    }
+
+    /* ══ nostromo ═══════════════════════════════════════════════════════ */
+
+    /* ── nostromo · 1 · the amber CRT ─────────────────────────────────── */
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper: radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.07), transparent 70%), var(--sidebar-background);
+        --cc-frame: 3px solid var(--secondary);
+        --cc-radius: 0.875rem;
+        --cc-paper-shadow: 0 0 0 1px var(--border-strong), inset 0 0 26px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        --cc-on-paper: var(--sidebar-background);
+        --cc-s1: var(--sidebar-primary);
+        --cc-s2: var(--sidebar-foreground);
+        --cc-s3: hsl(from var(--sidebar-primary) h s calc(l + 18));
+        --cc-s4: hsl(from var(--sidebar-foreground) h s calc(l - 25));
+        --cc-s5: hsl(from var(--sidebar-primary) h calc(s - 30) calc(l - 10));
+        --cc-grid: hsl(from var(--sidebar-primary) h s l / 0.25);
+        --cc-grid-dash: 2 3;
+        --cc-tick: var(--sidebar-primary);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--kp-chart-series) h s l / 0.7));
+        --cc-area-k: 1.6;
+        --cc-cross: var(--sidebar-primary);
+        --cc-cross-w: 7px;
+        --cc-cross-op: 0.22;
+        --cc-cross-pin-op: 0.4;
+        --cc-brush: var(--sidebar-primary);
+    }
+
+    /* The block cursor keeps its width when pinned. */
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__crosshair--pinned {
+        stroke-width: 7px;
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tick {
+        filter: drop-shadow(0 0 2px hsl(from var(--sidebar-primary) h s l / 0.5));
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+        content: '';
+        background: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.5) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__threshold {
+        stroke: hsl(from var(--destructive) h s calc(l + 30));
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__event-line {
+        stroke: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__mark {
+        --kp-chart-tone: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__mark[data-kp-tone='warning'] {
+        --kp-chart-tone: var(--sidebar-primary);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__mark[data-kp-tone='critical'] {
+        --kp-chart-tone: hsl(from var(--destructive) h s calc(l + 30));
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__state {
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__state .kp-chart__dot {
+        background: hsl(from var(--destructive) h s calc(l + 30));
+    }
+
+    /* A phosphor readout, boxed on the screen. */
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip {
+        border: 1px solid var(--sidebar-primary);
+        border-radius: 4px;
+        background: var(--sidebar-background);
+        color: var(--sidebar-primary);
+        box-shadow: 0 0 12px hsl(from var(--sidebar-primary) h s l / 0.3);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 1px var(--sidebar-primary),
+            0 0 12px hsl(from var(--sidebar-primary) h s l / 0.4);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip-event {
+        border-color: hsl(from var(--sidebar-primary) h s l / 0.4);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip .kp-chart__dot {
+        background: var(--kp-chart-tone);
+        --kp-chart-tone: var(--sidebar-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip .kp-chart__dot[data-kp-tone='warning'] {
+        --kp-chart-tone: var(--sidebar-primary);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__tip .kp-chart__dot[data-kp-tone='critical'] {
+        --kp-chart-tone: hsl(from var(--destructive) h s calc(l + 30));
+    }
+
+    /* Beige keys with an LED. */
+    [data-theme='nostromo'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        background: var(--secondary);
+        color: var(--foreground);
+        box-shadow: 0 2px 0 var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__source > .kp-chart__swatch {
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        box-shadow: none;
+        translate: 0 2px;
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] > .kp-chart__swatch {
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 7px 1px var(--accent);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__spark-plot {
+        border-radius: 4px;
+        background: var(--sidebar-background);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__spark .kp-chart__crosshair {
+        stroke: var(--sidebar-foreground);
+    }
+
+    /* Loading: the screen's glow and the block cursor, still. */
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::before {
+        content: '';
+        background: radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.12), transparent 65%);
+    }
+
+    [data-theme='nostromo'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 8px) auto auto calc(50% - 5px);
+        inline-size: 10px;
+        block-size: 16px;
+        background: var(--sidebar-primary);
+        box-shadow: 0 0 8px hsl(from var(--sidebar-primary) h s l / 0.7);
+    }
+
+    /* ── nostromo · 2 · the strip-chart recorder ──────────────────────── */
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart {
+        --cc-dot-ring: currentColor;
+        --cc-delta-w: 6.75rem;
+        --cc-tip-max: 22rem;
+        --cc-paper:
+            linear-gradient(90deg, hsl(from var(--accent) h s l / 0.32) 1px, transparent 1px) 0 0 / 25px 25px,
+            linear-gradient(hsl(from var(--accent) h s l / 0.32) 1px, transparent 1px) 0 0 / 25px 25px,
+            linear-gradient(90deg, hsl(from var(--accent) h s l / 0.11) 1px, transparent 1px) 0 0 / 5px 5px,
+            linear-gradient(hsl(from var(--accent) h s l / 0.11) 1px, transparent 1px) 0 0 / 5px 5px, var(--popover);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 2px;
+        --cc-paper-shadow: inset 0 7px 6px -6px hsl(from var(--foreground) h s l / 0.35);
+        --cc-on-paper: var(--popover);
+        --cc-grid: hsl(from var(--accent) h s l / 0.55);
+        --cc-tick: var(--foreground);
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 10.5px;
+        --cc-line-w: 1.5px;
+        --cc-area-k: 1;
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.5;
+    }
+
+    /* Embossed label tape, its ends cut in a V. */
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__tip {
+        padding-inline: 1rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        box-shadow: none;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%, 6px 50%);
+        filter: drop-shadow(0 4px 6px hsl(from var(--foreground) h s l / 0.35));
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+        text-shadow:
+            0 -1px 0 hsl(from var(--foreground) h s calc(l - 10)),
+            0 1px 0 hsl(from var(--primary-foreground) h s l / 0.25);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: none;
+        filter: drop-shadow(0 0 1.5px var(--accent)) drop-shadow(0 4px 6px hsl(from var(--foreground) h s l / 0.35));
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: inherit;
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__tip-event {
+        border-color: hsl(from var(--primary-foreground) h s l / 0.3);
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__source > b {
+        color: inherit;
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__source .kp-chart__swatch {
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__spark-plot {
+        background:
+            linear-gradient(90deg, hsl(from var(--accent) h s l / 0.25) 1px, transparent 1px) 0 0 / 10px 10px,
+            linear-gradient(hsl(from var(--accent) h s l / 0.25) 1px, transparent 1px) 0 0 / 10px 10px,
+            var(--popover);
+    }
+
+    /* Loading: the paper's grid shows; with motion the roll feeds. */
+    [data-theme='nostromo'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+        background: linear-gradient(var(--foreground), var(--foreground)) 85% 50% / 2px 18px no-repeat;
+    }
+
+    /* ══ titanium ═══════════════════════════════════════════════════════ */
+
+    /* ── titanium · 1 · the engraved dial face ────────────────────────── */
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.025) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.25) 0 2px, transparent 2px 7px),
+            linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.06), transparent 40%, hsl(from var(--background) h s l / 0.3)),
+            var(--card);
+        --cc-frame: 1px solid var(--border);
+        --cc-radius: 0;
+        --cc-paper-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--background);
+        --cc-tick: hsl(from var(--muted-foreground) h s calc(l + 10));
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 9.5px;
+        --cc-line-filter: drop-shadow(0 1px 0 var(--background)) drop-shadow(0 -0.5px 0 hsl(from var(--foreground) h s l / 0.35));
+        --cc-area-k: 1.5;
+        --cc-area-mask: linear-gradient(to bottom, var(--foreground), transparent);
+        --cc-cross: var(--foreground);
+        --cc-cross-op: 0.5;
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__grid {
+        filter: drop-shadow(0 1px 0 hsl(from var(--foreground) h s l / 0.12));
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__tick {
+        filter: drop-shadow(0 1px 0 var(--background));
+    }
+
+    /* A machined plate held by four screws. */
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__tip {
+        padding: 0.75rem 0.875rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background:
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, var(--background) 2px, transparent 2.5px) top left / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, var(--background) 2px, transparent 2.5px) top right / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, var(--background) 2px, transparent 2.5px) bottom left / 10px 10px no-repeat,
+            radial-gradient(circle at 5px 5px, var(--border-strong) 1.6px, var(--background) 2px, transparent 2.5px) bottom right / 10px 10px
+                no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.02) 0 1px, transparent 1px 3px),
+            var(--popover);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.1),
+            0 12px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='titanium'] [data-cc='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.08), transparent), var(--accent);
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__show-all {
+        background: none;
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--chart-1);
+        background: var(--accent);
+        box-shadow: inset 0 2px 3px var(--background);
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: the groove the cutter runs in, and the cutter at its start. */
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+        background:
+            linear-gradient(var(--background), var(--background)) 50% 50% / 84% 2px no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.14), hsl(from var(--foreground) h s l / 0.14)) 50% calc(50% + 2px) / 84% 1px
+                no-repeat;
+    }
+
+    [data-theme='titanium'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 8px) auto auto 8%;
+        inline-size: 2px;
+        block-size: 16px;
+        background: var(--primary);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* ── titanium · 2 · the vernier ───────────────────────────────────── */
+
+    [data-theme='titanium'] [data-cc='b'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.035) 0 2px, transparent 2px 4px),
+            repeating-linear-gradient(-45deg, hsl(from var(--background) h s l / 0.5) 0 2px, transparent 2px 4px), var(--background);
+        --cc-frame: 1px solid var(--border);
+        --cc-radius: 0;
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border-strong);
+        --cc-grid-dash: 1 3;
+        --cc-tick-font: var(--theme-font-mono);
+        --kp-chart-tick-size: 9.5px;
+        --cc-area-k: 1.5;
+        --cc-cross: var(--chart-1);
+        --cc-cross-w: 1.5px;
+        --cc-cross-op: 0.95;
+        --cc-cross-pin-op: 1;
+    }
+
+    /* The vernier scale engraved along the top. */
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        inset: 0 0 auto;
+        block-size: 9px;
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--border-strong) 1px, transparent 1px) 0 0 / 10% 9px repeat-x,
+            linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / 2% 5px repeat-x,
+            linear-gradient(var(--card), var(--card));
+        box-shadow: 0 1px 0 var(--border-strong);
+    }
+
+    /* The vernier's sliding plate, its edge knurled. */
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__tip {
+        padding-inline-start: calc(0.625rem + 7px);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--border-strong) 0 1px, transparent 1px 3px) left / 7px 100% no-repeat,
+            repeating-linear-gradient(-45deg, var(--border-strong) 0 1px, transparent 1px 3px) left / 7px 100% no-repeat,
+            var(--popover);
+        box-shadow:
+            inset 7px 0 0 hsl(from var(--background) h s l / 0.3),
+            0 12px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__tip[data-kp-pinned] {
+        border-color: var(--chart-1);
+        box-shadow:
+            inset 7px 0 0 hsl(from var(--background) h s l / 0.3),
+            0 12px 24px hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='titanium'] [data-cc='b'] :is(.kp-chart__source, .kp-chart__show-all) {
+        padding-inline-start: calc(var(--kp-space-sm, 0.5rem) + 5px);
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--border-strong) 0 1px, transparent 1px 3px) left / 5px 100% no-repeat,
+            repeating-linear-gradient(-45deg, var(--border-strong) 0 1px, transparent 1px 3px) left / 5px 100% no-repeat;
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--chart-1);
+        background:
+            repeating-linear-gradient(45deg, var(--chart-1) 0 1px, transparent 1px 3px) left / 5px 100% no-repeat,
+            repeating-linear-gradient(-45deg, var(--chart-1) 0 1px, transparent 1px 3px) left / 5px 100% no-repeat,
+            var(--card);
+        box-shadow: none;
+    }
+
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__swatch {
+        border-radius: 0;
+    }
+
+    /* Loading: a knurled band across the plot; it rolls with motion. */
+    [data-theme='titanium'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        inset: calc(50% - 6px) 8%;
+        background:
+            repeating-linear-gradient(45deg, var(--border-strong) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(-45deg, var(--border-strong) 0 1px, transparent 1px 4px);
+        background-size: 5.66px 12px;
+    }
+
+    /* ══ Motion ═════════════════════════════════════════════════════════
+       Every loop of every character, in one place, only for a reader who
+       has not asked for reduced motion. Without it each picture above is
+       its still frame. Two loops run at rest: cyberpunk 1's glitch (one
+       frame every 3.2 s) and nostromo 1's pinned cursor (once a second). */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-li-day 4.5s linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__plot:not(.kp-chart__spark-plot)::after {
+            animation: cc-cy-glitch 3.2s steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-cy-stream 0.9s linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-cy-hazard 1.2s linear infinite;
+        }
+
+        [data-theme='synthwave'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-sw-drive 0.7s linear infinite;
+        }
+
+        [data-theme='synthwave'] [data-cc='b'] .kp-chart__plot[aria-busy='true']::after {
+            animation: cc-sw-track 2.6s linear infinite;
+        }
+
+        [data-theme='pastel'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-pa-hop 1.8s ease-in-out infinite;
+        }
+
+        [data-theme='pastel'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-pa-drift 1.8s linear infinite;
+        }
+
+        [data-theme='terminal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: cc-tm-walk 2.4s steps(12, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-blink 1s steps(1, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-tm-sweep 1.8s linear infinite;
+        }
+
+        [data-theme='forest'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-fo-leaf 6s ease-in-out infinite;
+        }
+
+        [data-theme='forest'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-fo-walk 0.9s linear infinite;
+        }
+
+        [data-theme='sepia'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-se-write 3.2s ease-in-out infinite;
+        }
+
+        [data-theme='sepia'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-se-press 2.4s ease-in-out infinite alternate;
+        }
+
+        [data-theme='blueprint'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-run-x 2.4s linear infinite alternate;
+        }
+
+        [data-theme='blueprint'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-bp-march 1.2s linear infinite;
+        }
+
+        [data-theme='solstice'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-so-dawn 5s ease-in-out infinite;
+        }
+
+        [data-theme='solstice'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-so-breathe 3.2s ease-in-out infinite alternate;
+        }
+
+        [data-theme='brutalism'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-br-tape 0.8s linear infinite;
+        }
+
+        [data-theme='brutalism'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-br-drop 2.4s ease-in infinite;
+        }
+
+        [data-theme='deco'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-run-x 2.4s ease-in-out infinite;
+        }
+
+        [data-theme='deco'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-de-fan 3.6s ease-in-out infinite alternate;
+        }
+
+        [data-theme='phantom'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-ph-slide 1.6s linear infinite;
+        }
+
+        [data-theme='phantom'] [data-cc='b'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-ph-shuffle 1.6s steps(1, end) infinite;
+        }
+
+        :is([data-theme='shade-light'], [data-theme='shade-dark']) [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-sh-hatch 1.4s ease-out 1 both;
+        }
+
+        [data-theme='shade-light'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-sh-cloud 7s ease-in-out infinite;
+        }
+
+        [data-theme='shade-dark'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-sh-lamp 5s ease-in-out infinite alternate;
+        }
+
+        [data-theme='grotesk'] [data-cc='a'] .kp-chart__state[data-kp-state='loading'] {
+            animation: cc-gr-cut 1.6s steps(1, end) infinite;
+        }
+
+        [data-theme='grotesk'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-gr-zebra 1.2s steps(1, end) infinite;
+        }
+
+        [data-theme='lapis'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-la-burnish 2.8s ease-in-out infinite;
+        }
+
+        [data-theme='lapis'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-run-x 2.8s ease-in-out infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc='a'] .kp-chart__crosshair--pinned {
+            animation: cc-blink 1s steps(1, end) infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: cc-no-warm 2.4s ease-in-out infinite alternate;
+        }
+
+        [data-theme='nostromo'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-blink 1s steps(1, end) infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc='b'] .kp-chart__plot[aria-busy='true'] {
+            animation: cc-no-feed 2s linear infinite;
+        }
+
+        [data-theme='titanium'] [data-cc='a'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-ti-cut 2.2s linear infinite;
+        }
+
+        [data-theme='titanium'] [data-cc='b'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: cc-ti-knurl 0.6s linear infinite;
+        }
+    }
+}
+
+@keyframes cc-li-day {
+    from {
+        background-position: 100% 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
+}
+
+@keyframes cc-cy-glitch {
+    0%,
+    95% {
+        opacity: 0;
+        translate: 0 0;
+    }
+
+    96% {
+        opacity: 1;
+        translate: 6px 0;
+    }
+
+    97.5% {
+        opacity: 1;
+        translate: -4px 3px;
+    }
+
+    99% {
+        opacity: 0;
+        translate: 0 0;
+    }
+}
+
+@keyframes cc-cy-stream {
+    to {
+        background-position-x: 60px;
+    }
+}
+
+@keyframes cc-cy-hazard {
+    to {
+        background-position-x: 28.28px;
+    }
+}
+
+@keyframes cc-sw-drive {
+    to {
+        background-position-y: 14px;
+    }
+}
+
+@keyframes cc-sw-track {
+    from {
+        inset-block-start: -10%;
+    }
+
+    to {
+        inset-block-start: 100%;
+    }
+}
+
+@keyframes cc-pa-hop {
+    0%,
+    100% {
+        translate: 0 0;
+    }
+
+    16% {
+        translate: 12px -10px;
+    }
+
+    33% {
+        translate: 24px 0;
+    }
+
+    50% {
+        translate: 36px -10px;
+    }
+
+    66% {
+        translate: 48px 0;
+    }
+
+    83% {
+        translate: 24px -14px;
+    }
+}
+
+@keyframes cc-pa-drift {
+    to {
+        background-position-x: 22.63px;
+    }
+}
+
+@keyframes cc-tm-walk {
+    to {
+        translate: 120px 0;
+    }
+}
+
+@keyframes cc-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes cc-tm-sweep {
+    from {
+        translate: -100% 0;
+    }
+
+    to {
+        translate: 334% 0;
+    }
+}
+
+@keyframes cc-fo-leaf {
+    0% {
+        translate: 0 0;
+        rotate: 30deg;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    50% {
+        translate: 14rem 1.5rem;
+        rotate: 160deg;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        translate: 26rem -0.5rem;
+        rotate: 300deg;
+        opacity: 0;
+    }
+}
+
+@keyframes cc-fo-walk {
+    to {
+        background-position-x: 10px;
+    }
+}
+
+@keyframes cc-se-write {
+    0% {
+        scale: 0.02 1;
+        opacity: 1;
+    }
+
+    60% {
+        scale: 1 1;
+        opacity: 1;
+    }
+
+    100% {
+        scale: 1 1;
+        opacity: 0;
+    }
+}
+
+@keyframes cc-se-press {
+    from {
+        box-shadow: inset 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    to {
+        box-shadow: inset 0 3px 9px hsl(from var(--foreground) h s l / 0.32);
+    }
+}
+
+@keyframes cc-run-x {
+    from {
+        background-position-x: 0%;
+    }
+
+    to {
+        background-position-x: 100%;
+    }
+}
+
+@keyframes cc-bp-march {
+    to {
+        background-position:
+            12px 0,
+            -12px 100%,
+            0 -12px,
+            100% 12px;
+    }
+}
+
+@keyframes cc-so-dawn {
+    0%,
+    100% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes cc-so-breathe {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 0.9;
+    }
+}
+
+@keyframes cc-br-tape {
+    to {
+        background-position-x: 28.28px;
+    }
+}
+
+@keyframes cc-br-drop {
+    0% {
+        background-position:
+            0 -40px,
+            50% -40px,
+            100% -40px;
+    }
+
+    20% {
+        background-position:
+            0 0,
+            50% -40px,
+            100% -40px;
+    }
+
+    40% {
+        background-position:
+            0 0,
+            50% 0,
+            100% -40px;
+    }
+
+    60%,
+    92% {
+        background-position:
+            0 0,
+            50% 0,
+            100% 0;
+    }
+
+    100% {
+        background-position:
+            0 40px,
+            50% 40px,
+            100% 40px;
+    }
+}
+
+@keyframes cc-de-fan {
+    from {
+        --cc-de-fan: 0deg;
+    }
+
+    to {
+        --cc-de-fan: 180deg;
+    }
+}
+
+@keyframes cc-ph-slide {
+    to {
+        background-position: 7px 7px;
+    }
+}
+
+@keyframes cc-ph-shuffle {
+    0% {
+        background-position: 0 0;
+    }
+
+    25% {
+        background-position: 3px 0;
+    }
+
+    50% {
+        background-position: 3px 3px;
+    }
+
+    75% {
+        background-position: 0 3px;
+    }
+}
+
+@keyframes cc-sh-hatch {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes cc-sh-cloud {
+    from {
+        translate: -90% 0;
+    }
+
+    to {
+        translate: 200% 0;
+    }
+}
+
+@keyframes cc-sh-lamp {
+    to {
+        translate: 125% 0;
+    }
+}
+
+@keyframes cc-gr-cut {
+    0% {
+        background-size:
+            0 0,
+            0 0,
+            0 0;
+    }
+
+    25% {
+        background-size:
+            16px 16px,
+            0 0,
+            0 0;
+    }
+
+    50% {
+        background-size:
+            16px 16px,
+            16px 16px,
+            0 0;
+    }
+
+    75% {
+        background-size:
+            16px 16px,
+            16px 16px,
+            16px 16px;
+    }
+}
+
+@keyframes cc-gr-zebra {
+    50% {
+        translate: 8.333% 0;
+    }
+}
+
+@keyframes cc-la-burnish {
+    from {
+        translate: -100% 0;
+    }
+
+    to {
+        translate: 290% 0;
+    }
+}
+
+@keyframes cc-no-warm {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes cc-no-feed {
+    to {
+        background-position:
+            -25px 0,
+            -25px 0,
+            -25px 0,
+            -25px 0;
+    }
+}
+
+@keyframes cc-ti-cut {
+    from {
+        inset-inline-start: 8%;
+    }
+
+    to {
+        inset-inline-start: 92%;
+    }
+}
+
+@keyframes cc-ti-knurl {
+    to {
+        background-position-x: 5.66px;
+    }
+}

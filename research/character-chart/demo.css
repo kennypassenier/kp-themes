@@ -1,0 +1,140 @@
+/* The page: a centred column, and one section with its controls in one row
+   of groups and three columns side by side (character 1, character 2, the
+   plain chart of today), each holding the same chart group. The charts' own
+   drawing is in charts.css. */
+.cc-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.cc-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cc-intro h1,
+.cc-intro p {
+    margin: 0;
+}
+
+.cc-meta,
+.cc-motion {
+    color: var(--muted-foreground);
+}
+
+.cc-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-cc-toggle][aria-pressed='true'],
+[data-cc-state][aria-pressed='true'],
+[data-cc-sources][aria-pressed='true'],
+[data-cc-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.cc-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.cc-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cc-sec__head h2,
+.cc-sec__head p {
+    margin: 0;
+}
+
+.cc-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 60rem. The columns start on one
+   line and keep their rows aligned: label, description, chart group. */
+.cc-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .cc-trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cc-col {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.cc-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.cc-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cc-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* The chart group, and its two spark lines side by side under the chart. */
+.cc-group {
+    min-inline-size: 0;
+}
+
+/* A taller plot than the package's 168px, so a pinned tooltip leaves the
+   lines in view in a column a third of the page wide. */
+.cc-group .kp-chart:not(.kp-chart--spark) {
+    --kp-chart-height: 220px;
+}
+
+.cc-sparks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+.cc-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}

@@ -75,6 +75,8 @@ export const PAGES = [
         pages: [
             // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
             { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
+            // The character round's second component (form v18, 2026-10-05): two time charts of its own per theme, all 22 in one demo.
+            { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
         ],
     },
     {
