@@ -160,6 +160,18 @@
         box-shadow: 0 0 0 2px var(--primary-foreground);
     }
 
+    /* The event tones in inks that show on these papers: the tone tokens
+       (--info-foreground, --warning-foreground) are the paper's white here. */
+    [data-theme='high-contrast']
+        :is([data-cc-shape='hc1'], [data-cc-shape='hc2'], [data-cc-shape='hc3'])
+        .kp-chart__mark:not([data-kp-tone='warning'], [data-kp-tone='critical']) {
+        --kp-chart-tone: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] :is([data-cc-shape='hc1'], [data-cc-shape='hc2'], [data-cc-shape='hc3']) .kp-chart__mark[data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning);
+    }
+
     /* ── high-contrast tooltips ─────────────────────────────────────── */
     [data-theme='high-contrast'] [data-cc-tip='hc1'] .kp-chart__tip {
         border: 0;
@@ -278,6 +290,7 @@
         --cc-frame: 3px solid var(--foreground);
         --cc-radius: 0;
         --cc-on-paper: hsl(from var(--background) h 8% 86%);
+        --cc-s1: hsl(from var(--chart-1) h s calc(l - 8));
         --cc-grid: var(--foreground);
         --cc-grid-w: 3px;
         --cc-tick: var(--foreground);
@@ -358,6 +371,15 @@
         box-shadow: 3px 3px 0 var(--foreground);
     }
 
+    /* A pressed source's swatch ringed in the button's ink, so it shows on
+       the pressed plate. */
+    [data-theme='brutalism']
+        :is([data-cc-shape='br1'], [data-cc-shape='br2'], [data-cc-shape='br3'])
+        .kp-chart__source[aria-pressed='true']
+        .kp-chart__swatch {
+        box-shadow: 0 0 0 2px currentColor;
+    }
+
     /* ── brutalism tooltips ─────────────────────────────────────────── */
     [data-theme='brutalism'] [data-cc-tip='br1'] .kp-chart__tip {
         border: 3px solid var(--foreground);
@@ -385,8 +407,12 @@
     [data-theme='brutalism']
         [data-cc-tip='br2']
         .kp-chart__tip
-        :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span) {
+        :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span, a):not(.kp-chart__delta[data-kp-direction]) {
         color: var(--card);
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='br2'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 2px var(--card);
     }
 
     [data-theme='brutalism'] [data-cc-tip='br2'] .kp-chart__release {
@@ -404,6 +430,17 @@
 
     /* ══ solstice ═══════════════════════════════════════════════════════ */
 
+    /* On the low sun's and the hearth's glow (primary at up to 0.32 over
+       the card) the second source and a critical ember are lifted, so both
+       keep 3:1 where the glow is strongest. */
+    [data-theme='solstice'] :is([data-cc-shape='a'], [data-cc-shape='so2']) .kp-chart {
+        --cc-s2: hsl(from var(--chart-2) h s calc(l + 10));
+    }
+
+    [data-theme='solstice'] :is([data-cc-shape='a'], [data-cc-shape='so2']) .kp-chart__mark[data-kp-tone='critical'] {
+        --kp-chart-tone: hsl(from var(--destructive) h s calc(l + 12));
+    }
+
     /* ── so 2 · the hearth: a glow from the foot, warm dotted rules ──── */
     [data-theme='solstice'] [data-cc-shape='so2'] .kp-chart {
         --cc-paper: radial-gradient(120% 70% at 50% 115%, hsl(from var(--primary) h s l / 0.32), transparent 70%), var(--card);
@@ -412,7 +449,7 @@
         --cc-on-paper: var(--card);
         --cc-grid: hsl(from var(--primary) h s l / 0.35);
         --cc-grid-dash: 1 4;
-        --cc-tick: var(--muted-foreground);
+        --cc-tick: var(--foreground);
         --cc-tick-font: var(--theme-font-display);
         --kp-chart-tick-size: 12px;
         --cc-line-w: 2.5px;

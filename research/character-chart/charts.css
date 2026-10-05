@@ -182,31 +182,39 @@
        whose type is wider gives it `--cc-delta-w` (and the tooltip
        `--cc-tip-max`), so a change never wraps. */
 
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__tip {
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__tip {
         --kp-chart-tip-max: var(--cc-tip-max, 17.5rem);
     }
 
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__tip-row {
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__tip-row {
         grid-template-columns: 10px minmax(0, 1fr) auto var(--cc-delta-w, 4.5rem);
     }
 
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__delta {
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__delta {
         white-space: nowrap;
     }
 
     /* An event's dot on a tooltip that is a coloured plate is ringed in the
-       plate's ink (`--cc-dot-ring: currentColor`), so a red dot on a red
-       plate still shows. */
+       plate's ink (`--cc-dot-ring`, by default `currentColor`), so a red dot
+       on a red plate still shows. */
 
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__tip .kp-chart__dot {
-        box-shadow: 0 0 0 1.5px var(--cc-dot-ring, transparent);
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__tip .kp-chart__dot {
+        box-shadow: 0 0 0 1.5px var(--cc-dot-ring, currentColor);
+    }
+
+    /* A source's swatch in every tooltip, the plain one too, is ringed in
+       the tooltip's ink, so a series colour close to the plate still shows
+       (3:1 for a mark; measured 1.00:1 in nostromo's plain tooltip). */
+
+    [data-cc-tip] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 1.5px var(--cc-swatch-ring, currentColor);
     }
 
     /* The tooltip is positioned by js/chart.js: a character may draw on it
        and its pseudo-elements, never move it. */
 
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__tip::before,
-    [data-cc-shape]:not([data-cc-shape='plain']) .kp-chart__tip::after {
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__tip::before,
+    [data-cc-tip]:not([data-cc-tip='plain']) .kp-chart__tip::after {
         position: absolute;
         pointer-events: none;
     }
@@ -501,6 +509,14 @@
 
     /* ── dark · 1 · the spectrometer ──────────────────────────────────── */
 
+    /* Its tooltip is as wide as on its own shape when it is picked with
+       another (its event line wrapped under the machined pocket). */
+
+    [data-theme='dark'] [data-cc-tip='a'] .kp-chart__tip {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+    }
+
     [data-theme='dark'] [data-cc-shape='a'] .kp-chart {
         --cc-delta-w: 6rem;
         --cc-tip-max: 20rem;
@@ -717,7 +733,8 @@
 
     /* The notch, drawn over the corner (a clip would cut the ✕'s focus ring). */
 
-    [data-theme='cyberpunk'] [data-cc-tip='a'] :is(.kp-chart__tip, .kp-chart__source, .kp-chart__show-all)::after {
+    [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip::after,
+    [data-theme='cyberpunk'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all)::after {
         content: '';
         position: absolute;
         inset-block-start: -1px;
@@ -2050,6 +2067,7 @@
         --cc-on-paper: var(--card);
         --cc-grid: hsl(from var(--background) h s l / 0.9);
         --cc-grid-w: 3px;
+        --cc-tick: var(--foreground);
         --cc-tick-font: var(--theme-font-display);
         --kp-chart-tick-size: 13px;
         --cc-line-filter: drop-shadow(0 0 3px hsl(from var(--kp-chart-series) h s l / 0.45));

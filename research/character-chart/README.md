@@ -340,3 +340,61 @@ Show toggle and one, three and two sources:
   and tooltips: not measured yet; the first run's clipped shots fell outside
   the viewport, and the rerun could not get the shared screenshot lock
   before the time box ended.
+
+### Measured again (round 2, contrast and rows)
+
+Firefox (Playwright's), 2026-10-05 21:32 to 21:51, DOM reads only (no
+screenshots, so without the shared screenshot lock), four processes against
+an own `http.server` on 127.0.0.1:8771, 22 themes × full and reduced motion.
+Contrast is computed: the ink's computed colour (text `color` or SVG `fill`,
+a line's or ring's `stroke`, a swatch's or dot's background, border or ring)
+against the plate it sits on, resolved up the ancestors (background colours,
+covering gradients at their worst stop, a pseudo-element plate within 6px of
+the box); a rivet or dot gradient at a spot and a dimmed series while another
+is singled out (the package's own fade) are not plates or inks. Measured:
+the shape row of high-contrast, brutalism and solstice (Drawn, a source
+pressed, a source singled out) and the pinned tooltip row of every theme.
+
+- **Before the fixes:** 53 failing inks or texts (per element, over the
+  states) in 12 themes, the same in both motion settings. The shared tooltip
+  rules were keyed on `data-cc-shape`, so a tooltip picked with another shape
+  lost its dot ring (`transparent`) and the package's own ring (fix-97) as
+  well, also in the plain tooltip: event dots 1.04:1 to 2.89:1 in cyberpunk,
+  deco, high-contrast, brutalism, nostromo, shade-light and shade-dark;
+  tooltip swatches 1.00:1 to 2.88:1 (formal, high-contrast, lapis, nostromo,
+  brutalism). Brutalism's black slab: "Open" 1.00:1 and the change pills
+  white on light blue 1.67:1; br2's first source 2.31:1 on the concrete;
+  pressed swatches 1.00:1 to 2.14:1 (br1 to br3). High-contrast: the info and
+  warning events white on white (or 1.51:1 on the highlighter), because their
+  tone tokens are the paper's white there.
+  Solstice: the low sun's ticks 4.31:1 and the hearth's 4.13:1, the second
+  source 2.48:1 to 2.59:1 and a critical ember 2.22:1 to 2.32:1 where the glow
+  is strongest. Layout: dark's tooltip 2 (the spectrometer's, under the
+  machined pocket) wrapped its first event line (20 times); no text was cut
+  (cyberpunk's "Show all" overflows by its 1px notch only, its text fits).
+- **Fixes** (tokens only, one aspect per rule): `charts.css` the shared
+  tooltip rules keyed on `data-cc-tip`, the dot ring `currentColor` by
+  default, every tooltip's swatch ringed in the tooltip's ink
+  (`--cc-swatch-ring`), cyberpunk's notch split into its tooltip and its
+  legend, dark's spectrometer tooltip carries its own width, solstice's low
+  sun ticks in `--foreground`; `round2.css` high-contrast's event tones
+  (`--foreground`, `--warning`), brutalism's pressed swatches ringed, the
+  black slab's link and swatches in `--card` with the pills in their own ink,
+  br2's first source darkened from `--chart-1`, the hearth's ticks in
+  `--foreground`, and on solstice's two glows `--chart-2` and the critical
+  tone lifted.
+- **After:** 3,510 contrast checks, 0 failures in all 44 runs; the lowest
+  text 4.51:1, the lowest line, ring or swatch 3.15:1.
+- **Rows:** every plot keeps one height through every state (Drawn, Loading,
+  No readings, Error, Live update during and after, every Show toggle, one,
+  three and two sources), each chart on its own, in all 44 runs; in the
+  five rows other than the shape the three charts have one height in each
+  state; the shape row's charts differ only by their frames. The figure
+  under the plot grows and shrinks with the legend (sources, Loading), the
+  same in every option.
+- **Retro's update row:** "At once", "One step on", "The new column painted"
+  (`none`, `tick`, `tail`): three distinct options; every row in every theme
+  has three distinct keys.
+- **Wrap and cut:** 0 labels or tooltip lines wrap and 0 are cut
+  (`scrollWidth > clientWidth` with the text past the box) in any cell, state
+  or theme. Console: 0 errors.
