@@ -343,6 +343,10 @@ mountDevtools();
 // A page that gathers its blocks from elsewhere says so, and announces when
 // they are in; notes attach to what is on the page at that moment.
 // The review page and the compare page gather their blocks and judge them
-// themselves (review.js, frame/compare.js); every page carries the prompt.
-mountPrompt({ bar, main: document.querySelector('.cat-main') ?? document.querySelector('main') ?? bar.parentElement });
+// themselves (review.js, frame/compare.js); every page carries the prompt,
+// except a research demo (`data-review` on <html>): its review kit copies its
+// own answer, and a second "Copy prompt" beside it that knows nothing of the
+// demo's choices said "Nothing new" to Kenny (2026-10-05).
+if (!document.documentElement.hasAttribute('data-review'))
+    mountPrompt({ bar, main: document.querySelector('.cat-main') ?? document.querySelector('main') ?? bar.parentElement });
 if (!document.querySelector('[data-cat-compose]')) mountBlocks();
