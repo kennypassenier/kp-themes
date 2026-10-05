@@ -1,200 +1,1746 @@
 // research/character-trend: the fifth component of the character round
 // (Kenny, form v18, 2026-10-05): the key figure with its 24-hour trend
-// (`.kp-kpi--trend`), two characters per theme drawn in the theme's own
-// world, beside the plain tile of today, all 22 themes in one demo judged
-// through the review kit.
+// (`.kp-kpi--trend`), all 22 themes in one demo judged through the review
+// kit. Round 2 (Kenny, 2026-10-05 20:03: every demo gets separate options per
+// aspect, as the meter, "and it should be like this in the future"): nothing
+// is bundled any more. Each theme's tile has five aspects, each picked on its
+// own from three options: the shape, the loading picture, how the figure and
+// the line arrive, the tone and the change, and the live update.
 //
 // The tiles are the package's own: attachTrendCharts() (js/chart.js) draws
 // the trend, its crosshair, its chip and its axis, and keeps every behaviour
 // (the pointer, the keys, a click that follows the tile's link, the live
-// update). Each character is CSS only, in trends.css, scoped by
-// `[data-theme]` and the column's `[data-tr]`; this file only says what each
-// one is, gives the tiles their readings, sets the states, and runs the
-// speed. js/chart.js and js/kpi.js are not changed.
+// update). Every aspect is CSS only, in trends.css, keyed by one attribute
+// each on the tile's strip (`data-ct-shape`, `data-ct-loading`,
+// `data-ct-arrival`, `data-ct-tone`, `data-ct-live`), so any combination
+// composes. On the page: one composed preview showing the current picks, and
+// per aspect a row of three tiles that differ in that aspect only; the plain
+// tile of today stands below them for reference. The controls sit in the
+// section's `data-review-controls` container, which the review kit mirrors
+// into its dialog. js/chart.js and js/kpi.js are not changed.
 
 import { attachTrendCharts, setTrendData } from '../../js/chart.js';
 import { THEMES } from '../../js/theme-registry.js';
 
-/** @param {string} an @param {string} at @param {string} bn @param {string} bt */
-const two = (an, at, bn, bt) => ({ a: { name: an, text: at }, b: { name: bn, text: bt } });
+/** @typedef {{ name: string, text: string }} Option */
+/** @typedef {'shape' | 'loading' | 'arrival' | 'tone' | 'live'} Aspect */
+
+/** The five aspects, in the order they are asked. @type {{ id: Aspect, label: string, about: string }[]} */
+const ASPECTS = [
+    {
+        id: 'shape',
+        label: 'Shape',
+        about: 'The plate, the frame, the label, the number, the plot, the line and its wash, the axis. Compare them as they stand, then move the pointer over a trend.',
+    },
+    { id: 'loading', label: 'While loading', about: 'The picture on the plot while the tile loads; it always moves. Press Loading.' },
+    {
+        id: 'arrival',
+        label: 'How the figure and the line arrive',
+        about: 'How the number and the line come in after loading. Press Drawn to replay it.',
+    },
+    {
+        id: 'tone',
+        label: 'The tone and the change',
+        about: 'How the change in the hour reads, and how a warning or destructive figure shows. Press Warning, then Destructive, then None.',
+    },
+    { id: 'live', label: 'Live update', about: 'What a new reading does to the line. Press Live update (ten minutes later).' },
+];
 
 /**
- * The two characters per theme: a name and what each part becomes.
- * @type {Record<string, { a: { name: string, text: string }, b: { name: string, text: string } }>}
+ * Per theme, three options for each aspect. Options 1 and 2 are round 1's
+ * two characters split into their parts (where both had the same, option 2
+ * is new); option 3 is new.
+ * @type {Record<string, Record<Aspect, Option[]>>}
  */
 const IDEAS = {
-    formal: two(
-        'The engraved plate',
-        'A brass-plate engraving on paper: a ruled double frame, the label in the serif’s small capitals, the number in the display serif, the line engraved as a fine rule with no wash under it, the change boxed like an engraved figure. Loading is a still dotted leader; nothing moves.',
-        'The annual report',
-        'A key figure from a printed annual report: a heavy rule above the label, the number large in the display serif, the line over ledger rules with a ruled baseline, the axis in small capitals, the change in italics on its own plate. Still while loading: the ledger rules alone.',
-    ),
-    light: two(
-        'The soft card',
-        'A white card lifted on a soft shadow, a wider radius, the line soft and round-capped over a fuller wash, the change as a soft pill. Loading: a still dashed baseline.',
-        'Daylight',
-        'A pale sky over the line, from the primary wash at the top to the card at the foot, the sun as a warm glow in the corner, the change as a pill. Loading: a slow band of daylight crosses the sky.',
-    ),
-    dark: two(
-        'The status board',
-        'A black operations board: the number lit in ticker mono, the plot a dark well with a fine grid, the line lit with a soft glow, the change as a lit square chip. Still while loading.',
-        'The machined panel',
-        'A machined black panel with a fine bevel: the label in mono capitals, the line in a recessed slot (an inner shadow above, a lit lip below), the change as a flat machined tab. Still while loading.',
-    ),
-    cyberpunk: two(
-        'The neon trace',
-        'A neon trace on a black board with a faint circuit grid: the line a neon tube with its glow, the number in tech mono with a cyan halo, cut corners on the frame, the change as a cut-corner chip. Loading: a packet runs along the baseline.',
-        'The glitch HUD',
-        'A netrunner HUD: yellow brackets at the corners of the plot, the number with an RGB split, the line a square-capped data stream, hazard tape along the top edge. Loading: a glitch bar jumps across the plot.',
-    ),
-    synthwave: two(
-        'The grid-floor horizon',
-        'The plot is a perspective grid floor under a pink horizon, the line a sunset laser with its glow, the number in VT323, the change on a glass chip. Loading: the grid floor drives toward you.',
-        'The VCR display',
-        'A VCR’s on-screen display on black: OSD numerals, scanlines over the tile, the line a hard square trace, the change as an inverse block. Loading: the tracking band rolls down the plot.',
-    ),
-    pastel: two(
-        'The sticker chart',
-        'A candy card with a flat sticker shadow: the line fat and round-capped like icing, the change as a sticker with its own flat shadow, the number in the rounded face. Loading: a candy dot hops along the plot.',
-        'The washi planner',
-        'A dotted planner pad with a strip of washi tape across the top of the tile, the line a dashed doodle, the change as a taped label. Loading: the tape drifts.',
-    ),
-    terminal: two(
-        'The top(1) row',
-        'A text screen framed in a double box-drawing line: everything in the mono, the label in capitals, the line square-joined in the phosphor, the change in reverse video. Loading: a block caret blinks in the plot, once a second.',
-        'The dumb-terminal plot',
-        'gnuplot’s dumb terminal: the plot a grid of character cells, the line drawn in dots like a row of asterisks, the axis in brackets of rules, the change underlined. Loading: the dots march.',
-    ),
-    forest: two(
-        'The ranger’s logbook',
-        'A ranger’s logbook on kraft paper: the label in serif italic, contour rings behind the line, the line a moss trail with round caps, the change on a wooden tag. Loading: a trail of light walks the plot.',
-        'The canopy',
-        'Looking up into a canopy: a leaf-green wash on the card, the area under the line a dense canopy, the line a twig in bark ink, the change on a leaf tag. Loading: the canopy sways.',
-    ),
-    'high-contrast': two(
-        'Ink and frame',
-        'Everything framed in a 2px rule: the number bold, the line 3px with no wash, a solid baseline under it, the change as a framed plate with its own ink. Still: nothing moves.',
-        'The inverse plate',
-        'The plot inverted: an ink plate with the line drawn in the paper colour, the label bold, the number heavy, the change framed. Still: nothing moves.',
-    ),
-    sepia: two(
-        'The barograph',
-        'A barograph drum: the plot is ruled chart paper (fine level lines and hour lines in sepia), the line a fine nib trace, an aged vignette on the paper. Loading: the nib sweeps across the drum.',
-        'Letterpress',
-        'A letterpress card on speckled paper: the number pressed into the sheet, the label in small capitals, the line a heavier ink rule, the change as a printed border. Loading: the platen presses.',
-    ),
-    blueprint: two(
-        'The chart recorder',
-        'A strip-chart recorder on blueprint paper: a millimetre grid in the plot, the line in white ink, the label and the axis in technical mono capitals. Loading: the recorder’s pen sweeps.',
-        'The title block',
-        'A drawing’s title block: the tile parted into cells by drawn rules, the axis with dimension ticks, the line as a chain line over a hatched area. Loading: a dash marches along the baseline.',
-    ),
-    solstice: two(
-        'The low sun',
-        'Charcoal paper lit from below by a low sun: a warm glow rising from the foot of the tile, the line in warm light, the change on a glowing chip. Loading: a dawn breathes in the plot.',
-        'The embers',
-        'Embers on charcoal: the line a glowing coal with a hot halo, the wash a faint heat, the number in the serif. Loading: the embers breathe.',
-    ),
-    brutalism: two(
-        'The slab',
-        'A concrete slab: a heavy black frame with a hard offset shadow, the label in heavy capitals, the line 3px square-capped, the change as a block with the hard shadow. Loading: the slab stamps.',
-        'The sticker sheet',
-        'A lavender sticker sheet: the number huge and heavy, the change as an askew sticker in a black outline, the plot a white well in black. Loading: the sticker drops in.',
-    ),
-    deco: two(
-        'The gilt frame',
-        'A gilt frame on lacquer: a double gold rule, a faint sunburst rising behind the number, the label and the number in the display face’s capitals, the change on a gold-framed plaque. Loading: a glint runs across.',
-        'The marquee',
-        'A theatre marquee: a row of bulbs along the top and the foot of the plot, the number in display capitals, the change as a marquee plaque. Loading: the bulbs chase.',
-    ),
-    phantom: two(
-        'The evidence card',
-        'A white evidence card pinned to the board: the label slanted, the line as red string, the change as a stamped ring set askew. Loading: the stamp beats.',
-        'The calling card',
-        'A black calling card under a halftone: the label skewed in display capitals, a red slash across the corner, the line in the card’s ink. Loading: the halftone shuffles.',
-    ),
-    'shade-light': two(
-        'Pencil in the shade',
-        'A pencil sketch on paper in soft shade: the plot hatched in pencil, the line a soft graphite stroke, the change on a lifted paper chip. Loading: the hatching sweeps in.',
-        'The leaf shade',
-        'Dappled leaf shade over the card, a soft line, the number on the paper. Loading: a cloud’s shade passes.',
-    ),
-    'shade-dark': two(
-        'Silverpoint',
-        'Silverpoint on dark paper: the line a silver hairline over a faint silver wash, a silver rule above the label. Loading: the silver hatches in.',
-        'The reading lamp',
-        'A warm reading lamp over the card: a pool of light behind the number, the line in warm ink. Loading: the pool breathes.',
-    ),
-    retro: two(
-        'The 1995 dialog',
-        'A 1995 dialog: a raised grey bevel around the tile, the plot a sunken white well, one-pixel line with no wash, the label in the system face without capitals, the change as a raised button. Still while loading.',
-        'The performance monitor',
-        'A 1995 performance monitor: a black well with a green grid, the line in the phosphor, the number in the mono. Still while loading.',
-    ),
-    grotesk: two(
-        'The transit board',
-        'A Swiss transit board: a thick bar in the series colour across the top, the number in bold grotesque, the line 3px round-capped, the change as a flat colour bar. Loading: a line runs across.',
-        'The Swiss poster',
-        'A Swiss poster: the number huge and flush left, the line a hairline, the change in the red index colour on its own plate. Loading: three blocks cut in.',
-    ),
-    lapis: two(
-        'The girih tile',
-        'A girih lattice on lapis: a faint star lattice on the tile, a double gold frame, the number in the display face, the line in gold. Loading: a glint runs the frame.',
-        'Lapis on vellum',
-        'Lapis ink on ivory vellum: the line in lapis ink, a gold rim around the plot, the label in serif italic. Loading: a burnisher’s glint.',
-    ),
-    nostromo: two(
-        'The CRT trace',
-        'A green-black CRT in the beige bezel: scanlines over the plot, the line a phosphor trace with its glow, the label and the number in mono capitals. Loading: a sweep runs across the tube.',
-        'The indicator panel',
-        'The ship’s indicator panel: the label on embossed label tape, the change as a lit indicator lamp, the plot an embossed window. Loading: the lamps scan.',
-    ),
-    titanium: two(
-        'The milled plate',
-        'A milled titanium plate: a brushed grain on the tile, the plot ringed in an anodised edge, the label in small capitals, the number in instrument mono. Loading: the cutter runs along the edge.',
-        'The instrument dial',
-        'An instrument dial: the plot a recessed aperture with an inner shadow, a knurled band along the top of the tile, the change on a machined tab. Loading: the knurl rolls.',
-    ),
+    formal: {
+        shape: [
+            {
+                name: 'The engraved plate',
+                text: 'A brass-plate engraving on paper: a ruled double frame, the label in the serif’s small capitals, the number in the display serif, the line engraved as a fine rule with no wash under it, the change boxed like an engraved figure.',
+            },
+            {
+                name: 'The annual report',
+                text: 'A key figure from a printed annual report: a heavy rule above the label, the number large in the display serif, the line over ledger rules with a ruled baseline, the axis in small capitals, the change in italics on its own plate.',
+            },
+            {
+                name: 'The certificate',
+                text: 'A share certificate: a thin navy rule inside the frame, a guilloche of fine rings rising behind the figure, the number in the display serif, the line in navy ink with almost no wash, the axis in small capitals.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The dotted leader',
+                text: 'A dotted leader along the foot of the plot is written on, dot by dot.',
+            },
+            {
+                name: 'The ledger is ruled',
+                text: 'The ledger’s four rules are drawn across the plot, left to right, and ruled again.',
+            },
+            {
+                name: 'The seal is pressed',
+                text: 'A navy seal ring is pressed onto the plot, lifted and pressed again.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Engraved',
+                text: 'The line is drawn in from the left, slowing as it lands; the number is written in from the left.',
+            },
+            {
+                name: 'Entered in the ledger',
+                text: 'The line is drawn in from the left, in 10 hard steps; the number is typed in.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The engraved plate',
+                text: 'The change boxed like an engraved figure; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The annual report',
+                text: 'The change in italics on its own plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The red-ink entry',
+                text: 'The change on a plate inside a hairline rule, square; a warning or destructive figure is ruled off in its colour along the left edge, the accountant’s red ink.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The entry is carried forward',
+                text: 'The line steps one reading to the left, as chart paper advances, slowing as it lands.',
+            },
+            {
+                name: 'Signed again',
+                text: 'The line is traced again from its start, easing in and out.',
+            },
+        ],
+    },
+    light: {
+        shape: [
+            {
+                name: 'The soft card',
+                text: 'A white card lifted on a soft shadow, a wider radius, the line soft and round-capped over a fuller wash, the change as a soft pill.',
+            },
+            {
+                name: 'Daylight',
+                text: 'A pale sky over the line, from the primary wash at the top to the card at the foot, the sun as a warm glow in the corner, the change as a pill.',
+            },
+            {
+                name: 'The paper sheet',
+                text: 'A sheet of paper on the page: a small radius, a lifted corner folded over at the top right, faint writing rules in the plot, the line in indigo ink.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The dashed baseline',
+                text: 'The dashed baseline under the plot drifts to the right.',
+            },
+            {
+                name: 'Daylight',
+                text: 'A slow band of daylight crosses the sky.',
+            },
+            {
+                name: 'A cloud passes',
+                text: 'The soft shadow of a cloud drifts across the plot, slowly.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Unfolds',
+                text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'Sunrise',
+                text: 'The line rises from the baseline, slowing as it lands; the number drops into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The soft card',
+                text: 'The change as a soft pill; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The soft outline',
+                text: 'The change as a pill drawn in a soft outline of its own ink over its plate.',
+            },
+            {
+                name: 'The coloured tab',
+                text: 'The change as a pill with a soft drop shadow; a warning or destructive figure shows a band of its colour along the top of the card.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A soft swell',
+                text: 'The line swells once and settles, slowing as it lands.',
+            },
+            {
+                name: 'The page turns',
+                text: 'The line steps one reading to the left, as chart paper advances, slowing as it lands.',
+            },
+        ],
+    },
+    dark: {
+        shape: [
+            {
+                name: 'The status board',
+                text: 'A black operations board: the number lit in ticker mono, the plot a dark well with a fine grid, the line lit with a soft glow, the change as a lit square chip.',
+            },
+            {
+                name: 'The machined panel',
+                text: 'A machined black panel with a fine bevel: the label in mono capitals, the line in a recessed slot (an inner shadow above, a lit lip below), the change as a flat machined tab.',
+            },
+            {
+                name: 'The oscilloscope',
+                text: 'A scope screen in a black panel: the plot a dark well with a dotted graticule and a lit rim, the line a green trace with a soft glow, the number in mono.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The ticker baseline',
+                text: 'The dashed baseline ticks along like a ticker tape.',
+            },
+            {
+                name: 'The slot is scanned',
+                text: 'A lit band sweeps along the plot, as a scanner reads a slot.',
+            },
+            {
+                name: 'The status lamps',
+                text: 'A lamp steps between three places on the panel, one after the other.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Switched on',
+                text: 'The line strikes on and off like a tube, then holds, in hard jumps; the number is there at once.',
+            },
+            {
+                name: 'Machined in',
+                text: 'The line is drawn in from the left, in 8 hard steps; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The status board',
+                text: 'The change as a lit square chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The machined tab',
+                text: 'The change as a flat tab with a square corner and a lit top edge.',
+            },
+            {
+                name: 'The alarm lamp',
+                text: 'The change as a lit square chip; a warning or destructive figure lights its number on the tone’s plate, as an alarm lamp.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The trace jumps',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'The trace flares',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+        ],
+    },
+    cyberpunk: {
+        shape: [
+            {
+                name: 'The neon trace',
+                text: 'A neon trace on a black board with a faint circuit grid: the line a neon tube with its glow, the number in tech mono with a cyan halo, cut corners on the frame, the change as a cut-corner chip.',
+            },
+            {
+                name: 'The glitch HUD',
+                text: 'A netrunner HUD: yellow brackets at the corners of the plot, the number with an RGB split, the line a square-capped data stream, hazard tape along the top edge.',
+            },
+            {
+                name: 'The holo card',
+                text: 'A hologram card: a cyan rim with its glow, diagonal scan lines in the plot, the number in the display face, the line a cyan beam.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The neon trace',
+                text: 'A packet runs along the baseline.',
+            },
+            {
+                name: 'The glitch HUD',
+                text: 'A glitch bar jumps across the plot.',
+            },
+            {
+                name: 'Packet rain',
+                text: 'Packets rain down the plot in columns.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Jacked in',
+                text: 'The line jumps into place sideways, in hard jumps; the number glitches into place.',
+            },
+            {
+                name: 'The neon strikes',
+                text: 'The line strikes on and off like a tube, then holds, in hard jumps; the number is typed in.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The neon trace',
+                text: 'The change as a cut-corner chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The glitch HUD',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The hazard frame',
+                text: 'The change as a slanted chip; a warning or destructive figure is boxed in a frame of its colour all round the card.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Packet in',
+                text: 'The line glitches sideways for a moment, in hard jumps.',
+            },
+            {
+                name: 'The trace burns',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+        ],
+    },
+    synthwave: {
+        shape: [
+            {
+                name: 'The grid-floor horizon',
+                text: 'The plot is a perspective grid floor under a pink horizon, the line a sunset laser with its glow, the number in VT323, the change on a glass chip.',
+            },
+            {
+                name: 'The VCR display',
+                text: 'A VCR’s on-screen display on black: OSD numerals, scanlines over the tile, the line a hard square trace, the change as an inverse block.',
+            },
+            {
+                name: 'The arcade marquee',
+                text: 'An arcade cabinet’s marquee: a pink frame with a glow, the number in the display face with a pink drop, the line a cyan laser over a pink wash.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The grid-floor horizon',
+                text: 'The grid floor drives toward you.',
+            },
+            {
+                name: 'The VCR display',
+                text: 'The tracking band rolls down the plot.',
+            },
+            {
+                name: 'The sun rises',
+                text: 'A striped sun swells up over the horizon at the foot of the plot and sinks again.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Over the horizon',
+                text: 'The line rises from the baseline, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'Tape loads',
+                text: 'The line is drawn in from the left, in 12 hard steps; the number is typed in.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The grid-floor horizon',
+                text: 'The change on a glass chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The VCR display',
+                text: 'The change as an inverse block; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The arcade warning',
+                text: 'The change on a glass chip with a glow; a warning or destructive figure flashes its plate under the number, as an arcade score.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The tracking jumps',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'The laser flares',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+        ],
+    },
+    pastel: {
+        shape: [
+            {
+                name: 'The sticker chart',
+                text: 'A candy card with a flat sticker shadow: the line fat and round-capped like icing, the change as a sticker with its own flat shadow, the number in the rounded face.',
+            },
+            {
+                name: 'The washi planner',
+                text: 'A dotted planner pad with a strip of washi tape across the top of the tile, the line a dashed doodle, the change as a taped label.',
+            },
+            {
+                name: 'The cloud card',
+                text: 'A soft cloud: a wide round card with a dashed candy outline, a blob of colour behind the line, the line fat and round.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The sticker chart',
+                text: 'A candy dot hops along the plot.',
+            },
+            {
+                name: 'The washi planner',
+                text: 'The tape drifts.',
+            },
+            {
+                name: 'Sprinkles',
+                text: 'Sprinkles in two colours hop along the plot.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Popped',
+                text: 'The line rises from the baseline, overshooting once; the number is stamped down.',
+            },
+            {
+                name: 'Doodled in',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The sticker chart',
+                text: 'The change as a sticker with its own flat shadow, the number in the rounded face; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The washi planner',
+                text: 'The change as a taped label; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The heart sticker',
+                text: 'The change as a round sticker turned a little; a warning or destructive figure gets a candy band of its colour along the top.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A happy hop',
+                text: 'The line jolts once, as a needle does, overshooting once.',
+            },
+            {
+                name: 'Squished',
+                text: 'The line swells once and settles, slowing as it lands.',
+            },
+        ],
+    },
+    terminal: {
+        shape: [
+            {
+                name: 'The top(1) row',
+                text: 'A text screen framed in a double box-drawing line: everything in the mono, the label in capitals, the line square-joined in the phosphor, the change in reverse video.',
+            },
+            {
+                name: 'The dumb-terminal plot',
+                text: 'gnuplot’s dumb terminal: the plot a grid of character cells, the line drawn in dots like a row of asterisks, the axis in brackets of rules, the change underlined.',
+            },
+            {
+                name: 'The curses window',
+                text: 'A curses window: a single-line box, the label ruled off under it, the plot boxed in a fainter rule, the line square in the phosphor, no wash.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The top(1) row',
+                text: 'A block caret blinks in the plot, once a second.',
+            },
+            {
+                name: 'The dumb-terminal plot',
+                text: 'The dots march.',
+            },
+            {
+                name: 'The hash bar',
+                text: 'A row of # blocks fills the plot block by block, then starts over.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Printed',
+                text: 'The line is drawn in from the left, in 16 hard steps; the number is typed in.',
+            },
+            {
+                name: 'Paged in',
+                text: 'The line drops into place from above, in 3 hard steps; the number drops into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The top(1) row',
+                text: 'The change in reverse video; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The dumb-terminal plot',
+                text: 'The change underlined; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The bell',
+                text: 'The change in a dashed box, as a curses field; a warning or destructive figure prints its number in reverse on the tone, as a terminal bell line.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Scrolled',
+                text: 'The line steps one reading to the left, as chart paper advances, in 2 hard steps.',
+            },
+            {
+                name: 'Reverse flash',
+                text: 'The line flashes in the ink for a moment, in hard jumps.',
+            },
+        ],
+    },
+    forest: {
+        shape: [
+            {
+                name: 'The ranger’s logbook',
+                text: 'A ranger’s logbook on kraft paper: the label in serif italic, contour rings behind the line, the line a moss trail with round caps, the change on a wooden tag.',
+            },
+            {
+                name: 'The canopy',
+                text: 'Looking up into a canopy: a leaf-green wash on the card, the area under the line a dense canopy, the line a twig in bark ink, the change on a leaf tag.',
+            },
+            {
+                name: 'The herbarium sheet',
+                text: 'A pressed leaf on a herbarium sheet: leaf veins in the plot, the label in serif italic, the line in moss green over a leaf-green wash.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The ranger’s logbook',
+                text: 'A trail of light walks the plot.',
+            },
+            {
+                name: 'The canopy',
+                text: 'The canopy sways.',
+            },
+            {
+                name: 'Fireflies',
+                text: 'Two fireflies drift to and fro over the plot.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Grows',
+                text: 'The line rises from the baseline, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'The trail is walked',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The ranger’s logbook',
+                text: 'The change on a wooden tag; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The canopy',
+                text: 'The change on a leaf tag; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The trail blaze',
+                text: 'The change on a carved tag; a warning or destructive figure is blazed in its colour along the left edge, as a trail marker on a trunk.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A branch sways',
+                text: 'The line dips once and comes back, slowing as it lands.',
+            },
+            {
+                name: 'Growth ring',
+                text: 'The line swells once and settles, easing in and out.',
+            },
+        ],
+    },
+    'high-contrast': {
+        shape: [
+            {
+                name: 'Ink and frame',
+                text: 'Everything framed in a 2px rule: the number bold, the line 3px with no wash, a solid baseline under it, the change as a framed plate with its own ink. Still: nothing moves.',
+            },
+            {
+                name: 'The inverse plate',
+                text: 'The plot inverted: an ink plate with the line drawn in the paper colour, the label bold, the number heavy, the change framed. Still: nothing moves.',
+            },
+            {
+                name: 'The signal board',
+                text: 'A road signal: a heavy 3px frame, the plot boxed in ink, the number very large and heavy, the line 4px square-capped, no wash.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The dashed baseline',
+                text: 'The dashed baseline steps along in hard steps.',
+            },
+            {
+                name: 'The striped block',
+                text: 'A striped block in ink and paper steps across the foot of the plot; it shows on paper and on ink.',
+            },
+            {
+                name: 'The scanning bar',
+                text: 'A thick bar in ink and paper scans down the plot in hard steps.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Switched',
+                text: 'The line is drawn in from the left, in 4 hard steps; the number is there at once.',
+            },
+            {
+                name: 'Dropped',
+                text: 'The line drops into place from above, in 2 hard steps; the number drops into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'Ink and frame',
+                text: 'The change as a framed plate with its own ink; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The heavy frame',
+                text: 'The change in a 3px frame with square corners.',
+            },
+            {
+                name: 'The signal plate',
+                text: 'The change framed in ink with a hard shadow; a warning or destructive figure puts its number on the tone’s own plate and frames the card in the tone.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The bar jumps',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'The bar flips',
+                text: 'The line flashes in the ink for a moment, in hard jumps.',
+            },
+        ],
+    },
+    sepia: {
+        shape: [
+            {
+                name: 'The barograph',
+                text: 'A barograph drum: the plot is ruled chart paper (fine level lines and hour lines in sepia), the line a fine nib trace, an aged vignette on the paper.',
+            },
+            {
+                name: 'Letterpress',
+                text: 'A letterpress card on speckled paper: the number pressed into the sheet, the label in small capitals, the line a heavier ink rule, the change as a printed border.',
+            },
+            {
+                name: 'The ticket stub',
+                text: 'A printed ticket stub: notches punched in both sides, a dashed tear line as the frame, the number in the display serif, the line in brown ink.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The barograph',
+                text: 'The nib sweeps across the drum.',
+            },
+            {
+                name: 'The ink spreads',
+                text: 'A blot of ink swells and draws back on the paper.',
+            },
+            {
+                name: 'The drum turns',
+                text: 'The barograph drum turns: the hour lines move left under a still nib.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'The nib writes',
+                text: 'The line is drawn in from the left, at an even pace; the number is written in from the left.',
+            },
+            {
+                name: 'Pressed',
+                text: 'The line drops into place from above, slowing as it lands; the number is pressed into the sheet.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The barograph',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'Letterpress',
+                text: 'The change as a printed border; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The rubber stamp',
+                text: 'The change in a printed border; a warning or destructive note is stamped on the label askew, in the tone’s plate with a ruled border.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The nib moves on',
+                text: 'The line steps one reading to the left, as chart paper advances, at an even pace.',
+            },
+            {
+                name: 'Inked again',
+                text: 'The line is traced again from its start, easing in and out.',
+            },
+        ],
+    },
+    blueprint: {
+        shape: [
+            {
+                name: 'The chart recorder',
+                text: 'A strip-chart recorder on blueprint paper: a millimetre grid in the plot, the line in white ink, the label and the axis in technical mono capitals.',
+            },
+            {
+                name: 'The title block',
+                text: 'A drawing’s title block: the tile parted into cells by drawn rules, the axis with dimension ticks, the line as a chain line over a hatched area.',
+            },
+            {
+                name: 'The section view',
+                text: 'A section drawing: the plot hatched at forty-five degrees, a dashed frame, the line in white ink 2px, the label and axis in technical mono capitals.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The chart recorder',
+                text: 'The recorder’s pen sweeps.',
+            },
+            {
+                name: 'The title block',
+                text: 'A dash marches along the baseline.',
+            },
+            {
+                name: 'The dimension line',
+                text: 'A dimension line with its ticks is drawn across the plot, again and again.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Drafted',
+                text: 'The line is drawn in from the left, at an even pace; the number is written in from the left.',
+            },
+            {
+                name: 'Plotted',
+                text: 'The line is drawn in from the left, in 24 hard steps; the number is typed in.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The chart recorder',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The title block',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The revision cloud',
+                text: 'The change in a ruled box; a warning or destructive figure is framed all round in its colour, as a revision marked on a drawing.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The pen steps',
+                text: 'The line steps one reading to the left, as chart paper advances, in 3 hard steps.',
+            },
+            {
+                name: 'Retraced in ink',
+                text: 'The line is traced again from its start, at an even pace.',
+            },
+        ],
+    },
+    solstice: {
+        shape: [
+            {
+                name: 'The low sun',
+                text: 'Charcoal paper lit from below by a low sun: a warm glow rising from the foot of the tile, the line in warm light, the change on a glowing chip.',
+            },
+            {
+                name: 'The embers',
+                text: 'Embers on charcoal: the line a glowing coal with a hot halo, the wash a faint heat, the number in the serif.',
+            },
+            {
+                name: 'The horizon',
+                text: 'The day’s horizon: a warm band of light across the foot of the card, the number in the display face, the line in the low sun’s colour with a glow.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The low sun',
+                text: 'A glow rises from the foot of the plot, swelling and settling.',
+            },
+            {
+                name: 'The embers',
+                text: 'A heat glows from below, swelling and settling.',
+            },
+            {
+                name: 'The sun crosses',
+                text: 'A low sun crosses the plot from left to right.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Dawn',
+                text: 'The line rises from the baseline, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'Kindled',
+                text: 'The line is drawn in backwards, from now, easing in and out; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The low sun',
+                text: 'The change on a glowing chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The embers',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The red sky',
+                text: 'The change on a glowing chip; a warning or destructive figure turns the band of sky above the card into the tone.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A flare of sun',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+            {
+                name: 'The day moves on',
+                text: 'The line steps one reading to the left, as chart paper advances, easing in and out.',
+            },
+        ],
+    },
+    brutalism: {
+        shape: [
+            {
+                name: 'The slab',
+                text: 'A concrete slab: a heavy black frame with a hard offset shadow, the label in heavy capitals, the line 3px square-capped, the change as a block with the hard shadow.',
+            },
+            {
+                name: 'The sticker sheet',
+                text: 'A lavender sticker sheet: the number huge and heavy, the change as an askew sticker in a black outline, the plot a white well in black.',
+            },
+            {
+                name: 'The poster block',
+                text: 'A poster block: a 3px frame with a hard offset shadow in the accent, the plot hatched in ink, the number huge and in capitals, the line 4px.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The stamp',
+                text: 'A black block is stamped onto the plot, lifted and stamped again.',
+            },
+            {
+                name: 'The drop',
+                text: 'A black block drops onto the plot and lands hard, again and again.',
+            },
+            {
+                name: 'The hammer',
+                text: 'A black block hammers on three places along the plot in turn.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Slammed',
+                text: 'The line drops into place from above, in 2 hard steps; the number is stamped down.',
+            },
+            {
+                name: 'Shoved in',
+                text: 'The line is drawn in from the left, easing in and out; the number slides in slanted.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The slab',
+                text: 'The change as a block with the hard shadow; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The sticker sheet',
+                text: 'The change as an askew sticker in a black outline, the plot a white well in black; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The warning poster',
+                text: 'The change as a block with a hard shadow; a warning or destructive figure prints its number on the tone’s block, framed in ink.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Kicked',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'Shoved',
+                text: 'The line steps one reading to the left, as chart paper advances, in 2 hard steps.',
+            },
+        ],
+    },
+    deco: {
+        shape: [
+            {
+                name: 'The gilt frame',
+                text: 'A gilt frame on lacquer: a double gold rule, a faint sunburst rising behind the number, the label and the number in the display face’s capitals, the change on a gold-framed plaque.',
+            },
+            {
+                name: 'The marquee',
+                text: 'A theatre marquee: a row of bulbs along the top and the foot of the plot, the number in display capitals, the change as a marquee plaque.',
+            },
+            {
+                name: 'The skyscraper',
+                text: 'An Art Deco tower: fine gold setback lines rising behind the figure, a gold bar along the top, the label and number in the display capitals, the line in gold.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The gilt frame',
+                text: 'A glint runs across.',
+            },
+            {
+                name: 'The marquee',
+                text: 'The bulbs chase.',
+            },
+            {
+                name: 'The sunburst opens',
+                text: 'A gold sunburst opens from the foot of the plot, ray by ray.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'The curtain rises',
+                text: 'The line rises from the baseline, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'The marquee lights',
+                text: 'The line opens from its middle, in 9 hard steps; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The gilt frame',
+                text: 'The change on a gold-framed plaque; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The marquee',
+                text: 'The change as a marquee plaque; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The gilt notice',
+                text: 'The change on a plaque ringed twice in gold with a gap between; a warning or destructive figure is framed all round in its colour, as a notice in a gilt frame.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'The bulbs chase',
+                text: 'The line flashes in the ink for a moment, in hard jumps.',
+            },
+            {
+                name: 'Gilded',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+        ],
+    },
+    phantom: {
+        shape: [
+            {
+                name: 'The evidence card',
+                text: 'A white evidence card pinned to the board: the label slanted, the line as red string, the change as a stamped ring set askew.',
+            },
+            {
+                name: 'The calling card',
+                text: 'A black calling card under a halftone: the label skewed in display capitals, a red slash across the corner, the line in the card’s ink.',
+            },
+            {
+                name: 'The ransom note',
+                text: 'A ransom note: a halftone over the card, the label skewed, the number with a red offset shadow, the line in red, square and heavy.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The stamp ring',
+                text: 'A red ring is stamped onto the plot, again and again.',
+            },
+            {
+                name: 'Stamped askew',
+                text: 'The halftone shuffles.',
+            },
+            {
+                name: 'The string is pulled',
+                text: 'A red string is pulled across the plot in jerks.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'The card is thrown',
+                text: 'The line jumps into place sideways, in hard jumps; the number slides in slanted.',
+            },
+            {
+                name: 'Slashed in',
+                text: 'The line is drawn in backwards, from now, easing in and out; the number slides in slanted.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The evidence card',
+                text: 'The change as a stamped ring set askew; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The calling card',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The calling card',
+                text: 'The change as a skewed card; a warning or destructive note is stamped askew on the label, in the tone’s plate with a ruled border.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Snatched',
+                text: 'The line glitches sideways for a moment, in hard jumps.',
+            },
+            {
+                name: 'The string twangs',
+                text: 'The line jolts once, as a needle does, in 3 hard steps.',
+            },
+        ],
+    },
+    'shade-light': {
+        shape: [
+            {
+                name: 'Pencil in the shade',
+                text: 'A pencil sketch on paper in soft shade: the plot hatched in pencil, the line a soft graphite stroke, the change on a lifted paper chip.',
+            },
+            {
+                name: 'The leaf shade',
+                text: 'Dappled leaf shade over the card, a soft line, the number on the paper.',
+            },
+            {
+                name: 'The window light',
+                text: 'A shaft of window light falls across the card from the left; the plot is plain, the line a soft graphite stroke.',
+            },
+        ],
+        loading: [
+            {
+                name: 'Pencil in the shade',
+                text: 'The hatching sweeps in.',
+            },
+            {
+                name: 'The leaf shade',
+                text: 'A cloud’s shade passes.',
+            },
+            {
+                name: 'Leaves sway',
+                text: 'The leaf shade over the plot sways to and fro.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Drawn in pencil',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+            {
+                name: 'Out of the shade',
+                text: 'The line rises from the baseline, slowing as it lands; the number rises into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'Pencil in the shade',
+                text: 'The change on a lifted paper chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The leaf shade',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The pinned note',
+                text: 'The change on a paper chip; a warning or destructive figure is marked along the left edge in its colour, as a note pinned to the card.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A breeze',
+                text: 'The line dips once and comes back, easing in and out.',
+            },
+            {
+                name: 'Pencilled again',
+                text: 'The line is traced again from its start, easing in and out.',
+            },
+        ],
+    },
+    'shade-dark': {
+        shape: [
+            {
+                name: 'Silverpoint',
+                text: 'Silverpoint on dark paper: the line a silver hairline over a faint silver wash, a silver rule above the label.',
+            },
+            {
+                name: 'The reading lamp',
+                text: 'A warm reading lamp over the card: a pool of light behind the number, the line in warm ink.',
+            },
+            {
+                name: 'The night window',
+                text: 'A shaft of moonlight falls across the card; the line in a cool silver ink with a faint glow.',
+            },
+        ],
+        loading: [
+            {
+                name: 'Silverpoint',
+                text: 'The silver hatches in.',
+            },
+            {
+                name: 'The lamp',
+                text: 'The pool of lamplight swells and settles.',
+            },
+            {
+                name: 'The candle',
+                text: 'A small candle flame flickers in the corner of the plot.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Silverpoint',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+            {
+                name: 'The lamp is lit',
+                text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'Silverpoint',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The reading lamp',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The red lamp',
+                text: 'The change on a soft chip; a warning or destructive figure is marked by a band of its colour along the top, a lamp lit over the card.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A glint',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+            {
+                name: 'The page moves',
+                text: 'The line steps one reading to the left, as chart paper advances, easing in and out.',
+            },
+        ],
+    },
+    retro: {
+        shape: [
+            {
+                name: 'The 1995 dialog',
+                text: 'A 1995 dialog: a raised grey bevel around the tile, the plot a sunken white well, one-pixel line with no wash, the label in the system face without capitals, the change as a raised button.',
+            },
+            {
+                name: 'The performance monitor',
+                text: 'A 1995 performance monitor: a black well with a green grid, the line in the phosphor, the number in the mono.',
+            },
+            {
+                name: 'The Notepad window',
+                text: 'A plain 1995 window: a 1px black frame with a hard drop shadow, the plot a white well with a black border, one-pixel line, no wash, the label in the system face.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The progress blocks',
+                text: 'Blue progress blocks fill the foot of the well block by block, then start over.',
+            },
+            {
+                name: 'The marquee bar',
+                text: 'A group of three blue blocks slides across the well and comes round again.',
+            },
+            {
+                name: 'The defragmenter',
+                text: 'Blocks of colour shift through the well in hard steps, as a defragmenter’s map.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Painted',
+                text: 'The line is drawn in from the left, in 6 hard steps; the number is there at once.',
+            },
+            {
+                name: 'Dragged in',
+                text: 'The line drops into place from above, in 2 hard steps; the number drops into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The 1995 dialog',
+                text: 'The change as a raised button; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The flat field',
+                text: 'The change as a flat square field with a 1px rule, no bevel.',
+            },
+            {
+                name: 'The message box',
+                text: 'The change as a sunken field; a warning or destructive figure is shown framed in its colour, as a message box asks for attention.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Repainted',
+                text: 'The line flashes in the ink for a moment, in hard jumps.',
+            },
+            {
+                name: 'Scrolled one',
+                text: 'The line steps one reading to the left, as chart paper advances, in hard jumps.',
+            },
+        ],
+    },
+    grotesk: {
+        shape: [
+            {
+                name: 'The transit board',
+                text: 'A Swiss transit board: a thick bar in the series colour across the top, the number in bold grotesque, the line 3px round-capped, the change as a flat colour bar.',
+            },
+            {
+                name: 'The Swiss poster',
+                text: 'A Swiss poster: the number huge and flush left, the line a hairline, the change in the red index colour on its own plate.',
+            },
+            {
+                name: 'The index card',
+                text: 'A Swiss index card: a red rule down the left margin, a hairline along the top, the number large and tight, the line 2px over no wash.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The transit board',
+                text: 'A line runs across.',
+            },
+            {
+                name: 'The Swiss poster',
+                text: 'Three blocks cut in.',
+            },
+            {
+                name: 'The flap board',
+                text: 'Three bars flip over one after the other, as a departure board’s flaps.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Set in type',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+            {
+                name: 'The board flips',
+                text: 'The line rises from the baseline, in 3 hard steps; the number rises into its line.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The transit board',
+                text: 'The change as a flat colour bar; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The underlined figure',
+                text: 'The change on a flat plate with a heavy rule under it, square.',
+            },
+            {
+                name: 'The index colour',
+                text: 'The change on a flat plate; a warning or destructive figure prints its number on the tone’s plate, the poster’s index colour.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Flipped',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'Shifted',
+                text: 'The line steps one reading to the left, as chart paper advances, easing in and out.',
+            },
+        ],
+    },
+    lapis: {
+        shape: [
+            {
+                name: 'The girih tile',
+                text: 'A girih lattice on lapis: a faint star lattice on the tile, a double gold frame, the number in the display face, the line in gold.',
+            },
+            {
+                name: 'Lapis on vellum',
+                text: 'Lapis ink on ivory vellum: the line in lapis ink, a gold rim around the plot, the label in serif italic.',
+            },
+            {
+                name: 'The manuscript margin',
+                text: 'A page of a manuscript: a double gold rule down the left margin, the label in serif italic, the line in lapis ink, a gold rule under the plot.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The girih tile',
+                text: 'A glint runs the frame.',
+            },
+            {
+                name: 'The gold leaf is laid',
+                text: 'A band of gold leaf is laid along the foot of the plot, left to right, and laid again.',
+            },
+            {
+                name: 'The star turns',
+                text: 'An eight-point star of gold rays turns slowly behind the plot.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Illuminated',
+                text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
+            },
+            {
+                name: 'Inked',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The girih tile',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'Lapis on vellum',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The rubric',
+                text: 'The change on a gold-ruled plate; a warning or destructive figure is marked down the margin in its colour, as a rubric in red.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'Gilded',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+            {
+                name: 'Inked again',
+                text: 'The line is traced again from its start, easing in and out.',
+            },
+        ],
+    },
+    nostromo: {
+        shape: [
+            {
+                name: 'The CRT trace',
+                text: 'A green-black CRT in the beige bezel: scanlines over the plot, the line a phosphor trace with its glow, the label and the number in mono capitals.',
+            },
+            {
+                name: 'The indicator panel',
+                text: 'The ship’s indicator panel: the label on embossed label tape, the change as a lit indicator lamp, the plot an embossed window.',
+            },
+            {
+                name: 'The MU-TH-UR screen',
+                text: 'The ship computer’s console: everything in mono capitals, scanlines over the whole tile, the plot a dark screen ringed in green, the line a phosphor trace on it.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The CRT trace',
+                text: 'A sweep runs across the tube.',
+            },
+            {
+                name: 'The indicator panel',
+                text: 'The lamps scan.',
+            },
+            {
+                name: 'The motion tracker',
+                text: 'A ring pings out from the middle of the plot, as the motion tracker sweeps.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Warmed up',
+                text: 'The line strikes on and off like a tube, then holds, in hard jumps; the number is typed in.',
+            },
+            {
+                name: 'Printed out',
+                text: 'The line is drawn in from the left, in 20 hard steps; the number is typed in.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The CRT trace',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The indicator panel',
+                text: 'The change as a lit indicator lamp, the plot an embossed window; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The klaxon',
+                text: 'The change as a lit lamp; a warning or destructive figure is framed all round in its colour, as the bridge alarm frames the screen.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A blip',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+            {
+                name: 'The trace rolls',
+                text: 'The line steps one reading to the left, as chart paper advances, in 2 hard steps.',
+            },
+        ],
+    },
+    titanium: {
+        shape: [
+            {
+                name: 'The milled plate',
+                text: 'A milled titanium plate: a brushed grain on the tile, the plot ringed in an anodised edge, the label in small capitals, the number in instrument mono.',
+            },
+            {
+                name: 'The instrument dial',
+                text: 'An instrument dial: the plot a recessed aperture with an inner shadow, a knurled band along the top of the tile, the change on a machined tab.',
+            },
+            {
+                name: 'The anodised badge',
+                text: 'An anodised badge: a wide rounded tile with a primary rim and a diagonal sheen, the plot a rounded window, the number in instrument mono.',
+            },
+        ],
+        loading: [
+            {
+                name: 'The milled plate',
+                text: 'The cutter runs along the edge.',
+            },
+            {
+                name: 'The instrument dial',
+                text: 'The knurl rolls.',
+            },
+            {
+                name: 'The lathe',
+                text: 'Knurled ridges run along the plot, as a part turning on a lathe.',
+            },
+        ],
+        arrival: [
+            {
+                name: 'At once',
+                text: 'The number and the line are there the moment loading ends, as both characters had them.',
+            },
+            {
+                name: 'Milled',
+                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+            },
+            {
+                name: 'Seated',
+                text: 'The line drops into place from above, overshooting once; the number is pressed into the sheet.',
+            },
+        ],
+        tone: [
+            {
+                name: 'The milled plate',
+                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The instrument dial',
+                text: 'The change on a machined tab; a warning or destructive figure shows the note in the label on the tone’s plate.',
+            },
+            {
+                name: 'The anodised tag',
+                text: 'The change on a machined tab; a warning or destructive figure shows a band of its colour across the top, an anodised tag.',
+            },
+        ],
+        live: [
+            {
+                name: 'Redrawn',
+                text: 'A new reading redraws the line in place at once, as both characters had it.',
+            },
+            {
+                name: 'A click of the dial',
+                text: 'The line jolts once, as a needle does, in 2 hard steps.',
+            },
+            {
+                name: 'A glint',
+                text: 'The line flares with light once, slowing as it lands.',
+            },
+        ],
+    },
 };
 
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
+const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="trend"]'));
 
 /* ------------------------------------------------- the review kit's text */
 
 // Read by ../_review/review.js when it loads, which is after this module:
-// one choice per theme, the two characters' names and parts as its hints.
-const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="trend"]'));
-const hints = (/** @type {'a' | 'b'} */ which) =>
-    Object.fromEntries(Object.entries(IDEAS).map(([theme, t]) => [theme, `${t[which].name}. ${t[which].text}`]));
+// five choices per theme, each option's name and what it does as its hint.
+// Nothing is ticked for the reviewer.
+const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
+    Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at].name}. ${idea[aspect][at].text}`]));
 section.setAttribute(
     'data-review-choices',
-    JSON.stringify([
-        {
-            id: 'trend',
-            label: 'The trend tile for this theme',
-            options: [
-                { value: 'a', label: 'Character 1', hints: hints('a') },
-                { value: 'b', label: 'Character 2', hints: hints('b') },
-                {
-                    value: 'plain',
-                    label: 'The plain tile, as today',
-                    hint: 'Keep the package trend tile in this theme: the same shape as everywhere, in the theme’s colours.',
-                },
-            ],
-        },
-    ]),
+    JSON.stringify(
+        ASPECTS.map(({ id, label }) => ({
+            id,
+            label,
+            options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+        })),
+    ),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-const lower = (/** @type {string} */ name) => name.replace(/^(The|A) /, (m) => m.toLowerCase());
-for (const [theme, t] of Object.entries(IDEAS)) {
+for (const [theme, idea] of Object.entries(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
     p.textContent =
-        `Character 1 is ${lower(t.a.name)}, character 2 ${lower(t.b.name)}; the third column is the plain tile of today. ` +
-        'Look at the plate, the label, the number, the change, the line and its wash, and the axis, then move the pointer over a trend: the chip reads one point. ' +
-        'Press Loading, Nothing to draw and Could not read: the tile keeps its height. Try a long label, a wide value, the warning tone and the live update.';
+        `Five picks, each on its own. Shapes 1 and 2 are round 1's ${idea.shape[0].name.replace(/^The /, 'the ')} and ${idea.shape[1].name.replace(/^The /, 'the ')}, shape 3 is new. ` +
+        'Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
+        'Press Drawn, Loading, the tones and Live update at full speed and at ¼, try a long label and a wide value; the tile keeps its height.';
     look.append(p);
 }
+
+/* ------------------------------------------------ the rows of options */
+
+const TILE = `<div class="kp-kpi kp-kpi--trend" data-tr-tile>
+    <span class="kp-kpi__label"><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span>
+    <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"><span class="kp-kpi__link-word">Charts</span> ↗</a>
+    <span class="kp-kpi__value"></span>
+    <span class="kp-kpi__trend"></span>
+    <figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Pressure, last 24 hours"></figure>
+</div>`;
+const rows = /** @type {HTMLElement} */ (section.querySelector('[data-ct-aspects]'));
+for (const { id, label, about } of ASPECTS) {
+    const box = document.createElement('section');
+    box.className = 'tr-aspect';
+    box.setAttribute('data-ct-aspect', id);
+    box.setAttribute('aria-labelledby', `h-ct-${id}`);
+    const head = document.createElement('div');
+    head.className = 'tr-aspect__head';
+    head.innerHTML = '<h3></h3><p></p>';
+    head.firstElementChild.id = `h-ct-${id}`;
+    /** @type {HTMLElement} */ (head.firstElementChild).textContent = label;
+    /** @type {HTMLElement} */ (head.lastElementChild).textContent = about;
+    const trio = document.createElement('div');
+    trio.className = 'tr-trio';
+    for (const at of [1, 2, 3]) {
+        const cell = document.createElement('div');
+        cell.className = 'tr-col';
+        cell.setAttribute('data-ct-vary', id);
+        cell.setAttribute('data-ct-option', String(at));
+        cell.innerHTML =
+            `<p class="tr-label"><span class="tr-label__no">${label} · ${at}</span> <span data-ct-name></span></p>` +
+            `<p class="tr-desc" data-ct-desc></p><div class="kp-kpis tr-strip" data-ct>${TILE}</div>`;
+        trio.append(cell);
+    }
+    box.append(head, trio);
+    rows.append(box);
+}
+
+/* ------------------------------------------------------- the picks */
+
+/** What is ticked in the dialog, per theme; an aspect not ticked yet shows its option 1. */
+/** @type {Record<string, Partial<Record<Aspect, string>>>} */
+const ticked = {};
+const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
+const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+
+/** Writes the five aspects on every strip: the preview takes the picks, each row's cell its own option in its own aspect. */
+function compose() {
+    const now = picks();
+    const preview = section.querySelector('[data-ct-preview]');
+    for (const { id } of ASPECTS) if (preview?.getAttribute(`data-ct-${id}`) !== now[id]) preview?.setAttribute(`data-ct-${id}`, now[id]);
+    for (const cell of section.querySelectorAll('[data-ct-vary]')) {
+        const vary = cell.getAttribute('data-ct-vary');
+        const option = cell.getAttribute('data-ct-option') ?? '1';
+        const strip = cell.querySelector('[data-ct]');
+        for (const { id } of ASPECTS) {
+            const value = id === vary ? option : now[id];
+            if (strip?.getAttribute(`data-ct-${id}`) !== value) strip?.setAttribute(`data-ct-${id}`, value);
+        }
+        cell.classList.toggle('tr-picked', ticked[theme()]?.[/** @type {Aspect} */ (vary)] === option);
+    }
+    const words = section.querySelector('[data-ct-picks]');
+    const idea = IDEAS[theme()];
+    if (words && idea) words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1].name}`).join(' · ');
+}
+
+// What is ticked in the review dialog is what the preview shows.
+section.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent<{ id: Aspect, value: string }>} */ (event).detail;
+    (ticked[theme()] ??= {})[id] = value;
+    compose();
+});
 
 /* --------------------------------------------------------- the readings */
 
@@ -219,7 +1765,7 @@ const demand = (t) => {
 /**
  * @typedef {{ label: string, note: string, unit?: string, unitKind?: import('../../js/chart.js').ChartUnitKind, digits: number,
  *   context: string, at: (t: number) => number, from?: () => number, until?: () => number, one?: boolean,
- *   tone?: 'warning', upIs: 'good' | 'bad' }} Figure
+ *   upIs: 'good' | 'bad' }} Figure
  */
 /** @type {Record<string, Figure>} */
 const FIGURES = {
@@ -280,14 +1826,13 @@ const FIGURES = {
         at: () => 71,
         one: true,
     },
-    warning: {
+    hot: {
         label: 'Pump temperature',
         note: 'hottest pump',
         unitKind: 'celsius',
         digits: 0,
         context: 'limit 60 °C',
         upIs: 'bad',
-        tone: 'warning',
         at: (t) => 47 + 11 * demand(t) + noise(t, 4),
     },
 };
@@ -315,6 +1860,7 @@ const WORDS = {
 const state = {
     shown: /** @type {'ready' | 'loading' | 'empty' | 'error'} */ ('ready'),
     figure: 'pressure',
+    tone: /** @type {'' | 'warning' | 'destructive'} */ (''),
 };
 
 const tiles = () => /** @type {HTMLElement[]} */ ([...section.querySelectorAll('[data-tr-tile]')]);
@@ -328,7 +1874,8 @@ const skeleton = (el, width, height) => {
     el.replaceChildren(s);
 };
 
-function draw() {
+/** @param {boolean} [loading] one busy frame, so Drawn replays the arrival */
+function draw(loading = state.shown === 'loading') {
     const f = FIGURES[state.figure];
     for (const tile of tiles()) {
         const figure = /** @type {HTMLElement} */ (tile.querySelector('.kp-kpi__chart'));
@@ -341,9 +1888,9 @@ function draw() {
         if (note) note.textContent = f.note;
         link?.setAttribute('title', `Open ${f.label} on Charts`);
         figure.setAttribute('aria-label', `${f.label}, last 24 hours`);
-        if (f.tone) tile.setAttribute('data-kp-tone', f.tone);
+        if (state.tone) tile.setAttribute('data-kp-tone', state.tone);
         else tile.removeAttribute('data-kp-tone');
-        if (state.shown === 'loading') {
+        if (loading) {
             skeleton(value, '3ch', '1.75rem');
             skeleton(words, '80%');
             setTrendData(figure, null);
@@ -383,17 +1930,31 @@ const pressed = (/** @type {string} */ attr, /** @type {string} */ value) => {
     for (const b of section.querySelectorAll(`[${attr}]`)) b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value));
 };
 
+/** Drawn again: one busy frame, then the readings, so the arrival plays. */
+const replay = () => {
+    draw(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => draw()));
+};
+
 for (const b of section.querySelectorAll('[data-tr-state]'))
     b.addEventListener('click', () => {
         state.shown = /** @type {typeof state.shown} */ (b.getAttribute('data-tr-state') ?? 'ready');
         pressed('data-tr-state', state.shown);
-        draw();
+        if (state.shown === 'ready') replay();
+        else draw();
     });
 
 for (const b of section.querySelectorAll('[data-tr-data]'))
     b.addEventListener('click', () => {
         state.figure = b.getAttribute('data-tr-data') ?? 'pressure';
         pressed('data-tr-data', state.figure);
+        draw();
+    });
+
+for (const b of section.querySelectorAll('[data-tr-tone]'))
+    b.addEventListener('click', () => {
+        state.tone = /** @type {typeof state.tone} */ (b.getAttribute('data-tr-tone') ?? '');
+        pressed('data-tr-tone', state.tone);
         draw();
     });
 
@@ -416,25 +1977,29 @@ section.addEventListener('click', (event) => {
 });
 
 attachTrendCharts(section, { now: () => clock });
+compose();
 draw();
 
 /* ------------------------------------------------- the theme's words */
 
 function showTheme() {
-    const theme = document.documentElement.getAttribute('data-theme') ?? 'formal';
-    for (const el of document.querySelectorAll('[data-tr-theme-name]')) el.textContent = LABEL[theme] ?? theme;
+    const now = theme();
+    for (const el of document.querySelectorAll('[data-tr-theme-name]')) el.textContent = LABEL[now] ?? now;
     // On the page, only this theme's look-at line; the dialog reads them all.
-    for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== theme;
-    const t = IDEAS[theme];
-    for (const which of /** @type {const} */ (['a', 'b'])) {
-        const name = document.querySelector(`[data-tr-name="${which}"]`);
-        const desc = document.querySelector(`[data-tr-desc="${which}"]`);
-        if (name) name.textContent = t ? t[which].name : '';
-        if (desc) desc.textContent = t ? t[which].text : '';
+    for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== now;
+    const idea = IDEAS[now];
+    for (const cell of section.querySelectorAll('[data-ct-vary]')) {
+        const option = idea?.[/** @type {Aspect} */ (cell.getAttribute('data-ct-vary'))]?.[Number(cell.getAttribute('data-ct-option')) - 1];
+        const name = cell.querySelector('[data-ct-name]');
+        const desc = cell.querySelector('[data-ct-desc]');
+        if (name) name.textContent = option?.name ?? '';
+        if (desc) desc.textContent = option?.text ?? '';
     }
+    compose();
 }
 showTheme();
 new MutationObserver(showTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
 /* ------------------------------------------------------------- speed */
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -474,15 +2039,3 @@ for (const b of speedButtons)
         showSpeed();
     });
 showSpeed();
-
-/* ----------------------------------------------------- the pick shown */
-
-// What is ticked in the review dialog is what the page marks.
-section.addEventListener('review:choice', (event) => {
-    const { value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
-    for (const col of section.querySelectorAll('[data-tr-pick]')) col.classList.toggle('tr-picked', col.getAttribute('data-tr-pick') === value);
-});
-new MutationObserver(() => {
-    // A pick for one theme says nothing about the next.
-    for (const col of document.querySelectorAll('.tr-picked')) col.classList.remove('tr-picked');
-}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

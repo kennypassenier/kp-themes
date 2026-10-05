@@ -147,3 +147,59 @@
 [data-review-look] p {
     margin: 0;
 }
+
+[data-tr-tone][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* The combination at the top, the five rows of options, the plain tile
+   below them for reference. */
+.tr-preview,
+.tr-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The preview's and the reference's tile is as wide as a row's tile. */
+.tr-preview > .tr-strip,
+.tr-reference > .tr-strip {
+    inline-size: calc((100% - 2 * var(--kp-space-lg, 1.5rem)) / 3);
+}
+
+@media (max-width: 60rem) {
+    .tr-preview > .tr-strip,
+    .tr-reference > .tr-strip {
+        inline-size: auto;
+    }
+}
+
+.tr-preview__head h3,
+.tr-preview__head p,
+.tr-aspect__head h3,
+.tr-aspect__head p {
+    margin: 0;
+}
+
+.tr-preview__head p,
+.tr-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.tr-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.tr-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.tr-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}

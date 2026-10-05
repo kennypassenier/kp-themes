@@ -14,32 +14,67 @@ the number with its unit, a line of words with the change in it, grey
 skeletons while it loads. This demo gives every theme two strips drawn in its
 own world, beside the plain strip of today.
 
-## Files
+## Files (round 2: one pick per aspect)
+
+Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, like the
+meter (`research/character-meter`), "and it should be like this in the
+future". Round 1's two characters per theme are split into their parts; each
+part is now its own pick.
 
 - `demo.html`: one section judged per theme with the review kit
-  (`../_review/review.js`, `data-review-components="kpi--columns"`): one
-  choice per theme, "Character 1", "Character 2" or "The plain strip, as
-  today", each character's name and parts as the option's hint. The controls
-  sit inside the section, so they travel into the review dialog: State
-  (Drawn, Loading, Nothing to show, Could not read, and a live update ten
-  minutes later), Figures (five, a long label, a wide value, many columns
-  (eight), two columns), and the speed of every animation. Each option shows
-  its strip at desk width and under it the same strip at phone width
-  (334 px).
-- `columns.css`: the 44 characters, in `@layer kp.signature`, scoped
-  `[data-theme='<name>'] [data-cl='a'|'b']`. In a register the same rules read
-  `[data-theme='<name>'] .kp-kpis`. The contract and the shared knobs
+  (`../_review/review.js`, `data-review-components="kpi--columns"`), with
+  five choice groups per theme, three options each, nothing ticked: Shape
+  (the tiles, the dividers, the figure, the label), While loading (always
+  moving, a still frame under reduced motion, never a fade), How the figures
+  arrive (after loading and on Drawn), The tone and the change (the change's
+  plate, sign and type), Live update (how a figure that changed shows it).
+  At the top, "Your combination": the strip with the current picks (option 1
+  where nothing is ticked yet, said so in words), following every
+  `review:choice`. Under it one row per aspect, three strips stacked (a strip
+  needs the full width), each at desk width and under it at phone width
+  (334 px), differing in that aspect only. The controls sit in the section's
+  `data-review-controls` container, so the dialog mirrors them: State
+  (Drawn, Loading, Nothing to show, Could not read, Live update ten minutes
+  later), Figures (five, a long label, a wide value, many columns (eight),
+  two columns), the speed of every animation. The plain strip of today is
+  folded away at the foot, for reference, not an option.
+  `data-review-round` is `2026-10-05-r2` and reopens all 22 themes.
+- `columns.css`: one rule per theme, aspect and option, scoped
+  `[data-theme='<name>'] [data-cs-<aspect>='1'|'2'|'3'] .kp-kpis`, ordered by
+  aspect, then by theme. A shape sets the strip's and the tiles' knobs
   (`--cl-plate`, `--cl-rule`, `--cl-strip-*`, `--cl-frame*`, `--cl-deco*`,
-  `--cl-label-*`, `--cl-tag*`, `--cl-num-*`, `--cl-words-*`, `--cl-delta-*`,
-  `--cl-load`, `--cl-load-anim`, `--cl-hue`, `--cl-min`) are at the top of the
-  file; every loop is in one `prefers-reduced-motion: no-preference` block at
-  the end, and only the loading picture ever moves.
-- `demo.js`: the names and descriptions (`IDEAS`), the review choices and
-  look-at lines built from them, the figures of pump house 1, the states
-  written into the package's markup, the speed control.
-- `demo.css`: the page layout only. The three options stand one under the
-  other, not side by side as in the earlier demos: a strip is a wide thing,
-  and at a third of the section's width it could never show many columns.
+  `--cl-label-*`, `--cl-tag*`, `--cl-num-*`, `--cl-words-*`, `--cl-hue`,
+  `--cl-min`); a loading picture `--cl-load` and `--cl-load-anim` (on each
+  tile's ::after while the strip is `aria-busy`); an arrival
+  `--cl-arrive-num`, `--cl-arrive-tile` and `--cl-arrive-stagger` (played
+  when the page sets `data-cs-moment="arrive"`); a tone the `--cl-delta-*`
+  knobs (plate, frame, shadow, sign before and after, face, weight); a live
+  update `--cl-live-num`, `--cl-live-tile` and `--cl-live-ink` (played on
+  the tiles with `data-cs-changed` when the page sets
+  `data-cs-moment="live"`). No rule names two aspects, so any combination
+  composes. Motion moves, scales, turns and clips with `translate`, `scale`,
+  `rotate` and `clip-path`, which compose with a shape's own `transform`;
+  nothing fades, no size changes, and every animation sits in one
+  `prefers-reduced-motion: no-preference` block at the end. In a register the
+  `[data-cs…]` parts drop out and the moment becomes the package's hook.
+- `demo.js`: the five aspects (`ASPECTS`), the names and texts per theme
+  (`IDEAS`, three per aspect), the review choices and look-at lines built
+  from them, the rows of options, `compose()` (the preview takes the picks,
+  every row's cell its own option in its own aspect and the picks in the
+  other four), the figures of pump house 1, the states and moments written
+  into the package's markup, the speed control.
+- `demo.css`: the page layout only: the combination, the rows, the phone
+  pane.
+
+Options 1 and 2 of each aspect come from round 1's characters a and b where
+they differ. Where round 1 stood still while loading (formal, light, dark's
+rack, high contrast, retro) or breathed in opacity (sepia's drawers,
+solstice, phantom's pins, shade-light's sheets, shade-dark's lights,
+brutalism's stamp, terminal's cursor), the picture is new or redrawn as a
+change of size or place. Round 1 had no arrival and no live update: all three
+are new there. Where both characters had the same change (light, dark,
+cyberpunk, pastel, terminal, high contrast, deco, phantom, retro, grotesk,
+lapis, nostromo), tone option 2 is new.
 
 js/kpi.js is not changed.
 
@@ -242,3 +277,197 @@ full run, 124.0 s for 44 pages.
   the toggle tile and the trend tile are other components of the round.
 - The patterns under the text (see Contrast) and the catalogue's own strip
   block.
+
+## Round 2 (2026-10-05): one pick per aspect
+
+### The options per theme
+
+One line per theme and aspect: options 1, 2 and 3 by name (what each does is in `demo.js` `IDEAS` and in the review dialog).
+
+| Theme         | Aspect  | 1                          | 2                      | 3                        |
+| ------------- | ------- | -------------------------- | ---------------------- | ------------------------ |
+| formal        | Shape   | The ledger row             | The booktabs table     | The engraved certificate |
+| formal        | Loading | The pages riffle           | The ink rule           | The dotted leader        |
+| formal        | Arrival | Entered with the pen       | Set in type            | The pages turned         |
+| formal        | Tone    | The ruled entry            | The margin note        | Plus and minus           |
+| formal        | Live    | Underlined in ink          | Struck and rewritten   | The clerk’s stamp        |
+| light         | Shape   | One card                   | The legend chips       | Separate cards           |
+| light         | Loading | Morning light              | Through the window     | The shadow swings        |
+| light         | Arrival | Rising into the light      | Popped up              | Drawn by daylight        |
+| light         | Tone    | The pill                   | The soft tag           | The lifted pill          |
+| light         | Live    | A ring of light            | Lifted in              | Underlined               |
+| dark          | Shape   | The departure board        | The rack               | The oscilloscope         |
+| dark          | Loading | The flaps flick            | The status lamp blinks | The activity LEDs        |
+| dark          | Arrival | Flipped in                 | Slid into the rack     | Read out                 |
+| dark          | Tone    | The flap tag               | Signed in mono         | The LED                  |
+| dark          | Live    | The flap turns             | Reverse video          | Rolled up                |
+| cyberpunk     | Shape   | The ticker rail            | The data shards        | The HUD brackets         |
+| cyberpunk     | Loading | A packet on the rail       | The glitch line        | Data rain                |
+| cyberpunk     | Arrival | Glitched in                | Decoded                | Jacked in                |
+| cyberpunk     | Tone    | The square chip            | The chevrons           | The neon edge            |
+| cyberpunk     | Live    | Glitched                   | Reverse video          | Shaken                   |
+| synthwave     | Shape   | The cassette counter       | The arcade scoreboard  | The sunset grid          |
+| synthwave     | Loading | The tape’s teeth           | The screen rolls       | The sun rises            |
+| synthwave     | Arrival | The score counts up        | Dropped in             | Flipped over             |
+| synthwave     | Tone    | The counter tag            | The score chip         | The neon pill            |
+| synthwave     | Live    | The counter rolls          | Flipped                | A neon ring              |
+| pastel        | Shape   | The paint swatches         | The sticky notes       | The macarons             |
+| pastel        | Loading | A sheen on the band        | A sheen on the note    | Bubbles rise             |
+| pastel        | Arrival | Bounced in                 | Stuck on               | Rising softly            |
+| pastel        | Tone    | The pill                   | The soft square        | The candy                |
+| pastel        | Live    | A little wiggle            | A ring                 | Popped                   |
+| terminal      | Shape   | The df -h table            | The tmux status bar    | The prompt listing       |
+| terminal      | Loading | The block cursor           | The band               | The hash bar             |
+| terminal      | Arrival | Printed                    | Line by line           | Scrolled up              |
+| terminal      | Tone    | The square block           | Signed                 | The bracket              |
+| terminal      | Live    | Reverse video              | Retyped                | The underscore           |
+| forest        | Shape   | The trail markers          | The specimen mounts    | The tree rings           |
+| forest        | Loading | Light walks the trail      | A seed rolls           | A leaf falls             |
+| forest        | Arrival | Growing                    | Hung on the post       | Unfolding                |
+| forest        | Tone    | The painted blaze          | The field note         | The pebble               |
+| forest        | Live    | The post sways             | Grown in               | Underlined               |
+| high-contrast | Shape   | The ruled grid             | The inverse heads      | The heavy underline      |
+| high-contrast | Loading | The stepping bar           | The block cursor       | The tally                |
+| high-contrast | Arrival | Wiped in                   | Dropped                | Typed                    |
+| high-contrast | Tone    | The framed plate           | The bold sign          | The underlined plate     |
+| high-contrast | Live    | Inverted                   | Framed                 | Underlined               |
+| sepia         | Shape   | The typewriter tab stops   | The card catalogue     | The index card           |
+| sepia         | Loading | The carriage steps         | A drawer slides out    | The ink spreads          |
+| sepia         | Arrival | Typed                      | The drawer pushed in   | Rubber-stamped           |
+| sepia         | Tone    | The typed tag              | The brass tag          | Plus and minus typed     |
+| sepia         | Live    | Struck over                | Retyped                | Restamped                |
+| blueprint     | Shape   | The dimension chain        | The bill of materials  | The title block          |
+| blueprint     | Loading | The centre line marches    | The scan               | The construction line    |
+| blueprint     | Arrival | Drafted                    | Rolled out             | Lettered                 |
+| blueprint     | Tone    | The square tag             | The tolerance          | The revision triangle    |
+| blueprint     | Live    | The revision ring          | Underlined             | Turned over              |
+| solstice      | Shape   | The horizon                | The lanterns           | The sundial              |
+| solstice      | Loading | The light breathes         | The lanterns breathe   | The sun crosses          |
+| solstice      | Arrival | Sunrise                    | The lanterns hung      | Warmly popped            |
+| solstice      | Tone    | The warm pill              | The glowing pill       | The sun and moon         |
+| solstice      | Live    | Risen                      | A halo                 | The lantern sways        |
+| brutalism     | Shape   | The poster grid            | The ticket stubs       | The label stack          |
+| brutalism     | Loading | The bar stamps             | The accent stamps      | The marching block       |
+| brutalism     | Arrival | Stamped                    | Slammed down           | Shoved in                |
+| brutalism     | Tone    | The boxed plate            | The hard shadow        | The arrow block          |
+| brutalism     | Live    | Restamped                  | Inverted               | Shaken                   |
+| deco          | Shape   | The floor indicator        | The colonnade          | The sunburst panel       |
+| deco          | Loading | A glint runs across        | The rays fan out       | The dial’s needle        |
+| deco          | Arrival | Drawn in gold              | The doors open         | Rising                   |
+| deco          | Tone    | The square plaque          | The gold-edged plaque  | The chevron              |
+| deco          | Live    | A gold underline           | The floor turns        | A gold ring              |
+| phantom       | Shape   | The red-string board       | The case files         | The redacted dossier     |
+| phantom       | Loading | The pins beat              | The folders shuffle    | The flashlight           |
+| phantom       | Arrival | Pinned up                  | Typed into the report  | A card turned over       |
+| phantom       | Tone    | The evidence tag           | The case number        | The circled clue         |
+| phantom       | Live    | Redacted and rewritten     | A shiver               | Inverted                 |
+| shade-light   | Shape   | The window blinds          | The paper cut-outs     | Embossed paper           |
+| shade-light   | Loading | The slats drift            | A sheet slides in      | A cloud passes           |
+| shade-light   | Arrival | Laid down                  | Rising                 | Pressed up               |
+| shade-light   | Tone    | The soft pill              | The small tag          | The pressed pill         |
+| shade-light   | Live    | Risen                      | The sheet stirs        | A soft ring              |
+| shade-dark    | Shape   | The gallery wall           | The velvet tray        | The museum plaque        |
+| shade-dark    | Loading | The lights breathe         | A sheen crosses        | The light swings         |
+| shade-dark    | Arrival | Lit up                     | Unveiled               | Unfolded                 |
+| shade-dark    | Tone    | The square tag             | The cushion            | The engraved tag         |
+| shade-dark    | Live    | Underlined                 | A soft ring            | Risen                    |
+| retro         | Shape   | The status bar             | The list view          | The group box            |
+| retro         | Loading | The progress blocks        | The marquee            | The flying page          |
+| retro         | Arrival | Painted                    | Dropped                | Progress                 |
+| retro         | Tone    | The flat tag               | The raised button      | The sunken field         |
+| retro         | Live    | Selected                   | Repainted              | Flipped                  |
+| grotesk       | Shape   | The numbered grid          | The line colours       | The big numerals         |
+| grotesk       | Loading | A line runs across         | The blocks fill in     | A square steps the grid  |
+| grotesk       | Arrival | Slid in                    | Wiped in               | Rising on the grid       |
+| grotesk       | Tone    | The flat block             | Signed, bold           | The arrow                |
+| grotesk       | Live    | Inverted                   | Risen                  | Underlined               |
+| lapis         | Shape   | The arcade                 | The illuminated band   | The mosaic band          |
+| lapis         | Loading | A glint runs across        | The lattice is drawn   | The lamp in the arch     |
+| lapis         | Arrival | Gilded in                  | Turned in              | Rising                   |
+| lapis         | Tone    | The small tag              | The gilded tag         | The fleuron              |
+| lapis         | Live    | Underlined in gold         | A gold ring            | Turned                   |
+| nostromo      | Shape   | The readout bank           | The bulkhead           | The CRT screen           |
+| nostromo      | Loading | The sweep rolls            | The chevrons march     | The sonar ring           |
+| nostromo      | Arrival | Printed out                | Glitched in            | Flipped in               |
+| nostromo      | Tone    | The square tag             | The stencil            | The bracketed readout    |
+| nostromo      | Live    | Glitched                   | Inverted               | Reprinted                |
+| titanium      | Shape   | The anodised bars          | The machined bezels    | The milled bar           |
+| titanium      | Loading | Light rises along the edge | The grain runs         | The cutting pass         |
+| titanium      | Arrival | Machined up                | Slid into the rail     | Etched                   |
+| titanium      | Tone    | The small tag              | The square tag         | The chamfered tag        |
+| titanium      | Live    | Risen                      | Flipped                | A ring                   |
+
+### Measured (round 2, 2026-10-05)
+
+Firefox through Playwright at 1440 × 1000, the page served by a local
+`http.server`.
+
+**The rebuild's first run** (every option, both motion settings): heights,
+columns, the options' differences, the loading pictures (running with motion,
+still under reduce) and the preview all held in 22 themes. It found tile
+frames under 3:1 (pastel shape 1 at 1.27, forest shape 2 at 1.26, titanium
+shape 1 at 1.23, shade-dark shape 3 at 2.93) and labels it counted as cut:
+phantom in every cell and the preview, and arrival 2 in forest, solstice
+and pastel.
+
+**What changed after it.** The frames of pastel shape 1, forest shape 2 and
+titanium shape 1 were a mix of `--border` with transparent; they are now
+`1px solid var(--cl-rule)` (the ink mixed into the plate, the rule every
+shape already draws), still one pixel wide. Shade-dark shape 3's rule had been set to 72 % ink after the first run without a new measurement; it is measured here. The labels were never cut: the first
+run counted a label as wrapped when its bounding box was taller than 1.5
+lines, and a turned box is taller than its line (phantom's pinned cards lean
+by 0.5 to 0.6 degrees, the swing and pop arrivals turn and scale the tile).
+The check now reads the label's own line box (`offsetHeight` and its line
+count), which a transform does not change.
+
+**This run.** Every theme, every cell and the preview, with the shape set to
+1, 2 and 3 in turn. The frame contrast is the lowest of every drawn side of
+the first two tiles of each cell, each against the strip's ground, the page
+(`--background`) and the card (`--card`). A label is cut when its
+`scrollWidth` exceeds its `clientWidth`, when its line box holds more than
+one line, or when it reaches past a clipping ancestor; sampled every 50 ms
+for 1.2 s after Loading, after Drawn (the arrival) and after a live update,
+for each of the five sets of figures (360 samples per theme, each over every
+cell). "No frame" means the shape draws no border (a shadow, a rule above
+the strip or nothing).
+
+| Theme         | Shape 1  | Shape 2  | Shape 3  | Labels cut       | Errors |
+| ------------- | -------- | -------- | -------- | ---------------- | ------ |
+| formal        | no frame | no frame | 5.09     | 0 of 360 samples | 0      |
+| light         | no frame | no frame | no frame | 0 of 360 samples | 0      |
+| dark          | no frame | 6.40     | 5.73     | 0 of 360 samples | 0      |
+| cyberpunk     | no frame | 15.26    | no frame | 0 of 360 samples | 0      |
+| synthwave     | 4.67     | no frame | 4.67     | 0 of 360 samples | 0      |
+| pastel        | 4.21     | no frame | no frame | 0 of 360 samples | 0      |
+| terminal      | no frame | no frame | no frame | 0 of 360 samples | 0      |
+| forest        | 4.61     | 4.70     | 4.40     | 0 of 360 samples | 0      |
+| high-contrast | no frame | 21.00    | no frame | 0 of 360 samples | 0      |
+| sepia         | no frame | 4.51     | 4.26     | 0 of 360 samples | 0      |
+| blueprint     | 5.24     | no frame | 5.59     | 0 of 360 samples | 0      |
+| solstice      | no frame | 5.29     | 5.29     | 0 of 360 samples | 0      |
+| brutalism     | no frame | 18.23    | 18.23    | 0 of 360 samples | 0      |
+| deco          | 7.55     | 7.55     | 5.59     | 0 of 360 samples | 0      |
+| phantom       | 6.45     | 6.77     | no frame | 0 of 360 samples | 0      |
+| shade-light   | 3.70     | 3.70     | no frame | 0 of 360 samples | 0      |
+| shade-dark    | 3.84     | no frame | 3.48     | 0 of 360 samples | 0      |
+| retro         | no frame | no frame | 3.75     | 0 of 360 samples | 0      |
+| grotesk       | 6.19     | no frame | no frame | 0 of 360 samples | 0      |
+| lapis         | 5.10     | 3.21     | 4.36     | 0 of 360 samples | 0      |
+| nostromo      | no frame | 3.68     | 3.68     | 0 of 360 samples | 0      |
+| titanium      | 5.53     | 5.13     | no frame | 0 of 360 samples | 0      |
+
+Every drawn tile frame is at 3:1 or more: the lowest is lapis shape 2
+(3.21), then shade-dark shape 3 (3.48, the re-measure after its change to
+72 %). Brutalism shape 3 measures 18.23 and labels cut 0; phantom shape 3
+draws no frame and its labels cut 0 (both re-measured after the rebuild's
+change). The review dialog opened from the hub
+(`?next=/catalogue/changed.html&review=open`) shows five choice groups
+(shape, loading, arrival, tone, live) of three options each with nothing
+ticked, in all 22 themes, with 0 console errors.
+
+**Open, not a label:** while a figure lands from larger (`cl-a-stamp` at
+1.6, `cl-l-stamp` at 1.35), the number's box is wider than its tile for
+200 to 450 ms, so the tile's `scrollWidth` exceeds its `clientWidth`:
+formal live 3, pastel live 3, sepia arrival 3 and live 3, and brutalism's
+arrival 1 and live 1 (which every other brutalism cell shows by default).
+The label stays inside its tile.

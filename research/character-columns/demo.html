@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes — a key-figure strip of its own, per theme</title>
+        <title>kp-themes — a key-figure strip of its own, per theme: one pick per aspect</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -30,29 +30,25 @@
     <body>
         <main class="cl-page">
             <header class="cl-intro">
-                <h1>A key-figure strip of its own, per theme</h1>
+                <h1>A key-figure strip of its own, per theme: one pick per aspect</h1>
                 <p>
-                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
-                    chart, the month heatmap, the network graph and the trend tile comes the strip of key figures, one column per figure, its column
-                    count kept by <code>js/kpi.js</code>. Today <code>.kp-kpis</code> has the same shape in every theme (a card per figure in equal
-                    columns, the label in small capitals, the number, a line of words), drawn in the theme's colours only. Here every theme gets two
-                    strips of its own, drawn in the theme's own material, beside the plain strip as it is today. Pick one of the three per theme.
+                    Round 2 (Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, like the meter). Nothing is bundled any more: per
+                    theme you pick the shape, the loading picture, how the figures arrive, the tone and the change, and the live update, each from
+                    three options and each on its own. Options 1 and 2 come from round 1's two characters, split into their parts (where both had the
+                    same part, option 2 is new); option 3 is new in every aspect. Nothing is ticked for you.
                 </p>
                 <p class="cl-motion" data-cl-motion hidden>
-                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture is a still frame. Turn it off in
                     the system settings to judge the motion.
                 </p>
                 <p class="cl-meta">
                     Each strip holds the key figures of pump house 1 at a fixed now (20/10/2026 14:40 in Brussels). The strips are the package's own:
                     <code>attachKpiStrips()</code> picks the column count from the strip's own width (all, 3, 2 or 1, never one tile alone on a row);
-                    a character only restyles them from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>columns.css</code>),
-                    and keeps one height in every state. This theme: <b data-cl-theme-name>…</b>
+                    every option only restyles them from the theme's tokens, in the theme's <code>kp.signature</code> layer
+                    (<code>columns.css</code>), one attribute per aspect, and keeps one height in every state. This theme: <b data-cl-theme-name>…</b>
                 </p>
             </header>
 
-            <!-- Under review is one variant of the key figure, the strip with
-                 its columns; the toggle tile, the meter and the trend tile are
-                 components of their own in the character round. -->
             <section
                 class="cl-sec"
                 data-review-item="columns"
@@ -63,8 +59,10 @@
                 <div class="cl-sec__head">
                     <h2 id="h-columns">The key-figure strip in <span data-cl-theme-name>this theme</span></h2>
                     <p>
-                        Two characters drawn in this theme's world, and the plain strip as it is today, each at desk width and at phone width. Use the
-                        buttons below for every state and every kind of strip: the columns stay equal and the strip keeps its height.
+                        Five things to pick, each on its own. Each row below shows three strips that differ in that one aspect only, everything else
+                        as you ticked it (option 1 where nothing is ticked yet); the combination at the top shows your picks together. Each strip is
+                        shown at desk width and under it at phone width (334 px). <b>Drawn</b> replays how the figures arrive, <b>Loading</b> shows
+                        the loading picture, <b>Live update</b> moves the figures ten minutes on, and the speed slows every animation.
                     </p>
                 </div>
                 <div class="cl-controls" data-review-controls>
@@ -92,61 +90,21 @@
                     </div>
                 </div>
                 <div data-review-look></div>
-                <div class="cl-trio">
-                    <div class="cl-col" data-cl="a" data-cl-pick="a">
-                        <div class="cl-words">
-                            <p class="cl-label"><span class="cl-label__no">Character 1</span> <span data-cl-name="a">…</span></p>
-                            <p class="cl-desc" data-cl-desc="a"></p>
-                        </div>
-                        <div
-                            class="kp-kpis"
-                            data-kp-kpis-columns="all 3 2 1"
-                            role="group"
-                            aria-label="Pump house 1 right now"
-                            data-cl-strip="desk"
-                        ></div>
-                        <p class="cl-pane-name">At phone width (334 px):</p>
-                        <div class="cl-phone">
-                            <div
-                                class="kp-kpis"
-                                data-kp-kpis-columns="all 3 2 1"
-                                role="group"
-                                aria-label="Pump house 1 right now, phone width"
-                                data-cl-strip="phone"
-                            ></div>
-                        </div>
+                <div class="cl-preview">
+                    <div class="cl-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-cl-picks>…</p>
                     </div>
-                    <div class="cl-col" data-cl="b" data-cl-pick="b">
-                        <div class="cl-words">
-                            <p class="cl-label"><span class="cl-label__no">Character 2</span> <span data-cl-name="b">…</span></p>
-                            <p class="cl-desc" data-cl-desc="b"></p>
-                        </div>
-                        <div
-                            class="kp-kpis"
-                            data-kp-kpis-columns="all 3 2 1"
-                            role="group"
-                            aria-label="Pump house 1 right now"
-                            data-cl-strip="desk"
-                        ></div>
-                        <p class="cl-pane-name">At phone width (334 px):</p>
-                        <div class="cl-phone">
-                            <div
-                                class="kp-kpis"
-                                data-kp-kpis-columns="all 3 2 1"
-                                role="group"
-                                aria-label="Pump house 1 right now, phone width"
-                                data-cl-strip="phone"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="cl-col" data-cl="plain" data-cl-pick="plain">
-                        <div class="cl-words">
-                            <p class="cl-label"><span class="cl-label__no">Today</span> The plain strip</p>
-                            <p class="cl-desc">
-                                The package's strip as it ships: a card per figure in equal columns, the label in small capitals, the number with its
-                                unit, a line of words, grey skeletons while it loads; the same shape in every theme.
-                            </p>
-                        </div>
+                    <div
+                        class="cl-col"
+                        data-cs
+                        data-cs-preview
+                        data-cs-shape="1"
+                        data-cs-loading="1"
+                        data-cs-arrival="1"
+                        data-cs-tone="1"
+                        data-cs-live="1"
+                    >
                         <div
                             class="kp-kpis"
                             data-kp-kpis-columns="all 3 2 1"
@@ -166,9 +124,56 @@
                         </div>
                     </div>
                 </div>
+                <div class="cl-aspects" data-cl-aspects></div>
+                <details class="cl-plain">
+                    <summary>For reference: the plain strip of today (not an option)</summary>
+                    <div class="cl-col">
+                        <p class="cl-desc">
+                            The package's strip as it ships: a card per figure in equal columns, the label in small capitals, the number with its
+                            unit, a line of words, grey skeletons while it loads; the same shape in every theme.
+                        </p>
+                        <div
+                            class="kp-kpis"
+                            data-kp-kpis-columns="all 3 2 1"
+                            role="group"
+                            aria-label="Pump house 1 right now, the plain strip"
+                            data-cl-strip="desk"
+                        ></div>
+                    </div>
+                </details>
             </section>
         </main>
 
+        <!-- Round 2 splits every character into its aspects (Kenny, 2026-10-05 20:03). -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r2",
+                "reopen": [
+                    "formal|columns",
+                    "light|columns",
+                    "dark|columns",
+                    "cyberpunk|columns",
+                    "synthwave|columns",
+                    "pastel|columns",
+                    "terminal|columns",
+                    "forest|columns",
+                    "high-contrast|columns",
+                    "sepia|columns",
+                    "blueprint|columns",
+                    "solstice|columns",
+                    "brutalism|columns",
+                    "deco|columns",
+                    "phantom|columns",
+                    "shade-light|columns",
+                    "shade-dark|columns",
+                    "retro|columns",
+                    "grotesk|columns",
+                    "lapis|columns",
+                    "nostromo|columns",
+                    "titanium|columns"
+                ]
+            }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

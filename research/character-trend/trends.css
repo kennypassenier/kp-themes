@@ -1,45 +1,61 @@
-/* research/character-trend: two characters of the key figure with its
-   24-hour trend `.kp-kpi--trend` per theme, in the theme's kp.signature
-   layer, so each can move into its register as it stands. `[data-tr='a']`
-   and `[data-tr='b']` are the demo's two columns; in a register the same
-   rules read `[data-theme='<name>'] .kp-kpi--trend`.
+/* research/character-trend, round 2 (Kenny, 2026-10-05 20:03: every demo
+   gets separate options per aspect, as the meter, "and it should be like
+   this in the future"). Nothing is bundled any more: per theme the trend
+   tile `.kp-kpi--trend` has five aspects, each picked on its own from three
+   options, composed freely on the tile's wrapper (`[data-ct]`, a
+   `.kp-kpis` strip, which also carries the five aspects):
 
-   The contract every character keeps:
+     data-ct-shape="1|2|3"    the plate, the frame, the label, the number,
+                              the plot, the line and its wash, the axis
+                              (1 and 2: round 1's two characters; 3: new)
+     data-ct-loading="1|2|3"  the picture on the plot while the tile is busy;
+                              it always moves (a still frame under reduced
+                              motion), and nothing fades
+     data-ct-arrival="1|2|3"  how the number and the line arrive after loading
+     data-ct-tone="1|2|3"     the change's plate, and how a warning or
+                              destructive figure reads
+     data-ct-live="1|2|3"     a new reading: plays whenever js/chart.js draws
+                              new paths
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. Round 1's characters were split into their
+   parts: their `--tr-load*` knobs went to loading, their `--tr-delta-*`
+   knobs to the tone, the rest to the shape; where both characters shared an
+   aspect (no arrival, no live update, the same change), option 2 is new.
+   In a register the `[data-ct…]` parts drop out of every selector.
+
+   The contract every option keeps:
    - The markup is the package's: the page writes the tile
      (`.kp-kpi--trend` with `.kp-kpi__label`, `.kp-kpi__label-note`,
      `.kp-kpi__link`, `.kp-kpi__value`, `.kp-kpi__trend` and in it
      `.kp-kpi__delta`), js/chart.js writes the trend inside
      `figure.kp-kpi__chart`: `.kp-kpi__chart-plot` holding
-     `svg.kp-kpi__spark` (`.kp-kpi__spark-area`, `.kp-kpi__spark-line`),
-     `.kp-kpi__chart-cross` and `.kp-kpi__chart-chip`, and the axis
-     `.kp-kpi__chart-axis` (`-from`, `-to`, `-read`); the tile is
-     `aria-busy` while it loads. Nothing here needs more than that.
-   - Surfaces to draw on: the tile's background (the plate and its pattern,
-     `--tr-plate`, `--tr-pat`) and its ::after (over it: scanlines, a
-     halftone, `--tr-over`); the plot's background (`--tr-plot-bg`,
-     `--tr-plot-pat`), its inner frame (`--tr-plot-frame`), its ::before (the
-     loading picture, `--tr-load`, shown only while the tile is busy) and
-     its ::after (over the line, `--tr-plot-over`); the line's stroke and
-     the area's fill; the change (`.kp-kpi__delta`) as a plate.
-   - Colour: tokens only (DI9), alpha and mixes of tokens. The label, the
-     axis and the words take `--tr-mute`, the number `--tr-ink`, both on
-     `--tr-plate`; the line is the series colour mixed toward the ink
-     (`--tr-line-mix`) unless a character names its own
-     (`--tr-line-override`). The change carries a status pair, its plate
-     and its own ink (fix-70), never half of one.
-   - Height: one height per tile in every state and figure: the label, the
-     number and the words keep fixed line boxes (one line, one line, two
-     lines), the label never wraps and is never cut, and nothing a state
-     adds takes room (a frame is an inset shadow or a border every state
-     has).
+     `svg.kp-kpi__spark` (`.kp-kpi__spark-area`, `.kp-kpi__spark-line`, new
+     paths on every draw), `.kp-kpi__chart-cross` and `.kp-kpi__chart-chip`,
+     and the axis `.kp-kpi__chart-axis`; the tile is `aria-busy` while it
+     loads. Nothing here needs more than that.
+   - Surfaces: the tile's background (`--tr-plate`, `--tr-pat`) and its
+     ::after (`--tr-over`, and in a tone `--tr-tone-over` above it); the
+     plot's background (`--tr-plot-bg`, `--tr-plot-pat`), frame
+     (`--tr-plot-frame`), ::before (the loading picture, `--tr-load`) and
+     ::after (`--tr-plot-over`); the line's stroke and the area's fill; the
+     change (`.kp-kpi__delta`) and the label's note as plates.
+   - Colour: tokens only (DI9). The label, the axis and the words take
+     `--tr-mute`, the number `--tr-ink`, both on `--tr-plate`. The change,
+     the note and a toned number carry a status pair, the plate and its own
+     ink (fix-70), never half of one (`--tr-tc`/`--tr-tf` in a tone).
+   - Height: one height per tile in every state, figure and tone: the
+     label, the number and the words keep fixed line boxes, the label never
+     wraps and is never cut, and nothing a state adds takes room (marks are
+     the tile's ::after, motion only moves and clips).
    - Motion: every animation sits in one `prefers-reduced-motion:
-     no-preference` block at the end, and only the loading picture moves;
-     nothing loops at rest. */
+     no-preference` block at the end; nothing fades (no opacity anywhere);
+     nothing loops at rest, only the loading picture. */
 
 @layer kp.signature {
     /* ── The shared part of every character ───────────────────────────── */
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend {
+    [data-ct] .kp-kpi--trend {
         --tr-plate: var(--card);
         --tr-ink: var(--card-foreground);
         --tr-mute: color-mix(in oklch, var(--muted-foreground) 70%, var(--tr-ink));
@@ -53,7 +69,7 @@
         font-family: var(--tr-font, inherit);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend::after {
+    [data-ct] .kp-kpi--trend::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -63,7 +79,7 @@
         background: var(--tr-over, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__label {
+    [data-ct] .kp-kpi--trend > .kp-kpi__label {
         block-size: 1lh;
         border-block-end: var(--tr-label-rule, 0);
         background: var(--tr-label-bg, none);
@@ -82,12 +98,12 @@
         transform-origin: 0 100%;
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__link {
+    [data-ct] .kp-kpi--trend > .kp-kpi__link {
         font-family: var(--tr-label-font, inherit);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value,
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
+    [data-ct] .kp-kpi--trend > .kp-kpi__value,
+    [data-ct] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
         flex-wrap: nowrap;
         align-items: center;
         block-size: 1lh;
@@ -101,27 +117,27 @@
         white-space: nowrap;
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value small {
+    [data-ct] .kp-kpi--trend > .kp-kpi__value small {
         color: var(--tr-mute);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value > .kp-skeleton {
+    [data-ct] .kp-kpi--trend > .kp-kpi__value > .kp-skeleton {
         block-size: 0.7lh;
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-skeleton {
+    [data-ct] .kp-kpi--trend .kp-skeleton {
         background: color-mix(in oklch, var(--tr-ink) 14%, var(--tr-plate));
     }
 
     /* The words under the number: two lines in every state. */
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__trend {
+    [data-ct] .kp-kpi--trend > .kp-kpi__trend {
         block-size: 2lh;
         min-block-size: 0;
         color: var(--tr-mute);
     }
 
     /* The change carries its status pair: the plate and its own ink. */
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__delta {
+    [data-ct] .kp-kpi--trend .kp-kpi__delta {
         display: inline-block;
         padding: 0 0.35em;
         border: var(--tr-delta-border, 0);
@@ -136,32 +152,14 @@
         clip-path: var(--tr-delta-clip, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__delta[data-kp-tone='bad'] {
+    [data-ct] .kp-kpi--trend .kp-kpi__delta[data-kp-tone='bad'] {
         background: var(--tr-delta-bg, var(--destructive));
         color: var(--tr-delta-fg, var(--destructive-foreground));
     }
 
-    /* A tile in the warning tone keeps its number in the ink; the note in
-       the label goes on the warning plate in its own ink. */
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] {
-        box-shadow: var(--tr-shadow, none);
-    }
-
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] .kp-kpi__label-note {
-        margin-inline-start: 0.25em;
-        padding: 0 0.35em;
-        border-radius: var(--tr-delta-radius, 999px);
-        background: var(--warning);
-        color: var(--warning-foreground);
-    }
-
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] .kp-kpi__label-note::before {
-        content: '! ';
-    }
-
     /* The plot: its paper, its frame, and the loading picture under the
        line (only while the tile is busy) and an overlay above it. */
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-plot {
         isolation: isolate;
         border-radius: var(--tr-plot-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
         background: var(--tr-plot-pat, none);
@@ -169,8 +167,8 @@
         box-shadow: var(--tr-plot-frame, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::before,
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::after {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-plot::before,
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-plot::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -178,22 +176,22 @@
         pointer-events: none;
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::after {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-plot::after {
         z-index: 2;
         background: var(--tr-plot-over, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+    [data-ct] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
         background: var(--tr-load, linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark {
+    [data-ct] .kp-kpi--trend .kp-kpi__spark {
         position: relative;
         z-index: 1;
         filter: var(--tr-glow, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark-line {
+    [data-ct] .kp-kpi--trend .kp-kpi__spark-line {
         stroke: var(--tr-line-override, color-mix(in oklch, var(--kp-chart-series, var(--chart-1)) var(--tr-line-mix, 75%), var(--tr-ink)));
         stroke-width: var(--tr-line-w, 1.6);
         stroke-dasharray: var(--tr-line-dash, none);
@@ -201,7 +199,7 @@
         stroke-linejoin: var(--tr-line-join, round);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark-area {
+    [data-ct] .kp-kpi--trend .kp-kpi__spark-area {
         fill: var(
             --tr-area,
             var(--tr-line-override, color-mix(in oklch, var(--kp-chart-series, var(--chart-1)) var(--tr-line-mix, 75%), var(--tr-ink)))
@@ -209,17 +207,17 @@
         opacity: var(--tr-area-op, 0.12);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-cross {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-cross {
         z-index: 3;
         background: color-mix(in oklch, var(--tr-ink) 60%, transparent);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-chip {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-chip {
         z-index: 4;
         font-family: var(--tr-num-font, inherit);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-axis {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-axis {
         padding-block-start: 1px;
         border-block-start: var(--tr-axis-rule, 1px solid transparent);
         background: var(--tr-axis-pat, none);
@@ -229,33 +227,94 @@
         text-transform: var(--tr-axis-case, none);
     }
 
-    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-read {
+    [data-ct] .kp-kpi--trend .kp-kpi__chart-read {
         color: var(--tr-ink);
     }
 
-    /* The still characters: their skeletons (and the register's own
-       skeleton signature on them) do not move either, so nothing on the
-       tile moves while it loads. */
-    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
-        :is([data-tr='a'], [data-tr='b'])
-        .kp-kpi--trend
-        .kp-skeleton,
-    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
-        :is([data-tr='a'], [data-tr='b'])
-        .kp-kpi--trend
-        .kp-skeleton::before,
-    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
-        :is([data-tr='a'], [data-tr='b'])
-        .kp-kpi--trend
-        .kp-skeleton::after,
-    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton,
-    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton::before,
-    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton::after {
+    /* The skeletons stand still: the plot's loading picture is the one that
+       moves (the package's pulse is a fade). */
+    [data-ct] .kp-kpi--trend .kp-skeleton,
+    [data-ct] .kp-kpi--trend .kp-skeleton::before,
+    [data-ct] .kp-kpi--trend .kp-skeleton::after {
         animation: none;
     }
 
-    /* ══ formal ════════════════════════════════════════════════════════════ */
-    [data-theme='formal'] [data-tr='a'] .kp-kpi--trend {
+    /* The loading picture is clipped to the plot and turns or swells about
+       its own origin. */
+    [data-ct] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot {
+        overflow: clip;
+    }
+
+    [data-ct] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        transform-origin: var(--tr-load-origin, 50% 50%);
+    }
+
+    /* The arrival moves the line from its foot and the number from its
+       start. */
+    [data-ct] .kp-kpi--trend .kp-kpi__spark {
+        transform-origin: 50% 100%;
+    }
+
+    [data-ct] .kp-kpi--trend > .kp-kpi__value {
+        justify-self: start;
+        max-inline-size: 100%;
+        transform-origin: 0 50%;
+    }
+
+    /* A tone: its status pair, its mark over the tile, its note, and the
+       number on the pair only where the tone's option asks for it. */
+    [data-ct] .kp-kpi--trend[data-kp-tone='warning'] {
+        --tr-tc: var(--warning);
+        --tr-tf: var(--warning-foreground);
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone='destructive'] {
+        --tr-tc: var(--destructive);
+        --tr-tf: var(--destructive-foreground);
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone] {
+        border: var(--tr-frame, 1px solid var(--border));
+        box-shadow: var(--tr-shadow, none);
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone]::after {
+        background: var(--tr-tone-over, none), var(--tr-over, none);
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
+        padding-inline: var(--tr-tone-num-pad, 0);
+        border-radius: var(--tr-delta-radius, 0);
+        background: var(--tr-tone-num-bg, none);
+        color: var(--tr-tone-num-fg, var(--tr-ink));
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value small {
+        color: var(--tr-tone-num-fg, var(--tr-mute));
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone] .kp-kpi__label-note {
+        display: inline-block;
+        margin-inline-start: 0.25em;
+        padding: 0 0.35em;
+        border: var(--tr-note-border, 0);
+        border-radius: var(--tr-delta-radius, 999px);
+        background: var(--tr-tc);
+        color: var(--tr-tf);
+        line-height: 1.25;
+        transform: var(--tr-note-turn, none);
+    }
+
+    [data-ct] .kp-kpi--trend[data-kp-tone] .kp-kpi__label-note::before {
+        content: '! ';
+    }
+}
+
+@layer kp.signature {
+    /* ══ Shape (data-ct-shape): the plate, the frame, the label, the number, the plot, the line and its wash, the axis ══ */
+
+    /* formal · shape 1: The engraved plate */
+    [data-theme='formal'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--card);
         --tr-frame: 1px solid var(--foreground);
         --tr-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--border-strong, var(--border));
@@ -264,19 +323,18 @@
         --tr-label-case: none;
         --tr-label-caps: all-small-caps;
         --tr-label-size: 0.875rem;
-        --tr-label-track: 0.06em;
+        --tr-label-track: 0.04em;
         --tr-num-font: var(--theme-font-display);
         --tr-num-weight: 500;
         --tr-line-w: 1.1;
         --tr-line-mix: 55%;
         --tr-area-op: 0;
-        --tr-delta-radius: 0;
         --tr-axis-font: var(--theme-font-display);
         --tr-axis-caps: all-small-caps;
-        --tr-load: radial-gradient(circle, var(--tr-mute) 1px, transparent 1.5px) 0 50% / 6px 4px repeat-x;
     }
 
-    [data-theme='formal'] [data-tr='b'] .kp-kpi--trend {
+    /* formal · shape 2: The annual report */
+    [data-theme='formal'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--card);
         --tr-frame: 1px solid var(--border);
         --tr-shadow: inset 0 3px 0 var(--foreground);
@@ -285,7 +343,7 @@
         --tr-label-case: none;
         --tr-label-caps: all-small-caps;
         --tr-label-size: 0.875rem;
-        --tr-label-track: 0.05em;
+        --tr-label-track: 0.035em;
         --tr-label-weight: 600;
         --tr-num-font: var(--theme-font-display);
         --tr-num-size: 2rem;
@@ -300,15 +358,33 @@
         );
         --tr-plot-frame: inset 0 -1px 0 var(--foreground);
         --tr-plot-radius: 0;
-        --tr-delta-radius: 0;
-        --tr-delta-style: italic;
         --tr-axis-caps: all-small-caps;
         --tr-axis-font: var(--theme-font-display);
-        --tr-load: none;
     }
 
-    /* ══ light ═════════════════════════════════════════════════════════════ */
-    [data-theme='light'] [data-tr='a'] .kp-kpi--trend {
+    /* formal · shape 3: The certificate */
+    [data-theme='formal'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-frame: 1px solid var(--border-strong, var(--border));
+        --tr-shadow: inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--primary);
+        --tr-radius: 0;
+        --tr-pat: repeating-radial-gradient(circle at 50% 135%, transparent 0 6px, color-mix(in oklch, var(--primary) 7%, transparent) 6px 7px);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-caps: all-small-caps;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.04em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-size: 2rem;
+        --tr-num-weight: 500;
+        --tr-line-override: var(--primary);
+        --tr-line-w: 1.4;
+        --tr-area-op: 0.05;
+        --tr-axis-font: var(--theme-font-display);
+        --tr-axis-caps: all-small-caps;
+    }
+
+    /* light · shape 1: The soft card */
+    [data-theme='light'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-frame: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
         --tr-radius: calc(var(--radius, 0.5rem) * 2);
         --tr-shadow:
@@ -317,26 +393,41 @@
         --tr-line-w: 2.4;
         --tr-line-cap: round;
         --tr-area-op: 0.22;
-        --tr-delta-radius: 999px;
-        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
     }
 
-    [data-theme='light'] [data-tr='b'] .kp-kpi--trend {
+    /* light · shape 2: Daylight */
+    [data-theme='light'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-radius: calc(var(--radius, 0.5rem) * 1.5);
         --tr-line-w: 2;
         --tr-line-cap: round;
         --tr-area-op: 0.16;
-        --tr-delta-radius: 999px;
         --tr-plot-pat:
             radial-gradient(circle at 100% 0, color-mix(in oklch, var(--warning) 55%, transparent), transparent 32%),
             linear-gradient(to bottom, color-mix(in oklch, var(--primary) 14%, var(--card)), var(--card));
         --tr-plot-radius: calc(var(--radius, 0.5rem) * 0.75);
-        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--card) 85%, transparent), transparent) -50% 0 / 35% 100% no-repeat;
-        --tr-load-anim: tr-slide 2600ms ease-in-out infinite;
     }
 
-    /* ══ dark ══════════════════════════════════════════════════════════════ */
-    [data-theme='dark'] [data-tr='a'] .kp-kpi--trend {
+    /* light · shape 3: The paper sheet */
+    [data-theme='light'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 3px;
+        --tr-frame: 1px solid color-mix(in oklch, var(--border) 80%, transparent);
+        --tr-shadow:
+            0 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent), 0 6px 12px -10px color-mix(in oklch, var(--foreground) 40%, transparent);
+        --tr-pat: linear-gradient(225deg, color-mix(in oklch, var(--foreground) 8%, var(--card)) 0 9px, transparent 9px);
+        --tr-plot-pat: repeating-linear-gradient(
+            to bottom,
+            transparent 0 calc(33.3% - 1px),
+            color-mix(in oklch, var(--primary) 16%, transparent) calc(33.3% - 1px) 33.3%
+        );
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--primary);
+        --tr-line-w: 1.8;
+        --tr-line-cap: round;
+        --tr-area-op: 0.08;
+    }
+
+    /* dark · shape 1: The status board */
+    [data-theme='dark'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-font: var(--theme-font-mono);
         --tr-label-track: 0.02em;
@@ -349,13 +440,11 @@
         --tr-plot-radius: 2px;
         --tr-glow: drop-shadow(0 0 3px currentColor);
         --tr-line-mix: 80%;
-        --tr-delta-radius: 2px;
-        --tr-load: linear-gradient(90deg, color-mix(in oklch, var(--foreground) 40%, transparent) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px
-            repeat-x;
         --tr-label-size: 0.6875rem;
     }
 
-    [data-theme='dark'] [data-tr='b'] .kp-kpi--trend {
+    /* dark · shape 2: The machined panel */
+    [data-theme='dark'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--card);
         --tr-shadow:
             inset 0 1px 0 color-mix(in oklch, var(--foreground) 14%, transparent),
@@ -369,13 +458,26 @@
             inset 0 -1px 0 color-mix(in oklch, var(--foreground) 30%, transparent);
         --tr-plot-radius: 3px;
         --tr-line-mix: 75%;
-        --tr-delta-radius: 2px;
-        --tr-load: none;
         --tr-label-size: 0.6875rem;
     }
 
-    /* ══ cyberpunk ═════════════════════════════════════════════════════════ */
-    [data-theme='cyberpunk'] [data-tr='a'] .kp-kpi--trend {
+    /* dark · shape 3: The oscilloscope */
+    [data-theme='dark'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-label-size: 0.6875rem;
+        --tr-plot-bg: var(--background);
+        --tr-plot-frame: inset 0 0 0 1px color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-plot-pat: radial-gradient(circle, color-mix(in oklch, var(--foreground) 22%, transparent) 0.8px, transparent 1.2px) 0 0 / 10% 25%;
+        --tr-plot-radius: 6px;
+        --tr-line-override: color-mix(in oklch, var(--success) 70%, var(--foreground));
+        --tr-glow: drop-shadow(0 0 3px color-mix(in oklch, var(--success) 60%, transparent));
+    }
+
+    /* cyberpunk · shape 1: The neon trace */
+    [data-theme='cyberpunk'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-radius: 0;
         --tr-font: var(--theme-font-mono);
@@ -387,13 +489,10 @@
             linear-gradient(90deg, color-mix(in oklch, var(--accent) 10%, transparent) 1px, transparent 1px) 0 0 / 10% 100%;
         --tr-glow: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 6px currentColor);
         --tr-line-mix: 90%;
-        --tr-delta-radius: 0;
-        --tr-delta-clip: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-        --tr-load: linear-gradient(90deg, transparent, var(--accent), transparent) -50% calc(100% - 1px) / 18% 2px no-repeat;
-        --tr-load-anim: tr-slide 1400ms linear infinite;
     }
 
-    [data-theme='cyberpunk'] [data-tr='b'] .kp-kpi--trend {
+    /* cyberpunk · shape 2: The glitch HUD */
+    [data-theme='cyberpunk'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-radius: 0;
         --tr-label-font: var(--theme-font-display);
@@ -416,13 +515,26 @@
         --tr-line-dash: 7 2;
         --tr-line-w: 2;
         --tr-area-op: 0.08;
-        --tr-delta-radius: 0;
-        --tr-load: linear-gradient(var(--accent), var(--accent)) 0 0 / 22% 30% no-repeat;
-        --tr-load-anim: tr-glitch 900ms steps(1) infinite;
     }
 
-    /* ══ synthwave ═════════════════════════════════════════════════════════ */
-    [data-theme='synthwave'] [data-tr='a'] .kp-kpi--trend {
+    /* cyberpunk · shape 3: The holo card */
+    [data-theme='cyberpunk'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-frame: 1px solid var(--accent);
+        --tr-shadow: 0 0 12px color-mix(in oklch, var(--accent) 35%, transparent), inset 0 0 18px color-mix(in oklch, var(--accent) 12%, transparent);
+        --tr-num-font: var(--theme-font-display);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.1em;
+        --tr-plot-pat: repeating-linear-gradient(-60deg, color-mix(in oklch, var(--accent) 12%, transparent) 0 1px, transparent 1px 7px);
+        --tr-line-override: var(--accent);
+        --tr-glow: drop-shadow(0 0 3px currentColor);
+        --tr-line-w: 1.8;
+        --tr-area-op: 0.1;
+    }
+
+    /* synthwave · shape 1: The grid-floor horizon */
+    [data-theme='synthwave'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-num-font: var(--theme-font-display);
         --tr-num-size: 2.25rem;
@@ -437,13 +549,10 @@
                 100% / 100% 55% no-repeat;
         --tr-glow: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 8px currentColor);
         --tr-line-mix: 88%;
-        --tr-delta-radius: 4px;
-        --tr-load: repeating-linear-gradient(to bottom, transparent 0 7px, color-mix(in oklch, var(--primary) 50%, transparent) 7px 8px) 0 0 / 100%
-            8px;
-        --tr-load-anim: tr-march-y 800ms linear infinite;
     }
 
-    [data-theme='synthwave'] [data-tr='b'] .kp-kpi--trend {
+    /* synthwave · shape 2: The VCR display */
+    [data-theme='synthwave'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-radius: 0;
         --tr-font: var(--theme-font-mono);
@@ -454,14 +563,28 @@
         --tr-line-join: miter;
         --tr-line-w: 2;
         --tr-area-op: 0;
-        --tr-delta-radius: 0;
-        --tr-load: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--foreground) 28%, transparent), transparent) 0 -50% / 100% 30%
-            no-repeat;
-        --tr-load-anim: tr-roll 1800ms linear infinite;
     }
 
-    /* ══ pastel ════════════════════════════════════════════════════════════ */
-    [data-theme='pastel'] [data-tr='a'] .kp-kpi--trend {
+    /* synthwave · shape 3: The arcade marquee */
+    [data-theme='synthwave'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 4px;
+        --tr-frame: 2px solid var(--primary);
+        --tr-shadow: 0 0 14px color-mix(in oklch, var(--primary) 40%, transparent);
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-size: 2.25rem;
+        --tr-num-shadow: 2px 2px 0 color-mix(in oklch, var(--primary) 70%, transparent);
+        --tr-label-size: 0.75rem;
+        --tr-label-track: 0.02em;
+        --tr-line-override: var(--accent);
+        --tr-line-w: 2.4;
+        --tr-line-cap: round;
+        --tr-area: var(--primary);
+        --tr-area-op: 0.22;
+    }
+
+    /* pastel · shape 1: The sticker chart */
+    [data-theme='pastel'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-frame: 2px solid color-mix(in oklch, var(--primary) 45%, var(--foreground));
         --tr-radius: 1rem;
         --tr-shadow: 5px 5px 0 color-mix(in oklch, var(--primary) 35%, var(--background));
@@ -469,13 +592,10 @@
         --tr-line-w: 3.5;
         --tr-line-cap: round;
         --tr-area-op: 0.25;
-        --tr-delta-radius: 999px;
-        --tr-delta-shadow: 2px 2px 0 color-mix(in oklch, var(--foreground) 45%, transparent);
-        --tr-load: radial-gradient(circle, var(--accent) 0 5px, transparent 6px) -50% 50% / 14% 100% no-repeat;
-        --tr-load-anim: tr-slide 1600ms steps(8) infinite;
     }
 
-    [data-theme='pastel'] [data-tr='b'] .kp-kpi--trend {
+    /* pastel · shape 2: The washi planner */
+    [data-theme='pastel'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-radius: 0.75rem;
         --tr-pat: repeating-linear-gradient(
                 90deg,
@@ -488,18 +608,22 @@
         --tr-line-cap: round;
         --tr-line-w: 2.4;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 2px;
-        --tr-load: repeating-linear-gradient(
-                90deg,
-                color-mix(in oklch, var(--accent) 60%, transparent) 0 5px,
-                color-mix(in oklch, var(--accent) 40%, transparent) 5px 10px
-            ) -50%
-            50% / 34% 12px no-repeat;
-        --tr-load-anim: tr-slide 3000ms ease-in-out infinite alternate;
     }
 
-    /* ══ terminal ══════════════════════════════════════════════════════════ */
-    [data-theme='terminal'] [data-tr='a'] .kp-kpi--trend {
+    /* pastel · shape 3: The cloud card */
+    [data-theme='pastel'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 1.5rem;
+        --tr-frame: 2px dashed color-mix(in oklch, var(--primary) 55%, var(--foreground));
+        --tr-plot-pat: radial-gradient(ellipse 40% 70% at 70% 60%, color-mix(in oklch, var(--accent) 30%, transparent), transparent 70%);
+        --tr-plot-radius: 1rem;
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-w: 3;
+        --tr-line-cap: round;
+        --tr-area-op: 0.3;
+    }
+
+    /* terminal · shape 1: The top(1) row */
+    [data-theme='terminal'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-frame: 3px double var(--foreground);
         --tr-radius: 0;
@@ -509,14 +633,10 @@
         --tr-line-join: miter;
         --tr-line-cap: square;
         --tr-area-op: 0.08;
-        --tr-delta-radius: 0;
-        --tr-delta-bg: var(--tr-ink);
-        --tr-delta-fg: var(--tr-plate);
-        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) 4px 50% / 0.6em 1.1em no-repeat;
-        --tr-load-anim: tr-blink 1000ms steps(1) infinite;
     }
 
-    [data-theme='terminal'] [data-tr='b'] .kp-kpi--trend {
+    /* terminal · shape 2: The dumb-terminal plot */
+    [data-theme='terminal'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-radius: 0;
         --tr-font: var(--theme-font-mono);
@@ -528,14 +648,27 @@
         --tr-line-w: 3;
         --tr-area-op: 0;
         --tr-axis-rule: 1px dashed color-mix(in oklch, var(--foreground) 50%, transparent);
-        --tr-delta-radius: 0;
-        --tr-delta-deco: underline;
-        --tr-load: radial-gradient(circle, var(--tr-ink) 1.5px, transparent 2px) 0 50% / 12px 100% repeat-x;
-        --tr-load-anim: tr-march 600ms steps(4) infinite;
     }
 
-    /* ══ forest ════════════════════════════════════════════════════════════ */
-    [data-theme='forest'] [data-tr='a'] .kp-kpi--trend {
+    /* terminal · shape 3: The curses window */
+    [data-theme='terminal'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 1px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-label-rule: 1px solid var(--foreground);
+        --tr-plot-frame: inset 0 0 0 1px color-mix(in oklch, var(--foreground) 45%, transparent);
+        --tr-plot-radius: 0;
+        --tr-line-join: miter;
+        --tr-line-cap: square;
+        --tr-line-w: 1.5;
+        --tr-area-op: 0;
+    }
+
+    /* forest · shape 1: The ranger’s logbook */
+    [data-theme='forest'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: color-mix(in oklch, var(--accent) 8%, var(--card));
         --tr-label-font: var(--theme-font-display);
         --tr-label-case: none;
@@ -550,25 +683,39 @@
         --tr-line-w: 2.4;
         --tr-line-cap: round;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 3px;
-        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 12px 2px repeat-x;
-        --tr-load-anim: tr-march 1500ms linear infinite;
     }
 
-    [data-theme='forest'] [data-tr='b'] .kp-kpi--trend {
+    /* forest · shape 2: The canopy */
+    [data-theme='forest'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: color-mix(in oklch, var(--primary) 8%, var(--card));
         --tr-line-override: color-mix(in oklch, var(--foreground) 80%, var(--accent));
         --tr-line-w: 2;
         --tr-line-cap: round;
         --tr-area: var(--primary);
         --tr-area-op: 0.32;
-        --tr-delta-radius: 0 0.8em;
-        --tr-load: radial-gradient(ellipse at 30% 100%, color-mix(in oklch, var(--primary) 30%, transparent), transparent 60%) 0 0 / 200% 100%;
-        --tr-load-anim: tr-sway 2400ms ease-in-out infinite alternate;
     }
 
-    /* ══ high-contrast ═════════════════════════════════════════════════════ */
-    [data-theme='high-contrast'] [data-tr='a'] .kp-kpi--trend {
+    /* forest · shape 3: The herbarium sheet */
+    [data-theme='forest'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-frame: 1px solid var(--border);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-style: italic;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.01em;
+        --tr-plot-pat:
+            repeating-linear-gradient(60deg, transparent 0 10px, color-mix(in oklch, var(--primary) 12%, transparent) 10px 11px),
+            repeating-linear-gradient(-60deg, transparent 0 10px, color-mix(in oklch, var(--primary) 8%, transparent) 10px 11px);
+        --tr-line-override: color-mix(in oklch, var(--primary) 80%, var(--foreground));
+        --tr-line-w: 2;
+        --tr-line-cap: round;
+        --tr-area: var(--accent);
+        --tr-area-op: 0.18;
+    }
+
+    /* high-contrast · shape 1: Ink and frame */
+    [data-theme='high-contrast'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-frame: 2px solid var(--foreground);
         --tr-radius: 0;
         --tr-label-weight: 700;
@@ -577,12 +724,10 @@
         --tr-area-op: 0;
         --tr-plot-frame: inset 0 -2px 0 var(--foreground);
         --tr-plot-radius: 0;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 2px solid currentColor;
-        --tr-load: linear-gradient(90deg, var(--foreground) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
     }
 
-    [data-theme='high-contrast'] [data-tr='b'] .kp-kpi--trend {
+    /* high-contrast · shape 2: The inverse plate */
+    [data-theme='high-contrast'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-frame: 2px solid var(--foreground);
         --tr-radius: 0;
         --tr-label-weight: 700;
@@ -592,13 +737,27 @@
         --tr-line-override: var(--background);
         --tr-line-w: 2.5;
         --tr-area-op: 0.3;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 2px solid currentColor;
-        --tr-load: none;
     }
 
-    /* ══ sepia ═════════════════════════════════════════════════════════════ */
-    [data-theme='sepia'] [data-tr='a'] .kp-kpi--trend {
+    /* high-contrast · shape 3: The signal board */
+    [data-theme='high-contrast'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-label-weight: 800;
+        --tr-num-size: 2.25rem;
+        --tr-num-weight: 900;
+        --tr-plot-frame: inset 0 0 0 2px var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 4;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+    }
+
+    /* sepia · shape 1: The barograph */
+    [data-theme='sepia'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in oklch, var(--foreground) 10%, transparent));
         --tr-plot-pat:
             repeating-linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 13%, transparent) 0 1px, transparent 1px 20%),
@@ -612,12 +771,10 @@
         --tr-label-size: 0.875rem;
         --tr-label-track: 0.01em;
         --tr-num-font: var(--theme-font-display);
-        --tr-delta-radius: 2px;
-        --tr-load: linear-gradient(90deg, transparent calc(100% - 2px), var(--tr-ink) 0) -50% 0 / 40% 100% no-repeat;
-        --tr-load-anim: tr-slide 2400ms linear infinite;
     }
 
-    [data-theme='sepia'] [data-tr='b'] .kp-kpi--trend {
+    /* sepia · shape 2: Letterpress */
+    [data-theme='sepia'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-pat:
             radial-gradient(circle, color-mix(in oklch, var(--foreground) 12%, transparent) 0.6px, transparent 1px) 0 0 / 7px 9px,
             radial-gradient(circle, color-mix(in oklch, var(--foreground) 8%, transparent) 0.6px, transparent 1px) 3px 4px / 11px 13px;
@@ -631,14 +788,26 @@
         --tr-line-w: 2.2;
         --tr-line-mix: 55%;
         --tr-area-op: 0.08;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 1px solid currentColor;
-        --tr-load: linear-gradient(color-mix(in oklch, var(--foreground) 12%, transparent), color-mix(in oklch, var(--foreground) 12%, transparent));
-        --tr-load-anim: tr-pulse 1400ms ease-in-out infinite;
     }
 
-    /* ══ blueprint ═════════════════════════════════════════════════════════ */
-    [data-theme='blueprint'] [data-tr='a'] .kp-kpi--trend {
+    /* sepia · shape 3: The ticket stub */
+    [data-theme='sepia'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-frame: 1px dashed color-mix(in oklch, var(--foreground) 55%, transparent);
+        --tr-pat:
+            radial-gradient(circle at 0 50%, var(--background) 0 7px, transparent 7.5px),
+            radial-gradient(circle at 100% 50%, var(--background) 0 7px, transparent 7.5px);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: uppercase;
+        --tr-label-track: 0.12em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-w: 1.6;
+        --tr-line-mix: 60%;
+        --tr-area-op: 0.07;
+    }
+
+    /* blueprint · shape 1: The chart recorder */
+    [data-theme='blueprint'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-label-font: var(--theme-font-mono);
         --tr-label-track: 0.02em;
         --tr-num-font: var(--theme-font-mono);
@@ -652,14 +821,12 @@
         --tr-line-override: var(--foreground);
         --tr-line-w: 1.4;
         --tr-area-op: 0.08;
-        --tr-delta-radius: 0;
         --tr-radius: 0;
-        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) -50% 0 / 2px 100% no-repeat;
-        --tr-load-anim: tr-slide 2000ms linear infinite;
         --tr-label-size: 0.6875rem;
     }
 
-    [data-theme='blueprint'] [data-tr='b'] .kp-kpi--trend {
+    /* blueprint · shape 2: The title block */
+    [data-theme='blueprint'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-frame: 1px solid var(--foreground);
         --tr-radius: 0;
         --tr-label-font: var(--theme-font-mono);
@@ -674,39 +841,57 @@
         --tr-line-dash: 10 3 2 3;
         --tr-line-w: 1.6;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 1px solid currentColor;
-        --tr-load: linear-gradient(90deg, var(--tr-ink) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
-        --tr-load-anim: tr-march 900ms linear infinite;
         --tr-label-size: 0.6875rem;
     }
 
-    /* ══ solstice ══════════════════════════════════════════════════════════ */
-    [data-theme='solstice'] [data-tr='a'] .kp-kpi--trend {
+    /* blueprint · shape 3: The section view */
+    [data-theme='blueprint'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-frame: 1px dashed var(--foreground);
+        --tr-label-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-label-size: 0.6875rem;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-axis-font: var(--theme-font-mono);
+        --tr-axis-case: uppercase;
+        --tr-plot-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 14%, transparent) 0 1px, transparent 1px 6px);
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 2;
+        --tr-area-op: 0;
+    }
+
+    /* solstice · shape 1: The low sun */
+    [data-theme='solstice'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: radial-gradient(ellipse 80% 60% at 50% 125%, color-mix(in oklch, var(--primary) 32%, transparent), transparent 70%);
         --tr-line-mix: 85%;
         --tr-glow: drop-shadow(0 0 3px color-mix(in oklch, var(--primary) 55%, transparent));
         --tr-num-font: var(--theme-font-display);
-        --tr-delta-radius: 999px;
-        --tr-delta-shadow: 0 0 8px color-mix(in oklch, var(--primary) 45%, transparent);
-        --tr-load: radial-gradient(ellipse 60% 90% at 50% 120%, color-mix(in oklch, var(--primary) 45%, transparent), transparent 70%);
-        --tr-load-anim: tr-pulse 2400ms ease-in-out infinite;
     }
 
-    [data-theme='solstice'] [data-tr='b'] .kp-kpi--trend {
+    /* solstice · shape 2: The embers */
+    [data-theme='solstice'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-num-font: var(--theme-font-display);
         --tr-line-override: color-mix(in oklch, var(--accent) 65%, var(--foreground));
         --tr-glow: drop-shadow(0 0 4px color-mix(in oklch, var(--accent) 70%, transparent));
         --tr-area: var(--accent);
         --tr-area-op: 0.2;
-        --tr-delta-radius: 3px;
-        --tr-load: radial-gradient(ellipse at 50% 100%, color-mix(in oklch, var(--accent) 50%, transparent), transparent 65%);
-        --tr-load-anim: tr-pulse 1800ms ease-in-out infinite;
     }
 
-    /* ══ brutalism ═════════════════════════════════════════════════════════ */
-    [data-theme='brutalism'] [data-tr='a'] .kp-kpi--trend {
+    /* solstice · shape 3: The horizon */
+    [data-theme='solstice'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-pat: linear-gradient(to top, color-mix(in oklch, var(--primary) 16%, transparent) 0 22%, transparent 22%);
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-override: color-mix(in oklch, var(--accent) 70%, var(--foreground));
+        --tr-glow: drop-shadow(0 0 3px color-mix(in oklch, var(--accent) 55%, transparent));
+        --tr-line-w: 2;
+        --tr-line-cap: round;
+        --tr-area-op: 0.14;
+    }
+
+    /* brutalism · shape 1: The slab */
+    [data-theme='brutalism'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-frame: 3px solid var(--foreground);
         --tr-radius: 0;
         --tr-shadow: 6px 6px 0 var(--foreground);
@@ -717,14 +902,10 @@
         --tr-line-cap: square;
         --tr-line-join: miter;
         --tr-area-op: 0.15;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 2px solid var(--foreground);
-        --tr-delta-shadow: 2px 2px 0 var(--foreground);
-        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
-        --tr-load-anim: tr-stamp 900ms steps(1) infinite;
     }
 
-    [data-theme='brutalism'] [data-tr='b'] .kp-kpi--trend {
+    /* brutalism · shape 2: The sticker sheet */
+    [data-theme='brutalism'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: color-mix(in oklch, var(--accent) 45%, var(--card));
         --tr-frame: 3px solid var(--foreground);
         --tr-radius: 0;
@@ -735,15 +916,28 @@
         --tr-plot-frame: inset 0 0 0 2px var(--foreground);
         --tr-plot-radius: 0;
         --tr-line-w: 2.5;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 2px solid var(--foreground);
-        --tr-delta-turn: rotate(-4deg);
-        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
-        --tr-load-anim: tr-drop 1200ms ease-out infinite;
     }
 
-    /* ══ deco ══════════════════════════════════════════════════════════════ */
-    [data-theme='deco'] [data-tr='a'] .kp-kpi--trend {
+    /* brutalism · shape 3: The poster block */
+    [data-theme='brutalism'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-shadow: 6px 6px 0 var(--accent), 6px 6px 0 3px var(--foreground);
+        --tr-label-weight: 800;
+        --tr-label-track: 0.06em;
+        --tr-num-size: 2.25rem;
+        --tr-num-weight: 900;
+        --tr-num-case: uppercase;
+        --tr-plot-pat: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 12%, transparent) 0 2px, transparent 2px 8px);
+        --tr-plot-radius: 0;
+        --tr-line-w: 4;
+        --tr-line-cap: butt;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+    }
+
+    /* deco · shape 1: The gilt frame */
+    [data-theme='deco'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-frame: 1px solid var(--primary);
         --tr-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--primary);
         --tr-radius: 0;
@@ -758,14 +952,10 @@
         --tr-num-case: uppercase;
         --tr-num-track: 0.04em;
         --tr-line-mix: 80%;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 1px solid var(--primary);
-        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 60%, transparent) 50%, transparent 60%) -50% 0 / 40%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
     }
 
-    [data-theme='deco'] [data-tr='b'] .kp-kpi--trend {
+    /* deco · shape 2: The marquee */
+    [data-theme='deco'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-radius: 0;
         --tr-label-font: var(--theme-font-display);
         --tr-label-track: 0.16em;
@@ -774,16 +964,26 @@
             radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px) 0 0 / 12px 6px repeat-x,
             radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px) 0 100% / 12px 6px repeat-x;
         --tr-line-mix: 80%;
-        --tr-delta-radius: 0;
-        --tr-delta-border: 3px double var(--primary);
-        --tr-load:
-            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 0 / 48px 6px repeat-x,
-            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 100% / 48px 6px repeat-x;
-        --tr-load-anim: tr-march 1200ms steps(4) infinite;
     }
 
-    /* ══ phantom ═══════════════════════════════════════════════════════════ */
-    [data-theme='phantom'] [data-tr='a'] .kp-kpi--trend {
+    /* deco · shape 3: The skyscraper */
+    [data-theme='deco'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-frame: 1px solid var(--primary);
+        --tr-shadow: inset 0 4px 0 var(--primary);
+        --tr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--primary) 12%, transparent) 0 1px, transparent 1px 14px) 50% 100% / 60%
+            70% no-repeat;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.14em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-case: uppercase;
+        --tr-line-override: color-mix(in oklch, var(--primary) 85%, var(--tr-ink));
+        --tr-line-w: 1.6;
+        --tr-area-op: 0.1;
+    }
+
+    /* phantom · shape 1: The evidence card */
+    [data-theme='phantom'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: color-mix(in oklch, var(--foreground) 93%, var(--background));
         --tr-ink: var(--background);
         --tr-mute: color-mix(in oklch, var(--background) 78%, var(--foreground));
@@ -794,15 +994,10 @@
         --tr-line-override: color-mix(in oklch, var(--primary) 80%, var(--background));
         --tr-line-w: 2;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 999px;
-        --tr-delta-border: 2px solid currentColor;
-        --tr-delta-turn: rotate(-6deg);
-        --tr-load: radial-gradient(circle, transparent 0 40%, color-mix(in oklch, var(--primary) 70%, transparent) 42% 48%, transparent 50%) 50% 50% /
-            40px 40px no-repeat;
-        --tr-load-anim: tr-pulse 900ms steps(2) infinite;
     }
 
-    [data-theme='phantom'] [data-tr='b'] .kp-kpi--trend {
+    /* phantom · shape 2: The calling card */
+    [data-theme='phantom'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-radius: 0;
         --tr-label-font: var(--theme-font-display);
@@ -812,27 +1007,36 @@
         --tr-pat: linear-gradient(135deg, transparent 0 86%, var(--primary) 86% 89%, transparent 89%);
         --tr-over: radial-gradient(circle, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1.6px) 0 0 / 6px 6px;
         --tr-line-mix: 85%;
-        --tr-delta-radius: 0;
-        --tr-delta-turn: skewX(-12deg);
-        --tr-load: radial-gradient(circle, color-mix(in oklch, var(--foreground) 30%, transparent) 1.5px, transparent 2px) 0 0 / 8px 8px;
-        --tr-load-anim: tr-march 700ms steps(3) infinite;
     }
 
-    /* ══ shade-light ═══════════════════════════════════════════════════════ */
-    [data-theme='shade-light'] [data-tr='a'] .kp-kpi--trend {
+    /* phantom · shape 3: The ransom note */
+    [data-theme='phantom'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-pat: radial-gradient(circle, color-mix(in oklch, var(--primary) 18%, transparent) 1px, transparent 1.6px) 0 0 / 5px 5px;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-skew: skewX(-10deg);
+        --tr-label-track: 0.06em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-shadow: 3px 3px 0 color-mix(in oklch, var(--primary) 80%, transparent);
+        --tr-line-override: color-mix(in oklch, var(--primary) 85%, var(--foreground));
+        --tr-line-w: 2.5;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-area-op: 0.08;
+    }
+
+    /* shade-light · shape 1: Pencil in the shade */
+    [data-theme='shade-light'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plot-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0 1px, transparent 1px 6px);
         --tr-line-mix: 50%;
         --tr-line-w: 1.8;
         --tr-line-cap: round;
         --tr-area-op: 0.08;
-        --tr-delta-radius: 3px;
-        --tr-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 22%, transparent);
-        --tr-load: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
     }
 
-    [data-theme='shade-light'] [data-tr='b'] .kp-kpi--trend {
+    /* shade-light · shape 2: The leaf shade */
+    [data-theme='shade-light'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-pat:
             radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 7%, transparent), transparent 22%),
             radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--foreground) 6%, transparent), transparent 26%),
@@ -840,36 +1044,47 @@
         --tr-line-w: 1.8;
         --tr-line-cap: round;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 999px;
-        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 16%, transparent), transparent 70%) -50% 50% / 50% 140% no-repeat;
-        --tr-load-anim: tr-slide 3200ms ease-in-out infinite;
     }
 
-    /* ══ shade-dark ════════════════════════════════════════════════════════ */
-    [data-theme='shade-dark'] [data-tr='a'] .kp-kpi--trend {
+    /* shade-light · shape 3: The window light */
+    [data-theme='shade-light'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-pat:
+            linear-gradient(115deg, transparent 0 35%, color-mix(in oklch, var(--card) 70%, transparent) 35% 55%, transparent 55%),
+            linear-gradient(color-mix(in oklch, var(--foreground) 4%, transparent), color-mix(in oklch, var(--foreground) 4%, transparent));
+        --tr-line-mix: 55%;
+        --tr-line-w: 1.8;
+        --tr-line-cap: round;
+        --tr-area-op: 0.08;
+    }
+
+    /* shade-dark · shape 1: Silverpoint */
+    [data-theme='shade-dark'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
         --tr-line-override: color-mix(in oklch, var(--foreground) 85%, var(--background));
         --tr-line-w: 1;
         --tr-area: var(--foreground);
         --tr-area-op: 0.08;
-        --tr-delta-radius: 2px;
-        --tr-load: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2400ms ease-in-out infinite;
     }
 
-    [data-theme='shade-dark'] [data-tr='b'] .kp-kpi--trend {
+    /* shade-dark · shape 2: The reading lamp */
+    [data-theme='shade-dark'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-pat: radial-gradient(ellipse 60% 70% at 25% 40%, color-mix(in oklch, var(--warning) 22%, transparent), transparent 70%);
         --tr-line-override: color-mix(in oklch, var(--warning) 45%, var(--foreground));
         --tr-line-w: 1.8;
         --tr-area-op: 0.12;
-        --tr-delta-radius: 999px;
-        --tr-load: radial-gradient(ellipse at 30% 50%, color-mix(in oklch, var(--warning) 40%, transparent), transparent 70%);
-        --tr-load-anim: tr-pulse 2400ms ease-in-out infinite;
     }
 
-    /* ══ retro ═════════════════════════════════════════════════════════════ */
-    [data-theme='retro'] [data-tr='a'] .kp-kpi--trend {
+    /* shade-dark · shape 3: The night window */
+    [data-theme='shade-dark'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-pat: linear-gradient(115deg, transparent 0 35%, color-mix(in oklch, var(--foreground) 6%, transparent) 35% 55%, transparent 55%);
+        --tr-line-override: color-mix(in oklch, var(--foreground) 70%, var(--primary));
+        --tr-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--foreground) 30%, transparent));
+        --tr-line-w: 1.4;
+        --tr-area-op: 0.06;
+    }
+
+    /* retro · shape 1: The 1995 dialog */
+    [data-theme='retro'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-frame: 0;
         --tr-radius: 0;
@@ -880,17 +1095,13 @@
         --tr-line-w: 1;
         --tr-area-op: 0;
         --tr-line-join: miter;
-        --tr-delta-radius: 0;
-        --tr-delta-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent),
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent);
-        --tr-load: none;
         --tr-label-case: none;
         --tr-label-track: 0.01em;
         --tr-label-size: 0.75rem;
     }
 
-    [data-theme='retro'] [data-tr='b'] .kp-kpi--trend {
+    /* retro · shape 2: The performance monitor */
+    [data-theme='retro'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-radius: 0;
         --tr-num-font: var(--theme-font-mono);
         --tr-plot-bg: color-mix(in oklch, var(--foreground) 92%, var(--background));
@@ -902,15 +1113,30 @@
         --tr-line-w: 1.5;
         --tr-line-join: miter;
         --tr-area-op: 0;
-        --tr-delta-radius: 0;
-        --tr-load: none;
         --tr-label-case: none;
         --tr-label-track: 0.01em;
         --tr-label-size: 0.75rem;
     }
 
-    /* ══ grotesk ═══════════════════════════════════════════════════════════ */
-    [data-theme='grotesk'] [data-tr='a'] .kp-kpi--trend {
+    /* retro · shape 3: The Notepad window */
+    [data-theme='retro'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 1px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-shadow: 2px 2px 0 var(--foreground);
+        --tr-plot-bg: var(--card);
+        --tr-plot-frame: inset 0 0 0 1px var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-line-w: 1;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-label-case: none;
+        --tr-label-track: 0.01em;
+        --tr-label-size: 0.75rem;
+    }
+
+    /* grotesk · shape 1: The transit board */
+    [data-theme='grotesk'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 6px no-repeat;
         --tr-radius: 0;
         --tr-label-weight: 700;
@@ -919,12 +1145,10 @@
         --tr-line-w: 3;
         --tr-line-cap: round;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 0;
-        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% 50% / 30% 3px no-repeat;
-        --tr-load-anim: tr-slide 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
     }
 
-    [data-theme='grotesk'] [data-tr='b'] .kp-kpi--trend {
+    /* grotesk · shape 2: The Swiss poster */
+    [data-theme='grotesk'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-radius: 0;
         --tr-num-size: 2.5rem;
         --tr-num-weight: 800;
@@ -932,16 +1156,27 @@
         --tr-label-weight: 700;
         --tr-line-w: 1;
         --tr-area-op: 0;
-        --tr-delta-radius: 0;
-        --tr-load:
-            linear-gradient(var(--foreground), var(--foreground)) 0 50% / 14% 45% no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 14% 45% no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 100% 50% / 14% 45% no-repeat;
-        --tr-load-anim: tr-cut 1200ms steps(1) infinite;
     }
 
-    /* ══ lapis ═════════════════════════════════════════════════════════════ */
-    [data-theme='lapis'] [data-tr='a'] .kp-kpi--trend {
+    /* grotesk · shape 3: The index card */
+    [data-theme='grotesk'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-frame: 0;
+        --tr-shadow: inset 0 1px 0 var(--foreground);
+        --tr-pat: linear-gradient(var(--primary), var(--primary)) 0.5rem 0 / 2px 100% no-repeat;
+        --tr-label-weight: 700;
+        --tr-num-size: 2.25rem;
+        --tr-num-weight: 800;
+        --tr-num-track: -0.03em;
+        --tr-plot-frame: inset 0 -1px 0 var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-line-w: 2;
+        --tr-line-cap: butt;
+        --tr-area-op: 0;
+    }
+
+    /* lapis · shape 1: The girih tile */
+    [data-theme='lapis'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: repeating-conic-gradient(from 22.5deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 45deg, transparent 45deg 90deg) 0 0 /
             28px 28px;
         --tr-shadow: inset 0 0 0 1px var(--primary), inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--primary);
@@ -953,13 +1188,10 @@
         --tr-line-override: color-mix(in oklch, var(--primary) 85%, var(--tr-ink));
         --tr-line-w: 1.8;
         --tr-area-op: 0.12;
-        --tr-delta-radius: 0;
-        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 65%, transparent) 50%, transparent 60%) -50% 0 / 40%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
     }
 
-    [data-theme='lapis'] [data-tr='b'] .kp-kpi--trend {
+    /* lapis · shape 2: Lapis on vellum */
+    [data-theme='lapis'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: color-mix(in oklch, var(--foreground) 92%, var(--background));
         --tr-ink: var(--background);
         --tr-mute: color-mix(in oklch, var(--background) 80%, var(--foreground));
@@ -972,14 +1204,27 @@
         --tr-line-override: color-mix(in oklch, var(--background) 80%, var(--chart-1));
         --tr-line-w: 1.8;
         --tr-area-op: 0.1;
-        --tr-delta-radius: 2px;
-        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 60%, transparent) 50%, transparent 60%) -50% 0 / 40%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2800ms ease-in-out infinite;
     }
 
-    /* ══ nostromo ══════════════════════════════════════════════════════════ */
-    [data-theme='nostromo'] [data-tr='a'] .kp-kpi--trend {
+    /* lapis · shape 3: The manuscript margin */
+    [data-theme='lapis'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-pat:
+            linear-gradient(var(--primary), var(--primary)) 0.35rem 0 / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0.55rem 0 / 1px 100% no-repeat;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-style: italic;
+        --tr-label-size: 0.875rem;
+        --tr-num-font: var(--theme-font-display);
+        --tr-plot-frame: inset 0 -1px 0 var(--primary);
+        --tr-plot-radius: 0;
+        --tr-line-w: 1.4;
+        --tr-area-op: 0.08;
+    }
+
+    /* nostromo · shape 1: The CRT trace */
+    [data-theme='nostromo'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-font: var(--theme-font-mono);
         --tr-num-font: var(--theme-font-mono);
         --tr-label-track: 0.02em;
@@ -993,13 +1238,11 @@
         --tr-glow: drop-shadow(0 0 3px oklch(from var(--success) 0.7 0.16 h));
         --tr-line-w: 1.6;
         --tr-area-op: 0.12;
-        --tr-delta-radius: 2px;
-        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--success) 40%, var(--background))) -50% 0 / 30% 100% no-repeat;
-        --tr-load-anim: tr-slide 2000ms linear infinite;
         --tr-label-size: 0.6875rem;
     }
 
-    [data-theme='nostromo'] [data-tr='b'] .kp-kpi--trend {
+    /* nostromo · shape 2: The indicator panel */
+    [data-theme='nostromo'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-font: var(--theme-font-mono);
         --tr-num-font: var(--theme-font-mono);
         --tr-label-bg: var(--muted);
@@ -1012,16 +1255,29 @@
         --tr-plot-bg: var(--muted);
         --tr-plot-radius: 3px;
         --tr-line-w: 2;
-        --tr-delta-radius: 999px;
-        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--success) 60%, transparent);
-        --tr-load: radial-gradient(circle, var(--accent) 0 4px, transparent 5px) -50% 50% / 12% 100% no-repeat;
-        --tr-load-anim: tr-slide 1400ms steps(6) infinite;
         --tr-label-track: 0.02em;
         --tr-label-size: 0.6875rem;
     }
 
-    /* ══ titanium ══════════════════════════════════════════════════════════ */
-    [data-theme='titanium'] [data-tr='a'] .kp-kpi--trend {
+    /* nostromo · shape 3: The MU-TH-UR screen */
+    [data-theme='nostromo'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-label-size: 0.6875rem;
+        --tr-over: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in oklch, var(--background) 30%, transparent) 2px 3px);
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 94%, var(--background));
+        --tr-plot-frame: inset 0 0 0 2px var(--success);
+        --tr-plot-radius: 0;
+        --tr-line-override: oklch(from var(--success) 0.78 0.16 h);
+        --tr-glow: drop-shadow(0 0 3px oklch(from var(--success) 0.7 0.16 h));
+        --tr-line-w: 1.4;
+        --tr-area-op: 0.1;
+    }
+
+    /* titanium · shape 1: The milled plate */
+    [data-theme='titanium'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 3px);
         --tr-shadow:
             inset 0 1px 0 color-mix(in oklch, var(--background) 60%, transparent),
@@ -1033,13 +1289,11 @@
         --tr-plot-radius: 3px;
         --tr-plot-bg: color-mix(in oklch, var(--foreground) 4%, var(--card));
         --tr-line-mix: 70%;
-        --tr-delta-radius: 3px;
-        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% calc(100% - 1px) / 20% 2px no-repeat;
-        --tr-load-anim: tr-slide 1800ms linear infinite;
         --tr-label-size: var(--kp-text-xs, 0.75rem);
     }
 
-    [data-theme='titanium'] [data-tr='b'] .kp-kpi--trend {
+    /* titanium · shape 2: The instrument dial */
+    [data-theme='titanium'] [data-ct-shape='2'] .kp-kpi--trend {
         --tr-plate: var(--background);
         --tr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 3px) 0 0 / 100% 6px
             no-repeat;
@@ -1052,23 +1306,1758 @@
             inset 0 3px 6px color-mix(in oklch, var(--foreground) 22%, transparent),
             inset 0 -1px 0 color-mix(in oklch, var(--background) 70%, transparent);
         --tr-line-mix: 70%;
-        --tr-delta-radius: 2px;
+        --tr-label-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* titanium · shape 3: The anodised badge */
+    [data-theme='titanium'] [data-ct-shape='3'] .kp-kpi--trend {
+        --tr-radius: 1.25rem;
+        --tr-frame: 1px solid color-mix(in oklch, var(--primary) 60%, var(--border));
+        --tr-pat: linear-gradient(135deg, color-mix(in oklch, var(--foreground) 6%, transparent), transparent 45%);
+        --tr-label-track: 0.06em;
+        --tr-label-size: var(--kp-text-xs, 0.75rem);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-num-weight: 500;
+        --tr-plot-frame: inset 0 0 0 1px color-mix(in oklch, var(--primary) 50%, transparent);
+        --tr-plot-radius: 0.75rem;
+        --tr-line-mix: 70%;
+        --tr-line-w: 1.8;
+        --tr-line-cap: round;
+    }
+
+    /* ══ While loading (data-ct-loading): the picture on the plot while the tile is busy; it always moves (under reduced motion, its still frame) ══ */
+
+    /* formal · loading 1: The dotted leader */
+    [data-theme='formal'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, var(--tr-mute) 1px, transparent 1.5px) 0 50% / 6px 4px repeat-x;
+        --tr-load-anim: tr-march 1600ms steps(8) infinite;
+    }
+
+    /* formal · loading 2: The ledger is ruled */
+    [data-theme='formal'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(to bottom, transparent 0 calc(25% - 1px), var(--tr-mute) calc(25% - 1px) 25%) 0 0 / 0% 100% no-repeat;
+        --tr-load-anim: tr-rule 1800ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* formal · loading 3: The seal is pressed */
+    [data-theme='formal'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, transparent 0 9px, var(--primary) 9px 11px, transparent 11.5px) 50% 50% / 100% 100% no-repeat;
+        --tr-load-anim: tr-stamp 1400ms cubic-bezier(0.3, 0, 0.2, 1) infinite;
+    }
+
+    /* light · loading 1: The dashed baseline */
+    [data-theme='light'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+        --tr-load-anim: tr-march 1400ms linear infinite;
+    }
+
+    /* light · loading 2: Daylight */
+    [data-theme='light'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--card) 85%, transparent), transparent) -50% 0 / 35% 100% no-repeat;
+        --tr-load-anim: tr-slide 2600ms ease-in-out infinite;
+    }
+
+    /* light · loading 3: A cloud passes */
+    [data-theme='light'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 12%, transparent), transparent 70%) -50% 50% / 45% 160% no-repeat;
+        --tr-load-anim: tr-slide 3600ms ease-in-out infinite;
+    }
+
+    /* dark · loading 1: The ticker baseline */
+    [data-theme='dark'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, color-mix(in oklch, var(--foreground) 40%, transparent) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px
+            repeat-x;
+        --tr-load-anim: tr-march 1200ms steps(6) infinite;
+    }
+
+    /* dark · loading 2: The slot is scanned */
+    [data-theme='dark'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 30%, transparent), transparent) -50% 0 / 20% 100%
+            no-repeat;
+        --tr-load-anim: tr-slide 1600ms linear infinite;
+    }
+
+    /* dark · loading 3: The status lamps */
+    [data-theme='dark'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, var(--tr-ink) 0 3px, transparent 3.5px) 10% 50% / 12px 12px no-repeat;
+        --tr-load-anim: tr-hop3 1200ms steps(1) infinite;
+    }
+
+    /* cyberpunk · loading 1: The neon trace */
+    [data-theme='cyberpunk'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, transparent, var(--accent), transparent) -50% calc(100% - 1px) / 18% 2px no-repeat;
+        --tr-load-anim: tr-slide 1400ms linear infinite;
+    }
+
+    /* cyberpunk · loading 2: The glitch HUD */
+    [data-theme='cyberpunk'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--accent), var(--accent)) 0 0 / 22% 30% no-repeat;
+        --tr-load-anim: tr-glitch 900ms steps(1) infinite;
+    }
+
+    /* cyberpunk · loading 3: Packet rain */
+    [data-theme='cyberpunk'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, color-mix(in oklch, var(--accent) 70%, transparent) 1px, transparent 1.5px) 0 0 / 9px 8px;
+        --tr-load-anim: tr-march-y 400ms linear infinite;
+    }
+
+    /* synthwave · loading 1: The grid-floor horizon */
+    [data-theme='synthwave'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(to bottom, transparent 0 7px, color-mix(in oklch, var(--primary) 50%, transparent) 7px 8px) 0 0 / 100%
+            8px;
+        --tr-load-anim: tr-march-y 800ms linear infinite;
+    }
+
+    /* synthwave · loading 2: The VCR display */
+    [data-theme='synthwave'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--foreground) 28%, transparent), transparent) 0 -50% / 100% 30%
+            no-repeat;
+        --tr-load-anim: tr-roll 1800ms linear infinite;
+    }
+
+    /* synthwave · loading 3: The sun rises */
+    [data-theme='synthwave'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle at 50% 100%, color-mix(in oklch, var(--accent) 55%, transparent) 0 34%, transparent 35%) 50% 100% / 60% 100%
+            no-repeat;
+        --tr-load-origin: 50% 100%;
+        --tr-load-anim: tr-breathe 1800ms ease-in-out infinite alternate;
+    }
+
+    /* pastel · loading 1: The sticker chart */
+    [data-theme='pastel'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, var(--accent) 0 5px, transparent 6px) -50% 50% / 14% 100% no-repeat;
+        --tr-load-anim: tr-slide 1600ms steps(8) infinite;
+    }
+
+    /* pastel · loading 2: The washi planner */
+    [data-theme='pastel'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(
+                90deg,
+                color-mix(in oklch, var(--accent) 60%, transparent) 0 5px,
+                color-mix(in oklch, var(--accent) 40%, transparent) 5px 10px
+            ) -50%
+            50% / 34% 12px no-repeat;
+        --tr-load-anim: tr-slide 3000ms ease-in-out infinite alternate;
+    }
+
+    /* pastel · loading 3: Sprinkles */
+    [data-theme='pastel'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px) 0 30% / 16px 50%,
+            radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px) 8px 80% / 16px 50%;
+        --tr-load-anim: tr-march 1600ms steps(6) infinite;
+    }
+
+    /* terminal · loading 1: The top(1) row */
+    [data-theme='terminal'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) 4px 50% / 0.6em 1.1em no-repeat;
+        --tr-load-anim: tr-blink 1000ms steps(1) infinite;
+    }
+
+    /* terminal · loading 2: The dumb-terminal plot */
+    [data-theme='terminal'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, var(--tr-ink) 1.5px, transparent 2px) 0 50% / 12px 100% repeat-x;
+        --tr-load-anim: tr-march 600ms steps(4) infinite;
+    }
+
+    /* terminal · loading 3: The hash bar */
+    [data-theme='terminal'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, var(--tr-ink) 0 6px, transparent 6px 9px) 0 50% / 0% 10px no-repeat;
+        --tr-load-anim: tr-rule 1800ms steps(12) infinite;
+    }
+
+    /* forest · loading 1: The ranger’s logbook */
+    [data-theme='forest'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 12px 2px repeat-x;
+        --tr-load-anim: tr-march 1500ms linear infinite;
+    }
+
+    /* forest · loading 2: The canopy */
+    [data-theme='forest'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse at 30% 100%, color-mix(in oklch, var(--primary) 30%, transparent), transparent 60%) 0 0 / 200% 100%;
+        --tr-load-anim: tr-sway 2400ms ease-in-out infinite alternate;
+    }
+
+    /* forest · loading 3: Fireflies */
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, color-mix(in oklch, var(--warning) 80%, transparent) 0 2.5px, transparent 5px) 0 30% / 50% 50% no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--warning) 80%, transparent) 0 2.5px, transparent 5px) 100% 80% / 50% 50% no-repeat;
+        --tr-load-anim: tr-sway 2600ms ease-in-out infinite alternate;
+    }
+
+    /* high-contrast · loading 1: The dashed baseline */
+    [data-theme='high-contrast'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, var(--foreground) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+        --tr-load-anim: tr-march 800ms steps(4) infinite;
+    }
+
+    /* high-contrast · loading 2: The striped block */
+    [data-theme='high-contrast'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, var(--tr-ink) 0 4px, var(--tr-plate) 4px 8px) -50% calc(100% - 2px) / 24% 6px no-repeat;
+        --tr-load-anim: tr-slide 1400ms steps(7) infinite;
+    }
+
+    /* high-contrast · loading 3: The scanning bar */
+    [data-theme='high-contrast'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--tr-ink) 0 3px, var(--tr-plate) 3px 6px) 0 -50% / 100% 6px no-repeat;
+        --tr-load-anim: tr-roll 1500ms steps(6) infinite;
+    }
+
+    /* sepia · loading 1: The barograph */
+    [data-theme='sepia'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, transparent calc(100% - 2px), var(--tr-ink) 0) -50% 0 / 40% 100% no-repeat;
+        --tr-load-anim: tr-slide 2400ms linear infinite;
+    }
+
+    /* sepia · loading 2: The ink spreads */
+    [data-theme='sepia'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 14%, transparent), transparent 70%) 50% 50% / 60% 100% no-repeat;
+        --tr-load-anim: tr-breathe 1400ms ease-in-out infinite alternate;
+    }
+
+    /* sepia · loading 3: The drum turns */
+    [data-theme='sepia'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 12px) 0 0 / 48px
+            100%;
+        --tr-load-anim: tr-march 3000ms linear infinite reverse;
+    }
+
+    /* blueprint · loading 1: The chart recorder */
+    [data-theme='blueprint'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) -50% 0 / 2px 100% no-repeat;
+        --tr-load-anim: tr-slide 2000ms linear infinite;
+    }
+
+    /* blueprint · loading 2: The title block */
+    [data-theme='blueprint'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, var(--tr-ink) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+        --tr-load-anim: tr-march 900ms linear infinite;
+    }
+
+    /* blueprint · loading 3: The dimension line */
+    [data-theme='blueprint'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            linear-gradient(var(--tr-ink), var(--tr-ink)) 0 50% / 0% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--tr-ink) 0 1px, transparent 1px 20%) 0 50% / 0% 9px no-repeat;
+        --tr-load-anim: tr-rule 1600ms linear infinite;
+    }
+
+    /* solstice · loading 1: The low sun */
+    [data-theme='solstice'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse 60% 90% at 50% 120%, color-mix(in oklch, var(--primary) 45%, transparent), transparent 70%);
+        --tr-load-anim: tr-breathe 2400ms ease-in-out infinite alternate;
+        --tr-load-origin: 50% 100%;
+    }
+
+    /* solstice · loading 2: The embers */
+    [data-theme='solstice'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse at 50% 100%, color-mix(in oklch, var(--accent) 50%, transparent), transparent 65%);
+        --tr-load-anim: tr-breathe 1800ms ease-in-out infinite alternate;
+        --tr-load-origin: 50% 100%;
+    }
+
+    /* solstice · loading 3: The sun crosses */
+    [data-theme='solstice'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(
+                circle,
+                color-mix(in oklch, var(--primary) 60%, transparent) 0 6px,
+                color-mix(in oklch, var(--primary) 20%, transparent) 9px,
+                transparent 14px
+            ) -50%
+            70% / 30px 30px no-repeat;
+        --tr-load-anim: tr-slide 3000ms ease-in-out infinite;
+    }
+
+    /* brutalism · loading 1: The stamp */
+    [data-theme='brutalism'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
+        --tr-load-anim: tr-stamp 900ms steps(2) infinite;
+    }
+
+    /* brutalism · loading 2: The drop */
+    [data-theme='brutalism'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
+        --tr-load-anim: tr-drop 1200ms cubic-bezier(0.5, 0, 0.8, 0.4) infinite;
+    }
+
+    /* brutalism · loading 3: The hammer */
+    [data-theme='brutalism'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 10% 50% / 22% 50% no-repeat;
+        --tr-load-anim: tr-hop3 900ms steps(1) infinite;
+    }
+
+    /* deco · loading 1: The gilt frame */
+    [data-theme='deco'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 60%, transparent) 50%, transparent 60%) -50% 0 / 40%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    /* deco · loading 2: The marquee */
+    [data-theme='deco'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 0 / 48px 6px repeat-x,
+            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 100% / 48px 6px repeat-x;
+        --tr-load-anim: tr-march 1200ms steps(4) infinite;
+    }
+
+    /* deco · loading 3: The sunburst opens */
+    [data-theme='deco'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: repeating-conic-gradient(
+            from 270deg at 50% 100%,
+            color-mix(in oklch, var(--primary) 45%, transparent) 0 4deg,
+            transparent 4deg 12deg
+        );
+        --tr-load-origin: 50% 100%;
+        --tr-load-anim: tr-grow-y 1600ms steps(6) infinite;
+    }
+
+    /* phantom · loading 1: The stamp ring */
+    [data-theme='phantom'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, transparent 0 40%, color-mix(in oklch, var(--primary) 70%, transparent) 42% 48%, transparent 50%) 50% 50% /
+            40px 40px no-repeat;
+        --tr-load-anim: tr-stamp 900ms steps(2) infinite;
+    }
+
+    /* phantom · loading 2: The calling card */
+    [data-theme='phantom'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, color-mix(in oklch, var(--foreground) 30%, transparent) 1.5px, transparent 2px) 0 0 / 8px 8px;
+        --tr-load-anim: tr-march 700ms steps(3) infinite;
+    }
+
+    /* phantom · loading 3: The string is pulled */
+    [data-theme='phantom'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: linear-gradient(160deg, transparent 49%, var(--primary) 49% 51%, transparent 51%) -50% 0 / 40% 100% no-repeat;
+        --tr-load-anim: tr-slide 1500ms steps(5) infinite;
+    }
+
+    /* shade-light · loading 1: Pencil in the shade */
+    [data-theme='shade-light'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    /* shade-light · loading 2: The leaf shade */
+    [data-theme='shade-light'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 16%, transparent), transparent 70%) -50% 50% / 50% 140% no-repeat;
+        --tr-load-anim: tr-slide 3200ms ease-in-out infinite;
+    }
+
+    /* shade-light · loading 3: Leaves sway */
+    [data-theme='shade-light'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle at 30% 40%, color-mix(in oklch, var(--foreground) 12%, transparent), transparent 25%),
+            radial-gradient(circle at 70% 60%, color-mix(in oklch, var(--foreground) 10%, transparent), transparent 22%);
+        --tr-load-anim: tr-sway 2200ms ease-in-out infinite alternate;
+    }
+
+    /* shade-dark · loading 1: Silverpoint */
+    [data-theme='shade-dark'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2400ms ease-in-out infinite;
+    }
+
+    /* shade-dark · loading 2: The lamp */
+    [data-theme='shade-dark'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse at 30% 50%, color-mix(in oklch, var(--warning) 40%, transparent), transparent 70%);
+        --tr-load-anim: tr-breathe 2400ms ease-in-out infinite alternate;
+    }
+
+    /* shade-dark · loading 3: The candle */
+    [data-theme='shade-dark'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(ellipse 14px 20px at 50% 60%, color-mix(in oklch, var(--warning) 55%, transparent), transparent 70%) 85% 50% / 40px
+            100% no-repeat;
+        --tr-load-anim: tr-flick 1300ms steps(1) infinite;
+    }
+
+    /* retro · loading 1: The progress blocks */
+    [data-theme='retro'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) 3px calc(100% - 3px) / 0% 10px no-repeat;
+        --tr-load-anim: tr-rule 2000ms steps(10) infinite;
+    }
+
+    /* retro · loading 2: The marquee bar */
+    [data-theme='retro'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) -50% calc(100% - 3px) / 30px 10px no-repeat;
+        --tr-load-anim: tr-slide 1800ms steps(12) infinite;
+    }
+
+    /* retro · loading 3: The defragmenter */
+    [data-theme='retro'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 8px 8px,
+            conic-gradient(var(--chart-2) 0 25%, transparent 0 50%, var(--chart-3) 0 75%, transparent 0) 0 0 / 16px 16px;
+        --tr-load-anim: tr-march 2400ms steps(6) infinite;
+    }
+
+    /* grotesk · loading 1: The transit board */
+    [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% 50% / 30% 3px no-repeat;
+        --tr-load-anim: tr-slide 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    }
+
+    /* grotesk · loading 2: The Swiss poster */
+    [data-theme='grotesk'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load:
+            linear-gradient(var(--foreground), var(--foreground)) 0 50% / 14% 45% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 14% 45% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 50% / 14% 45% no-repeat;
+        --tr-load-anim: tr-cut 1200ms steps(1) infinite;
+    }
+
+    /* grotesk · loading 3: The flap board */
+    [data-theme='grotesk'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load:
+            linear-gradient(var(--foreground), var(--foreground)) 0 50% / 30% 40% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 30% 40% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 50% / 30% 40% no-repeat;
+        --tr-load-anim: tr-flap 900ms steps(3) infinite;
+    }
+
+    /* lapis · loading 1: The girih tile */
+    [data-theme='lapis'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 65%, transparent) 50%, transparent 60%) -50% 0 / 40%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    /* lapis · loading 2: The gold leaf is laid */
+    [data-theme='lapis'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: linear-gradient(color-mix(in oklch, var(--primary) 70%, transparent), color-mix(in oklch, var(--primary) 70%, transparent)) 0
+            100% / 0% 4px no-repeat;
+        --tr-load-anim: tr-rule 2200ms ease-in-out infinite;
+    }
+
+    /* lapis · loading 3: The star turns */
+    [data-theme='lapis'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: repeating-conic-gradient(
+            from 0deg at 50% 50%,
+            color-mix(in oklch, var(--primary) 35%, transparent) 0 6deg,
+            transparent 6deg 45deg
+        );
+        --tr-load-anim: tr-spin 6000ms linear infinite;
+    }
+
+    /* nostromo · loading 1: The CRT trace */
+    [data-theme='nostromo'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--success) 40%, var(--background))) -50% 0 / 30% 100% no-repeat;
+        --tr-load-anim: tr-slide 2000ms linear infinite;
+    }
+
+    /* nostromo · loading 2: The indicator panel */
+    [data-theme='nostromo'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, var(--accent) 0 4px, transparent 5px) -50% 50% / 12% 100% no-repeat;
+        --tr-load-anim: tr-slide 1400ms steps(6) infinite;
+    }
+
+    /* nostromo · loading 3: The motion tracker */
+    [data-theme='nostromo'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, transparent 0 46%, color-mix(in oklch, var(--success) 70%, transparent) 47% 50%, transparent 51%) 50% 50% /
+            80px 80px no-repeat;
+        --tr-load-anim: tr-ping 1400ms cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+    }
+
+    /* titanium · loading 1: The milled plate */
+    [data-theme='titanium'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% calc(100% - 1px) / 20% 2px no-repeat;
+        --tr-load-anim: tr-slide 1800ms linear infinite;
+    }
+
+    /* titanium · loading 2: The instrument dial */
+    [data-theme='titanium'] [data-ct-loading='2'] .kp-kpi--trend {
         --tr-load: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 30%, transparent) 0 1px, transparent 1px 3px) 0 0 / 100% 6px;
         --tr-load-anim: tr-march 1500ms linear infinite;
-        --tr-label-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* titanium · loading 3: The lathe */
+    [data-theme='titanium'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(60deg, color-mix(in oklch, var(--foreground) 24%, transparent) 0 1px, transparent 1px 6px) 0 0 / 48px
+            100%;
+        --tr-load-anim: tr-march 900ms linear infinite;
+    }
+
+    /* ══ How the figure and the line arrive (data-ct-arrival): after loading, and on Drawn ══ */
+
+    /* formal · arrival 1: At once */
+    [data-theme='formal'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* formal · arrival 2: Engraved */
+    [data-theme='formal'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1100ms ease-out both;
+        --tr-arr-num: tr-n-wipe 1100ms ease-out both;
+    }
+
+    /* formal · arrival 3: Entered in the ledger */
+    [data-theme='formal'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1200ms steps(10) both;
+        --tr-arr-num: tr-n-type 1200ms steps(10) both;
+    }
+
+    /* light · arrival 1: At once */
+    [data-theme='light'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* light · arrival 2: Unfolds */
+    [data-theme='light'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-mid 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --tr-arr-num: tr-n-rise 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* light · arrival 3: Sunrise */
+    [data-theme='light'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1000ms ease-out both;
+        --tr-arr-num: tr-n-drop 1000ms ease-out both;
+    }
+
+    /* dark · arrival 1: At once */
+    [data-theme='dark'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* dark · arrival 2: Switched on */
+    [data-theme='dark'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-flicker 700ms steps(1) both;
+        --tr-arr-num: none;
+    }
+
+    /* dark · arrival 3: Machined in */
+    [data-theme='dark'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 800ms steps(8) both;
+        --tr-arr-num: tr-n-wipe 800ms steps(8) both;
+    }
+
+    /* cyberpunk · arrival 1: At once */
+    [data-theme='cyberpunk'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* cyberpunk · arrival 2: Jacked in */
+    [data-theme='cyberpunk'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-glitch 600ms steps(1) both;
+        --tr-arr-num: tr-n-glitch 600ms steps(1) both;
+    }
+
+    /* cyberpunk · arrival 3: The neon strikes */
+    [data-theme='cyberpunk'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-flicker 800ms steps(1) both;
+        --tr-arr-num: tr-n-type 800ms steps(1) both;
+    }
+
+    /* synthwave · arrival 1: At once */
+    [data-theme='synthwave'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* synthwave · arrival 2: Over the horizon */
+    [data-theme='synthwave'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --tr-arr-num: tr-n-rise 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* synthwave · arrival 3: Tape loads */
+    [data-theme='synthwave'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 900ms steps(12) both;
+        --tr-arr-num: tr-n-type 900ms steps(12) both;
+    }
+
+    /* pastel · arrival 1: At once */
+    [data-theme='pastel'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* pastel · arrival 2: Popped */
+    [data-theme='pastel'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 700ms cubic-bezier(0.3, 1.6, 0.5, 1) both;
+        --tr-arr-num: tr-n-stamp 700ms cubic-bezier(0.3, 1.6, 0.5, 1) both;
+    }
+
+    /* pastel · arrival 3: Doodled in */
+    [data-theme='pastel'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1000ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1000ms ease-in-out both;
+    }
+
+    /* terminal · arrival 1: At once */
+    [data-theme='terminal'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* terminal · arrival 2: Printed */
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 900ms steps(16) both;
+        --tr-arr-num: tr-n-type 900ms steps(16) both;
+    }
+
+    /* terminal · arrival 3: Paged in */
+    [data-theme='terminal'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 500ms steps(3) both;
+        --tr-arr-num: tr-n-drop 500ms steps(3) both;
+    }
+
+    /* forest · arrival 1: At once */
+    [data-theme='forest'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* forest · arrival 2: Grows */
+    [data-theme='forest'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --tr-arr-num: tr-n-rise 1300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    /* forest · arrival 3: The trail is walked */
+    [data-theme='forest'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1600ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1600ms ease-in-out both;
+    }
+
+    /* high-contrast · arrival 1: At once */
+    [data-theme='high-contrast'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* high-contrast · arrival 2: Switched */
+    [data-theme='high-contrast'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 400ms steps(4) both;
+        --tr-arr-num: none;
+    }
+
+    /* high-contrast · arrival 3: Dropped */
+    [data-theme='high-contrast'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 350ms steps(2) both;
+        --tr-arr-num: tr-n-drop 350ms steps(2) both;
+    }
+
+    /* sepia · arrival 1: At once */
+    [data-theme='sepia'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* sepia · arrival 2: The nib writes */
+    [data-theme='sepia'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1800ms linear both;
+        --tr-arr-num: tr-n-wipe 1800ms linear both;
+    }
+
+    /* sepia · arrival 3: Pressed */
+    [data-theme='sepia'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 500ms cubic-bezier(0.3, 0, 0.2, 1) both;
+        --tr-arr-num: tr-n-press 500ms cubic-bezier(0.3, 0, 0.2, 1) both;
+    }
+
+    /* blueprint · arrival 1: At once */
+    [data-theme='blueprint'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* blueprint · arrival 2: Drafted */
+    [data-theme='blueprint'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1400ms linear both;
+        --tr-arr-num: tr-n-wipe 1400ms linear both;
+    }
+
+    /* blueprint · arrival 3: Plotted */
+    [data-theme='blueprint'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1200ms steps(24) both;
+        --tr-arr-num: tr-n-type 1200ms steps(24) both;
+    }
+
+    /* solstice · arrival 1: At once */
+    [data-theme='solstice'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* solstice · arrival 2: Dawn */
+    [data-theme='solstice'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1400ms ease-out both;
+        --tr-arr-num: tr-n-rise 1400ms ease-out both;
+    }
+
+    /* solstice · arrival 3: Kindled */
+    [data-theme='solstice'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-unroll 1100ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1100ms ease-in-out both;
+    }
+
+    /* brutalism · arrival 1: At once */
+    [data-theme='brutalism'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* brutalism · arrival 2: Slammed */
+    [data-theme='brutalism'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 300ms steps(2) both;
+        --tr-arr-num: tr-n-stamp 300ms steps(2) both;
+    }
+
+    /* brutalism · arrival 3: Shoved in */
+    [data-theme='brutalism'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 400ms cubic-bezier(0.7, 0, 0.3, 1) both;
+        --tr-arr-num: tr-n-skew 400ms cubic-bezier(0.7, 0, 0.3, 1) both;
+    }
+
+    /* deco · arrival 1: At once */
+    [data-theme='deco'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* deco · arrival 2: The curtain rises */
+    [data-theme='deco'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1100ms cubic-bezier(0.3, 0, 0.2, 1) both;
+        --tr-arr-num: tr-n-rise 1100ms cubic-bezier(0.3, 0, 0.2, 1) both;
+    }
+
+    /* deco · arrival 3: The marquee lights */
+    [data-theme='deco'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-mid 900ms steps(9) both;
+        --tr-arr-num: tr-n-wipe 900ms steps(9) both;
+    }
+
+    /* phantom · arrival 1: At once */
+    [data-theme='phantom'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* phantom · arrival 2: The card is thrown */
+    [data-theme='phantom'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-glitch 500ms steps(1) both;
+        --tr-arr-num: tr-n-skew 500ms steps(1) both;
+    }
+
+    /* phantom · arrival 3: Slashed in */
+    [data-theme='phantom'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-unroll 450ms cubic-bezier(0.7, 0, 0.3, 1) both;
+        --tr-arr-num: tr-n-skew 450ms cubic-bezier(0.7, 0, 0.3, 1) both;
+    }
+
+    /* shade-light · arrival 1: At once */
+    [data-theme='shade-light'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* shade-light · arrival 2: Drawn in pencil */
+    [data-theme='shade-light'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1400ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1400ms ease-in-out both;
+    }
+
+    /* shade-light · arrival 3: Out of the shade */
+    [data-theme='shade-light'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 1200ms ease-out both;
+        --tr-arr-num: tr-n-rise 1200ms ease-out both;
+    }
+
+    /* shade-dark · arrival 1: At once */
+    [data-theme='shade-dark'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* shade-dark · arrival 2: Silverpoint */
+    [data-theme='shade-dark'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1600ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1600ms ease-in-out both;
+    }
+
+    /* shade-dark · arrival 3: The lamp is lit */
+    [data-theme='shade-dark'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-mid 1000ms ease-out both;
+        --tr-arr-num: tr-n-rise 1000ms ease-out both;
+    }
+
+    /* retro · arrival 1: At once */
+    [data-theme='retro'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* retro · arrival 2: Painted */
+    [data-theme='retro'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 600ms steps(6) both;
+        --tr-arr-num: none;
+    }
+
+    /* retro · arrival 3: Dragged in */
+    [data-theme='retro'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 300ms steps(2) both;
+        --tr-arr-num: tr-n-drop 300ms steps(2) both;
+    }
+
+    /* grotesk · arrival 1: At once */
+    [data-theme='grotesk'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* grotesk · arrival 2: Set in type */
+    [data-theme='grotesk'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 500ms cubic-bezier(0.7, 0, 0.3, 1) both;
+        --tr-arr-num: tr-n-wipe 500ms cubic-bezier(0.7, 0, 0.3, 1) both;
+    }
+
+    /* grotesk · arrival 3: The board flips */
+    [data-theme='grotesk'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 450ms steps(3) both;
+        --tr-arr-num: tr-n-rise 450ms steps(3) both;
+    }
+
+    /* lapis · arrival 1: At once */
+    [data-theme='lapis'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* lapis · arrival 2: Illuminated */
+    [data-theme='lapis'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-mid 1300ms ease-out both;
+        --tr-arr-num: tr-n-rise 1300ms ease-out both;
+    }
+
+    /* lapis · arrival 3: Inked */
+    [data-theme='lapis'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1500ms ease-in-out both;
+        --tr-arr-num: tr-n-wipe 1500ms ease-in-out both;
+    }
+
+    /* nostromo · arrival 1: At once */
+    [data-theme='nostromo'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* nostromo · arrival 2: Warmed up */
+    [data-theme='nostromo'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-flicker 900ms steps(1) both;
+        --tr-arr-num: tr-n-type 900ms steps(1) both;
+    }
+
+    /* nostromo · arrival 3: Printed out */
+    [data-theme='nostromo'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 1100ms steps(20) both;
+        --tr-arr-num: tr-n-type 1100ms steps(20) both;
+    }
+
+    /* titanium · arrival 1: At once */
+    [data-theme='titanium'] [data-ct-arrival='1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* titanium · arrival 2: Milled */
+    [data-theme='titanium'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe 900ms cubic-bezier(0.4, 0, 0.2, 1) both;
+        --tr-arr-num: tr-n-wipe 900ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    /* titanium · arrival 3: Seated */
+    [data-theme='titanium'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-drop 450ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+        --tr-arr-num: tr-n-press 450ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+    }
+
+    /* ══ The tone and the change (data-ct-tone): the change’s plate, and how a warning or destructive figure reads ══ */
+
+    /* formal · tone 1: The engraved plate */
+    [data-theme='formal'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* formal · tone 2: The annual report */
+    [data-theme='formal'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-style: italic;
+    }
+
+    /* formal · tone 3: The red-ink entry */
+    [data-theme='formal'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+        --tr-delta-style: normal;
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
+    }
+
+    /* light · tone 1: The soft card */
+    [data-theme='light'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+    }
+
+    /* light · tone 2: The soft outline */
+    [data-theme='light'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-border: 1px solid color-mix(in oklch, var(--foreground) 25%, transparent);
+    }
+
+    /* light · tone 3: The coloured tab */
+    [data-theme='light'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 20%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
+    }
+
+    /* dark · tone 1: The status board */
+    [data-theme='dark'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* dark · tone 2: The machined tab */
+    [data-theme='dark'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 30%, transparent);
+    }
+
+    /* dark · tone 3: The alarm lamp */
+    [data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+    }
+
+    /* cyberpunk · tone 1: The neon trace */
+    [data-theme='cyberpunk'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-clip: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    }
+
+    /* cyberpunk · tone 2: The glitch HUD */
+    [data-theme='cyberpunk'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* cyberpunk · tone 3: The hazard frame */
+    [data-theme='cyberpunk'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-turn: skewX(-12deg);
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* synthwave · tone 1: The grid-floor horizon */
+    [data-theme='synthwave'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 4px;
+    }
+
+    /* synthwave · tone 2: The VCR display */
+    [data-theme='synthwave'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* synthwave · tone 3: The arcade warning */
+    [data-theme='synthwave'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 4px;
+        --tr-delta-shadow: 0 0 8px color-mix(in oklch, var(--primary) 50%, transparent);
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+    }
+
+    /* pastel · tone 1: The sticker chart */
+    [data-theme='pastel'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 2px 2px 0 color-mix(in oklch, var(--foreground) 45%, transparent);
+    }
+
+    /* pastel · tone 2: The washi planner */
+    [data-theme='pastel'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* pastel · tone 3: The heart sticker */
+    [data-theme='pastel'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-turn: rotate(-3deg);
+        --tr-delta-shadow: 2px 2px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
+    }
+
+    /* terminal · tone 1: The top(1) row */
+    [data-theme='terminal'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-bg: var(--tr-ink);
+        --tr-delta-fg: var(--tr-plate);
+    }
+
+    /* terminal · tone 2: The dumb-terminal plot */
+    [data-theme='terminal'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-deco: underline;
+    }
+
+    /* terminal · tone 3: The bell */
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px dashed currentColor;
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+    }
+
+    /* forest · tone 1: The ranger’s logbook */
+    [data-theme='forest'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 3px;
+    }
+
+    /* forest · tone 2: The canopy */
+    [data-theme='forest'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0 0.8em;
+    }
+
+    /* forest · tone 3: The trail blaze */
+    [data-theme='forest'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0 0.6em 0 0.6em;
+        --tr-delta-border: 1px solid currentColor;
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
+    }
+
+    /* high-contrast · tone 1: Ink and frame */
+    [data-theme='high-contrast'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid currentColor;
+    }
+
+    /* high-contrast · tone 2: The heavy frame */
+    [data-theme='high-contrast'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 3px solid currentColor;
+    }
+
+    /* high-contrast · tone 3: The signal plate */
+    [data-theme='high-contrast'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid currentColor;
+        --tr-delta-shadow: 2px 2px 0 var(--foreground);
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* sepia · tone 1: The barograph */
+    [data-theme='sepia'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* sepia · tone 2: Letterpress */
+    [data-theme='sepia'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+    }
+
+    /* sepia · tone 3: The rubber stamp */
+    [data-theme='sepia'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px double currentColor;
+        --tr-note-turn: rotate(-4deg);
+        --tr-note-border: 1px solid currentColor;
+    }
+
+    /* blueprint · tone 1: The chart recorder */
+    [data-theme='blueprint'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* blueprint · tone 2: The title block */
+    [data-theme='blueprint'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+    }
+
+    /* blueprint · tone 3: The revision cloud */
+    [data-theme='blueprint'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px dashed currentColor;
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* solstice · tone 1: The low sun */
+    [data-theme='solstice'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 8px color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    /* solstice · tone 2: The embers */
+    [data-theme='solstice'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 3px;
+    }
+
+    /* solstice · tone 3: The red sky */
+    [data-theme='solstice'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 8px color-mix(in oklch, var(--accent) 50%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
+    }
+
+    /* brutalism · tone 1: The slab */
+    [data-theme='brutalism'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid var(--foreground);
+        --tr-delta-shadow: 2px 2px 0 var(--foreground);
+    }
+
+    /* brutalism · tone 2: The sticker sheet */
+    [data-theme='brutalism'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid var(--foreground);
+        --tr-delta-turn: rotate(-4deg);
+    }
+
+    /* brutalism · tone 3: The warning poster */
+    [data-theme='brutalism'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid var(--foreground);
+        --tr-delta-shadow: 3px 3px 0 var(--foreground);
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+    }
+
+    /* deco · tone 1: The gilt frame */
+    [data-theme='deco'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid var(--primary);
+    }
+
+    /* deco · tone 2: The marquee */
+    [data-theme='deco'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 3px double var(--primary);
+    }
+
+    /* deco · tone 3: The gilt notice */
+    [data-theme='deco'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid var(--primary);
+        --tr-delta-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--primary);
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* phantom · tone 1: The evidence card */
+    [data-theme='phantom'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-border: 2px solid currentColor;
+        --tr-delta-turn: rotate(-6deg);
+    }
+
+    /* phantom · tone 2: The calling card */
+    [data-theme='phantom'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-turn: skewX(-12deg);
+    }
+
+    /* phantom · tone 3: Stamped askew */
+    [data-theme='phantom'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-turn: skewX(-12deg);
+        --tr-delta-border: 2px solid currentColor;
+        --tr-note-turn: rotate(-4deg);
+        --tr-note-border: 1px solid currentColor;
+    }
+
+    /* shade-light · tone 1: Pencil in the shade */
+    [data-theme='shade-light'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 3px;
+        --tr-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 22%, transparent);
+    }
+
+    /* shade-light · tone 2: The leaf shade */
+    [data-theme='shade-light'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+    }
+
+    /* shade-light · tone 3: The pinned note */
+    [data-theme='shade-light'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+        --tr-delta-shadow: 1px 2px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
+    }
+
+    /* shade-dark · tone 1: Silverpoint */
+    [data-theme='shade-dark'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* shade-dark · tone 2: The reading lamp */
+    [data-theme='shade-dark'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+    }
+
+    /* shade-dark · tone 3: The red lamp */
+    [data-theme='shade-dark'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
+    }
+
+    /* retro · tone 1: The 1995 dialog */
+    [data-theme='retro'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent),
+            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent);
+    }
+
+    /* retro · tone 2: The flat field */
+    [data-theme='retro'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+    }
+
+    /* retro · tone 3: The message box */
+    [data-theme='retro'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 55%, transparent),
+            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 10%, transparent);
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* grotesk · tone 1: The transit board */
+    [data-theme='grotesk'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* grotesk · tone 2: The underlined figure */
+    [data-theme='grotesk'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-shadow: inset 0 -3px 0 color-mix(in oklch, var(--foreground) 60%, transparent);
+    }
+
+    /* grotesk · tone 3: The index colour */
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-style: normal;
+        --tr-tone-num-bg: var(--tr-tc);
+        --tr-tone-num-fg: var(--tr-tf);
+        --tr-tone-num-pad: 0.25em;
+    }
+
+    /* lapis · tone 1: The girih tile */
+    [data-theme='lapis'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+    }
+
+    /* lapis · tone 2: Lapis on vellum */
+    [data-theme='lapis'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* lapis · tone 3: The rubric */
+    [data-theme='lapis'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid var(--primary);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
+    }
+
+    /* nostromo · tone 1: The CRT trace */
+    [data-theme='nostromo'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* nostromo · tone 2: The indicator panel */
+    [data-theme='nostromo'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--success) 60%, transparent);
+    }
+
+    /* nostromo · tone 3: The klaxon */
+    [data-theme='nostromo'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--success) 50%, transparent);
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    /* titanium · tone 1: The milled plate */
+    [data-theme='titanium'] [data-ct-tone='1'] .kp-kpi--trend {
+        --tr-delta-radius: 3px;
+    }
+
+    /* titanium · tone 2: The instrument dial */
+    [data-theme='titanium'] [data-ct-tone='2'] .kp-kpi--trend {
+        --tr-delta-radius: 2px;
+    }
+
+    /* titanium · tone 3: The anodised tag */
+    [data-theme='titanium'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 3px;
+        --tr-delta-border: 1px solid color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
+    }
+
+    /* ══ Live update (data-ct-live): a new reading; plays whenever the module draws new paths ══ */
+
+    /* formal · live 1: Redrawn */
+    [data-theme='formal'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* formal · live 2: The entry is carried forward */
+    [data-theme='formal'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 700ms ease-out;
+        --tr-live-area: tr-l-shift 700ms ease-out;
+    }
+
+    /* formal · live 3: Signed again */
+    [data-theme='formal'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-retrace 1100ms ease-in-out;
+        --tr-live-area: none;
+    }
+
+    /* light · live 1: Redrawn */
+    [data-theme='light'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* light · live 2: A soft swell */
+    [data-theme='light'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-swell 900ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* light · live 3: The page turns */
+    [data-theme='light'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        --tr-live-area: tr-l-shift 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* dark · live 1: Redrawn */
+    [data-theme='dark'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* dark · live 2: The trace jumps */
+    [data-theme='dark'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 400ms steps(2);
+        --tr-live-area: tr-l-jolt 400ms steps(2);
+    }
+
+    /* dark · live 3: The trace flares */
+    [data-theme='dark'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 900ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* cyberpunk · live 1: Redrawn */
+    [data-theme='cyberpunk'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* cyberpunk · live 2: Packet in */
+    [data-theme='cyberpunk'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-glitch 360ms steps(1);
+        --tr-live-area: tr-l-glitch 360ms steps(1);
+    }
+
+    /* cyberpunk · live 3: The trace burns */
+    [data-theme='cyberpunk'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 700ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* synthwave · live 1: Redrawn */
+    [data-theme='synthwave'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* synthwave · live 2: The tracking jumps */
+    [data-theme='synthwave'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 400ms steps(2);
+        --tr-live-area: tr-l-jolt 400ms steps(2);
+    }
+
+    /* synthwave · live 3: The laser flares */
+    [data-theme='synthwave'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 900ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* pastel · live 1: Redrawn */
+    [data-theme='pastel'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* pastel · live 2: A happy hop */
+    [data-theme='pastel'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+        --tr-live-area: tr-l-jolt 500ms cubic-bezier(0.3, 1.6, 0.5, 1);
+    }
+
+    /* pastel · live 3: Squished */
+    [data-theme='pastel'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-swell 600ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* terminal · live 1: Redrawn */
+    [data-theme='terminal'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* terminal · live 2: Scrolled */
+    [data-theme='terminal'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 300ms steps(2);
+        --tr-live-area: tr-l-shift 300ms steps(2);
+    }
+
+    /* terminal · live 3: Reverse flash */
+    [data-theme='terminal'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flash 500ms steps(1);
+        --tr-live-area: none;
+    }
+
+    /* forest · live 1: Redrawn */
+    [data-theme='forest'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* forest · live 2: A branch sways */
+    [data-theme='forest'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-sink 900ms ease-out;
+        --tr-live-area: tr-l-sink 900ms ease-out;
+    }
+
+    /* forest · live 3: Growth ring */
+    [data-theme='forest'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-swell 1000ms ease-in-out;
+        --tr-live-area: none;
+    }
+
+    /* high-contrast · live 1: Redrawn */
+    [data-theme='high-contrast'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* high-contrast · live 2: The bar jumps */
+    [data-theme='high-contrast'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 300ms steps(2);
+        --tr-live-area: tr-l-jolt 300ms steps(2);
+    }
+
+    /* high-contrast · live 3: The bar flips */
+    [data-theme='high-contrast'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flash 400ms steps(1);
+        --tr-live-area: none;
+    }
+
+    /* sepia · live 1: Redrawn */
+    [data-theme='sepia'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* sepia · live 2: The nib moves on */
+    [data-theme='sepia'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 1000ms linear;
+        --tr-live-area: tr-l-shift 1000ms linear;
+    }
+
+    /* sepia · live 3: Inked again */
+    [data-theme='sepia'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-retrace 1200ms ease-in-out;
+        --tr-live-area: none;
+    }
+
+    /* blueprint · live 1: Redrawn */
+    [data-theme='blueprint'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* blueprint · live 2: The pen steps */
+    [data-theme='blueprint'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 500ms steps(3);
+        --tr-live-area: tr-l-shift 500ms steps(3);
+    }
+
+    /* blueprint · live 3: Retraced in ink */
+    [data-theme='blueprint'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-retrace 1000ms linear;
+        --tr-live-area: none;
+    }
+
+    /* solstice · live 1: Redrawn */
+    [data-theme='solstice'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* solstice · live 2: A flare of sun */
+    [data-theme='solstice'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 1000ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* solstice · live 3: The day moves on */
+    [data-theme='solstice'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 900ms ease-in-out;
+        --tr-live-area: tr-l-shift 900ms ease-in-out;
+    }
+
+    /* brutalism · live 1: Redrawn */
+    [data-theme='brutalism'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* brutalism · live 2: Kicked */
+    [data-theme='brutalism'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 300ms steps(2);
+        --tr-live-area: tr-l-jolt 300ms steps(2);
+    }
+
+    /* brutalism · live 3: Shoved */
+    [data-theme='brutalism'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 300ms steps(2);
+        --tr-live-area: tr-l-shift 300ms steps(2);
+    }
+
+    /* deco · live 1: Redrawn */
+    [data-theme='deco'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* deco · live 2: The bulbs chase */
+    [data-theme='deco'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flash 600ms steps(1);
+        --tr-live-area: none;
+    }
+
+    /* deco · live 3: Gilded */
+    [data-theme='deco'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 900ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* phantom · live 1: Redrawn */
+    [data-theme='phantom'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* phantom · live 2: Snatched */
+    [data-theme='phantom'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-glitch 360ms steps(1);
+        --tr-live-area: tr-l-glitch 360ms steps(1);
+    }
+
+    /* phantom · live 3: The string twangs */
+    [data-theme='phantom'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 400ms steps(3);
+        --tr-live-area: tr-l-jolt 400ms steps(3);
+    }
+
+    /* shade-light · live 1: Redrawn */
+    [data-theme='shade-light'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* shade-light · live 2: A breeze */
+    [data-theme='shade-light'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-sink 900ms ease-in-out;
+        --tr-live-area: tr-l-sink 900ms ease-in-out;
+    }
+
+    /* shade-light · live 3: Pencilled again */
+    [data-theme='shade-light'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-retrace 1200ms ease-in-out;
+        --tr-live-area: none;
+    }
+
+    /* shade-dark · live 1: Redrawn */
+    [data-theme='shade-dark'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* shade-dark · live 2: A glint */
+    [data-theme='shade-dark'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 900ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* shade-dark · live 3: The page moves */
+    [data-theme='shade-dark'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 900ms ease-in-out;
+        --tr-live-area: tr-l-shift 900ms ease-in-out;
+    }
+
+    /* retro · live 1: Redrawn */
+    [data-theme='retro'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* retro · live 2: Repainted */
+    [data-theme='retro'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flash 400ms steps(1);
+        --tr-live-area: none;
+    }
+
+    /* retro · live 3: Scrolled one */
+    [data-theme='retro'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 300ms steps(1);
+        --tr-live-area: tr-l-shift 300ms steps(1);
+    }
+
+    /* grotesk · live 1: Redrawn */
+    [data-theme='grotesk'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* grotesk · live 2: Flipped */
+    [data-theme='grotesk'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 300ms steps(2);
+        --tr-live-area: tr-l-jolt 300ms steps(2);
+    }
+
+    /* grotesk · live 3: Shifted */
+    [data-theme='grotesk'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 300ms cubic-bezier(0.7, 0, 0.3, 1);
+        --tr-live-area: tr-l-shift 300ms cubic-bezier(0.7, 0, 0.3, 1);
+    }
+
+    /* lapis · live 1: Redrawn */
+    [data-theme='lapis'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* lapis · live 2: Gilded */
+    [data-theme='lapis'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 1000ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* lapis · live 3: Inked again */
+    [data-theme='lapis'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-retrace 1300ms ease-in-out;
+        --tr-live-area: none;
+    }
+
+    /* nostromo · live 1: Redrawn */
+    [data-theme='nostromo'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* nostromo · live 2: A blip */
+    [data-theme='nostromo'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 700ms ease-out;
+        --tr-live-area: none;
+    }
+
+    /* nostromo · live 3: The trace rolls */
+    [data-theme='nostromo'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-shift 400ms steps(2);
+        --tr-live-area: tr-l-shift 400ms steps(2);
+    }
+
+    /* titanium · live 1: Redrawn */
+    [data-theme='titanium'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    /* titanium · live 2: A click of the dial */
+    [data-theme='titanium'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: tr-l-jolt 300ms steps(2);
+        --tr-live-area: tr-l-jolt 300ms steps(2);
+    }
+
+    /* titanium · live 3: A glint */
+    [data-theme='titanium'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tr-l-flare 800ms ease-out;
+        --tr-live-area: none;
     }
 }
 
-/* ── Motion: only here, only while loading ───────────────────────────── */
+/* ── Motion: only here; nothing fades ───────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
     @layer kp.signature {
-        :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        /* While loading: the picture loops. */
+        [data-ct] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
             animation: var(--tr-load-anim, none);
+        }
+
+        /* The arrival plays once when the tile stops being busy. */
+        [data-ct] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__spark {
+            animation: var(--tr-arr-line, none);
+        }
+
+        [data-ct] .kp-kpi--trend:not([aria-busy='true']) > .kp-kpi__value {
+            animation: var(--tr-arr-num, none);
+        }
+
+        /* A live update plays once on the new paths of every draw. */
+        [data-ct] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__spark-line {
+            animation: var(--tr-live-line, none);
+        }
+
+        [data-ct] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__spark-area {
+            animation: var(--tr-live-area, none);
         }
     }
 }
 
+/* Loading pictures. */
 @keyframes tr-slide {
     from {
         background-position-x: -50%;
@@ -1099,21 +3088,36 @@
     }
 }
 
-@keyframes tr-pulse {
-    50% {
-        opacity: 0.35;
+/* A swell about the picture's origin (round 1's pulse was a fade). */
+@keyframes tr-breathe {
+    from {
+        transform: scale(0.7);
+    }
+    to {
+        transform: scale(1);
     }
 }
 
+@keyframes tr-pulse {
+    50% {
+        transform: scale(0.7);
+    }
+}
+
+/* On and off by its size, not its opacity. */
 @keyframes tr-blink {
     50% {
-        opacity: 0;
+        background-size: 0 0;
     }
 }
 
 @keyframes tr-stamp {
-    50% {
-        opacity: 0.25;
+    0% {
+        transform: scale(1.35);
+    }
+    40%,
+    100% {
+        transform: scale(1);
     }
 }
 
@@ -1143,13 +3147,11 @@
 
 @keyframes tr-drop {
     from {
-        transform: translateY(-10px);
-        opacity: 0.3;
+        transform: translateY(-14px);
     }
     40%,
     to {
         transform: none;
-        opacity: 1;
     }
 }
 
@@ -1162,5 +3164,327 @@
     }
     66% {
         clip-path: inset(0);
+    }
+}
+
+@keyframes tr-rule {
+    from {
+        background-size: 0% 100%;
+    }
+    to {
+        background-size: 100% 100%;
+    }
+}
+
+@keyframes tr-hop3 {
+    0% {
+        background-position-x: 10%;
+    }
+    33% {
+        background-position-x: 50%;
+    }
+    66% {
+        background-position-x: 90%;
+    }
+}
+
+@keyframes tr-spin {
+    from {
+        transform: rotate(0) scale(2);
+    }
+    to {
+        transform: rotate(1turn) scale(2);
+    }
+}
+
+@keyframes tr-grow-y {
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes tr-ping {
+    from {
+        transform: scale(0.15);
+    }
+    to {
+        transform: scale(1.6);
+    }
+}
+
+@keyframes tr-flap {
+    0% {
+        transform: scaleY(1);
+    }
+    33% {
+        transform: scaleY(0.15);
+    }
+    66% {
+        transform: scaleY(0.6);
+    }
+}
+
+@keyframes tr-flick {
+    0% {
+        transform: scale(1, 1);
+    }
+    20% {
+        transform: scale(0.85, 1.1);
+    }
+    45% {
+        transform: scale(1.05, 0.9);
+    }
+    70% {
+        transform: scale(0.9, 1.05);
+    }
+}
+
+/* The line arrives. */
+@keyframes tr-a-wipe {
+    from {
+        clip-path: inset(-30% 100% -30% 0);
+    }
+    to {
+        clip-path: inset(-30% -5% -30% 0);
+    }
+}
+
+@keyframes tr-a-unroll {
+    from {
+        clip-path: inset(-30% 0 -30% 100%);
+    }
+    to {
+        clip-path: inset(-30% 0 -30% -5%);
+    }
+}
+
+@keyframes tr-a-mid {
+    from {
+        clip-path: inset(-30% 50% -30% 50%);
+    }
+    to {
+        clip-path: inset(-30% -5% -30% -5%);
+    }
+}
+
+@keyframes tr-a-rise {
+    from {
+        transform: scaleY(0);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-a-drop {
+    from {
+        transform: translateY(-14px);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-a-glitch {
+    0% {
+        transform: translateX(-10px);
+        clip-path: inset(-30% 60% -30% 0);
+    }
+    25% {
+        transform: translateX(7px);
+        clip-path: inset(-30% 30% -30% 0);
+    }
+    50% {
+        transform: translateX(-4px);
+        clip-path: inset(-30% 10% -30% 0);
+    }
+    75% {
+        transform: translateX(2px);
+        clip-path: inset(-30% -5% -30% 0);
+    }
+    100% {
+        transform: none;
+        clip-path: inset(-30% -5% -30% 0);
+    }
+}
+
+@keyframes tr-a-flicker {
+    0% {
+        clip-path: inset(0 0 0 100%);
+    }
+    15% {
+        clip-path: inset(-30% -5%);
+    }
+    25% {
+        clip-path: inset(0 0 0 100%);
+    }
+    45% {
+        clip-path: inset(-30% -5%);
+    }
+    55% {
+        clip-path: inset(0 0 0 100%);
+    }
+    70%,
+    100% {
+        clip-path: inset(-30% -5%);
+    }
+}
+
+/* The number arrives. */
+@keyframes tr-n-wipe {
+    from {
+        clip-path: inset(-30% 100% -30% 0);
+    }
+    to {
+        clip-path: inset(-30% -10% -30% 0);
+    }
+}
+
+@keyframes tr-n-type {
+    from {
+        clip-path: inset(-30% 100% -30% 0);
+    }
+    to {
+        clip-path: inset(-30% -10% -30% 0);
+    }
+}
+
+@keyframes tr-n-rise {
+    from {
+        transform: translateY(0.5em);
+        clip-path: inset(-30% -10% 100% -10%);
+    }
+    to {
+        transform: none;
+        clip-path: inset(-30% -10% -30% -10%);
+    }
+}
+
+@keyframes tr-n-stamp {
+    from {
+        transform: scale(1.6);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-n-skew {
+    from {
+        transform: translateX(-0.75em) skewX(-24deg);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-n-press {
+    from {
+        transform: translateY(-4px) scale(1.06);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-n-glitch {
+    0% {
+        transform: translateX(-6px);
+    }
+    25% {
+        transform: translateX(5px);
+    }
+    50% {
+        transform: translateX(-3px);
+    }
+    75% {
+        transform: translateX(1px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes tr-n-drop {
+    from {
+        transform: translateY(-0.6em);
+    }
+    to {
+        transform: none;
+    }
+}
+
+/* A new reading. */
+@keyframes tr-l-shift {
+    from {
+        transform: translateX(4px);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes tr-l-swell {
+    30% {
+        stroke-width: calc(var(--tr-line-w, 1.6) * 2.5);
+    }
+}
+
+@keyframes tr-l-jolt {
+    0% {
+        transform: translateY(-3px);
+    }
+    50% {
+        transform: translateY(1.5px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes tr-l-glitch {
+    0% {
+        transform: translateX(-3px);
+    }
+    33% {
+        transform: translateX(2px);
+    }
+    66% {
+        transform: translateX(-1px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes tr-l-flash {
+    0%,
+    60% {
+        stroke: var(--tr-ink);
+    }
+}
+
+@keyframes tr-l-flare {
+    30% {
+        filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor);
+        stroke-width: calc(var(--tr-line-w, 1.6) * 1.6);
+    }
+}
+
+@keyframes tr-l-retrace {
+    from {
+        stroke-dasharray: 0 3000;
+    }
+    to {
+        stroke-dasharray: 3000 0;
+    }
+}
+
+@keyframes tr-l-sink {
+    40% {
+        transform: translateY(2px);
     }
 }

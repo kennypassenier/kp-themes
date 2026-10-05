@@ -30,23 +30,22 @@
     <body>
         <main class="tr-page">
             <header class="tr-intro">
-                <h1>A trend tile of its own, per theme</h1>
+                <h1>A trend tile of its own, per theme: one pick per aspect</h1>
                 <p>
-                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
-                    chart, the month heatmap and the network graph comes the key figure with its 24-hour trend. Today <code>.kp-kpi--trend</code> has
-                    the same shape in every theme (a card with the label in small capitals, ↗ in the corner, the number, a line of words, the 24-hour
-                    line over a soft area and the axis under it), drawn in the theme's colours only. Here every theme gets two tiles of its own, drawn
-                    in the theme's own material, beside the plain tile as it is today. Pick one of the three per theme.
+                    Round 2 (Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, as the meter). Nothing is bundled any more: per
+                    theme you pick the shape, the loading picture, how the figure and the line arrive, the tone and the change, and the live update,
+                    each from three options and each on its own. Options 1 and 2 are round 1's two characters split into their parts (where both had
+                    the same, option 2 is new); option 3 is new in every aspect.
                 </p>
                 <p class="tr-motion" data-tr-motion hidden>
-                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
-                    the system settings to judge the motion.
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture shows its still frame and the
+                    figures arrive at once. Turn it off in the system settings to judge the motion.
                 </p>
                 <p class="tr-meta">
-                    Each column is one key figure of pump house 1, with 24 hours of readings every ten minutes up to a fixed now (20/10/2026 14:40 in
-                    Brussels). Every tile is the package's own (<code>js/chart.js</code> draws the trend, so the pointer, the arrow keys, the chip
-                    with the moment and the value, and the link all work); a character only restyles it from the theme's tokens, in the theme's
-                    <code>kp.signature</code> layer (<code>trends.css</code>), and keeps the tile's height in every state. This theme:
+                    Every tile is one key figure of pump house 1, with 24 hours of readings every ten minutes up to a fixed now (20/10/2026 14:40 in
+                    Brussels). Every tile is the package's own (<code>js/chart.js</code> draws the trend, so the pointer, the arrow keys, the chip and
+                    the link all work); an option only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer
+                    (<code>trends.css</code>), one attribute per aspect, and keeps the tile's height in every state. This theme:
                     <b data-tr-theme-name>…</b>
                 </p>
             </header>
@@ -63,9 +62,10 @@
                 <div class="tr-sec__head">
                     <h2 id="h-trend">The trend tile in <span data-tr-theme-name>this theme</span></h2>
                     <p>
-                        Two characters drawn in this theme's world, and the plain tile as it is today. Use the buttons (in the review dialog they sit
-                        above the columns) for every state and every kind of figure; move the pointer over a trend, or tab to it and walk it with the
-                        arrow keys: the tile behaves the same in all three columns.
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Drawn</b> replays how the figure and the line arrive,
+                        <b>Loading</b> shows the loading picture, a tone shows how a warning or destructive figure reads, <b>Live update</b> adds a
+                        reading, and the speed slows every animation. Move the pointer over a trend, or tab to it and walk it with the arrow keys.
                     </p>
                 </div>
                 <div class="tr-controls" data-review-controls>
@@ -77,6 +77,12 @@
                         <button type="button" class="kp-button kp-button--sm" data-tr-state="error" aria-pressed="false">Could not read</button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-live>Live update (ten minutes later)</button>
                     </div>
+                    <div class="tr-actions" role="group" aria-label="Tone of every tile">
+                        <b>Tone:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-tone="" aria-pressed="true">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-tone="destructive" aria-pressed="false">Destructive</button>
+                    </div>
                     <div class="tr-actions" role="group" aria-label="The figure in every tile">
                         <b>Figure:</b>
                         <button type="button" class="kp-button kp-button--sm" data-tr-data="pressure" aria-pressed="true">Pressure</button>
@@ -85,7 +91,7 @@
                         <button type="button" class="kp-button kp-button--sm" data-tr-data="stopped" aria-pressed="false">Stopped 40 min ago</button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-data="today" aria-pressed="false">Began this morning</button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-data="one" aria-pressed="false">One reading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tr-data="warning" aria-pressed="false">Warning tone</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="hot" aria-pressed="false">Rising is bad</button>
                     </div>
                     <div class="tr-actions" role="group" aria-label="Animation speed">
                         <b>Speed of every animation:</b>
@@ -96,84 +102,103 @@
                     <p class="tr-log" data-tr-log aria-live="polite">The tiles' links go nowhere here; a click says where it would go.</p>
                 </div>
                 <div data-review-look></div>
-                <div class="tr-trio">
-                    <div class="tr-col" data-tr="a" data-tr-pick="a">
-                        <p class="tr-label"><span class="tr-label__no">Character 1</span> <span data-tr-name="a">…</span></p>
-                        <p class="tr-desc" data-tr-desc="a"></p>
-                        <div class="kp-kpis tr-strip">
-                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
-                                <span class="kp-kpi__label"
-                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
-                                >
-                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
-                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
-                                >
-                                <span class="kp-kpi__value"></span>
-                                <span class="kp-kpi__trend"></span>
-                                <figure
-                                    class="kp-kpi__chart"
-                                    data-kp-chart="spark"
-                                    data-kp-spark-head="none"
-                                    data-kp-spark-axis="relative"
-                                    aria-label="Pressure, last 24 hours"
-                                ></figure>
-                            </div>
+                <div class="tr-preview">
+                    <div class="tr-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-ct-picks>…</p>
+                    </div>
+                    <div
+                        class="kp-kpis tr-strip"
+                        data-ct
+                        data-ct-preview
+                        data-ct-shape="1"
+                        data-ct-loading="1"
+                        data-ct-arrival="1"
+                        data-ct-tone="1"
+                        data-ct-live="1"
+                    >
+                        <div class="kp-kpi kp-kpi--trend" data-tr-tile>
+                            <span class="kp-kpi__label"
+                                ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
+                            >
+                            <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"></span>
+                            <span class="kp-kpi__trend"></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pressure, last 24 hours"
+                            ></figure>
                         </div>
                     </div>
-                    <div class="tr-col" data-tr="b" data-tr-pick="b">
-                        <p class="tr-label"><span class="tr-label__no">Character 2</span> <span data-tr-name="b">…</span></p>
-                        <p class="tr-desc" data-tr-desc="b"></p>
-                        <div class="kp-kpis tr-strip">
-                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
-                                <span class="kp-kpi__label"
-                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
-                                >
-                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
-                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
-                                >
-                                <span class="kp-kpi__value"></span>
-                                <span class="kp-kpi__trend"></span>
-                                <figure
-                                    class="kp-kpi__chart"
-                                    data-kp-chart="spark"
-                                    data-kp-spark-head="none"
-                                    data-kp-spark-axis="relative"
-                                    aria-label="Pressure, last 24 hours"
-                                ></figure>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tr-col" data-tr="plain" data-tr-pick="plain">
-                        <p class="tr-label"><span class="tr-label__no">Today</span> The plain tile</p>
-                        <p class="tr-desc">
-                            The package's trend tile as it ships: a card with the label in small capitals and ↗ in the corner, the number, a line of
-                            words, the 24-hour line over a soft area in the series colour and the axis under it, grey skeletons while it loads; the
-                            same shape in every theme.
+                </div>
+                <div class="tr-aspects" data-ct-aspects></div>
+                <div class="tr-reference">
+                    <div class="tr-aspect__head">
+                        <h3>For reference: the plain tile, as today</h3>
+                        <p>
+                            The package's trend tile as it ships, not an option: a card with the label in small capitals and ↗ in the corner, the
+                            number, a line of words, the 24-hour line over a soft area and the axis under it, grey skeletons while it loads; the same
+                            shape in every theme.
                         </p>
-                        <div class="kp-kpis tr-strip">
-                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
-                                <span class="kp-kpi__label"
-                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
-                                >
-                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
-                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
-                                >
-                                <span class="kp-kpi__value"></span>
-                                <span class="kp-kpi__trend"></span>
-                                <figure
-                                    class="kp-kpi__chart"
-                                    data-kp-chart="spark"
-                                    data-kp-spark-head="none"
-                                    data-kp-spark-axis="relative"
-                                    aria-label="Pressure, last 24 hours"
-                                ></figure>
-                            </div>
+                    </div>
+                    <div class="kp-kpis tr-strip">
+                        <div class="kp-kpi kp-kpi--trend" data-tr-tile>
+                            <span class="kp-kpi__label"
+                                ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
+                            >
+                            <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
+                                ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                            >
+                            <span class="kp-kpi__value"></span>
+                            <span class="kp-kpi__trend"></span>
+                            <figure
+                                class="kp-kpi__chart"
+                                data-kp-chart="spark"
+                                data-kp-spark-head="none"
+                                data-kp-spark-axis="relative"
+                                aria-label="Pressure, last 24 hours"
+                            ></figure>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
 
+        <!-- Round 2 reopens all 22 themes: every aspect is its own pick now (Kenny, 2026-10-05 20:03). -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r2",
+                "reopen": [
+                    "formal|trend",
+                    "light|trend",
+                    "dark|trend",
+                    "cyberpunk|trend",
+                    "synthwave|trend",
+                    "pastel|trend",
+                    "terminal|trend",
+                    "forest|trend",
+                    "high-contrast|trend",
+                    "sepia|trend",
+                    "blueprint|trend",
+                    "solstice|trend",
+                    "brutalism|trend",
+                    "deco|trend",
+                    "phantom|trend",
+                    "shade-light|trend",
+                    "shade-dark|trend",
+                    "retro|trend",
+                    "grotesk|trend",
+                    "lapis|trend",
+                    "nostromo|trend",
+                    "titanium|trend"
+                ]
+            }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

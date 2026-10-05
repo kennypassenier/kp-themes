@@ -17,32 +17,56 @@ one point with a crosshair and a chip; grey skeletons while it loads. This
 demo gives every theme two tiles drawn in its own world, beside the plain tile
 of today.
 
-## Files
+## Structure (round 2: one pick per aspect)
 
-- `demo.html`: one section judged per theme with the review kit
-  (`../_review/review.js`): one choice per theme, "Character 1",
-  "Character 2" or "The plain tile, as today", each character's name and
-  parts as the option's hint. The controls sit inside the section, so they
-  travel into the review dialog: State (Drawn, Loading, Nothing to draw,
-  Could not read, and a live update ten minutes later), Figure (pressure, a
-  long label, a wide value, a figure that stopped 40 minutes ago, one that
-  began this morning, one reading, the warning tone), and the speed of every
-  animation.
-- `trends.css`: the 44 characters, in `@layer kp.signature`, scoped
-  `[data-theme='<name>'] [data-tr='a'|'b']`. In a register the same rules
-  read `[data-theme='<name>'] .kp-kpi--trend`. The contract and the shared
-  knobs (`--tr-plate`, `--tr-pat`, `--tr-over`, `--tr-frame`, `--tr-label-*`,
-  `--tr-num-*`, `--tr-line-*`, `--tr-area*`, `--tr-plot-*`, `--tr-axis-*`,
-  `--tr-delta-*`, `--tr-load`, `--tr-load-anim`, …) are at the top of the
-  file; every loop is in one `prefers-reduced-motion: no-preference` block
-  at the end, and only the loading picture ever moves.
-- `demo.js`: the names and descriptions (`IDEAS`), the review choices and
-  look-at lines built from them, the readings (pump house 1, every ten
-  minutes, "now" fixed at 20/10/2026 14:40 in Brussels and handed to
-  `attachTrendCharts()` as its clock), the states driven through the
-  package's own `setTrendData()`, the speed control.
-- `demo.css`: the page layout only; the three columns share their rows (a
-  subgrid), so the three tiles start on one line.
+Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, as the
+meter (`research/character-meter`), "and it should be like this in the
+future". Nothing is bundled any more: per theme the tile has five aspects,
+each picked on its own from three options, and any combination composes.
+
+| Aspect                             | Attribute         | What it covers                                                                                                                       |
+| ---------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Shape                              | `data-ct-shape`   | the plate, the frame, the label, the number, the plot, the line and its wash, the axis                                               |
+| While loading                      | `data-ct-loading` | the picture on the plot while the tile is busy; it always moves (a still frame under reduced motion), and nothing fades              |
+| How the figure and the line arrive | `data-ct-arrival` | the number and the line after loading, and on Drawn (one busy frame, then the readings)                                              |
+| The tone and the change            | `data-ct-tone`    | the change's plate, and how a warning or destructive figure reads (its note, and an edge, a band, a frame or its number on the tone) |
+| Live update                        | `data-ct-live`    | what a new reading does to the line                                                                                                  |
+
+Options 1 and 2 are round 1's two characters split into their parts: their
+`--tr-load*` knobs became the loading options, their `--tr-delta-*` knobs
+the tone options, the rest the shape. Where both characters had the same (no
+arrival and no live update in any theme; a still loading picture in formal,
+dark, high-contrast and retro, which now moves; the same change in light and
+grotesk), option 1 keeps it, made to move where loading was still, and option
+2 is new. Option 3 is new in every aspect. Nothing is ticked for the reviewer.
+
+- `demo.html`: the section judged with the review kit (`../_review/review.js`,
+  round `2026-10-05-r2`, all 22 themes reopened). At the top "Your
+  combination", one tile carrying the picks ticked in the dialog (an aspect
+  not ticked yet shows its option 1); under it five rows, one per aspect, of
+  three tiles that differ in that aspect only, every other aspect as ticked;
+  the plain tile of today below them for reference, not as an option. The
+  controls sit in `data-review-controls`, so they travel into the dialog:
+  State (Drawn, Loading, Nothing to draw, Could not read, Live update ten
+  minutes later), Tone (None, Warning, Destructive), Figure (pressure, a long
+  label, a wide value, stopped 40 minutes ago, began this morning, one
+  reading, rising is bad) and the speed of every animation.
+- `trends.css`: in `@layer kp.signature`. The shared part (`[data-ct]`), then
+  one rule per theme, aspect and option, `[data-theme='<name>']
+[data-ct-<aspect>='<n>'] .kp-kpi--trend`, which sets that aspect's knobs
+  only (330 rules); in a register the `[data-ct…]` part drops out. Every
+  animation sits in one `prefers-reduced-motion: no-preference` block at the
+  end; no keyframe touches opacity. The arrival runs on the svg and the
+  number when the tile stops being busy; the live update runs on the line's
+  paths, which js/chart.js writes anew on every draw.
+- `demo.js`: `ASPECTS`, the names and descriptions (`IDEAS`, per theme five
+  aspects of three options), the review choices built from them, `compose()`
+  (the preview takes the picks, each row's tile its own option in its own
+  aspect), the readings (pump house 1, every ten minutes, "now" fixed at
+  20/10/2026 14:40 in Brussels and handed to `attachTrendCharts()` as its
+  clock), the states driven through the package's own `setTrendData()`, the
+  speed control.
+- `demo.css`: the page layout only.
 
 js/chart.js and js/kpi.js are not changed.
 
@@ -77,10 +101,15 @@ Found while building; each would want a change in a module, so none of the
 - **The change (`.kp-kpi__delta`) has no plate of its own in the package**:
   it is coloured with `--success-foreground` and `--destructive` on the
   card, half a status pair (fix-70). Every character here gives it the pair
-  (the plate and its own ink); the plain tile keeps the package's, which is
-  a finding below.
+  (the plate and its own ink); the plain tile kept the package's (fixed
+  since by fix-99).
+- **No hook for "a new reading".** js/chart.js writes the line's two paths
+  anew on every draw, so the live-update options run on those paths: they
+  also play when the figure changes, and the number (written by the page)
+  cannot take part. A register would want a mark from the module (an
+  attribute for one frame on a live update) to tell the two apart.
 
-## The characters
+## Round 1: the characters (now split into options 1 and 2)
 
 | Theme         | Character 1                                                                                                                                                                                                          | Character 2                                                                                                                                                                                                  |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -112,7 +141,7 @@ and 2, retro 1 and 2) also stop the skeletons' pulse and the register's own
 skeleton signature, so nothing on the tile moves while it loads. Nothing
 loops at rest in any character.
 
-## Measured
+## Round 1 measured
 
 Firefox (Playwright's, one script, its own `http.server` on 127.0.0.1:8731,
 under `flock /tmp/kp-themes-shot.lock`), 2026-10-05, all 22 themes, viewport
@@ -235,3 +264,161 @@ full run, 56.9 s for 44 pages.
   by side at desk width.
 - The keys (← →, Home, End, Esc) and the focus rings in each character: the
   module's, unchanged, and the release suite covers them.
+
+## Round 2: the options per theme
+
+The names of the three options of every aspect; each option's description is in `demo.js` (`IDEAS`) and in the review dialog.
+
+| Theme         | Aspect          | 1                      | 2                            | 3                     |
+| ------------- | --------------- | ---------------------- | ---------------------------- | --------------------- |
+| formal        | Shape           | The engraved plate     | The annual report            | The certificate       |
+|               | While loading   | The dotted leader      | The ledger is ruled          | The seal is pressed   |
+|               | Arrival         | At once                | Engraved                     | Entered in the ledger |
+|               | Tone and change | The engraved plate     | The annual report            | The red-ink entry     |
+|               | Live update     | Redrawn                | The entry is carried forward | Signed again          |
+| light         | Shape           | The soft card          | Daylight                     | The paper sheet       |
+|               | While loading   | The dashed baseline    | Daylight                     | A cloud passes        |
+|               | Arrival         | At once                | Unfolds                      | Sunrise               |
+|               | Tone and change | The soft card          | The soft outline             | The coloured tab      |
+|               | Live update     | Redrawn                | A soft swell                 | The page turns        |
+| dark          | Shape           | The status board       | The machined panel           | The oscilloscope      |
+|               | While loading   | The ticker baseline    | The slot is scanned          | The status lamps      |
+|               | Arrival         | At once                | Switched on                  | Machined in           |
+|               | Tone and change | The status board       | The machined tab             | The alarm lamp        |
+|               | Live update     | Redrawn                | The trace jumps              | The trace flares      |
+| cyberpunk     | Shape           | The neon trace         | The glitch HUD               | The holo card         |
+|               | While loading   | The neon trace         | The glitch HUD               | Packet rain           |
+|               | Arrival         | At once                | Jacked in                    | The neon strikes      |
+|               | Tone and change | The neon trace         | The glitch HUD               | The hazard frame      |
+|               | Live update     | Redrawn                | Packet in                    | The trace burns       |
+| synthwave     | Shape           | The grid-floor horizon | The VCR display              | The arcade marquee    |
+|               | While loading   | The grid-floor horizon | The VCR display              | The sun rises         |
+|               | Arrival         | At once                | Over the horizon             | Tape loads            |
+|               | Tone and change | The grid-floor horizon | The VCR display              | The arcade warning    |
+|               | Live update     | Redrawn                | The tracking jumps           | The laser flares      |
+| pastel        | Shape           | The sticker chart      | The washi planner            | The cloud card        |
+|               | While loading   | The sticker chart      | The washi planner            | Sprinkles             |
+|               | Arrival         | At once                | Popped                       | Doodled in            |
+|               | Tone and change | The sticker chart      | The washi planner            | The heart sticker     |
+|               | Live update     | Redrawn                | A happy hop                  | Squished              |
+| terminal      | Shape           | The top(1) row         | The dumb-terminal plot       | The curses window     |
+|               | While loading   | The top(1) row         | The dumb-terminal plot       | The hash bar          |
+|               | Arrival         | At once                | Printed                      | Paged in              |
+|               | Tone and change | The top(1) row         | The dumb-terminal plot       | The bell              |
+|               | Live update     | Redrawn                | Scrolled                     | Reverse flash         |
+| forest        | Shape           | The ranger’s logbook   | The canopy                   | The herbarium sheet   |
+|               | While loading   | The ranger’s logbook   | The canopy                   | Fireflies             |
+|               | Arrival         | At once                | Grows                        | The trail is walked   |
+|               | Tone and change | The ranger’s logbook   | The canopy                   | The trail blaze       |
+|               | Live update     | Redrawn                | A branch sways               | Growth ring           |
+| high-contrast | Shape           | Ink and frame          | The inverse plate            | The signal board      |
+|               | While loading   | The dashed baseline    | The striped block            | The scanning bar      |
+|               | Arrival         | At once                | Switched                     | Dropped               |
+|               | Tone and change | Ink and frame          | The heavy frame              | The signal plate      |
+|               | Live update     | Redrawn                | The bar jumps                | The bar flips         |
+| sepia         | Shape           | The barograph          | Letterpress                  | The ticket stub       |
+|               | While loading   | The barograph          | The ink spreads              | The drum turns        |
+|               | Arrival         | At once                | The nib writes               | Pressed               |
+|               | Tone and change | The barograph          | Letterpress                  | The rubber stamp      |
+|               | Live update     | Redrawn                | The nib moves on             | Inked again           |
+| blueprint     | Shape           | The chart recorder     | The title block              | The section view      |
+|               | While loading   | The chart recorder     | The title block              | The dimension line    |
+|               | Arrival         | At once                | Drafted                      | Plotted               |
+|               | Tone and change | The chart recorder     | The title block              | The revision cloud    |
+|               | Live update     | Redrawn                | The pen steps                | Redrawn               |
+| solstice      | Shape           | The low sun            | The embers                   | The horizon           |
+|               | While loading   | The low sun            | The embers                   | The sun crosses       |
+|               | Arrival         | At once                | Dawn                         | Kindled               |
+|               | Tone and change | The low sun            | The embers                   | The red sky           |
+|               | Live update     | Redrawn                | A flare of sun               | The day moves on      |
+| brutalism     | Shape           | The slab               | The sticker sheet            | The poster block      |
+|               | While loading   | The stamp              | The drop                     | The hammer            |
+|               | Arrival         | At once                | Slammed                      | Shoved in             |
+|               | Tone and change | The slab               | The sticker sheet            | The warning poster    |
+|               | Live update     | Redrawn                | Kicked                       | Shoved                |
+| deco          | Shape           | The gilt frame         | The marquee                  | The skyscraper        |
+|               | While loading   | The gilt frame         | The marquee                  | The sunburst opens    |
+|               | Arrival         | At once                | The curtain rises            | The marquee lights    |
+|               | Tone and change | The gilt frame         | The marquee                  | The gilt notice       |
+|               | Live update     | Redrawn                | The bulbs chase              | Gilded                |
+| phantom       | Shape           | The evidence card      | The calling card             | The ransom note       |
+|               | While loading   | The stamp ring         | The calling card             | The string is pulled  |
+|               | Arrival         | At once                | The card is thrown           | Slashed in            |
+|               | Tone and change | The evidence card      | The calling card             | The calling card      |
+|               | Live update     | Redrawn                | Snatched                     | The string twangs     |
+| shade-light   | Shape           | Pencil in the shade    | The leaf shade               | The window light      |
+|               | While loading   | Pencil in the shade    | The leaf shade               | Leaves sway           |
+|               | Arrival         | At once                | Drawn in pencil              | Out of the shade      |
+|               | Tone and change | Pencil in the shade    | The leaf shade               | The pinned note       |
+|               | Live update     | Redrawn                | A breeze                     | Pencilled again       |
+| shade-dark    | Shape           | Silverpoint            | The reading lamp             | The night window      |
+|               | While loading   | Silverpoint            | The lamp                     | The candle            |
+|               | Arrival         | At once                | Silverpoint                  | The lamp is lit       |
+|               | Tone and change | Silverpoint            | The reading lamp             | The red lamp          |
+|               | Live update     | Redrawn                | A glint                      | The page moves        |
+| retro         | Shape           | The 1995 dialog        | The performance monitor      | The Notepad window    |
+|               | While loading   | The progress blocks    | The marquee bar              | The defragmenter      |
+|               | Arrival         | At once                | Painted                      | Dragged in            |
+|               | Tone and change | The 1995 dialog        | The flat field               | The message box       |
+|               | Live update     | Redrawn                | Repainted                    | Scrolled one          |
+| grotesk       | Shape           | The transit board      | The Swiss poster             | The index card        |
+|               | While loading   | The transit board      | The Swiss poster             | The flap board        |
+|               | Arrival         | At once                | Set in type                  | The board flips       |
+|               | Tone and change | The transit board      | The underlined figure        | The index colour      |
+|               | Live update     | Redrawn                | Flipped                      | Shifted               |
+| lapis         | Shape           | The girih tile         | Lapis on vellum              | The manuscript margin |
+|               | While loading   | The girih tile         | The gold leaf is laid        | The star turns        |
+|               | Arrival         | At once                | Illuminated                  | Inked                 |
+|               | Tone and change | The girih tile         | Lapis on vellum              | The rubric            |
+|               | Live update     | Redrawn                | Gilded                       | Inked again           |
+| nostromo      | Shape           | The CRT trace          | The indicator panel          | The MU-TH-UR screen   |
+|               | While loading   | The CRT trace          | The indicator panel          | The motion tracker    |
+|               | Arrival         | At once                | Warmed up                    | Printed out           |
+|               | Tone and change | The CRT trace          | The indicator panel          | The klaxon            |
+|               | Live update     | Redrawn                | A blip                       | The trace rolls       |
+| titanium      | Shape           | The milled plate       | The instrument dial          | The anodised badge    |
+|               | While loading   | The milled plate       | The instrument dial          | The lathe             |
+|               | Arrival         | At once                | Milled                       | Seated                |
+|               | Tone and change | The milled plate       | The instrument dial          | The anodised tag      |
+|               | Live update     | Redrawn                | A click of the dial          | A glint               |
+
+## Round 2 measured
+
+Firefox (Playwright), 1600 × 1200, own `http.server` on 127.0.0.1; all 22
+themes, each with motion and under `prefers-reduced-motion: reduce` (44
+runs, four in parallel: 4 min 21 s). Per run: seven figures × Drawn,
+Loading, Nothing to draw, Could not read, Warning, Destructive, plus Live
+update; every tile on the page (the preview and the fifteen in the five
+rows) read in every one.
+
+| Check                                                                                  | Result                                                               |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Console errors                                                                         | 0 in 44 runs                                                         |
+| Label wrapped                                                                          | 0                                                                    |
+| Label cut (text past the link's edge, or `scrollWidth > clientWidth` on label or tile) | 0, the preview included                                              |
+| One height per tile across every state, tone and figure                                | every tile, 44 runs; reduced motion gives the same heights           |
+| Three different options in every aspect row (that aspect's knobs compared)             | 3/3/3/3/3 in all 22 themes                                           |
+| The preview follows a ticked option                                                    | 10/10 in every theme; the dialog: five groups of three, none ticked  |
+| Text contrast (label, number, words, change, note; every shape and tone option)        | lowest 4.51:1 (formal, forest)                                       |
+| Line against its plot                                                                  | lowest 3.42:1 (dark); nostromo shape 3 now 7.11:1, its text ≥ 4.94:1 |
+| Loading moves (with motion) / at rest nothing runs                                     | one animation per loading tile, 16 on the page / 0                   |
+
+Tile heights (px) per theme: the shape row's three options may differ from
+one another, every other tile keeps option 1's shape height; e.g. formal
+192/197/197, synthwave 198.5/189/200.5, high-contrast 191/191/202.5,
+brutalism 193/202.5/202.5, grotesk 189/203/196.5, and 187 to 193 elsewhere.
+
+Fixed in this round, faults rather than choices:
+
+- **formal, every tile, long label with a tone** ("Pressure, far end of the
+  ring" with "! avg 15 min"): the note ran 4.5 px under the ↗ link. The
+  label's tracking is now 0.04em (shapes 1 and 3) and 0.035em (shape 2): 6.7
+  px clear.
+- **brutalism, arrival 2 (Slammed)**: the number's row spanned the tile, so
+  `scale(1.6)` pushed it past the tile's edge for the first frames. The
+  number now takes its own width (`justify-self: start`, as the package
+  already does under a tone) and grows from its start; pastel's Popped, the
+  other arrival that stamps the number, gets the same.
+- deco shape 3, the tone options of terminal, high-contrast, deco and retro,
+  and nostromo shape 3 (the darker plot) were re-measured: no cut, three
+  different options, the contrast above.

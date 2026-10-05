@@ -1,9 +1,9 @@
 /* The page: a centred column, and one section with its controls in one row
-   of groups and the three options under each other (character 1,
-   character 2, the plain strip of today), each holding the same strip of key
-   figures at desk width and under it at phone width. A strip is a
-   wide thing: side by side, three strips would have a third of the width
-   each and could never show many columns. The strips' own drawing is in
+   of groups, the combination of the current picks, and per aspect a row of
+   three options under each other, each holding the same strip of key
+   figures at desk width and under it at phone width. A strip is a wide
+   thing: side by side, three strips would have a third of the width each
+   and could never show many columns. The strips' own drawing is in
    columns.css. */
 .cl-page {
     display: grid;
@@ -69,6 +69,61 @@
 
 .cl-sec__head p {
     color: var(--muted-foreground);
+}
+
+/* The combination: its picks in words over its strips. */
+.cl-preview {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.cl-preview__head,
+.cl-aspect__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cl-preview__head h3,
+.cl-preview__head p,
+.cl-aspect__head h3,
+.cl-aspect__head p {
+    margin: 0;
+}
+
+.cl-preview__head p,
+.cl-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* One row per aspect, a rule between them. */
+.cl-aspects {
+    display: grid;
+}
+
+.cl-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* The plain strip of today, for reference only, folded away. */
+.cl-plain {
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.cl-plain summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cl-plain > .cl-col {
+    margin-block-start: var(--kp-space-md, 1rem);
 }
 
 /* The three options, one under the other: the words, the strip at desk
