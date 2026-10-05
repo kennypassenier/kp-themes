@@ -2343,5 +2343,324 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 3, how the share arrives 3, when the tone changes 2,
+       the mark past the end 2]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='terminal']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='terminal']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='terminal']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='terminal']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='terminal']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='terminal']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='terminal']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='terminal']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── terminal · the htop meter ────────────────────────────────── */
+
+    /* [||||||||        ]: square brackets in the dim phosphor, a dot in
+       every empty cell; the run between them is the scale. */
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.75rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-cell: 0.375rem;
+        --kp-sig-meter-mo-ink: var(--accent);
+        --kp-sig-meter-mo-halo: var(--background);
+        --kp-sig-meter-bracket: var(--muted-foreground);
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--kp-sig-meter-bracket), var(--kp-sig-meter-bracket)) 100% 100% / 3px 1px no-repeat,
+            radial-gradient(circle, hsl(from var(--muted-foreground) h s l / 0.5) 0 0.6px, transparent 1px) 3px 50% / var(--kp-sig-meter-cell) 100%
+                repeat-x;
+    }
+
+    /* One phosphor bar per character cell. */
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 2px;
+        inset-inline-start: 3px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 6px));
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 2px, transparent 2px) calc(var(--kp-sig-meter-cell) / 2 - 1px) 0 /
+            var(--kp-sig-meter-cell) 100% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.6));
+    }
+
+    /* The block caret in the cell the mark stands in. */
+    [data-theme='terminal'] .kp-meter__mark {
+        --kp-sig-meter-mw: 0.375rem;
+        inset-block: 0;
+        inset-inline-start: calc(3px + clamp(0, var(--kp-mark, 0), 1) * (100% - 6px) - var(--kp-sig-meter-mw) / 2);
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='terminal'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '+';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--accent);
+        font: 700 1rem/1 var(--theme-font-mono, monospace);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-meter__mark {
+            animation: kp-sig-terminal-meter-blink 2000ms steps(1) infinite;
+        }
+    }
+
+    /* ── while loading: option 3 ── */
+
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 6px 100% no-repeat;
+        --kp-sig-meter-l0: 0% 50%;
+        --kp-sig-meter-l1: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-terminal-meter-pos 2000ms steps(20) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-terminal-meter-wipe-o 1200ms steps(32) backwards;
+            transition: inline-size 1200ms steps(32);
+        }
+    }
+
+    /* ── when the tone changes: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-terminal-meter-jolt-o 160ms steps(2);
+        }
+
+        [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-terminal-meter-jolt-w 160ms steps(2);
+        }
+
+        [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-terminal-meter-jolt-d 160ms steps(2);
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='terminal'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '>';
+    }
+
+    [data-theme='terminal'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% + 3px);
+    }
+
+    [data-theme='terminal'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-blink {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.25;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-jolt-d {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-jolt-o {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-jolt-w {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-terminal-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */

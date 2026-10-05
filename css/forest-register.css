@@ -1959,5 +1959,269 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 3, how the share arrives 1, when the tone changes 3,
+       the mark past the end 3]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='forest']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='forest']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='forest']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='forest']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='forest']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='forest']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='forest']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='forest']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── forest · the wooden gauge with the trail's marks ─────────────── */
+
+    /* Kenny, 2026-10-05: the width and filling of the old wooden gauge, the
+       icons of the old trail on the map, no leaf. */
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--primary);
+        border-radius: 3px;
+        background: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px), var(--muted);
+        box-shadow:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3),
+            inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+    }
+
+    /* The same wood, stained forest green, with a knot. */
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 3px;
+        background:
+            radial-gradient(ellipse 5px 2px at 30% 55%, hsl(from var(--background) h s l / 0.25), transparent),
+            repeating-linear-gradient(178deg, transparent 0 2px, hsl(from var(--primary-foreground) h s l / 0.14) 2px 3px),
+            var(--kp-meter-fill-colour);
+        box-shadow: inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.2);
+    }
+
+    /* A trig point: the survey triangle with its dot, on a post. */
+    [data-theme='forest'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='forest'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 7px;
+        translate: -50% 0;
+        background: radial-gradient(circle at 50% 70%, var(--card) 0 1.2px, transparent 1.6px), var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    /* A clay blaze points the trail on past the end. */
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: -2px;
+        inline-size: 0.4375rem;
+        background: var(--chart-2);
+        clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(var(--chart-2), var(--chart-2)) 50% 50% / 7px 100% no-repeat;
+        --kp-sig-meter-l0: 0% 50%;
+        --kp-sig-meter-l1: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-forest-meter-pos 2400ms steps(12) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-forest-meter-wipe-o 1200ms linear backwards;
+            transition: inline-size 1200ms linear;
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-forest-meter-bump-o 260ms ease-out;
+        }
+
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-forest-meter-bump-w 260ms ease-out;
+        }
+
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-forest-meter-bump-d 260ms ease-out;
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '›';
+    }
+
+    [data-theme='forest'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='forest'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-meter__mark {
+            transition:
+                inset-inline-start 700ms ease-in-out,
+                rotate 700ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-bump-d {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-bump-o {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-bump-w {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */

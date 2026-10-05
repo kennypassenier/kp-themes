@@ -2450,5 +2450,279 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 2, how the share arrives 2, when the tone changes 3,
+       the mark past the end 3]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='dark']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='dark']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── dark · the machined channel ──────────────────────────────── */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.625rem;
+        --kp-sig-meter-cut: 3px;
+        --kp-sig-meter-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(
+                    135deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                0 0 / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(
+                    -45deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                100% 100% / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) var(--kp-sig-meter-cut) 0 / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 var(--kp-sig-meter-cut) / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            var(--muted);
+    }
+
+    /* Bright machined metal, the oxide film along its top edge laid along
+       the whole scale. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset: 1px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 2px));
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 0 0 /
+                calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(
+            calc(var(--kp-sig-meter-cut) - 1px) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-meter-cut) + 1px),
+            calc(100% - var(--kp-sig-meter-cut) + 1px) 100%,
+            0 100%,
+            0 calc(var(--kp-sig-meter-cut) - 1px)
+        );
+    }
+
+    /* A V milled into the edge, a dark cut through the metal. */
+    [data-theme='dark'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--primary),
+            -1px 0 0 var(--primary);
+    }
+
+    [data-theme='dark'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    /* The part runs out of the channel with a chamfered tip. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.4375rem;
+        background:
+            linear-gradient(90deg, var(--chart-4), var(--chart-1)) 0 0 / 100% 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 50%, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* ── while loading: option 2 ── */
+
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(135deg, hsl(from var(--foreground) h s l / 0.18) 0 1px, transparent 1px 5px);
+    }
+
+    /* ── how the share arrives: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-dark-meter-grow-o 600ms steps(5) backwards;
+            transition: inline-size 600ms steps(5);
+            transform-origin: 0 50%;
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-dark-meter-bump-o 200ms linear;
+        }
+
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-dark-meter-bump-w 200ms linear;
+        }
+
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-dark-meter-bump-d 200ms linear;
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▸';
+    }
+
+    [data-theme='dark'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='dark'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-meter__mark {
+            transition:
+                inset-inline-start 300ms linear,
+                rotate 300ms linear;
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-bump-d {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-bump-o {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-bump-w {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-grow-o {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
 }
 /* ── End of the signature ── */

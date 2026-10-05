@@ -1703,5 +1703,260 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 3, while
+       loading 2, how the share arrives 2, when the tone changes 2,
+       the mark past the end 2]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='solstice']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='solstice']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='solstice']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='solstice']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='solstice']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='solstice']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='solstice']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='solstice']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 3 ── */
+
+    /* ── solstice · 3 · the horizon ── */
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.875rem;
+        border-radius: 0;
+        background: linear-gradient(to bottom, var(--muted), color-mix(in oklab, var(--muted) 70%, var(--primary)));
+        box-shadow: inset 0 -1px 0 var(--border-strong);
+    }
+
+    /* The lit land: a warm edge where the low sun touches it. */
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 0;
+        background:
+            linear-gradient(to bottom, hsl(from var(--fx-signal, var(--warning)) h s l / 0.6) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+    }
+
+    /* The sun on a stalk. */
+    [data-theme='solstice'] .kp-meter__mark {
+        inset-block: -3px -2px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='solstice'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 7px;
+        block-size: 7px;
+        translate: -50% 0;
+        border-radius: 50%;
+        background: var(--warning);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '✳';
+        inset-inline-start: calc(100% + 1px);
+        inset-block-start: 50%;
+        translate: 0 -55%;
+        color: var(--kp-meter-fill-colour);
+        font-size: 0.75rem;
+    }
+
+    /* ── while loading: option 2 ── */
+
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle, var(--primary) 3px, transparent 3.5px) 50% 50% / 10px 100% no-repeat;
+        --kp-sig-meter-l0: 0% 50%;
+        --kp-sig-meter-l1: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-solstice-meter-pos 4000ms ease-in-out infinite alternate;
+        }
+    }
+
+    /* ── how the share arrives: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-solstice-meter-grow-o 1400ms ease-in-out backwards;
+            transition: inline-size 1400ms ease-in-out;
+            transform-origin: 0 50%;
+        }
+    }
+
+    /* ── when the tone changes: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-solstice-meter-bump-o 500ms ease-in-out;
+        }
+
+        [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-solstice-meter-bump-w 500ms ease-in-out;
+        }
+
+        [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-solstice-meter-bump-d 500ms ease-in-out;
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='solstice'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '›';
+    }
+
+    [data-theme='solstice'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='solstice'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-meter__mark {
+            transition:
+                inset-inline-start 900ms ease-in-out,
+                rotate 900ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-solstice-meter-bump-d {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-solstice-meter-bump-o {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-solstice-meter-bump-w {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-solstice-meter-grow-o {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes kp-sig-solstice-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
 }
 /* ── End of the signature ── */

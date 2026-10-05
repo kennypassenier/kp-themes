@@ -2309,5 +2309,246 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 1, how the share arrives 1, when the tone changes 3,
+       the mark past the end 3]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='brutalism']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='brutalism']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='brutalism']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='brutalism']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── brutalism · the stacked blocks ───────────────────────────── */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.875rem;
+        --kp-sig-meter-room: 1.125rem;
+        --kp-meter-fill: var(--accent);
+        --kp-sig-meter-walls: linear-gradient(90deg, transparent calc(100% - 3px), var(--foreground) 0) 0 0 / 10% 100%;
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--kp-sig-meter-walls), var(--card);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-meter--inline {
+        --kp-sig-meter-walls: linear-gradient(90deg, transparent calc(100% - 2px), var(--foreground) 0) 0 0 / 20% 100%;
+    }
+
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 0;
+        background: var(--kp-sig-meter-walls), var(--kp-meter-fill-colour);
+    }
+
+    /* A yellow peg with a tab sticking up. */
+    [data-theme='brutalism'] .kp-meter__mark {
+        --kp-sig-meter-mw: 7px;
+        inset-block: -9px 0;
+        border-radius: 0;
+        background: var(--secondary);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* One more block thrown on top, off the row. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: -10px;
+        inline-size: 0.75rem;
+        block-size: 0.625rem;
+        background: var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 0 0 3px var(--foreground),
+            3px 3px 0 var(--foreground);
+    }
+
+    /* ── while loading: option 1 ── */
+
+    /* The blocks drop in one at a time. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background: var(--kp-sig-meter-walls), hsl(from var(--accent) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-brutalism-meter-stack 2200ms steps(10, jump-start) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-brutalism-meter-drop-o 300ms cubic-bezier(0.6, 0, 0.9, 0.5) backwards;
+            transition: inline-size 300ms cubic-bezier(0.6, 0, 0.9, 0.5);
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-brutalism-meter-bump-o 200ms steps(2);
+        }
+
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-brutalism-meter-bump-w 200ms steps(2);
+        }
+
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-brutalism-meter-bump-d 200ms steps(2);
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '■';
+    }
+
+    [data-theme='brutalism'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='brutalism'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-meter-stack {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-sig-brutalism-meter-bump-d {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-meter-bump-o {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-meter-bump-w {
+        0% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.04 1.3;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-meter-drop-o {
+        0% {
+            translate: 0 -160%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
 }
 /* ── End of the signature ── */

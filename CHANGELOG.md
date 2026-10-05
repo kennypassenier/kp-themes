@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **The meter draws itself each theme's way in sixteen registers** [feature,
+  9.3.0; research/character-meter round 3, Kenny's picks of 2026-10-05]:
+  formal, light, dark, synthwave, pastel, terminal, forest, sepia,
+  blueprint, solstice, brutalism, deco, phantom, lapis, nostromo and
+  titanium each carry their picked shape, loading picture, arrival of the
+  share, reaction to a new tone and mark past the end in the
+  `kp.signature` layer of their register, on the package's own `.kp-meter` (and
+  `.kp-kpi__meter`) markup and states, with 77 keyframes
+  `kp-sig-<theme>-meter-*` and their TIMINGS rows. Measured in Firefox
+  against the demo's composed combination: identical pixels in drawn,
+  loading, warning, destructive, a mark past the end and a share past the
+  end, in all sixteen. Cyberpunk, high-contrast, shade-light, shade-dark,
+  retro and grotesk keep the plain meter until round 4.
+- **The demo review dialog no longer sinks on every approval** [fix-102,
+  2026-10-05]: opened from the hub, research/_review/review.js opened its
+  dialog before the catalogue shell moved the body's children into its
+  column, which took the dialog out of the top layer; it stayed open as a
+  plain box after the answer and moved down as the answer grew (840 to
+  1096 px over ten approvals on character-graph). The dialog now opens once
+  the page's scripts have run, modal, at 36 px in every theme; pinned by
+  tests/review-kit-dialog.spec.mjs.
 - **The plain key-figure strip keeps one height, one-line labels and a
   frame that reads** [fix-101, 2026-10-05]: in a strip with columns
   (`data-kp-kpis-columns`) the label, the figure and two lines of words

@@ -2022,5 +2022,276 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 3, how the share arrives 2, when the tone changes 3,
+       the mark past the end 3]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='deco']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='deco']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='deco']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='deco']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='deco']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='deco']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='deco']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='deco']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── deco · the lobby floor indicator ─────────────────────────── */
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--primary);
+        --kp-sig-meter-mo-halo: var(--background);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.22) 0 3px, transparent 3px) 1px 50% / 5px 4px repeat-x,
+            var(--background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* The lamps lit in gold up to the share. */
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 2px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px) 1px 0 / 5px 100% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.55));
+    }
+
+    /* A gold arrow points down at the floor you want. */
+    [data-theme='deco'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='deco'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 6px;
+        translate: -50% 0;
+        background: var(--primary);
+        clip-path: polygon(30% 0, 70% 0, 70% 40%, 100% 40%, 50% 100%, 0 40%, 30% 40%);
+    }
+
+    /* An arrow up: higher than the top floor. */
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: -4px;
+        inline-size: 0.4375rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 45%, 70% 45%, 70% 100%, 30% 100%, 30% 45%, 0 45%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 8px 100% no-repeat;
+        --kp-sig-meter-l0: 0% 50%;
+        --kp-sig-meter-l1: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-deco-meter-pos 2400ms ease-in-out infinite alternate;
+        }
+    }
+
+    /* ── how the share arrives: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-deco-meter-wipe-o 900ms cubic-bezier(0.6, 0, 0.2, 1) backwards;
+            transition: inline-size 900ms cubic-bezier(0.6, 0, 0.2, 1);
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-deco-meter-knock-o 300ms ease-out;
+        }
+
+        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-deco-meter-knock-w 300ms ease-out;
+        }
+
+        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-deco-meter-knock-d 300ms ease-out;
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▼';
+    }
+
+    [data-theme='deco'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='deco'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-meter__mark {
+            transition:
+                inset-inline-start 500ms ease-in-out,
+                rotate 500ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-deco-meter-knock-d {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-deco-meter-knock-o {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-deco-meter-knock-w {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-deco-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-deco-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */
