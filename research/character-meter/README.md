@@ -1,5 +1,7 @@
 # A meter of its own, per theme
 
+**Round 4 judged (2026-10-05 20:45).** Kenny approved all 22 themes. The seven reopened themes picked: dark 1/2/3/3/3 (arrival moved from 2 to 3), cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2, shade-dark 1/3/1/1/2, retro 1/2/1/2/2, grotesk 1/2/3/3/2 (shape 1 = the rule and its cursor). The fifteen others stand as in round three. The meter is decided in every theme; the seven move into the package next.
+
 **Round 3 judged (2026-10-05 20:03).** Kenny judged all 22 themes from To judge: 16 approved in full, 6 not approved with the ticked aspects kept. Picks (shape / while loading / how the share arrives / when the tone changes / the mark past the end):
 formal 1/2/1/1/2 · light 1/1/2/2/2 · dark 1/2/2/3/3 · synthwave 1/2/2/2/1 · pastel 1/1/3/1/2 · terminal 1/3/3/2/2 · forest 1/3/1/3/3 · sepia 1/2/2/2/2 · blueprint 3/1/1/1/3 · solstice 3/2/2/2/2 · brutalism 1/1/1/3/3 · deco 1/3/2/3/3 · phantom 1/1/1/1/2 · lapis 1/2/2/2/2 · nostromo 1/1/3/2/3 · titanium 1/1/3/3/3.
 Not approved: cyberpunk (kept: shape 2, tone 3, mark 3; redo loading and arrival: "de dingen die ik aanvinkte zijn goedgekeurd, maar de rest moet opnieuw"), high-contrast (kept: shape 2, arrival 1, tone 1, mark 3; "doe de loading opnieuw, loading moet altijd animated zijn"), shade-light (kept 1/-/1/1/2; redo the loading), shade-dark (kept 1/-/1/1/2; redo the loading), retro (kept 1/-/1/2/2; redo the loading), grotesk (kept loading 2, arrival 3, tone 3, mark 2; redo the shapes).
@@ -620,3 +622,27 @@ Firefox (Playwright's, its own `http.server` on 127.0.0.1:8746, under `flock
 | 3             | 17.05 |         18.73 |             17.05 | 18.73 |
 
 `node gates/check-catalogue.mjs` and `node gates/check-demo-variants.mjs` pass.
+
+**2026-10-05, round 4: the seven.** The same port for cyberpunk 2/3/2/3/3,
+high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2, shade-dark 1/3/1/1/2, retro
+1/2/1/2/2 and grotesk 1/2/3/3/2, and dark redone as 1/2/3/3/3: its section
+replaced, loading 2 is now round 4's "The oxide film runs" and the share
+arrives pressed in (arrival 3), with `kp-sig-dark-meter-grow-o` gone from
+TIMINGS and OUT_OF_SCOPE. 32 keyframes, 32 TIMINGS rows and 32 reasons in
+check-motion's OUT_OF_SCOPE (round-4 names `cm-cy4-*`, `cm-hc4-*`,
+`cm-rt4-*` renamed like the others). One stop added: cyberpunk's
+`kp-sig-cyberpunk-meter-noise` had no 100 % stop; it now has the element's
+own value, its 0 % positions, which is what the browser drew implicitly.
+All 22 themes now draw their picked meter in the package.
+Measured in Firefox (Playwright's, its own `http.server` on 127.0.0.1:8773,
+under `flock /tmp/kp-themes-shot.lock`, 1 run of 8 min 13 s for both pages):
+one meter at 62 % with the mark at 80 %, set with `setMeter()` from a drawn
+start, on catalogue/data.html against this demo with the picked combination
+on its wrapper (the register served without its meter section), at 2x.
+0 differing pixels in drawn, loading (paused at 500 ms), warning,
+destructive, mark past the end (115 %) and share past the end (130 %) in all
+seven themes, at full and at reduced motion (84 of 84 pairs); 0 console
+errors; one height per theme in all six states (dark, shade-light and
+shade-dark 8 px, cyberpunk, high-contrast and grotesk 10 px, retro 12 px);
+in Loading 1 running infinite animation in each of the seven at full motion
+and 0 under reduced motion, and 0 running once a state has settled.

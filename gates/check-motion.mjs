@@ -239,10 +239,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-light-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-light-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-light-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
-    'kp-sig-dark-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-dark-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-dark-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-dark-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-synthwave-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-synthwave-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-synthwave-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
@@ -313,6 +309,46 @@ const OUT_OF_SCOPE = {
     'kp-sig-titanium-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-titanium-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
     'kp-sig-titanium-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
+    // The meter, round 4 [research/character-meter, 2026-10-05]: dark again and the
+    // six reopened themes; transforms, clip-paths and pattern slides on a meter a few px tall.
+    'kp-sig-dark-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
+    'kp-sig-dark-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
+    'kp-sig-dark-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
+    'kp-sig-dark-meter-pos':
+        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
+    'kp-sig-dark-meter-press-o': "a meter's share pressed in from its edge once; a transform, under 341x256 px",
+    'kp-sig-cyberpunk-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
+    'kp-sig-cyberpunk-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
+    'kp-sig-cyberpunk-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
+    'kp-sig-cyberpunk-meter-noise':
+        'three thin slivers jumping to new places along a loading meter in hard steps; they keep their colours, only their position moves',
+    'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
+    'kp-sig-high-contrast-meter-march': 'a row of chevrons translating one step along a loading meter; a transform, the chevrons keep their colour',
+    'kp-sig-high-contrast-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
+    'kp-sig-high-contrast-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
+    'kp-sig-high-contrast-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
+    'kp-sig-shade-light-meter-pos':
+        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
+    'kp-sig-shade-light-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
+    'kp-sig-shade-light-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
+    'kp-sig-shade-light-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
+    'kp-sig-shade-dark-meter-pos':
+        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
+    'kp-sig-shade-dark-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
+    'kp-sig-shade-dark-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
+    'kp-sig-shade-dark-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
+    'kp-sig-retro-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
+    'kp-sig-retro-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
+    'kp-sig-retro-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
+    'kp-sig-retro-meter-shake':
+        'two lamps sliding in from both ends of a loading meter and apart again; they keep their colours, only their position moves',
+    'kp-sig-retro-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
+    'kp-sig-grotesk-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
+    'kp-sig-grotesk-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
+    'kp-sig-grotesk-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
+    'kp-sig-grotesk-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
+    'kp-sig-grotesk-meter-pos':
+        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     // Information that updates in place [research/update-motion, 2026-10-05].
     'kp-sig-cyberpunk-update-glitch':
         'a changed value jittering by at most 3px with two drop-shadow copies, once per update for 750 ms; a transform and a filter on one value, far under 341x256 px',

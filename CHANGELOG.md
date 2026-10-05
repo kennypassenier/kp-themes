@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **The meter draws itself each theme's way in all 22 registers** [feature,
+  9.3.0; research/character-meter round 4, Kenny's picks of 2026-10-05]:
+  cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2,
+  shade-dark 1/3/1/1/2, retro 1/2/1/2/2 and grotesk 1/2/3/3/2 (shape, while
+  loading, how the share arrives, when the tone changes, the mark past the
+  end) carry their meter in `kp.signature` on the package's own `.kp-meter`
+  markup and states, and dark moves to 1/2/3/3/3 (the oxide film runs while
+  loading, the share pressed in): 32 keyframes `kp-sig-<theme>-meter-*` with
+  their TIMINGS rows. Measured in Firefox against the demo's composed
+  combination: identical pixels in drawn, loading, warning, destructive, a
+  mark past the end and a share past the end, in all seven, at full and
+  reduced motion.
 - **The meter draws itself each theme's way in sixteen registers** [feature,
   9.3.0; research/character-meter round 3, Kenny's picks of 2026-10-05]:
   formal, light, dark, synthwave, pastel, terminal, forest, sepia,

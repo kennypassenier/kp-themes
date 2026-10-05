@@ -3067,5 +3067,287 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1,
+       while loading 2, how the share arrives 1, when the tone
+       changes 2, the mark past the end 2]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='retro']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='retro']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='retro']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='retro']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── retro · the system monitor ────────────────────────────────────── */
+
+    /* A sunken black panel of LED segments, as Task Manager and Winamp drew a
+       level: unlit segments in dark green, the share lit, a peak-hold segment
+       as the mark, the red clip lamp past the end. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.75rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-meter-fill: hsl(from var(--success) h s calc(l * 2.2));
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--success) h s l / 0.6) 0 3px, transparent 3px 4px) 2px 2px / calc(100% - 4px)
+                calc(100% - 4px) no-repeat,
+            var(--foreground);
+        box-shadow:
+            -1px -1px 0 var(--border-strong),
+            1px 1px 0 var(--popover);
+    }
+
+    /* The LEDs keep the panel's own colours for a tone: yellow for a warning,
+       a lit red for danger, both bright on the black panel. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--warning);
+    }
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-meter-fill-colour: hsl(from var(--destructive) h s calc(l * 2));
+    }
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 2px;
+        inset-inline-start: 2px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 4px));
+        border-radius: 0;
+        background: repeating-linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px 4px);
+    }
+
+    /* The peak-hold segment: a white bar in a black frame. */
+    [data-theme='retro'] .kp-meter__mark {
+        --kp-sig-meter-mw: 3px;
+        inset-block: -2px;
+        inset-inline-start: calc(2px + clamp(0, var(--kp-mark, 0), 1) * (100% - 4px) - var(--kp-sig-meter-mw) / 2);
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The clip lamp, lit, past the end. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: 1px;
+        inline-size: 0.4375rem;
+        background: hsl(from var(--destructive) h s calc(l * 2));
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            inset 1px 1px 0 hsl(from var(--primary-foreground) h s l / 0.5);
+    }
+
+    /* ── while loading: option 2 ── */
+
+    /* Round 4. The modem handshake: a green and a yellow lamp run in from
+       both ends, meet in the middle and part again. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 2px;
+        pointer-events: none;
+        background:
+            linear-gradient(hsl(from var(--success) h s calc(l * 2.2)), hsl(from var(--success) h s calc(l * 2.2))) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--warning), var(--warning)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-retro-meter-shake 1400ms steps(10, jump-none) infinite alternate;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-retro-meter-wipe-o 600ms steps(12) backwards;
+            transition: inline-size 600ms steps(12);
+        }
+    }
+
+    /* ── when the tone changes: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-retro-meter-knock-o 160ms steps(2);
+        }
+
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-retro-meter-knock-w 160ms steps(2);
+        }
+
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-retro-meter-knock-d 160ms steps(2);
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '»';
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% + 3px);
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-meter__mark {
+            transition:
+                inset-inline-start 600ms steps(12),
+                rotate 600ms steps(12);
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-shake {
+        0% {
+            background-position:
+                0 0,
+                100% 0;
+        }
+
+        100% {
+            background-position:
+                46% 0,
+                54% 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-d {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-o {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-w {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -16134,6 +16134,326 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 2,
+       while loading 3, how the share arrives 2, when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='cyberpunk']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='cyberpunk']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='cyberpunk']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='cyberpunk']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 2 ── */
+
+    /* ── cyberpunk · 2 · the HUD segment gauge ────────────────────────── */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--accent);
+        --kp-sig-meter-mo-halo: var(--background);
+        --kp-sig-meter-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, var(--kp-sig-meter-halo) 50%, transparent 50%) 0 0 / 5px 5px no-repeat,
+            linear-gradient(-45deg, var(--kp-sig-meter-halo) 50%, transparent 50%) 100% 100% / 5px 5px no-repeat,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.28) 0 6px, transparent 6px) 0 50% / 8px 2px repeat-x,
+            var(--muted);
+    }
+
+    /* Yellow plates split by void slits, the lead cut at forty-five degrees. */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 6px, transparent 6px) 0 0 / 8px 100% repeat-x;
+        clip-path: polygon(4px 0, 100% 0, calc(100% - 7px) 100%, 0 100%, 0 4px);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::before {
+        clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+
+    /* A cyan target notch, a void cut through the plates. */
+    [data-theme='cyberpunk'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--accent),
+            -1px 0 0 var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.5rem;
+        background: linear-gradient(90deg, var(--destructive) 0 3px, transparent 3px) 0 0 / 4px 100% repeat-x;
+        clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    /* Round 4. Signal noise: a corrupt line on the empty track, red, cyan and
+       yellow slivers jumping to a new place every beat. */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 10% 0 / 18% 3px no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 70% 100% / 9% 3px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 40% 50% / 5% 2px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-cyberpunk-meter-noise 900ms steps(1) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 2 ── */
+
+    /* Round 4. Glitch slip: the share lands torn, split into cyan and red
+       ghosts and thrown left and right, and snaps true in three jumps. */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-cyberpunk-meter-slip-o 320ms steps(1) backwards;
+            transition: inline-size 120ms steps(2);
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-cyberpunk-meter-knock-o 200ms steps(3);
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-cyberpunk-meter-knock-w 200ms steps(3);
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-cyberpunk-meter-knock-d 200ms steps(3);
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '!';
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-noise {
+        0% {
+            background-position:
+                10% 0,
+                70% 100%,
+                40% 50%;
+        }
+
+        25% {
+            background-position:
+                62% 0,
+                18% 100%,
+                88% 50%;
+        }
+
+        50% {
+            background-position:
+                86% 0,
+                44% 100%,
+                8% 50%;
+        }
+
+        75% {
+            background-position:
+                30% 0,
+                92% 100%,
+                58% 50%;
+        }
+
+        100% {
+            background-position:
+                10% 0,
+                70% 100%,
+                40% 50%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-slip-o {
+        0% {
+            translate: -10px 0;
+            filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+        }
+
+        30% {
+            translate: 7px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        60% {
+            translate: -3px 0;
+            filter: drop-shadow(1px 0 0 var(--accent));
+        }
+
+        85%,
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-d {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-o {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-w {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -19204,6 +19524,288 @@
                 transform: scale(0.1);
                 opacity: 0;
             }
+        }
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1,
+       while loading 2, how the share arrives 1, when the tone
+       changes 2, the mark past the end 2]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='retro']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='retro']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='retro']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='retro']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='retro']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── retro · the system monitor ────────────────────────────────────── */
+
+    /* A sunken black panel of LED segments, as Task Manager and Winamp drew a
+       level: unlit segments in dark green, the share lit, a peak-hold segment
+       as the mark, the red clip lamp past the end. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.75rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-meter-fill: hsl(from var(--success) h s calc(l * 2.2));
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--success) h s l / 0.6) 0 3px, transparent 3px 4px) 2px 2px / calc(100% - 4px)
+                calc(100% - 4px) no-repeat,
+            var(--foreground);
+        box-shadow:
+            -1px -1px 0 var(--border-strong),
+            1px 1px 0 var(--popover);
+    }
+
+    /* The LEDs keep the panel's own colours for a tone: yellow for a warning,
+       a lit red for danger, both bright on the black panel. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--warning);
+    }
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-meter-fill-colour: hsl(from var(--destructive) h s calc(l * 2));
+    }
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 2px;
+        inset-inline-start: 2px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 4px));
+        border-radius: 0;
+        background: repeating-linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px 4px);
+    }
+
+    /* The peak-hold segment: a white bar in a black frame. */
+    [data-theme='retro'] .kp-meter__mark {
+        --kp-sig-meter-mw: 3px;
+        inset-block: -2px;
+        inset-inline-start: calc(2px + clamp(0, var(--kp-mark, 0), 1) * (100% - 4px) - var(--kp-sig-meter-mw) / 2);
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The clip lamp, lit, past the end. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: 1px;
+        inline-size: 0.4375rem;
+        background: hsl(from var(--destructive) h s calc(l * 2));
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            inset 1px 1px 0 hsl(from var(--primary-foreground) h s l / 0.5);
+    }
+
+    /* ── while loading: option 2 ── */
+
+    /* Round 4. The modem handshake: a green and a yellow lamp run in from
+       both ends, meet in the middle and part again. */
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 2px;
+        pointer-events: none;
+        background:
+            linear-gradient(hsl(from var(--success) h s calc(l * 2.2)), hsl(from var(--success) h s calc(l * 2.2))) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--warning), var(--warning)) 100% 0 / 3px 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-retro-meter-shake 1400ms steps(10, jump-none) infinite alternate;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-retro-meter-wipe-o 600ms steps(12) backwards;
+            transition: inline-size 600ms steps(12);
+        }
+    }
+
+    /* ── when the tone changes: option 2 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-retro-meter-knock-o 160ms steps(2);
+        }
+
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-retro-meter-knock-w 160ms steps(2);
+        }
+
+        [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-retro-meter-knock-d 160ms steps(2);
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='retro'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '»';
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% + 3px);
+    }
+
+    [data-theme='retro'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] .kp-meter__mark {
+            transition:
+                inset-inline-start 600ms steps(12),
+                rotate 600ms steps(12);
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-shake {
+        0% {
+            background-position:
+                0 0,
+                100% 0;
+        }
+
+        100% {
+            background-position:
+                46% 0,
+                54% 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-d {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-o {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-knock-w {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-retro-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
         }
     }
 }
@@ -37175,6 +37777,223 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1,
+       while loading 3, how the share arrives 1, when the tone
+       changes 1, the mark past the end 2]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='shade-light']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='shade-light']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='shade-light']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='shade-light']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='shade-light']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='shade-light']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='shade-light']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='shade-light']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── shade-light · the pencil gauge ───────────────────────────── */
+    [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.75rem;
+        border-radius: 2px;
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.65),
+            0.5px 0.5px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* The blue plate hatched over in pencil. */
+    [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 2px;
+        background:
+            repeating-linear-gradient(-55deg, hsl(from var(--primary-foreground) h s l / 0.2) 0 1px, transparent 1px 3px), var(--kp-meter-fill-colour);
+    }
+
+    /* A graphite stroke with a soft shade beside it. */
+    [data-theme='shade-light'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 1px var(--card),
+            2px 1px 2px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* A patch of pencil scribble past the end. */
+    [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -2px;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
+        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    /* Round 4. Pencil dashes run: a dashed pencil line along the middle of the gauge runs on and on. */
+    [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0 2px;
+        pointer-events: none;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.6) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
+        --kp-sig-meter-l0: 0 50%;
+        --kp-sig-meter-l1: 7px 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-shade-light-meter-pos 700ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-shade-light-meter-wipe-o 900ms ease-out backwards;
+            transition: inline-size 900ms ease-out;
+        }
+    }
+
+    /* ── when the tone changes: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']::before {
+            animation-name: kp-sig-shade-light-meter-wipe-w;
+        }
+
+        [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']::before {
+            animation-name: kp-sig-shade-light-meter-wipe-d;
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='shade-light'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '›';
+    }
+
+    [data-theme='shade-light'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='shade-light'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] .kp-meter__mark {
+            transition:
+                inset-inline-start 600ms ease-out,
+                rotate 600ms ease-out;
+        }
+    }
+
+    @keyframes kp-sig-shade-light-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-meter-wipe-d {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-light-meter-wipe-w {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -45579,6 +46398,302 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1,
+       while loading 2, how the share arrives 3, when the tone
+       changes 3, the mark past the end 2]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='grotesk']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='grotesk']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='grotesk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='grotesk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='grotesk']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='grotesk']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='grotesk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='grotesk']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── grotesk · 1 · the rule and its cursor (round 4) ──────────────── */
+
+    /* A steel rule: a white strip in a black outline, a long tick every
+       tenth and a short one every fiftieth hanging from its top edge, the
+       share a red band along its lower half under the ticks, a black
+       cursor triangle pointing up from below as the mark, a bold red +
+       past the end. */
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 0.875rem;
+        --kp-sig-meter-mo-ink: var(--foreground);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--foreground) 1px, transparent 1px) 0 0 / 10% 5px repeat-x,
+            linear-gradient(90deg, var(--foreground) 1px, transparent 1px) 0 0 / 2% 2px repeat-x,
+            var(--card);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 5px 1px;
+        border-radius: 0;
+    }
+
+    /* The cursor: a black hairline across the rule, a black triangle under it. */
+    [data-theme='grotesk'] .kp-meter__mark {
+        inset-block: 0 -1px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='grotesk'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '+';
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--primary);
+        font: 900 1rem/1 var(--theme-font-display, sans-serif);
+    }
+
+    /* ── while loading: option 2 ── */
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        animation: none;
+    }
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 12px) 0 100% / 12px 6px repeat-x;
+        --kp-sig-meter-l0: 0 50%;
+        --kp-sig-meter-l1: 12px 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-grotesk-meter-pos 600ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-grotesk-meter-grow-o 400ms steps(4) backwards;
+            transition: inline-size 400ms steps(4);
+            transform-origin: 0 50%;
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-grotesk-meter-jolt-o 160ms steps(2);
+        }
+
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-grotesk-meter-jolt-w 160ms steps(2);
+        }
+
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-grotesk-meter-jolt-d 160ms steps(2);
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '→';
+    }
+
+    [data-theme='grotesk'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% + 3px);
+    }
+
+    [data-theme='grotesk'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-meter__mark {
+            transition:
+                inset-inline-start 400ms cubic-bezier(0.6, 0, 0.2, 1),
+                rotate 400ms cubic-bezier(0.6, 0, 0.2, 1);
+        }
+    }
+
+    @keyframes kp-sig-grotesk-meter-grow-o {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-meter-jolt-d {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-meter-jolt-o {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-meter-jolt-w {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -52834,12 +53949,12 @@
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
-       research/character-meter, round 3, 2026-10-05: shape 1, while
-       loading 2, how the share arrives 2, when the tone changes 3,
-       the mark past the end 3]. The package's own markup and states
-       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
-       the sign past the end or the loading picture on ::after, the mark
-       `.kp-meter__mark`. Every animation and transition under
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1, while
+       loading 2 (round 4), how the share arrives 3 (round 4), when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
        prefers-reduced-motion: no-preference; still frames otherwise. ── */
 
     /* The shared part: room past the end, loading without the pulse, the mark
@@ -52991,26 +54106,39 @@
 
     /* ── while loading: option 2 ── */
 
-    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The oxide film runs: thin bands of the film's colours, the
+       way heat tints a polished part, slide along the whole channel. */
     [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 1px;
         pointer-events: none;
-        background: repeating-linear-gradient(135deg, hsl(from var(--foreground) h s l / 0.18) 0 1px, transparent 1px 5px);
+        background: linear-gradient(
+                90deg,
+                hsl(from var(--primary) h s l / 0.35) 0 6px,
+                transparent 6px 9px,
+                hsl(from var(--accent) h s l / 0.35) 9px 15px,
+                transparent 15px 18px
+            )
+            0 0 / 18px 100% repeat-x;
+        --kp-sig-meter-l0: 0 0;
+        --kp-sig-meter-l1: 18px 0;
     }
 
-    /* ── how the share arrives: option 2 ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-dark-meter-pos 900ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-dark-meter-grow-o 600ms steps(5) backwards;
-            transition: inline-size 600ms steps(5);
-            transform-origin: 0 50%;
+            animation: kp-sig-dark-meter-press-o 220ms linear backwards;
+            transition: inline-size 220ms linear;
+            transform-origin: 50% 50%;
         }
     }
 
@@ -53097,9 +54225,19 @@
         }
     }
 
-    @keyframes kp-sig-dark-meter-grow-o {
+    @keyframes kp-sig-dark-meter-pos {
         0% {
-            scale: 0 1;
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-press-o {
+        0% {
+            scale: 1 0;
         }
 
         100% {
@@ -61469,6 +62607,232 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 2,
+       while loading 3, how the share arrives 1, when the tone
+       changes 1, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='high-contrast']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='high-contrast']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='high-contrast']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='high-contrast']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='high-contrast']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='high-contrast']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='high-contrast']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='high-contrast']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 2 ── */
+
+    /* ── high-contrast · 1 · the ink frame ────────────────────────────── */
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 1rem;
+        --kp-meter-fill: var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* A warning in this theme is the yellow, closed by an ink edge. */
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--accent);
+    }
+
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 0;
+        box-shadow: inset -2px 0 0 var(--foreground);
+    }
+
+    /* A white slot between two ink edges. */
+    [data-theme='high-contrast'] .kp-meter__mark {
+        --kp-sig-meter-mw: 8px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--foreground) 0 2px, var(--card) 2px 6px, var(--foreground) 6px);
+    }
+
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '+';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        inline-size: 0.875rem;
+        block-size: 0.875rem;
+        box-sizing: border-box;
+        translate: 0 -50%;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+        color: var(--foreground);
+        font: 800 0.75rem/1 var(--theme-font-body, sans-serif);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    /* Round 4. Marching chevrons: a row of ink › marches to the right in
+       hard steps, the sign of something on its way. */
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '› › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › ›';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -2ch;
+        pointer-events: none;
+        color: var(--foreground);
+        font: 700 0.75rem/0.625rem var(--theme-font-mono, monospace);
+        white-space: pre;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-high-contrast-meter-march 800ms steps(2) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-high-contrast-meter-wipe-o 120ms steps(1) backwards;
+            transition: inline-size 120ms steps(1);
+        }
+    }
+
+    /* ── when the tone changes: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']::before {
+            animation-name: kp-sig-high-contrast-meter-wipe-w;
+        }
+
+        [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']::before {
+            animation-name: kp-sig-high-contrast-meter-wipe-d;
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='high-contrast'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▶';
+    }
+
+    [data-theme='high-contrast'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='high-contrast'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-meter-march {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 2ch 0;
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-meter-wipe-d {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-high-contrast-meter-wipe-w {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -65693,6 +67057,218 @@
                 transform: translateY(-12px) scale(1.03);
                 opacity: 0;
             }
+        }
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1,
+       while loading 3, how the share arrives 1, when the tone
+       changes 1, the mark past the end 2]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='shade-dark']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='shade-dark']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='shade-dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='shade-dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='shade-dark']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='shade-dark']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='shade-dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='shade-dark']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── shade-dark · silverpoint ─────────────────────────────────── */
+    [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-halo: var(--background);
+        border-radius: 2px;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px), var(--background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.6);
+    }
+
+    /* The blue plate laid over the silver lines, its top edge lit. */
+    [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.55) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+    }
+
+    /* A pale metal stroke. */
+    [data-theme='shade-dark'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -2px;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
+        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    /* Round 4. Silver stitches run: a running stitch of silver along the middle of the well runs on and on. */
+    [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0 2px;
+        pointer-events: none;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.7) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
+        --kp-sig-meter-l0: 0 50%;
+        --kp-sig-meter-l1: 7px 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-shade-dark-meter-pos 700ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-shade-dark-meter-wipe-o 900ms ease-out backwards;
+            transition: inline-size 900ms ease-out;
+        }
+    }
+
+    /* ── when the tone changes: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']::before {
+            animation-name: kp-sig-shade-dark-meter-wipe-w;
+        }
+
+        [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']::before {
+            animation-name: kp-sig-shade-dark-meter-wipe-d;
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='shade-dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '›';
+    }
+
+    [data-theme='shade-dark'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='shade-dark'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] .kp-meter__mark {
+            transition:
+                inset-inline-start 600ms ease-out,
+                rotate 600ms ease-out;
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-meter-pos {
+        0% {
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-meter-wipe-d {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-shade-dark-meter-wipe-w {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
         }
     }
 }

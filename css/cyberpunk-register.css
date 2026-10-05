@@ -2838,5 +2838,325 @@
             }
         }
     }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 2,
+       while loading 3, how the share arrives 2, when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='cyberpunk']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='cyberpunk']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='cyberpunk']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='cyberpunk']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='cyberpunk']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 2 ── */
+
+    /* ── cyberpunk · 2 · the HUD segment gauge ────────────────────────── */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--accent);
+        --kp-sig-meter-mo-halo: var(--background);
+        --kp-sig-meter-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, var(--kp-sig-meter-halo) 50%, transparent 50%) 0 0 / 5px 5px no-repeat,
+            linear-gradient(-45deg, var(--kp-sig-meter-halo) 50%, transparent 50%) 100% 100% / 5px 5px no-repeat,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.28) 0 6px, transparent 6px) 0 50% / 8px 2px repeat-x,
+            var(--muted);
+    }
+
+    /* Yellow plates split by void slits, the lead cut at forty-five degrees. */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 6px, transparent 6px) 0 0 / 8px 100% repeat-x;
+        clip-path: polygon(4px 0, 100% 0, calc(100% - 7px) 100%, 0 100%, 0 4px);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::before {
+        clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+
+    /* A cyan target notch, a void cut through the plates. */
+    [data-theme='cyberpunk'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--accent),
+            -1px 0 0 var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.5rem;
+        background: linear-gradient(90deg, var(--destructive) 0 3px, transparent 3px) 0 0 / 4px 100% repeat-x;
+        clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* ── while loading: option 3 ── */
+
+    /* Round 4. Signal noise: a corrupt line on the empty track, red, cyan and
+       yellow slivers jumping to a new place every beat. */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 10% 0 / 18% 3px no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 70% 100% / 9% 3px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 40% 50% / 5% 2px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-cyberpunk-meter-noise 900ms steps(1) infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 2 ── */
+
+    /* Round 4. Glitch slip: the share lands torn, split into cyan and red
+       ghosts and thrown left and right, and snaps true in three jumps. */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-cyberpunk-meter-slip-o 320ms steps(1) backwards;
+            transition: inline-size 120ms steps(2);
+        }
+    }
+
+    /* ── when the tone changes: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-cyberpunk-meter-knock-o 200ms steps(3);
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-cyberpunk-meter-knock-w 200ms steps(3);
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-cyberpunk-meter-knock-d 200ms steps(3);
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '!';
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-noise {
+        0% {
+            background-position:
+                10% 0,
+                70% 100%,
+                40% 50%;
+        }
+
+        25% {
+            background-position:
+                62% 0,
+                18% 100%,
+                88% 50%;
+        }
+
+        50% {
+            background-position:
+                86% 0,
+                44% 100%,
+                8% 50%;
+        }
+
+        75% {
+            background-position:
+                30% 0,
+                92% 100%,
+                58% 50%;
+        }
+
+        100% {
+            background-position:
+                10% 0,
+                70% 100%,
+                40% 50%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-slip-o {
+        0% {
+            translate: -10px 0;
+            filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+        }
+
+        30% {
+            translate: 7px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        60% {
+            translate: -3px 0;
+            filter: drop-shadow(1px 0 0 var(--accent));
+        }
+
+        85%,
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-d {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-o {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-knock-w {
+        0% {
+            translate: 0 0;
+        }
+
+        30% {
+            translate: 0 -3px;
+        }
+
+        60% {
+            translate: 0 1px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -2452,12 +2452,12 @@
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
-       research/character-meter, round 3, 2026-10-05: shape 1, while
-       loading 2, how the share arrives 2, when the tone changes 3,
-       the mark past the end 3]. The package's own markup and states
-       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
-       the sign past the end or the loading picture on ::after, the mark
-       `.kp-meter__mark`. Every animation and transition under
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1, while
+       loading 2 (round 4), how the share arrives 3 (round 4), when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
        prefers-reduced-motion: no-preference; still frames otherwise. ── */
 
     /* The shared part: room past the end, loading without the pulse, the mark
@@ -2609,26 +2609,39 @@
 
     /* ── while loading: option 2 ── */
 
-    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The oxide film runs: thin bands of the film's colours, the
+       way heat tints a polished part, slide along the whole channel. */
     [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 1px;
         pointer-events: none;
-        background: repeating-linear-gradient(135deg, hsl(from var(--foreground) h s l / 0.18) 0 1px, transparent 1px 5px);
+        background: linear-gradient(
+                90deg,
+                hsl(from var(--primary) h s l / 0.35) 0 6px,
+                transparent 6px 9px,
+                hsl(from var(--accent) h s l / 0.35) 9px 15px,
+                transparent 15px 18px
+            )
+            0 0 / 18px 100% repeat-x;
+        --kp-sig-meter-l0: 0 0;
+        --kp-sig-meter-l1: 18px 0;
     }
 
-    /* ── how the share arrives: option 2 ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-dark-meter-pos 900ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-dark-meter-grow-o 600ms steps(5) backwards;
-            transition: inline-size 600ms steps(5);
-            transform-origin: 0 50%;
+            animation: kp-sig-dark-meter-press-o 220ms linear backwards;
+            transition: inline-size 220ms linear;
+            transform-origin: 50% 50%;
         }
     }
 
@@ -2715,9 +2728,19 @@
         }
     }
 
-    @keyframes kp-sig-dark-meter-grow-o {
+    @keyframes kp-sig-dark-meter-pos {
         0% {
-            scale: 0 1;
+            background-position: var(--kp-sig-meter-l0);
+        }
+
+        100% {
+            background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-press-o {
+        0% {
+            scale: 1 0;
         }
 
         100% {

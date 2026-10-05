@@ -260,6 +260,62 @@ reduced motion.
 - The keys (arrows, Enter, Esc) and the focus ring in each character: the
   module's, unchanged, and the release suite covers them.
 
+## Measured (round 2)
+
+Firefox (Playwright's, one script with its own `http.server`, under
+`flock /tmp/kp-themes-shot.lock`), 2026-10-05, all 22 themes at 1600 × 1200,
+with and without `prefers-reduced-motion: reduce`, in 16 min 21 s.
+
+- **Console:** 0 errors and 0 page errors in all 44 runs, through Drawn,
+  fifteen long names, Loading, Nothing to draw, Could not read, Drawn again,
+  Live update, size by flow, pick a node and hide a kind.
+- **Heights:** one height per graph box through every state, for each of the
+  17 graphs (preview, 15 row graphs, the plain graph).
+- **Rows differ:** in every theme each aspect row's three options differ in
+  that aspect (computed styles of the shape; the aspect's knobs otherwise).
+- **Preview:** follows `review:choice` on the preview and on every row.
+- **Loading:** at full motion every loading option runs at least one
+  animation; under reduced motion 0 animations run anywhere on the page.
+- **Dialog** (formal): five groups (Shape, While loading, How the network
+  arrives, The picked node and the hidden kind, Live update), three options
+  each, none ticked, hints per theme; the 16 controls are mirrored; ticking
+  Shape 3 moves the preview to shape 3.
+- **Contrast and labels**, lowest over every option graph in Drawn and with
+  fifteen long names (labels on their halo, chips on their ground, edges and
+  rings on the paper; the focus row includes the pick ring). One run found
+  pastel focus 3's pink pick ring at 2.29:1; it was darkened (accent 70 % →
+  35 % toward the ink) and is not measured again. Synthwave's arrival-3 graph
+  showed one overlapping label pair once, read while the network was being
+  redrawn; the other 16 graphs of synthwave had none. The plain graph (not an
+  option) stays below 3:1 for rings in pastel (2.97) and brutalism (2.77), as
+  in round 1. "Box heights" lists the heights found across the option
+  graphs (the wider preview is 495 px); each graph kept one height.
+
+| Theme         | Box heights      | Label |  Edge |  Ring |  Chip | Overlaps |
+| ------------- | ---------------- | ----: | ----: | ----: | ----: | -------: |
+| formal        | 482, 495 px      | 16.41 |  7.54 |  7.10 | 16.41 |        0 |
+| light         | 482, 495 px      | 17.20 |  4.56 |  3.30 | 17.20 |        0 |
+| dark          | 482, 495 px      | 16.26 |  6.94 |  9.47 | 16.26 |        0 |
+| cyberpunk     | 482, 495 px      | 13.51 |  6.03 |  9.43 | 12.68 |        0 |
+| synthwave     | 482, 495 px      | 14.03 |  7.00 |  6.16 | 10.74 |        1 |
+| pastel        | 482, 495 px      | 13.77 |  4.76 |  2.29 | 10.43 |        0 |
+| terminal      | 481, 482 px      | 13.50 | 10.25 |  7.96 | 12.96 |        0 |
+| forest        | 482, 495 px      | 11.82 |  5.31 |  3.20 | 11.27 |        0 |
+| high-contrast | 482, 484, 496 px | 21.00 | 14.49 |  7.78 | 21.00 |        0 |
+| sepia         | 482, 495 px      | 13.21 |  8.25 |  6.89 | 13.21 |        0 |
+| blueprint     | 482, 495 px      | 14.93 | 10.60 |  7.96 | 13.33 |        0 |
+| solstice      | 482, 495 px      | 14.30 |  7.22 |  4.62 | 10.53 |        0 |
+| brutalism     | 486, 497 px      | 18.23 |  8.26 | 11.88 | 10.84 |        0 |
+| deco          | 482, 495 px      | 15.01 |  8.38 |  8.16 | 15.01 |        0 |
+| phantom       | 482, 495 px      | 17.18 |  5.86 |  4.81 |  5.31 |        0 |
+| shade-light   | 482, 495 px      |  6.07 |  4.58 |  3.27 |  6.07 |        0 |
+| shade-dark    | 482, 495 px      |  6.06 |  5.30 |  4.33 |  5.44 |        0 |
+| retro         | 424, 482, 484 px | 11.97 |  5.79 |  9.61 | 10.84 |        0 |
+| grotesk       | 482, 495 px      | 18.73 |  6.28 |  6.07 | 18.73 |        0 |
+| lapis         | 482, 495 px      |  9.39 |  6.20 |  5.83 |  9.39 |        0 |
+| nostromo      | 482, 495 px      |  5.70 |  3.97 |  3.48 |  5.70 |        0 |
+| titanium      | 482, 495 px      | 13.33 |  7.91 |  7.50 |  9.72 |        0 |
+
 ## Round 2: the options per aspect
 
 The names; each option's full description is in `demo.js` (`IDEAS`) and in
