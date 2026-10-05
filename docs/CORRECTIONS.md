@@ -5919,6 +5919,8 @@ after its boot (a framework mount, a lazy section): whether
 `data-kp-settling` is enough for it or the package needs an attach option
 for it; and at the character round's motion component.
 
+**Approved by Kenny, 2026-10-05** (form v23: Klopt).
+
 
 ## fix-101 · The plain key-figure strip: a height that moved, a label cut or wrapped, a frame under 3:1 (2026-10-05)
 
@@ -6038,3 +6040,5 @@ lines, or draws its own; when a plain tile outside a strip with columns
 is fixed (kpi-label-cut-M1: its label still cuts or wraps, its frame is
 still the hairline); and when dark's and titanium's `--border-strong`
 reach DI1's floor, which would make their mix redundant.
+
+**Approved by Kenny, 2026-10-05** (form v23: Klopt).
