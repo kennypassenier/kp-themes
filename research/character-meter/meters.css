@@ -2894,126 +2894,154 @@
 
     /* ── grotesk · shape 1 ── */
 
-    /* ── grotesk · the transit line ───────────────────────────────────── */
+    /* ── grotesk · 1 · the rule and its cursor (round 4) ──────────────── */
 
-    /* The route diagram of Swiss transit signage: the line served so far in
-       the line's red, the rest in grey, a station tick every sixth, the
-       interchange capsule as the mark, the line run on to a terminus bar
+    /* A steel rule: a white strip in a black outline, a long tick every
+       tenth and a short one every fiftieth hanging from its top edge, the
+       share a red band along its lower half under the ticks, a black
+       cursor triangle pointing up from below as the mark, a bold red +
        past the end. */
     [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter {
         --kp-meter-height: 0.625rem;
-        --cm-room: 0.75rem;
-        --cm-line: color-mix(in oklab, var(--foreground) 30%, var(--card));
+        --cm-room: 0.875rem;
+        --cm-mo-ink: var(--foreground);
         border-radius: 0;
         background:
-            linear-gradient(var(--cm-line), var(--cm-line)) 0 100% / 100% 6px no-repeat,
-            linear-gradient(90deg, transparent calc(100% - 2px), var(--cm-line) 0) 0 0 / calc(100% / 6) 4px repeat-x;
+            linear-gradient(90deg, var(--foreground) 1px, transparent 1px) 0 0 / 10% 5px repeat-x,
+            linear-gradient(90deg, var(--foreground) 1px, transparent 1px) 0 0 / 2% 2px repeat-x,
+            var(--card);
+        box-shadow: inset 0 0 0 1px var(--foreground);
     }
 
     [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter::before {
+        inset-block: 5px 1px;
         border-radius: 0;
-        background:
-            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 100% / 100% 6px no-repeat,
-            linear-gradient(90deg, transparent calc(100% - 2px), var(--kp-meter-fill-colour) 0) 0 0 /
-                calc(100% / 6 / clamp(0.01, var(--kp-value, 0), 1)) 4px repeat-x;
     }
 
-    /* The interchange: a white capsule in a black outline across the line. */
+    /* The cursor: a black hairline across the rule, a black triangle under it. */
     [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter__mark {
-        --cm-mw: 6px;
-        inset-block: 1px -3px;
-        border-radius: 999px;
-        background: var(--card);
-        box-shadow: inset 0 0 0 2px var(--foreground);
-    }
-
-    /* The line runs on past the end to a black terminus bar. */
-    [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: 100%;
-        inset-block: -2px 0;
-        inline-size: 0.5rem;
-        background:
-            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 100% / calc(100% - 3px) 6px no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 3px 100% no-repeat;
-    }
-
-    /* ── grotesk · shape 2 ── */
-
-    /* ── grotesk · 1 · the red block on the baseline ──────────────────── */
-    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 1.25rem;
-        border-radius: 0;
-        background:
-            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 1px no-repeat,
-            var(--muted);
-    }
-
-    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter::before {
-        inset-block: 0 1px;
-        border-radius: 0;
-    }
-
-    /* A black rule rising from the baseline, flush. */
-    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter__mark {
-        inset-block: -6px 0;
+        inset-block: 0 -1px;
         border-radius: 0;
         background: var(--foreground);
         box-shadow: 0 0 0 1px var(--card);
     }
 
-    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
-        content: '→';
+    [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    [data-theme='grotesk'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
+        content: '+';
         inset-inline-start: calc(100% + 2px);
-        inset-block-end: -3px;
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--primary);
+        font: 900 1rem/1 var(--theme-font-display, sans-serif);
+    }
+
+    /* ── grotesk · shape 2 ── */
+
+    /* ── grotesk · 2 · the poster bar and its slash (round 4) ─────────── */
+
+    /* A poster's heavy bar: a thick black outline on white, the share set
+       solid red inside it, the mark a black oblique slash cut through the
+       bar and standing out above and below, a bold black ! past the end. */
+    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 0.75rem;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter::before {
+        inset-block: 2px;
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter__mark {
+        --cm-mw: 4px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow:
+            1px 0 0 var(--card),
+            -1px 0 0 var(--card);
+        transform: skewX(-20deg);
+    }
+
+    [data-theme='grotesk'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
+        content: '!';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        translate: 0 -50%;
         color: var(--foreground);
-        font: 700 1rem/1 var(--theme-font-display, sans-serif);
+        font: 900 1rem/1 var(--theme-font-display, sans-serif);
     }
 
     /* ── grotesk · shape 3 ── */
 
-    /* ── grotesk · 2 · the zebra scale ────────────────────────────────── */
+    /* ── grotesk · 3 · the twelve-column grid (round 4) ───────────────── */
+
+    /* The Swiss layout grid as a meter: twelve columns marked by hairline
+       guides between a top and a bottom rule, the share set flush in red
+       over them, the mark a black rule with an open grid node on top, and
+       past the end the guides run on, three more columns in red hairline. */
     [data-theme='grotesk'] [data-cm-shape='3'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.75rem;
-        --kp-meter-fill: var(--foreground);
-        --cm-mo-ink: var(--primary);
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.875rem;
+        --cm-guide: color-mix(in oklab, var(--foreground) 45%, var(--card));
         border-radius: 0;
         background:
-            linear-gradient(90deg, var(--foreground) 50%, transparent 50%) 0 100% / calc(100% / 6) 3px repeat-x,
+            linear-gradient(90deg, var(--cm-guide) 1px, transparent 1px) 0 0 / calc(100% / 12) 100% repeat-x,
+            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 1px no-repeat,
             var(--card);
-        box-shadow: inset 0 0 0 1px var(--foreground);
+        box-shadow: inset -1px 0 0 var(--cm-guide);
     }
 
     [data-theme='grotesk'] [data-cm-shape='3'] .kp-meter::before {
+        inset-block: 1px;
         border-radius: 0;
     }
 
-    /* A red rule with a small red square flag. */
     [data-theme='grotesk'] [data-cm-shape='3'] .kp-meter__mark {
-        inset-block: -5px -1px;
+        inset-block: -2px -3px;
         border-radius: 0;
-        background: var(--primary);
+        background: var(--foreground);
         box-shadow: 0 0 0 1px var(--card);
     }
 
+    /* The grid node: an open black square on the mark's top. */
     [data-theme='grotesk'] [data-cm-shape='3'] .kp-meter__mark::before {
         content: '';
         position: absolute;
-        inset-block-start: 0;
-        inset-inline-start: 100%;
-        inline-size: 5px;
-        block-size: 5px;
-        background: var(--primary);
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 7px;
+        block-size: 7px;
+        translate: -50% 0;
+        box-sizing: border-box;
+        background: var(--card);
+        border: 2px solid var(--foreground);
     }
 
-    /* A red square set lower, off the line. */
     [data-theme='grotesk'] [data-cm-shape='3'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 4px);
-        inset-block-start: 4px;
-        inline-size: 0.4375rem;
-        block-size: 0.4375rem;
-        background: var(--primary);
+        inset-inline-start: 100%;
+        inset-block: 0;
+        inline-size: 0.75rem;
+        background:
+            linear-gradient(90deg, transparent 3px, var(--primary) 3px 4px, transparent 4px) 0 0 / 4px 100% repeat-x,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 1px no-repeat;
     }
 
     /* ── lapis · shape 1 ── */
@@ -3644,100 +3672,177 @@
 
     /* ── dark · loading 1 ── */
 
-    /* The empty channel's engraved scale, still. */
+    /* Round 4. The milling pass: a bright cutter edge with a short trail of
+       oxide colour traverses the empty channel and starts again. */
     [data-theme='dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        inset: 2px 1px;
-        background: linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 0 / 10% 100%;
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 1px;
+        pointer-events: none;
+        background: linear-gradient(
+                90deg,
+                transparent,
+                hsl(from var(--primary) h s l / 0.45) 10px,
+                hsl(from var(--accent) h s l / 0.7) 13px,
+                hsl(from var(--foreground) h s l / 0.9) 13px 15px,
+                transparent 15px
+            ) -16px
+            0 / 16px 100% no-repeat;
+        --cm-l0: -16px 0;
+        --cm-l1: calc(100% + 16px) 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            animation: cm-x-pos 1400ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            background-position: 40% 0;
+        }
     }
 
     /* ── dark · loading 2 ── */
 
-    [data-theme='dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The oxide film runs: thin bands of the film's colours, the
+       way heat tints a polished part, slide along the whole channel. */
     [data-theme='dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 1px;
         pointer-events: none;
-        background: repeating-linear-gradient(135deg, hsl(from var(--foreground) h s l / 0.18) 0 1px, transparent 1px 5px);
+        background: linear-gradient(
+                90deg,
+                hsl(from var(--primary) h s l / 0.35) 0 6px,
+                transparent 6px 9px,
+                hsl(from var(--accent) h s l / 0.35) 9px 15px,
+                transparent 15px 18px
+            )
+            0 0 / 18px 100% repeat-x;
+        --cm-l0: 0 0;
+        --cm-l1: 18px 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            animation: cm-x-pos 900ms linear infinite;
+        }
     }
 
     /* ── dark · loading 3 ── */
 
-    [data-theme='dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
+    /* Round 4. The spectral scan: one thin emission line steps across the
+       slit, reading it line by line, and starts again. */
+    [data-theme='dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 1px 2px;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 0 / 2px 100% no-repeat,
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 0 / 10% 100%;
     }
 
-    [data-theme='dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+            animation: cm-dk4-scan 2000ms steps(20, jump-none) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+            background-position:
+                35% 0,
+                0 0;
+        }
+    }
+
+    /* ── cyberpunk · loading 1 ── */
+
+    /* Round 4. The scanline: a cyan beam with a yellow afterglow runs across
+       a track of faint scanlines, again and again. */
+    [data-theme='cyberpunk'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.35) 1px, transparent 1.5px) 0 50% / 8px 100% repeat-x;
-    }
-
-    /* ── cyberpunk · loading 1 ── */
-
-    /* The tube tries to strike: a flicker twice, then dark. */
-    [data-theme='cyberpunk'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        border-radius: inherit;
-        background: var(--primary);
-        opacity: 0.22;
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.55) 12px, var(--accent) 12px 14px, transparent 14px) -16px 0 / 16px
+                100% no-repeat,
+            repeating-linear-gradient(180deg, hsl(from var(--accent) h s l / 0.22) 0 1px, transparent 1px 2px);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-cy-strike 2800ms steps(1) infinite;
+            animation: cm-cy4-scan 1100ms linear infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            background-position:
+                40% 0,
+                0 0;
         }
     }
 
     /* ── cyberpunk · loading 2 ── */
 
-    [data-theme='cyberpunk'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The packet stream: packets of cyan and yellow of every length
+       run along a thin data line through the middle, a packet at a time. */
     [data-theme='cyberpunk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.55) 0 4px, transparent 4px 8px);
+        background: linear-gradient(
+                90deg,
+                var(--accent) 0 2px,
+                transparent 2px 5px,
+                hsl(from var(--primary) h s l / 0.85) 5px 11px,
+                transparent 11px 13px,
+                var(--accent) 13px 14px,
+                transparent 14px 17px,
+                hsl(from var(--primary) h s l / 0.85) 17px 19px,
+                transparent 19px
+            )
+            0 50% / 28px 4px repeat-x;
         --cm-l0: 0 50%;
-        --cm-l1: 11.3137px 50%;
+        --cm-l1: 28px 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1000ms linear infinite;
+            animation: cm-x-pos 700ms steps(7) infinite;
         }
     }
 
     /* ── cyberpunk · loading 3 ── */
 
-    [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. Signal noise: a corrupt line on the empty track, red, cyan and
+       yellow slivers jumping to a new place every beat. */
     [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(var(--accent), var(--accent)) 50% 50% / 12px 100% no-repeat;
-        --cm-l0: 0% 50%;
-        --cm-l1: 100% 50%;
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 10% 0 / 18% 3px no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 70% 100% / 9% 3px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 40% 50% / 5% 2px no-repeat;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1400ms steps(16) infinite;
+            animation: cm-cy4-noise 900ms steps(1) infinite;
         }
     }
 
@@ -3990,39 +4095,69 @@
 
     /* ── high-contrast · loading 1 ── */
 
+    /* Round 4. The stepping block: a square of ink jumps across the frame in
+       ten hard steps and starts again; it never touches the start, so it
+       cannot be read as a share. */
     [data-theme='high-contrast'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        inset: 0 4px;
-        background: linear-gradient(90deg, var(--foreground) 0 4px, transparent 4px) 0 50% / 7px 2px repeat-x;
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 3px 4px;
+        pointer-events: none;
+        background: linear-gradient(var(--foreground), var(--foreground)) 20% 50% / 6px 100% no-repeat;
+        --cm-l0: calc(0% + 8px) 50%;
+        --cm-l1: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            animation: cm-x-pos 1500ms steps(10, jump-none) infinite;
+        }
     }
 
     /* ── high-contrast · loading 2 ── */
 
-    [data-theme='high-contrast'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. Counting dots: three ink rings in the middle, filled one
+       after another, the way a phone counts while it waits. */
     [data-theme='high-contrast'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle, var(--foreground) 1.5px, transparent 2px) 0 50% / 8px 100% repeat-x;
+        background:
+            radial-gradient(circle, var(--foreground) 2.5px, transparent 3px) 40% 50% / 8px 8px no-repeat,
+            radial-gradient(circle, transparent 1.5px, var(--foreground) 1.5px 2.5px, transparent 3px) 40% 50% / 8px 8px no-repeat,
+            radial-gradient(circle, transparent 1.5px, var(--foreground) 1.5px 2.5px, transparent 3px) 50% 50% / 8px 8px no-repeat,
+            radial-gradient(circle, transparent 1.5px, var(--foreground) 1.5px 2.5px, transparent 3px) 60% 50% / 8px 8px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            animation: cm-hc4-count 1200ms steps(1) infinite;
+        }
     }
 
     /* ── high-contrast · loading 3 ── */
 
-    [data-theme='high-contrast'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. Marching chevrons: a row of ink › marches to the right in
+       hard steps, the sign of something on its way. */
     [data-theme='high-contrast'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
         all: unset;
-        content: '';
+        content: '› › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › › ›';
         position: absolute;
-        inset: 0;
+        inset-block: 0;
+        inset-inline-start: -2ch;
         pointer-events: none;
-        background: repeating-linear-gradient(90deg, var(--foreground) 0 4px, transparent 4px 8px) 0 50% / 100% 2px no-repeat;
+        color: var(--foreground);
+        font: 700 0.75rem/0.625rem var(--theme-font-mono, monospace);
+        white-space: pre;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+            animation: cm-hc4-march 800ms steps(2) infinite;
+        }
     }
 
     /* ── sepia · loading 1 ── */
@@ -4391,184 +4526,223 @@
 
     /* ── shade-light · loading 1 ── */
 
-    /* The empty gauge is hatched in once and left. */
+    /* Round 4. Cross-hatching drifts: pencil hatching in two directions slides across the empty gauge, the two layers against each other, so the paper shimmers while it waits. */
     [data-theme='shade-light'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
         border-radius: inherit;
-        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.4) 0 1px, transparent 1px 3px);
+        background:
+            repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.28) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(55deg, hsl(from var(--foreground) h s l / 0.28) 0 1px, transparent 1px 4px);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-light'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-sh-hatch 1200ms ease-out 1 both;
+            animation: cm-sh4-cross 900ms linear infinite;
         }
     }
 
     /* ── shade-light · loading 2 ── */
 
-    [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The crease passes: a fold in the paper, a pencil shade on one side and a lit edge on the other, crosses the gauge and comes round again. */
     [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.5)) 0 50% / 100% 1px no-repeat;
-        inset-inline-end: auto;
-        inline-size: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+                90deg,
+                transparent,
+                hsl(from var(--foreground) h s l / calc(0.6 / 3)) 8px,
+                hsl(from var(--foreground) h s l / 0.6) 9px 10px,
+                hsl(from var(--card) h s calc(l + 10)) 10px 11px,
+                transparent 11px
+            ) -12px
+            0 / 12px 100% no-repeat;
+        --cm-l0: -12px 0;
+        --cm-l1: calc(100% + 12px) 0;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-width 1200ms ease-out 1 backwards;
+            animation: cm-x-pos 1800ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            background-position: 45% 0;
         }
     }
 
     /* ── shade-light · loading 3 ── */
 
-    [data-theme='shade-light'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. Pencil dashes run: a dashed pencil line along the middle of the gauge runs on and on. */
     [data-theme='shade-light'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 0 2px;
         pointer-events: none;
-        background: linear-gradient(hsl(from var(--foreground) h s l / 0.18), hsl(from var(--foreground) h s l / 0.18)) 50% 50% / 30% 100% no-repeat;
-        --cm-l0: 0% 50%;
-        --cm-l1: 100% 50%;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.6) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
+        --cm-l0: 0 50%;
+        --cm-l1: 7px 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-light'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 2600ms linear infinite alternate;
+            animation: cm-x-pos 700ms linear infinite;
         }
     }
 
     /* ── shade-dark · loading 1 ── */
 
+    /* Round 4. Silver cross-hatching drifts: silver hatching in two directions slides over the dark ground, the two layers against each other, so the silver glints while it waits. */
     [data-theme='shade-dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
         border-radius: inherit;
-        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.55) 0 1px, transparent 1px 3px);
+        background:
+            repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(55deg, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px 4px);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-sh-hatch 1200ms ease-out 1 both;
+            animation: cm-sh4-cross 900ms linear infinite;
         }
     }
 
     /* ── shade-dark · loading 2 ── */
 
-    [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The glint passes: a pale metal glint with its shade crosses the well and comes round again. */
     [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 0 50% / 100% 1px no-repeat;
-        inset-inline-end: auto;
-        inline-size: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+                90deg,
+                transparent,
+                hsl(from var(--foreground) h s l / calc(0.7 / 3)) 8px,
+                hsl(from var(--foreground) h s l / 0.7) 9px 10px,
+                hsl(from var(--card) h s calc(l + 10)) 10px 11px,
+                transparent 11px
+            ) -12px
+            0 / 12px 100% no-repeat;
+        --cm-l0: -12px 0;
+        --cm-l1: calc(100% + 12px) 0;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-width 1200ms ease-out 1 backwards;
+            animation: cm-x-pos 1800ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            background-position: 45% 0;
         }
     }
 
     /* ── shade-dark · loading 3 ── */
 
-    [data-theme='shade-dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. Silver stitches run: a running stitch of silver along the middle of the well runs on and on. */
     [data-theme='shade-dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 0 2px;
         pointer-events: none;
-        background: linear-gradient(hsl(from var(--foreground) h s l / 0.2), hsl(from var(--foreground) h s l / 0.2)) 50% 50% / 30% 100% no-repeat;
-        --cm-l0: 0% 50%;
-        --cm-l1: 100% 50%;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.7) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
+        --cm-l0: 0 50%;
+        --cm-l1: 7px 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='shade-dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 2600ms linear infinite alternate;
+            animation: cm-x-pos 700ms linear infinite;
         }
     }
 
     /* ── retro · loading 1 ── */
 
-    /* The history grid, scrolling one step at a time. */
+    /* Round 4. The marquee: a block of three lit segments slides through the
+       panel and comes round again, the way a busy progress bar did. */
     [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
         inset: 2px;
-        background:
-            linear-gradient(90deg, hsl(from var(--success) h s l / 0.9) 1px, transparent 1px) 0 0 / 6px 100%,
-            linear-gradient(hsl(from var(--success) h s l / 0.9), hsl(from var(--success) h s l / 0.9)) 0 50% / 100% 1px no-repeat,
-            var(--foreground);
+        pointer-events: none;
+        background: repeating-linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 3px, transparent 3px 4px) -12px 0 / 11px 100%
+            no-repeat;
+        --cm-l0: -12px 0;
+        --cm-l1: calc(100% + 12px) 0;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-rt-scroll 1200ms steps(3) infinite;
+            animation: cm-x-pos 1600ms steps(24) infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            background-position: 40% 0;
         }
     }
 
     /* ── retro · loading 2 ── */
 
-    [data-theme='retro'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The modem handshake: a green and a yellow lamp run in from
+       both ends, meet in the middle and part again. */
     [data-theme='retro'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 2px;
         pointer-events: none;
-        background: repeating-linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 3px, transparent 3px 16px);
-        --cm-l0: 0 50%;
-        --cm-l1: 16px 50%;
+        background:
+            linear-gradient(hsl(from var(--success) h s calc(l * 2.2)), hsl(from var(--success) h s calc(l * 2.2))) 0 0 / 3px 100% no-repeat,
+            linear-gradient(var(--warning), var(--warning)) 100% 0 / 3px 100% no-repeat;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='retro'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 800ms steps(4) infinite;
+            animation: cm-rt4-shake 1400ms steps(10, jump-none) infinite alternate;
         }
     }
 
     /* ── retro · loading 3 ── */
 
-    [data-theme='retro'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
+    /* Round 4. The rubber band: a dotted selection line along the top and
+       the bottom of the panel, marching in opposite directions. */
     [data-theme='retro'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset: 2px;
         pointer-events: none;
-        background: linear-gradient(hsl(from var(--destructive) h s calc(l * 2)), hsl(from var(--destructive) h s calc(l * 2))) 50% 50% / 4px 100%
-            no-repeat;
-        --cm-l0: 0% 50%;
-        --cm-l1: 100% 50%;
+        background:
+            linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 2px, transparent 2px) 0 0 / 4px 1px repeat-x,
+            linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 2px, transparent 2px) 0 100% / 4px 1px repeat-x;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='retro'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1400ms steps(7) infinite alternate;
+            animation: cm-rt4-band 400ms steps(2) infinite;
         }
     }
 
@@ -4957,47 +5131,53 @@
 
     /* ── cyberpunk · arrival 1 ── */
 
+    /* Round 4. Data burst: the share is written in eight packets, white-hot
+       as they land, cooling to its neon in the same eight steps. */
     [data-theme='cyberpunk'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
+        --cm-arr-o: cm-cy4-burst-o;
+        --cm-arr-w: cm-cy4-burst-w;
+        --cm-arr-d: cm-cy4-burst-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 300ms steps(6) backwards;
-            transition: inline-size 300ms steps(6);
+            mask: linear-gradient(#000, #000) 0 0 / 100% 100% no-repeat;
+            animation: var(--cm-arr-o) 360ms steps(8) backwards;
+            transition: inline-size 360ms steps(8);
         }
     }
 
     /* ── cyberpunk · arrival 2 ── */
 
+    /* Round 4. Glitch slip: the share lands torn, split into cyan and red
+       ghosts and thrown left and right, and snaps true in three jumps. */
     [data-theme='cyberpunk'] [data-cm-arrival='2'] .kp-meter {
-        --cm-arr-o: cm-x-slant-o;
-        --cm-arr-w: cm-x-slant-w;
-        --cm-arr-d: cm-x-slant-d;
+        --cm-arr-o: cm-cy4-slip-o;
+        --cm-arr-w: cm-cy4-slip-w;
+        --cm-arr-d: cm-cy4-slip-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-arrival='2'] .kp-meter::before {
-            animation: var(--cm-arr-o) 260ms cubic-bezier(0.7, 0, 0.3, 1) backwards;
-            transition: inline-size 260ms cubic-bezier(0.7, 0, 0.3, 1);
+            animation: var(--cm-arr-o) 320ms steps(1) backwards;
+            transition: inline-size 120ms steps(2);
         }
     }
 
     /* ── cyberpunk · arrival 3 ── */
 
+    /* Round 4. Neon strike: the share is there at once, dark, and the tube
+       strikes: two failed flickers, then it holds. */
     [data-theme='cyberpunk'] [data-cm-arrival='3'] .kp-meter {
-        --cm-arr-o: cm-x-grow-o;
-        --cm-arr-w: cm-x-grow-w;
-        --cm-arr-d: cm-x-grow-d;
+        --cm-arr-o: cm-cy4-strike-o;
+        --cm-arr-w: cm-cy4-strike-w;
+        --cm-arr-d: cm-cy4-strike-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 240ms steps(8) backwards;
-            transition: inline-size 240ms steps(8);
-            transform-origin: 0 50%;
+            animation: var(--cm-arr-o) 560ms steps(1) backwards;
+            transition: inline-size 80ms steps(1);
         }
     }
 
@@ -8198,30 +8378,6 @@
     }
 }
 
-@keyframes cm-cy-strike {
-    0%,
-    66% {
-        opacity: 0.22;
-    }
-
-    68% {
-        opacity: 0.6;
-    }
-
-    71% {
-        opacity: 0.22;
-    }
-
-    74% {
-        opacity: 0.75;
-    }
-
-    78%,
-    100% {
-        opacity: 0.22;
-    }
-}
-
 @keyframes cm-sw-road {
     to {
         background-position:
@@ -8308,16 +8464,6 @@
     }
 }
 
-@keyframes cm-sh-hatch {
-    from {
-        clip-path: inset(0 100% 0 0);
-    }
-
-    to {
-        clip-path: inset(0 0 0 0);
-    }
-}
-
 @keyframes cm-la-burnish {
     from {
         background-position: -40% 0;
@@ -8351,15 +8497,6 @@
 @keyframes cm-fo-steps {
     to {
         background-position: 7px 50%;
-    }
-}
-
-@keyframes cm-rt-scroll {
-    to {
-        background-position:
-            -6px 0,
-            0 50%,
-            0 0;
     }
 }
 
@@ -8735,6 +8872,331 @@
     to {
         background-position:
             3px 3px,
+            0 0;
+    }
+}
+
+/* ── Round 4 (2026-10-05): cyberpunk loading and arrival, dark, high-contrast,
+   shade-light, shade-dark and retro loading. ── */
+
+@keyframes cm-cy4-scan {
+    from {
+        background-position:
+            -16px 0,
+            0 0;
+    }
+
+    to {
+        background-position:
+            calc(100% + 16px) 0,
+            0 0;
+    }
+}
+
+@keyframes cm-cy4-noise {
+    0% {
+        background-position:
+            10% 0,
+            70% 100%,
+            40% 50%;
+    }
+
+    25% {
+        background-position:
+            62% 0,
+            18% 100%,
+            88% 50%;
+    }
+
+    50% {
+        background-position:
+            86% 0,
+            44% 100%,
+            8% 50%;
+    }
+
+    75% {
+        background-position:
+            30% 0,
+            92% 100%,
+            58% 50%;
+    }
+}
+
+@keyframes cm-cy4-burst-o {
+    from {
+        mask-size: 0% 100%;
+        filter: brightness(2.2);
+    }
+
+    to {
+        mask-size: 100% 100%;
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-cy4-burst-w {
+    from {
+        mask-size: 0% 100%;
+        filter: brightness(2.2);
+    }
+
+    to {
+        mask-size: 100% 100%;
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-cy4-burst-d {
+    from {
+        mask-size: 0% 100%;
+        filter: brightness(2.2);
+    }
+
+    to {
+        mask-size: 100% 100%;
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-cy4-slip-o {
+    0% {
+        translate: -10px 0;
+        filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+    }
+
+    30% {
+        translate: 7px 0;
+        filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+    }
+
+    60% {
+        translate: -3px 0;
+        filter: drop-shadow(1px 0 0 var(--accent));
+    }
+
+    85%,
+    100% {
+        translate: 0 0;
+        filter: none;
+    }
+}
+
+@keyframes cm-cy4-slip-w {
+    0% {
+        translate: -10px 0;
+        filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+    }
+
+    30% {
+        translate: 7px 0;
+        filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+    }
+
+    60% {
+        translate: -3px 0;
+        filter: drop-shadow(1px 0 0 var(--accent));
+    }
+
+    85%,
+    100% {
+        translate: 0 0;
+        filter: none;
+    }
+}
+
+@keyframes cm-cy4-slip-d {
+    0% {
+        translate: -10px 0;
+        filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+    }
+
+    30% {
+        translate: 7px 0;
+        filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+    }
+
+    60% {
+        translate: -3px 0;
+        filter: drop-shadow(1px 0 0 var(--accent));
+    }
+
+    85%,
+    100% {
+        translate: 0 0;
+        filter: none;
+    }
+}
+
+@keyframes cm-cy4-strike-o {
+    0% {
+        filter: brightness(0.2);
+    }
+
+    15% {
+        filter: brightness(1.7);
+    }
+
+    25% {
+        filter: brightness(0.2);
+    }
+
+    40% {
+        filter: brightness(1.9);
+    }
+
+    50% {
+        filter: brightness(0.45);
+    }
+
+    65%,
+    100% {
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-cy4-strike-w {
+    0% {
+        filter: brightness(0.2);
+    }
+
+    15% {
+        filter: brightness(1.7);
+    }
+
+    25% {
+        filter: brightness(0.2);
+    }
+
+    40% {
+        filter: brightness(1.9);
+    }
+
+    50% {
+        filter: brightness(0.45);
+    }
+
+    65%,
+    100% {
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-cy4-strike-d {
+    0% {
+        filter: brightness(0.2);
+    }
+
+    15% {
+        filter: brightness(1.7);
+    }
+
+    25% {
+        filter: brightness(0.2);
+    }
+
+    40% {
+        filter: brightness(1.9);
+    }
+
+    50% {
+        filter: brightness(0.45);
+    }
+
+    65%,
+    100% {
+        filter: brightness(1);
+    }
+}
+
+@keyframes cm-hc4-count {
+    0% {
+        background-position:
+            40% 50%,
+            40% 50%,
+            50% 50%,
+            60% 50%;
+    }
+
+    33.333% {
+        background-position:
+            50% 50%,
+            40% 50%,
+            50% 50%,
+            60% 50%;
+    }
+
+    66.667% {
+        background-position:
+            60% 50%,
+            40% 50%,
+            50% 50%,
+            60% 50%;
+    }
+}
+
+@keyframes cm-hc4-march {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 2ch 0;
+    }
+}
+
+@keyframes cm-sh4-cross {
+    from {
+        background-position:
+            0 0,
+            0 0;
+    }
+
+    to {
+        background-position:
+            4.883px 0,
+            -4.883px 0;
+    }
+}
+
+@keyframes cm-rt4-shake {
+    from {
+        background-position:
+            0 0,
+            100% 0;
+    }
+
+    to {
+        background-position:
+            46% 0,
+            54% 0;
+    }
+}
+
+@keyframes cm-rt4-band {
+    from {
+        background-position:
+            0 0,
+            0 100%;
+    }
+
+    to {
+        background-position:
+            4px 0,
+            -4px 100%;
+    }
+}
+
+@keyframes cm-dk4-scan {
+    from {
+        background-position:
+            0% 0,
+            0 0;
+    }
+
+    to {
+        background-position:
+            100% 0,
             0 0;
     }
 }

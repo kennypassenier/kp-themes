@@ -1,5 +1,10 @@
 # A meter of its own, per theme
 
+**Round 3 judged (2026-10-05 20:03).** Kenny judged all 22 themes from To judge: 16 approved in full, 6 not approved with the ticked aspects kept. Picks (shape / while loading / how the share arrives / when the tone changes / the mark past the end):
+formal 1/2/1/1/2 · light 1/1/2/2/2 · dark 1/2/2/3/3 · synthwave 1/2/2/2/1 · pastel 1/1/3/1/2 · terminal 1/3/3/2/2 · forest 1/3/1/3/3 · sepia 1/2/2/2/2 · blueprint 3/1/1/1/3 · solstice 3/2/2/2/2 · brutalism 1/1/1/3/3 · deco 1/3/2/3/3 · phantom 1/1/1/1/2 · lapis 1/2/2/2/2 · nostromo 1/1/3/2/3 · titanium 1/1/3/3/3.
+Not approved: cyberpunk (kept: shape 2, tone 3, mark 3; redo loading and arrival: "de dingen die ik aanvinkte zijn goedgekeurd, maar de rest moet opnieuw"), high-contrast (kept: shape 2, arrival 1, tone 1, mark 3; "doe de loading opnieuw, loading moet altijd animated zijn"), shade-light (kept 1/-/1/1/2; redo the loading), shade-dark (kept 1/-/1/1/2; redo the loading), retro (kept 1/-/1/2/2; redo the loading), grotesk (kept loading 2, arrival 3, tone 3, mark 2; redo the shapes).
+Rule from this round: a loading picture is always animated, in every theme, including the themes that otherwise allow no loops. He also reported that the dialog sank a little each time it opened on the next theme after an approval, cured by closing and reopening (fix-102).
+
 **Judged (2026-10-05 17:58).** Kenny judged the demo in all 22 themes from To judge: 19 approved with a pick, 3 not approved. Picks: Character 2 for formal, light, dark, synthwave, high-contrast, sepia, brutalism, deco, retro, nostromo; Character 1 for cyberpunk, pastel, terminal, blueprint, solstice, phantom, shade-light, shade-dark, lapis, titanium. Not approved, with his notes: forest ("I really like the width and filling of character 1, but I don't like the leaf. So can we combine that with the icons from character 2?"), retro ("Just try something different"; his pick Character 2 stands only until the new round), grotesk ("try something else"). At 18:00 he added that he had judged in the dialog without seeing the animations (the state and speed controls sat outside it) and asked to wait: he re-judges the whole demo once the controls are in the dialog. At 18:01 he settled it: only the SHAPE of the 19 picks is approved; their states and animations are not. The next round shows, per theme, three motion treatments of the approved shape (loading, a mark past the end, the three tones, the fill), with a speed control for every animation, inside the review dialog; forest (C1 width and fill with C2 icons, no leaf), retro and grotesk get new shapes with the same three treatments. Nothing is ported until he has chosen.
 
 Kenny, form v18 (2026-10-05): the character round starts with the meter,
@@ -513,3 +518,105 @@ Firefox (Playwright's, its own `http.server` on 127.0.0.1:8731, under `flock
   approved.
 - The page keeps the ticks per theme only while it is open; after a reload the preview starts at option 1 until a
   choice is ticked again (the dialog itself remembers them).
+
+## Ported
+
+**2026-10-05, the 16 decided combinations.** Each theme's picked shape,
+loading picture, arrival, tone reaction and mark past the end moved out of
+`meters.css` into its register, at the end of `@layer kp.signature`
+("The meter with a mark, this theme's way"), resolved into plain rules on
+the package's markup: `[data-theme='<name>'] :is(.kp-meter, .kp-kpi__meter)`
+and `.kp-meter__mark`, the `[data-cm…]` wrapper gone; the shared contract
+under `:where([data-theme='<name>'])` so every picked rule wins as it did in
+the demo; `--cm-*` became `--kp-sig-meter-*`; the arrival's
+`var(--cm-arr-o|w|d)` resolved to its keyframe names; the keyframes renamed
+`kp-sig-<theme>-meter-*` with explicit 0 % and 100 % stops, 77 rows in
+TIMINGS (js/effects.js) and 76 reasons in check-motion's OUT_OF_SCOPE.
+formal 1/2/1/1/2, light 1/1/2/2/2, dark 1/2/2/3/3, synthwave 1/2/2/2/1,
+pastel 1/1/3/1/2, terminal 1/3/3/2/2, forest 1/3/1/3/3, sepia 1/2/2/2/2,
+blueprint 3/1/1/1/3, solstice 3/2/2/2/2, brutalism 1/1/1/3/3, deco
+1/3/2/3/3, phantom 1/1/1/1/2, lapis 1/2/2/2/2, nostromo 1/1/3/2/3, titanium
+1/1/3/3/3. One change: titanium shape 1's unguarded `transition` on the
+share now sits under `prefers-reduced-motion: no-preference` (DI7); at full
+motion the arrival's transition replaces it, as in the demo. Measured in
+Firefox: the package meter on catalogue/data.html against this demo's
+composed combination (with the register as it was before the port),
+pixel-identical in drawn, loading, warning, destructive, mark past the end
+and share past the end in all sixteen. Since the demo loads the register,
+these sixteen themes now draw the ported meter under every demo option; the
+demo's own rules still win wherever they set a property. Open in round 4:
+cyberpunk, high-contrast, shade-light, shade-dark, retro, grotesk.
+
+## Round 4: only what is open
+
+Kenny, 2026-10-05 20:03: 16 themes approved in full, 6 sent back with the
+ticked aspects kept, and the rule that a loading picture always moves, in
+every theme. Dark joined afterwards: its approved loading (2) stood still,
+so its loading is redrawn too and its other picks kept. Round 4 redraws only
+the open aspects, three new options each, written as options 1 to 3 of that
+aspect (the rejected CSS is gone, with its keyframes `cm-cy-strike`,
+`cm-sh-hatch` and `cm-rt-scroll`). Everything kept is the group's `default`
+in the review kit (`PICKED` in `demo.js`: the 15 decided themes' picks and
+the kept aspects of the seven), so the dialog ticks it and Kenny ticks only
+what is open; the page's preview and its outlined options follow the same
+defaults. `data-review-round` is `2026-10-05-r4`: the kit reopens the rejected
+pairs by itself, and `reopen` names the seven (dark is the one approved pair
+it reopens); the other 15 stay closed.
+
+| Theme         | Kept (shape / loading / arrival / tone / mark) | New option 1                   | New option 2                 | New option 3           |
+| ------------- | ---------------------------------------------- | ------------------------------ | ---------------------------- | ---------------------- |
+| dark          | 1 / - / 2 / 3 / 3                              | loading: The milling pass      | The oxide film runs          | The spectral scan      |
+| cyberpunk     | 2 / - / - / 3 / 3                              | loading: The scanline          | The packet stream            | Signal noise           |
+|               |                                                | arrival: Data burst            | Glitch slip                  | Neon strike            |
+| high-contrast | 2 / - / 1 / 1 / 3                              | loading: The stepping block    | Counting dots                | Marching chevrons      |
+| shade-light   | 1 / - / 1 / 1 / 2                              | loading: Cross-hatching drifts | The crease passes            | Pencil dashes run      |
+| shade-dark    | 1 / - / 1 / 1 / 2                              | loading: Silver cross-hatching | The glint passes             | Silver stitches run    |
+| retro         | 1 / - / 1 / 2 / 2                              | loading: The marquee           | The modem handshake          | The rubber band        |
+| grotesk       | - / 2 / 3 / 3 / 2                              | shape: The rule and its cursor | The poster bar and its slash | The twelve-column grid |
+
+Every new loading picture loops (high-contrast and dark too: loading is
+transient) in hard steps or a moving edge, never a fade, and none grows from
+the start, so none reads as a share; under reduced motion each shows a still
+frame. Cyberpunk's arrivals use `mask-size`, `translate` with cyan and red
+`drop-shadow` ghosts, and stepped `brightness`, each with its `-o|-w|-d`
+keyframes so a re-inking tone still replays them. Grotesk's shapes: a steel
+rule (ticks every tenth and fiftieth, a red band under them, a black cursor
+triangle, a red + past the end), a poster bar (2px black outline, red share,
+a black oblique slash as the mark, a bold ! past the end) and the twelve-column
+grid (hairline guides between two rules, a black rule with an open grid node,
+the guides running on in red past the end).
+
+### Measured, round 4
+
+Firefox (Playwright's, its own `http.server` on 127.0.0.1:8746, under `flock
+/tmp/kp-themes-shot.lock`), 2026-10-05, viewport 1400 × 1000 at 2×, one run of
+4 min 10 s (192 s in the script):
+
+- **Console:** 0 errors and page errors on all 14 pages (the seven themes × full and reduced motion) through
+  all 9 states (3 states × 3 tones), 0 on the 15 decided themes' pages and 0 in the dialog run.
+- **Heights:** every meter row and sentence of the section (preview and the 15 aspect meters' rows), the row's
+  and its meter's offset height in all 9 states: one height each, 0 rows with more than one, in all 14 pages.
+- **Loading moves:** in Loading, each of the three options in the loading row (disk meter, `::after`) has 1
+  running animation with infinite iterations at full motion in all seven themes (21 of 21 new ones; grotesk's
+  three too), and 0 under reduced motion (21 of 21).
+- **Cyberpunk's arrivals:** right after Drawn, each arrival option's share runs its own keyframes
+  (`cm-cy4-burst-o`, `cm-cy4-slip-o`, `cm-cy4-strike-o`); 0 under reduced motion.
+- **The 15 decided themes:** the preview shows each theme's picked loading, and in Loading its picture runs 1
+  infinite animation in all 15. Before this round dark's picked loading 2 ran none (still); that is why dark
+  is in round 4.
+- **The dialog**, with a round-3 store (15 approved, dark approved, 6 not approved, `__round` r3) and the page
+  reloaded: "15 of 22 steps judged", still open exactly dark, cyberpunk, high-contrast, shade-light,
+  shade-dark, retro and grotesk; in each of the seven steps the kept aspects are ticked and the open one
+  is not (dark shape 1, arrival 2, tone 3, mark 3; cyberpunk shape 2, tone 3, mark 3; high-contrast 2/1/1/3;
+  shade-light and shade-dark 1/1/1/2; retro 1/1/2/2; grotesk loading 2, arrival 3, tone 3, mark 2).
+- **Grotesk mark contrast**, round 3's method (mark pixels against the same pixels with the mark hidden, the
+  mark's best tenth), limited to the meter's own box; fill = the 130 % meter, track = the 62 % meter, mark at
+  80 %. All 18 values at or above 3:1; the lowest is 16.25.
+
+| Grotesk shape |  Fill | Fill, warning | Fill, destructive | Track |
+| ------------- | ----: | ------------: | ----------------: | ----: |
+| 1             | 18.73 |         18.73 |             18.73 | 18.73 |
+| 2             | 16.25 |         18.73 |             16.25 | 18.73 |
+| 3             | 17.05 |         18.73 |             17.05 | 18.73 |
+
+`node gates/check-catalogue.mjs` and `node gates/check-demo-variants.mjs` pass.

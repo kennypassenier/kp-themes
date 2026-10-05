@@ -209,16 +209,16 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Machined',
-                text: 'The empty channel’s engraved scale, still.',
+                name: 'The milling pass',
+                text: 'A bright cutter edge with a short trail of oxide colour traverses the empty channel and starts again.',
             },
             {
-                name: 'Milled in passes',
-                text: 'Engraved cross-hatching in the channel, still.',
+                name: 'The oxide film runs',
+                text: 'Thin bands of the film’s colours, the way heat tints a polished part, slide along the whole channel.',
             },
             {
-                name: 'Pressed in the die',
-                text: 'A row of centre-punch dots, still.',
+                name: 'The spectral scan',
+                text: 'One thin emission line steps across the slit, reading it line by line, and starts again.',
             },
         ],
         arrival: [
@@ -281,30 +281,30 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Ignition',
-                text: 'The tube tries to strike, flickers twice, then dark.',
+                name: 'The scanline',
+                text: 'A cyan beam with a yellow afterglow runs across a track of faint scanlines, again and again.',
             },
             {
-                name: 'Data burst',
-                text: 'Yellow hazard stripes run along the sleeve.',
+                name: 'The packet stream',
+                text: 'Packets of cyan and yellow of every length run along a thin data line through the middle, one packet at a time.',
             },
             {
-                name: 'Packet sync',
-                text: 'A cyan data packet hops along the tube.',
+                name: 'Signal noise',
+                text: 'A corrupt line on the empty track: red, cyan and yellow slivers jump to a new place every beat.',
             },
         ],
         arrival: [
             {
-                name: 'Ignition',
-                text: 'The share is drawn in from the left in 6 hard steps.',
-            },
-            {
                 name: 'Data burst',
-                text: 'The share is cut in from the left with a slanted edge slowing as it lands.',
+                text: 'The share is written in eight packets, white-hot as they land, cooling to its neon in the same eight steps.',
             },
             {
-                name: 'Packet sync',
-                text: 'The share stretches out from the start in 8 hard steps.',
+                name: 'Glitch slip',
+                text: 'The share lands torn, split into cyan and red ghosts and thrown left and right, and snaps true in three jumps.',
+            },
+            {
+                name: 'Neon strike',
+                text: 'The share is there at once, dark, and the tube strikes: two failed flickers, then it holds.',
             },
         ],
         tone: [
@@ -641,16 +641,16 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'At once',
-                text: 'A dashed ink line through the empty frame, still.',
+                name: 'The stepping block',
+                text: 'A square of ink jumps across the frame in ten hard steps and starts again; it never touches the start, so it cannot be read as a share.',
             },
             {
-                name: 'In two steps',
-                text: 'A row of ink dots, still.',
+                name: 'Counting dots',
+                text: 'Three ink rings in the middle, filled one after another, the way a phone counts while it waits.',
             },
             {
-                name: 'In quarters',
-                text: 'An ink dash line, still.',
+                name: 'Marching chevrons',
+                text: 'A row of ink › marches to the right in hard steps, the sign of something on its way.',
             },
         ],
         arrival: [
@@ -1145,16 +1145,16 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Hatched in',
-                text: 'The empty gauge is hatched in once.',
+                name: 'Cross-hatching drifts',
+                text: 'Pencil hatching in two directions slides across the empty gauge, the two layers against each other, so the paper shimmers while it waits.',
             },
             {
-                name: 'Pressed paper',
-                text: 'A pencil line is drawn through the gauge once.',
+                name: 'The crease passes',
+                text: 'A fold in the paper, a pencil shade on one side and a lit edge on the other, crosses the gauge and comes round again.',
             },
             {
-                name: 'Passing shade',
-                text: 'A soft band of shade moves along the gauge and back.',
+                name: 'Pencil dashes run',
+                text: 'A dashed pencil line along the middle of the gauge runs on and on.',
             },
         ],
         arrival: [
@@ -1217,16 +1217,16 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Silver drawn',
-                text: 'The empty gauge is hatched in once.',
+                name: 'Silver cross-hatching drifts',
+                text: 'Silver hatching in two directions slides over the dark ground, the two layers against each other, so the silver glints while it waits.',
             },
             {
-                name: 'Lifted',
-                text: 'A silver line is drawn through the gauge once.',
+                name: 'The glint passes',
+                text: 'A pale metal glint with its shade crosses the well and comes round again.',
             },
             {
-                name: 'Lamp passes',
-                text: 'A pale band of lamplight moves along the gauge and back.',
+                name: 'Silver stitches run',
+                text: 'A running stitch of silver along the middle of the well runs on and on.',
             },
         ],
         arrival: [
@@ -1289,16 +1289,16 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Task Manager',
-                text: 'The history grid scrolls one step at a time.',
+                name: 'The marquee',
+                text: 'A block of three lit segments slides through the panel and comes round again, the way a busy progress bar did.',
             },
             {
-                name: 'Winamp',
-                text: 'A chase of lit LEDs runs along the panel.',
+                name: 'The modem handshake',
+                text: 'A green and a yellow lamp run in from both ends, meet in the middle and part again.',
             },
             {
-                name: 'Disk light',
-                text: 'One red drive lamp jumps along the panel and back.',
+                name: 'The rubber band',
+                text: 'A dotted selection line along the top and the bottom of the panel, marching in opposite directions.',
             },
         ],
         arrival: [
@@ -1347,16 +1347,16 @@ const IDEAS = {
     grotesk: {
         shape: [
             {
-                name: 'The transit line',
-                text: 'New, unlike the red block and the zebra scale: the route diagram of Swiss transit signage. The line served so far runs in red with a station tick every sixth, the rest in grey; the mark is the interchange, a white capsule in a black outline across the line; past the end the line runs on to a black terminus bar.',
+                name: 'The rule and its cursor',
+                text: 'A steel rule: a white strip in a black outline, a long tick every tenth and a short one every fiftieth hanging from its top edge; the share is a red band along its lower half, under the ticks; the mark is a black cursor triangle pointing up from below, with a hairline across the rule; past the end a bold red +.',
             },
             {
-                name: 'The red block on the baseline',
-                text: 'A black baseline; the share is a flat red block standing on it. The mark is a black rule rising from the baseline, flush. Past the end an oversized black →.',
+                name: 'The poster bar and its slash',
+                text: 'A poster’s heavy bar: a thick black outline on white with the share set solid red inside it; the mark is a black oblique slash cut through the bar, standing out above and below; past the end a bold black !.',
             },
             {
-                name: 'The zebra scale',
-                text: 'A frame with a black-and-white zebra scale of twelve columns along its foot; the share is solid black. The mark is a red rule with a small red square flag. Past the end a red square set lower, off the line.',
+                name: 'The twelve-column grid',
+                text: 'The Swiss layout grid as a meter: twelve columns marked by hairline guides between a top and a bottom rule, the share set flush in red over them; the mark is a black rule with an open grid node on top; past the end the guides run on, three more columns in red hairline.',
             },
         ],
         loading: [
@@ -1634,8 +1634,43 @@ const IDEAS = {
     },
 };
 
-/** Themes whose shape was approved in round 1; forest, retro and grotesk were not. */
-const APPROVED = new Set(Object.keys(IDEAS).filter((t) => !['forest', 'retro', 'grotesk'].includes(t)));
+/**
+ * Round 3's verdicts (Kenny, 2026-10-05 20:03), shape / loading / arrival /
+ * tone / mark: the 16 themes approved in full, and for the six he sent back
+ * the aspects he kept ('' = open again in round 4; dark's loading too:
+ * its three were still, and a loading picture always moves now). Every value here is
+ * ticked for him in the dialog as the group's `default`; he only ticks what
+ * is open.
+ * @type {Record<string, string[]>}
+ */
+const PICKED = {
+    formal: ['1', '2', '1', '1', '2'],
+    light: ['1', '1', '2', '2', '2'],
+    dark: ['1', '', '2', '3', '3'],
+    synthwave: ['1', '2', '2', '2', '1'],
+    pastel: ['1', '1', '3', '1', '2'],
+    terminal: ['1', '3', '3', '2', '2'],
+    forest: ['1', '3', '1', '3', '3'],
+    sepia: ['1', '2', '2', '2', '2'],
+    blueprint: ['3', '1', '1', '1', '3'],
+    solstice: ['3', '2', '2', '2', '2'],
+    brutalism: ['1', '1', '1', '3', '3'],
+    deco: ['1', '3', '2', '3', '3'],
+    phantom: ['1', '1', '1', '1', '2'],
+    lapis: ['1', '2', '2', '2', '2'],
+    nostromo: ['1', '1', '3', '2', '3'],
+    titanium: ['1', '1', '3', '3', '3'],
+    cyberpunk: ['2', '', '', '3', '3'],
+    'high-contrast': ['2', '', '1', '1', '3'],
+    'shade-light': ['1', '', '1', '1', '2'],
+    'shade-dark': ['1', '', '1', '1', '2'],
+    retro: ['1', '', '1', '2', '2'],
+    grotesk: ['', '2', '3', '3', '2'],
+};
+/** The aspect's pick from round 3, or '' when it is open in round 4. */
+const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
+/** Round 4 redraws the open aspects of these six themes. */
+const REDRAWN = Object.keys(PICKED).filter((theme) => PICKED[theme].includes(''));
 
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="meter"]'));
@@ -1649,7 +1684,8 @@ const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
         Object.entries(IDEAS).map(([theme, idea]) => [
             theme,
             `${idea[aspect][at].name}. ${idea[aspect][at].text}` +
-                (aspect === 'shape' && at === 0 ? (APPROVED.has(theme) ? ' (Approved in round 1.)' : ' (New in round 2.)') : ''),
+                (REDRAWN.includes(theme) && !keptOf(theme, aspect) ? ' (New in round 4.)' : '') +
+                (keptOf(theme, aspect) === String(at + 1) ? ' (Kept in round 3.)' : ''),
         ]),
     );
 section.setAttribute(
@@ -1659,21 +1695,25 @@ section.setAttribute(
             id,
             label,
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
-            // The shape Kenny approved in round 1 (and formal's shape 1, his
-            // 18:45 verdict) is ticked for him; he only ticks what is open.
-            ...(id === 'shape' ? { default: Object.fromEntries([...APPROVED, 'formal'].map((theme) => [theme, '1'])) } : {}),
+            // What Kenny kept or approved in round 3 is ticked for him.
+            default: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((theme) => keptOf(theme, id))
+                    .map((theme) => [theme, keptOf(theme, id)]),
+            ),
         })),
     ),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-for (const [theme, idea] of Object.entries(IDEAS)) {
+for (const theme of Object.keys(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
-    p.textContent =
-        `Five picks, each on its own. Shape 1 is ${idea.shape[0].name.replace(/^The /, 'the ')}` +
-        (APPROVED.has(theme) ? ', approved in round 1 (keep it unless another one is better). ' : ', new in round 2. ') +
-        'Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
-        'Press Drawn, Loading, Mark past the end and the tones at full speed and at ¼; the words around the meters never move.';
+    const open = ASPECTS.filter(({ id }) => !keptOf(theme, id)).map(({ label }) => label.toLowerCase());
+    p.textContent = open.length
+        ? `Round 4: only ${open.join(' and ')} ${open.length > 1 ? 'are' : 'is'} new, three options${open.length > 1 ? ' each' : ''}; ` +
+          'what you kept in round 3 is ticked already. Each row changes one thing only; the preview at the top shows your picks. ' +
+          'Press Loading, Drawn and the tones at full speed and at ¼; the words around the meters never move.'
+        : 'Approved in round 3: your picks are ticked.';
     look.append(p);
 }
 
@@ -1725,11 +1765,12 @@ for (const { id, label, about } of ASPECTS) {
 
 /* ------------------------------------------------------- the picks */
 
-/** What is ticked in the dialog, per theme; an aspect not ticked yet shows its option 1. */
+/** What is ticked in the dialog, per theme; an aspect not ticked yet shows its round-3 pick, or its option 1 when it is open. */
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const ticked = {};
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+const picks = () =>
+    /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? (keptOf(theme(), id) || '1')])));
 
 /** Writes the five aspects on every wrapper: the preview takes the picks, each row's cell its own option in its own aspect. */
 function compose() {
@@ -1741,7 +1782,10 @@ function compose() {
         const option = cell.getAttribute('data-cm-option') ?? '1';
         const meters = cell.querySelector('[data-cm]');
         for (const { id } of ASPECTS) meters?.setAttribute(`data-cm-${id}`, id === vary ? option : now[id]);
-        cell.classList.toggle('cm-picked', ticked[theme()]?.[/** @type {Aspect} */ (vary)] === option);
+        cell.classList.toggle(
+            'cm-picked',
+            (ticked[theme()]?.[/** @type {Aspect} */ (vary)] ?? keptOf(theme(), /** @type {Aspect} */ (vary))) === option,
+        );
     }
     const words = section.querySelector('[data-cm-picks]');
     const idea = IDEAS[theme()];
