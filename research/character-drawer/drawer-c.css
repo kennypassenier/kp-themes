@@ -1,0 +1,1451 @@
+/* research/character-drawer, group c: solstice, brutalism, deco, phantom,
+   shade-light. Five aspects per theme (shape, openclose, highlight, card,
+   next), each with three options, built on the contract in drawer.css
+   (formal/titanium is the model). Tokens only, `kp.signature`, one rule
+   names one aspect. Approximations noted inline where a described texture
+   (rebar ticks, hazard stripes, sunburst rays, chevron brackets) is the
+   closest CSS-only reading rather than a literal redraw. */
+
+@layer kp.signature {
+    /* ══════════════════════════════════════════════ solstice: the sun ═ */
+
+    /* shape: the amber panel / the sundial tray / the horizon slab */
+    [data-theme='solstice'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.16), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 6rem;
+        box-shadow: -1.5rem 0.5rem 2rem -1rem hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background: color-mix(in oklab, var(--primary) 22%, var(--card));
+        border-block-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        background-image: repeating-conic-gradient(
+            from 0deg at 50% 160%,
+            hsl(from var(--border-strong) h s l / 0.55) 0deg 1deg,
+            transparent 1deg 9deg
+        );
+        background-repeat: no-repeat;
+        background-color: var(--muted);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: -2rem 0 3rem -1.5rem hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='solstice'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background: color-mix(in oklab, var(--primary) 32%, var(--card));
+        border-block-end: none;
+    }
+
+    [data-theme='solstice'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.22), transparent);
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: 100% 3.5rem;
+    }
+
+    [data-theme='solstice'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it rises like the sun */
+    [data-theme='solstice'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='solstice'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 55%;
+        filter: brightness(0.7);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-1 320ms ease-out both;
+        }
+
+        [data-theme='solstice'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-1 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-solstice-1 {
+        0% {
+            translate: 0 55%;
+            filter: brightness(0.7);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* openclose 2: it slides over the horizon */
+    [data-theme='solstice'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+        background-image: linear-gradient(100deg, transparent 35%, hsl(from var(--primary) h s l / 0.35) 50%, transparent 65%);
+        background-repeat: no-repeat;
+        background-size: 220% 100%;
+        background-position: 40% 0;
+    }
+
+    [data-theme='solstice'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        background-position: -60% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-2 300ms ease-out both;
+        }
+
+        [data-theme='solstice'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-solstice-2 {
+        0% {
+            translate: 100% 0;
+            background-position: -60% 0;
+        }
+
+        100% {
+            translate: 0 0;
+            background-position: 40% 0;
+        }
+    }
+
+    /* openclose 3: it swings on warm light */
+    [data-theme='solstice'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+        box-shadow: -1rem 0.5rem 1.5rem -0.75rem hsl(from var(--primary) h s l / 0.35);
+    }
+
+    [data-theme='solstice'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 78deg;
+        box-shadow: 1rem 0.5rem 1.5rem -0.75rem hsl(from var(--primary) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-3 300ms ease-out both;
+        }
+
+        [data-theme='solstice'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-solstice-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-solstice-3 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 78deg;
+            box-shadow: 1rem 0.5rem 1.5rem -0.75rem hsl(from var(--primary) h s l / 0.35);
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+            box-shadow: -1rem 0.5rem 1.5rem -0.75rem hsl(from var(--primary) h s l / 0.35);
+        }
+    }
+
+    /* highlight: the sun-ring halo / the shadow arc / the amber bracket */
+    [data-theme='solstice'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 3px solid var(--primary);
+        outline-offset: 6px;
+        box-shadow:
+            0 0 2rem 0.25rem hsl(from var(--primary) h s l / 0.35),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+        box-shadow:
+            0.75rem 0.5rem 1.5rem -0.5rem hsl(from var(--foreground) h s l / 0.4),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.45);
+    }
+
+    [data-theme='solstice'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 3px double var(--primary);
+        outline-offset: 5px;
+        border-radius: 0;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.5);
+    }
+
+    /* card: the sundial tag / the horizon card / the amber plaque */
+    [data-theme='solstice'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='solstice'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    [data-theme='solstice'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='solstice'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        font-weight: 700;
+    }
+
+    [data-theme='solstice'] [data-dt-card='2'] .dt-tour .kp-tour__foot {
+        background-image: linear-gradient(to right, hsl(from var(--primary) h s l / 0.25), transparent);
+        background-repeat: no-repeat;
+        background-position: bottom;
+        background-size: 100% 0.35rem;
+    }
+
+    [data-theme='solstice'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='solstice'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.5rem 1rem -0.5rem hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='solstice'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        border-block-start: 3px solid var(--primary);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* next: the arc advances / the halo swings / the plaque relights */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-solstice-1 340ms ease-in-out;
+        }
+
+        [data-theme='solstice'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-solstice-2 380ms ease-in-out;
+        }
+
+        [data-theme='solstice'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-solstice-3 360ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-solstice-1 {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+
+        50% {
+            rotate: -5deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-solstice-2 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        35% {
+            filter: brightness(0.82);
+        }
+
+        65% {
+            filter: brightness(1.2);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-solstice-3 {
+        0%,
+        100% {
+            filter: brightness(1);
+            translate: 0 0;
+        }
+
+        50% {
+            filter: brightness(0.8);
+            translate: 0 -0.2rem;
+        }
+    }
+
+    /* ═══════════════════════════════════════ brutalism: printed matter ═ */
+
+    /* shape: the concrete panel / the shutter tray / the slab of poured stock */
+    [data-theme='brutalism'] [data-dt-shape='1'] .dt-drawer {
+        border: var(--kp-line, 3px) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background: var(--foreground);
+        color: var(--background);
+        border-block-end: var(--kp-line, 3px) solid var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: var(--kp-line, 3px) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='2'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        background-image: repeating-linear-gradient(to right, hsl(from var(--border-strong) h s l / 0.4) 0 4px, transparent 4px 12px);
+        background-repeat: no-repeat;
+        background-color: var(--muted);
+        color: var(--muted-foreground);
+        border-block-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        background: var(--foreground);
+        color: var(--background);
+        border-block-start: 2px solid var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='3'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image: radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.4) 1px, transparent 1.5px);
+        background-repeat: repeat;
+        background-size: 14px 14px;
+        background-color: var(--card);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: var(--kp-line, 3px) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: none;
+    }
+
+    /* openclose 1: it is forced open on its rail (jerky, stepped) */
+    [data-theme='brutalism'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-1 320ms linear both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-1 280ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-brutalism-1 {
+        0% {
+            translate: 100% 0;
+            box-shadow: none;
+        }
+
+        30% {
+            translate: 68% 0;
+            box-shadow: none;
+        }
+
+        55% {
+            translate: 68% 0;
+            box-shadow: none;
+        }
+
+        80% {
+            translate: 6% 0;
+            box-shadow: var(--kp-shadow);
+        }
+
+        100% {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow);
+        }
+    }
+
+    /* openclose 2: it drops like a shutter */
+    [data-theme='brutalism'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 -110%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-2 220ms linear both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-2 220ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-brutalism-2 {
+        0% {
+            translate: 0 -110%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is cranked out (discrete ratchet steps) */
+    [data-theme='brutalism'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-3 300ms steps(4, jump-end) both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-brutalism-3 280ms steps(4, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-brutalism-3 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the rebar ring / the stencil bracket / the hazard frame
+       (rebar's own tick marks and the hazard stripe pattern are read here
+       as a thick solid outline and a thick destructive-coloured outline —
+       the closest CSS-only version, not the literal texture). */
+    [data-theme='brutalism'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: var(--kp-line, 3px) solid var(--border-strong);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--muted) h s l / 0.85);
+    }
+
+    [data-theme='brutalism'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 8px;
+        box-shadow:
+            var(--kp-pixel),
+            0 0 0 100vmax hsl(from var(--muted) h s l / 0.85);
+    }
+
+    [data-theme='brutalism'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 4px solid var(--destructive);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--muted) h s l / 0.85);
+    }
+
+    /* card: the stencilled tag / the hazard card / the poured plaque */
+    [data-theme='brutalism'] [data-dt-card='1'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+    }
+
+    [data-theme='brutalism'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-block-end: 2px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    [data-theme='brutalism'] [data-dt-card='2'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='brutalism'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        border-block-start: 4px solid var(--destructive);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+        font-weight: 800;
+    }
+
+    [data-theme='brutalism'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+    }
+
+    [data-theme='brutalism'] [data-dt-card='3'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.35) 1px, transparent 1.5px);
+        background-repeat: repeat;
+        background-size: 12px 12px;
+    }
+
+    [data-theme='brutalism'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: var(--kp-line, 3px) solid var(--border-strong);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* next: the bracket jumps a notch / the shutter re-drops / the frame re-clamps */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-brutalism-1 260ms steps(2, jump-end);
+        }
+
+        [data-theme='brutalism'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-brutalism-2 280ms linear;
+        }
+
+        [data-theme='brutalism'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-brutalism-3 300ms linear;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-brutalism-1 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.04;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-brutalism-2 {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 0.6rem;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-brutalism-3 {
+        0%,
+        100% {
+            box-shadow: var(--kp-shadow);
+        }
+
+        50% {
+            box-shadow: var(--kp-shadow-up);
+        }
+    }
+
+    /* ═══════════════════════════════════════════════ deco: Paris 1925 ═ */
+
+    /* shape: the gilt panel / the fan-motif tray / the lacquered slab */
+    [data-theme='deco'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 0 0 0 3px hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='deco'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background: color-mix(in oklab, var(--primary) 15%, var(--card));
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        background-image: var(
+            --kp-sig-deco-rays,
+            repeating-conic-gradient(from -90deg at 100% 100%, hsl(from var(--primary) h s l / 0.4) 0 4deg, transparent 4deg 15deg)
+        );
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: 6rem 6rem;
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='deco'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        background-image: repeating-linear-gradient(115deg, hsl(from var(--primary) h s l / 0.5) 0 2px, transparent 2px 10px);
+        background-repeat: no-repeat;
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--primary);
+    }
+
+    [data-theme='deco'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 4px 0 0 0 var(--primary);
+    }
+
+    [data-theme='deco'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='deco'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: none;
+    }
+
+    /* openclose 1: it glides open on a gilt rail */
+    [data-theme='deco'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='deco'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-deco-1 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        [data-theme='deco'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-deco-1 260ms cubic-bezier(0.7, 0, 0.84, 0) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-deco-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unfolds like a fan */
+    [data-theme='deco'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='deco'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.08 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-deco-2 300ms ease-out both;
+        }
+
+        [data-theme='deco'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-deco-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-deco-2 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.08 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it rises behind a sunburst (a brightness flash stands
+       for the sunburst's own flash) */
+    [data-theme='deco'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='deco'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        filter: brightness(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-deco-3 340ms ease-out both;
+        }
+
+        [data-theme='deco'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-deco-3 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-deco-3 {
+        0% {
+            translate: 100% 0;
+            filter: brightness(1);
+        }
+
+        18% {
+            translate: 100% 0;
+            filter: brightness(1.6);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* highlight: the sunburst ring / the chevron bracket / the gilt circle
+       (the sunburst's rays and the chevron's stepped corners are read as
+       a gold glow ring and a thick square-cornered outline, the closest
+       CSS-only version). */
+    [data-theme='deco'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 6px;
+        box-shadow:
+            0 0 1.5rem 0.25rem hsl(from var(--primary) h s l / 0.4),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.55);
+    }
+
+    [data-theme='deco'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 3px solid var(--primary);
+        outline-offset: 4px;
+        border-radius: 0;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='deco'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 1px solid var(--primary);
+        outline-offset: 6px;
+        border-radius: 50%;
+        box-shadow:
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.55);
+    }
+
+    /* card: the marquee tag / the lacquered card / the fan-fold ticket */
+    [data-theme='deco'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='deco'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        text-align: center;
+    }
+
+    [data-theme='deco'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        border-block-start: 3px solid var(--primary);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='deco'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: repeating-linear-gradient(115deg, hsl(from var(--primary) h s l / 0.4) 0 2px, transparent 2px 8px);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 0.4rem;
+    }
+
+    [data-theme='deco'] [data-dt-card='3'] .dt-tour .kp-tour__count {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+    }
+
+    /* next: the sunburst re-rays / the fan refolds / the chevron resets */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-deco-1 360ms ease-in-out;
+        }
+
+        [data-theme='deco'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-deco-2 320ms ease-in-out;
+        }
+
+        [data-theme='deco'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-deco-3 360ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-deco-1 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        40% {
+            filter: brightness(0.8);
+        }
+
+        70% {
+            filter: brightness(1.5);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-deco-2 {
+        0%,
+        100% {
+            scale: 1 1;
+        }
+
+        50% {
+            scale: 0.92 1;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-deco-3 {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        25% {
+            translate: -0.4rem 0;
+        }
+
+        75% {
+            translate: 0.4rem 0;
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════ phantom: fog ═ */
+
+    /* shape: the spectral panel / the fog-bank tray / the veil slab */
+    [data-theme='phantom'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow:
+            inset 0 0 2rem hsl(from var(--background) h s l / 0.5),
+            0 0 1.5rem hsl(from var(--background) h s l / 0.35);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        box-shadow: inset 0 0 1.5rem hsl(from var(--background) h s l / 0.4);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: none;
+    }
+
+    [data-theme='phantom'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 0 2.5rem hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 2rem 1.4rem 2rem 1.4rem;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='phantom'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: none;
+    }
+
+    [data-theme='phantom'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        box-shadow: inset 0 -2rem 1.5rem -1.5rem hsl(from var(--card) h s l / 0.9);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it seeps in through the edge */
+    [data-theme='phantom'] [data-dt-openclose='1'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.02 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-1 340ms ease-in-out both;
+        }
+
+        [data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-1 320ms ease-in-out both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-phantom-1 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.02 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 2: it rises like mist (a side-to-side waver, not a straight line) */
+    [data-theme='phantom'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='phantom'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 0.3rem 60%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-2 360ms ease-in-out both;
+        }
+
+        [data-theme='phantom'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-2 340ms ease-in-out both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-phantom-2 {
+        0% {
+            translate: 0.3rem 60%;
+        }
+
+        40% {
+            translate: -0.2rem 30%;
+        }
+
+        70% {
+            translate: 0.15rem 10%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is drawn by an unseen hand (a brief uneven pause) */
+    [data-theme='phantom'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='phantom'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-3 340ms ease-in-out both;
+        }
+
+        [data-theme='phantom'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-phantom-3 320ms ease-in-out both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-phantom-3 {
+        0% {
+            translate: 100% 0;
+        }
+
+        45% {
+            translate: 35% 0;
+        }
+
+        55% {
+            translate: 35% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the pale halo / the vapour ring / the faint bracket */
+    [data-theme='phantom'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 1px solid var(--border-strong);
+        outline-offset: 8px;
+        box-shadow:
+            0 0 2.5rem 0.5rem hsl(from var(--card) h s l / 0.5),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.25);
+    }
+
+    [data-theme='phantom'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 6px;
+        border-radius: 55% 45% 60% 40% / 45% 55% 40% 60%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--muted) h s l / 0.5);
+    }
+
+    [data-theme='phantom'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 1px dashed var(--border-strong);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.18);
+    }
+
+    /* card: the apparition tag / the veiled card / the faint plaque
+       (the faintest-hint border still keeps a `--border-strong` colour so
+       it reaches 3:1 — a thin width stands in for "barely there"). */
+    [data-theme='phantom'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0 1.5rem hsl(from var(--foreground) h s l / 0.15);
+    }
+
+    [data-theme='phantom'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 500;
+    }
+
+    [data-theme='phantom'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 55% 45% 55% 45% / 10% 10% 10% 10%;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='phantom'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        font-weight: 500;
+    }
+
+    [data-theme='phantom'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='phantom'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        padding-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* next: the halo drifts on / the vapour reshapes / the veil resettles */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-phantom-1 380ms ease-in-out;
+        }
+
+        [data-theme='phantom'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-phantom-2 360ms ease-in-out;
+        }
+
+        [data-theme='phantom'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-phantom-3 340ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-phantom-1 {
+        0% {
+            translate: -0.3rem 0;
+        }
+
+        50% {
+            translate: 0.2rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-phantom-2 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.015;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-phantom-3 {
+        0% {
+            translate: -0.25rem 0;
+        }
+
+        60% {
+            translate: 0.15rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ═══════════════════════════════════════════ shade-light: duotone ═ */
+
+    /* shape: the washed panel / the gradient tray / the duotone slab */
+    [data-theme='shade-light'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sl-radius, var(--radius, 0.5rem));
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, transparent, hsl(from var(--background) h s l / 0.5));
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        background-image: linear-gradient(to bottom, transparent, hsl(from var(--background) h s l / 0.6));
+        background-repeat: no-repeat;
+        border-block-start: none;
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background-image: linear-gradient(135deg, hsl(from var(--background) h s l / 0.7), transparent 60%);
+        background-repeat: no-repeat;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        background: color-mix(in oklab, var(--popover) 85%, var(--foreground) 6%);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        background: color-mix(in oklab, var(--popover) 85%, var(--foreground) 6%);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-light'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it slides up through the wash */
+    [data-theme='shade-light'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='shade-light'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        filter: brightness(0.92);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-1 280ms ease-out both;
+        }
+
+        [data-theme='shade-light'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-1 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-light-1 {
+        0% {
+            translate: 100% 0;
+            filter: brightness(0.92);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* openclose 2: it bleeds in from the edge (the wash and the slide finish together) */
+    [data-theme='shade-light'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+        clip-path: inset(0 0 0 0%);
+    }
+
+    [data-theme='shade-light'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 40% 0;
+        clip-path: inset(0 0 0 70%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-2 300ms ease-out both;
+        }
+
+        [data-theme='shade-light'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-light-2 {
+        0% {
+            translate: 40% 0;
+            clip-path: inset(0 0 0 70%);
+        }
+
+        100% {
+            translate: 0 0;
+            clip-path: inset(0 0 0 0%);
+        }
+    }
+
+    /* openclose 3: it tilts into the light */
+    [data-theme='shade-light'] [data-dt-openclose='3'] .dt-drawer {
+        rotate: 0deg;
+        translate: 0 0;
+    }
+
+    [data-theme='shade-light'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        rotate: 4deg;
+        translate: 60% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-3 300ms ease-out both;
+        }
+
+        [data-theme='shade-light'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-light-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-light-3 {
+        0% {
+            rotate: 4deg;
+            translate: 60% 0;
+        }
+
+        100% {
+            rotate: 0deg;
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the gradient ring / the wash halo / the duotone bracket */
+    [data-theme='shade-light'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 5px;
+        box-shadow:
+            0 0 1.5rem 0.25rem hsl(from var(--background) h s l / 0.6),
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-light'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 1px solid var(--border-strong);
+        outline-offset: 8px;
+        box-shadow:
+            0 0 2rem 0.5rem hsl(from var(--background) h s l / 0.7),
+            0 0 0 100vmax hsl(from var(--muted) h s l / 0.5);
+    }
+
+    [data-theme='shade-light'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 3px solid var(--border-strong);
+        outline-offset: 4px;
+        border-radius: 0;
+        box-shadow: 0 0 0 100vmax hsl(from var(--muted) h s l / 0.55);
+    }
+
+    /* card: the wash tag / the gradient card / the duotone chip */
+    [data-theme='shade-light'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sl-radius, var(--radius, 0.5rem));
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, transparent, hsl(from var(--background) h s l / 0.5));
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='shade-light'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 600;
+    }
+
+    [data-theme='shade-light'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        background-image: linear-gradient(135deg, hsl(from var(--background) h s l / 0.6), transparent 55%);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='shade-light'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-light'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        margin: calc(-1 * var(--kp-space-sm, 0.5rem)) calc(-1 * var(--kp-space-sm, 0.5rem)) 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* next: the wash shifts a step / the gradient re-sweeps / the bracket redraws */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-light-1 340ms ease-in-out;
+        }
+
+        [data-theme='shade-light'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-light-2 300ms ease-out;
+        }
+
+        [data-theme='shade-light'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-light-3 320ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-light-1 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        45% {
+            filter: brightness(1.25);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-light-2 {
+        0% {
+            translate: -0.5rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-light-3 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 0.97;
+        }
+    }
+}

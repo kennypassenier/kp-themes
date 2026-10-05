@@ -218,32 +218,32 @@ objects only, never transitions):
   so the browser dropped the whole `animation` declaration and nothing
   played) — changed to `steps(2, jump-none)`.
 - Text >= 4.5:1 and separating edges >= 3:1, measured per theme. Fixes:
-  - formal tone 1's delta ink (`var(--card)` on `var(--border-strong)`,
-    3.42:1) → `var(--foreground)` (4.8:1); formal shape 2 had no
-    `--kf-frame` and fell back to the package's own weak `--border`
-    (1.3:1) → set explicitly to `var(--border-strong)`.
-  - titanium shape 1/2's frame (`var(--border-strong)` alone, 2.6–3.0:1
-    against the page background) → `color-mix(in oklab, var(--border-strong)
-    85%, var(--foreground) 15%)`.
-  - The shared fallback frame in `kpi.css` (`[data-kf] .kp-kpi`, used by
-    any option that does not set its own `--kf-frame`) was
-    `1px solid var(--border)`, which fails 3:1 in every theme tested
-    (1.2–2.2:1) → `1px solid color-mix(in oklab, var(--border-strong) 85%,
-    var(--foreground) 15%)`.
-  - kpi-a.css (light, dark, cyberpunk, synthwave, pastel): every shape's
-    `--kf-frame` mixed foreground into `var(--card)` (close to the page
-    background in lightness, so the mix barely moved away from 1.2–2.4:1)
-    → mixed into `var(--border-strong)` instead (now 4–7:1).
-  - shade-light shape 2 used `var(--border)` instead of
-    `var(--border-strong)` (1.3:1) → fixed.
-  - terminal shape 2's grid pattern (45% `--border-strong` on the 1px
-    lines) pulled the label/trend text contrast on the line pixels to
-    4.29:1 → lowered to 25%.
-  - shade-dark shape 2's warning-tinted corner wash (20% opacity) pulled
-    label/value/trend text to 4.2–4.4:1 → lowered to 10%.
-  - lapis tone 1's delta ink (`var(--secondary-foreground)`, 3.96:1) →
-    lightened with `color-mix(in oklab, var(--secondary-foreground) 85%,
-    white 15%)` (8.5:1).
+    - formal tone 1's delta ink (`var(--card)` on `var(--border-strong)`,
+      3.42:1) → `var(--foreground)` (4.8:1); formal shape 2 had no
+      `--kf-frame` and fell back to the package's own weak `--border`
+      (1.3:1) → set explicitly to `var(--border-strong)`.
+    - titanium shape 1/2's frame (`var(--border-strong)` alone, 2.6–3.0:1
+      against the page background) → `color-mix(in oklab, var(--border-strong)
+85%, var(--foreground) 15%)`.
+    - The shared fallback frame in `kpi.css` (`[data-kf] .kp-kpi`, used by
+      any option that does not set its own `--kf-frame`) was
+      `1px solid var(--border)`, which fails 3:1 in every theme tested
+      (1.2–2.2:1) → `1px solid color-mix(in oklab, var(--border-strong) 85%,
+var(--foreground) 15%)`.
+    - kpi-a.css (light, dark, cyberpunk, synthwave, pastel): every shape's
+      `--kf-frame` mixed foreground into `var(--card)` (close to the page
+      background in lightness, so the mix barely moved away from 1.2–2.4:1)
+      → mixed into `var(--border-strong)` instead (now 4–7:1).
+    - shade-light shape 2 used `var(--border)` instead of
+      `var(--border-strong)` (1.3:1) → fixed.
+    - terminal shape 2's grid pattern (45% `--border-strong` on the 1px
+      lines) pulled the label/trend text contrast on the line pixels to
+      4.29:1 → lowered to 25%.
+    - shade-dark shape 2's warning-tinted corner wash (20% opacity) pulled
+      label/value/trend text to 4.2–4.4:1 → lowered to 10%.
+    - lapis tone 1's delta ink (`var(--secondary-foreground)`, 3.96:1) →
+      lightened with `color-mix(in oklab, var(--secondary-foreground) 85%,
+white 15%)` (8.5:1).
 - Labels never wrapped or cut, in any theme.
 - One height per tile across ready/loading/tone states within every row,
   in every theme (the package's own skeleton swap is the one exception —
@@ -253,19 +253,19 @@ objects only, never transitions):
 
 ### Measurement table (failures before -> after the fix pass)
 
-| Theme(s)                                  | Before                                                  | After |
-| ------------------------------------------ | -------------------------------------------------------- | ----- |
-| formal                                    | 34 contrast failures (delta ink, shape-2 frame)          | 0 (3 package-finding instances remain, see below) |
-| titanium                                  | 48 contrast failures (shape 1/2 frame)                   | 0 (3 package-finding instances remain) |
-| light, dark, synthwave, pastel            | 48–51 contrast failures each (shape frame vs card)       | 0 (3 package-finding instances each) |
-| cyberpunk                                 | 146 contrast failures (frame + grid-pattern false reads) | 0 (3 package-finding instances; the grid-pattern reads were a sampler bug, fixed to match the hairline-pattern filter in the proven method) |
-| terminal                                  | 10 (grid-pattern text contrast + live option 3 dead)     | 0 (3 package-finding instances) |
-| shade-light                               | 6 (shape-2 weak frame)                                   | 0 (3 package-finding instances) |
-| shade-dark                                | 13 (warning-wash text contrast)                          | 0 (3 package-finding instances) |
-| lapis                                     | 5 (delta ink + frame)                                    | 2 (delta ink fixed in our own tone rule, 8.5:1; the remaining 2 are the package's own `good`/`bad` delta colours on the reference tile, see below) |
-| high-contrast                             | live option 3 dead (invalid `steps(1, jump-none)`)       | fixed |
-| forest, blueprint, solstice, brutalism, deco, phantom, retro, grotesk, nostromo, sepia | 3–6 (shared weak fallback frame, or none) | 0 (3 package-finding instances each) |
-| All 22 themes, all aspects                | n/a                                                      | loading: >= 1 running animation at full motion, 0 under reduced motion; live: same; 0 console errors; labels never wrap/cut; one height per row |
+| Theme(s)                                                                               | Before                                                   | After                                                                                                                                              |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| formal                                                                                 | 34 contrast failures (delta ink, shape-2 frame)          | 0 (3 package-finding instances remain, see below)                                                                                                  |
+| titanium                                                                               | 48 contrast failures (shape 1/2 frame)                   | 0 (3 package-finding instances remain)                                                                                                             |
+| light, dark, synthwave, pastel                                                         | 48–51 contrast failures each (shape frame vs card)       | 0 (3 package-finding instances each)                                                                                                               |
+| cyberpunk                                                                              | 146 contrast failures (frame + grid-pattern false reads) | 0 (3 package-finding instances; the grid-pattern reads were a sampler bug, fixed to match the hairline-pattern filter in the proven method)        |
+| terminal                                                                               | 10 (grid-pattern text contrast + live option 3 dead)     | 0 (3 package-finding instances)                                                                                                                    |
+| shade-light                                                                            | 6 (shape-2 weak frame)                                   | 0 (3 package-finding instances)                                                                                                                    |
+| shade-dark                                                                             | 13 (warning-wash text contrast)                          | 0 (3 package-finding instances)                                                                                                                    |
+| lapis                                                                                  | 5 (delta ink + frame)                                    | 2 (delta ink fixed in our own tone rule, 8.5:1; the remaining 2 are the package's own `good`/`bad` delta colours on the reference tile, see below) |
+| high-contrast                                                                          | live option 3 dead (invalid `steps(1, jump-none)`)       | fixed                                                                                                                                              |
+| forest, blueprint, solstice, brutalism, deco, phantom, retro, grotesk, nostromo, sepia | 3–6 (shared weak fallback frame, or none)                | 0 (3 package-finding instances each)                                                                                                               |
+| All 22 themes, all aspects                                                             | n/a                                                      | loading: >= 1 running animation at full motion, 0 under reduced motion; live: same; 0 console errors; labels never wrap/cut; one height per row    |
 
 ## Package findings (not fixable from this demo; for a later correction)
 

@@ -1,0 +1,220 @@
+/* The page: a centred column, and one section with its controls in rows of
+   groups, the combination, a row of three options per aspect and the plain
+   tiles of today. The tiles' own drawing is in tiles.css. */
+.tl-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.tl-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tl-intro h1,
+.tl-intro p {
+    margin: 0;
+}
+
+.tl-meta,
+.tl-motion,
+.tl-log {
+    color: var(--muted-foreground);
+}
+
+.tl-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-tl-state][aria-pressed='true'],
+[data-tl-point][aria-pressed='true'],
+[data-tl-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.tl-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.tl-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.tl-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.tl-sec__head h2,
+.tl-sec__head p {
+    margin: 0;
+}
+
+.tl-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 60rem. The columns share the
+   trio's rows (a subgrid), so the three tiles start on one line however
+   long each description is. */
+.tl-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .tl-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .tl-col {
+        grid-row: auto;
+        grid-template-rows: auto auto 1fr;
+    }
+}
+
+.tl-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.tl-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.tl-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.tl-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* Each board holds two tiles side by side: the grid's own column rule,
+   with a narrower floor so two fit in a third of the page. */
+.tl-col > .tl-board {
+    align-self: start;
+}
+
+.tl-grid {
+    /* Wide enough that "Pump house 1" and "Reservoir North" never wrap in
+       a bold or monospace title (measured 2026-10-05): below this floor
+       several themes wrapped the title to two lines, so the grid's own
+       auto-fill stacks the two tiles instead of cramming them. */
+    --kp-tile-min: 13.5rem;
+}
+
+/* One block size for every tile across ready / loading / empty / error:
+   the four states' own text is genuinely different lengths ("Pump house
+   1 — 42 L/min" vs "Could not read: the readings store did not
+   answer"), and the package's own evenTileSet() only floors a grid to
+   its tallest tile at the moment of redraw, not to a height fixed
+   across every state the content could ever take — so switching state
+   still reflowed the grid underneath it. Floored here instead, tall
+   enough for the longest state line in every theme's own type size.
+   Package behaviour noted in the README as a finding, not fixed there. */
+[data-ti] .kp-card {
+    min-block-size: 11rem;
+}
+
+.tl-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+[data-tl-tone][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* The combination at the top, the five rows of options, the plain tile
+   below them for reference. */
+.tl-preview,
+.tl-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The preview's and the reference's tile is as wide as a row's tile. */
+.tl-preview > .tl-board,
+.tl-reference > .tl-board {
+    inline-size: calc((100% - 2 * var(--kp-space-lg, 1.5rem)) / 3);
+}
+
+@media (max-width: 60rem) {
+    .tl-preview > .tl-board,
+    .tl-reference > .tl-board {
+        inline-size: auto;
+    }
+}
+
+.tl-preview__head h3,
+.tl-preview__head p,
+.tl-aspect__head h3,
+.tl-aspect__head p {
+    margin: 0;
+}
+
+.tl-preview__head p,
+.tl-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.tl-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.tl-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.tl-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}

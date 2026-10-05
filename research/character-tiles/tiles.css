@@ -1,0 +1,454 @@
+/* research/character-tiles: dashboard tiles of their own, per theme. Per
+   theme the tile grid `.kp-tiles` has six aspects, each picked on its own
+   from three options, composed freely on the grid (`[data-ti]`, which
+   wraps the package's own `.kp-tiles`):
+
+     data-ti-shape="1|2|3"    the plate, the title, the mark and the
+                              footer rule
+     data-ti-loading="1|2|3"  the picture while a tile is busy
+                              (`[data-kp-busy]`); it always moves (a still
+                              frame under reduced motion), and nothing fades
+     data-ti-arrival="1|2|3"  how a tile's content lands once shown
+     data-ti-tone="1|2|3"     how a warning or destructive tile reads
+                              (`[data-kp-tone]` on the tile)
+     data-ti-hover="1|2|3"    the pointer, the keyboard focus and the Open
+                              link, on `:hover`, `.tl-hover-sim` (the
+                              demo's "Pointed at" button) and `:focus-visible`
+     data-ti-live="1|2|3"     a new reading: plays on `[data-tl-flash]`,
+                              which the demo sets for one animation
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. In a register the `[data-ti…]` parts drop
+   out of every selector.
+
+   The contract every option keeps:
+   - The markup is the package's: `.kp-tiles` of `.kp-card`
+     (css/components.css); this file only adds a decorative mark
+     (`[data-tl-mark]`) beside the title, which no option needs to use.
+   - Colour: tokens only (DI9).
+   - Height: one height per tile in every state (js/tiles.js evens the
+     grid); nothing a state adds takes room — a mark is drawn, never laid
+     out as extra content; loading, arrival, hover and live only move,
+     clip or recolour.
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block per rule; nothing fades (no opacity transition on
+     its own — a mark may still glow via colour/shadow); nothing loops at
+     rest, only the loading picture. */
+
+@layer kp.signature {
+    /* ── Shared scaffolding ──────────────────────────────────────────── */
+
+    .tl-grid[data-ti] {
+        position: relative;
+    }
+
+    .tl-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .tl-head .kp-card__title {
+        margin: 0;
+    }
+
+    [data-tl-mark] {
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        flex: none;
+        border-radius: 50%;
+        background: var(--ti-mark, var(--muted-foreground));
+    }
+
+    [data-ti] .kp-card {
+        position: relative;
+        isolation: isolate;
+        transition: none;
+    }
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    [data-ti-shape='1'] .kp-card {
+        border: var(--ti-frame, 1px solid var(--border));
+        border-radius: var(--ti-radius, var(--radius, 0.5rem));
+        background: var(--ti-plate, var(--card));
+    }
+
+    [data-ti-shape='1'] [data-tl-mark] {
+        --ti-mark: var(--muted-foreground);
+    }
+
+    /* formal: the engraved plate */
+    [data-theme='formal'] [data-ti-shape='1'] .kp-card {
+        border: 2px double var(--border-strong);
+        border-radius: 0.125rem;
+    }
+    [data-theme='formal'] [data-ti-shape='1'] .kp-card__title {
+        font-variant-caps: small-caps;
+        letter-spacing: 0.03em;
+    }
+    [data-theme='formal'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 0;
+        transform: rotate(45deg);
+        background: var(--primary);
+    }
+
+    /* titanium: the milled plate */
+    [data-theme='titanium'] [data-ti-shape='1'] .kp-card {
+        background: linear-gradient(100deg, color-mix(in oklch, var(--card) 94%, var(--foreground)), var(--card) 60%);
+        border: 1px solid var(--border-strong);
+        box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--primary) 20%, transparent);
+    }
+    [data-theme='titanium'] [data-ti-shape='1'] .kp-card__title {
+        font-family: var(--font-mono, monospace);
+        letter-spacing: 0.02em;
+    }
+    [data-theme='titanium'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 0.1rem;
+        background: var(--primary);
+    }
+
+    [data-ti-shape='2'] .kp-card {
+        border: var(--ti-frame-2, 1px solid var(--border));
+        border-radius: var(--ti-radius-2, var(--radius, 0.5rem));
+    }
+    /* formal: the ledger card */
+    [data-theme='formal'] [data-ti-shape='2'] .kp-card {
+        border-block-start: 3px solid var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='formal'] [data-ti-shape='2'] [data-tl-mark] {
+        border-radius: 50%;
+        background: var(--primary);
+    }
+    [data-theme='formal'] [data-ti-shape='2'] .kp-card__footer {
+        border-block-start: 3px double var(--border);
+    }
+    /* titanium: the instrument dial */
+    [data-theme='titanium'] [data-ti-shape='2'] .kp-card {
+        border-block-start: 3px solid color-mix(in oklch, var(--border-strong) 70%, var(--primary));
+    }
+    [data-theme='titanium'] [data-ti-shape='2'] [data-tl-mark] {
+        border-radius: 0.1rem;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        background: color-mix(in oklch, var(--muted-foreground) 50%, var(--card));
+    }
+
+    [data-ti-shape='3'] .kp-card {
+        border: var(--ti-frame-3, 1px solid var(--border));
+        border-radius: var(--ti-radius-3, var(--radius, 0.5rem));
+    }
+    /* formal: the certificate */
+    [data-theme='formal'] [data-ti-shape='3'] .kp-card {
+        border: 1px solid var(--primary);
+        border-radius: 0.25rem;
+    }
+    [data-theme='formal'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 0;
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        background: var(--primary);
+    }
+    /* titanium: the anodised badge */
+    [data-theme='titanium'] [data-ti-shape='3'] .kp-card {
+        border-radius: 999px;
+        border: 2px solid var(--primary);
+    }
+    [data-theme='titanium'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), transparent);
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    [data-ti-loading] [data-kp-busy]::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* formal: the dotted leader */
+    [data-theme='formal'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-inline: 1rem;
+        inset-block-end: 0.75rem;
+        block-size: 2px;
+        background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1.2px);
+        background-size: 6px 2px;
+        background-repeat: repeat-x;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-leader 1.4s linear infinite;
+        }
+    }
+    @keyframes tl-leader {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 24px 0;
+        }
+    }
+
+    /* titanium: the cutter runs the edge */
+    [data-theme='titanium'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset: 0;
+        border-radius: inherit;
+        border: 2px solid transparent;
+        border-start-color: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-cutter 1.2s linear infinite;
+        }
+    }
+    @keyframes tl-cutter {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* generic (every other theme), aspect 1: a sweep along the footer */
+    [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-inline-start: 0;
+        inset-block-end: 0;
+        inline-size: 30%;
+        block-size: 2px;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-sweep 1.3s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-sweep {
+        0% {
+            inset-inline-start: 0;
+        }
+        50% {
+            inset-inline-start: 70%;
+        }
+        100% {
+            inset-inline-start: 0;
+        }
+    }
+
+    /* aspect 2: a lamp steps between three spots */
+    [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-block-end: 0.6rem;
+        inset-inline-start: 1rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-step 1.5s steps(1) infinite;
+        }
+    }
+    @keyframes tl-step {
+        0%,
+        32% {
+            inset-inline-start: 1rem;
+        }
+        33%,
+        65% {
+            inset-inline-start: 48%;
+        }
+        66%,
+        100% {
+            inset-inline-start: calc(100% - 1.5rem);
+        }
+    }
+
+    /* aspect 3: a block scans down */
+    [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-start: 2.5rem;
+        block-size: 3px;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-scan 1.1s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-scan {
+        0% {
+            inset-block-start: 2.5rem;
+        }
+        50% {
+            inset-block-start: calc(100% - 1.5rem);
+        }
+        100% {
+            inset-block-start: 2.5rem;
+        }
+    }
+
+    /* Reduced motion: every keyframe above is set only inside its own
+       `prefers-reduced-motion: no-preference` block, so under reduced
+       motion none of them ever starts — the `::after` still paints (the
+       still frame), it simply never moves. */
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-arrive-slide 0.42s ease-out both;
+        }
+        [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-arrive-drop 0.36s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+        }
+        [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes tl-arrive-slide {
+        from {
+            transform: translateX(-0.75rem);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    @keyframes tl-arrive-drop {
+        from {
+            transform: translateY(-0.6rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        background: var(--primary);
+    }
+    [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+    }
+    [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
+    }
+    [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
+    }
+
+    [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border-block-start: 3px solid var(--primary);
+    }
+    [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start: 4px solid var(--primary);
+    }
+    [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success);
+    }
+    [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning);
+    }
+    [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    [data-ti-hover='1'] .kp-card:hover,
+    [data-ti-hover='1'] .kp-card.tl-hover-sim,
+    [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow: 0 0.25rem 0.75rem color-mix(in oklch, var(--foreground) 16%, transparent);
+    }
+    [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+    }
+    [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-ti-hover='2'] .kp-card:hover,
+    [data-ti-hover='2'] .kp-card.tl-hover-sim,
+    [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
+        border-color: var(--primary);
+    }
+    [data-ti-hover='2'] [data-tl-link]:hover,
+    [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius, 0.5rem);
+    }
+    [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+    }
+
+    [data-ti-hover='3'] .kp-card:hover,
+    [data-ti-hover='3'] .kp-card.tl-hover-sim,
+    [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+    }
+    [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+    [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline-offset: 5px;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-live='1'] [data-tl-flash] {
+            animation: tl-live-redraw 0.5s ease-out;
+        }
+        [data-ti-live='2'] [data-tl-flash] {
+            animation: tl-live-jolt 0.4s cubic-bezier(0.3, 1.6, 0.6, 1);
+        }
+        [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-live-flare 0.6s ease-out;
+        }
+    }
+    @keyframes tl-live-redraw {
+        0%,
+        100% {
+            box-shadow: none;
+        }
+        40% {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+    }
+    @keyframes tl-live-jolt {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-0.25rem);
+        }
+    }
+    @keyframes tl-live-flare {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+        40% {
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 45%, transparent);
+        }
+    }
+}

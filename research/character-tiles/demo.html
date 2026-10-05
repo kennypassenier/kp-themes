@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-tiles">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — dashboard tiles of their own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="tiles.css" />
+        <link rel="stylesheet" href="tiles-a.css" />
+        <link rel="stylesheet" href="tiles-b.css" />
+        <link rel="stylesheet" href="tiles-c.css" />
+        <link rel="stylesheet" href="tiles-d.css" />
+        <link rel="stylesheet" href="tiles-e.css" />
+    </head>
+    <body>
+        <main class="tl-page">
+            <header class="tl-intro">
+                <h1>Dashboard tiles of their own, per theme: one pick per aspect</h1>
+                <p>
+                    The character round's next component, with one choice per aspect from the start (Kenny, 2026-10-05: "keep these things separate so
+                    I could choose one over another … it should be like this in the future"). Per theme you pick the shape, the loading picture, how
+                    the tiles arrive, the tone, the pointer and the keyboard focus, and the live update, each from three options and each on its own.
+                    Nothing is ticked for you.
+                </p>
+                <p class="tl-motion" data-tl-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture shows its still frame and the
+                    tiles arrive at once. Turn it off in the system settings to judge the motion.
+                </p>
+                <p class="tl-meta">
+                    Every row holds two tiles of a water board: pump house 1 and reservoir North. The tiles are the package's own (<code
+                        >.kp-tiles</code
+                    >
+                    of <code>.kp-card</code>, one board per row through <code>attachTileSets()</code> in <code>js/tiles.js</code>); an option only
+                    restyles them from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>tiles.css</code>), one attribute per
+                    aspect, and keeps every tile's height in every state. This theme:
+                    <b data-tl-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Under review is the tiles layout component (.kp-tiles), not the
+                 card's own variants: a tile is the package's plain .kp-card. -->
+            <section
+                class="tl-sec"
+                data-review-item="tiles"
+                data-review-components="tiles"
+                data-review-title="Dashboard tiles"
+                aria-labelledby="h-tiles"
+            >
+                <div class="tl-sec__head">
+                    <h2 id="h-tiles">Dashboard tiles in <span data-tl-theme-name>this theme</span></h2>
+                    <p>
+                        Six things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Shown</b> replays how the tiles arrive, <b>Loading</b> shows the loading
+                        picture, a tone marks pump house 1, <b>Pointed at</b> holds pump house 1 as if the pointer were on it, <b>Live update</b>
+                        brings pump house 1 a new reading, and the speed slows every animation. Move the pointer over a tile, or tab to its Open link.
+                    </p>
+                </div>
+                <div class="tl-controls" data-review-controls>
+                    <div class="tl-actions" role="group" aria-label="State of every tile">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-state="ready" aria-pressed="true">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-state="empty" aria-pressed="false">No reading yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-live>Live update (a new reading)</button>
+                    </div>
+                    <div class="tl-actions" role="group" aria-label="Tone of pump house 1">
+                        <b>Tone of pump house 1:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="" aria-pressed="true">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="ok" aria-pressed="false">Ok</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="destructive" aria-pressed="false">Destructive</button>
+                    </div>
+                    <div class="tl-actions" role="group" aria-label="Pointer on pump house 1">
+                        <b>Pointer:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-point="" aria-pressed="true">Away</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-point="on" aria-pressed="false">Pointed at</button>
+                    </div>
+                    <div class="tl-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="tl-log" data-tl-log aria-live="polite">The tiles' links go nowhere here; a click says where it would go.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="tl-preview">
+                    <div class="tl-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-ti-picks>…</p>
+                    </div>
+                    <div class="tl-board" data-kp-tiles-set>
+                        <ul
+                            class="kp-tiles tl-grid"
+                            data-ti
+                            data-ti-preview
+                            data-ti-shape="1"
+                            data-ti-loading="1"
+                            data-ti-arrival="1"
+                            data-ti-tone="1"
+                            data-ti-hover="1"
+                            data-ti-live="1"
+                        ></ul>
+                    </div>
+                </div>
+                <div class="tl-aspects" data-ti-aspects></div>
+                <div class="tl-reference">
+                    <div class="tl-aspect__head">
+                        <h3>For reference: the plain tiles, as today</h3>
+                        <p>
+                            The package's tiles as they ship, not an option: plain cards in a grid, one height, the footer on the bottom edge with its
+                            rule; no tone, no loading picture, no arrival, the same in every theme.
+                        </p>
+                    </div>
+                    <div class="tl-board" data-kp-tiles-set>
+                        <ul class="kp-tiles tl-grid" data-tl-plain></ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- The tiles' first round: every theme open, one pick per aspect. -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r1",
+                "reopen": [
+                    "formal|tiles",
+                    "light|tiles",
+                    "dark|tiles",
+                    "cyberpunk|tiles",
+                    "synthwave|tiles",
+                    "pastel|tiles",
+                    "terminal|tiles",
+                    "forest|tiles",
+                    "high-contrast|tiles",
+                    "sepia|tiles",
+                    "blueprint|tiles",
+                    "solstice|tiles",
+                    "brutalism|tiles",
+                    "deco|tiles",
+                    "phantom|tiles",
+                    "shade-light|tiles",
+                    "shade-dark|tiles",
+                    "retro|tiles",
+                    "grotesk|tiles",
+                    "lapis|tiles",
+                    "nostromo|tiles",
+                    "titanium|tiles"
+                ]
+            }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

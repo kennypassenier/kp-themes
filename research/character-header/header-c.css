@@ -1,0 +1,817 @@
+/* research/character-header group c: solstice, brutalism, deco, phantom,
+   shade-light (phase 1 builds formal and titanium only, in header.css).
+   Same contract as header.css: tokens only, one rule per aspect's knobs,
+   a leave is its arrival's keyframes in reverse, nothing fades, every
+   animation sits in `prefers-reduced-motion: no-preference`. */
+
+@layer kp.signature {
+    /* ══════════════════════════════════════════════════ solstice ═════ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    /* 1, the low sun: a warm glow rises from the header's foot behind the
+       title, the actions on glowing chips. */
+    [data-theme='solstice'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat: radial-gradient(ellipse 70% 60% at 50% 120%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 70%);
+    }
+    [data-theme='solstice'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+    }
+    [data-theme='solstice'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: 999px;
+        --ph-btn-bg: color-mix(in oklch, var(--secondary) 85%, var(--primary) 15%);
+    }
+    [data-theme='solstice'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button--primary {
+        --ph-btn-primary-bg: color-mix(in oklch, var(--primary) 90%, white 10%);
+    }
+
+    /* 2, the embers: embers on charcoal, the title with a hot halo, the
+       actions as warm glowing tabs. */
+    [data-theme='solstice'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: color-mix(in oklch, var(--card) 86%, var(--foreground) 14%);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-shadow: inset 0 3px 0 0 var(--primary);
+    }
+    [data-theme='solstice'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+        text-shadow: 0 0 0.5rem color-mix(in oklch, var(--primary) 55%, transparent);
+    }
+    [data-theme='solstice'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: 999px;
+        --ph-btn-shadow: inset 0 0 0.5rem color-mix(in oklch, var(--primary) 30%, transparent);
+    }
+
+    /* 3, the horizon: a warm band of light along the header's foot, the
+       title in the display face, the actions in the low sun's colour. */
+    [data-theme='solstice'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--primary);
+        --ph-pat: linear-gradient(0deg, color-mix(in oklch, var(--primary) 18%, transparent) 0 3px, transparent 3px 55%);
+    }
+    [data-theme='solstice'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+    }
+    [data-theme='solstice'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--primary);
+        --ph-btn-ink: var(--primary);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-solstice-dawn {
+            from {
+                transform: translateY(10px) scaleY(0.9);
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                transform: translateY(0) scaleY(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-solstice-kindled {
+            from {
+                filter: brightness(1.5) saturate(1.3);
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                filter: brightness(1) saturate(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-solstice-suncross {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0% 0 0);
+            }
+        }
+
+        [data-theme='solstice'] [data-ph-menu='1'] [data-ph-panel] {
+            --ph-menu-origin: bottom right;
+        }
+        [data-theme='solstice'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-solstice-dawn 260ms ease-out;
+        }
+        [data-theme='solstice'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-solstice-dawn 260ms ease-out reverse;
+        }
+        [data-theme='solstice'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-solstice-kindled 300ms ease-out;
+        }
+        [data-theme='solstice'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-solstice-kindled 300ms ease-out reverse;
+        }
+        [data-theme='solstice'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-solstice-suncross 240ms ease-in-out;
+        }
+        [data-theme='solstice'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-solstice-suncross 240ms ease-in-out reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='solstice'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 80%, var(--primary) 20%);
+    }
+    [data-theme='solstice'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 65%, var(--primary) 35%);
+    }
+
+    [data-theme='solstice'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 0 0.75rem color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+    [data-theme='solstice'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 0 0.5rem color-mix(in oklch, var(--primary) 40%, transparent);
+    }
+
+    [data-theme='solstice'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: inset 0 -2px 0 0 var(--primary);
+    }
+    [data-theme='solstice'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 -4px 0 0 var(--primary);
+    }
+
+    /* ══════════════════════════════════════════════════ brutalism ════ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    /* 1, the slab: a heavy black frame with a hard offset shadow, the title
+       in heavy capitals, the actions as blocks with the same hard shadow. */
+    [data-theme='brutalism'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 3px solid var(--border-strong);
+        --ph-radius: 0;
+        --ph-shadow: 6px 6px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-weight: 900;
+        --ph-title-case: uppercase;
+    }
+    [data-theme='brutalism'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 2px solid var(--border-strong);
+        --ph-btn-radius: 0;
+        --ph-btn-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    /* 2, the sticker sheet: a lavender sheet, the title huge and heavy, the
+       actions as askew stickers in a black outline. */
+    [data-theme='brutalism'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: color-mix(in srgb, var(--card) 55%, var(--accent) 45%);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-radius: 0;
+    }
+    [data-theme='brutalism'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-weight: 900;
+        font-size: 1.15em;
+    }
+    [data-theme='brutalism'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 2px solid var(--border-strong);
+        --ph-btn-radius: 0;
+        transform: rotate(-1deg);
+    }
+    [data-theme='brutalism'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button--primary {
+        transform: rotate(1deg);
+    }
+
+    /* 3, the poster block: a 3px frame with a hard offset shadow in the
+       accent, the title huge in capitals, the actions as poster blocks. */
+    [data-theme='brutalism'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 3px solid var(--border-strong);
+        --ph-radius: 0;
+        --ph-shadow: 5px 5px 0 0 var(--secondary);
+        --ph-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 5%, transparent) 0 2px, transparent 2px 10px);
+    }
+    [data-theme='brutalism'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-weight: 900;
+        --ph-title-case: uppercase;
+        font-size: 1.2em;
+    }
+    [data-theme='brutalism'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 2px solid var(--border-strong);
+        --ph-btn-radius: 0;
+        --ph-btn-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-brutalism-slam {
+            0% {
+                transform: translateY(-16px);
+                clip-path: inset(0 0 100% 0);
+            }
+            50% {
+                transform: translateY(-16px);
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                transform: translateY(0);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-brutalism-drop {
+            0% {
+                transform: translateY(-20px);
+            }
+            70% {
+                transform: translateY(2px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        @keyframes ph-brutalism-hammer {
+            0%,
+            12% {
+                clip-path: inset(0 0 100% 0);
+            }
+            16%,
+            32% {
+                clip-path: inset(0 0 66% 0);
+            }
+            36%,
+            52% {
+                clip-path: inset(0 0 33% 0);
+            }
+            56%,
+            100% {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel] {
+            --ph-menu-origin: top right;
+        }
+        [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-brutalism-slam 260ms steps(2, jump-end);
+        }
+        [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-brutalism-slam 260ms steps(2, jump-end) reverse;
+        }
+        [data-theme='brutalism'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-brutalism-drop 220ms steps(3, jump-end);
+        }
+        [data-theme='brutalism'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-brutalism-drop 220ms steps(3, jump-end) reverse;
+        }
+        [data-theme='brutalism'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-brutalism-hammer 420ms steps(4, jump-end);
+        }
+        [data-theme='brutalism'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-brutalism-hammer 420ms steps(4, jump-end) reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='brutalism'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 8px 8px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 3px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='brutalism'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: 0 0 0 0 var(--border-strong);
+        transform: translate(3px, 3px);
+    }
+
+    [data-theme='brutalism'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        transform: translateX(3px);
+    }
+    [data-theme='brutalism'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 3px dashed var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='brutalism'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        outline: 3px solid var(--border-strong);
+        outline-offset: -3px;
+    }
+
+    [data-theme='brutalism'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 2px;
+    }
+    [data-theme='brutalism'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 3px solid var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='brutalism'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 0 0 3px var(--border-strong);
+    }
+
+    /* ══════════════════════════════════════════════════════ deco ═════ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    /* 1, the gilt frame: a double gold rule, a faint sunburst rises behind
+       the title, the actions on gold-framed plaques. */
+    [data-theme='deco'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--primary);
+        --ph-pat: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 65%);
+    }
+    [data-theme='deco'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-case: uppercase;
+        --ph-title-track: 0.05em;
+    }
+    [data-theme='deco'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--primary);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* 2, the marquee: a theatre marquee, a row of bulbs along the header,
+       the title in display capitals, the actions as marquee plaques. */
+    [data-theme='deco'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-pat: repeating-radial-gradient(circle at 6px 2px, var(--primary) 0 1.5px, transparent 1.5px 12px);
+        background-repeat: repeat-x;
+        background-size: 100% 4px;
+        background-position: top;
+    }
+    [data-theme='deco'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-case: uppercase;
+    }
+    [data-theme='deco'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* 3, the skyscraper: fine gold setback lines rising behind the title, a
+       gold bar along the top, the actions in gold. */
+    [data-theme='deco'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-shadow: inset 0 3px 0 0 var(--primary);
+        --ph-pat: repeating-linear-gradient(0deg, color-mix(in oklch, var(--primary) 10%, transparent) 0 2px, transparent 2px 7px);
+    }
+    [data-theme='deco'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-case: uppercase;
+    }
+    [data-theme='deco'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--primary);
+        --ph-btn-ink: var(--primary);
+        --ph-btn-radius: 0;
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-deco-curtain {
+            from {
+                transform: translateY(14px) scaleY(0.88);
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                transform: translateY(0) scaleY(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-deco-marquee {
+            from {
+                clip-path: inset(0 45% 0 45%);
+            }
+            to {
+                clip-path: inset(0 0% 0 0%);
+            }
+        }
+        @keyframes ph-deco-sunburst {
+            from {
+                transform: scale(0.5);
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                transform: scale(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='deco'] [data-ph-menu='1'] [data-ph-panel] {
+            --ph-menu-origin: bottom right;
+        }
+        [data-theme='deco'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-deco-curtain 280ms ease-out;
+        }
+        [data-theme='deco'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-deco-curtain 280ms ease-out reverse;
+        }
+        [data-theme='deco'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-deco-marquee 260ms steps(4, jump-end);
+        }
+        [data-theme='deco'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-deco-marquee 260ms steps(4, jump-end) reverse;
+        }
+        [data-theme='deco'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-deco-sunburst 280ms ease-out;
+        }
+        [data-theme='deco'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-deco-sunburst 280ms ease-out reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='deco'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 86%, var(--primary) 14%);
+    }
+
+    [data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow:
+            inset 2px 0 0 var(--primary),
+            inset -2px 0 0 var(--primary);
+    }
+    [data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 1px dotted var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow:
+            inset 1px 0 0 var(--primary),
+            inset -1px 0 0 var(--primary);
+    }
+
+    [data-theme='deco'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-image: linear-gradient(100deg, transparent 20%, color-mix(in oklch, var(--primary) 35%, transparent) 50%, transparent 80%);
+    }
+    [data-theme='deco'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-image: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 45%, transparent) 55%, transparent 70%);
+    }
+
+    /* ══════════════════════════════════════════════════════ phantom ═══ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    /* 1, the evidence card: a white evidence card, the title slanted, the
+       actions as stamped rings set askew. */
+    [data-theme='phantom'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-shadow: 3px 3px 0 0 color-mix(in oklch, var(--foreground) 12%, transparent);
+    }
+    [data-theme='phantom'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        display: inline-block;
+        transform: skewX(-6deg);
+    }
+    [data-theme='phantom'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 2px solid var(--border-strong);
+        --ph-btn-radius: 999px;
+        transform: rotate(-2deg);
+    }
+
+    /* 2, the calling card: a black calling card under a halftone, the title
+       skewed in display capitals, a red slash across the corner, the
+       actions in the card's ink. */
+    [data-theme='phantom'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: color-mix(in oklch, var(--card) 90%, var(--foreground) 10%);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-pat: radial-gradient(circle at 1px 1px, color-mix(in oklch, var(--foreground) 8%, transparent) 1px, transparent 1px);
+        background-size: 6px 6px;
+        position: relative;
+    }
+    [data-theme='phantom'] [data-ph-shape='2'] .kp-page-header::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: 0;
+        block-size: 0;
+        border-style: solid;
+        border-width: 0 1.25rem 1.25rem 0;
+        border-color: transparent var(--primary) transparent transparent;
+    }
+    [data-theme='phantom'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        --ph-title-case: uppercase;
+        display: inline-block;
+        transform: skewX(-6deg);
+    }
+    [data-theme='phantom'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* 3, the ransom note: a halftone over the header, the title skewed, a
+       red offset shadow on the actions. */
+    [data-theme='phantom'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat: radial-gradient(circle at 1px 1px, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px);
+        background-size: 7px 7px;
+    }
+    [data-theme='phantom'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, sans-serif);
+        display: inline-block;
+        transform: skewX(-4deg);
+    }
+    [data-theme='phantom'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-shadow: 2px 2px 0 0 var(--primary);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-phantom-throw {
+            0% {
+                transform: translateX(-28px) rotate(-4deg);
+                clip-path: inset(0 0 100% 0);
+            }
+            60% {
+                transform: translateX(4px) rotate(1deg);
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                transform: translateX(0) rotate(0deg);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-phantom-slash {
+            from {
+                clip-path: inset(0 0 0 100%);
+            }
+            to {
+                clip-path: inset(0 0 0 0%);
+            }
+        }
+        @keyframes ph-phantom-stampaskew {
+            0% {
+                transform: rotate(-8deg) scale(0.92);
+                clip-path: inset(0 0 100% 0);
+            }
+            70% {
+                transform: rotate(2deg) scale(1.02);
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                transform: rotate(0deg) scale(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='phantom'] [data-ph-menu='1'] [data-ph-panel] {
+            --ph-menu-origin: top right;
+        }
+        [data-theme='phantom'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-phantom-throw 280ms steps(3, jump-end);
+        }
+        [data-theme='phantom'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-phantom-throw 280ms steps(3, jump-end) reverse;
+        }
+        [data-theme='phantom'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-phantom-slash 240ms ease-in-out;
+        }
+        [data-theme='phantom'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-phantom-slash 240ms ease-in-out reverse;
+        }
+        [data-theme='phantom'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-phantom-stampaskew 300ms ease-out;
+        }
+        [data-theme='phantom'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-phantom-stampaskew 300ms ease-out reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='phantom'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 60%, transparent);
+    }
+    [data-theme='phantom'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='phantom'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 0 0 2px var(--primary);
+        transform: scale(0.97);
+    }
+
+    [data-theme='phantom'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    [data-theme='phantom'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='phantom'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 5px 0 0 var(--primary);
+    }
+
+    [data-theme='phantom'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        transform: translateX(2px) skewX(-4deg);
+    }
+    [data-theme='phantom'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='phantom'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: translateX(3px) skewX(-4deg);
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    /* ══════════════════════════════════════════════════ shade-light ══ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    /* 1, pencil in the shade: a pencil sketch on paper in soft shade, the
+       title in a hand-drawn weight, the actions as lifted paper chips. */
+    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat: repeating-linear-gradient(60deg, color-mix(in oklch, var(--foreground) 4%, transparent) 0 1px, transparent 1px 7px);
+    }
+    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+        --ph-title-style: italic;
+    }
+    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-shadow: 0 2px 3px 0 color-mix(in oklch, var(--foreground) 16%, transparent);
+    }
+
+    /* 2, the leaf shade: dappled leaf shade over the header, a soft line
+       under the title, the actions plain on the paper. */
+    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat:
+            radial-gradient(circle at 18% 20%, color-mix(in oklch, var(--foreground) 7%, transparent) 0 11%, transparent 12%),
+            radial-gradient(circle at 72% 65%, color-mix(in oklch, var(--foreground) 6%, transparent) 0 9%, transparent 10%);
+    }
+    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+    }
+    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+    }
+
+    /* 3, the window light: a shaft of window light falls across the header
+       from the left, the title in soft graphite, the actions plain. */
+    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat: linear-gradient(100deg, color-mix(in oklch, var(--primary) 10%, transparent) 0 22%, transparent 38%);
+    }
+    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display, serif);
+    }
+    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-shadelight-pencil {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0% 0 0);
+            }
+        }
+        @keyframes ph-shadelight-shade {
+            from {
+                transform: translateY(10px);
+                filter: brightness(0.92);
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                transform: translateY(0);
+                filter: brightness(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-shadelight-breeze {
+            0% {
+                transform: translateY(0);
+                clip-path: inset(0 0 100% 0);
+            }
+            55% {
+                transform: translateY(3px);
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                transform: translateY(0);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='shade-light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-shadelight-pencil 240ms ease-in-out;
+        }
+        [data-theme='shade-light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-shadelight-pencil 240ms ease-in-out reverse;
+        }
+        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel] {
+            --ph-menu-origin: bottom right;
+        }
+        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-shadelight-shade 260ms ease-out;
+        }
+        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-shadelight-shade 260ms ease-out reverse;
+        }
+        [data-theme='shade-light'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-shadelight-breeze 300ms ease-in-out;
+        }
+        [data-theme='shade-light'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-shadelight-breeze 300ms ease-in-out reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        transform: translateY(-1px);
+        --ph-btn-shadow: 0 3px 4px 0 color-mix(in oklch, var(--foreground) 20%, transparent);
+    }
+    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 94%, var(--foreground) 6%);
+    }
+    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 89%, var(--foreground) 11%);
+    }
+
+    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 1px 0 0 var(--border-strong);
+        transform: translateY(-1px);
+    }
+    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: none;
+    }
+}

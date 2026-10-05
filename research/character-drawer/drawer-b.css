@@ -1,0 +1,1402 @@
+/* research/character-drawer, group b: terminal, forest, high-contrast,
+   sepia, blueprint. Same contract as drawer.css (formal/titanium): tokens
+   only, @layer kp.signature, one rule names one aspect, no opacity
+   keyframes, every animation inside `prefers-reduced-motion: no-preference`,
+   a drawer's close is its open's own `@keyframes` played with
+   `animation-direction: reverse`. */
+
+@layer kp.signature {
+    /* ══════════════════════════════ terminal: the CRT panel ═══════════ */
+
+    [data-theme='terminal'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--background);
+        --dt-ink: var(--foreground);
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, var(--background) 0 1px, hsl(from var(--primary) h s l / 0.08) 1px 2px);
+        background-repeat: repeat;
+    }
+
+    [data-theme='terminal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        border-inline-start: 1px solid var(--border-strong);
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='3'] .dt-drawer {
+        border: 2px double var(--primary);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background: var(--foreground);
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='terminal'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    /* openclose 1: it types open, width grows in discrete steps */
+    [data-theme='terminal'] [data-dt-openclose='1'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='terminal'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.02 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-1 300ms steps(10, end) both;
+        }
+
+        [data-theme='terminal'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-1 260ms steps(10, end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-terminal-1 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.02 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 2: it scrolls up from the prompt, in line-height steps */
+    [data-theme='terminal'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='terminal'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-2 280ms steps(8, end) both;
+        }
+
+        [data-theme='terminal'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-2 260ms steps(8, end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-terminal-2 {
+        0% {
+            translate: 0 100%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is piped in, constant linear speed, hard-edged */
+    [data-theme='terminal'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='terminal'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-3 220ms linear both;
+        }
+
+        [data-theme='terminal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-terminal-3 220ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-terminal-3 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the cursor box / the ASCII bracket / the grep highlight */
+    [data-theme='terminal'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.85);
+    }
+
+    [data-theme='terminal'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 1px dashed var(--primary);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.75);
+    }
+
+    [data-theme='terminal'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: none;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.9);
+    }
+
+    /* card: the man-page box / the tooltip prompt / the log line */
+    [data-theme='terminal'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        background: var(--foreground);
+        color: var(--background);
+        padding-inline: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='terminal'] [data-dt-card='1'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-card='2'] .dt-tour .kp-tour__title::before {
+        content: '$ ';
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] [data-dt-card='2'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-card='3'] .dt-tour {
+        border-inline-start: 3px solid var(--primary);
+        border-block: 1px solid var(--border-strong);
+        border-inline-end: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-card='3'] .dt-tour .kp-tour__count {
+        float: inline-end;
+    }
+
+    /* next: the cursor retypes / the prompt reprints / the grep rehighlights */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-terminal-1 260ms steps(2, jump-none);
+        }
+
+        [data-theme='terminal'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-terminal-2 240ms steps(2, jump-none);
+        }
+
+        [data-theme='terminal'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-terminal-3 280ms steps(2, jump-none);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-terminal-1 {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-terminal-2 {
+        0%,
+        100% {
+            filter: invert(0);
+        }
+
+        50% {
+            filter: invert(1);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-terminal-3 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.6);
+        }
+    }
+
+    /* ══════════════════════════════ forest: the bark panel ════════════ */
+
+    [data-theme='forest'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 2px solid var(--border-strong);
+        border-radius: 0.9rem 0.3rem 0.9rem 0.3rem;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='forest'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+
+    [data-theme='forest'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        background-image: linear-gradient(to bottom, transparent 90%, hsl(from var(--border-strong) h s l / 0.5) 100%);
+        background-repeat: no-repeat;
+        background-position: right;
+        background-size: 3px 100%;
+    }
+
+    [data-theme='forest'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+        border-radius: 0 0 0.3rem 0.9rem;
+    }
+
+    [data-theme='forest'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='forest'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: var(--kp-space-md, 1rem);
+        inline-size: 0.6rem;
+        block-size: 0.4rem;
+        background-color: var(--primary);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    [data-theme='forest'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: hsl(from var(--background) h s l / 1);
+        background-image: radial-gradient(ellipse at top, hsl(from var(--primary) h s l / 0.1), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 6rem;
+        color: var(--foreground);
+    }
+
+    [data-theme='forest'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    /* openclose 1: it grows out from the trunk */
+    [data-theme='forest'] [data-dt-openclose='1'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.06 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-forest-1 320ms ease-out both;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-forest-1 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-forest-1 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.06 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 2: it unfurls like a leaf, folded to flat */
+    [data-theme='forest'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+        scale: 1 1;
+    }
+
+    [data-theme='forest'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 55deg;
+        scale: 0.4 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-forest-2 340ms ease-out both;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-forest-2 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-forest-2 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 55deg;
+            scale: 0.4 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it is pulled from the undergrowth, with a sway */
+    [data-theme='forest'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+        rotate: 0deg;
+    }
+
+    [data-theme='forest'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 100%;
+        rotate: 0deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-forest-3 360ms ease-out both;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-forest-3 320ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-forest-3 {
+        0% {
+            translate: 0 100%;
+            rotate: 0deg;
+        }
+
+        60% {
+            translate: 0 0%;
+            rotate: -1.5deg;
+        }
+
+        80% {
+            rotate: 1deg;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    /* highlight: the lichen ring / the knot-hole circle / the moss halo */
+    [data-theme='forest'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 3px solid var(--primary);
+        outline-offset: 4px;
+        border-radius: 60% 40% 55% 45%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s 12% / 0.55);
+    }
+
+    [data-theme='forest'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 3px solid var(--border-strong);
+        outline-offset: 5px;
+        border-radius: 45% 55% 40% 60%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s 10% / 0.6);
+    }
+
+    [data-theme='forest'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 4px solid hsl(from var(--primary) h s l / 0.55);
+        outline-offset: 6px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s 14% / 0.5);
+    }
+
+    /* card: the leaf tag / the bark plaque / the mushroom cap */
+    [data-theme='forest'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem 0.9rem 0.2rem 0.2rem;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='forest'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-inline-start: 3px solid var(--primary);
+        padding-inline-start: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='forest'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        border-block-end: 2px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='forest'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 1.4rem 1.4rem 0.3rem 0.3rem;
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+    }
+
+    [data-theme='forest'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* next: the ring widens / the leaf turns / the cap tilts */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-forest-1 380ms ease-in-out;
+        }
+
+        [data-theme='forest'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            transform-origin: 50% 0%;
+            animation: kp-sig-drawer-next-forest-2 360ms ease-in-out;
+        }
+
+        [data-theme='forest'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-forest-3 340ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-forest-1 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.08;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-forest-2 {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+
+        50% {
+            rotate: 4deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-forest-3 {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+
+        50% {
+            rotate: -3deg;
+        }
+    }
+
+    /* ══════════════════════════ high-contrast: the stark panel ════════ */
+
+    [data-theme='high-contrast'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--background);
+        --dt-ink: var(--foreground);
+        border: 4px solid var(--foreground);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='2'] .dt-drawer {
+        border: 4px solid var(--foreground);
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--background);
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='3'] .dt-drawer {
+        border-block: 4px solid var(--foreground);
+        border-inline: none;
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--foreground);
+    }
+
+    /* openclose 1: it snaps open, an instant cut after the final slide */
+    [data-theme='high-contrast'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-hc-1 200ms steps(2, jump-end) both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-hc-1 200ms steps(2, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-hc-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        60% {
+            translate: 4% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it slides on a hard edge, constant speed, no overshoot */
+    [data-theme='high-contrast'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-hc-2 200ms linear both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-hc-2 200ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-hc-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is slotted in, the border thickens as it arrives */
+    [data-theme='high-contrast'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+        border-width: 4px;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        border-width: 1px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-hc-3 240ms linear both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-hc-3 240ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-hc-3 {
+        0% {
+            translate: 100% 0;
+            border-width: 1px;
+        }
+
+        100% {
+            translate: 0 0;
+            border-width: 4px;
+        }
+    }
+
+    /* highlight: the thick ring / the hazard bracket / the crosshair */
+    [data-theme='high-contrast'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 6px solid var(--foreground);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s 50%);
+    }
+
+    [data-theme='high-contrast'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 6px solid var(--foreground);
+        outline-offset: 4px;
+        background-image: repeating-linear-gradient(45deg, var(--foreground) 0 6px, var(--background) 6px 12px);
+        background-color: var(--background);
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s 50%);
+    }
+
+    [data-theme='high-contrast'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 4px double var(--foreground);
+        outline-offset: 10px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s 50%);
+    }
+
+    /* card: the placard / the index card / the stencil tag */
+    [data-theme='high-contrast'] [data-dt-card='1'] .dt-tour {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 800;
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='1'] .dt-tour .kp-tour__foot {
+        border-block-start: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='2'] .dt-tour {
+        border: 3px solid var(--foreground);
+        border-block-start-width: 6px;
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        background: var(--foreground);
+        color: var(--background);
+        padding-inline: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='2'] .dt-tour .kp-tour__foot {
+        border-block-start: 3px solid var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-card='3'] .dt-tour {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        clip-path: polygon(0.6rem 0, 100% 0, 100% calc(100% - 0.6rem), calc(100% - 0.6rem) 100%, 0 100%, 0 0.6rem);
+    }
+
+    /* next: the ring thickens / the bracket jumps / the crosshair recentres */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-hc-1 220ms steps(2, jump-none);
+        }
+
+        [data-theme='high-contrast'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-hc-2 200ms steps(2, jump-none);
+        }
+
+        [data-theme='high-contrast'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-hc-3 240ms steps(2, jump-none);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-hc-1 {
+        0% {
+            border-width: 0;
+        }
+
+        100% {
+            border-width: 3px;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-hc-2 {
+        0% {
+            translate: 0.5rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-hc-3 {
+        0% {
+            scale: 0.4;
+        }
+
+        50% {
+            scale: 0.4;
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    /* ══════════════════════════════ sepia: the aged panel ═════════════ */
+
+    [data-theme='sepia'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        background: var(--dt-plate);
+        background-image: radial-gradient(ellipse at center, transparent 55%, hsl(from var(--foreground) h s l / 0.12) 100%);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+        color: var(--dt-ink);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--border-strong);
+        background: hsl(from var(--primary) h s l / 0.1);
+        font-family: var(--theme-font-display, serif);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.6rem 0.2rem 0.6rem 0.2rem;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, transparent 0 2.2rem, hsl(from var(--border) h s l / 0.5) 2.2rem calc(2.2rem + 1px));
+    }
+
+    [data-theme='sepia'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='3'] .dt-drawer {
+        border: 2px double var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px double var(--border-strong);
+        font-family: var(--theme-font-display, serif);
+    }
+
+    [data-theme='sepia'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it is drawn from a sleeve */
+    [data-theme='sepia'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='sepia'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 85% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-1 320ms ease-out both;
+        }
+
+        [data-theme='sepia'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-1 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-sepia-1 {
+        0% {
+            translate: 85% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unrolls like a scroll, from a thin band */
+    [data-theme='sepia'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 50% 0%;
+        scale: 1 1;
+    }
+
+    [data-theme='sepia'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 0%;
+        scale: 1 0.05;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-2 360ms ease-out both;
+        }
+
+        [data-theme='sepia'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-2 320ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-sepia-2 {
+        0% {
+            transform-origin: 50% 0%;
+            scale: 1 0.05;
+        }
+
+        100% {
+            transform-origin: 50% 0%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it swings on a hinge, with a settle-wobble */
+    [data-theme='sepia'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+    }
+
+    [data-theme='sepia'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 80deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-3 360ms ease-out both;
+        }
+
+        [data-theme='sepia'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-sepia-3 320ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-sepia-3 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 80deg;
+        }
+
+        80% {
+            transform-origin: 100% 50%;
+            rotate: y -4deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+        }
+    }
+
+    /* highlight: the ink-blot ring / the pencil halo / the brass loupe circle */
+    [data-theme='sepia'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 5px;
+        border-radius: 58% 42% 48% 52%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='sepia'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 5px;
+        border-radius: 48% 52% 55% 45%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    [data-theme='sepia'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 3px solid var(--border-strong);
+        outline-offset: 4px;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.26),
+            inset 0 0 0 1px hsl(from var(--background) h s l / 0.4);
+    }
+
+    /* card: the postcard / the index card / the ticket stub */
+    [data-theme='sepia'] [data-dt-card='1'] .dt-tour {
+        border: 2px double var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='sepia'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-family: var(--theme-font-display, serif);
+    }
+
+    [data-theme='sepia'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='sepia'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='sepia'] [data-dt-card='3'] .dt-tour {
+        border: 2px dashed var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        clip-path: polygon(
+            0 0.4rem,
+            0.4rem 0,
+            calc(100% - 0.4rem) 0,
+            100% 0.4rem,
+            100% calc(100% - 0.4rem),
+            calc(100% - 0.4rem) 100%,
+            0.4rem 100%,
+            0 calc(100% - 0.4rem)
+        );
+    }
+
+    [data-theme='sepia'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    /* next: the ink dries anew / the scroll advances / the stub is stamped again */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-sepia-1 400ms ease-in-out;
+        }
+
+        [data-theme='sepia'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-sepia-2 360ms ease-in-out;
+        }
+
+        [data-theme='sepia'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-sepia-3 320ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-sepia-1 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.05;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-sepia-2 {
+        0% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+
+        50% {
+            translate: 0.6rem 0;
+            rotate: 2deg;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-sepia-3 {
+        0%,
+        100% {
+            border-width: 1px;
+        }
+
+        50% {
+            border-width: 4px;
+        }
+    }
+
+    /* ══════════════════════════════ blueprint: the drafting panel ═════ */
+
+    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--dt-plate);
+        background-image:
+            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 1.5rem),
+            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 1.5rem);
+        background-repeat: repeat;
+        color: var(--dt-ink);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline: var(--kp-space-md, 1rem);
+        block-size: 6px;
+        background-image: repeating-linear-gradient(90deg, var(--primary) 0 2px, transparent 2px 6px);
+        background-repeat: repeat;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer::before,
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer::after {
+        content: '';
+        position: absolute;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border: 1px solid var(--primary);
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer::before {
+        inset-block-start: 0.4rem;
+        inset-inline-start: 0.4rem;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer::after {
+        inset-block-start: 0.4rem;
+        inset-inline-end: 0.4rem;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px dashed var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dashed var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: repeating-linear-gradient(0deg, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 2rem);
+        background-repeat: repeat;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it is drawn out on its rail, grid-aligned */
+    [data-theme='blueprint'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='blueprint'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-1 280ms steps(6, end) both;
+        }
+
+        [data-theme='blueprint'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-1 260ms steps(6, end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-blueprint-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unrolls from the tube */
+    [data-theme='blueprint'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.04 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-2 300ms ease-out both;
+        }
+
+        [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-blueprint-2 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.04 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it is pinned open, dropped from above with a settle-bounce */
+    [data-theme='blueprint'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='blueprint'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 -100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-3 320ms cubic-bezier(0.3, 1.4, 0.7, 1) both;
+        }
+
+        [data-theme='blueprint'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-blueprint-3 300ms cubic-bezier(0.3, 0, 0.7, 1) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-blueprint-3 {
+        0% {
+            translate: 0 -100%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the dimension ring / the compass circle / the crosshair bracket */
+    [data-theme='blueprint'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--card) h s l / 0.7);
+    }
+
+    [data-theme='blueprint'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 1px solid var(--primary);
+        outline-offset: 5px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--card) h s l / 0.7);
+    }
+
+    [data-theme='blueprint'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--card) h s l / 0.75);
+    }
+
+    /* card: the callout tag / the title-block card / the detail bubble */
+    [data-theme='blueprint'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='blueprint'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-inline-start: 3px solid var(--primary);
+        padding-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='blueprint'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.4) 0 1px, transparent 1px 1rem);
+        background-repeat: repeat-x;
+        background-position: top;
+        background-size: 100% 0.6rem;
+    }
+
+    [data-theme='blueprint'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-variant-numeric: tabular-nums;
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--primary);
+        border-radius: 50%/40%;
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+    }
+
+    /* next: the leader redraws / the compass swings / the callout retargets */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-blueprint-1 320ms steps(8, end);
+        }
+
+        [data-theme='blueprint'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            transform-origin: 0% 0%;
+            animation: kp-sig-drawer-next-blueprint-2 360ms ease-in-out;
+        }
+
+        [data-theme='blueprint'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-blueprint-3 320ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-blueprint-1 {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-blueprint-2 {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+
+        50% {
+            rotate: -6deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-blueprint-3 {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0.5rem 0;
+        }
+    }
+}

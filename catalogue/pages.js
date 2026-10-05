@@ -87,6 +87,21 @@ export const PAGES = [
             { href: 'research/character-columns/demo.html', label: 'A key-figure strip of its own, per theme' },
             // The character round, seventh component: the dashboard tiles.
             { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
+            // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-attention/demo.html', label: 'An attention band of its own, per theme' },
+            // The character round, ninth and tenth components: the action columns and the menu button.
+            { href: 'research/character-actions/demo.html', label: 'Action columns of their own, per theme' },
+            { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
+            // The character round, eleventh component: the plain key figure tile, shape/loading/tone/interactive/live, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-kpi/demo.html', label: 'A key figure of its own, per theme' },
+            // The character round, twelfth component: the state word, shape/tone/change, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-state/demo.html', label: 'A state word of its own, per theme' },
+            // The character round, thirteenth component: the page header, shape/menu-open-close/interactive, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-header/demo.html', label: 'A page header of its own, per theme' },
+            // The character round, fourteenth component: the data table's busy overlay, shape/loading/arrival/failure/phone, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-busy/demo.html', label: "A data table's busy overlay, of its own, per theme" },
+            // The character round, fifteenth component: the help drawer and its guided tour, shape/open-close/highlight/card/next-step, one pick per aspect (formal and titanium built first).
+            { href: 'research/character-drawer/demo.html', label: 'A drawer and its guided tour, each of its own, per theme' },
         ],
     },
     {

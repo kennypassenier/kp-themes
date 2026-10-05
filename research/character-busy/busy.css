@@ -1,0 +1,476 @@
+/* research/character-busy, phase 1 (Kenny, 2026-10-05): the data table's
+   busy overlay (`.kp-datatable__busy-overlay` > `.kp-datatable__busy-panel`,
+   fix-80 to fix-85) has five aspects, each picked on its own from three
+   options, composed freely on the `.kp-datatable` wrapper itself
+   (`[data-bo]`, which already carries `data-kp-datatable`):
+
+     data-bo-shape="1|2|3"    the overlay's veil and the panel's chrome
+                               (border, radius, shadow, the spinner's ring)
+     data-bo-loading="1|2|3"  the picture that plays on the panel while it
+                               shows; it always moves (a still frame under
+                               reduced motion), and nothing fades
+     data-bo-arrival="1|2|3"  how the panel comes in when the table turns
+                               busy (the layer is drawn fresh by
+                               `drawOverlay()` every time, so the animation
+                               plays again on every "Loading")
+     data-bo-failure="1|2|3"  the failed alert that stands in the panel's
+                               place; mirrored in and out through
+                               `@starting-style` + `allow-discrete`, because
+                               the alert only toggles `hidden` (the overlay
+                               layer itself is removed from the DOM the
+                               instant loading ends, so no leave can be
+                               shown there — see demo.js's header comment)
+     data-bo-phone="1|2|3"    the panel's own accents in the flat layout a
+                               phone gets below 30rem (`@container kp-table`)
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. Phase 1 builds formal and titanium; busy-a.css
+   … busy-d.css (`@layer kp.signature {}`, empty) hold the other twenty
+   themes, five each, added group by group. In a register the `[data-bo…]`
+   parts drop out of every selector.
+
+   The contract every option keeps:
+   - The markup is the package's: `attachDataTables()` draws the overlay,
+     the panel (a spinner, the words, the clock) and the failed alert
+     itself; `js/datatable.js` is not changed.
+   - Colour: tokens only (DI9). The panel's ink is a status pair with its
+     plate (fix-70): the failed alert carries `--destructive` with
+     `--destructive-foreground`, never half of one.
+   - Height: the overlay is absolutely placed over the rows it covers; no
+     option changes the table's own height, only what is painted on top of
+     it.
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end; nothing fades (no opacity anywhere);
+     the loading picture loops at rest, the arrival plays once per fresh
+     overlay, the failed alert's mirror is a transition, reversible by
+     construction. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    [data-bo] .kp-datatable__busy-overlay {
+        background: var(--bo-veil, color-mix(in oklab, var(--background) 70%, transparent));
+    }
+
+    [data-bo] .kp-datatable__busy-panel {
+        position: relative;
+        isolation: isolate;
+        overflow: var(--bo-panel-overflow, visible);
+        border: var(--bo-panel-border, 0);
+        border-radius: var(--bo-panel-radius, var(--radius, 0.5rem));
+        background: var(--bo-panel-bg, var(--card));
+        box-shadow: var(--bo-panel-shadow, 0 0 0 1px var(--border));
+        color: var(--bo-panel-ink, var(--card-foreground));
+        font-family: var(--bo-font, inherit);
+    }
+
+    /* The loading picture: one pseudo-element on the panel, clipped to it,
+       so it never spills onto the veil or the rows under it. */
+    [data-bo] .kp-datatable__busy-panel::before {
+        content: '';
+        position: absolute;
+        inset: var(--bo-pic-inset, 0);
+        z-index: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: var(--bo-pic, none);
+        transform-origin: var(--bo-pic-origin, 50% 50%);
+    }
+
+    [data-bo] .kp-datatable__busy-panel > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    [data-bo] .kp-datatable__busy-panel > .kp-spinner {
+        box-shadow: var(--bo-ring, none);
+    }
+
+    [data-bo] .kp-datatable__busy-clock {
+        color: var(--bo-clock-ink, var(--muted-foreground));
+    }
+
+    /* The overlay's own arrival: `drawOverlay()` builds the layer fresh
+       every time the table turns busy, so a plain one-shot animation on
+       insert is all a character needs; it plays again on every "Loading". */
+    [data-bo] .kp-datatable__busy-overlay {
+        animation: var(--bo-arrival, none) var(--bo-arrival-dur, 0.4s) var(--bo-arrival-ease, ease) both;
+    }
+
+    /* The failed alert's arrival mirrors in: `js/datatable.js` only toggles
+       `hidden` on it (never removes it), and `@starting-style` can animate
+       the very frame an element stops being `display: none`, so its
+       transform eases in from `--bo-fail-from` to its resting `none` with
+       no script of its own. Its *leave* cannot be shown the same way: the
+       package's base layer sets `[hidden] { display: none !important }`
+       (KT13), which `!important` applies the instant the attribute returns
+       — before any transition on this layer's `transition-behavior:
+       allow-discrete` can delay it — so the alert disappears at once, the
+       same limitation the overlay's own removal has (see demo.js's header
+       comment). Only the one direction genuinely mirrors; the other is a
+       finding, not a choice this layer can make. */
+    [data-bo] [data-kp-datatable-failed] {
+        border: var(--bo-fail-border, 1px solid var(--border));
+        border-radius: var(--bo-fail-radius, var(--radius, 0.5rem));
+        background: var(--bo-fail-bg, var(--destructive));
+        box-shadow: var(--bo-fail-shadow, none);
+        color: var(--bo-fail-ink, var(--destructive-foreground));
+        transform: none;
+        transition: var(--bo-fail-transition, transform 0.3s ease);
+        transition-behavior: allow-discrete;
+    }
+
+    @starting-style {
+        [data-bo] [data-kp-datatable-failed]:not([hidden]) {
+            transform: var(--bo-fail-from, none);
+        }
+    }
+
+    /* ── formal: the engraved plate, the docket, the seal ─────────────── */
+
+    [data-theme='formal'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='formal'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border), 0 0 0 4px var(--background), 0 0 0 5px var(--border);
+        --bo-font: var(--theme-font-body);
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='formal'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='formal'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 3px 0 0 var(--border);
+        --bo-panel-overflow: clip;
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+        inline-size: 0.85rem;
+        block-size: 0.85rem;
+        background: var(--background);
+        box-shadow: -1px 1px 0 0 var(--border);
+    }
+
+    [data-theme='formal'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='formal'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border);
+        --bo-panel-radius: 50%;
+        --bo-panel-shadow: 0 0 0 1px var(--border);
+        --bo-font: var(--theme-font-body);
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='formal'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--primary) 0 2px, transparent 2px 10px);
+        --bo-pic-inset: auto 0 0.4rem 0;
+        block-size: 2px;
+        animation: bo-formal-leader var(--kp-busy-loading-dur, 1.6s) linear infinite;
+    }
+
+    [data-theme='formal'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--border) 0 1px, transparent 1px);
+        background-size: 100% 0.6rem;
+        animation: bo-formal-rule var(--kp-busy-loading-dur, 1.8s) linear infinite;
+    }
+
+    [data-theme='formal'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: radial-gradient(circle, transparent 55%, var(--primary) 56% 60%, transparent 61%);
+        --bo-pic-inset: auto auto 0.4rem 50%;
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        margin-inline-start: -0.55rem;
+        animation: bo-formal-seal var(--kp-busy-loading-dur, 1.4s) ease-in-out infinite;
+    }
+
+    [data-theme='formal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='formal'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-formal-engrave;
+        --bo-arrival-dur: 0.5s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    [data-theme='formal'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-formal-ledger;
+        --bo-arrival-dur: 0.42s;
+        --bo-arrival-ease: steps(4, end);
+    }
+
+    [data-theme='formal'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--border);
+        --bo-fail-shadow: inset 4px 0 0 0 var(--destructive-foreground);
+        --bo-fail-from: translateX(-0.4rem);
+    }
+
+    [data-theme='formal'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        clip-path: polygon(0 6%, 100% 0, 100% 100%, 0 94%);
+        --bo-fail-from: scaleY(0.92);
+    }
+
+    [data-theme='formal'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 2px double var(--destructive-foreground);
+        --bo-fail-shadow: none;
+        --bo-fail-from: scale(0.97);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='formal'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-end: 1px solid var(--border);
+        }
+
+        [data-theme='formal'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            border-inline-start: 2px solid var(--border);
+        }
+
+        [data-theme='formal'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow:
+                0 0 0 1px var(--border),
+                inset 0 -1px 0 0 var(--border);
+        }
+    }
+
+    /* ── titanium: the milled plate, the instrument dial, the inspection window ── */
+
+    [data-theme='titanium'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 68%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong, var(--border));
+        --bo-panel-radius: var(--radius, 0.5rem);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border)), 0 1px 2px 0 color-mix(in oklab, var(--foreground) 20%, transparent);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        background-image: linear-gradient(170deg, color-mix(in oklab, var(--foreground) 6%, transparent), transparent 45%);
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: var(--radius, 0.5rem);
+        --bo-panel-shadow:
+            inset 0 1px 0 0 color-mix(in oklab, var(--background) 60%, white),
+            inset 0 -2px 0 0 color-mix(in oklab, var(--foreground) 18%, transparent), 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+    }
+
+    [data-theme='titanium'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0.6rem;
+        block-size: 3px;
+        background-image: repeating-linear-gradient(to right, var(--border-strong, var(--border)) 0 2px, transparent 2px 5px);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 999px;
+        --bo-panel-shadow:
+            0 0 0 2px var(--background), 0 0 0 3px var(--border-strong, var(--border)),
+            inset 0 1px 0 0 color-mix(in oklab, var(--background) 55%, white);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+    }
+
+    [data-theme='titanium'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: conic-gradient(from 0deg, transparent 0 85%, var(--primary) 85% 100%);
+        --bo-pic-inset: auto auto 0.5rem 50%;
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: -0.5rem;
+        border-radius: 50%;
+        animation: bo-titanium-needle var(--kp-busy-loading-dur, 1.3s) linear infinite;
+    }
+
+    [data-theme='titanium'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--primary), var(--primary));
+        --bo-pic-inset: auto 0 0 0;
+        block-size: 2px;
+        animation: bo-titanium-warm var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite;
+    }
+
+    [data-theme='titanium'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--border-strong, var(--border)) 0 2px, transparent 2px 7px);
+        --bo-pic-inset: auto 0 0.3rem 0;
+        block-size: 2px;
+        animation: bo-titanium-rivets var(--kp-busy-loading-dur, 1.2s) steps(4, end) infinite;
+    }
+
+    [data-theme='titanium'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='titanium'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-titanium-seated;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: cubic-bezier(0.3, 1.4, 0.4, 1);
+    }
+
+    [data-theme='titanium'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-titanium-torque;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: cubic-bezier(0.25, 0.9, 0.3, 1);
+    }
+
+    [data-theme='titanium'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--border-strong, var(--border)), inset 0 0 0 2px var(--destructive-foreground);
+        --bo-fail-from: scale(0.96);
+    }
+
+    [data-theme='titanium'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--card-foreground);
+        --bo-fail-border: 1px solid var(--border-strong, var(--border));
+        background-image: repeating-linear-gradient(135deg, var(--destructive) 0 0.5rem, transparent 0.5rem 1rem);
+        background-repeat: no-repeat;
+        background-size: 100% 3px;
+        background-position: top;
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateY(-0.4rem);
+    }
+
+    [data-theme='titanium'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+        --bo-fail-from: translateX(0.4rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='titanium'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-end: 1px solid var(--border-strong, var(--border));
+        }
+
+        [data-theme='titanium'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            border-inline-start: 3px solid var(--border-strong, var(--border));
+        }
+
+        [data-theme='titanium'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        }
+    }
+
+    /* ── motion: one block, every loop and every arrival ──────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes bo-formal-leader {
+            to {
+                background-position: 10px 0;
+            }
+        }
+
+        @keyframes bo-formal-rule {
+            to {
+                background-position: 0 0.6rem;
+            }
+        }
+
+        @keyframes bo-formal-seal {
+            0%,
+            100% {
+                transform: scale(0.85);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-formal-engrave {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-formal-ledger {
+            from {
+                transform: translateY(0.6rem);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bo-titanium-needle {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bo-titanium-warm {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.6);
+            }
+        }
+
+        @keyframes bo-titanium-rivets {
+            to {
+                background-position: 9px 0;
+            }
+        }
+
+        @keyframes bo-titanium-seated {
+            from {
+                transform: scale(0.9);
+            }
+            60% {
+                transform: scale(1.03);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-titanium-torque {
+            from {
+                transform: scale(0.9) rotate(-3deg);
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+    }
+}

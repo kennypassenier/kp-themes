@@ -1,0 +1,914 @@
+/* research/character-busy, group d (shade-dark, retro, grotesk, lapis,
+   nostromo): this group's theme-native CSS for the data table's busy
+   overlay, following busy.css's shared part and the formal/titanium
+   characters as the pattern. See busy.css's header for the five aspects
+   and the contract every option keeps: tokens only, every animation inside
+   one `prefers-reduced-motion: no-preference` block, nothing fades. */
+@layer kp.signature {
+    /* ── shade-dark: silverpoint, the reading lamp, the night window ──── */
+
+    [data-theme='shade-dark'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: inset 0 1px 0 0 var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+        background-image: linear-gradient(180deg, color-mix(in oklab, var(--foreground) 10%, transparent), transparent 55%);
+    }
+
+    [data-theme='shade-dark'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+        background-image: radial-gradient(circle at 50% 35%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 65%);
+    }
+
+    [data-theme='shade-dark'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+        background-image: linear-gradient(115deg, transparent 40%, color-mix(in oklab, var(--foreground) 12%, transparent) 50%, transparent 60%);
+    }
+
+    [data-theme='shade-dark'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--primary), var(--primary));
+        --bo-pic-inset: 0.6rem auto auto 0;
+        inline-size: 1.4rem;
+        block-size: 1px;
+        animation: bo-shadedark-glint var(--kp-busy-loading-dur, 1.8s) linear infinite;
+    }
+
+    [data-theme='shade-dark'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: radial-gradient(circle, color-mix(in oklab, var(--primary) 30%, transparent), transparent 70%);
+        --bo-pic-inset: auto auto 0.3rem 50%;
+        inline-size: 2.2rem;
+        block-size: 1.4rem;
+        margin-inline-start: -1.1rem;
+        background-position: 0 0;
+        animation: bo-shadedark-lamp var(--kp-busy-loading-dur, 2.2s) ease-in-out infinite;
+    }
+
+    [data-theme='shade-dark'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 16%, transparent), transparent);
+        background-size: 60% 100%;
+        background-repeat: no-repeat;
+        background-position: -40% 0;
+        animation: bo-shadedark-moon var(--kp-busy-loading-dur, 2.4s) linear infinite;
+    }
+
+    [data-theme='shade-dark'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='shade-dark'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-shadedark-silverpoint;
+        --bo-arrival-dur: 0.6s;
+        --bo-arrival-ease: ease-out;
+    }
+
+    [data-theme='shade-dark'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-shadedark-lampon;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: ease-out;
+    }
+
+    [data-theme='shade-dark'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: none;
+        background-image: radial-gradient(circle at 50% 0%, color-mix(in oklab, var(--destructive-foreground) 30%, transparent), transparent 70%);
+        --bo-fail-from: scale(0.94);
+    }
+
+    [data-theme='shade-dark'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: inset 0 1px 0 0 var(--destructive-foreground);
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='shade-dark'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: none;
+        background-image: linear-gradient(
+            115deg,
+            transparent 40%,
+            color-mix(in oklab, var(--destructive-foreground) 30%, transparent) 50%,
+            transparent 60%
+        );
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='shade-dark'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 1px 0 0 var(--border-strong, var(--border));
+        }
+
+        [data-theme='shade-dark'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            background-image: linear-gradient(180deg, color-mix(in oklab, var(--primary) 20%, transparent), transparent 70%);
+            background-size: 100% 50%;
+            background-repeat: no-repeat;
+            background-position: top;
+        }
+
+        [data-theme='shade-dark'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 color-mix(in oklab, var(--foreground) 14%, transparent);
+        }
+    }
+
+    /* ── retro: the 1995 dialog, the performance monitor, the Notepad window ── */
+
+    [data-theme='retro'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='retro'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong, var(--border));
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 1px 1px 0 0 var(--popover), inset -1px -1px 0 0 color-mix(in oklab, var(--foreground) 45%, transparent);
+        --bo-font: var(--theme-font-body);
+        background-image: linear-gradient(var(--popover), var(--popover));
+        background-repeat: no-repeat;
+        background-size: 100% 55%;
+        background-position: bottom;
+    }
+
+    [data-theme='retro'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='retro'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong, var(--border));
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        background-image: linear-gradient(var(--foreground), var(--foreground));
+        background-repeat: no-repeat;
+        background-size: 100% 55%;
+        background-position: bottom;
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='retro'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        block-size: 55%;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--primary) 55%, var(--background)) 0 1px, transparent 1px 4px);
+    }
+
+    [data-theme='retro'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='retro'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong, var(--border));
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='retro'] [data-bo-shape='3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        block-size: 0.3rem;
+        background-color: var(--primary);
+    }
+
+    [data-theme='retro'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 0.65rem);
+        --bo-pic-inset: auto 0 0.3rem 0;
+        block-size: 0.5rem;
+        animation: bo-retro-blocks var(--kp-busy-loading-dur, 1.6s) steps(8, end) infinite;
+    }
+
+    [data-theme='retro'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--primary), var(--primary));
+        --bo-pic-inset: auto auto 0.3rem 0;
+        inline-size: 20%;
+        block-size: 0.4rem;
+        animation: bo-retro-marquee var(--kp-busy-loading-dur, 1.4s) steps(10, end) infinite alternate;
+    }
+
+    [data-theme='retro'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--primary) 0 15%, var(--border-strong, var(--border)) 15% 30%);
+        background-size: 200% 100%;
+        animation: bo-retro-defrag var(--kp-busy-loading-dur, 1.2s) steps(6, end) infinite;
+    }
+
+    [data-theme='retro'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='retro'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-retro-painted;
+        --bo-arrival-dur: 0.5s;
+        --bo-arrival-ease: steps(5, end);
+    }
+
+    [data-theme='retro'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-retro-dragged;
+        --bo-arrival-dur: 0.22s;
+        --bo-arrival-ease: steps(1, end);
+    }
+
+    [data-theme='retro'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--border-strong, var(--border));
+        --bo-fail-shadow:
+            inset 1px 1px 0 0 color-mix(in oklab, var(--destructive-foreground) 55%, transparent),
+            inset -1px -1px 0 0 color-mix(in oklab, var(--destructive) 55%, transparent);
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='retro'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--border-strong, var(--border));
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        --bo-fail-from: scale(0.97);
+    }
+
+    [data-theme='retro'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--border-strong, var(--border));
+        --bo-fail-shadow: none;
+        background-image: repeating-linear-gradient(
+            0deg,
+            color-mix(in oklab, var(--destructive-foreground) 45%, transparent) 0 1px,
+            transparent 1px 4px
+        );
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='retro'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            box-shadow:
+                inset 1px 1px 0 0 var(--popover),
+                inset -1px -1px 0 0 color-mix(in oklab, var(--foreground) 45%, transparent);
+        }
+
+        [data-theme='retro'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--primary) 55%, var(--background)) 0 1px, transparent 1px 4px);
+            background-size: 100% 40%;
+            background-repeat: no-repeat;
+            background-position: top;
+        }
+
+        [data-theme='retro'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--primary);
+        }
+    }
+
+    /* ── grotesk: the transit board, the Swiss poster, the index card ─── */
+
+    [data-theme='grotesk'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='1'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        block-size: 0.4rem;
+        background-color: var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-display);
+        letter-spacing: 0.02em;
+        font-weight: 700;
+        text-align: end;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 0 -1px 0 0 var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='grotesk'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--primary) 0 33%, var(--foreground) 33% 66%, var(--border-strong, var(--border)) 66% 100%);
+        --bo-pic-inset: 0 auto auto 0;
+        inline-size: 100%;
+        block-size: 0.4rem;
+        background-size: 300% 100%;
+        animation: bo-grotesk-flip var(--kp-busy-loading-dur, 1.2s) steps(3, end) infinite;
+    }
+
+    [data-theme='grotesk'] [data-bo-loading='2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        display: inline-block;
+        animation: bo-grotesk-nudge var(--kp-busy-loading-dur, 0.9s) steps(1, end) infinite alternate;
+    }
+
+    [data-theme='grotesk'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--border-strong, var(--border)), var(--border-strong, var(--border)));
+        --bo-pic-inset: auto 0 0.5rem 0;
+        block-size: 2px;
+        clip-path: inset(0 100% 0 0);
+        animation: bo-grotesk-index var(--kp-busy-loading-dur, 1.3s) linear infinite;
+    }
+
+    [data-theme='grotesk'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='grotesk'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-grotesk-setintype;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: ease-out;
+    }
+
+    [data-theme='grotesk'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-grotesk-flipin;
+        --bo-arrival-dur: 0.2s;
+        --bo-arrival-ease: steps(1, end);
+    }
+
+    [data-theme='grotesk'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: inset 0 -2px 0 0 var(--destructive-foreground);
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='grotesk'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-bo-failure='2'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        block-size: 0.4rem;
+        background-color: var(--destructive-foreground);
+    }
+
+    [data-theme='grotesk'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: none;
+        --bo-fail-from: scale(0.98);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='grotesk'] [data-bo-phone='1'] .kp-datatable__busy-panel::after {
+            block-size: 0.3rem;
+        }
+
+        [data-theme='grotesk'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            letter-spacing: normal;
+            font-weight: 400;
+            text-align: start;
+        }
+
+        [data-theme='grotesk'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 -1px 0 0 var(--border-strong, var(--border));
+        }
+    }
+
+    /* ── lapis: the girih tile, lapis on vellum, the manuscript margin ── */
+
+    [data-theme='lapis'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--primary), 0 0 0 3px var(--background), 0 0 0 4px var(--primary);
+        --bo-font: var(--theme-font-display);
+        background-image:
+            repeating-linear-gradient(45deg, color-mix(in oklab, var(--primary) 10%, transparent) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(-45deg, color-mix(in oklab, var(--primary) 10%, transparent) 0 1px, transparent 1px 12px);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--primary), 0 0 0 3px color-mix(in oklab, var(--primary) 40%, transparent);
+        --bo-font: var(--theme-font-display);
+        font-style: italic;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: inset 2px 0 0 0 var(--primary);
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='lapis'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: conic-gradient(from 0deg, transparent 0 80%, var(--primary) 80% 100%);
+        --bo-pic-inset: auto auto 0.4rem 50%;
+        --bo-pic-origin: 50% 50%;
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: -0.5rem;
+        animation: bo-lapis-star var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite alternate;
+    }
+
+    [data-theme='lapis'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--primary), var(--primary));
+        --bo-pic-inset: 0.5rem auto auto 0;
+        inline-size: 0.8rem;
+        block-size: 2px;
+        animation: bo-lapis-leaf var(--kp-busy-loading-dur, 1.6s) linear infinite;
+    }
+
+    [data-theme='lapis'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--primary), var(--primary));
+        --bo-pic-inset: 0 auto 0 0;
+        inline-size: 2px;
+        animation: bo-lapis-margin var(--kp-busy-loading-dur, 1.5s) linear infinite;
+    }
+
+    [data-theme='lapis'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='lapis'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-lapis-illuminated;
+        --bo-arrival-dur: 0.5s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    [data-theme='lapis'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-lapis-inked;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: ease-out;
+    }
+
+    [data-theme='lapis'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: inset 0 -2px 0 0 var(--destructive-foreground);
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='lapis'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: none;
+        background-image:
+            repeating-linear-gradient(45deg, color-mix(in oklab, var(--destructive-foreground) 20%, transparent) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(-45deg, color-mix(in oklab, var(--destructive-foreground) 20%, transparent) 0 1px, transparent 1px 12px);
+        --bo-fail-from: scale(0.96);
+    }
+
+    [data-theme='lapis'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 2px var(--destructive-foreground);
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='lapis'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            background-image:
+                repeating-linear-gradient(45deg, color-mix(in oklab, var(--primary) 10%, transparent) 0 1px, transparent 1px 12px),
+                repeating-linear-gradient(-45deg, color-mix(in oklab, var(--primary) 10%, transparent) 0 1px, transparent 1px 12px);
+            background-size: 100% 40%;
+            background-repeat: repeat-x;
+            background-position: top;
+        }
+
+        [data-theme='lapis'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--primary);
+        }
+
+        [data-theme='lapis'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--primary);
+        }
+    }
+
+    /* ── nostromo: the CRT trace, the indicator panel, the MU-TH-UR screen ── */
+
+    [data-theme='nostromo'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--accent);
+        --bo-font: var(--theme-font-mono);
+        text-transform: uppercase;
+        background-image: repeating-linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 8%, transparent) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow:
+            inset 0 1px 0 0 color-mix(in oklab, var(--background) 60%, transparent),
+            inset 0 -1px 0 0 color-mix(in oklab, var(--foreground) 25%, transparent);
+        --bo-font: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.4rem;
+        inset-inline-start: 0.4rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background-color: var(--accent);
+        box-shadow: 0 0 4px var(--accent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--accent);
+        --bo-font: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--accent), var(--accent));
+        --bo-pic-inset: 0 0 auto 0;
+        block-size: 2px;
+        box-shadow: 0 0 6px var(--accent);
+        animation: bo-nostromo-trace var(--kp-busy-loading-dur, 1.6s) linear infinite;
+    }
+
+    [data-theme='nostromo'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(var(--accent), var(--accent));
+        --bo-pic-inset: auto auto 0.5rem 0.5rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        animation: bo-nostromo-lamp var(--kp-busy-loading-dur, 1s) steps(1, end) infinite;
+    }
+
+    [data-theme='nostromo'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--accent) 0 0.4rem, transparent 0.4rem 0.6rem);
+        --bo-pic-inset: auto 0 0.3rem 0;
+        block-size: 0.5rem;
+        animation: bo-nostromo-print var(--kp-busy-loading-dur, 1.4s) steps(10, end) infinite;
+    }
+
+    [data-theme='nostromo'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='nostromo'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-nostromo-warmed;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: steps(2, jump-none);
+    }
+
+    [data-theme='nostromo'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-nostromo-printed;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: steps(4, end);
+    }
+
+    [data-theme='nostromo'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        --bo-fail-shadow: none;
+        --bo-fail-from: scale(0.95);
+    }
+
+    [data-theme='nostromo'] [data-bo-failure='1'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.4rem;
+        inset-inline-start: 0.4rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background-color: var(--destructive-foreground);
+        box-shadow: 0 0 4px var(--destructive-foreground);
+    }
+
+    [data-theme='nostromo'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        --bo-fail-shadow: none;
+        background-image: linear-gradient(var(--destructive-foreground), var(--destructive-foreground));
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position: top;
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='nostromo'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='nostromo'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            background-image: repeating-linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 8%, transparent) 0 1px, transparent 1px 3px);
+            background-size: 100% 40%;
+            background-repeat: no-repeat;
+            background-position: top;
+        }
+
+        [data-theme='nostromo'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--border-strong, var(--border));
+        }
+
+        [data-theme='nostromo'] [data-bo-phone='2'] .kp-datatable__busy-panel::after {
+            inset-block-start: 0.3rem;
+        }
+
+        [data-theme='nostromo'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 1px 0 0 var(--accent);
+        }
+    }
+
+    /* ── motion: one block, every loop and every arrival ──────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes bo-shadedark-glint {
+            to {
+                transform: translateX(calc(100% - 1.4rem));
+            }
+        }
+
+        @keyframes bo-shadedark-lamp {
+            0%,
+            100% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 15% 10%;
+            }
+        }
+
+        @keyframes bo-shadedark-moon {
+            to {
+                background-position: 140% 0;
+            }
+        }
+
+        @keyframes bo-shadedark-silverpoint {
+            0% {
+                clip-path: inset(0 100% 95% 0);
+            }
+            45% {
+                clip-path: inset(0 0 95% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-shadedark-lampon {
+            from {
+                transform: scale(0.4);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-retro-blocks {
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes bo-retro-marquee {
+            to {
+                transform: translateX(calc(400% - 100%));
+            }
+        }
+
+        @keyframes bo-retro-defrag {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        @keyframes bo-retro-painted {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-retro-dragged {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bo-grotesk-flip {
+            to {
+                background-position: -200% 0;
+            }
+        }
+
+        @keyframes bo-grotesk-nudge {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(0.12rem);
+            }
+        }
+
+        @keyframes bo-grotesk-index {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+            90% {
+                clip-path: inset(0 0 0 0);
+            }
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes bo-grotesk-setintype {
+            from {
+                transform: scaleX(0.3);
+                transform-origin: 0% 50%;
+            }
+            to {
+                transform: scaleX(1);
+                transform-origin: 0% 50%;
+            }
+        }
+
+        @keyframes bo-grotesk-flipin {
+            from {
+                transform: translateY(0.6rem);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bo-lapis-star {
+            from {
+                transform: rotate(-6deg);
+            }
+            to {
+                transform: rotate(6deg);
+            }
+        }
+
+        @keyframes bo-lapis-leaf {
+            to {
+                transform: translateX(calc(100% - 0.8rem));
+            }
+        }
+
+        @keyframes bo-lapis-margin {
+            0% {
+                clip-path: inset(100% 0 0 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-lapis-illuminated {
+            from {
+                clip-path: inset(0 100% 95% 0);
+            }
+            45% {
+                clip-path: inset(0 0 95% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-lapis-inked {
+            from {
+                transform: scaleX(0.3);
+                transform-origin: 0% 50%;
+            }
+            to {
+                transform: scaleX(1);
+                transform-origin: 0% 50%;
+            }
+        }
+
+        @keyframes bo-nostromo-trace {
+            to {
+                transform: translateY(calc(100% - 2px));
+            }
+        }
+
+        @keyframes bo-nostromo-lamp {
+            0%,
+            49% {
+                background-color: var(--accent);
+            }
+            50%,
+            100% {
+                background-color: color-mix(in oklab, var(--accent) 35%, var(--card));
+            }
+        }
+
+        @keyframes bo-nostromo-print {
+            to {
+                background-position: -6rem 0;
+            }
+        }
+
+        @keyframes bo-nostromo-warmed {
+            0% {
+                transform: scaleY(0);
+            }
+            20% {
+                transform: scaleY(1);
+            }
+            35% {
+                transform: scaleY(0);
+            }
+            55% {
+                transform: scaleY(1);
+            }
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes bo-nostromo-printed {
+            from {
+                transform: translateY(0.6rem);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    }
+}

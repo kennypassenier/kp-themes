@@ -1,0 +1,910 @@
+/* research/character-busy, group c (solstice, brutalism, deco, phantom,
+   shade-light): the data table's busy overlay, following busy.css's shared
+   part and the formal/titanium characters as the pattern. See busy.css's
+   header for the five aspects and the contract every option keeps (tokens
+   only, one rule per aspect, motion in one `prefers-reduced-motion:
+   no-preference` block, nothing fades). */
+@layer kp.signature {
+    /* ── solstice: the low sun, the embers, the horizon ───────────────── */
+
+    [data-theme='solstice'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: 0 0 0 1px var(--primary);
+        background-image: radial-gradient(ellipse at 50% 120%, color-mix(in oklab, var(--primary) 32%, transparent), transparent 70%);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        background-image: radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--primary) 42%, transparent) 0%, transparent 60%);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 32%;
+        block-size: 2px;
+        background-color: var(--primary);
+    }
+
+    [data-theme='solstice'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: radial-gradient(circle, color-mix(in oklab, var(--primary) 75%, transparent) 0%, transparent 65%);
+        --bo-pic-inset: auto 0 0.3rem 0;
+        block-size: 0.5rem;
+        background-repeat: no-repeat;
+        background-size: 35% 100%;
+        animation: bo-solstice-sun var(--kp-busy-loading-dur, 2.2s) ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: radial-gradient(circle, color-mix(in oklab, var(--primary) 60%, transparent) 0%, transparent 70%);
+        --bo-pic-inset: auto auto 0 50%;
+        inline-size: 3rem;
+        block-size: 1.2rem;
+        margin-inline-start: -1.5rem;
+        border-radius: 50%;
+        transform-origin: 50% 100%;
+        animation: bo-solstice-embers var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic-inset: auto 0 30% 0;
+        block-size: 2px;
+        background-color: var(--border-strong);
+        animation: bo-solstice-horizonglow var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='solstice'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-solstice-dawn;
+        --bo-arrival-dur: 0.5s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    [data-theme='solstice'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-solstice-kindled;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: cubic-bezier(0.3, 1.4, 0.4, 1);
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='solstice'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        background-image: radial-gradient(ellipse at 50% 120%, color-mix(in oklab, var(--destructive-foreground) 28%, transparent), transparent 70%);
+        --bo-fail-from: translateY(0.4rem);
+    }
+
+    [data-theme='solstice'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        background-image: radial-gradient(
+            circle at 50% 100%,
+            color-mix(in oklab, var(--destructive-foreground) 38%, transparent) 0%,
+            transparent 60%
+        );
+        --bo-fail-from: scale(0.94);
+    }
+
+    [data-theme='solstice'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: inset 0 -3px 0 0 var(--destructive-foreground), 0 0 0 1px var(--destructive-foreground);
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='solstice'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-start: 2px solid var(--primary);
+        }
+
+        [data-theme='solstice'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 3px 0 0 var(--primary);
+        }
+
+        [data-theme='solstice'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            border-block-start: 1px solid var(--border-strong);
+        }
+    }
+
+    /* ── brutalism: the slab, the sticker sheet, the poster block ─────── */
+
+    [data-theme='brutalism'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 2px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: var(--fx-shadow-offset, 4px) var(--fx-shadow-offset, 4px) 0 0 var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: 0 0 0 2px var(--border-strong);
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 2px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-display);
+        transform: rotate(-1.2deg);
+        font-size: 1.05em;
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        border-block-start: 6px solid var(--border-strong);
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='brutalism'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--border-strong);
+        --bo-pic-inset: auto auto 0.3rem 50%;
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        margin-inline-start: -0.7rem;
+        animation: bo-brutalism-stamp var(--kp-busy-loading-dur, 1.1s) steps(2, end) infinite;
+    }
+
+    [data-theme='brutalism'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--border-strong);
+        --bo-pic-inset: auto 0.4rem 0.4rem auto;
+        inline-size: 1rem;
+        block-size: 1rem;
+        animation: bo-brutalism-hammer var(--kp-busy-loading-dur, 0.9s) steps(1, end) infinite alternate;
+    }
+
+    [data-theme='brutalism'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--primary);
+        --bo-pic-inset: auto auto 0 50%;
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: -0.5rem;
+        animation: bo-brutalism-drop var(--kp-busy-loading-dur, 1.2s) steps(4, end) infinite;
+    }
+
+    [data-theme='brutalism'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='brutalism'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-brutalism-slam;
+        --bo-arrival-dur: 0.15s;
+        --bo-arrival-ease: steps(1, end);
+    }
+
+    [data-theme='brutalism'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-brutalism-shove;
+        --bo-arrival-dur: 0.18s;
+        --bo-arrival-ease: steps(1, end);
+    }
+
+    [data-theme='brutalism'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 2px solid var(--destructive-foreground);
+        --bo-fail-shadow: var(--fx-shadow-offset, 4px) var(--fx-shadow-offset, 4px) 0 0 var(--destructive-foreground);
+        border-block-start: 6px solid var(--destructive-foreground);
+        --bo-fail-from: translateY(-0.5rem);
+    }
+
+    [data-theme='brutalism'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 2px solid var(--destructive-foreground);
+        --bo-fail-shadow: var(--fx-shadow-offset, 4px) var(--fx-shadow-offset, 4px) 0 0 var(--destructive-foreground);
+        --bo-fail-from: translate(-0.4rem, -0.4rem);
+    }
+
+    [data-theme='brutalism'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 2px solid var(--destructive-foreground);
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        transform: rotate(-1deg);
+        --bo-fail-from: rotate(-7deg) scale(0.9);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='brutalism'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 -4px 0 0 var(--border-strong);
+        }
+
+        [data-theme='brutalism'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: 0 0 0 2px var(--border-strong);
+        }
+
+        [data-theme='brutalism'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            border-block-start: 4px solid var(--border-strong);
+        }
+    }
+
+    /* ── deco: the gilt frame, the marquee, the skyscraper ─────────────── */
+
+    [data-theme='deco'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='deco'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong), 0 0 0 3px var(--background), 0 0 0 4px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        background-image: radial-gradient(circle at 50% 120%, color-mix(in oklab, var(--primary) 30%, transparent), transparent 60%);
+    }
+
+    [data-theme='deco'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='deco'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-display);
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        block-size: 3px;
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 10px);
+    }
+
+    [data-theme='deco'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='deco'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        background-image: linear-gradient(
+            to top,
+            color-mix(in oklab, var(--primary) 16%, transparent) 0 20%,
+            transparent 20% 40%,
+            color-mix(in oklab, var(--primary) 10%, transparent) 40% 60%
+        );
+    }
+
+    [data-theme='deco'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: conic-gradient(
+            from 0deg,
+            color-mix(in oklab, var(--primary) 60%, transparent) 0 8%,
+            transparent 8% 25%,
+            color-mix(in oklab, var(--primary) 60%, transparent) 25% 33%,
+            transparent 33% 50%,
+            color-mix(in oklab, var(--primary) 60%, transparent) 50% 58%,
+            transparent 58% 75%,
+            color-mix(in oklab, var(--primary) 60%, transparent) 75% 83%,
+            transparent 83% 100%
+        );
+        --bo-pic-inset: auto auto 0.3rem 50%;
+        inline-size: 1.3rem;
+        block-size: 1.3rem;
+        margin-inline-start: -0.65rem;
+        border-radius: 50%;
+        animation: bo-deco-sunburst var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite;
+    }
+
+    [data-theme='deco'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 10px);
+        --bo-pic-inset: 0 0 auto 0;
+        block-size: 3px;
+        background-repeat: repeat-x;
+        animation: bo-deco-bulbs var(--kp-busy-loading-dur, 1s) steps(6, end) infinite;
+    }
+
+    [data-theme='deco'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--primary);
+        --bo-pic-inset: auto auto 0 50%;
+        inline-size: 0.8rem;
+        block-size: 0.3rem;
+        margin-inline-start: -0.4rem;
+        animation: bo-deco-steps var(--kp-busy-loading-dur, 1.4s) steps(4, end) infinite;
+    }
+
+    [data-theme='deco'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='deco'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-deco-curtain;
+        --bo-arrival-dur: 0.5s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='deco'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-deco-marquee;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: steps(4, end);
+    }
+
+    [data-theme='deco'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground), 0 0 0 3px var(--background), 0 0 0 4px var(--destructive-foreground);
+        --bo-fail-from: scale(0.95);
+    }
+
+    [data-theme='deco'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        background-image: repeating-linear-gradient(to right, var(--destructive-foreground) 0 4px, transparent 4px 10px);
+        background-repeat: no-repeat;
+        background-size: 100% 3px;
+        background-position: top;
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='deco'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        background-image: linear-gradient(
+            to top,
+            color-mix(in oklab, var(--destructive-foreground) 20%, transparent) 0 20%,
+            transparent 20% 40%,
+            color-mix(in oklab, var(--destructive-foreground) 14%, transparent) 40% 60%
+        );
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        --bo-fail-from: scaleY(0.9);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='deco'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-start: 2px solid var(--border-strong);
+        }
+
+        [data-theme='deco'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--primary);
+        }
+
+        [data-theme='deco'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            border-block-start: 3px double var(--border-strong);
+        }
+    }
+
+    /* ── phantom: the evidence card, the calling card, the ransom note ─── */
+
+    [data-theme='phantom'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='phantom'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 2px 0 0 0 var(--primary);
+        --bo-font: var(--theme-font-display);
+        font-style: italic;
+    }
+
+    [data-theme='phantom'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='phantom'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-display);
+        text-transform: uppercase;
+        transform: rotate(-1deg);
+    }
+
+    [data-theme='phantom'] [data-bo-shape='2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        background-color: var(--primary);
+        clip-path: polygon(100% 0, 100% 100%, 40% 0);
+    }
+
+    [data-theme='phantom'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='phantom'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        clip-path: polygon(0 2%, 3% 0, 97% 1%, 100% 3%, 99% 97%, 96% 100%, 2% 99%, 0 96%);
+    }
+
+    [data-theme='phantom'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--primary);
+        --bo-pic-inset: 0 auto 0 0;
+        inline-size: 2px;
+        transform-origin: 0 50%;
+        animation: bo-phantom-string var(--kp-busy-loading-dur, 1.6s) ease-in-out infinite;
+    }
+
+    [data-theme='phantom'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--primary);
+        --bo-pic-inset: 0.5rem 0 auto auto;
+        inline-size: 1.4rem;
+        block-size: 3px;
+        transform-origin: 100% 50%;
+        animation: bo-phantom-slash var(--kp-busy-loading-dur, 1.2s) ease-in-out infinite;
+    }
+
+    [data-theme='phantom'] [data-bo-loading='3'] .kp-datatable__busy-panel {
+        animation: bo-phantom-tremble var(--kp-busy-loading-dur, 1s) ease-in-out infinite;
+    }
+
+    [data-theme='phantom'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='phantom'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-phantom-thrown;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    [data-theme='phantom'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-phantom-slashin;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: steps(3, end);
+    }
+
+    [data-theme='phantom'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        transform: rotate(-1deg);
+        --bo-fail-from: rotate(-7deg) scale(0.92);
+    }
+
+    [data-theme='phantom'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 2px solid var(--destructive-foreground);
+        --bo-fail-radius: 999px 4px 999px 4px;
+        --bo-fail-shadow: none;
+        --bo-fail-from: rotate(8deg) scale(0.9);
+    }
+
+    [data-theme='phantom'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        clip-path: polygon(0 2%, 3% 0, 97% 1%, 100% 3%, 99% 97%, 96% 100%, 2% 99%, 0 96%);
+        --bo-fail-from: translateY(0.4rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='phantom'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-start: 2px solid var(--primary);
+        }
+
+        [data-theme='phantom'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            border-inline-end: 3px solid var(--border-strong);
+        }
+
+        [data-theme='phantom'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            border-block-start: 1px dashed var(--border-strong);
+        }
+    }
+
+    /* ── shade-light: pencil in the shade, the leaf shade, the window light ── */
+
+    [data-theme='shade-light'] [data-bo-shape='1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='shade-light'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--border-strong) 35%, transparent) 0 1px, transparent 1px 6px);
+    }
+
+    [data-theme='shade-light'] [data-bo-shape='2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='shade-light'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        background-image:
+            radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--foreground) 10%, transparent) 0 10%, transparent 11%),
+            radial-gradient(circle at 70% 60%, color-mix(in oklab, var(--foreground) 8%, transparent) 0 8%, transparent 9%),
+            radial-gradient(circle at 45% 80%, color-mix(in oklab, var(--foreground) 10%, transparent) 0 9%, transparent 10%);
+    }
+
+    [data-theme='shade-light'] [data-bo-shape='3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='shade-light'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-font: var(--theme-font-body);
+        background-image: linear-gradient(115deg, transparent 40%, color-mix(in oklab, var(--primary) 14%, transparent) 50%, transparent 60%);
+    }
+
+    [data-theme='shade-light'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: radial-gradient(circle, color-mix(in oklab, var(--foreground) 16%, transparent) 0 40%, transparent 42%);
+        --bo-pic-inset: 20% auto auto 20%;
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-radius: 50%;
+        animation: bo-shadelight-leaves var(--kp-busy-loading-dur, 2s) ease-in-out infinite;
+    }
+
+    [data-theme='shade-light'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(90deg, var(--border-strong), var(--border-strong));
+        --bo-pic-inset: auto 0 0.3rem 0;
+        block-size: 1px;
+        background-size: 30% 100%;
+        background-repeat: no-repeat;
+        animation: bo-shadelight-hatch var(--kp-busy-loading-dur, 1.6s) linear infinite;
+    }
+
+    [data-theme='shade-light'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: linear-gradient(115deg, transparent 30%, color-mix(in oklab, var(--primary) 32%, transparent) 50%, transparent 70%);
+        background-size: 200% 100%;
+        animation: bo-shadelight-lightshift var(--kp-busy-loading-dur, 2.2s) ease-in-out infinite;
+    }
+
+    [data-theme='shade-light'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    [data-theme='shade-light'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-shadelight-drawn;
+        --bo-arrival-dur: 0.4s;
+        --bo-arrival-ease: steps(5, end);
+    }
+
+    [data-theme='shade-light'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-shadelight-outofshade;
+        --bo-arrival-dur: 0.45s;
+        --bo-arrival-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    [data-theme='shade-light'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        background-image: radial-gradient(circle at calc(100% - 0.6rem) 0.6rem, var(--destructive-foreground) 0 3px, transparent 4px);
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateY(-0.3rem);
+    }
+
+    [data-theme='shade-light'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        background-image:
+            radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--destructive-foreground) 20%, transparent) 0 10%, transparent 11%),
+            radial-gradient(circle at 70% 60%, color-mix(in oklab, var(--destructive-foreground) 16%, transparent) 0 8%, transparent 9%);
+        --bo-fail-shadow: 0 0 0 1px var(--destructive-foreground);
+        --bo-fail-from: scale(0.95);
+    }
+
+    [data-theme='shade-light'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 1px solid var(--destructive-foreground);
+        background-image: linear-gradient(
+            115deg,
+            transparent 40%,
+            color-mix(in oklab, var(--destructive-foreground) 28%, transparent) 50%,
+            transparent 60%
+        );
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateX(0.3rem);
+    }
+
+    @container kp-table (max-width: 30rem) {
+        [data-theme='shade-light'] [data-bo-phone='1'] .kp-datatable__busy-panel {
+            border-block-start: 1px solid var(--border-strong);
+        }
+
+        [data-theme='shade-light'] [data-bo-phone='2'] .kp-datatable__busy-panel {
+            box-shadow: inset 0 2px 0 0 var(--border-strong);
+        }
+
+        [data-theme='shade-light'] [data-bo-phone='3'] .kp-datatable__busy-panel {
+            border-block-start: 2px solid var(--primary);
+        }
+    }
+
+    /* ── motion: one block, every loop and every arrival ──────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes bo-solstice-sun {
+            0%,
+            100% {
+                background-position: 0% 0;
+            }
+            50% {
+                background-position: 100% 0;
+            }
+        }
+
+        @keyframes bo-solstice-embers {
+            0%,
+            100% {
+                transform: scale(0.75);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes bo-solstice-horizonglow {
+            0%,
+            100% {
+                background-color: color-mix(in oklab, var(--primary) 45%, var(--border-strong));
+            }
+            50% {
+                background-color: var(--primary);
+            }
+        }
+
+        @keyframes bo-solstice-dawn {
+            from {
+                transform: translateY(0.6rem);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bo-solstice-kindled {
+            from {
+                transform: scale(0.88);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-brutalism-stamp {
+            0%,
+            100% {
+                transform: scaleY(0.3) translateY(0.4rem);
+            }
+            50% {
+                transform: scaleY(1) translateY(0);
+            }
+        }
+
+        @keyframes bo-brutalism-hammer {
+            from {
+                transform: translate(0, 0);
+            }
+            to {
+                transform: translate(3px, 3px);
+            }
+        }
+
+        @keyframes bo-brutalism-drop {
+            0% {
+                transform: translateY(-1.5rem);
+            }
+            60% {
+                transform: translateY(0);
+            }
+            80% {
+                transform: translateY(-0.3rem);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bo-brutalism-slam {
+            from {
+                transform: scale(0.7);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-brutalism-shove {
+            from {
+                transform: translateX(-2rem);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bo-deco-sunburst {
+            0%,
+            100% {
+                transform: scale(0.6);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes bo-deco-bulbs {
+            to {
+                background-position: 10px 0;
+            }
+        }
+
+        @keyframes bo-deco-steps {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-2.2rem);
+            }
+        }
+
+        @keyframes bo-deco-curtain {
+            from {
+                transform: scaleY(0.05);
+            }
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes bo-deco-marquee {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-phantom-string {
+            0%,
+            100% {
+                transform: scaleY(0.85);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes bo-phantom-slash {
+            0%,
+            100% {
+                transform: scaleX(0.4);
+            }
+            50% {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes bo-phantom-tremble {
+            0%,
+            100% {
+                transform: rotate(-1deg);
+            }
+            50% {
+                transform: rotate(1deg);
+            }
+        }
+
+        @keyframes bo-phantom-thrown {
+            from {
+                transform: translateX(-3rem) rotate(-6deg);
+            }
+            to {
+                transform: translateX(0) rotate(0deg);
+            }
+        }
+
+        @keyframes bo-phantom-slashin {
+            from {
+                clip-path: polygon(100% 0, 100% 0, 100% 0);
+            }
+            to {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+        }
+
+        @keyframes bo-shadelight-leaves {
+            0%,
+            100% {
+                transform: translateX(-0.3rem);
+            }
+            50% {
+                transform: translateX(0.3rem);
+            }
+        }
+
+        @keyframes bo-shadelight-hatch {
+            from {
+                background-position: -30% 0;
+            }
+            to {
+                background-position: 130% 0;
+            }
+        }
+
+        @keyframes bo-shadelight-lightshift {
+            0%,
+            100% {
+                background-position: 0% 0;
+            }
+            50% {
+                background-position: 100% 0;
+            }
+        }
+
+        @keyframes bo-shadelight-drawn {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes bo-shadelight-outofshade {
+            from {
+                transform: translateY(-0.5rem);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    }
+}

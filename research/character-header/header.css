@@ -1,0 +1,397 @@
+/* research/character-header, phase 1 (Kenny, 2026-10-05 brief): the page
+   header (`.kp-page-header`) has three aspects, each picked on its own from
+   three options, composed freely on the strip that wraps it (`[data-ph]`):
+
+     data-ph-shape="1|2|3"       the plate, the title, the description, the
+                                  buttons and the overflow button's own look
+     data-ph-menu="1|2|3"        how the overflow menu opens; its leave is
+                                  that arrival played in reverse
+                                  (`[data-ph-anim="open"|"close"]`, set by
+                                  demo.js); it always moves (a still frame
+                                  under reduced motion), nothing fades
+     data-ph-interactive="1|2|3" hover, focus-visible and :active on every
+                                  button in the header
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. Phase 1 builds formal and titanium; header-a.css
+   … header-d.css (`@layer kp.signature {}`, empty) hold the other twenty
+   themes, five each, added group by group. In a register the `[data-ph…]`
+   parts drop out of every selector.
+
+   The contract every option keeps:
+   - The markup is the package's own `.kp-page-header` shape (title,
+     description, the overflow panel built by demo.js's buildHeader(), the
+     same every page using the header would render). js/* is not changed.
+   - Layout: the header's own grid (`.kp-page-header__inner`, the 40rem
+     container-query stack in css/components.css) is never overridden here
+     — only paint, type and the menu's motion.
+   - Colour: tokens only (DI9). The plate and its ink are a pair, never
+     half of one; the primary button keeps `--primary`/`--primary-foreground`
+     as its base, restyled only in frame, radius and surface.
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end; nothing fades (no opacity anywhere);
+     a leave reuses its arrival's keyframes in reverse (`animation-direction:
+     reverse`), so the two are always mirrors; nothing loops at rest. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    [data-ph] .kp-page-header {
+        padding: var(--ph-pad, var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem));
+        border: var(--ph-frame, 1px solid var(--border));
+        border-radius: var(--ph-radius, var(--radius, 0.5rem));
+        background: var(--ph-pat, none);
+        background-color: var(--ph-plate, var(--card));
+        box-shadow: var(--ph-shadow, none);
+        color: var(--ph-ink, var(--card-foreground));
+        font-family: var(--ph-font, inherit);
+        transition: var(--ph-transition, none);
+    }
+
+    [data-ph] .kp-page-header__title {
+        font-family: var(--ph-title-font, inherit);
+        font-weight: var(--ph-title-weight, 700);
+        font-style: var(--ph-title-style, normal);
+        letter-spacing: var(--ph-title-track, normal);
+        text-transform: var(--ph-title-case, none);
+        color: var(--ph-title-ink, var(--ph-ink, inherit));
+    }
+
+    [data-ph] .kp-page-header__description {
+        font-style: var(--ph-desc-style, normal);
+        color: var(--ph-desc-ink, var(--muted-foreground));
+    }
+
+    [data-ph] .kp-page-header__actions > .kp-button {
+        border: var(--ph-btn-frame, 1px solid var(--border));
+        border-radius: var(--ph-btn-radius, var(--radius, 0.5rem));
+        background: var(--ph-btn-pat, none);
+        background-color: var(--ph-btn-bg, var(--secondary));
+        color: var(--ph-btn-ink, var(--secondary-foreground));
+        box-shadow: var(--ph-btn-shadow, none);
+        transition: var(--ph-btn-transition, none);
+    }
+
+    [data-ph] .kp-page-header__actions > .kp-button--primary {
+        border-color: var(--ph-btn-primary-frame, transparent);
+        background: var(--ph-btn-primary-pat, none);
+        background-color: var(--ph-btn-primary-bg, var(--primary));
+        color: var(--ph-btn-primary-ink, var(--primary-foreground));
+    }
+
+    [data-ph] [data-ph-panel] {
+        border: var(--ph-menu-frame, 1px solid var(--border-strong));
+        border-radius: var(--ph-menu-radius, var(--radius, 0.5rem));
+        background: var(--ph-menu-pat, none);
+        background-color: var(--ph-menu-bg, var(--popover));
+        box-shadow: var(--ph-menu-shadow, none);
+        transform-origin: var(--ph-menu-origin, top right);
+    }
+
+    /* ══════════════════════════════════════════════════ formal ═══════ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    [data-theme='formal'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pad: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+        --ph-shadow: inset 0 0 0 3px transparent, 0 0 0 1px var(--border-strong) inset;
+        border-block-end: 2px double var(--border-strong);
+    }
+    [data-theme='formal'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: var(--kp-font-serif, serif);
+        --ph-title-track: 0.04em;
+        --ph-title-case: uppercase;
+    }
+    [data-theme='formal'] [data-ph-shape='1'] .kp-page-header__description {
+        --ph-desc-style: italic;
+    }
+    [data-theme='formal'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: 0;
+    }
+
+    [data-theme='formal'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-pad: var(--kp-space-lg, 1.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+        border-block-start: 3px solid var(--border-strong);
+    }
+    /* The button frame is drawn as an inset box-shadow below (so the ring sits
+       inside the pill without widening it); the border itself stays off. */
+    [data-theme='formal'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--kp-font-display, serif);
+        --ph-title-weight: 800;
+    }
+    [data-theme='formal'] [data-ph-shape='2'] .kp-page-header__description {
+        --ph-desc-style: italic;
+    }
+    [data-theme='formal'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 0;
+        --ph-btn-shadow: inset 0 0 0 1px var(--border-strong);
+        --ph-btn-radius: var(--radius, 0.5rem);
+    }
+
+    [data-theme='formal'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--primary);
+        --ph-pat: radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--primary) 8%, transparent) 0%, transparent 60%);
+        --ph-pad: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    }
+    [data-theme='formal'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--kp-font-display, serif);
+        --ph-title-track: 0.02em;
+    }
+    [data-theme='formal'] [data-ph-shape='3'] .kp-page-header__description {
+        --ph-desc-style: italic;
+    }
+    [data-theme='formal'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--primary);
+        --ph-btn-radius: var(--kp-radius-sm, 0.25rem);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-formal-menu-1 {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-formal-menu-2 {
+            from {
+                clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+            }
+            to {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+        }
+        @keyframes ph-formal-menu-3 {
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+            60% {
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='formal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-formal-menu-1 240ms ease-out;
+        }
+        [data-theme='formal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-formal-menu-1 240ms ease-out reverse;
+        }
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-formal-menu-2 220ms ease-out;
+        }
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-formal-menu-2 220ms ease-out reverse;
+        }
+        [data-theme='formal'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-formal-menu-3 420ms steps(6, end);
+        }
+        [data-theme='formal'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-formal-menu-3 420ms steps(6, end) reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        border-color: var(--ph-ink, var(--foreground));
+    }
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--secondary) 85%, var(--foreground));
+    }
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button--primary:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--primary) 85%, black);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--border-strong) 60%, transparent);
+    }
+    [data-theme='formal'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 1px dotted var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='formal'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 2px 0 0 color-mix(in oklch, var(--border-strong) 60%, transparent);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 1px 0 0 var(--ph-ink, var(--foreground));
+        transform: translateY(-1px);
+    }
+    [data-theme='formal'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 1px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='formal'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: none;
+    }
+
+    /* ══════════════════════════════════════════════════ titanium ═════ */
+
+    /* --- Shape --------------------------------------------------------- */
+
+    [data-theme='titanium'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 1px solid var(--border-strong);
+        --ph-pat: repeating-linear-gradient(100deg, color-mix(in oklch, var(--foreground) 4%, transparent) 0 1px, transparent 1px 3px);
+        --ph-shadow: inset 0 0 0 1px color-mix(in oklch, var(--foreground) 6%, transparent);
+    }
+    [data-theme='titanium'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-case: uppercase;
+        --ph-title-track: 0.08em;
+        --ph-title-weight: 600;
+    }
+    [data-theme='titanium'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-radius: var(--radius, 0.5rem);
+        --ph-btn-bg: color-mix(in oklch, var(--secondary) 92%, var(--primary) 8%);
+    }
+
+    [data-theme='titanium'] [data-ph-shape='2'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-frame: 0;
+        --ph-shadow: inset 0 3px 0 0 color-mix(in oklch, var(--primary) 30%, transparent);
+    }
+    [data-theme='titanium'] [data-ph-shape='2'] .kp-page-header__title {
+        --ph-title-font: var(--kp-font-mono, monospace);
+    }
+    [data-theme='titanium'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--border-strong);
+        --ph-btn-shadow: inset 0 -2px 0 0 color-mix(in oklch, var(--foreground) 10%, transparent);
+    }
+
+    [data-theme='titanium'] [data-ph-shape='3'] .kp-page-header {
+        --ph-plate: var(--card);
+        --ph-ink: var(--card-foreground);
+        --ph-radius: calc(var(--radius, 0.5rem) * 1.6);
+        --ph-frame: 1px solid var(--primary);
+        --ph-pat: linear-gradient(115deg, transparent 40%, color-mix(in oklch, var(--primary) 10%, transparent) 50%, transparent 60%);
+    }
+    [data-theme='titanium'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid var(--primary);
+        --ph-btn-radius: calc(var(--radius, 0.5rem) * 1.4);
+    }
+
+    /* --- The overflow menu's open and its mirrored close ---------------- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes ph-titanium-menu-1 {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-titanium-menu-2 {
+            0% {
+                transform: translateY(-10px) scaleY(0.92);
+                clip-path: inset(0 0 100% 0);
+            }
+            70% {
+                transform: translateY(2px) scaleY(1.02);
+                clip-path: inset(0 0 0% 0);
+            }
+            100% {
+                transform: translateY(0) scaleY(1);
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+        @keyframes ph-titanium-menu-3 {
+            0%,
+            12%,
+            24%,
+            36%,
+            48%,
+            60% {
+                clip-path: inset(0 0 100% 0);
+            }
+            6%,
+            18%,
+            30%,
+            42%,
+            54%,
+            70%,
+            100% {
+                clip-path: inset(0 0 0% 0);
+            }
+        }
+
+        [data-theme='titanium'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-titanium-menu-1 220ms ease-out;
+        }
+        [data-theme='titanium'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-titanium-menu-1 220ms ease-out reverse;
+        }
+        [data-theme='titanium'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-titanium-menu-2 320ms cubic-bezier(0.2, 0.8, 0.2, 1.3);
+        }
+        [data-theme='titanium'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-titanium-menu-2 320ms cubic-bezier(0.2, 0.8, 0.2, 1.3) reverse;
+        }
+        [data-theme='titanium'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: ph-titanium-menu-3 420ms steps(1, end);
+        }
+        [data-theme='titanium'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: ph-titanium-menu-3 420ms steps(1, end) reverse;
+        }
+    }
+
+    /* --- Hover, focus, press --------------------------------------------- */
+
+    [data-theme='titanium'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-color: color-mix(in oklch, var(--secondary) 88%, var(--primary) 12%);
+    }
+    [data-theme='titanium'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+    [data-theme='titanium'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: inset 0 1px 2px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
+    }
+
+    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    [data-theme='titanium'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: 0 2px 6px 0 color-mix(in oklch, var(--foreground) 18%, transparent);
+        transform: translateY(-1px);
+    }
+    [data-theme='titanium'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='titanium'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+}

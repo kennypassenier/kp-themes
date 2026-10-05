@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-busy">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a data table's busy overlay, of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="busy.css" />
+        <link rel="stylesheet" href="busy-a.css" />
+        <link rel="stylesheet" href="busy-b.css" />
+        <link rel="stylesheet" href="busy-c.css" />
+        <link rel="stylesheet" href="busy-d.css" />
+    </head>
+    <body>
+        <main class="bo-page">
+            <header class="bo-intro">
+                <h1>A data table's busy overlay, of its own, per theme: one pick per aspect</h1>
+                <p>
+                    Phase 1 (Kenny, 2026-10-05): the panel that covers a data table while it loads (<code>.kp-datatable__busy-overlay</code>,
+                    <code>data-kp-busy-overlay</code> or <code>busy({ overlay: true })</code>, fix-80 to fix-85) — a large spinner, the app's words, a
+                    live busy counter, and the failed alert that can stand in its place when <code>fail()</code> is called. Per theme you pick the
+                    shape of the panel, the loading picture, how the panel arrives (and leaves), the failed state, and the flat layout on a phone,
+                    each from three options and each on its own.
+                </p>
+                <p class="bo-motion" data-bo-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture shows its still frame. Turn it
+                    off in the system settings to judge the motion.
+                </p>
+                <p class="bo-meta">
+                    Every table is the package's own (<code>js/datatable.js</code>'s <code>attachDataTables()</code> draws the overlay, the live
+                    counter and the failed alert; it is not changed here); an option only restyles the overlay and the panel from the theme's tokens,
+                    in the theme's <code>kp.signature</code> layer (<code>busy.css</code>), one attribute per aspect, and keeps the table's own rows
+                    untouched. This theme: <b data-bo-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Phase 1 builds formal and titanium only; busy-a.css … busy-d.css
+                 (each `@layer kp.signature {}`, empty) are where the other
+                 twenty themes' CSS lands, group by group. -->
+            <section
+                class="bo-sec"
+                data-review-item="busy"
+                data-review-components="datatable"
+                data-review-title="The data table's busy overlay"
+                aria-labelledby="h-busy"
+            >
+                <div class="bo-sec__head">
+                    <h2 id="h-busy">The busy overlay in <span data-bo-theme-name>this theme</span></h2>
+                    <p>
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Loading</b> shows the overlay fresh (so the arrival plays again),
+                        <b>Failed</b> shows the alert in its place, <b>Long reason</b> tries a longer sentence of words, and the speed slows every
+                        animation. The counter under the words ticks by itself.
+                    </p>
+                </div>
+                <div class="bo-controls" data-review-controls>
+                    <div class="bo-actions" role="group" aria-label="State of the table">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-state="ready" aria-pressed="false">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-state="loading" aria-pressed="true">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-state="failed" aria-pressed="false">Failed</button>
+                    </div>
+                    <div class="bo-actions" role="group" aria-label="The app's words">
+                        <b>Words:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-words="short" aria-pressed="true">Short</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-words="long" aria-pressed="false">Long reason</button>
+                    </div>
+                    <div class="bo-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="bo-log" data-bo-log aria-live="polite">Try again in the failed alert reloads here; a click says so.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="bo-preview">
+                    <div class="bo-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-bo-picks>…</p>
+                    </div>
+                    <div
+                        class="kp-datatable bo-table"
+                        data-bo
+                        data-bo-preview
+                        data-kp-datatable
+                        data-kp-busy-overlay
+                        data-bo-shape="1"
+                        data-bo-loading="1"
+                        data-bo-arrival="1"
+                        data-bo-failure="1"
+                        data-bo-phone="1"
+                    >
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Pump houses on the northern network
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Pump house</th>
+                                        <th scope="col">Pressure</th>
+                                        <th scope="col">Read</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Pump house 1</td>
+                                        <td>3.42 bar</td>
+                                        <td>2 min ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pump house 2</td>
+                                        <td>3.08 bar</td>
+                                        <td>5 min ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pump house 3</td>
+                                        <td>2.95 bar</td>
+                                        <td>1 min ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bo-aspects" data-bo-aspects></div>
+                <div class="bo-reference">
+                    <div class="bo-aspect__head">
+                        <h3>For reference: the plain overlay, as today</h3>
+                        <p>
+                            The package's busy overlay as it ships, not an option: a card with a spinner, the words and the counter under it, over the
+                            dimmed rows, the same shape in every theme.
+                        </p>
+                    </div>
+                    <div class="kp-datatable bo-table" data-kp-datatable data-kp-busy-overlay>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Pump houses on the northern network, plain
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Pump house</th>
+                                        <th scope="col">Pressure</th>
+                                        <th scope="col">Read</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Pump house 1</td>
+                                        <td>3.42 bar</td>
+                                        <td>2 min ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pump house 2</td>
+                                        <td>3.08 bar</td>
+                                        <td>5 min ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pump house 3</td>
+                                        <td>2.95 bar</td>
+                                        <td>1 min ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Phase 1: no theme has been judged yet; this round's full reopen
+             list is written once every theme has its CSS (phase 2+). -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-05-busy-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

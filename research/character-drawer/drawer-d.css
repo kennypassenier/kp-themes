@@ -1,0 +1,1433 @@
+/* research/character-drawer, group d: shade-dark, retro, grotesk, lapis,
+   nostromo. Same contract as drawer.css (the model, formal + titanium):
+   one pick per aspect on the stage wrapper `.dt-demo[data-dt]`
+   (`data-dt-shape|openclose|highlight|card|next`), every rule names one
+   aspect only, tokens only, nothing fades, a close is always its open's
+   `@keyframes` played with `animation-direction: reverse`, every animation
+   sits inside `@media (prefers-reduced-motion: no-preference)`. */
+
+@layer kp.signature {
+    /* ── shade-dark: a dark wash, deepest at the foot ────────────────── */
+
+    [data-theme='shade-dark'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-image: linear-gradient(to bottom, var(--card), color-mix(in srgb, var(--card) 45%, var(--background) 55%));
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        background-color: var(--background);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background-color: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head,
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        background-color: var(--popover);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background-image: linear-gradient(135deg, color-mix(in srgb, var(--card) 65%, var(--background) 35%), var(--background));
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head,
+    [data-theme='shade-dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        background-color: var(--card);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it rises out of the dark wash, deepening as it travels */
+    [data-theme='shade-dark'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='shade-dark'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        filter: brightness(1.5);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-1 280ms ease-out both;
+        }
+
+        [data-theme='shade-dark'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-1 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-dark-1 {
+        0% {
+            translate: 100% 0;
+            filter: brightness(1.5);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* openclose 2: the wash bleeds in from the hinge edge as the panel slides */
+    [data-theme='shade-dark'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 0 0;
+        scale: 1 1;
+    }
+
+    [data-theme='shade-dark'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 100% 0;
+        scale: 0.4 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-2 300ms ease-out both;
+        }
+
+        [data-theme='shade-dark'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-dark-2 {
+        0% {
+            transform-origin: 100% 50%;
+            translate: 100% 0;
+            scale: 0.4 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            translate: 0 0;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it tilts out of shadow on its way in */
+    [data-theme='shade-dark'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 0 0;
+        rotate: y 0deg;
+    }
+
+    [data-theme='shade-dark'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 60% 0;
+        rotate: y 55deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-3 300ms ease-out both;
+        }
+
+        [data-theme='shade-dark'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-shade-dark-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-shade-dark-3 {
+        0% {
+            transform-origin: 100% 50%;
+            translate: 60% 0;
+            rotate: y 55deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            translate: 0 0;
+            rotate: y 0deg;
+        }
+    }
+
+    /* highlight: the deep-glow ring / the night-wash halo / the duotone bracket */
+    [data-theme='shade-dark'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='shade-dark'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: none;
+        box-shadow:
+            0 0 0 0.3rem hsl(from var(--primary) h s l / 0.3),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.75);
+    }
+
+    [data-theme='shade-dark'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 4px;
+        box-shadow:
+            inset 0 0 0 2px var(--ring),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.7);
+    }
+
+    /* card: the night tag / the deep-wash card / the duotone chip */
+    [data-theme='shade-dark'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-image: linear-gradient(to bottom, var(--card), var(--background));
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        color: var(--ring);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='1'] .dt-tour .kp-tour__foot {
+        background-color: var(--background);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background-image: linear-gradient(135deg, var(--card), var(--background));
+        color: var(--card-foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='2'] .dt-tour .kp-tour__title,
+    [data-theme='shade-dark'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        color: var(--ring);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='shade-dark'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        background-color: var(--card);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* next: the glow shifts a step / the wash re-sweeps / the bracket redraws */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-dark-1 320ms ease-in-out;
+        }
+
+        [data-theme='shade-dark'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-dark-2 360ms ease-in-out;
+        }
+
+        [data-theme='shade-dark'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-shade-dark-3 280ms steps(1, jump-end);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-dark-1 {
+        0%,
+        100% {
+            filter: brightness(1);
+            translate: 0 0;
+        }
+
+        50% {
+            filter: brightness(1.3);
+            translate: 0.4rem 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-dark-2 {
+        0% {
+            background-position: -100% 0;
+        }
+
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-shade-dark-3 {
+        0%,
+        49% {
+            box-shadow: inset 2px 0 0 0 var(--ring);
+        }
+
+        50%,
+        100% {
+            box-shadow: inset -2px 0 0 0 var(--ring);
+        }
+    }
+
+    [data-theme='shade-dark'] [data-dt-next='2'] .dt-tour {
+        background-image: linear-gradient(100deg, transparent 40%, hsl(from var(--ring) h s l / 0.35) 50%, transparent 60%);
+        background-repeat: no-repeat;
+        background-size: 300% 100%;
+        background-position: -100% 0;
+    }
+
+    /* ── retro: Windows-95 chrome, a navy title bar, hard bevels ─────── */
+
+    [data-theme='retro'] [data-dt-shape='1'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow:
+            inset 1px 1px 0 hsl(from var(--background) h s l / 0.9),
+            inset -1px -1px 0 var(--border-strong);
+        background-color: var(--card);
+        color: var(--card-foreground);
+        background-image: repeating-linear-gradient(to bottom, transparent 0 0.5rem, hsl(from var(--border) h s l / 0.5) 0.5rem calc(0.5rem + 1px));
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 2.5rem;
+    }
+
+    [data-theme='retro'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+    }
+
+    [data-theme='retro'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-family: var(--kp-dos, var(--theme-font-mono));
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='retro'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-dt-shape='2'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: inset -2px -2px 0 hsl(from var(--background) h s l / 0.6);
+        background-color: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='retro'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+        box-shadow: inset 0 -2px 0 hsl(from var(--background) h s l / 0.7);
+    }
+
+    [data-theme='retro'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-dt-shape='3'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='retro'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background-color: var(--muted);
+        border-block-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+        border-radius: 50%;
+        background-color: var(--border-strong);
+        box-shadow:
+            0 0.25rem 0 var(--border-strong),
+            0 0.5rem 0 var(--border-strong);
+        vertical-align: middle;
+    }
+
+    [data-theme='retro'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    /* openclose 1: it slides on with a scanline wipe */
+    [data-theme='retro'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='retro'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-retro-1 240ms steps(6, end) both;
+        }
+
+        [data-theme='retro'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-retro-1 240ms steps(6, end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-retro-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it rolls up like a blind, from a thin band at the top */
+    [data-theme='retro'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 50% 0%;
+        scale: 1 1;
+    }
+
+    [data-theme='retro'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 0%;
+        scale: 1 0.05;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-retro-2 260ms linear both;
+        }
+
+        [data-theme='retro'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-retro-2 260ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-retro-2 {
+        0% {
+            transform-origin: 50% 0%;
+            scale: 1 0.05;
+        }
+
+        100% {
+            transform-origin: 50% 0%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it clunks open on a hinge, a small mechanical overshoot */
+    [data-theme='retro'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+    }
+
+    [data-theme='retro'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 80deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-retro-3 280ms cubic-bezier(0.3, 1.4, 0.4, 1) both;
+        }
+
+        [data-theme='retro'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-retro-3 240ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-retro-3 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 80deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+        }
+    }
+
+    /* highlight: the dashed ring / the dial bracket / the tube-glow halo */
+    [data-theme='retro'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    [data-theme='retro'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    [data-theme='retro'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--warning);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    /* card: the index card / the ticket card / the dial tag */
+    [data-theme='retro'] [data-dt-card='1'] .dt-tour {
+        border: 2px dashed var(--primary);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='retro'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-family: var(--kp-dos, var(--theme-font-mono));
+    }
+
+    [data-theme='retro'] [data-dt-card='2'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        clip-path: polygon(0.6rem 0, 100% 0, 100% 100%, 0.6rem 100%, 0.6rem calc(50% + 0.3rem), 0 50%, 0.6rem calc(50% - 0.3rem));
+    }
+
+    [data-theme='retro'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-family: var(--kp-dos, var(--theme-font-mono));
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='retro'] [data-dt-card='3'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='retro'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        border-block-start: 2px solid var(--warning);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* next: the dial clicks forward / the blind re-rolls / the scanline re-wipes */
+    [data-theme='retro'] [data-dt-next='2'] .dt-tour {
+        box-shadow: inset 0 -0.3rem 0 -0.2rem hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    [data-theme='retro'] [data-dt-next='3'] .dt-tour {
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0 0.4rem,
+            hsl(from var(--border-strong) h s l / 0.15) 0.4rem calc(0.4rem + 1px)
+        );
+        background-repeat: no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-retro-1 320ms steps(3, end);
+        }
+
+        [data-theme='retro'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            transform-origin: 50% 0%;
+            animation: kp-sig-drawer-next-retro-2 340ms ease-in-out;
+        }
+
+        [data-theme='retro'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-retro-3 240ms steps(4, end);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-retro-1 {
+        0% {
+            rotate: 0deg;
+        }
+
+        33% {
+            rotate: 8deg;
+        }
+
+        66% {
+            rotate: -4deg;
+        }
+
+        100% {
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-retro-2 {
+        0%,
+        100% {
+            transform-origin: 50% 0%;
+            scale: 1 1;
+        }
+
+        50% {
+            transform-origin: 50% 0%;
+            scale: 1 0.1;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-retro-3 {
+        0% {
+            box-shadow: inset 0 -1.5rem 0 0 hsl(from var(--primary) h s l / 0.3);
+        }
+
+        100% {
+            box-shadow: inset 0 1.5rem 0 0 hsl(from var(--primary) h s l / 0);
+        }
+    }
+
+    /* ── grotesk: Swiss style, black/white/red, no softness ──────────── */
+
+    [data-theme='grotesk'] [data-dt-shape='1'] .dt-drawer {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background-color: var(--border-strong);
+        color: var(--background);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-weight: 900;
+        font-size: 1.1em;
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 3px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='2'] .dt-drawer {
+        border: 0;
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        overflow: visible;
+        border-block-end: 0;
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-weight: 900;
+        font-size: 1.4em;
+        letter-spacing: -0.01em;
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='3'] .dt-drawer {
+        border: 0;
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background-color: var(--border-strong);
+        color: var(--background);
+    }
+
+    [data-theme='grotesk'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    /* openclose 1: it slams open, hard and fast, no overshoot */
+    [data-theme='grotesk'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='grotesk'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-1 140ms steps(1, jump-end) both;
+        }
+
+        [data-theme='grotesk'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-1 140ms steps(1, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-grotesk-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it slides on a hard beat, constant speed, dead stop */
+    [data-theme='grotesk'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-2 220ms linear both;
+        }
+
+        [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-2 220ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-grotesk-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is stamped down, scaling up in one hard step */
+    [data-theme='grotesk'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 50% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='grotesk'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 50%;
+        scale: 0.9 0.9;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-3 180ms steps(1, jump-end) both;
+        }
+
+        [data-theme='grotesk'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-grotesk-3 180ms steps(1, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-grotesk-3 {
+        0% {
+            transform-origin: 50% 50%;
+            scale: 0.9 0.9;
+        }
+
+        100% {
+            transform-origin: 50% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* highlight: the thick-rule ring / the block bracket / the poster frame */
+    [data-theme='grotesk'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='grotesk'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 0.6rem var(--border-strong),
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.2);
+        outline-offset: 0;
+    }
+
+    [data-theme='grotesk'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 6px solid var(--border-strong);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* card: the headline tag / the poster card / the stamp chip */
+    [data-theme='grotesk'] [data-dt-card='1'] .dt-tour {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 900;
+        font-size: 1.2em;
+    }
+
+    [data-theme='grotesk'] [data-dt-card='2'] .dt-tour {
+        border: 0;
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        background-color: var(--border-strong);
+        color: var(--background);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='grotesk'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] [data-dt-card='3'] .dt-tour {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    /* next: the rule re-stamps / the block re-slams / the frame re-snaps */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-grotesk-1 160ms steps(1, jump-end);
+        }
+
+        [data-theme='grotesk'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-grotesk-2 160ms steps(1, jump-end);
+        }
+
+        [data-theme='grotesk'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-grotesk-3 150ms steps(1, jump-end);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-grotesk-1 {
+        0% {
+            box-shadow: inset 0 0 0 0 var(--border-strong);
+        }
+
+        100% {
+            box-shadow: inset 0 0 0 0.3rem var(--border-strong);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-grotesk-2 {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 0.6rem 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-grotesk-3 {
+        0% {
+            outline-offset: 10px;
+        }
+
+        100% {
+            outline-offset: 2px;
+        }
+    }
+
+    [data-theme='grotesk'] [data-dt-next='3'] .dt-tour {
+        outline: 3px solid var(--border-strong);
+    }
+
+    /* ── lapis: Persian illumination, gold on deep blue ───────────────── */
+
+    [data-theme='lapis'] [data-dt-shape='1'] .dt-drawer {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        background-image:
+            radial-gradient(circle at 92% 12%, hsl(from var(--border-strong) h s l / 0.4) 0 2px, transparent 2px),
+            radial-gradient(circle at 78% 30%, hsl(from var(--border-strong) h s l / 0.35) 0 1.5px, transparent 1.5px),
+            radial-gradient(circle at 88% 55%, hsl(from var(--border-strong) h s l / 0.3) 0 1.5px, transparent 1.5px);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='lapis'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        background-color: color-mix(in srgb, var(--card) 70%, var(--background) 30%);
+        border-block-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(105deg, transparent 48%, var(--border-strong) 49%, var(--border-strong) 51%, transparent 52%);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='lapis'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] [data-dt-shape='3'] .dt-drawer {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='lapis'] [data-dt-shape='3'] .dt-drawer::before {
+        content: '';
+        position: absolute;
+        inset: 0.35rem;
+        border: 1px solid hsl(from var(--border-strong) h s l / 0.5);
+        pointer-events: none;
+    }
+
+    [data-theme='lapis'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: it is drawn out on gilt rails, a rich slow settle */
+    [data-theme='lapis'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='lapis'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-1 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        [data-theme='lapis'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-1 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-lapis-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unfolds like an illuminated page, from half width */
+    [data-theme='lapis'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='lapis'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.5 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-2 320ms ease-out both;
+        }
+
+        [data-theme='lapis'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-2 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-lapis-2 {
+        0% {
+            transform-origin: 100% 50%;
+            scale: 0.5 1;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: a gold vein draws itself before the panel rises behind it */
+    [data-theme='lapis'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+        rotate: y 0deg;
+        transform-origin: 100% 50%;
+    }
+
+    [data-theme='lapis'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        rotate: y 25deg;
+        transform-origin: 100% 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-3 360ms ease-out both;
+        }
+
+        [data-theme='lapis'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-lapis-3 320ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-lapis-3 {
+        0% {
+            translate: 100% 0;
+            rotate: y 25deg;
+            transform-origin: 100% 50%;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: y 0deg;
+            transform-origin: 100% 50%;
+        }
+    }
+
+    /* highlight: the gold-vein ring / the gilt bracket / the pyrite-fleck halo */
+    [data-theme='lapis'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.65);
+    }
+
+    [data-theme='lapis'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 3px double var(--border-strong);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='lapis'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 4px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    /* card: the illuminated tag / the gilt-edge card / the inlay chip */
+    [data-theme='lapis'] [data-dt-card='1'] .dt-tour {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+    }
+
+    [data-theme='lapis'] [data-dt-card='2'] .dt-tour {
+        border: 0;
+        border-radius: 0;
+        border-block-start: 4px solid var(--border-strong);
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='lapis'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(115deg, transparent 45%, hsl(from var(--border-strong) h s l / 0.3) 50%, transparent 55%);
+        background-repeat: no-repeat;
+    }
+
+    /* next: the vein re-traces / the gilt re-rays / the fleck re-glints */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-lapis-1 420ms ease-in-out;
+        }
+
+        [data-theme='lapis'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-lapis-2 300ms ease-in-out;
+        }
+
+        [data-theme='lapis'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-lapis-3 440ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-lapis-1 {
+        0% {
+            background-position: -120% 0;
+        }
+
+        100% {
+            background-position: 220% 0;
+        }
+    }
+
+    [data-theme='lapis'] [data-dt-next='1'] .dt-tour {
+        background-image: linear-gradient(100deg, transparent 42%, hsl(from var(--border-strong) h s l / 0.4) 50%, transparent 58%);
+        background-repeat: no-repeat;
+        background-size: 250% 100%;
+        background-position: -120% 0;
+    }
+
+    @keyframes kp-sig-drawer-next-lapis-2 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.3);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-lapis-3 {
+        0%,
+        20% {
+            filter: brightness(1.3);
+        }
+
+        40%,
+        60% {
+            filter: brightness(1);
+        }
+
+        80%,
+        100% {
+            filter: brightness(1.3);
+        }
+    }
+
+    /* ── nostromo: cassette futurism, amber indicators, rivets ────────── */
+
+    [data-theme='nostromo'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 0 0 0 3px var(--background);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--warning);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        background-image:
+            radial-gradient(circle at 0.5rem 0.5rem, var(--border-strong) 0 1.5px, transparent 1.5px),
+            radial-gradient(circle at 0.5rem calc(100% - 0.5rem), var(--border-strong) 0 1.5px, transparent 1.5px);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid color-mix(in srgb, var(--warning) 70%, var(--card-foreground) 30%);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head .kp-dialog__title {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--warning);
+        background-image: repeating-linear-gradient(-45deg, transparent 0 0.3rem, hsl(from var(--warning) h s l / 0.25) 0.3rem 0.6rem);
+    }
+
+    /* openclose 1: it slides on a hatch rail with a hiss, catching mid-way */
+    [data-theme='nostromo'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='nostromo'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-1 320ms cubic-bezier(0.5, 0, 0.3, 1) both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-1 300ms cubic-bezier(0.5, 0, 0.3, 1) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-nostromo-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        55% {
+            translate: 38% 0;
+        }
+
+        70% {
+            translate: 42% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unlatches with a small outward pop, then swings in */
+    [data-theme='nostromo'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 0 0;
+        rotate: y 0deg;
+    }
+
+    [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 100% 0;
+        rotate: y 40deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-2 320ms ease-out both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-2 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-nostromo-2 {
+        0% {
+            transform-origin: 100% 50%;
+            translate: 100% 0;
+            rotate: y 40deg;
+        }
+
+        15% {
+            transform-origin: 100% 50%;
+            translate: 108% 0;
+            rotate: y 40deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            translate: 0 0;
+            rotate: y 0deg;
+        }
+    }
+
+    /* openclose 3: it is cranked out by a winch, in slow jerky increments */
+    [data-theme='nostromo'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='nostromo'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-3 420ms steps(5, end) both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-nostromo-3 420ms steps(5, end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-nostromo-3 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the amber-CRT ring / the stencil bracket / the warning-strobe halo */
+    [data-theme='nostromo'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--warning);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='nostromo'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--warning),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='nostromo'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--warning);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-highlight='3'] [data-kp-tour-target] {
+            animation: kp-sig-drawer-strobe-nostromo 900ms ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-sig-drawer-strobe-nostromo {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.6);
+        }
+    }
+
+    /* card: the manifest tag / the console card / the stencil plate */
+    [data-theme='nostromo'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-block-start: 2px solid var(--warning);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+        text-transform: uppercase;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='2'] .dt-tour .kp-tour__title,
+    [data-theme='nostromo'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-family: var(--theme-font-mono);
+        color: var(--warning);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        color: var(--card-foreground);
+        clip-path: polygon(0.4rem 0, 100% 0, 100% 100%, 0 100%, 0 0.4rem);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 0.25rem, hsl(from var(--warning) h s l / 0.3) 0.25rem 0.5rem);
+    }
+
+    /* next: the amber ring re-sweeps / the strobe re-pulses / the stencil replate */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-nostromo-1 340ms ease-in-out;
+        }
+
+        [data-theme='nostromo'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-nostromo-2 360ms ease-in-out;
+        }
+
+        [data-theme='nostromo'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-nostromo-3 280ms ease-in-out;
+        }
+    }
+
+    [data-theme='nostromo'] [data-dt-next='1'] .dt-tour {
+        background-image: linear-gradient(100deg, transparent 42%, hsl(from var(--warning) h s l / 0.35) 50%, transparent 58%);
+        background-repeat: no-repeat;
+        background-size: 260% 100%;
+        background-position: -130% 0;
+    }
+
+    @keyframes kp-sig-drawer-next-nostromo-1 {
+        0% {
+            background-position: -130% 0;
+        }
+
+        100% {
+            background-position: 230% 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-nostromo-2 {
+        0%,
+        20%,
+        100% {
+            filter: brightness(1);
+        }
+
+        10%,
+        30% {
+            filter: brightness(1.5);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-nostromo-3 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.45);
+        }
+    }
+}

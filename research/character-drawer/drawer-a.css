@@ -1,0 +1,1393 @@
+/* research/character-drawer, group a: light, dark, cyberpunk, synthwave,
+   pastel. Contract and the formal/titanium model are in drawer.css — this
+   file only adds the same five aspects for this group's five themes, one
+   rule per aspect, tokens only, no fades, open/close mirrored by
+   `animation-direction: reverse` on the same `@keyframes`. */
+
+@layer kp.signature {
+    /* ── light: the soft card, a daylight pane, a lifted paper sheet ─── */
+
+    [data-theme='light'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        box-shadow: 0 0.75rem 2rem hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-theme='light'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+        background: hsl(from var(--muted) h s l / 0.6);
+    }
+
+    [data-theme='light'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        box-shadow: inset 0 6px 6px -6px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-theme='light'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+        background: hsl(from var(--muted) h s l / 0.6);
+    }
+
+    [data-theme='light'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.5), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 6rem;
+    }
+
+    [data-theme='light'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='light'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='light'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+        background-image: linear-gradient(135deg, transparent 50%, hsl(from var(--border-strong) h s l / 0.6) 50%);
+        background-repeat: no-repeat;
+        background-position: top right;
+        background-size: 1.25rem 1.25rem;
+    }
+
+    [data-theme='light'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, transparent 0 1.5rem, hsl(from var(--border) h s l / 0.5) 1.5rem calc(1.5rem + 1px));
+    }
+
+    [data-theme='light'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+        box-shadow: inset 0 4px 4px -4px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* openclose 1: it slides on daylight, a hard brightness sweep riding the slide */
+    [data-theme='light'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='light'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-light-1 300ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-light-1 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-light-1 {
+        0% {
+            translate: 100% 0;
+            filter: brightness(1);
+        }
+
+        55% {
+            filter: brightness(1.15);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* openclose 2: it drifts in like a curtain, a gentle overshoot and settle */
+    [data-theme='light'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='light'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-light-2 320ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-light-2 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-light-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        70% {
+            translate: -2% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it lifts off the sheet, a small scale-in with the slide */
+    [data-theme='light'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 50% 50%;
+        translate: 0 0;
+        scale: 1;
+    }
+
+    [data-theme='light'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 50%;
+        translate: 100% 0;
+        scale: 0.97;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-light-3 280ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-light-3 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-light-3 {
+        0% {
+            translate: 100% 0;
+            scale: 0.97;
+        }
+
+        100% {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    /* highlight: the soft halo / the daylight beam / the pencil circle */
+    [data-theme='light'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 4px solid var(--ring);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='light'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 3px;
+        background-image: linear-gradient(115deg, hsl(from var(--ring) h s l / 0.35), transparent 65%);
+        background-repeat: no-repeat;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    [data-theme='light'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 5px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    /* card: the sticky note / the sunlit card / the paper tab */
+    [data-theme='light'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.25rem var(--radius, 0.5rem) var(--radius, 0.5rem) var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.4rem 1rem hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='light'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 500;
+    }
+
+    [data-theme='light'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.45), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 3rem;
+    }
+
+    [data-theme='light'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        font-weight: 700;
+    }
+
+    [data-theme='light'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='light'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='light'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        padding-block-start: var(--kp-space-md, 1rem);
+    }
+
+    /* next: the halo drifts / the beam swings / the tab is peeled */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-light-1 300ms ease-out;
+        }
+
+        [data-theme='light'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-light-2 340ms ease-in-out;
+        }
+
+        [data-theme='light'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-light-3 360ms ease-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-light-1 {
+        0% {
+            translate: -0.6rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-light-2 {
+        0% {
+            rotate: 6deg;
+            translate: 0.4rem -0.2rem;
+        }
+
+        100% {
+            rotate: 0deg;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-light-3 {
+        0% {
+            translate: 0 -0.5rem;
+            scale: 1.03;
+        }
+
+        60% {
+            translate: 0 0.05rem;
+            scale: 0.99;
+        }
+
+        100% {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    /* ── dark: the slate panel, a glass pane, a console tray ─────────── */
+
+    [data-theme='dark'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        --dt-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border: 1px solid var(--dt-border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='dark'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--dt-border);
+        box-shadow: inset 0 -1px 0 hsl(from var(--ring) h s l / 0.5);
+    }
+
+    [data-theme='dark'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--dt-border);
+    }
+
+    [data-theme='dark'] [data-dt-shape='2'] .dt-drawer {
+        --dt-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border: 1px solid var(--dt-border);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--dt-border);
+        box-shadow: inset 0 -1px 0 hsl(from var(--ring) h s l / 0.6);
+    }
+
+    [data-theme='dark'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--dt-border);
+    }
+
+    [data-theme='dark'] [data-dt-shape='3'] .dt-drawer {
+        --dt-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border: 1px solid var(--dt-border);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ring) h s l / 0.3);
+    }
+
+    [data-theme='dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--dt-border);
+    }
+
+    [data-theme='dark'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image:
+            repeating-linear-gradient(to right, hsl(from var(--border) h s l / 0.4) 0 1px, transparent 1px 2rem),
+            repeating-linear-gradient(to bottom, hsl(from var(--border) h s l / 0.4) 0 1px, transparent 1px 2rem);
+    }
+
+    /* openclose 1: it slides from the glow, the edge brightens first */
+    [data-theme='dark'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-dark-1 320ms ease-out both;
+        }
+
+        [data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-dark-1 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-dark-1 {
+        0% {
+            translate: 100% 0;
+            box-shadow: inset 6px 0 0 -4px hsl(from var(--ring) h s l / 0.85);
+        }
+
+        40% {
+            translate: 55% 0;
+            box-shadow: inset 6px 0 0 -4px hsl(from var(--ring) h s l / 0.85);
+        }
+
+        100% {
+            translate: 0 0;
+            box-shadow: inset 6px 0 0 -6px hsl(from var(--ring) h s l / 0);
+        }
+    }
+
+    /* openclose 2: it rises from the floor */
+    [data-theme='dark'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='dark'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-dark-2 300ms ease-out both;
+        }
+
+        [data-theme='dark'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-dark-2 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-dark-2 {
+        0% {
+            translate: 0 100%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it unlatches, a short rotate before sliding flush */
+    [data-theme='dark'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 0 0;
+        rotate: 0deg;
+    }
+
+    [data-theme='dark'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 100% 0;
+        rotate: 6deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-dark-3 300ms ease-out both;
+        }
+
+        [data-theme='dark'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-dark-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-dark-3 {
+        0% {
+            translate: 100% 0;
+            rotate: 6deg;
+        }
+
+        60% {
+            translate: 8% 0;
+            rotate: 6deg;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    /* highlight: the glow ring / the laser outline / the aperture */
+    [data-theme='dark'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+        box-shadow:
+            0 0 1rem hsl(from var(--ring) h s l / 0.6),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.75);
+    }
+
+    [data-theme='dark'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 1px solid var(--ring);
+        outline-offset: 1px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.88);
+    }
+
+    [data-theme='dark'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--ring);
+        outline-offset: 6px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.92);
+    }
+
+    /* card: the glass tile / the console readout / the aperture card */
+    [data-theme='dark'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: inset 0 1px 0 hsl(from var(--ring) h s l / 0.35);
+    }
+
+    [data-theme='dark'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 600;
+    }
+
+    [data-theme='dark'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        border-block-start: 2px solid var(--ring);
+    }
+
+    [data-theme='dark'] [data-dt-card='2'] .dt-tour .kp-tour__title,
+    [data-theme='dark'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0 0.75rem hsl(from var(--ring) h s l / 0.4);
+    }
+
+    /* next: the glow steps over / the readout refreshes / the aperture re-irises */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-dark-1 320ms ease-out;
+        }
+
+        [data-theme='dark'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-dark-2 280ms steps(2, jump-none);
+        }
+
+        [data-theme='dark'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-dark-3 360ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-dark-1 {
+        0% {
+            translate: -0.5rem 0;
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.8);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-dark-2 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(2.2);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-dark-3 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 0.05;
+        }
+    }
+
+    /* ── cyberpunk: the neon panel, a HUD tray, a data slab ───────────── */
+
+    [data-theme='cyberpunk'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        box-shadow: inset 0 0 0 1px hsl(from var(--accent) h s l / 0.4);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, hsl(from var(--accent) h s l / 0.1) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        clip-path: polygon(0.75rem 0, 100% 0, 100% calc(100% - 0.75rem), calc(100% - 0.75rem) 100%, 0 100%, 0 0.75rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        background-image: linear-gradient(100deg, transparent 40%, hsl(from var(--destructive) h s l / 0.3) 41%, transparent 42%);
+        background-repeat: no-repeat;
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to right, hsl(from var(--border) h s l / 0.5) 0 1px, transparent 1px 2.5rem);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    /* openclose 1: it glitches in, three jittered steps before settling */
+    [data-theme='cyberpunk'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='cyberpunk'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-1 260ms steps(1, jump-end) both;
+        }
+
+        [data-theme='cyberpunk'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-1 220ms steps(1, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-cyberpunk-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        30% {
+            translate: 92% 0.3rem;
+        }
+
+        55% {
+            translate: 96% -0.2rem;
+        }
+
+        80% {
+            translate: 94% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it rezzes in from static, a brightness/contrast surge */
+    [data-theme='cyberpunk'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1) contrast(1);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-2 260ms linear both;
+        }
+
+        [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-2 240ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-cyberpunk-2 {
+        0% {
+            translate: 100% 0;
+            filter: brightness(1.8) contrast(1.4);
+        }
+
+        50% {
+            filter: brightness(0.6) contrast(1.2);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1) contrast(1);
+        }
+    }
+
+    /* openclose 3: it slots home, an overshoot then a snap back */
+    [data-theme='cyberpunk'] [data-dt-openclose='3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='cyberpunk'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-3 300ms ease-out both;
+        }
+
+        [data-theme='cyberpunk'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-cyberpunk-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-cyberpunk-3 {
+        0% {
+            translate: 130% 0;
+        }
+
+        60% {
+            translate: -4% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight: the scanline ring / the glitch bracket / the target reticle */
+    [data-theme='cyberpunk'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--accent);
+        outline-offset: 4px;
+        box-shadow:
+            inset 0 0 0 1px var(--accent),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.85);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px dashed var(--accent);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--destructive) h s l / 0.14);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 1px solid var(--accent);
+        outline-offset: 8px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.9);
+    }
+
+    /* card: the HUD tooltip / the terminal popup / the data chip */
+    [data-theme='cyberpunk'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        clip-path: polygon(0.6rem 0, 100% 0, 100% 100%, 0 100%, 0 0.6rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        border-block-start: 2px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-card='2'] .dt-tour .kp-tour__title,
+    [data-theme='cyberpunk'] [data-dt-card='2'] .dt-tour .kp-tour__count {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px solid var(--primary);
+    }
+
+    /* next: the reticle snaps / the glitch cuts over / the chip reprints */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-cyberpunk-1 160ms steps(1, jump-end);
+        }
+
+        [data-theme='cyberpunk'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-cyberpunk-2 240ms steps(3, jump-end);
+        }
+
+        [data-theme='cyberpunk'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-cyberpunk-3 320ms linear;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-cyberpunk-1 {
+        0% {
+            translate: 0.4rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-cyberpunk-2 {
+        0% {
+            translate: -0.4rem 0;
+        }
+
+        33% {
+            translate: 0.3rem 0;
+        }
+
+        66% {
+            translate: -0.15rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-cyberpunk-3 {
+        0% {
+            box-shadow: inset 0 0 0 0 var(--primary);
+        }
+
+        100% {
+            box-shadow: inset 0 0 0 2px var(--primary);
+        }
+    }
+
+    /* ── synthwave: the outrun panel, a sunset tray, a grid slab ──────── */
+
+    [data-theme='synthwave'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+        background-image: linear-gradient(90deg, hsl(from var(--primary) h s l / 0.5), hsl(from var(--accent) h s l / 0.35));
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(115deg, hsl(from var(--accent) h s l / 0.15) 0 1px, transparent 1px 1.5rem);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='3'] .dt-drawer .kp-drawer__body {
+        background-image:
+            repeating-linear-gradient(to right, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 2rem),
+            repeating-linear-gradient(to bottom, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 2rem);
+    }
+
+    [data-theme='synthwave'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    /* openclose 1: it rolls up over the horizon */
+    [data-theme='synthwave'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='synthwave'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-1 320ms ease-out both;
+        }
+
+        [data-theme='synthwave'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-1 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-synthwave-1 {
+        0% {
+            translate: 0 100%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it slides on the grid, a constant-rate pass */
+    [data-theme='synthwave'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='synthwave'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-2 260ms linear both;
+        }
+
+        [data-theme='synthwave'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-2 260ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-synthwave-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it drops from the sun, a scale-in near the top edge */
+    [data-theme='synthwave'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 50% 0%;
+        translate: 0 0;
+        scale: 1;
+    }
+
+    [data-theme='synthwave'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 0%;
+        translate: 0 -2%;
+        scale: 0.04;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-3 300ms ease-out both;
+        }
+
+        [data-theme='synthwave'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-synthwave-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-synthwave-3 {
+        0% {
+            translate: 0 -2%;
+            scale: 0.04;
+        }
+
+        100% {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    /* highlight: the neon tube ring / the horizon beam / the grid cell */
+    [data-theme='synthwave'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 3px solid var(--primary);
+        outline-offset: 5px;
+        box-shadow:
+            0 0 1.25rem hsl(from var(--primary) h s l / 0.55),
+            0 0 0 100vmax hsl(from var(--border-strong) h s l / 0.35);
+    }
+
+    [data-theme='synthwave'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 1px solid var(--accent);
+        outline-offset: 4px;
+        background-image: linear-gradient(90deg, hsl(from var(--primary) h s l / 0.3), hsl(from var(--accent) h s l / 0.3));
+        background-repeat: no-repeat;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.9);
+    }
+
+    [data-theme='synthwave'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.85);
+    }
+
+    /* card: the neon sign / the dashboard readout / the arcade marquee */
+    [data-theme='synthwave'] [data-dt-card='1'] .dt-tour {
+        border: 2px double var(--primary);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='synthwave'] [data-dt-card='1'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px solid var(--accent);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='synthwave'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(90deg, hsl(from var(--primary) h s l / 0.6), hsl(from var(--accent) h s l / 0.6));
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 0.3rem;
+    }
+
+    [data-theme='synthwave'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='synthwave'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.8) 0 0.4rem, transparent 0.4rem 0.9rem);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 3px;
+        text-align: center;
+    }
+
+    [data-theme='synthwave'] [data-dt-card='3'] .dt-tour .kp-tour__title {
+        font-weight: 700;
+    }
+
+    [data-theme='synthwave'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px solid var(--accent);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* next: the tube relights / the beam sweeps / the marquee recycles */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-synthwave-1 420ms ease-in-out;
+        }
+
+        [data-theme='synthwave'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-synthwave-2 320ms ease-out;
+        }
+
+        [data-theme='synthwave'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-synthwave-3 300ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-synthwave-1 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        20% {
+            filter: brightness(0.3);
+        }
+
+        35% {
+            filter: brightness(1.4);
+        }
+
+        50% {
+            filter: brightness(0.5);
+        }
+
+        70% {
+            filter: brightness(1.3);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-synthwave-2 {
+        0% {
+            translate: -0.6rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-synthwave-3 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 0.96;
+        }
+    }
+
+    /* ── pastel: the candy card, a bubble tray, a macaron slab ────────── */
+
+    [data-theme='pastel'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius, 0.5rem) * 1.6);
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='pastel'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+        background: hsl(from var(--primary) h s l / 0.18);
+    }
+
+    [data-theme='pastel'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+        background: hsl(from var(--accent) h s l / 0.2);
+    }
+
+    [data-theme='pastel'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius, 0.5rem) * 2.2);
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image:
+            radial-gradient(circle at 1.1rem 1.1rem, hsl(from var(--accent) h s l / 0.6) 0 0.3rem, transparent 0.32rem),
+            radial-gradient(circle at calc(100% - 1.1rem) 1.1rem, hsl(from var(--primary) h s l / 0.6) 0 0.3rem, transparent 0.32rem);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='pastel'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='pastel'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='pastel'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 3px solid var(--border-strong);
+        background: hsl(from var(--muted) h s l / 0.6);
+    }
+
+    /* openclose 1: it bounces in, a slide with an overshoot */
+    [data-theme='pastel'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='pastel'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-1 340ms ease-out both;
+        }
+
+        [data-theme='pastel'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-1 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-pastel-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        65% {
+            translate: -3% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it unrolls like ribbon, a scale from a thin strip at the hinge edge */
+    [data-theme='pastel'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 1 1;
+    }
+
+    [data-theme='pastel'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        scale: 0.04 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-2 320ms ease-out both;
+        }
+
+        [data-theme='pastel'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-2 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-pastel-2 {
+        0% {
+            scale: 0.04 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    /* openclose 3: it pops open, a springy scale with the slide */
+    [data-theme='pastel'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 50% 50%;
+        translate: 0 0;
+        scale: 1;
+    }
+
+    [data-theme='pastel'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 50%;
+        translate: 6% 0;
+        scale: 0.92;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-3 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        [data-theme='pastel'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-pastel-3 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-pastel-3 {
+        0% {
+            translate: 6% 0;
+            scale: 0.92;
+        }
+
+        70% {
+            translate: -1% 0;
+            scale: 1.03;
+        }
+
+        100% {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    /* highlight: the bubble ring / the crayon circle / the sticker halo */
+    [data-theme='pastel'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 6px solid hsl(from var(--primary) h s l / 0.6);
+        outline-offset: 4px;
+        border-radius: calc(var(--radius, 0.5rem) * 1.5);
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='pastel'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 3px dashed var(--border-strong);
+        outline-offset: 6px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.05);
+    }
+
+    [data-theme='pastel'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 4px solid var(--card);
+        outline-offset: 0;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 4px var(--border-strong),
+            0 0 0 100vmax hsl(from var(--primary) h s l / 0.14);
+    }
+
+    /* card: the sticky-note bubble / the balloon tag / the macaron card */
+    [data-theme='pastel'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        rotate: -2deg;
+    }
+
+    [data-theme='pastel'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius, 0.5rem) * 2.4);
+        background: hsl(from var(--accent) h s l / 0.3);
+        color: var(--card-foreground);
+        text-align: center;
+    }
+
+    [data-theme='pastel'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, hsl(from var(--muted) h s l / 0.6), transparent 50%);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 50%;
+    }
+
+    [data-theme='pastel'] [data-dt-card='3'] .dt-tour .kp-tour__count {
+        font-weight: 700;
+    }
+
+    /* next: the bubble hops / the ribbon slides / the sticker peels */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-pastel-1 340ms ease-out;
+        }
+
+        [data-theme='pastel'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-pastel-2 360ms ease-in-out;
+        }
+
+        [data-theme='pastel'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-pastel-3 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-pastel-1 {
+        0% {
+            translate: -0.4rem 0;
+        }
+
+        50% {
+            translate: -0.1rem -0.5rem;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-pastel-2 {
+        0% {
+            translate: -0.6rem 0;
+            rotate: -3deg;
+        }
+
+        70% {
+            rotate: 2deg;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-pastel-3 {
+        0% {
+            translate: -0.5rem 0;
+            scale: 0.94;
+        }
+
+        100% {
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+}

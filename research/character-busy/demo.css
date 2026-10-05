@@ -1,0 +1,184 @@
+/* The page: a centred column, and one section with its controls, "Your
+   combination" at the top, a row per aspect (three data tables that differ
+   in that aspect only), and the plain overlay of today for reference. The
+   overlay's own drawing is in busy.css (and busy-a..d.css). */
+.bo-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.bo-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bo-intro h1,
+.bo-intro p {
+    margin: 0;
+}
+
+.bo-meta,
+.bo-motion,
+.bo-log {
+    color: var(--muted-foreground);
+}
+
+.bo-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-bo-state][aria-pressed='true'],
+[data-bo-words][aria-pressed='true'],
+[data-bo-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.bo-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.bo-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.bo-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.bo-sec__head h2,
+.bo-sec__head p {
+    margin: 0;
+}
+
+.bo-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 60rem. The columns share the
+   trio's rows (a subgrid), so the three tables start on one line however
+   long each description is. */
+.bo-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .bo-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .bo-col {
+        grid-row: auto;
+        grid-template-rows: auto auto 1fr;
+    }
+}
+
+.bo-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.bo-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.bo-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bo-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.bo-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+/* The combination at the top, the five rows of options, the plain table
+   below them for reference. */
+.bo-preview,
+.bo-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bo-preview__head h3,
+.bo-preview__head p,
+.bo-aspect__head h3,
+.bo-aspect__head p {
+    margin: 0;
+}
+
+.bo-preview__head p,
+.bo-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.bo-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.bo-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.bo-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* The phone aspect's three columns are shown in a fixed 334px pane each,
+   narrower than the package's 30rem breakpoint, so the flat layout is the
+   one on the page, not something to resize for. */
+.bo-phone-pane {
+    inline-size: 334px;
+    max-inline-size: 100%;
+}

@@ -1,0 +1,206 @@
+/* The page: a centred column, one section with its controls, a preview row,
+   three aspect rows of three options each, the plain header of today at the
+   foot. The header's own drawing is in header.css / header-a.css … d.css. */
+.ph-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.ph-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ph-intro h1,
+.ph-intro p {
+    margin: 0;
+}
+
+.ph-meta,
+.ph-motion,
+.ph-log {
+    color: var(--muted-foreground);
+}
+
+.ph-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ph-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-ph-menu-state][aria-pressed='true'],
+[data-ph-width][aria-pressed='true'],
+[data-ph-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.ph-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ph-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ph-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ph-sec__head h2,
+.ph-sec__head p {
+    margin: 0;
+}
+
+.ph-sec__head p {
+    color: var(--muted-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+/* The preview's and each row's header can be narrowed to try the
+   below-40rem stacking without resizing the browser window. */
+.ph-resize {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    overflow: hidden;
+}
+
+.ph-resize[data-ph-narrow] {
+    inline-size: 22.5rem;
+    border-inline-end: 1px dashed var(--border);
+}
+
+.ph-strip {
+    container: ph-strip / inline-size;
+}
+
+/* The overflow menu's panel is demo plumbing, not a theme's character: it
+   hangs under its button without CSS anchor positioning, which needs an
+   anchor-name this demo does not bother setting up. */
+.ph-strip .kp-page-header__actions {
+    position: relative;
+}
+
+.ph-strip [data-ph-panel] {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: calc(100% + 0.25rem);
+    z-index: 20;
+}
+
+.ph-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* The combination at the top, the three rows of options, the plain header
+   below for reference. */
+.ph-preview,
+.ph-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ph-preview__head h3,
+.ph-preview__head p,
+.ph-aspect__head h3,
+.ph-aspect__head p {
+    margin: 0;
+}
+
+.ph-preview__head p,
+.ph-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ph-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.ph-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.ph-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* Three columns, one under the other below 60rem (the demo's own grid, not
+   the header's — the header keeps its own 40rem stacking inside each
+   column). */
+.ph-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .ph-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .ph-col {
+        grid-row: auto;
+        grid-template-rows: auto auto;
+    }
+}
+
+.ph-col {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.ph-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.ph-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ph-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}

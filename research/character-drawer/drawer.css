@@ -1,0 +1,580 @@
+/* research/character-drawer: the component that pairs the help drawer
+   (`dialog.kp-drawer`) with the guided tour it opens into (`.kp-tour`,
+   `js/tour.js`), all 22 themes in one demo. Five aspects, each picked on
+   its own from three options, composed freely on the stage's wrapper
+   (`.dt-demo[data-dt]`, which also carries the five attributes):
+
+     data-dt-shape="1|2|3"      the drawer's plate, its frame, the
+                                 head/body/foot dividers, the scroll edge
+     data-dt-openclose="1|2|3"  the drawer's arrival from the end edge and
+                                 its leave, read from `data-dt-state`
+                                 ("opening" | "open" | "closing" | "closed")
+     data-dt-highlight="1|2|3"  the ring on `[data-kp-tour-target]` and how
+                                 the rest of the stage dims around it
+     data-dt-card="1|2|3"       the tour card's (`.kp-tour`) plate and frame
+     data-dt-next="1|2|3"       what the card does while `data-dt-playing`
+                                 is briefly set to "next" by the demo's
+                                 step change
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes. This file carries the contract and the
+   complete theme-native CSS for formal and titanium only; the other
+   twenty themes are built in drawer-a.css … drawer-d.css, one file per
+   theme group, each starting empty.
+
+   The contract every option keeps:
+   - The markup is this demo's own stand-in for the package's real
+     `dialog.kp-drawer` (head/body/foot) and `.kp-tour` card — the same
+     classes and parts (`.kp-drawer__head`, `.kp-drawer__body`,
+     `.kp-drawer__foot`, `.kp-tour__title`, `.kp-tour__text`,
+     `.kp-tour__foot`), rendered as plain elements so up to a few dozen
+     can sit open side by side for the three-wide rows. Nothing in
+     `css/components.css` or `js/tour.js` changes.
+   - Colour: tokens only (DI9). The drawer takes `--dt-plate`/`--dt-ink` on
+     its own background; the card takes `--dt-card-plate`/`--dt-card-ink`.
+   - Height: `.dt-demo` is a fixed block-size (demo.css) in every option,
+     so the three-wide rows stay comparable; nothing an option adds grows
+     or shrinks that box.
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block; nothing fades (no `opacity` keyframe anywhere);
+     a drawer's close is always its open's own `@keyframes` played with
+     `animation-direction: reverse` — the same shape, exactly backwards;
+     nothing loops at rest. */
+
+@layer kp.signature {
+    /* ── formal: the engraved plate ──────────────────────────────────── */
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 2px solid var(--primary);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+        font-family: var(--theme-font-serif, serif);
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-dialog__title {
+        font-variant-caps: small-caps;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, transparent 0 1.6rem, hsl(from var(--border) h s l / 0.6) 1.6rem calc(1.6rem + 1px));
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 3px double var(--primary);
+    }
+
+    [data-theme='formal'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='formal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border-strong);
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, transparent 0 1.4rem, hsl(from var(--border) h s l / 0.5) 1.4rem calc(1.4rem + 1px));
+    }
+
+    [data-theme='formal'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='formal'] [data-dt-shape='3'] .dt-drawer::before {
+        content: '';
+        position: absolute;
+        inset: 0.4rem;
+        border: 1px solid hsl(from var(--primary) h s l / 0.35);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--primary);
+    }
+
+    [data-theme='formal'] [data-dt-shape='3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--primary);
+    }
+
+    /* openclose 1: drawn out, with a short mechanical overshoot */
+    [data-theme='formal'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-formal-1 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-formal-1 220ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-formal-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: the leaf is turned, hinged on its outer edge */
+    [data-theme='formal'] [data-dt-openclose='2'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 85deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-formal-2 280ms ease-out both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-formal-2 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-formal-2 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 85deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+        }
+    }
+
+    /* openclose 3: the seal is broken, unfolding up from a thin line */
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 50% 100%;
+        scale: 1 1;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 50% 100%;
+        scale: 1 0.04;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-formal-3 300ms ease-out both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-formal-3 260ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-formal-3 {
+        0% {
+            transform-origin: 50% 100%;
+            scale: 1 0.04;
+        }
+
+        100% {
+            transform-origin: 50% 100%;
+            scale: 1 1;
+        }
+    }
+
+    /* highlight: the ruled margin note / the engraved bracket / the wax seal ring */
+    [data-theme='formal'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+        box-shadow: none;
+        background: hsl(from var(--card) h s l / 0.4);
+    }
+
+    [data-theme='formal'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 3px double var(--primary);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='formal'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.16);
+    }
+
+    /* card: the index card / the memorandum / the certificate slip */
+    [data-theme='formal'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='formal'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 1px solid var(--border-strong);
+        font-variant-caps: small-caps;
+    }
+
+    [data-theme='formal'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='formal'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 2px solid var(--border-strong);
+        font-weight: 700;
+    }
+
+    [data-theme='formal'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+    }
+
+    [data-theme='formal'] [data-dt-card='3'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px dotted var(--border-strong);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* next: the leaf turns / the entry is carried forward / the seal is pressed again */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            transform-origin: 0% 50%;
+            animation: kp-sig-drawer-next-formal-1 320ms ease-in-out;
+        }
+
+        [data-theme='formal'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-formal-2 360ms ease-in-out;
+        }
+
+        [data-theme='formal'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-formal-3 420ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-formal-1 {
+        0% {
+            rotate: y 0deg;
+        }
+
+        50% {
+            rotate: y -35deg;
+        }
+
+        100% {
+            rotate: y 0deg;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-formal-2 {
+        0% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0.75rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-formal-3 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 0.97;
+        }
+
+        70% {
+            scale: 1.015;
+        }
+    }
+
+    /* ── titanium: brushed metal, a machined bevel ───────────────────── */
+
+    [data-theme='titanium'] [data-dt-shape='1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+        box-shadow: inset 0 -1px 0 hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.6);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='2'] .dt-drawer {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.08), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 4rem;
+    }
+
+    [data-theme='titanium'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    /* openclose 1: a machined rail, a crisp even slide */
+    [data-theme='titanium'] [data-dt-openclose='1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='titanium'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-1 220ms linear both;
+        }
+
+        [data-theme='titanium'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-1 220ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-titanium-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: a drawer on its glide, a weighted ease */
+    [data-theme='titanium'] [data-dt-openclose='2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='titanium'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: 60% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-2 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        [data-theme='titanium'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-2 300ms cubic-bezier(0.7, 0, 0.84, 0) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-titanium-2 {
+        0% {
+            translate: 60% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it pivots on a hinge pin */
+    [data-theme='titanium'] [data-dt-openclose='3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 0deg;
+    }
+
+    [data-theme='titanium'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        transform-origin: 100% 50%;
+        rotate: y 70deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-3 260ms ease-out both;
+        }
+
+        [data-theme='titanium'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-titanium-3 240ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-titanium-3 {
+        0% {
+            transform-origin: 100% 50%;
+            rotate: y 70deg;
+        }
+
+        100% {
+            transform-origin: 100% 50%;
+            rotate: y 0deg;
+        }
+    }
+
+    /* highlight: the machined ring / the bevel bracket / the anodised halo */
+    [data-theme='titanium'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow:
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.55),
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.15);
+    }
+
+    [data-theme='titanium'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.55);
+    }
+
+    [data-theme='titanium'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.5);
+    }
+
+    /* card: the machined tag / the bevel card / the anodised chip */
+    [data-theme='titanium'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='titanium'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    [data-theme='titanium'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    [data-theme='titanium'] [data-dt-card='2'] .dt-tour .kp-tour__foot {
+        border-block-start: 1px solid var(--border-strong);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='titanium'] [data-dt-card='3'] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        background-image: linear-gradient(to right, hsl(from var(--ring) h s l / 0.1), transparent);
+        background-repeat: no-repeat;
+        background-position: top;
+        background-size: 100% 0.25rem;
+    }
+
+    /* next: the bevel re-cuts / the ring re-machines / the chip re-anodises */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-titanium-1 300ms ease-out;
+        }
+
+        [data-theme='titanium'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-titanium-2 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-theme='titanium'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-drawer-next-titanium-3 340ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-titanium-1 {
+        0% {
+            translate: -0.5rem 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-titanium-2 {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 0.97;
+        }
+    }
+
+    @keyframes kp-sig-drawer-next-titanium-3 {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.18);
+        }
+    }
+}

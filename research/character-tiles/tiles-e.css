@@ -1,0 +1,931 @@
+/* research/character-tiles: tiles-e.css — the finisher group.
+   Theme-native "how the tiles arrive" and "tone of a tile" for the seven
+   themes that still used the generic rules from tiles.css: formal,
+   titanium (both otherwise covered in tiles.css itself), solstice,
+   brutalism, deco, phantom and shade-light (covered by tiles-c.css for
+   shape/loading/hover/live only). Option 1 of every aspect here is "At
+   once" (no rule — the generic default already is static), so only
+   options 2 and 3 are written. Same contract as tiles.css: tokens only,
+   no fades, every animation inside its own `prefers-reduced-motion:
+   no-preference` block, one rule names one aspect. */
+
+@layer kp.signature {
+    /* ── formal · how the tiles arrive ──────────────────────────────── */
+
+    /* Engraved: the title is written in from the left, slowing as it
+       lands; the body follows a beat later. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__title {
+            animation: tl-formal-engrave 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
+            animation: tl-formal-engrave 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+            animation-delay: 0.14s;
+        }
+        /* Entered in the ledger: tile after tile drops into the ledger,
+           each a beat after the last. */
+        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-formal-ledger 0.3s steps(3, end) both;
+        }
+        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.12s;
+        }
+    }
+    @keyframes tl-formal-engrave {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-formal-ledger {
+        from {
+            transform: translateY(-0.6rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── formal · tone ───────────────────────────────────────────────── */
+
+    /* The engraved plate: the note sits boxed like an engraved figure —
+       a double rule framing the mark. */
+    [data-theme='formal'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--primary);
+        border-radius: 0;
+        transform: rotate(45deg);
+    }
+    [data-theme='formal'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--success);
+        background: var(--success);
+    }
+    [data-theme='formal'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--warning);
+        background: var(--warning);
+    }
+    [data-theme='formal'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--destructive);
+        background: var(--destructive);
+    }
+
+    /* The ribbon: a ribbon of the tone's colour along the top edge. */
+    [data-theme='formal'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border-block-start: 4px solid var(--primary);
+    }
+    [data-theme='formal'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-theme='formal'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-theme='formal'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    /* The red-ink entry: ruled off along the left edge, double rule, the
+       accountant's ink. */
+    [data-theme='formal'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start: 4px double var(--primary);
+    }
+    [data-theme='formal'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success);
+    }
+    [data-theme='formal'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning);
+    }
+    [data-theme='formal'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+    }
+
+    /* ── titanium · how the tiles arrive ────────────────────────────── */
+
+    /* Milled: the body is drawn in from the left, easing in and out. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
+            animation: tl-titanium-mill 0.45s ease-in-out both;
+        }
+        /* Seated: tile after tile drops into place from above, overshooting once. */
+        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-titanium-seat 0.42s cubic-bezier(0.3, 1.6, 0.4, 1) both;
+        }
+        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.1s;
+        }
+    }
+    @keyframes tl-titanium-mill {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-titanium-seat {
+        from {
+            transform: translateY(-0.8rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── titanium · tone ─────────────────────────────────────────────── */
+
+    /* The status plate: the note on its own recessed plate, an inset
+       bevel in the tone's colour. */
+    [data-theme='titanium'] [data-ti-tone='1'] .kp-card[data-kp-tone] {
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+    [data-theme='titanium'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] {
+        box-shadow: inset 0 0 0 2px var(--success);
+    }
+    [data-theme='titanium'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] {
+        box-shadow: inset 0 0 0 2px var(--warning);
+    }
+    [data-theme='titanium'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+
+    /* The machined tab: a flat tab with a knurled, ridged top edge. */
+    [data-theme='titanium'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border-block-start: 4px solid var(--primary);
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 5px);
+        background-size: 100% 4px;
+        background-position: top;
+        background-repeat: no-repeat;
+    }
+    [data-theme='titanium'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-theme='titanium'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-theme='titanium'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    /* The anodised tag: a band of colour across the top with a diagonal
+       sheen, as an anodised part. */
+    [data-theme='titanium'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-block-start: 5px solid var(--primary);
+        background-image: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--card) 75%, white) 50%, transparent 60%);
+    }
+    [data-theme='titanium'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-theme='titanium'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-theme='titanium'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    /* ── formal · while loading (options 2–3; option 1 is tiles.css's
+       own tl-leader) ─────────────────────────────────────────────────── */
+
+    /* The ledger is ruled: two ledger rules draw across the body, left
+       to right, and rule again. */
+    [data-theme='formal'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-inline: 1rem;
+        inset-block-end: 0.6rem;
+        block-size: 0.6rem;
+        background-image: linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong));
+        background-size:
+            100% 1px,
+            100% 1px;
+        background-position: top, bottom;
+        background-repeat: no-repeat;
+        clip-path: inset(0 100% 0 0);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-formal-ledger-rule 1.6s steps(16, end) infinite;
+        }
+    }
+    @keyframes tl-formal-ledger-rule {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* The seal is pressed: a navy seal ring presses onto the plate,
+       lifts and presses again. */
+    [data-theme='formal'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline-start: 50%;
+        inset-block-end: 0.7rem;
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: -0.5rem;
+        border-radius: 50%;
+        border: 2px solid var(--primary);
+        transform: scale(0.45);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-formal-seal 1.4s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-formal-seal {
+        0%,
+        100% {
+            transform: scale(0.45);
+        }
+        50% {
+            transform: scale(1);
+        }
+    }
+
+    /* ── formal · hover and focus ─────────────────────────────────────── */
+
+    /* The raised seal: the plate lifts a hair on a soft shadow; Open
+       underlines in navy; the border darkens on focus. */
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        transform: translateY(-1px);
+        box-shadow: 0 0.2rem 0.4rem color-mix(in oklch, var(--foreground) 16%, transparent);
+    }
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+    }
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        border-color: var(--primary);
+    }
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* The ink deepens: the frame's rule doubles; Open gains a navy
+       plate; a focus ring in navy traces the tile. */
+    [data-theme='formal'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='formal'] [data-ti-hover='2'] .kp-card.tl-hover-sim,
+    [data-theme='formal'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--card),
+            0 0 0 5px var(--border-strong);
+    }
+    [data-theme='formal'] [data-ti-hover='2'] [data-tl-link]:hover,
+    [data-theme='formal'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0.125rem;
+    }
+    [data-theme='formal'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+    }
+
+    /* The wax warms: the mark glows faintly; Open's underline
+       thickens; focus draws a fine double rule. */
+    [data-theme='formal'] [data-ti-hover='3'] .kp-card:hover [data-tl-mark],
+    [data-theme='formal'] [data-ti-hover='3'] .kp-card.tl-hover-sim [data-tl-mark],
+    [data-theme='formal'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) [data-tl-mark] {
+        box-shadow: 0 0 0.4rem var(--primary);
+    }
+    [data-theme='formal'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='formal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='formal'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--border-strong);
+    }
+
+    /* ── formal · live update (option 2–3; option 1 is tiles.css's own
+       tl-live-redraw, used by every theme) ──────────────────────────── */
+
+    /* Entered again: the footer's timestamp is struck through once,
+       then the new one is written in. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-live='2'] [data-tl-flash] [data-tl-time] {
+            animation: tl-formal-strike 0.5s steps(1, jump-end);
+        }
+    }
+    @keyframes tl-formal-strike {
+        0% {
+            text-decoration: line-through;
+            text-decoration-color: var(--destructive);
+        }
+        60% {
+            text-decoration: line-through;
+            text-decoration-color: var(--destructive);
+        }
+        100% {
+            text-decoration: none;
+        }
+    }
+
+    /* Signed again: the whole tile is traced again by a thin rule,
+       left to right. */
+    [data-theme='formal'] [data-ti-live='3'] [data-tl-flash]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: 0;
+        inline-size: 0;
+        block-size: 1px;
+        background: var(--primary);
+        pointer-events: none;
+        z-index: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ti-live='3'] [data-tl-flash]::after {
+            animation: tl-formal-sign 0.55s steps(20, end);
+        }
+    }
+    @keyframes tl-formal-sign {
+        to {
+            inline-size: 100%;
+        }
+    }
+
+    /* ── titanium · while loading (options 2–3; option 1 is tiles.css's
+       own tl-cutter) ─────────────────────────────────────────────────── */
+
+    /* The instrument dial: the knurl rolls. */
+    [data-theme='titanium'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-inline-start: 1rem;
+        inset-block-end: 0.6rem;
+        inline-size: calc(100% - 2rem);
+        block-size: 0.5rem;
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 6px);
+        background-size: 24px 100%;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-titanium-knurl-roll 1s linear infinite;
+        }
+    }
+    @keyframes tl-titanium-knurl-roll {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 24px 0;
+        }
+    }
+
+    /* The lathe: knurled ridges run along the body, as a part turning
+       on a lathe. */
+    [data-theme='titanium'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-start: 2.6rem;
+        block-size: 0.5rem;
+        background-image: repeating-linear-gradient(0deg, var(--border-strong) 0 2px, transparent 2px 6px);
+        background-size: 100% 24px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-titanium-lathe-ridge 0.9s linear infinite;
+        }
+    }
+    @keyframes tl-titanium-lathe-ridge {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 0 24px;
+        }
+    }
+
+    /* ── titanium · hover and focus ───────────────────────────────────── */
+
+    /* The surface catches light: the brushed grain catches a diagonal
+       sheen; Open underlines in the primary; focus traces an anodised
+       ring. */
+    [data-theme='titanium'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='titanium'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
+    [data-theme='titanium'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        background-image: linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--card) 70%, white) 50%, transparent 70%);
+    }
+    [data-theme='titanium'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='titanium'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+    }
+    [data-theme='titanium'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 0 0 4px color-mix(in oklch, var(--primary) 35%, transparent);
+    }
+
+    /* The dial clicks: the knurled band tightens a notch; Open gains a
+       machined tab; focus frames the aperture in a lit edge. */
+    [data-theme='titanium'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='titanium'] [data-ti-hover='2'] .kp-card.tl-hover-sim,
+    [data-theme='titanium'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
+        border-block-start: 4px solid color-mix(in oklch, var(--border-strong) 40%, var(--primary));
+    }
+    [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:hover,
+    [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        background: color-mix(in oklch, var(--muted-foreground) 25%, var(--card));
+        border-radius: 0.1rem;
+    }
+    [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* The badge tilts: the diagonal sheen sweeps once; Open underlines;
+       focus halos the rim in the primary. */
+    [data-theme='titanium'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='titanium'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
+    [data-theme='titanium'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        background-image: linear-gradient(120deg, transparent 20%, color-mix(in oklch, var(--card) 65%, white) 45%, transparent 65%);
+    }
+    [data-theme='titanium'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='titanium'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+    }
+    [data-theme='titanium'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    /* ── titanium · live update (options 2–3; option 1 is tiles.css's
+       own tl-live-redraw, used by every theme) ──────────────────────── */
+
+    /* A click of the dial: the tile jolts once, as a needle does. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-live='2'] [data-tl-flash] {
+            animation: tl-titanium-click 0.35s steps(2, jump-both);
+        }
+    }
+    @keyframes tl-titanium-click {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(0.2rem);
+        }
+    }
+
+    /* A glint: the tile flares with light once, slowing as it lands. */
+    [data-theme='titanium'] [data-ti-live='3'] [data-tl-flash]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background-image: linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--card) 70%, white) 50%, transparent 70%);
+        background-position: -140% 0;
+        background-size: 240% 100%;
+        background-repeat: no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ti-live='3'] [data-tl-flash]::after {
+            animation: tl-titanium-glint 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+    }
+    @keyframes tl-titanium-glint {
+        to {
+            background-position: 140% 0;
+        }
+    }
+
+    /* ── solstice · how the tiles arrive ────────────────────────────── */
+
+    /* Dawn: the tile rises from the baseline, slowing as it lands. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-solstice-dawn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        /* Kindled: tile after tile is drawn in backwards, from the last
+           to the first. */
+        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-solstice-kindle 0.45s ease-out both;
+        }
+        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy]) {
+            animation-delay: 0.12s;
+        }
+    }
+    @keyframes tl-solstice-dawn {
+        from {
+            transform: translateY(0.9rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    @keyframes tl-solstice-kindle {
+        from {
+            transform: translateY(0.5rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── solstice · tone ─────────────────────────────────────────────── */
+
+    /* The glowing chip: the note on a chip with a warm halo. */
+    [data-theme='solstice'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 45%, transparent);
+        background: var(--primary);
+    }
+    [data-theme='solstice'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--success) 45%, transparent);
+        background: var(--success);
+    }
+    [data-theme='solstice'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--warning) 45%, transparent);
+        background: var(--warning);
+    }
+    [data-theme='solstice'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--destructive) 45%, transparent);
+        background: var(--destructive);
+    }
+
+    /* The status plate: the note on its own status plate, framed. */
+    [data-theme='solstice'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border: 2px solid var(--primary);
+    }
+    [data-theme='solstice'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-color: var(--success);
+    }
+    [data-theme='solstice'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-color: var(--warning);
+    }
+    [data-theme='solstice'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    /* The red sky: the band of light above the card turns the tone's
+       colour. */
+    [data-theme='solstice'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-block-start: 5px solid var(--primary);
+        background-image: linear-gradient(to bottom, color-mix(in oklch, var(--primary) 18%, transparent) 0, transparent 2.5rem);
+    }
+    [data-theme='solstice'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+        background-image: linear-gradient(to bottom, color-mix(in oklch, var(--success) 18%, transparent) 0, transparent 2.5rem);
+    }
+    [data-theme='solstice'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+        background-image: linear-gradient(to bottom, color-mix(in oklch, var(--warning) 18%, transparent) 0, transparent 2.5rem);
+    }
+    [data-theme='solstice'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+        background-image: linear-gradient(to bottom, color-mix(in oklch, var(--destructive) 18%, transparent) 0, transparent 2.5rem);
+    }
+
+    /* ── brutalism · how the tiles arrive ───────────────────────────── */
+
+    /* Slammed: the tile drops into place from above, in hard steps. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-brutalism-slam 0.3s steps(4, end) both;
+        }
+        /* Shoved in: tile after tile slides in slanted, easing in and out. */
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-brutalism-shove 0.4s ease-in-out both;
+        }
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.1s;
+        }
+    }
+    @keyframes tl-brutalism-slam {
+        from {
+            transform: translateY(-1.2rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    @keyframes tl-brutalism-shove {
+        from {
+            transform: translateX(-1rem) rotate(-3deg);
+        }
+        to {
+            transform: translateX(0) rotate(0deg);
+        }
+    }
+
+    /* ── brutalism · tone ────────────────────────────────────────────── */
+
+    /* The hard-shadow block: the note on a block with the frame's own
+       hard offset shadow. */
+    [data-theme='brutalism'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        box-shadow: 0.2rem 0.2rem 0 0 var(--primary);
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow: 0.2rem 0.2rem 0 0 var(--success);
+        background: var(--success);
+    }
+    [data-theme='brutalism'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        box-shadow: 0.2rem 0.2rem 0 0 var(--warning);
+        background: var(--warning);
+    }
+    [data-theme='brutalism'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow: 0.2rem 0.2rem 0 0 var(--destructive);
+        background: var(--destructive);
+    }
+
+    /* The sticker: an askew sticker in a black outline. */
+    [data-theme='brutalism'] [data-ti-tone='2'] .kp-card[data-kp-tone] [data-tl-mark] {
+        border: 2px solid var(--foreground);
+        border-radius: 999px;
+        transform: rotate(-8deg) scale(1.3);
+        background: var(--primary);
+    }
+    [data-theme='brutalism'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+    }
+    [data-theme='brutalism'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
+    }
+    [data-theme='brutalism'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
+    }
+
+    /* The warning poster: the note printed on the tone's own block,
+       framed in ink. */
+    [data-theme='brutalism'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border: 3px solid var(--foreground);
+        box-shadow: 0.3rem 0.3rem 0 0 var(--primary);
+    }
+    [data-theme='brutalism'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        box-shadow: 0.3rem 0.3rem 0 0 var(--success);
+    }
+    [data-theme='brutalism'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        box-shadow: 0.3rem 0.3rem 0 0 var(--warning);
+    }
+    [data-theme='brutalism'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        box-shadow: 0.3rem 0.3rem 0 0 var(--destructive);
+    }
+
+    /* ── deco · how the tiles arrive ─────────────────────────────────── */
+
+    /* The curtain rises: the tile rises from the baseline, slowing as it
+       lands. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-deco-curtain 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        /* The marquee lights: tile after tile lights up in hard steps,
+           one after the other. */
+        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-deco-marquee 0.26s steps(1, end) both;
+        }
+        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.14s;
+        }
+    }
+    @keyframes tl-deco-curtain {
+        from {
+            transform: translateY(1rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    @keyframes tl-deco-marquee {
+        from {
+            box-shadow: 0 0 0 0 transparent;
+        }
+        to {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+    }
+
+    /* ── deco · tone ─────────────────────────────────────────────────── */
+
+    /* The gold-framed plaque: the note on a gold-framed plaque. */
+    [data-theme='deco'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--primary);
+        border-radius: 0.1rem;
+    }
+    [data-theme='deco'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--success);
+        background: var(--success);
+    }
+    [data-theme='deco'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--warning);
+        background: var(--warning);
+    }
+    [data-theme='deco'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--destructive);
+        background: var(--destructive);
+    }
+
+    /* The marquee plaque: a plaque lit from the top. */
+    [data-theme='deco'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border-block-start: 4px double var(--primary);
+    }
+    [data-theme='deco'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-theme='deco'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-theme='deco'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+
+    /* The gilt notice: framed all round in the tone's colour, as a
+       notice in a gilt frame. */
+    [data-theme='deco'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border: 2px solid var(--primary);
+        box-shadow: inset 0 0 0 4px var(--card);
+    }
+    [data-theme='deco'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-color: var(--success);
+    }
+    [data-theme='deco'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-color: var(--warning);
+    }
+    [data-theme='deco'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    /* ── phantom · how the tiles arrive ─────────────────────────────── */
+
+    /* The card is thrown: the tile jumps into place sideways, in hard
+       jumps. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-phantom-throw 0.28s steps(1, end) both;
+        }
+        /* Slashed in: tile after tile is drawn in backwards, easing in
+           and out. */
+        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-phantom-slash 0.4s ease-in-out both;
+        }
+        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy]) {
+            animation-delay: 0.1s;
+        }
+    }
+    @keyframes tl-phantom-throw {
+        from {
+            transform: translateX(1.2rem) rotate(2deg);
+        }
+        to {
+            transform: translateX(0) rotate(0deg);
+        }
+    }
+    @keyframes tl-phantom-slash {
+        from {
+            transform: translateX(0.8rem);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    /* ── phantom · tone ──────────────────────────────────────────────── */
+
+    /* The stamped ring: the note on a stamped ring set askew. */
+    [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        background: transparent;
+        transform: rotate(-12deg) scale(1.4);
+    }
+    [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        border-color: var(--success);
+    }
+    [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        border-color: var(--warning);
+    }
+    [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        border-color: var(--destructive);
+    }
+
+    /* The status plate: the note on its own status plate. */
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border: 2px solid var(--primary);
+    }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-color: var(--success);
+    }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-color: var(--warning);
+    }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    /* The askew card: stamped askew on the label, in a ruled border. */
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start: 4px solid var(--primary);
+        transform: rotate(-0.6deg);
+    }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success);
+    }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning);
+    }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+    }
+
+    /* ── shade-light · how the tiles arrive ─────────────────────────── */
+
+    /* Drawn in pencil: the body is drawn in from the left, easing in and
+       out. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
+            animation: tl-shadelight-pencil 0.45s ease-in-out both;
+        }
+        /* Out of the shade: tile after tile rises from the baseline,
+           slowing as it lands. */
+        [data-theme='shade-light'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-shadelight-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        [data-theme='shade-light'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.1s;
+        }
+    }
+    @keyframes tl-shadelight-pencil {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-shadelight-rise {
+        from {
+            transform: translateY(0.7rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── shade-light · tone ──────────────────────────────────────────── */
+
+    /* The paper chip: the note on a lifted paper chip. */
+    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        box-shadow: 0 0.1rem 0.25rem color-mix(in oklch, var(--foreground) 25%, transparent);
+        background: var(--primary);
+    }
+    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+    }
+    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
+    }
+    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
+    }
+
+    /* The status plate: the note on its own status plate. */
+    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border: 2px solid var(--primary);
+    }
+    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-color: var(--success);
+    }
+    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
+        border-color: var(--warning);
+    }
+    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    /* The pinned note: marked along the left edge, as a note pinned to
+       the card. */
+    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start: 4px solid var(--primary);
+    }
+    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success);
+    }
+    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning);
+    }
+    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+    }
+}

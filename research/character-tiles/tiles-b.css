@@ -1,0 +1,1500 @@
+/* research/character-tiles/tiles-b.css — theme-native tiles for terminal,
+   forest, high-contrast, sepia and blueprint. Same contract as tiles.css:
+   tokens only, one rule per aspect, every loading picture animates inside
+   its own `prefers-reduced-motion: no-preference` block, nothing fades
+   (no opacity keyframe), one height per tile in every state. */
+
+@layer kp.signature {
+    /* ════════════════════════════════════════════════════════ terminal ═══
+       The character cell: double rules, stepped motion, reverse video. */
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    /* the top(1) row: a double box-drawing frame */
+    [data-theme='terminal'] [data-ti-shape='1'] .kp-card {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='terminal'] [data-ti-shape='1'] .kp-card__title {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='terminal'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 0;
+        background: var(--primary);
+    }
+
+    /* the dumb-terminal card: a grid of character cells */
+    [data-theme='terminal'] [data-ti-shape='2'] .kp-card {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background-image:
+            repeating-linear-gradient(0deg, color-mix(in oklch, var(--border-strong) 12%, transparent) 0 1px, transparent 1px 1.15rem),
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--border-strong) 12%, transparent) 0 1px, transparent 1px 0.65rem);
+    }
+    [data-theme='terminal'] [data-ti-shape='2'] [data-tl-mark] {
+        border-radius: 0;
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        background: var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-shape='2'] .kp-card__footer {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: 0.2rem;
+    }
+
+    /* the curses window: a single-line box, the title ruled off */
+    [data-theme='terminal'] [data-ti-shape='3'] .kp-card {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='terminal'] [data-ti-shape='3'] .tl-head {
+        border-block-end: 1px solid var(--border-strong);
+        padding-block-end: 0.3rem;
+        margin-block-end: 0.3rem;
+    }
+    [data-theme='terminal'] [data-ti-shape='3'] [data-tl-mark] {
+        position: relative;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-shape='3'] [data-tl-mark]::before,
+    [data-theme='terminal'] [data-ti-shape='3'] [data-tl-mark]::after {
+        position: absolute;
+        inset-block-start: -0.15rem;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+    [data-theme='terminal'] [data-ti-shape='3'] [data-tl-mark]::before {
+        content: '[';
+        inset-inline-end: 100%;
+    }
+    [data-theme='terminal'] [data-ti-shape='3'] [data-tl-mark]::after {
+        content: ']';
+        inset-inline-start: 100%;
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    /* a block caret blinks in the body, once a second */
+    [data-theme='terminal'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-inline-start: 1rem;
+        inset-block-end: 0.75rem;
+        inline-size: 0.55rem;
+        block-size: 1rem;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-term-caret 1s steps(1) infinite;
+        }
+    }
+    @keyframes tl-term-caret {
+        0%,
+        49% {
+            background: var(--primary);
+        }
+        50%,
+        100% {
+            background: transparent;
+        }
+    }
+
+    /* a row of dots marches across the body */
+    [data-theme='terminal'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-inline: 1rem;
+        inset-block-end: 0.75rem;
+        block-size: 2px;
+        background-image: radial-gradient(circle, var(--primary) 1px, transparent 1.2px);
+        background-size: 8px 2px;
+        background-repeat: repeat-x;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-term-dots 1.2s steps(8) infinite;
+        }
+    }
+    @keyframes tl-term-dots {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 64px 0;
+        }
+    }
+
+    /* a row of # blocks fills the body block by block, then starts over */
+    [data-theme='terminal'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline-start: 1rem;
+        inset-block-end: 0.75rem;
+        block-size: 0.5rem;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-term-hash 1.6s steps(8) infinite;
+        }
+    }
+    @keyframes tl-term-hash {
+        0% {
+            inline-size: 0;
+        }
+        90%,
+        100% {
+            inline-size: calc(100% - 2rem);
+        }
+    }
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    /* printed: the body is typed in from the left, character by character */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-term-print 0.5s steps(16) both;
+        }
+        /* paged in: tile after tile drops into place from above, in hard steps */
+        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-term-page 0.3s steps(4, end) both;
+        }
+        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes tl-term-print {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-term-page {
+        from {
+            transform: translateY(-0.6rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    /* reverse video: the note shows in reverse video */
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__body {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        padding: 0.15rem 0.35rem;
+    }
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] .kp-card__body {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* underlined: the note is underlined in its colour */
+    [data-theme='terminal'] [data-ti-tone='2'] .kp-card[data-kp-tone] .kp-card__body {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-decoration-color: var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        text-decoration-color: var(--success);
+    }
+    [data-theme='terminal'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] .kp-card__body {
+        text-decoration-color: var(--warning);
+    }
+    [data-theme='terminal'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        text-decoration-color: var(--destructive);
+    }
+
+    /* the bell: the note prints in reverse on a dashed box */
+    [data-theme='terminal'] [data-ti-tone='3'] .kp-card[data-kp-tone] .kp-card__body {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border: 1px dashed var(--primary-foreground);
+        padding: 0.15rem 0.35rem;
+    }
+    [data-theme='terminal'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success-foreground);
+    }
+    [data-theme='terminal'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] .kp-card__body {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning-foreground);
+    }
+    [data-theme='terminal'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive-foreground);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    /* the cursor lands: a block caret beside the title; Open inverts */
+    [data-theme='terminal'] [data-ti-hover='1'] .kp-card:hover [data-tl-mark],
+    [data-theme='terminal'] [data-ti-hover='1'] .kp-card.tl-hover-sim [data-tl-mark] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='terminal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='terminal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 3px;
+    }
+
+    /* the row highlights: the whole row inverts briefly */
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card.tl-hover-sim {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card:hover .kp-card__title,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card:hover .kp-card__body,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card:hover .kp-timestamp,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-card__title,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-card__body,
+    [data-theme='terminal'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-timestamp {
+        color: var(--background);
+    }
+    [data-theme='terminal'] [data-ti-hover='2'] [data-tl-link]:hover,
+    [data-theme='terminal'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        color: var(--background);
+    }
+    [data-theme='terminal'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--background);
+        outline-offset: 2px;
+    }
+
+    /* the prompt blinks: a > prompt before the title */
+    [data-theme='terminal'] [data-ti-hover='3'] .kp-card:hover .kp-card__title::before,
+    [data-theme='terminal'] [data-ti-hover='3'] .kp-card.tl-hover-sim .kp-card__title::before {
+        content: '> ';
+        color: var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        color: var(--primary);
+    }
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:hover::before,
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible::before {
+        content: '[';
+    }
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:hover::after,
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible::after {
+        content: ']';
+    }
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 1px solid var(--border-strong);
+        box-shadow:
+            0 0 0 3px var(--card),
+            0 0 0 4px var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    /* redrawn: the body text changes in place at once */
+    [data-theme='terminal'] [data-ti-live='1'] [data-tl-flash] {
+        animation: none;
+    }
+
+    /* scrolled: the tile steps up one line, in hard steps */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-live='2'] [data-tl-flash] {
+            animation: tl-term-scroll 0.4s steps(3, end);
+        }
+        /* reverse flash: the tile flashes in reverse once, in hard jumps */
+        [data-theme='terminal'] [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-term-revflash 0.3s steps(1);
+        }
+    }
+    @keyframes tl-term-scroll {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-0.9em);
+        }
+    }
+    @keyframes tl-term-revflash {
+        0%,
+        100% {
+            background: var(--card);
+            color: var(--card-foreground);
+        }
+        50% {
+            background: var(--foreground);
+            color: var(--background);
+        }
+    }
+
+    /* ════════════════════════════════════════════════════════ forest ════
+       The wood, the leaf, the trail: eased organic motion. */
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    /* the ranger's logbook: kraft paper, serif italic title */
+    [data-theme='forest'] [data-ti-shape='1'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background: color-mix(in oklch, var(--card) 85%, var(--warning) 6%);
+    }
+    [data-theme='forest'] [data-ti-shape='1'] .kp-card__title {
+        font-style: italic;
+        font-family: Georgia, 'Times New Roman', serif;
+    }
+    [data-theme='forest'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 0.15rem;
+        background: var(--warning);
+        transform: rotate(-4deg);
+    }
+
+    /* the canopy: a leaf-green wash, a twig rule */
+    [data-theme='forest'] [data-ti-shape='2'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background: color-mix(in oklch, var(--card) 88%, var(--success) 12%);
+    }
+    [data-theme='forest'] [data-ti-shape='2'] [data-tl-mark] {
+        clip-path: ellipse(45% 30% at 50% 50%);
+        background: var(--success);
+        transform: rotate(45deg);
+    }
+    [data-theme='forest'] [data-ti-shape='2'] .kp-card__footer {
+        border-block-start: 2px solid var(--success);
+    }
+
+    /* the herbarium sheet: faint leaf veins, a pressed-leaf dot */
+    [data-theme='forest'] [data-ti-shape='3'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background-image: repeating-linear-gradient(60deg, color-mix(in oklch, var(--border-strong) 8%, transparent) 0 1px, transparent 1px 10px);
+    }
+    [data-theme='forest'] [data-ti-shape='3'] .kp-card__title {
+        font-style: italic;
+        font-family: Georgia, 'Times New Roman', serif;
+    }
+    [data-theme='forest'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 50% 10% 50% 10%;
+        background: color-mix(in oklch, var(--success) 70%, var(--muted-foreground));
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    /* a trail of light walks across the body */
+    [data-theme='forest'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-block-end: 0.7rem;
+        inset-inline-start: 1rem;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 6px var(--success);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-forest-trail 1.6s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-forest-trail {
+        0%,
+        100% {
+            inset-inline-start: 1rem;
+        }
+        50% {
+            inset-inline-start: calc(100% - 1.6rem);
+        }
+    }
+
+    /* the canopy sways */
+    [data-theme='forest'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset: 0;
+        background: linear-gradient(100deg, transparent, color-mix(in oklch, var(--success) 18%, transparent), transparent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-forest-sway 2.4s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-forest-sway {
+        0%,
+        100% {
+            transform: translateX(-12%);
+        }
+        50% {
+            transform: translateX(12%);
+        }
+    }
+
+    /* fireflies: two drift to and fro over the plate */
+    [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::before,
+    [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        z-index: 1;
+        border-radius: 50%;
+        background: var(--warning);
+        box-shadow: 0 0 4px var(--warning);
+    }
+    [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::before {
+        inset-block-end: 1.2rem;
+        inset-inline-start: 1.1rem;
+        inline-size: 0.35rem;
+        block-size: 0.35rem;
+    }
+    [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-block-end: 0.6rem;
+        inset-inline-start: calc(100% - 2rem);
+        inline-size: 0.3rem;
+        block-size: 0.3rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::before {
+            animation: tl-forest-firefly-a 2.2s ease-in-out infinite;
+        }
+        [data-theme='forest'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-forest-firefly-b 1.8s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-forest-firefly-a {
+        0%,
+        100% {
+            transform: translate(0, 0);
+        }
+        50% {
+            transform: translate(0.6rem, -0.5rem);
+        }
+    }
+    @keyframes tl-forest-firefly-b {
+        0%,
+        100% {
+            transform: translate(0, 0);
+        }
+        50% {
+            transform: translate(-0.5rem, -0.4rem);
+        }
+    }
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* grows: the tile rises from the ground, slowing as it lands */
+        [data-theme='forest'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-forest-grow 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+            transform-origin: bottom;
+        }
+        /* the trail is walked: tile after tile drawn in from the left */
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-forest-walk 0.45s ease-in-out both;
+        }
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.1s;
+        }
+    }
+    @keyframes tl-forest-grow {
+        from {
+            transform: translateY(0.8rem) scaleY(0.85);
+        }
+        to {
+            transform: translateY(0) scaleY(1);
+        }
+    }
+    @keyframes tl-forest-walk {
+        from {
+            transform: translateX(-1rem);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    /* the wooden tag */
+    [data-theme='forest'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__body {
+        border-inline-start: 4px solid var(--warning);
+        background: color-mix(in oklch, var(--card) 92%, var(--warning) 8%);
+        padding-inline-start: 0.4rem;
+    }
+    [data-theme='forest'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        border-inline-start-color: var(--success);
+        background: color-mix(in oklch, var(--card) 92%, var(--success) 8%);
+    }
+    [data-theme='forest'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        border-inline-start-color: var(--destructive);
+        background: color-mix(in oklch, var(--card) 92%, var(--destructive) 8%);
+    }
+
+    /* the leaf tag */
+    [data-theme='forest'] [data-ti-tone='2'] .kp-card[data-kp-tone] .tl-head {
+        background: color-mix(in oklch, var(--card) 85%, var(--warning) 15%);
+        border-radius: 0 0.5rem 0 0.5rem;
+        padding: 0.1rem 0.3rem;
+    }
+    [data-theme='forest'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] .tl-head {
+        background: color-mix(in oklch, var(--card) 85%, var(--success) 15%);
+    }
+    [data-theme='forest'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] .tl-head {
+        background: color-mix(in oklch, var(--card) 85%, var(--destructive) 15%);
+    }
+
+    /* the trail blaze */
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start: 4px solid var(--primary);
+        box-shadow: inset 4px 0 6px -4px var(--primary);
+    }
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success);
+        box-shadow: inset 4px 0 6px -4px var(--success);
+    }
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning);
+        box-shadow: inset 4px 0 6px -4px var(--warning);
+    }
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+        box-shadow: inset 4px 0 6px -4px var(--destructive);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    /* the leaves rustle */
+    [data-theme='forest'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='forest'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
+        background: color-mix(in oklch, var(--card) 80%, var(--success) 20%);
+    }
+    [data-theme='forest'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='forest'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-color: var(--success);
+    }
+    [data-theme='forest'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--warning);
+        outline-offset: 3px;
+    }
+
+    /* the tag swings */
+    [data-theme='forest'] [data-ti-hover='2'] .kp-card:hover [data-tl-mark],
+    [data-theme='forest'] [data-ti-hover='2'] .kp-card.tl-hover-sim [data-tl-mark] {
+        transform: rotate(10deg);
+    }
+    [data-theme='forest'] [data-ti-hover='2'] [data-tl-link]:hover::before,
+    [data-theme='forest'] [data-ti-hover='2'] [data-tl-link]:focus-visible::before {
+        content: '🍃';
+        margin-inline-end: 0.2em;
+    }
+    [data-theme='forest'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--success);
+        outline-offset: 4px;
+    }
+
+    /* the light breaks through */
+    [data-theme='forest'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='forest'] [data-ti-hover='3'] .kp-card.tl-hover-sim {
+        box-shadow: inset 0 0 1.5rem color-mix(in oklch, var(--success) 18%, transparent);
+    }
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-shadow: 0 0 6px color-mix(in oklch, var(--success) 60%, transparent);
+    }
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--success);
+        box-shadow: 0 0 0 5px color-mix(in oklch, var(--success) 25%, transparent);
+        outline-offset: 2px;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    [data-theme='forest'] [data-ti-live='1'] [data-tl-flash] {
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        /* a branch sways: the tile dips once and comes back */
+        [data-theme='forest'] [data-ti-live='2'] [data-tl-flash] {
+            animation: tl-forest-sway-live 0.5s cubic-bezier(0.3, 0.7, 0.4, 1);
+        }
+        /* growth ring: the tile swells once and settles */
+        [data-theme='forest'] [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-forest-ring 0.5s ease-in-out;
+        }
+    }
+    @keyframes tl-forest-sway-live {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(0.3rem);
+        }
+    }
+    @keyframes tl-forest-ring {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 transparent;
+        }
+        50% {
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--success) 40%, transparent);
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════ high-contrast ═══
+       Ink and paper only: hard steps, heavy frames, never colour alone. */
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    /* ink and frame: still, nothing moves */
+    [data-theme='high-contrast'] [data-ti-shape='1'] .kp-card {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='high-contrast'] [data-ti-shape='1'] .kp-card__title {
+        font-weight: 800;
+    }
+    [data-theme='high-contrast'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 0;
+        background: var(--border-strong);
+    }
+
+    /* the inverse plate: ink plate, title in the paper colour. The frame
+       and the Open link were left on the page's own paper colour
+       (measured 2026-10-05: a border and a link that read 1:1 against
+       the page, invisible); the frame now reads in `--border-strong` so
+       it separates from the page, and the link is explicitly set to the
+       plate's own paper colour, same as the title and body. */
+    [data-theme='high-contrast'] [data-ti-shape='2'] .kp-card {
+        background: var(--foreground);
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='high-contrast'] [data-ti-shape='2'] .kp-card__title,
+    [data-theme='high-contrast'] [data-ti-shape='2'] .kp-card__body,
+    [data-theme='high-contrast'] [data-ti-shape='2'] .kp-timestamp,
+    [data-theme='high-contrast'] [data-ti-shape='2'] [data-tl-link] {
+        color: var(--background);
+    }
+    [data-theme='high-contrast'] [data-ti-shape='2'] [data-tl-mark] {
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    /* the signal board: a heavy 3px frame, the title very large */
+    [data-theme='high-contrast'] [data-ti-shape='3'] .kp-card {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='high-contrast'] [data-ti-shape='3'] .kp-card__title {
+        font-size: 1.3em;
+        font-weight: 700;
+    }
+    [data-theme='high-contrast'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 50%;
+        background: transparent;
+        border: 3px solid var(--border-strong);
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    /* the dashed baseline steps along */
+    [data-theme='high-contrast'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-inline: 1rem;
+        inset-block-end: 0.75rem;
+        block-size: 3px;
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 10px, transparent 10px 20px);
+        background-size: 20px 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-hc-dash 1s steps(4) infinite;
+        }
+    }
+    @keyframes tl-hc-dash {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 20px 0;
+        }
+    }
+
+    /* the striped block steps across the body */
+    [data-theme='high-contrast'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-block-end: 0.6rem;
+        inset-inline-start: 1rem;
+        inline-size: 1.2rem;
+        block-size: 0.5rem;
+        background-image: repeating-linear-gradient(45deg, var(--border-strong) 0 4px, var(--background) 4px 8px);
+        border: 1px solid var(--border-strong);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-hc-stripe 1s steps(3) infinite alternate;
+        }
+    }
+    @keyframes tl-hc-stripe {
+        from {
+            inset-inline-start: 1rem;
+        }
+        to {
+            inset-inline-start: calc(100% - 2.2rem);
+        }
+    }
+
+    /* a thick bar scans down the plate in hard steps */
+    [data-theme='high-contrast'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-start: 2.5rem;
+        block-size: 4px;
+        background: var(--border-strong);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-hc-scan 1.2s steps(6) infinite;
+        }
+    }
+    @keyframes tl-hc-scan {
+        0% {
+            inset-block-start: 2.5rem;
+        }
+        100% {
+            inset-block-start: calc(100% - 1.5rem);
+        }
+    }
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* switched: the tile is drawn in hard steps, four at a time */
+        [data-theme='high-contrast'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-hc-switch 0.4s steps(4) both;
+        }
+        /* dropped: tile after tile drops into place from above, in hard steps */
+        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-hc-drop 0.35s steps(4, end) both;
+        }
+        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes tl-hc-switch {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-hc-drop {
+        from {
+            transform: translateY(-0.6rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    /* the framed plate */
+    [data-theme='high-contrast'] [data-ti-tone='1'] .kp-card[data-kp-tone] {
+        border: 2px solid var(--border-strong);
+    }
+    [data-theme='high-contrast'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__body {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding: 0.2rem 0.4rem;
+    }
+    [data-theme='high-contrast'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+    [data-theme='high-contrast'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* the heavy frame: 3px, square corners */
+    [data-theme='high-contrast'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border: 3px solid var(--warning);
+        border-radius: 0;
+    }
+    [data-theme='high-contrast'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-color: var(--success);
+    }
+    [data-theme='high-contrast'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    /* the signal plate: the tone's own plate, framed in ink */
+    [data-theme='high-contrast'] [data-ti-tone='3'] .kp-card[data-kp-tone] .kp-card__body {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border: 2px solid var(--border-strong);
+        padding: 0.2rem 0.4rem;
+    }
+    [data-theme='high-contrast'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+    [data-theme='high-contrast'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    /* the frame thickens to 3px */
+    [data-theme='high-contrast'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='high-contrast'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
+        border-width: 3px;
+    }
+    [data-theme='high-contrast'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='high-contrast'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        background: var(--border-strong);
+        color: var(--background);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* the plate flips: the whole tile inverts ink and paper */
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card.tl-hover-sim {
+        background: var(--foreground);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card:hover .kp-card__title,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card:hover .kp-card__body,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card:hover .kp-timestamp,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-card__title,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-card__body,
+    [data-theme='high-contrast'] [data-ti-hover='2'] .kp-card.tl-hover-sim .kp-timestamp {
+        color: var(--background);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='2'] [data-tl-link]:hover,
+    [data-theme='high-contrast'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        color: var(--background);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 3px dashed var(--background);
+        outline-offset: 3px;
+    }
+
+    /* the signal flashes: the frame to full ink */
+    [data-theme='high-contrast'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='high-contrast'] [data-ti-hover='3'] .kp-card.tl-hover-sim {
+        box-shadow: inset 0 0 0 3px var(--border-strong);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='high-contrast'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        background: var(--border-strong);
+        color: var(--background);
+    }
+    [data-theme='high-contrast'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--border-strong);
+        box-shadow:
+            0 0 0 4px var(--background),
+            0 0 0 6px var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    [data-theme='high-contrast'] [data-ti-live='1'] [data-tl-flash] {
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        /* the bar jumps, as a needle does, in hard steps */
+        [data-theme='high-contrast'] [data-ti-live='2'] [data-tl-flash] {
+            animation: tl-hc-jump 0.35s steps(2, end);
+        }
+        /* the bar flips to its inverse once, in hard jumps */
+        [data-theme='high-contrast'] [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-hc-flip 0.3s steps(1);
+        }
+    }
+    @keyframes tl-hc-jump {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-0.4rem);
+        }
+    }
+    @keyframes tl-hc-flip {
+        0%,
+        100% {
+            background: var(--card);
+            color: var(--card-foreground);
+        }
+        50% {
+            background: var(--border-strong);
+            color: var(--background);
+        }
+    }
+
+    /* ════════════════════════════════════════════════════════ sepia ═════
+       The barograph, the nib, the stamp: even-paced ink. */
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    /* the barograph: ruled chart paper, an aged vignette */
+    [data-theme='sepia'] [data-ti-shape='1'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background-image: repeating-linear-gradient(
+            var(--card) 0 1.4rem,
+            color-mix(in oklch, var(--border) 65%, transparent) 1.4rem calc(1.4rem + 1px)
+        );
+        box-shadow: inset 0 0 2.5rem color-mix(in oklch, var(--foreground) 6%, transparent);
+    }
+    [data-theme='sepia'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    /* letterpress: the title pressed into speckled paper */
+    [data-theme='sepia'] [data-ti-shape='2'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background-image: radial-gradient(color-mix(in oklch, var(--border-strong) 16%, transparent) 0.5px, transparent 0.5px);
+        background-size: 6px 6px;
+    }
+    [data-theme='sepia'] [data-ti-shape='2'] .kp-card__title {
+        text-shadow: 0 1px 0 color-mix(in oklch, var(--card) 60%, var(--background));
+    }
+    [data-theme='sepia'] [data-ti-shape='2'] [data-tl-mark] {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* the ticket stub: punched notches, a dashed tear-line frame */
+    [data-theme='sepia'] [data-ti-shape='3'] .kp-card {
+        border: 1px dashed var(--border-strong);
+        background-image:
+            radial-gradient(circle at 0 50%, transparent 0.35rem, var(--card) 0.36rem),
+            radial-gradient(circle at 100% 50%, transparent 0.35rem, var(--card) 0.36rem);
+    }
+    [data-theme='sepia'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    /* the nib sweeps across the drum */
+    [data-theme='sepia'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-block-end: 0.7rem;
+        inset-inline-start: 0;
+        inline-size: 25%;
+        block-size: 1.5px;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-sepia-nib 1.4s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-sepia-nib {
+        0%,
+        100% {
+            inset-inline-start: 0;
+        }
+        50% {
+            inset-inline-start: 75%;
+        }
+    }
+
+    /* a blot of ink swells and draws back */
+    [data-theme='sepia'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-block-end: 0.7rem;
+        inset-inline-start: 1rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: color-mix(in oklch, var(--primary) 70%, var(--foreground));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-sepia-blot 1.6s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-sepia-blot {
+        0%,
+        100% {
+            transform: scale(0.6);
+        }
+        50% {
+            transform: scale(1.8);
+        }
+    }
+
+    /* the hour lines move left under a still nib */
+    [data-theme='sepia'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-end: 0.6rem;
+        block-size: 2px;
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 10px);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-sepia-hours 1.5s linear infinite;
+        }
+    }
+    @keyframes tl-sepia-hours {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: -40px 0;
+        }
+    }
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* the nib writes: the body written in from the left, at an even pace */
+        [data-theme='sepia'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-sepia-write 0.5s linear both;
+        }
+        /* pressed: tile after tile drops into place, slowing as it lands */
+        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-sepia-press 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+        }
+        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes tl-sepia-write {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-sepia-press {
+        from {
+            transform: translateY(-0.6rem);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    /* the status plate */
+    [data-theme='sepia'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__footer {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-radius: 0.25rem;
+        padding-inline: 0.3rem;
+    }
+    [data-theme='sepia'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__footer {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__footer {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* letterpress border */
+    [data-theme='sepia'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
+        border: 2px solid color-mix(in oklch, var(--warning) 75%, var(--foreground) 25%);
+    }
+    [data-theme='sepia'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
+        border-color: color-mix(in oklch, var(--success) 75%, var(--foreground) 25%);
+    }
+    [data-theme='sepia'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
+        border-color: color-mix(in oklch, var(--destructive) 75%, var(--foreground) 25%);
+    }
+
+    /* the rubber stamp: stamped askew, in a ruled border */
+    [data-theme='sepia'] [data-ti-tone='3'] .kp-card[data-kp-tone] .kp-card__footer {
+        border: 1px solid var(--warning);
+        transform: rotate(-1.5deg);
+    }
+    [data-theme='sepia'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] .kp-card__footer {
+        border-color: var(--success);
+    }
+    [data-theme='sepia'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] .kp-card__footer {
+        border-color: var(--destructive);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    /* the ink deepens */
+    [data-theme='sepia'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='sepia'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
+        background: color-mix(in oklch, var(--card) 92%, var(--primary) 8%);
+    }
+    [data-theme='sepia'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='sepia'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+    }
+    [data-theme='sepia'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 3px;
+    }
+
+    /* the seal warms */
+    [data-theme='sepia'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='sepia'] [data-ti-hover='2'] .kp-card.tl-hover-sim {
+        box-shadow: inset 0 0 1.5rem color-mix(in oklch, var(--primary) 12%, transparent);
+    }
+    [data-theme='sepia'] [data-ti-hover='2'] [data-tl-link]:hover::before,
+    [data-theme='sepia'] [data-ti-hover='2'] [data-tl-link]:focus-visible::before {
+        content: '●';
+        font-size: 0.6em;
+        margin-inline-end: 0.3em;
+    }
+    [data-theme='sepia'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 1px solid var(--border-strong);
+        box-shadow:
+            0 0 0 3px var(--card),
+            0 0 0 4px var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* the press lands */
+    [data-theme='sepia'] [data-ti-hover='3'] .kp-card:hover .kp-card__title,
+    [data-theme='sepia'] [data-ti-hover='3'] .kp-card.tl-hover-sim .kp-card__title {
+        text-shadow: 0 1px 1px color-mix(in oklch, var(--foreground) 25%, transparent);
+    }
+    [data-theme='sepia'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='sepia'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='sepia'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        border-radius: 50%;
+        outline-offset: 4px;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    [data-theme='sepia'] [data-ti-live='1'] [data-tl-flash] {
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        /* the nib moves on: the footer's timestamp steps forward, at an even pace */
+        [data-theme='sepia'] [data-ti-live='2'] [data-tl-flash] [data-tl-time] {
+            animation: tl-sepia-advance 0.5s linear;
+        }
+        /* inked again: the tile is traced again from its edge */
+        [data-theme='sepia'] [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-sepia-retrace 0.6s ease-in-out;
+        }
+    }
+    @keyframes tl-sepia-advance {
+        from {
+            transform: translateX(-0.3rem);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    @keyframes tl-sepia-retrace {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 var(--primary);
+        }
+        50% {
+            box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 55%, transparent);
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════ blueprint ══
+       The drafting table: millimetre grids, linear and stepped pens. */
+
+    /* ── 1 · Shape ───────────────────────────────────────────────────── */
+
+    /* the chart recorder: a millimetre grid */
+    [data-theme='blueprint'] [data-ti-shape='1'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background-image:
+            linear-gradient(color-mix(in oklch, var(--border-strong) 10%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--border-strong) 10%, transparent) 1px, transparent 1px);
+        background-size: 8px 8px;
+    }
+    [data-theme='blueprint'] [data-ti-shape='1'] .kp-card__title {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    [data-theme='blueprint'] [data-ti-shape='1'] [data-tl-mark] {
+        border-radius: 50%;
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    /* the title block: cells divided by drawn rules */
+    [data-theme='blueprint'] [data-ti-shape='2'] .kp-card {
+        border: 1px solid var(--border-strong);
+        background-image:
+            linear-gradient(var(--border-strong) 1px, transparent 1px), linear-gradient(90deg, var(--border-strong) 1px, transparent 1px);
+        background-size:
+            100% 33%,
+            50% 100%;
+    }
+    [data-theme='blueprint'] [data-ti-shape='2'] [data-tl-mark] {
+        border-radius: 0;
+        inline-size: 0.9rem;
+        block-size: 0.3rem;
+        background: var(--border-strong);
+    }
+
+    /* the section view: a hatched plate at forty-five degrees, a dashed frame */
+    [data-theme='blueprint'] [data-ti-shape='3'] .kp-card {
+        border: 1px dashed var(--border-strong);
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 10%, transparent) 0 1px, transparent 1px 8px);
+    }
+    [data-theme='blueprint'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 50%;
+        background: transparent;
+        border: 2px dashed var(--border-strong);
+    }
+
+    /* ── 2 · While loading ───────────────────────────────────────────── */
+
+    /* the recorder's pen sweeps */
+    [data-theme='blueprint'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-block-end: 0.7rem;
+        inset-inline-start: 0;
+        inline-size: 20%;
+        block-size: 1px;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-ti-loading='1'] [data-kp-busy]::after {
+            animation: tl-blue-pen 1.3s linear infinite;
+        }
+    }
+    @keyframes tl-blue-pen {
+        0%,
+        100% {
+            inset-inline-start: 0;
+        }
+        50% {
+            inset-inline-start: 80%;
+        }
+    }
+
+    /* a dash marches along the baseline */
+    [data-theme='blueprint'] [data-ti-loading='2'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-end: 0.6rem;
+        block-size: 1px;
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-blue-dash 1s steps(4) infinite;
+        }
+    }
+    @keyframes tl-blue-dash {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: 16px 0;
+        }
+    }
+
+    /* a dimension line with its ticks is drawn across the plate, again and again */
+    [data-theme='blueprint'] [data-ti-loading='3'] [data-kp-busy]::after {
+        inset-block-end: 0.6rem;
+        inset-inline-start: 0.75rem;
+        inline-size: calc(100% - 1.5rem);
+        block-size: 2px;
+        background: var(--border-strong);
+        transform-origin: left;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-ti-loading='3'] [data-kp-busy]::after {
+            animation: tl-blue-dim 1.4s ease-in-out infinite;
+        }
+    }
+    @keyframes tl-blue-dim {
+        0%,
+        100% {
+            transform: scaleX(0);
+        }
+        50% {
+            transform: scaleX(1);
+        }
+    }
+
+    /* ── 3 · How the tiles arrive ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* drafted: the body is drawn in from the left, at an even pace */
+        [data-theme='blueprint'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-blue-draft 0.5s linear both;
+        }
+        /* plotted: tile after tile is drawn in from the left, in hard steps */
+        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+            animation: tl-blue-plot 0.45s steps(6) both;
+        }
+        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes tl-blue-draft {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+    @keyframes tl-blue-plot {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
+
+    /* the status plate */
+    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__footer {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        padding-inline: 0.3rem;
+    }
+    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__footer {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__footer {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* the ruled box */
+    [data-theme='blueprint'] [data-ti-tone='2'] .kp-card[data-kp-tone] .kp-card__body {
+        border: 1px solid var(--warning);
+        padding: 0.2rem 0.3rem;
+    }
+    [data-theme='blueprint'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        border-color: var(--success);
+    }
+    [data-theme='blueprint'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        border-color: var(--destructive);
+    }
+
+    /* the revision cloud: framed all round, as a drawing revision */
+    [data-theme='blueprint'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border: 2px dashed color-mix(in oklch, var(--warning) 75%, var(--card-foreground) 25%);
+    }
+    [data-theme='blueprint'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-color: color-mix(in oklch, var(--success) 75%, var(--card-foreground) 25%);
+    }
+    [data-theme='blueprint'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-color: color-mix(in oklch, var(--destructive) 75%, var(--card-foreground) 25%);
+    }
+
+    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
+
+    /* the pen hovers: the grid lines brighten faintly */
+    [data-theme='blueprint'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='blueprint'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
+        background-image:
+            linear-gradient(color-mix(in oklch, var(--border-strong) 22%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--border-strong) 22%, transparent) 1px, transparent 1px);
+        background-size: 8px 8px;
+    }
+    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+    }
+    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 3px;
+    }
+
+    /* the cell highlights: the title-block cell fills faintly */
+    [data-theme='blueprint'] [data-ti-hover='2'] .kp-card:hover,
+    [data-theme='blueprint'] [data-ti-hover='2'] .kp-card.tl-hover-sim {
+        background-color: color-mix(in oklch, var(--card) 92%, var(--primary) 8%);
+    }
+    [data-theme='blueprint'] [data-ti-hover='2'] [data-tl-link]:hover::before,
+    [data-theme='blueprint'] [data-ti-hover='2'] [data-tl-link]:focus-visible::before {
+        content: '⊢';
+        margin-inline-end: 0.2em;
+    }
+    [data-theme='blueprint'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
+        outline: 1px solid var(--border-strong);
+        box-shadow:
+            0 0 0 3px var(--card),
+            0 0 0 4px var(--border-strong);
+        outline-offset: 2px;
+    }
+
+    /* the hatching tightens */
+    [data-theme='blueprint'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='blueprint'] [data-ti-hover='3'] .kp-card.tl-hover-sim {
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 18%, transparent) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='blueprint'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: underline;
+    }
+    [data-theme='blueprint'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 4px;
+        border-radius: 40%;
+    }
+
+    /* ── 6 · Live update ─────────────────────────────────────────────── */
+
+    [data-theme='blueprint'] [data-ti-live='1'] [data-tl-flash] {
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        /* the pen steps: the footer's timestamp steps forward, in hard steps */
+        [data-theme='blueprint'] [data-ti-live='2'] [data-tl-flash] [data-tl-time] {
+            animation: tl-blue-tick 0.4s steps(3);
+        }
+        /* retraced in ink: the tile is traced again from its edge, at an even pace */
+        [data-theme='blueprint'] [data-ti-live='3'] [data-tl-flash] {
+            animation: tl-blue-retrace 0.5s linear;
+        }
+    }
+    @keyframes tl-blue-tick {
+        from {
+            transform: translateX(-0.3rem);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    @keyframes tl-blue-retrace {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 var(--border-strong);
+        }
+        50% {
+            box-shadow: 0 0 0 2px var(--border-strong);
+        }
+    }
+}

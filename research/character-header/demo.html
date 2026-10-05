@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-header">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a page header of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="header.css" />
+        <link rel="stylesheet" href="header-a.css" />
+        <link rel="stylesheet" href="header-b.css" />
+        <link rel="stylesheet" href="header-c.css" />
+        <link rel="stylesheet" href="header-d.css" />
+    </head>
+    <body>
+        <main class="ph-page">
+            <header class="ph-intro">
+                <h1>A page header of its own, per theme: one pick per aspect</h1>
+                <p>
+                    Phase 1 (Kenny, 2026-10-05): the page header (<code>.kp-page-header</code>): the title and its one-sentence description on the
+                    left, the actions — secondary buttons, one primary and an overflow menu — on the right. Per theme you pick the shape, how the
+                    overflow menu opens and closes, and hover/focus/press, each from three options and each on its own; any combination composes.
+                </p>
+                <p class="ph-motion" data-ph-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the overflow menu appears and disappears at once. Turn
+                    it off in the system settings to judge the motion.
+                </p>
+                <p class="ph-meta">
+                    The header below is a page's own: a title, a one-sentence description, two secondary actions, one primary action and an overflow
+                    menu with a destructive item last. An option only restyles <code>.kp-page-header</code> from the theme's tokens, in the theme's
+                    <code>kp.signature</code> layer (<code>header.css</code>, and the four group files for the other 20 themes), one attribute per
+                    aspect, and keeps the header's layout — including how it stacks below 40rem — exactly as the package's own. This theme:
+                    <b data-ph-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Phase 1 builds formal and titanium only; header-a.css …
+                 header-d.css (each `@layer kp.signature {}`, empty) are
+                 where the other twenty themes' CSS lands, group by group. -->
+            <section
+                class="ph-sec"
+                data-review-item="header"
+                data-review-components="page-header"
+                data-review-title="The page header"
+                aria-labelledby="h-header"
+            >
+                <div class="ph-sec__head">
+                    <h2 id="h-header">The page header in <span data-ph-theme-name>this theme</span></h2>
+                    <p>
+                        Three things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it;
+                        the combination at the top shows your picks together. <b>Shape</b> is the plate, the title, the description and the buttons.
+                        <b>The overflow menu</b> opens on More ▾ and mirrors its own leave. <b>Hover, focus, press</b> covers every button. Move the
+                        pointer over a button, tab to it, or open the menu.
+                    </p>
+                </div>
+                <div class="ph-controls" data-review-controls>
+                    <div class="ph-actions" role="group" aria-label="The overflow menu">
+                        <b>Menu:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-menu-state="closed" aria-pressed="true">Closed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-menu-state="open" aria-pressed="false">Open</button>
+                    </div>
+                    <div class="ph-actions" role="group" aria-label="Page width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-width="wide" aria-pressed="true">Desktop</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-width="narrow" aria-pressed="false">
+                            Narrow (below 40rem)
+                        </button>
+                    </div>
+                    <div class="ph-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="ph-log" data-ph-log aria-live="polite">The overflow menu's items go nowhere here; a click says where it would go.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="ph-preview">
+                    <div class="ph-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-ph-picks>…</p>
+                    </div>
+                    <div class="ph-resize" data-ph-resize>
+                        <div class="ph-strip" data-ph data-ph-preview data-ph-shape="1" data-ph-menu="1" data-ph-interactive="1"></div>
+                    </div>
+                </div>
+                <div class="ph-aspects" data-ph-aspects></div>
+                <div class="ph-reference">
+                    <div class="ph-aspect__head">
+                        <h3>For reference: the plain header, as today</h3>
+                        <p>
+                            The package's page header as it ships, not an option: the title and its description on the left, two secondary buttons,
+                            one primary and an overflow button on the right, folding under the description below 40rem; the same shape in every theme.
+                        </p>
+                    </div>
+                    <div class="ph-strip ph-strip--plain" data-ph-plain></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Phase 1: no theme has been judged yet; this round's full reopen
+             list is written once every theme has its CSS (phase 2+). -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-05-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
