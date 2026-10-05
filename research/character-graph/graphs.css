@@ -3260,10 +3260,10 @@
     /* pastel · focus 3 · The heart */
 
     [data-theme='pastel'] [data-cg-focus='3'] .kp-graph {
-        --gr-pick: color-mix(in oklch, var(--accent) 70%, var(--foreground));
+        --gr-pick: color-mix(in oklch, var(--accent) 20%, var(--foreground));
         --gr-pick-w: 6;
         --gr-pick-glow: drop-shadow(0 3px 0 var(--accent));
-        --gr-node-dim: 0.5;
+        --gr-node-dim: 0.65;
         --gr-off-outline: 2px dashed currentColor;
     }
 
