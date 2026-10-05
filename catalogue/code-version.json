@@ -23,7 +23,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "a0b7c50910046cca", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "5a433ee8fa7c1986",
+            "digest": "5ab1f5bb102e45b1",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -37,10 +37,10 @@
         "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
     },
     "themes": {
-        "formal": "d367e8d21c9078d1",
+        "formal": "7b82be24a5aa5a54",
         "light": "e6044e0ebc3c77ab",
         "dark": "053bff6d7311dc9a",
-        "cyberpunk": "740c380828a1b9e4",
+        "cyberpunk": "d9a699b94962ba95",
         "synthwave": "3abc977b8c0f690c",
         "pastel": "edff186fed81409e",
         "terminal": "ab1ca814842d25ed",
@@ -58,7 +58,7 @@
         "grotesk": "555bafde18700431",
         "lapis": "5f3031be9de9228b",
         "nostromo": "aeb82f4ae11e2c04",
-        "titanium": "9b31df27361d1c73"
+        "titanium": "301739bd8dfccbef"
     },
     "rules": {
         "blueprint||@container (max-width: 60rem)||[data-kp-hero-grid]": "3808ae5786791ad7",

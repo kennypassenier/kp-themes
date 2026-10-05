@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Opening as the reverse of close** [scope-143]: in formal, cyberpunk and
+  titanium a dialog opens, and a card arrives, as its theme's close and
+  leave played backwards (`--kp-open: reverse-close` in the register,
+  played by js/motion.js from the theme's own keyframes and timings; the
+  other themes keep their entrances). Approved from `research/open-reverse`
+  (2026-10-05). A research demo page no longer carries the catalogue's
+  Copy prompt beside its own Copy answer.
+
 - **Kenny's deco review, round one (2026-10-05)** [scope-143]: the rich menu
   always opens fully on screen (`menuPlacement()`: the other edge, above the
   button, or clamped, clear of sticky bars; 144 of 144 cases measured); the

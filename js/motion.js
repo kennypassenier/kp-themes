@@ -20,6 +20,12 @@
 //     on the root plays all of it slower or faster at once.
 //   - A theme with no entrance (or a reader who asked for reduced motion)
 //     gets none: the dialog closes and the box takes its size at once.
+//   - A register that declares `--kp-open: reverse-close` (formal,
+//     cyberpunk, titanium; Kenny's pick on research/open-reverse,
+//     2026-10-05) opens as it closes, turned around: the dialog plays its
+//     entrance forwards in the close's time, and what arrives in an eased
+//     box plays the theme's leave backwards, so frame t of the opening is
+//     frame (T - t) of the close.
 //
 // What moves: every `.kp-dialog` (closing, and growing or shrinking while
 // open), the accordion's items, tabs, the data table, the toast stack, the
@@ -210,6 +216,47 @@ export async function closeDialog(dialog, returnValue) {
 }
 
 /**
+ * Whether the theme `el` wears opens what closes as that close played
+ * backwards: its register says `--kp-open: reverse-close` (formal, cyberpunk
+ * and titanium; Kenny's pick on research/open-reverse, 2026-10-05).
+ * @param {Element} el
+ */
+const opensAsReversedClose = (el) => getComputedStyle(el).getPropertyValue('--kp-open').trim() === 'reverse-close';
+
+/**
+ * Open `dialog` as its close played backwards [research/open-reverse]:
+ * closeDialog() plays each kept entrance with `direction: 'reverse'` in
+ * themeMotion().close; this replaces the register's entrance with the same
+ * keyframes on the same curve, forwards, in that same time, and the
+ * backdrop's fade turned around, so frame t of the opening is frame
+ * (close - t) of the close. Only in a theme that asks for it.
+ * @param {HTMLDialogElement} dialog
+ */
+function openAsReversedClose(dialog) {
+    if (!dialog.open || !opensAsReversedClose(dialog)) return;
+    const { close: duration } = themeMotion(dialog);
+    const kept = entrances.get(dialog) ?? [];
+    if (duration <= 0) return;
+    for (const a of dialog.getAnimations({ subtree: true })) if (a instanceof CSSAnimation) a.cancel();
+    for (const { keyframes, easing, pseudoElement } of kept) {
+        try {
+            dialog.animate(keyframes, { duration, easing, fill: 'backwards', ...(pseudoElement ? { pseudoElement } : {}) });
+        } catch {
+            /* an engine that cannot animate that pseudo-element skips it, as the close does */
+        }
+    }
+    const fade = /** @type {Keyframe[]} */ ([{ opacity: 1 }, { opacity: 0 }]);
+    if (!kept.some((one) => one.pseudoElement === '::backdrop')) {
+        try {
+            dialog.animate(fade, { duration, easing: 'ease-in', direction: 'reverse', fill: 'backwards', pseudoElement: '::backdrop' });
+        } catch {
+            /* as above */
+        }
+    }
+    if (kept.length === 0) dialog.animate(fade, { duration, easing: 'ease-in', direction: 'reverse', fill: 'backwards' });
+}
+
+/**
  * Give one dialog its leaving motion: its own `close()`, Escape and the
  * backdrop all play it. `dialog.open` stays true while it plays, and the
  * `close` event comes at its end, as it does for any closed dialog.
@@ -226,10 +273,12 @@ function attachClose(dialog) {
     own.showModal = function () {
         showModal.call(dialog);
         rememberEntrance(dialog);
+        openAsReversedClose(dialog);
     };
     own.show = function () {
         show.call(dialog);
         rememberEntrance(dialog);
+        openAsReversedClose(dialog);
     };
     own.close = (/** @type {string | undefined} */ value) => void closeDialog(dialog, value);
     if (dialog.open) rememberEntrance(dialog);
@@ -412,6 +461,9 @@ function arrival(scope) {
  */
 function arrive(el, motion) {
     if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving')) return;
+    // A theme that opens as its close turned around lets it arrive as its
+    // leave played backwards [research/open-reverse].
+    if (opensAsReversedClose(el) && arriveAsReversedLeave(el)) return;
     // A register that has its own arrival draws it on `[data-kp-arriving]`;
     // one that has not lends its toast's.
     el.setAttribute('data-kp-arriving', '');
@@ -492,6 +544,198 @@ function arrivalOf(el) {
 }
 
 /**
+ * The space `el` takes, and nothing, as a leave folds it: in a row (a flex
+ * row, an inline chip) its width, sideways; anywhere else its height, from
+ * below; margins and paddings to 0, and the flex gap towards a neighbour
+ * swallowed by a negative margin.
+ * @param {HTMLElement} el @param {CSSStyleDeclaration} style its style while it carries `data-kp-leaving`
+ * @returns {[Record<string, string>, Record<string, string>]}
+ */
+function foldFrames(el, style) {
+    const parent = el.parentElement ? getComputedStyle(el.parentElement) : null;
+    const sideways =
+        style.display.startsWith('inline') || (parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith('column'));
+    /** @type {Record<string, string>} */
+    const from = sideways
+        ? {
+              width: `${el.offsetWidth}px`,
+              marginLeft: style.marginLeft,
+              marginRight: style.marginRight,
+              paddingLeft: style.paddingLeft,
+              paddingRight: style.paddingRight,
+          }
+        : {
+              height: `${el.offsetHeight}px`,
+              marginTop: style.marginTop,
+              marginBottom: style.marginBottom,
+              paddingTop: style.paddingTop,
+              paddingBottom: style.paddingBottom,
+          };
+    /** @type {Record<string, string>} */
+    const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
+    // The gap a flex box keeps between its items stays until the item is
+    // taken out, so a column of rows folded every row to nothing and then
+    // jumped by a gap at each removal (15 px, measured in the leave
+    // options' cards, 2026-10-05). A negative margin towards the
+    // neighbour swallows the gap as the space closes.
+    const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
+    if (gapOf > 0) {
+        const inFlow = (/** @type {Element | null} */ n) => {
+            if (!n) return false;
+            const s = getComputedStyle(n);
+            return s.display !== 'none' && s.position !== 'absolute' && s.position !== 'fixed';
+        };
+        const near = (/** @type {'previousElementSibling' | 'nextElementSibling'} */ way) => {
+            let n = el[way];
+            while (n && !inFlow(n)) n = n[way];
+            return n;
+        };
+        const rtl = sideways && style.direction === 'rtl';
+        const start = sideways ? (rtl ? 'marginRight' : 'marginLeft') : 'marginTop';
+        const end = sideways ? (rtl ? 'marginLeft' : 'marginRight') : 'marginBottom';
+        if (near('previousElementSibling')) to[start] = `${-gapOf}px`;
+        else if (near('nextElementSibling')) to[end] = `${-gapOf}px`;
+    }
+    return [from, to];
+}
+
+/**
+ * The reverse arrivals playing now, each with the way to stop it, so a
+ * leave that comes during one starts from the element as it stands.
+ * @type {WeakMap<HTMLElement, () => void>}
+ */
+const entering = new WeakMap();
+
+/**
+ * Let `el` arrive as its leave played backwards [research/open-reverse;
+ * Kenny's pick for formal, cyberpunk and titanium, 2026-10-05]: the
+ * timeline leaveOne() would play for it in its theme (the register's exit
+ * on `[data-kp-leaving]`, pseudo-elements included, and the fold of its
+ * space a third of the way in, or after it, or under a stand-in), turned
+ * around, so frame t of the arrival is frame (T - t) of the leave. Every
+ * duration, delay and curve is the theme's, read as leaveOne() reads it.
+ *
+ * @param {HTMLElement} el
+ * @returns {boolean} false when it has no leave to turn around (a table row,
+ *   which a leave does not fold; a register with no exit of its own): the
+ *   caller plays the theme's arrival instead
+ */
+function arriveAsReversedLeave(el) {
+    if (el instanceof HTMLTableRowElement || !el.isConnected) return false;
+    const { size, ease } = themeMotion(el);
+    const before = getComputedStyle(el).animationName;
+    el.setAttribute('data-kp-leaving', '');
+    const style = getComputedStyle(el);
+    const ownName = style.animationName;
+    if (!ownName || ownName === 'none' || ownName === before) {
+        el.removeAttribute('data-kp-leaving');
+        return false;
+    }
+    el.setAttribute('data-kp-arriving', '');
+    const lasts = firstMs(style.animationDuration);
+    const fold = style.getPropertyValue('--kp-leave-fold').trim();
+    // `ghost`: as in the leave, a stand-in of the same shape plays the exit
+    // on top while the element itself, hidden, unfolds its space underneath.
+    /** @type {HTMLElement} */
+    let actor = el;
+    if (fold === 'ghost' && lasts > 0) {
+        actor = /** @type {HTMLElement} */ (el.cloneNode(true));
+        actor.setAttribute('aria-hidden', 'true');
+        actor.inert = true;
+        Object.assign(actor.style, {
+            position: 'absolute',
+            top: `${el.offsetTop}px`,
+            left: `${el.offsetLeft}px`,
+            width: `${el.offsetWidth}px`,
+            height: `${el.offsetHeight}px`,
+            margin: '0',
+            boxSizing: 'border-box',
+            pointerEvents: 'none',
+            zIndex: '1',
+        });
+        el.after(actor);
+        const want = el.getBoundingClientRect();
+        const got = actor.getBoundingClientRect();
+        actor.style.top = `${el.offsetTop + want.top - got.top}px`;
+        actor.style.left = `${el.offsetLeft + want.left - got.left}px`;
+        el.style.setProperty('visibility', 'hidden');
+    }
+    // The exit, read off the actor and taken over: its keyframes and timing.
+    getComputedStyle(actor).animationName;
+    const css = actor
+        .getAnimations({ subtree: true })
+        .filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === actor)
+        .map((a) => /** @type {CSSAnimation} */ (a));
+    const exits = css.map((a) => {
+        const effect = /** @type {KeyframeEffect} */ (a.effect);
+        const timing = effect.getTiming();
+        return {
+            keyframes: effect.getKeyframes(),
+            duration: Number(timing.duration) || 0,
+            delay: Number(timing.delay) || 0,
+            easing: String(timing.easing ?? 'linear'),
+            pseudoElement: effect.pseudoElement,
+        };
+    });
+    for (const a of css) a.cancel();
+    if (actor !== el) for (const a of el.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
+    const after = fold === 'after';
+    const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
+    const foldFor = size > 0 ? Math.max(size, lasts) * 1.25 : 0;
+    const foldAt = after ? lasts + pause : lasts / 3;
+    const total = Math.max(lasts, foldFor ? foldAt + foldFor : 0);
+    /** @type {Animation[]} */
+    const plays = [];
+    for (const exit of exits) {
+        // In the leave this exit ran from its delay to its delay + duration;
+        // turned around it ends at the timeline's end.
+        try {
+            plays.push(
+                actor.animate(exit.keyframes, {
+                    duration: exit.duration,
+                    delay: total - exit.delay - exit.duration,
+                    easing: exit.easing,
+                    direction: 'reverse',
+                    fill: 'both',
+                    ...(exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}),
+                }),
+            );
+        } catch {
+            /* an engine that cannot animate that pseudo-element skips it, as the leave does */
+        }
+    }
+    if (foldFor > 0) {
+        el.style.setProperty('overflow', 'clip');
+        el.style.setProperty('box-sizing', 'border-box');
+        plays.push(
+            el.animate(foldFrames(el, style), {
+                duration: foldFor,
+                delay: total - foldAt - foldFor,
+                easing: withoutOvershoot(ease),
+                direction: 'reverse',
+                fill: 'backwards',
+            }),
+        );
+    }
+    let stopped = false;
+    const stop = () => {
+        if (stopped) return;
+        stopped = true;
+        entering.delete(el);
+        for (const a of plays) a.cancel();
+        if (actor !== el) actor.remove();
+        el.removeAttribute('data-kp-leaving');
+        el.removeAttribute('data-kp-arriving');
+        el.style.removeProperty('overflow');
+        el.style.removeProperty('box-sizing');
+        el.style.removeProperty('visibility');
+    };
+    entering.set(el, stop);
+    void Promise.all(plays.map((a) => a.finished.catch(() => undefined))).then(stop);
+    return true;
+}
+
+/**
  * Let `el` leave the theme's way, then take it out [scope-142; Kenny,
  * 2026-10-04: "die grow/shrink bewegingen moeten ook zijn als er opeens
  * nieuwe elementen bijkomen of weggaan"]: it plays its arrival backwards
@@ -551,6 +795,9 @@ async function leaveOne(el, hide, exited) {
         if (hide) el.hidden = true;
         else el.remove();
     };
+    // Told to leave while it still arrives as a leave turned around: it
+    // leaves from where it stands.
+    entering.get(el)?.();
     if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return exited();
     const before = getComputedStyle(el).animationName;
     const arrival = arrivalOf(el);
@@ -616,52 +863,9 @@ async function leaveOne(el, hide, exited) {
     // A table row cannot be folded below its cells' content: it plays its
     // leave, and the table glides shut once it is out.
     if (size > 0 && !(el instanceof HTMLTableRowElement)) {
-        // In a row (a flex row, an inline chip) the space closes sideways;
-        // anywhere else it closes from below.
-        const parent = el.parentElement ? getComputedStyle(el.parentElement) : null;
-        const sideways =
-            style.display.startsWith('inline') || (parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith('column'));
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
-        const from = sideways
-            ? {
-                  width: `${el.offsetWidth}px`,
-                  marginLeft: style.marginLeft,
-                  marginRight: style.marginRight,
-                  paddingLeft: style.paddingLeft,
-                  paddingRight: style.paddingRight,
-              }
-            : {
-                  height: `${el.offsetHeight}px`,
-                  marginTop: style.marginTop,
-                  marginBottom: style.marginBottom,
-                  paddingTop: style.paddingTop,
-                  paddingBottom: style.paddingBottom,
-              };
-        const to = Object.fromEntries(Object.keys(from).map((k) => [k, '0px']));
-        // The gap a flex box keeps between its items stays until the item is
-        // taken out, so a column of rows folded every row to nothing and then
-        // jumped by a gap at each removal (15 px, measured in the leave
-        // options' cards, 2026-10-05). A negative margin towards the
-        // neighbour swallows the gap as the space closes.
-        const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
-        if (gapOf > 0) {
-            const inFlow = (/** @type {Element | null} */ n) => {
-                if (!n) return false;
-                const s = getComputedStyle(n);
-                return s.display !== 'none' && s.position !== 'absolute' && s.position !== 'fixed';
-            };
-            const near = (/** @type {'previousElementSibling' | 'nextElementSibling'} */ way) => {
-                let n = el[way];
-                while (n && !inFlow(n)) n = n[way];
-                return n;
-            };
-            const rtl = sideways && style.direction === 'rtl';
-            const start = sideways ? (rtl ? 'marginRight' : 'marginLeft') : 'marginTop';
-            const end = sideways ? (rtl ? 'marginLeft' : 'marginRight') : 'marginBottom';
-            if (near('previousElementSibling')) to[start] = `${-gapOf}px`;
-            else if (near('nextElementSibling')) to[end] = `${-gapOf}px`;
-        }
+        const [from, to] = foldFrames(el, style);
         // The space closes slower than a plain resize, so the eye can follow
         // what closes up (Kenny, 2026-10-04: "ik zou het graag iets trager
         // zien gaan, zodat de animatie zichtbaar is"). `--kp-leave-fold`

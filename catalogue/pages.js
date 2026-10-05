@@ -71,10 +71,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [
-            // Kenny, 2026-10-05: a dialog and a card opening as their theme's close played backwards, in formal, cyberpunk and titanium.
-            { href: 'research/open-reverse/demo.html', label: 'Opening as the reverse of closing' },
-        ],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -82,6 +79,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-05: Kenny approved the reverse of close in full; in formal, cyberpunk and titanium a dialog and an arriving element open as their close turned around (js/motion.js, `--kp-open: reverse-close`).
+            { href: 'research/open-reverse/demo.html', label: 'Opening as the reverse of closing' },
             // Decided at scope-143 (2026-10-05): the seven components of round two, moved into the package.
             { href: 'research/dashboard-ports-2/demo.html', label: 'Dashboard components to port, round two' },
             // Decided at scope-143: the eight dashboard components, moved into the package.

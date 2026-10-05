@@ -2770,6 +2770,30 @@ async function closeDialog(dialog, returnValue) {
   close();
   for (const a of out) a.cancel();
 }
+function openAsReversedClose(dialog) {
+  if (!dialog.open || !opensAsReversedClose(dialog)) return;
+  const { close: duration } = themeMotion(dialog);
+  const kept = entrances.get(dialog) ?? [];
+  if (duration <= 0) return;
+  for (const a of dialog.getAnimations({ subtree: true })) if (a instanceof CSSAnimation) a.cancel();
+  for (const { keyframes, easing, pseudoElement } of kept) {
+    try {
+      dialog.animate(keyframes, { duration, easing, fill: "backwards", ...pseudoElement ? { pseudoElement } : {} });
+    } catch {
+    }
+  }
+  const fade = (
+    /** @type {Keyframe[]} */
+    [{ opacity: 1 }, { opacity: 0 }]
+  );
+  if (!kept.some((one) => one.pseudoElement === "::backdrop")) {
+    try {
+      dialog.animate(fade, { duration, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
+    } catch {
+    }
+  }
+  if (kept.length === 0) dialog.animate(fade, { duration, easing: "ease-in", direction: "reverse", fill: "backwards" });
+}
 function attachClose(dialog) {
   const own = (
     /** @type {any} */
@@ -2784,10 +2808,12 @@ function attachClose(dialog) {
   own.showModal = function() {
     showModal.call(dialog);
     rememberEntrance(dialog);
+    openAsReversedClose(dialog);
   };
   own.show = function() {
     show.call(dialog);
     rememberEntrance(dialog);
+    openAsReversedClose(dialog);
   };
   own.close = (value) => void closeDialog(dialog, value);
   if (dialog.open) rememberEntrance(dialog);
@@ -2883,6 +2909,7 @@ function arrival(scope) {
 }
 function arrive(el2, motion) {
   if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving")) return;
+  if (opensAsReversedClose(el2) && arriveAsReversedLeave(el2)) return;
   el2.setAttribute("data-kp-arriving", "");
   const own = getComputedStyle(el2).animationName;
   if (!own || own === "none") el2.style.animation = motion;
@@ -2932,6 +2959,156 @@ function arrivalOf(el2) {
   const [name, duration, ...ease] = toast2.split(" ");
   return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(" ") };
 }
+function foldFrames(el2, style) {
+  const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
+  const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
+  const from = sideways ? {
+    width: `${el2.offsetWidth}px`,
+    marginLeft: style.marginLeft,
+    marginRight: style.marginRight,
+    paddingLeft: style.paddingLeft,
+    paddingRight: style.paddingRight
+  } : {
+    height: `${el2.offsetHeight}px`,
+    marginTop: style.marginTop,
+    marginBottom: style.marginBottom,
+    paddingTop: style.paddingTop,
+    paddingBottom: style.paddingBottom
+  };
+  const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
+  const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
+  if (gapOf > 0) {
+    const inFlow = (n) => {
+      if (!n) return false;
+      const s2 = getComputedStyle(n);
+      return s2.display !== "none" && s2.position !== "absolute" && s2.position !== "fixed";
+    };
+    const near = (way) => {
+      let n = el2[way];
+      while (n && !inFlow(n)) n = n[way];
+      return n;
+    };
+    const rtl = sideways && style.direction === "rtl";
+    const start = sideways ? rtl ? "marginRight" : "marginLeft" : "marginTop";
+    const end = sideways ? rtl ? "marginLeft" : "marginRight" : "marginBottom";
+    if (near("previousElementSibling")) to[start] = `${-gapOf}px`;
+    else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
+  }
+  return [from, to];
+}
+function arriveAsReversedLeave(el2) {
+  if (el2 instanceof HTMLTableRowElement || !el2.isConnected) return false;
+  const { size, ease } = themeMotion(el2);
+  const before = getComputedStyle(el2).animationName;
+  el2.setAttribute("data-kp-leaving", "");
+  const style = getComputedStyle(el2);
+  const ownName = style.animationName;
+  if (!ownName || ownName === "none" || ownName === before) {
+    el2.removeAttribute("data-kp-leaving");
+    return false;
+  }
+  el2.setAttribute("data-kp-arriving", "");
+  const lasts = firstMs(style.animationDuration);
+  const fold = style.getPropertyValue("--kp-leave-fold").trim();
+  let actor = el2;
+  if (fold === "ghost" && lasts > 0) {
+    actor = /** @type {HTMLElement} */
+    el2.cloneNode(true);
+    actor.setAttribute("aria-hidden", "true");
+    actor.inert = true;
+    Object.assign(actor.style, {
+      position: "absolute",
+      top: `${el2.offsetTop}px`,
+      left: `${el2.offsetLeft}px`,
+      width: `${el2.offsetWidth}px`,
+      height: `${el2.offsetHeight}px`,
+      margin: "0",
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      zIndex: "1"
+    });
+    el2.after(actor);
+    const want = el2.getBoundingClientRect();
+    const got = actor.getBoundingClientRect();
+    actor.style.top = `${el2.offsetTop + want.top - got.top}px`;
+    actor.style.left = `${el2.offsetLeft + want.left - got.left}px`;
+    el2.style.setProperty("visibility", "hidden");
+  }
+  getComputedStyle(actor).animationName;
+  const css = actor.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === actor).map((a) => (
+    /** @type {CSSAnimation} */
+    a
+  ));
+  const exits = css.map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    const timing = effect.getTiming();
+    return {
+      keyframes: effect.getKeyframes(),
+      duration: Number(timing.duration) || 0,
+      delay: Number(timing.delay) || 0,
+      easing: String(timing.easing ?? "linear"),
+      pseudoElement: effect.pseudoElement
+    };
+  });
+  for (const a of css) a.cancel();
+  if (actor !== el2) {
+    for (const a of el2.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
+  }
+  const after = fold === "after";
+  const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+  const foldFor = size > 0 ? Math.max(size, lasts) * 1.25 : 0;
+  const foldAt = after ? lasts + pause : lasts / 3;
+  const total = Math.max(lasts, foldFor ? foldAt + foldFor : 0);
+  const plays = [];
+  for (const exit of exits) {
+    try {
+      plays.push(
+        actor.animate(exit.keyframes, {
+          duration: exit.duration,
+          delay: total - exit.delay - exit.duration,
+          easing: exit.easing,
+          direction: "reverse",
+          fill: "both",
+          ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
+        })
+      );
+    } catch {
+    }
+  }
+  if (foldFor > 0) {
+    el2.style.setProperty("overflow", "clip");
+    el2.style.setProperty("box-sizing", "border-box");
+    plays.push(
+      el2.animate(foldFrames(el2, style), {
+        duration: foldFor,
+        delay: total - foldAt - foldFor,
+        easing: withoutOvershoot(ease),
+        direction: "reverse",
+        fill: "backwards"
+      })
+    );
+  }
+  let stopped = false;
+  const stop = () => {
+    if (stopped) return;
+    stopped = true;
+    entering.delete(el2);
+    for (const a of plays) a.cancel();
+    if (actor !== el2) actor.remove();
+    el2.removeAttribute("data-kp-leaving");
+    el2.removeAttribute("data-kp-arriving");
+    el2.style.removeProperty("overflow");
+    el2.style.removeProperty("box-sizing");
+    el2.style.removeProperty("visibility");
+  };
+  entering.set(el2, stop);
+  void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(stop);
+  return true;
+}
 function leave(el2, { hide = false } = {}) {
   return new Promise((resolve) => {
     if (!batch) {
@@ -2962,6 +3139,7 @@ async function leaveOne(el2, hide, exited) {
     if (hide) el2.hidden = true;
     else el2.remove();
   };
+  entering.get(el2)?.();
   if (!el2.isConnected || el2.hasAttribute("data-kp-leaving")) return exited();
   const before = getComputedStyle(el2).animationName;
   const arrival2 = arrivalOf(el2);
@@ -3010,42 +3188,9 @@ async function leaveOne(el2, hide, exited) {
   else void exit.then(exited);
   running.push(exit);
   if (size > 0 && !(el2 instanceof HTMLTableRowElement)) {
-    const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
-    const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
-    const from = sideways ? {
-      width: `${el2.offsetWidth}px`,
-      marginLeft: style.marginLeft,
-      marginRight: style.marginRight,
-      paddingLeft: style.paddingLeft,
-      paddingRight: style.paddingRight
-    } : {
-      height: `${el2.offsetHeight}px`,
-      marginTop: style.marginTop,
-      marginBottom: style.marginBottom,
-      paddingTop: style.paddingTop,
-      paddingBottom: style.paddingBottom
-    };
-    const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
-    const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
-    if (gapOf > 0) {
-      const inFlow = (n) => {
-        if (!n) return false;
-        const s2 = getComputedStyle(n);
-        return s2.display !== "none" && s2.position !== "absolute" && s2.position !== "fixed";
-      };
-      const near = (way) => {
-        let n = el2[way];
-        while (n && !inFlow(n)) n = n[way];
-        return n;
-      };
-      const rtl = sideways && style.direction === "rtl";
-      const start = sideways ? rtl ? "marginRight" : "marginLeft" : "marginTop";
-      const end = sideways ? rtl ? "marginLeft" : "marginRight" : "marginBottom";
-      if (near("previousElementSibling")) to[start] = `${-gapOf}px`;
-      else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
-    }
+    const [from, to] = foldFrames(el2, style);
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
     const folding = el2.animate([from, to], {
@@ -3320,7 +3465,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, switching, batch, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, entering, batch, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -3360,6 +3505,7 @@ var init_motion = __esm({
     entrances = /* @__PURE__ */ new WeakMap();
     closing = /* @__PURE__ */ new WeakSet();
     nativeClose = typeof HTMLDialogElement === "undefined" ? null : HTMLDialogElement.prototype.close;
+    opensAsReversedClose = (el2) => getComputedStyle(el2).getPropertyValue("--kp-open").trim() === "reverse-close";
     switching = 0;
     if (typeof document !== "undefined" && typeof MutationObserver === "function") {
       new MutationObserver(() => {
@@ -3370,6 +3516,7 @@ var init_motion = __esm({
         requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     }
+    entering = /* @__PURE__ */ new WeakMap();
     batch = null;
     arriveMode = (el2, fallback2) => el2.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
   }

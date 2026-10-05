@@ -1,6 +1,6 @@
 # Opening as the reverse of closing
 
-**Open (2026-10-05).** Waiting for Kenny's pick per theme: formal, cyberpunk and titanium.
+**Decided (2026-10-05).** Kenny approved the demo in full at 11:08: "Reverse of close" for both the dialog and the card, in formal, cyberpunk and titanium. In the package each of those registers declares `--kp-open: reverse-close`, and js/motion.js opens a dialog as its close played backwards (the entrance's keyframes forwards in the close's time) and lets what arrives in an eased box play the theme's leave backwards. The other nineteen themes keep their entrances and arrivals.
 
 Kenny, 2026-10-05, on the catalogue block "Leaving: the options"
 (catalogue/motion.html#leave-options): "bring them back should be smoother,

@@ -15710,6 +15710,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── cyberpunk: the classic glitch: the text turns neon blue, a cyan copy jumps right and up, a magenta copy right and down, and it is sliced away ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='cyberpunk'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='cyberpunk'] [data-kp-leaving] {
             animation: kp-sig-cyberpunk-leave 650ms linear forwards;
         }
@@ -30768,6 +30775,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── titanium: anodised: it runs through the colours titanium takes under heat, gold, violet, blue, and cools away ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='titanium'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='titanium'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
@@ -50968,6 +50982,13 @@
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
         /* ── formal: folded up like a letter, from the bottom edge to the top ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='formal'] {
+            --kp-open: reverse-close;
+        }
+
         [data-theme='formal'] [data-kp-leaving] {
             transform-origin: top;
             animation: kp-sig-formal-leave 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
