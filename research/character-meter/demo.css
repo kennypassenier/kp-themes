@@ -1,0 +1,154 @@
+/* The page: a centred column, the controls in one row of groups, and one
+   section with three columns side by side (character 1, character 2, the
+   plain meter of today), each holding the same three meters. The meters'
+   own drawing is in meters.css. */
+.cm-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.cm-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cm-intro h1,
+.cm-intro p {
+    margin: 0;
+}
+
+.cm-meta,
+.cm-motion {
+    color: var(--muted-foreground);
+}
+
+.cm-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-cm-toggle][aria-pressed='true'],
+[data-cm-tone][aria-pressed='true'],
+[data-cm-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.cm-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.cm-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cm-sec__head h2,
+.cm-sec__head p {
+    margin: 0;
+}
+
+.cm-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 52rem. The columns start on one
+   line and keep their rows aligned: label, description, meters. */
+.cm-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 52rem) {
+    .cm-trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cm-col {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.cm-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.cm-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cm-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* The meters sit with room on their far side for a sign past the end (at
+   most 1.75rem in any character), and room above and below for a mark
+   that stands out of the bar, so nothing is cut by the column. */
+.cm-meters {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-sm, 0.5rem);
+    padding-inline-end: 1.75rem;
+}
+
+.cm-row {
+    display: grid;
+    gap: 0.625rem;
+}
+
+.cm-row__label {
+    font-size: var(--kp-text-sm, 0.875rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.cm-inline {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+    line-height: 1.6;
+}
+
+.cm-signs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.cm-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}

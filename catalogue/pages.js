@@ -11,6 +11,7 @@ export const PAGES = [
         group: 'Review',
         pages: [
             { href: 'catalogue/index.html', label: 'Every component, one page' },
+            { href: 'catalogue/changed.html', label: 'What changed since my last verdicts' },
             { href: 'catalogue/compare.html', label: 'Compare two themes' },
         ],
     },
@@ -71,7 +72,10 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [],
+        pages: [
+            // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
+            { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
+        ],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in

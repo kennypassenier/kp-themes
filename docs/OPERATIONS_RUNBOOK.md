@@ -882,3 +882,45 @@ previous credential in place.
   is that consumers vendor the files they need and verify them against
   `SHA256SUMS`, so an outage of the remote does not stop them building —
   it stops *this* project releasing.
+
+---
+
+## 9 · Judging a round on the review site
+
+The reviewer's procedure on the catalogue (`catalogue/index.html`, or the
+published review site). Verdicts, notes and the prompt are unchanged; these
+steps only remove clicks.
+
+### Procedure 9.1 — judge what is open
+
+1. Open **What changed since my last verdicts** (`catalogue/changed.html`).
+   It gathers only the blocks open in the theme on screen — never judged,
+   judged on markup that changed, an approval whose pixels moved
+   (`catalogue/pixel-checks.json`), or a review note asking again — page by
+   page, with the count in the title. Correct: the count equals the "left
+   to judge" count on Every component, one page in the same theme. "Nothing
+   is open in …" means the theme is done.
+2. The theme menu shows, per theme, how many blocks are left (`12 left`,
+   `done`). Pick the next one there, or press **T**.
+3. Per block: read the look, then its **Checklist** under it (one line per
+   sentence; a line naming a button carries that button, `▶ Loading`,
+   which presses the block's own). Tick what you have seen; the ticks are
+   per block and per theme, in this browser, and go with **Clear prompt**.
+   They do not approve anything.
+4. Press **▶ Play** (or **P**) to have the block's try-buttons pressed in
+   turn: each is outlined while it runs, the caption under the block says
+   what was pressed and what the look says to see, and the pause follows
+   the theme's motion. A second press or Escape stops it; the block ends
+   where it started. A block orders or limits its steps with
+   `data-cat-play="sel, sel"` on its section (`none` for no Play) — that is
+   a markup change, so the block's verdicts reopen in every theme.
+5. Judge with the keys: **A** approve (the next open block follows),
+   **R** not approved (records with a note, otherwise puts the cursor in
+   the note), **N** next block, **K** the list of keys. Never while typing
+   in a field or inside a stage. In the review dialog the cursor is in the
+   note: hold Alt (Alt+A, Alt+R, …). `?` is not used: the shortcut sheet
+   under review answers it.
+6. Tick **Open the review dialog when the page loads** once: every reload
+   then opens the dialog on the block last shown in it, if that one is
+   still open, or on the first open block.
+7. Copy the prompt as before.

@@ -718,6 +718,20 @@
         font-style: italic;
     }
 
+    /* While the review dialog is open on the review page, the blocks left on
+       the page behind it are not drawn: the dialog covers them, and a theme
+       chosen in it (the walk to the next theme, scope-113) then restyles and
+       lays out the one block in the dialog rather than all 196 behind it.
+       Measured 2026-10-05 in Firefox, judging.js reading nothing again:
+       the next theme judgeable 0.7 to 1.4 s after the last verdict with the
+       page drawn, 0.22 to 0.30 s without. The
+       `hidden` attribute stays as judging.js sets it, so Left and Right
+       still walk the blocks the page shows, and closing the dialog brings
+       them back. */
+    body:has(> .cat-review-dialog[open]) [data-cat-compose='all'] .cat-component > .cat-block {
+        display: none;
+    }
+
     /* The prompt bar every page carries under its header. */
     .cat-prompt-bar {
         padding: 0.45rem 1rem;
@@ -825,5 +839,206 @@
 @layer kp.layout {
     body.cat-shell:has(.kp-shell) {
         margin: revert-layer;
+    }
+}
+
+/* ------------------------------------------------------------------------
+   Review aids (Kenny, 2026-10-05: "zoek een manier om het mij makkelijker te
+   maken om demo's te testen"): Play (play.js), the look as a checklist
+   (checklist.js), the keys (shortcuts.js) and the page of what changed
+   (changed.js). Chrome around the blocks only; theme tokens, so it reads in
+   every theme. */
+@layer catalogue {
+    /* The button a running Play pressed last, and the block it plays. */
+    .cat-play-step {
+        outline: 3px solid var(--ring, var(--primary));
+        outline-offset: 3px;
+    }
+
+    .cat-block[data-cat-playing] > .cat-stage,
+    .cat-block[data-cat-playing] > .cat-live__bar {
+        box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    .cat-play-caption {
+        margin-block: 0.5rem 0;
+        padding: 0.35rem 0.6rem;
+        border-inline-start: 3px solid var(--primary);
+        background: var(--muted);
+    }
+
+    .cat-play-caption:empty {
+        display: none;
+    }
+
+    /* The dialog's own Play, above its four buttons. The caption keeps two
+       lines whatever it says, so the buttons below never move. */
+    .cat-play-dialog {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .cat-play-dialog__caption {
+        margin: 0;
+        font-size: 0.8rem;
+        line-height: 1.35;
+        block-size: 2.7em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: var(--muted-foreground);
+    }
+
+    /* The look as a checklist, right under the prose it is read from. */
+    .cat-checklist {
+        margin-block: -0.4rem 0.75rem;
+        padding: 0.5rem 0.9rem 0.6rem;
+        border-inline-start: 3px solid var(--accent);
+        background: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    .cat-checklist__head {
+        margin: 0 0 0.35rem;
+        display: flex;
+        gap: 0.6rem;
+        align-items: baseline;
+    }
+
+    .cat-checklist__count {
+        color: var(--muted-foreground);
+    }
+
+    .cat-checklist__lines {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    /* The box, then the sentence at the list's full width; the buttons it
+       names sit under the sentence, so a long line never squeezes it. */
+    .cat-checklist .cat-checklist__line {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: start;
+        gap: 0.2rem 0.5rem;
+        margin: 0;
+        inline-size: auto;
+        max-inline-size: none;
+    }
+
+    .cat-checklist__text {
+        font-weight: normal;
+        cursor: pointer;
+        line-height: 1.45;
+        color: var(--foreground);
+    }
+
+    .cat-checklist__line:has(:checked) .cat-checklist__text {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+        text-decoration-color: var(--border-strong, currentColor);
+    }
+
+    .cat-checklist__presses {
+        grid-column: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+
+    .cat-checklist__press {
+        white-space: nowrap;
+    }
+
+    /* In the dialog the side holds the list (under its copy of the look);
+       the one inside the block stays out of the stage. */
+    .cat-review-dialog__stage > .cat-block > .cat-checklist {
+        display: none;
+    }
+
+    [data-cat-dialog-look] > .cat-checklist {
+        margin: 0.6rem 0 0;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    /* The block the keys act on, after N or A. */
+    .cat-key-current > .cat-judge {
+        outline: 2px solid var(--ring, var(--primary));
+        outline-offset: 2px;
+    }
+
+    .cat-key-flash {
+        position: fixed;
+        inset-block-end: 1rem;
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        z-index: 2147483000;
+        margin: 0;
+        padding: 0.5rem 0.9rem;
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--card-foreground));
+        border: 1px solid var(--border-strong, var(--border));
+        box-shadow: 0 4px 16px rgb(0 0 0 / 0.2);
+        max-inline-size: min(40rem, calc(100vw - 2rem));
+    }
+
+    .cat-key-flash[hidden] {
+        display: none;
+    }
+
+    .cat-keys-help {
+        position: fixed;
+        inset: 0;
+        margin: auto;
+        inline-size: min(34rem, calc(100vw - 2rem));
+        block-size: fit-content;
+        padding: 1rem 1.25rem;
+    }
+
+    .cat-keys-help__title {
+        margin: 0 0 0.5rem;
+    }
+
+    .cat-keys-help__list {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.35rem 0.9rem;
+        margin: 0 0 0.75rem;
+    }
+
+    .cat-keys-help__list dd {
+        margin: 0;
+    }
+
+    .cat-keys-help kbd,
+    .cat-keys-legend kbd {
+        font-family: var(--theme-font-mono, monospace);
+        font-size: 0.85em;
+        padding: 0 0.3em;
+        border: 1px solid var(--border-strong, var(--border));
+        border-block-end-width: 2px;
+    }
+
+    /* How many blocks each theme in the menu has left (open-pairs.js). */
+    .cat-bar__theme [data-kp-theme][data-cat-left]::after {
+        content: attr(data-cat-left);
+        margin-inline-start: auto;
+        padding-inline-start: 0.75rem;
+        font-size: 0.8em;
+        color: var(--muted-foreground);
+    }
+
+    .cat-changed-done {
+        padding: 1rem 1.25rem;
+        border-inline-start: 3px solid var(--success-foreground, var(--primary));
+        background: var(--muted);
     }
 }

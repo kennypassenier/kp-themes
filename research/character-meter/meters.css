@@ -1,0 +1,3356 @@
+/* research/character-meter: two characters of `.kp-meter` per theme, in
+   the theme's kp.signature layer, so each can move into its register as it
+   stands. `[data-cm='a']` and `[data-cm='b']` are the demo's two columns; in
+   a register the same rules read `[data-theme='<name>'] .kp-meter` (and
+   `.kp-kpi__meter`, the same meter at the foot of a key figure).
+
+   The contract every character keeps:
+   - The markup is the package's: `.kp-meter` with `--kp-value`, an optional
+     `.kp-meter__mark` child with `--kp-mark`, `data-kp-over` past the end,
+     `data-kp-tone`, `data-kp-loading`, `.kp-meter--inline`. setMeter()
+     writes it all; nothing here needs more.
+   - Surfaces to draw on: the meter's background and shadows (the track),
+     ::before (the share, at `--kp-value`), ::after (the sign past the end,
+     or the loading picture), the mark and its ::before (the mark's
+     ornament); the mark's ::after is the sign of a mark past the end.
+   - Height: `--kp-meter-height` is constant per character in every state;
+     marks, ornaments and signs stand out of the box and take no room.
+   - Room past the end: `--cm-room`, the width the sign past the end needs;
+     an inline meter keeps it after itself in every state, so the words
+     beside it never move.
+   - Colour: tokens only (DI9), alpha as relative colours of tokens. The
+     share is drawn in `--kp-meter-fill-colour`, so the tones still apply.
+   - Motion: every animation sits in `prefers-reduced-motion:
+     no-preference`; a loading meter without motion shows a still frame. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    :is([data-cm='a'], [data-cm='b']) .kp-meter {
+        --cm-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :is([data-cm='a'], [data-cm='b']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--cm-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :is([data-cm='a'], [data-cm='b']) .kp-meter[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :is([data-cm='a'], [data-cm='b']) .kp-meter[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :is([data-cm='a'], [data-cm='b']) .kp-meter__mark {
+        --cm-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--cm-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--cm-mw) / 2);
+    }
+
+    :is([data-cm='a'], [data-cm='b']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :is([data-cm='a'], [data-cm='b']) .kp-meter[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :is([data-cm='a'], [data-cm='b']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--cm-mo-sign, '▸');
+        color: var(--cm-mo-ink, var(--foreground));
+        font-family: var(--cm-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--cm-mo-halo, var(--card)),
+            0 0 2px var(--cm-mo-halo, var(--card));
+    }
+
+    /* ── formal · 1 · the ledger column ───────────────────────────────── */
+
+    [data-theme='formal'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 1.125rem;
+        --cm-mo-sign: '»';
+        --cm-mo-ink: var(--primary);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), color-mix(in oklab, var(--border-strong) 50%, transparent) 0) 0 0 / 10% 100%,
+            var(--card);
+        box-shadow:
+            inset 0 1px 0 var(--border-strong),
+            inset 0 -1px 0 var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-cm='a'] .kp-meter::before {
+        inset-block: 2px;
+        border-radius: 0;
+    }
+
+    /* Closed with the bookkeeper's double rule. */
+    [data-theme='formal'] [data-cm='a'] .kp-meter[data-kp-over]::before {
+        background:
+            linear-gradient(
+                90deg,
+                transparent calc(100% - 5px),
+                var(--card) calc(100% - 5px) calc(100% - 4px),
+                transparent calc(100% - 4px) calc(100% - 2px),
+                var(--card) calc(100% - 2px) calc(100% - 1px),
+                transparent calc(100% - 1px)
+            ),
+            var(--kp-meter-fill-colour);
+    }
+
+    [data-theme='formal'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: 'c/f';
+        inset-inline-start: calc(100% + 0.1875rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--primary);
+        font: italic 600 0.6875rem/1 var(--theme-font-display, serif);
+    }
+
+    /* Tick and tie: two ink hairlines with paper between. */
+    [data-theme='formal'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 5px;
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            inset 1px 0 0 var(--foreground),
+            inset -1px 0 0 var(--foreground);
+    }
+
+    /* To be entered: a leader of dots, set once and still. */
+    [data-theme='formal'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 0 3px;
+        background: radial-gradient(circle, var(--muted-foreground) 0 0.75px, transparent 1.25px) 0 50% / 5px 100% repeat-x;
+    }
+
+    /* ── formal · 2 · the bound volume and its ribbon ─────────────────── */
+
+    [data-theme='formal'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 1px;
+        background:
+            repeating-linear-gradient(180deg, color-mix(in oklab, var(--border-strong) 45%, transparent) 0 1px, transparent 1px 2px), var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* Navy buckram: the cloth's weave, the headband's light top edge. */
+    [data-theme='formal'] [data-cm='b'] .kp-meter::before {
+        border-radius: 1px 2px 2px 1px;
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--primary-foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(-45deg, hsl(from var(--primary-foreground) h s l / 0.1) 0 1px, transparent 1px 3px), var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.3),
+            inset -1px 0 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+
+    /* One more volume leans past the end of the shelf. */
+    [data-theme='formal'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: 0;
+        inline-size: 0.3125rem;
+        border-radius: 1px;
+        background: var(--kp-meter-fill-colour);
+        box-shadow: inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.3);
+        transform: skewX(-16deg);
+        transform-origin: bottom;
+    }
+
+    /* The ribbon: a paper edge round a gold ribbon, cut in a swallowtail,
+       hanging out below the book. */
+    [data-theme='formal'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 8px;
+        inset-block: -2px -8px;
+        border-radius: 0;
+        background: var(--card);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 4px), 0 100%);
+    }
+
+    [data-theme='formal'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset: 0 1px 1px;
+        background: var(--fx-signal);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 3px), 0 100%);
+    }
+
+    [data-theme='formal'] [data-cm='b'] .kp-meter__mark[data-kp-over] {
+        background: transparent;
+        clip-path: none;
+    }
+
+    /* The pages riffle: a shade runs along the fore-edge. */
+    [data-theme='formal'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-inline-end: auto;
+        inline-size: 25%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.24), transparent);
+        translate: -100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-formal-riffle 2600ms ease-in-out infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='formal'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            translate: 150% 0;
+        }
+    }
+
+    /* ── light · 1 · the seam and its circle ──────────────────────────── */
+
+    [data-theme='light'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.875rem;
+        border-radius: 999px;
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / 100% 1px no-repeat;
+    }
+
+    [data-theme='light'] [data-cm='a'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 999px;
+    }
+
+    [data-theme='light'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 10px;
+        inset-block: -1px;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='light'] [data-cm='a'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.875rem);
+    }
+
+    /* The seam runs on past the end to a small cyan circle. */
+    [data-theme='light'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: 100%;
+        inset-block: 0;
+        inline-size: 0.75rem;
+        background:
+            radial-gradient(circle at calc(100% - 4px) 50%, var(--fx-signal) 0 3px, transparent 3.5px),
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / calc(100% - 6px) 1px no-repeat;
+    }
+
+    [data-theme='light'] [data-cm='a'] .kp-meter[data-kp-loading] {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 8px) 0 50% / 100% 1px no-repeat;
+    }
+
+    /* ── light · 2 · daylight ─────────────────────────────────────────── */
+
+    [data-theme='light'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.375rem;
+        --cm-room: 1rem;
+        border-radius: 999px;
+        background: var(--muted);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--border-strong) 40%, transparent);
+    }
+
+    /* The share brightens towards its end, where the sun is on it. */
+    [data-theme='light'] [data-cm='b'] .kp-meter::before {
+        border-radius: 999px;
+        background:
+            linear-gradient(to bottom, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1px),
+            linear-gradient(
+                90deg,
+                var(--kp-meter-fill-colour) calc(100% - 1.5rem),
+                color-mix(in oklab, var(--kp-meter-fill-colour) 62%, var(--fx-signal)) 100%
+            );
+    }
+
+    /* The gnomon and its short shadow. */
+    [data-theme='light'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 1px var(--card),
+            3px 2px 3px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* The light spills out past the end in a glint. */
+    [data-theme='light'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        content: '✦';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% - 0.125rem);
+        inset-block: -0.4375rem;
+        inline-size: 1.125rem;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, hsl(from var(--fx-signal) h s l / 0.4), transparent);
+        color: var(--fx-signal);
+        font-size: 0.75rem;
+    }
+
+    [data-theme='light'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-inline-end: auto;
+        inline-size: 35%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.45), transparent);
+        translate: -100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-light-day 3000ms ease-in-out infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='light'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            translate: 90% 0;
+        }
+    }
+
+    /* ── dark · 1 · the spectrometer ──────────────────────────────────── */
+
+    [data-theme='dark'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px) 0 0 / 10% 2px repeat-x,
+            linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px) 0 100% / 10% 2px repeat-x,
+            var(--background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* One emission line, its colour read off the oxide film where the share
+       ends: cyan, violet, magenta, lime. A tone replaces it. */
+    [data-theme='dark'] [data-cm='a'] .kp-meter::before {
+        --cm-line: color-mix(
+            in oklab,
+            color-mix(
+                in oklab,
+                color-mix(in oklab, var(--chart-1), var(--chart-2) calc(clamp(0, var(--kp-value, 0) * 3, 1) * 100%)),
+                var(--chart-3) calc(clamp(0, var(--kp-value, 0) * 3 - 1, 1) * 100%)
+            ),
+            var(--chart-4) calc(clamp(0, var(--kp-value, 0) * 3 - 2, 1) * 100%)
+        );
+        inset-block: 2px;
+        border-radius: 0;
+        background: linear-gradient(to bottom, transparent 0 25%, hsl(from var(--foreground) h s l / 0.45) 25% 75%, transparent 75%), var(--cm-line);
+    }
+
+    [data-theme='dark'] [data-cm='a'] .kp-meter[data-kp-tone]::before {
+        --cm-line: var(--kp-meter-fill-colour);
+    }
+
+    [data-theme='dark'] [data-cm='a'] .kp-meter[data-kp-over]::before {
+        box-shadow: inset -2px 0 0 var(--foreground);
+    }
+
+    /* The closing bracket, "]". */
+    [data-theme='dark'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='dark'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 5px;
+        box-sizing: border-box;
+        border-block: 2px solid var(--foreground);
+    }
+
+    [data-theme='dark'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: -4px;
+        inline-size: 5px;
+        box-sizing: border-box;
+        border: 2px solid var(--chart-3);
+        border-inline-start: 0;
+    }
+
+    /* The calibration spectrum, faint and still. */
+    [data-theme='dark'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 2px 0;
+        background: linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+        opacity: 0.32;
+    }
+
+    /* ── dark · 2 · the machined channel ──────────────────────────────── */
+
+    [data-theme='dark'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.625rem;
+        --cm-cut: 3px;
+        --cm-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, var(--cm-halo) 0 calc(50% - 0.7px), var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px), transparent 0) 0 0 /
+                var(--cm-cut) var(--cm-cut) no-repeat,
+            linear-gradient(-45deg, var(--cm-halo) 0 calc(50% - 0.7px), var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px), transparent 0) 100%
+                100% / var(--cm-cut) var(--cm-cut) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) var(--cm-cut) 0 / calc(100% - var(--cm-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / calc(100% - var(--cm-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 var(--cm-cut) / 1px calc(100% - var(--cm-cut)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(100% - var(--cm-cut)) no-repeat,
+            var(--muted);
+    }
+
+    /* Bright machined metal, the oxide film along its top edge laid along
+       the whole scale. */
+    [data-theme='dark'] [data-cm='b'] .kp-meter::before {
+        inset: 1px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 2px));
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 0 0 /
+                calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(
+            calc(var(--cm-cut) - 1px) 0,
+            100% 0,
+            100% calc(100% - var(--cm-cut) + 1px),
+            calc(100% - var(--cm-cut) + 1px) 100%,
+            0 100%,
+            0 calc(var(--cm-cut) - 1px)
+        );
+    }
+
+    /* A V milled into the edge, a dark cut through the metal. */
+    [data-theme='dark'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--primary),
+            -1px 0 0 var(--primary);
+    }
+
+    [data-theme='dark'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    /* The part runs out of the channel with a chamfered tip. */
+    [data-theme='dark'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.4375rem;
+        background:
+            linear-gradient(90deg, var(--chart-4), var(--chart-1)) 0 0 / 100% 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 50%, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* The empty channel's engraved scale, still. */
+    [data-theme='dark'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset: 2px 1px;
+        background: linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 0 / 10% 100%;
+    }
+
+    /* ── cyberpunk · 1 · the neon tube with a glitch tick ─────────────── */
+
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.375rem;
+        --cm-room: 1.75rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 999px;
+        background: var(--background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.32);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter::before {
+        border-radius: 999px;
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 0 30%,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 45%, var(--foreground)) 30% 70%,
+                transparent 70%
+            ),
+            var(--kp-meter-fill-colour);
+        box-shadow: 0 0 6px hsl(from var(--kp-meter-fill-colour) h s l / 0.55);
+    }
+
+    /* The tube cracks at its end and reads OVR. */
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter[data-kp-over]::before {
+        background:
+            linear-gradient(90deg, transparent calc(100% - 5px), var(--background) calc(100% - 5px) calc(100% - 3px), transparent calc(100% - 3px)),
+            linear-gradient(
+                to bottom,
+                transparent 0 30%,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 45%, var(--foreground)) 30% 70%,
+                transparent 70%
+            ),
+            var(--kp-meter-fill-colour);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: 'OVR';
+        inset-inline-start: calc(100% + 0.25rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--destructive);
+        font: 700 0.625rem/1 var(--theme-font-mono, monospace);
+        letter-spacing: 0.08em;
+        text-shadow: 0 0 4px hsl(from var(--destructive) h s l / 0.6);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 5px hsl(from var(--accent) h s l / 0.7);
+    }
+
+    /* The violet copy that tears off when it glitches. */
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--chart-4);
+        opacity: 0;
+    }
+
+    /* The tube tries to strike: a flicker twice, then dark. */
+    [data-theme='cyberpunk'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: var(--primary);
+        opacity: 0.22;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cm='a'] .kp-meter__mark {
+            animation: cm-cy-jolt 3200ms steps(1) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cm='a'] .kp-meter__mark::before {
+            animation: cm-cy-ghost 3200ms steps(1) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-cy-strike 2800ms steps(1) infinite;
+        }
+    }
+
+    /* ── cyberpunk · 2 · the HUD segment gauge ────────────────────────── */
+
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        --cm-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(135deg, var(--cm-halo) 50%, transparent 50%) 0 0 / 5px 5px no-repeat,
+            linear-gradient(-45deg, var(--cm-halo) 50%, transparent 50%) 100% 100% / 5px 5px no-repeat,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.28) 0 6px, transparent 6px) 0 50% / 8px 2px repeat-x,
+            var(--muted);
+    }
+
+    /* Yellow plates split by void slits, the lead cut at forty-five degrees. */
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 6px, transparent 6px) 0 0 / 8px 100% repeat-x;
+        clip-path: polygon(4px 0, 100% 0, calc(100% - 7px) 100%, 0 100%, 0 4px);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter[data-kp-over]::before {
+        clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+    }
+
+    /* A cyan target notch, a void cut through the plates. */
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--accent),
+            -1px 0 0 var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.5rem;
+        background: linear-gradient(90deg, var(--destructive) 0 3px, transparent 3px) 0 0 / 4px 100% repeat-x;
+        clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* The data stream runs along the rail. */
+    [data-theme='cyberpunk'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(90deg, var(--accent) 0 4px, transparent 4px) 0 50% / 12px 2px repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-cy-stream 900ms linear infinite;
+        }
+    }
+
+    /* ── synthwave · 1 · the neon sign ────────────────────────────────── */
+
+    [data-theme='synthwave'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.375rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 999px;
+        background: hsl(from var(--background) h s l / 0.6);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
+    }
+
+    /* The core is light, the colour lives in the glow. */
+    [data-theme='synthwave'] [data-cm='a'] .kp-meter::before {
+        border-radius: 999px;
+        background: linear-gradient(to bottom, var(--kp-meter-fill-colour), var(--foreground) 35% 65%, var(--kp-meter-fill-colour));
+        box-shadow:
+            0 0 4px 1px hsl(from var(--kp-meter-fill-colour) h s l / 0.8),
+            0 0 10px 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 6px hsl(from var(--accent) h s l / 0.8);
+    }
+
+    [data-theme='synthwave'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '›';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        translate: 0 -55%;
+        color: var(--foreground);
+        font: 700 1.375rem/1 var(--theme-font-mono, monospace);
+        text-shadow:
+            0 0 3px var(--kp-meter-fill-colour),
+            0 0 8px var(--kp-meter-fill-colour);
+    }
+
+    /* The tube lights from left to right, holds, and goes dark. */
+    [data-theme='synthwave'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: linear-gradient(to bottom, var(--primary), var(--foreground) 35% 65%, var(--primary));
+        opacity: 0.3;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-sw-ignite 2400ms ease-in-out infinite;
+        }
+    }
+
+    /* ── synthwave · 2 · chrome over the grid ─────────────────────────── */
+
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.875rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 2px;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(90deg, hsl(from var(--accent) h s l / 0.38) 0 1px, transparent 1px) 0 0 / 8px 100% repeat-x,
+            var(--background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    /* Chrome: the sky above, a dark horizon through the middle, the sunset
+       (the tone) below. */
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter::before {
+        border-radius: 2px;
+        background: linear-gradient(
+            to bottom,
+            var(--foreground) 0,
+            color-mix(in oklab, var(--accent) 55%, var(--foreground)) 45%,
+            var(--background) 45% 55%,
+            var(--kp-meter-fill-colour) 55%,
+            color-mix(in oklab, var(--kp-meter-fill-colour) 55%, var(--warning-foreground)) 100%
+        );
+    }
+
+    /* The striped sun, half risen over a laser-yellow line. */
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--warning-foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        inline-size: 10px;
+        block-size: 5px;
+        translate: -50% 0;
+        border-radius: 10px 10px 0 0;
+        background: linear-gradient(to bottom, var(--warning-foreground) 0 2px, transparent 2px 3px, var(--primary) 3px);
+    }
+
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        content: '»';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        translate: 0 -55%;
+        color: var(--accent);
+        font: 700 0.875rem/1 var(--theme-font-mono, monospace);
+        text-shadow: 0 0 5px hsl(from var(--accent) h s l / 0.7);
+    }
+
+    [data-theme='synthwave'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.45), transparent 70%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-cm='b'] .kp-meter[data-kp-loading] {
+            animation: cm-sw-road 1200ms linear infinite;
+        }
+    }
+
+    /* ── pastel · 1 · washi tape ──────────────────────────────────────── */
+
+    [data-theme='pastel'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 999px;
+        background:
+            radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.4) 0 0.75px, transparent 1.25px) 0 0 / 4px 4px,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    /* Plum tape with white stripes, the sky second pass off register under
+       it, the far end torn. */
+    [data-theme='pastel'] [data-cm='a'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 999px 0 0 999px;
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--card) h s l / 0.3) 0 2px, transparent 2px 5px) 0 0 / calc(100% - 2px) calc(100% - 2px)
+                no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 2px) calc(100% - 2px) no-repeat,
+            var(--fx-overprint);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 20%, calc(100% - 3px) 40%, 100% 60%, calc(100% - 3px) 80%, 100% 100%, 0 100%);
+    }
+
+    /* A round sticker on a pin. */
+    [data-theme='pastel'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='pastel'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 9px;
+        translate: -50% 0;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            1px 1px 0 var(--primary);
+    }
+
+    /* The tape runs over and its corner curls. */
+    [data-theme='pastel'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block: 1px;
+        inline-size: 0.5rem;
+        background: linear-gradient(225deg, transparent 0 32%, var(--fx-overprint) 32% 50%, var(--kp-meter-fill-colour) 50%);
+    }
+
+    /* A pale tape drifts along. */
+    [data-theme='pastel'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset-block: 1px;
+        inset-inline: -14.1421px 0;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.3) 0 2px, transparent 2px 10px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-pa-drift 1600ms linear infinite;
+        }
+    }
+
+    /* ── pastel · 2 · gummy candy ─────────────────────────────────────── */
+
+    [data-theme='pastel'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 999px;
+        background: var(--muted);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.45),
+            2px 2px 0 hsl(from var(--border-strong) h s l / 0.55);
+    }
+
+    [data-theme='pastel'] [data-cm='b'] .kp-meter::before {
+        border-radius: 999px;
+        background:
+            radial-gradient(circle at calc(100% - 5px) 35%, hsl(from var(--card) h s l / 0.85) 0 1.25px, transparent 1.75px),
+            linear-gradient(to bottom, transparent 0 1px, hsl(from var(--card) h s l / 0.4) 1px 2.5px, transparent 2.5px), var(--kp-meter-fill-colour);
+    }
+
+    /* A candy stick in white and mint, outlined in plum. */
+    [data-theme='pastel'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 4px;
+        inset-block: -3px;
+        border-radius: 999px;
+        background: repeating-linear-gradient(135deg, var(--card) 0 2px, var(--fx-signal) 2px 4px);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    /* A gummy drop past the end. */
+    [data-theme='pastel'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 1px;
+        inline-size: 0.4375rem;
+        block-size: 0.5rem;
+        border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+        background: radial-gradient(circle at 35% 30%, hsl(from var(--card) h s l / 0.85) 0 1px, transparent 1.5px), var(--kp-meter-fill-colour);
+        box-shadow: 1px 1px 0 hsl(from var(--border-strong) h s l / 0.55);
+    }
+
+    /* A mint candy hops along three plum ones. */
+    [data-theme='pastel'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background:
+            radial-gradient(circle, var(--fx-signal) 0 3px, transparent 3.5px) 0% 50% / 33.333% 100% no-repeat,
+            radial-gradient(circle, hsl(from var(--primary) h s l / 0.45) 0 2.5px, transparent 3px) 0 50% / 33.333% 100% repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-pa-hop 1500ms steps(1) infinite;
+        }
+    }
+}
+
+/* Keyframes outside the layer, named per theme. */
+@keyframes cm-formal-riffle {
+    to {
+        translate: 400% 0;
+    }
+}
+
+@keyframes cm-light-day {
+    to {
+        translate: 290% 0;
+    }
+}
+
+@keyframes cm-cy-jolt {
+    0%,
+    90% {
+        translate: 0 0;
+    }
+
+    92% {
+        translate: -2px 0;
+    }
+
+    94% {
+        translate: 1px 0;
+    }
+
+    96%,
+    100% {
+        translate: 0 0;
+    }
+}
+
+@keyframes cm-cy-ghost {
+    0%,
+    90% {
+        opacity: 0;
+        translate: 0 0;
+    }
+
+    91% {
+        opacity: 0.9;
+        translate: 3px -1px;
+    }
+
+    94% {
+        opacity: 0.9;
+        translate: -3px 1px;
+    }
+
+    96%,
+    100% {
+        opacity: 0;
+        translate: 0 0;
+    }
+}
+
+@keyframes cm-cy-strike {
+    0%,
+    66% {
+        opacity: 0.22;
+    }
+
+    68% {
+        opacity: 0.6;
+    }
+
+    71% {
+        opacity: 0.22;
+    }
+
+    74% {
+        opacity: 0.75;
+    }
+
+    78%,
+    100% {
+        opacity: 0.22;
+    }
+}
+
+@keyframes cm-cy-stream {
+    to {
+        background-position: 12px 50%;
+    }
+}
+
+@keyframes cm-sw-ignite {
+    0% {
+        clip-path: inset(0 100% 0 0 round 999px);
+        opacity: 0.55;
+    }
+
+    55%,
+    80% {
+        clip-path: inset(0 0 0 0 round 999px);
+        opacity: 0.55;
+    }
+
+    100% {
+        clip-path: inset(0 0 0 0 round 999px);
+        opacity: 0;
+    }
+}
+
+@keyframes cm-sw-road {
+    to {
+        background-position:
+            0 0,
+            -8px 0;
+    }
+}
+
+@keyframes cm-pa-drift {
+    to {
+        translate: 14.1421px 0;
+    }
+}
+
+@keyframes cm-pa-hop {
+    0% {
+        background-position:
+            0% 50%,
+            0 50%;
+    }
+
+    33.333% {
+        background-position:
+            50% 50%,
+            0 50%;
+    }
+
+    66.667% {
+        background-position:
+            100% 50%,
+            0 50%;
+    }
+}
+
+@layer kp.signature {
+    /* ── terminal · 1 · the htop meter ────────────────────────────────── */
+
+    /* [||||||||        ]: square brackets in the dim phosphor, a dot in
+       every empty cell; the run between them is the scale. */
+    [data-theme='terminal'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 0.75rem;
+        --cm-cell: 0.375rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        --cm-bracket: var(--muted-foreground);
+        border-radius: 0;
+        background:
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--cm-bracket), var(--cm-bracket)) 100% 100% / 3px 1px no-repeat,
+            radial-gradient(circle, hsl(from var(--muted-foreground) h s l / 0.5) 0 0.6px, transparent 1px) 3px 50% / var(--cm-cell) 100% repeat-x;
+    }
+
+    /* One phosphor bar per character cell. */
+    [data-theme='terminal'] [data-cm='a'] .kp-meter::before {
+        inset-block: 2px;
+        inset-inline-start: 3px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 6px));
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 2px, transparent 2px) calc(var(--cm-cell) / 2 - 1px) 0 / var(--cm-cell) 100%
+            repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.6));
+    }
+
+    /* The block caret in the cell the mark stands in. */
+    [data-theme='terminal'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 0.375rem;
+        inset-block: 0;
+        inset-inline-start: calc(3px + clamp(0, var(--kp-mark, 0), 1) * (100% - 6px) - var(--cm-mw) / 2);
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='terminal'] [data-cm='a'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    [data-theme='terminal'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '+';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--accent);
+        font: 700 1rem/1 var(--theme-font-mono, monospace);
+    }
+
+    /* A lit cell walks the line. */
+    [data-theme='terminal'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 2px 3px;
+        background: linear-gradient(var(--primary), var(--primary)) 50% 0 / var(--cm-cell) 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cm='a'] .kp-meter__mark {
+            animation: cm-tm-blink 2000ms steps(1) infinite;
+        }
+
+        [data-theme='terminal'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-tm-walk 2400ms steps(16) infinite;
+        }
+    }
+
+    /* ── terminal · 2 · the oscilloscope ──────────────────────────────── */
+
+    [data-theme='terminal'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 1.25rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.85) 0 1px, transparent 1px) 0 0 / 10% 100%,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.85) 0 1px, transparent 1px) 0 50% / 3px 1px repeat-x,
+            var(--background);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* The trace over its afterglow. */
+    [data-theme='terminal'] [data-cm='b'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 50% / 100% 2px no-repeat,
+            linear-gradient(to bottom, transparent, hsl(from var(--kp-meter-fill-colour) h s l / 0.26) 50%, transparent);
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.7));
+    }
+
+    [data-theme='terminal'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    /* Overloaded, as a multimeter says it. */
+    [data-theme='terminal'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        content: 'OL';
+        inset-inline-start: calc(100% + 0.25rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        color: var(--destructive);
+        font: 700 0.75rem/1 var(--theme-font-mono, monospace);
+        text-shadow: 0 0 3px hsl(from var(--destructive) h s l / 0.6);
+    }
+
+    /* The beam sweeps the screen with its fading tail. */
+    [data-theme='terminal'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-inline-end: auto;
+        inline-size: 35%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.4) 80%, var(--primary) 97%, transparent) 0 50% / 100% 2px
+            no-repeat;
+        translate: 80% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            translate: -100% 0;
+            animation: cm-tm-sweep 1400ms linear infinite;
+        }
+    }
+
+    /* ── forest · 1 · the wooden gauge with a leaf ────────────────────── */
+
+    [data-theme='forest'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 3px;
+        background: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px), var(--muted);
+        box-shadow:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3),
+            inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+    }
+
+    /* The same wood, stained forest green, with a knot. */
+    [data-theme='forest'] [data-cm='a'] .kp-meter::before {
+        border-radius: 3px;
+        background:
+            radial-gradient(ellipse 5px 2px at 30% 55%, hsl(from var(--background) h s l / 0.25), transparent),
+            repeating-linear-gradient(178deg, transparent 0 2px, hsl(from var(--primary-foreground) h s l / 0.14) 2px 3px),
+            var(--kp-meter-fill-colour);
+        box-shadow: inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.2);
+    }
+
+    /* A stem, and a leaf on top of it. */
+    [data-theme='forest'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            1px 0 0 var(--foreground),
+            -1px 0 0 var(--foreground);
+    }
+
+    [data-theme='forest'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 0;
+        inline-size: 12px;
+        block-size: 8px;
+        border-radius: 0 100% 0 100%;
+        background: var(--selected);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+        rotate: -24deg;
+        transform-origin: 0 100%;
+    }
+
+    /* The gauge sprouts a leaf past its end. */
+    [data-theme='forest'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block-start: -1px;
+        inline-size: 12px;
+        block-size: 8px;
+        border-radius: 0 100% 0 100%;
+        background: var(--selected);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+        rotate: -30deg;
+        transform-origin: 0 100%;
+    }
+
+    /* A leaf on the wind, through the empty groove. */
+    [data-theme='forest'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 2px auto auto 40%;
+        inline-size: 12px;
+        block-size: 8px;
+        border-radius: 0 100% 0 100%;
+        background: var(--selected);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-fo-wind 3200ms ease-in-out infinite;
+        }
+    }
+
+    /* ── forest · 2 · the trail on the map ────────────────────────────── */
+
+    [data-theme='forest'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--chart-2) 0 4px, transparent 4px) 0 50% / 7px 2px repeat-x,
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.55), hsl(from var(--border-strong) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.55), hsl(from var(--border-strong) h s l / 0.55)) 0 100% / 100% 1px no-repeat;
+    }
+
+    /* The trail walked, in forest ink. */
+    [data-theme='forest'] [data-cm='b'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0 999px 999px 0;
+        background: var(--kp-meter-fill-colour);
+    }
+
+    /* A trig point: the survey triangle with its dot, on a post. */
+    [data-theme='forest'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='forest'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 7px;
+        translate: -50% 0;
+        background: radial-gradient(circle at 50% 70%, var(--card) 0 1.2px, transparent 1.6px), var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    /* A clay blaze points the trail on past the end. */
+    [data-theme='forest'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: -2px;
+        inline-size: 0.4375rem;
+        background: var(--chart-2);
+        clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-cm='b'] .kp-meter[data-kp-loading] {
+            animation: cm-fo-walk 1400ms linear infinite;
+        }
+    }
+
+    /* While it loads the dashes are footsteps in forest ink. */
+    [data-theme='forest'] [data-cm='b'] .kp-meter[data-kp-loading] {
+        background:
+            linear-gradient(90deg, var(--primary) 0 2px, transparent 2px) 0 50% / 7px 2px repeat-x,
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.55), hsl(from var(--border-strong) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.55), hsl(from var(--border-strong) h s l / 0.55)) 0 100% / 100% 1px no-repeat;
+    }
+
+    /* ── high-contrast · 1 · the ink frame ────────────────────────────── */
+
+    [data-theme='high-contrast'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 1rem;
+        --kp-meter-fill: var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* A warning in this theme is the yellow, closed by an ink edge. */
+    [data-theme='high-contrast'] :is([data-cm='a'], [data-cm='b']) .kp-meter[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--accent);
+    }
+
+    [data-theme='high-contrast'] [data-cm='a'] .kp-meter::before {
+        border-radius: 0;
+        box-shadow: inset -2px 0 0 var(--foreground);
+    }
+
+    /* A white slot between two ink edges. */
+    [data-theme='high-contrast'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 8px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--foreground) 0 2px, var(--card) 2px 6px, var(--foreground) 6px);
+    }
+
+    [data-theme='high-contrast'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '+';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        inline-size: 0.875rem;
+        block-size: 0.875rem;
+        box-sizing: border-box;
+        translate: 0 -50%;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+        color: var(--foreground);
+        font: 800 0.75rem/1 var(--theme-font-body, sans-serif);
+    }
+
+    /* Three ink squares, still: no loops, ever. */
+    [data-theme='high-contrast'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% - 7px) 50% / 3px 3px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 3px 3px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) calc(50% + 7px) 50% / 3px 3px no-repeat;
+    }
+
+    /* ── high-contrast · 2 · the pattern-coded gauge ──────────────────── */
+
+    [data-theme='high-contrast'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --kp-meter-fill: var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* Ink hatching closed by a solid ink edge: the share reads by pattern. */
+    [data-theme='high-contrast'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+        background: repeating-linear-gradient(-45deg, var(--kp-meter-fill-colour) 0 2px, transparent 2px 4px), var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--foreground),
+            inset -3px 0 0 var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 8px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -2px;
+        inline-size: 0.5rem;
+        background: var(--foreground);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    [data-theme='high-contrast'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset: 0 4px;
+        background: linear-gradient(90deg, var(--foreground) 0 4px, transparent 4px) 0 50% / 7px 2px repeat-x;
+    }
+
+    /* ── sepia · 1 · the pen stroke and the blot ──────────────────────── */
+
+    [data-theme='sepia'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 0;
+        background: radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.85) 0 0.6px, transparent 1px) 0 50% / 4px 100% repeat-x;
+    }
+
+    /* Tapered where the nib came down, pooled where it stops. */
+    [data-theme='sepia'] [data-cm='a'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0 3px 3px 0;
+        background:
+            radial-gradient(
+                circle at calc(100% - 3px) 50%,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 55%, var(--foreground)) 0 2.5px,
+                transparent 3.5px
+            ),
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(0 40%, 8px 0, 100% 0, 100% 100%, 8px 100%, 0 60%);
+    }
+
+    /* A hairline with the divider's lozenge on top. */
+    [data-theme='sepia'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='sepia'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        inline-size: 5px;
+        block-size: 5px;
+        translate: -50% 0;
+        rotate: 45deg;
+        background: var(--fx-signal);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    /* The ink blots past the end. */
+    [data-theme='sepia'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% - 2px);
+        inset-block: -4px;
+        inline-size: 0.75rem;
+        background:
+            radial-gradient(circle at 35% 50%, var(--kp-meter-fill-colour) 0 4.5px, transparent 5px),
+            radial-gradient(circle at 72% 25%, var(--kp-meter-fill-colour) 0 2.5px, transparent 3px),
+            radial-gradient(circle at 70% 78%, var(--kp-meter-fill-colour) 0 1.75px, transparent 2.25px),
+            radial-gradient(circle at 94% 55%, var(--kp-meter-fill-colour) 0 1px, transparent 1.5px);
+    }
+
+    /* The pen writes the stroke slowly and it fades. */
+    [data-theme='sepia'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 1px auto 1px 0;
+        inline-size: 100%;
+        background: hsl(from var(--primary) h s l / 0.25);
+        clip-path: polygon(0 40%, 8px 0, 100% 0, 100% 100%, 8px 100%, 0 60%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-se-write 2600ms ease-in-out infinite;
+        }
+    }
+
+    /* ── sepia · 2 · the letterpress impression ───────────────────────── */
+
+    [data-theme='sepia'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        border-radius: 1px;
+        background: var(--muted);
+        box-shadow:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3),
+            inset 0 -1px 0 hsl(from var(--card) h s l / 0.9),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
+    }
+
+    /* Inked into the impression, squashed at its edges, speckled. */
+    [data-theme='sepia'] [data-cm='b'] .kp-meter::before {
+        border-radius: 1px;
+        background:
+            radial-gradient(circle, hsl(from var(--card) h s l / 0.2) 0 0.5px, transparent 0.9px) 0 0 / 3px 3px,
+            var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4),
+            inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.4),
+            inset -1px 0 0 hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    /* A brass rule with a pilcrow above it. */
+    [data-theme='sepia'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 3px;
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 0 0 0 1px var(--fx-signal);
+    }
+
+    [data-theme='sepia'] [data-cm='b'] .kp-meter__mark::before {
+        content: '¶';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        color: var(--primary);
+        font: 700 0.625rem/1 var(--theme-font-display, serif);
+    }
+
+    /* The ink squeezed out past the end. */
+    [data-theme='sepia'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: 100%;
+        inset-block: 0;
+        inline-size: 0.5625rem;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour), hsl(from var(--kp-meter-fill-colour) h s l / 0.15));
+        clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+    }
+
+    /* The platen presses: the impression deepens and lifts, the ink not
+       yet laid. */
+    [data-theme='sepia'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: radial-gradient(circle, hsl(from var(--primary) h s l / 0.5) 0 0.6px, transparent 1px) 0 0 / 3px 3px;
+    }
+
+    [data-theme='sepia'] [data-cm='b'] .kp-meter[data-kp-loading] {
+        box-shadow:
+            inset 0 2px 3px hsl(from var(--foreground) h s l / 0.38),
+            inset 0 -1px 0 hsl(from var(--card) h s l / 0.9),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='sepia'] [data-cm='b'] .kp-meter[data-kp-loading] {
+            animation: cm-se-press 2400ms ease-in-out infinite;
+        }
+    }
+
+    /* ── blueprint · 1 · the engineer's scale with a break line ───────── */
+
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px) 0 0 / 25% 5px repeat-x,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.75) 0 1px, transparent 1px) 0 0 / 5% 2px repeat-x,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 5px no-repeat;
+    }
+
+    /* The drawn line weight on the baseline, a cyan wash above it. */
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter::before {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 100% / 100% 3px no-repeat,
+            hsl(from var(--kp-meter-fill-colour) h s l / 0.16);
+    }
+
+    /* An amber datum triangle on its leader. */
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    /* The break line: longer than drawn. */
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block: -3px;
+        inline-size: 0.5rem;
+        background: var(--primary);
+        clip-path: polygon(40% 0, 70% 0, 45% 40%, 85% 60%, 55% 100%, 25% 100%, 50% 60%, 10% 40%);
+    }
+
+    /* The plotter pen runs along the baseline at an even pace. */
+    [data-theme='blueprint'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset-block: auto 0;
+        block-size: 3px;
+        background: linear-gradient(var(--primary), var(--primary)) 50% 0 / 1.25rem 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-bp-plot 1800ms linear infinite alternate;
+        }
+    }
+
+    /* ── blueprint · 2 · the tolerance band ───────────────────────────── */
+
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--accent);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background: linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.22) 0 1px, transparent 1px) 0 0 / 4px 100% repeat-x;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* A tinted bar drawn in outline. */
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+        background: hsl(from var(--kp-meter-fill-colour) h s l / 0.18);
+        box-shadow:
+            inset 0 1px 0 var(--kp-meter-fill-colour),
+            inset 0 -1px 0 var(--kp-meter-fill-colour),
+            inset -1px 0 0 var(--kp-meter-fill-colour);
+    }
+
+    /* The centre line: solid through the band, a chain line beyond it. */
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block: -7px;
+        inset-inline: 0;
+        background:
+            repeating-linear-gradient(to bottom, var(--accent) 0 3px, transparent 3px 5px, var(--accent) 5px 6px, transparent 6px 8px) 0 0 / 100% 7px
+                no-repeat,
+            repeating-linear-gradient(to top, var(--accent) 0 3px, transparent 3px 5px, var(--accent) 5px 6px, transparent 6px 8px) 0 100% / 100% 7px
+                no-repeat;
+    }
+
+    /* Out of tolerance: hatched in amber past the end. */
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: 100%;
+        inset-block: 0;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(45deg, var(--accent) 0 1px, transparent 1px 3px);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    /* The pen traces the outline. */
+    [data-theme='blueprint'] [data-cm='b'] .kp-meter[data-kp-loading] {
+        background:
+            linear-gradient(90deg, var(--border-strong) 0 3px, transparent 3px) 0 0 / 6px 1px repeat-x,
+            linear-gradient(90deg, var(--border-strong) 0 3px, transparent 3px) 0 100% / 6px 1px repeat-x;
+        box-shadow:
+            inset 1px 0 0 var(--border-strong),
+            inset -1px 0 0 var(--border-strong);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-cm='b'] .kp-meter[data-kp-loading] {
+            animation: cm-bp-trace 900ms linear infinite;
+        }
+    }
+
+    /* ── solstice · 1 · the standing stones ───────────────────────────── */
+
+    [data-theme='solstice'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--background);
+        border-radius: 2px;
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.5), hsl(from var(--border-strong) h s l / 0.5)) 0 50% / 100% 1px no-repeat,
+            var(--muted);
+    }
+
+    /* Ridged ground caught by the low sun: each ridge lit on one side. */
+    [data-theme='solstice'] [data-cm='a'] .kp-meter::before {
+        border-radius: 2px;
+        background:
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.16) 0 1px, transparent 1px 4px, hsl(from var(--background) h s l / 0.18) 4px)
+                0 0 / 5px 100% repeat-x,
+            linear-gradient(
+                to bottom,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 70%, var(--chart-3)),
+                var(--kp-meter-fill-colour) 60%,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 70%, var(--accent))
+            );
+    }
+
+    /* The standing stone, lit on its sunward edge, its long shadow along
+       the ground. */
+    [data-theme='solstice'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 6px;
+        inset-block: -8px 0;
+        border-radius: 3px 3px 0 0;
+        background: var(--background);
+        box-shadow:
+            inset 2px 0 0 var(--primary),
+            0 0 0 1px hsl(from var(--foreground) h s l / 0.8);
+    }
+
+    [data-theme='solstice'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 100%;
+        inline-size: 14px;
+        block-size: 3px;
+        background: linear-gradient(90deg, hsl(from var(--background) h s l / 0.6), transparent);
+    }
+
+    /* The sun rises over the horizon past the end. */
+    [data-theme='solstice'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block-end: 50%;
+        inline-size: 0.625rem;
+        block-size: 0.3125rem;
+        border-radius: 0.3125rem 0.3125rem 0 0;
+        background: var(--chart-3);
+        box-shadow: 0 1px 0 var(--border-strong);
+    }
+
+    /* A warm dawn rises and fades, unhurried. */
+    [data-theme='solstice'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.45), transparent);
+        opacity: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-so-dawn 4000ms ease-in-out infinite;
+        }
+    }
+
+    /* ── solstice · 2 · the embers ────────────────────────────────────── */
+
+    [data-theme='solstice'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--background);
+        --cm-embers:
+            radial-gradient(circle at 20% 40%, hsl(from var(--warning-foreground) h s l / 0.75) 0 1.5px, transparent 2.5px) 0 0 / 14px 100%,
+            radial-gradient(circle at 70% 65%, hsl(from var(--accent) h s l / 0.85) 0 1.5px, transparent 2.5px) 0 0 / 11px 100%;
+        border-radius: 999px;
+        background:
+            linear-gradient(90deg, transparent 0 5px, hsl(from var(--background) h s l / 0.45) 5px) 0 0 / 6px 100% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] [data-cm='b'] .kp-meter::before {
+        border-radius: 999px;
+        background: var(--cm-embers), var(--kp-meter-fill-colour);
+    }
+
+    /* A dark iron poker with a pale edge. */
+    [data-theme='solstice'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--background);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    /* Sparks fly up past the end. */
+    [data-theme='solstice'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -5px 0;
+        inline-size: 0.5rem;
+        background:
+            radial-gradient(circle at 20% 75%, var(--primary) 0 1.25px, transparent 1.75px),
+            radial-gradient(circle at 62% 42%, var(--chart-3) 0 1px, transparent 1.5px),
+            radial-gradient(circle at 88% 12%, var(--primary) 0 0.75px, transparent 1.25px);
+    }
+
+    /* Faint embers breathe along the whole log. */
+    [data-theme='solstice'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: var(--cm-embers);
+        opacity: 0.55;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] [data-cm='b'] .kp-meter::before {
+            animation: cm-so-breathe 3600ms ease-in-out infinite;
+        }
+
+        [data-theme='solstice'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-so-glow 3600ms ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes cm-tm-blink {
+    50% {
+        opacity: 0.25;
+    }
+}
+
+@keyframes cm-tm-walk {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}
+
+@keyframes cm-tm-sweep {
+    to {
+        translate: 290% 0;
+    }
+}
+
+@keyframes cm-fo-wind {
+    from {
+        inset-inline-start: -12px;
+        inset-block-start: 3px;
+        rotate: -15deg;
+    }
+
+    50% {
+        inset-block-start: 0;
+        rotate: 20deg;
+    }
+
+    to {
+        inset-inline-start: 100%;
+        inset-block-start: 3px;
+        rotate: 70deg;
+    }
+}
+
+@keyframes cm-fo-walk {
+    to {
+        background-position:
+            7px 50%,
+            0 0,
+            0 100%;
+    }
+}
+
+@keyframes cm-se-write {
+    0% {
+        inline-size: 0;
+        opacity: 1;
+    }
+
+    70% {
+        inline-size: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        inline-size: 100%;
+        opacity: 0;
+    }
+}
+
+@keyframes cm-se-press {
+    50% {
+        box-shadow:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.15),
+            inset 0 -1px 0 hsl(from var(--card) h s l / 0.9),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
+    }
+}
+
+@keyframes cm-bp-plot {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}
+
+@keyframes cm-bp-trace {
+    to {
+        background-position:
+            6px 0,
+            -6px 100%;
+    }
+}
+
+@keyframes cm-so-dawn {
+    0%,
+    100% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes cm-so-breathe {
+    50% {
+        filter: brightness(1.12);
+    }
+}
+
+@keyframes cm-so-glow {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@layer kp.signature {
+    /* ── brutalism · 1 · the slab with an overhang ────────────────────── */
+
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.875rem;
+        --cm-room: 1rem;
+        --kp-meter-fill: var(--secondary);
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    /* The yellow plate with the black line at its edge. */
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter::before {
+        border-radius: 0;
+        box-shadow: 3px 0 0 var(--foreground);
+    }
+
+    /* A black post with a lavender cap. */
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 3px;
+        inset-block: -9px;
+        border-radius: 0;
+        background: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -2px;
+        inset-inline-start: 50%;
+        inline-size: 11px;
+        block-size: 7px;
+        box-sizing: border-box;
+        translate: -50% 0;
+        background: var(--accent);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* A yellow block slammed out over the edge of the box. */
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% - 3px);
+        inset-block: -9px 1px;
+        inline-size: 0.75rem;
+        rotate: 6deg;
+        background: var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 0 0 3px var(--foreground),
+            3px 3px 0 var(--foreground);
+    }
+
+    /* The yellow and black tape runs through the box. */
+    [data-theme='brutalism'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset-inline: -14.1421px 0;
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 3px, var(--secondary) 3px 10px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-br-tape 1400ms linear infinite;
+        }
+    }
+
+    /* ── brutalism · 2 · the stacked blocks ───────────────────────────── */
+
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.875rem;
+        --cm-room: 1.125rem;
+        --kp-meter-fill: var(--accent);
+        --cm-walls: linear-gradient(90deg, transparent calc(100% - 3px), var(--foreground) 0) 0 0 / 10% 100%;
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--cm-walls), var(--card);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter--inline {
+        --cm-walls: linear-gradient(90deg, transparent calc(100% - 2px), var(--foreground) 0) 0 0 / 20% 100%;
+    }
+
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+        background: var(--cm-walls), var(--kp-meter-fill-colour);
+    }
+
+    /* A yellow peg with a tab sticking up. */
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 7px;
+        inset-block: -9px 0;
+        border-radius: 0;
+        background: var(--secondary);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* One more block thrown on top, off the row. */
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: -10px;
+        inline-size: 0.75rem;
+        block-size: 0.625rem;
+        background: var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 0 0 3px var(--foreground),
+            3px 3px 0 var(--foreground);
+    }
+
+    /* The blocks drop in one at a time. */
+    [data-theme='brutalism'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: var(--cm-walls), hsl(from var(--accent) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-br-stack 2200ms steps(10, jump-start) infinite;
+        }
+    }
+
+    /* ── deco · 1 · the gilt frieze ───────────────────────────────────── */
+
+    [data-theme='deco'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 1.25rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            inset 0 1px 0 var(--primary),
+            inset 0 -1px 0 var(--primary),
+            inset 0 3px 0 var(--background),
+            inset 0 -3px 0 var(--background),
+            inset 0 4px 0 hsl(from var(--primary) h s l / 0.6),
+            inset 0 -4px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* Flat gold, ending in the Empire State's chevron. */
+    [data-theme='deco'] [data-cm='a'] .kp-meter::before {
+        inset-block: 4px;
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 0 100%);
+    }
+
+    /* An emerald lozenge set on a dark spire. */
+    [data-theme='deco'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--primary),
+            -1px 0 0 var(--primary);
+    }
+
+    [data-theme='deco'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 50%;
+        inline-size: 6px;
+        block-size: 6px;
+        translate: -50% 0;
+        rotate: 45deg;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='deco'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '›››';
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        translate: 0 -55%;
+        color: var(--primary);
+        font: 700 1.125rem/1 var(--theme-font-display, serif);
+        letter-spacing: -0.12em;
+    }
+
+    /* A glint runs along the gilt. */
+    [data-theme='deco'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.55), transparent) 50% 0 / 30% 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-de-glint 2600ms ease-in-out infinite;
+        }
+    }
+
+    /* ── deco · 2 · the lobby floor indicator ─────────────────────────── */
+
+    [data-theme='deco'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.22) 0 3px, transparent 3px) 1px 50% / 5px 4px repeat-x,
+            var(--background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* The lamps lit in gold up to the share. */
+    [data-theme='deco'] [data-cm='b'] .kp-meter::before {
+        inset-block: 2px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px) 1px 0 / 5px 100% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.55));
+    }
+
+    /* A gold arrow points down at the floor you want. */
+    [data-theme='deco'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='deco'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 6px;
+        translate: -50% 0;
+        background: var(--primary);
+        clip-path: polygon(30% 0, 70% 0, 70% 40%, 100% 40%, 50% 100%, 0 40%, 30% 40%);
+    }
+
+    /* An arrow up: higher than the top floor. */
+    [data-theme='deco'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block: -4px;
+        inline-size: 0.4375rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 45%, 70% 45%, 70% 100%, 30% 100%, 30% 45%, 0 45%);
+    }
+
+    /* One lit lamp travels the row: the lift moving. */
+    [data-theme='deco'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-block: 2px;
+        background: linear-gradient(var(--primary), var(--primary)) 50% 0 / 3px 100% no-repeat;
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-de-lift 3200ms steps(20) infinite alternate;
+        }
+    }
+
+    /* ── phantom · 1 · the calling card ───────────────────────────────── */
+
+    [data-theme='phantom'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 1.375rem;
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        transform: skewX(-8deg);
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.24) 0 0.7px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--background);
+        box-shadow: 0 0 0 1px hsl(from var(--foreground) h s l / 0.55);
+    }
+
+    /* The red plate, its deep red second plate off register. */
+    [data-theme='phantom'] [data-cm='a'] .kp-meter::before {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 2px) calc(100% - 2px) no-repeat,
+            color-mix(in oklab, var(--kp-meter-fill-colour) 55%, var(--background));
+    }
+
+    /* A white shard of paper. */
+    [data-theme='phantom'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 3px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='phantom'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 0;
+        inline-size: 7px;
+        block-size: 5px;
+        background: var(--foreground);
+        clip-path: polygon(0 100%, 100% 0, 45% 100%);
+    }
+
+    /* A white burst with a black "!". */
+    [data-theme='phantom'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '!';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+        translate: 0 -50%;
+        background: var(--foreground);
+        color: var(--background);
+        font: italic 900 0.75rem/1 var(--theme-font-display, sans-serif);
+        clip-path: polygon(50% 0, 61% 30%, 95% 18%, 74% 47%, 100% 74%, 63% 70%, 55% 100%, 40% 72%, 6% 90%, 26% 58%, 0 28%, 36% 32%);
+    }
+
+    /* The halftone screen slides. */
+    [data-theme='phantom'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background: hsl(from var(--primary) h s l / 0.28);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-cm='a'] .kp-meter[data-kp-loading] {
+            animation: cm-ph-screen 700ms linear infinite;
+        }
+    }
+
+    /* ── phantom · 2 · the ransom collage ─────────────────────────────── */
+
+    [data-theme='phantom'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.75rem;
+        --cm-mo-halo: var(--background);
+        --cm-collage: linear-gradient(
+                100deg,
+                var(--kp-meter-fill-colour) 0 18%,
+                var(--background) 18% 20%,
+                var(--foreground) 20% 31%,
+                var(--background) 31% 33%,
+                var(--kp-meter-fill-colour) 33% 58%,
+                var(--background) 58% 60%,
+                color-mix(in oklab, var(--kp-meter-fill-colour) 60%, var(--background)) 60% 71%,
+                var(--background) 71% 73%,
+                var(--kp-meter-fill-colour) 73% 100%
+            )
+            0 0 / 3.5rem 100% repeat-x;
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: 0 0 0 1px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='phantom'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+        background: var(--cm-collage);
+    }
+
+    /* A black shard edged in white. */
+    [data-theme='phantom'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 4px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--foreground),
+            -1px 0 0 var(--foreground);
+        transform: skewX(-8deg);
+    }
+
+    /* The strip tears off in a jagged white shard. */
+    [data-theme='phantom'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block: -3px;
+        inline-size: 0.5rem;
+        background: var(--foreground);
+        clip-path: polygon(0 15%, 55% 0, 35% 35%, 100% 40%, 45% 62%, 80% 100%, 0 85%);
+    }
+
+    /* The pieces shuffle in hard steps. */
+    [data-theme='phantom'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: var(--cm-collage);
+        opacity: 0.4;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-ph-shuffle 1200ms steps(4) infinite;
+        }
+    }
+
+    /* ── shade-light · 1 · the pencil gauge ───────────────────────────── */
+
+    [data-theme='shade-light'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        border-radius: 2px;
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.65),
+            0.5px 0.5px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* The blue plate hatched over in pencil. */
+    [data-theme='shade-light'] [data-cm='a'] .kp-meter::before {
+        border-radius: 2px;
+        background:
+            repeating-linear-gradient(-55deg, hsl(from var(--primary-foreground) h s l / 0.2) 0 1px, transparent 1px 3px), var(--kp-meter-fill-colour);
+    }
+
+    /* A graphite stroke with a soft shade beside it. */
+    [data-theme='shade-light'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 1px var(--card),
+            2px 1px 2px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* A patch of pencil scribble past the end. */
+    [data-theme='shade-light'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -2px;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
+        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+    }
+
+    /* The empty gauge is hatched in once and left. */
+    [data-theme='shade-light'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.4) 0 1px, transparent 1px 3px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-sh-hatch 1200ms ease-out 1 both;
+        }
+    }
+
+    /* ── shade-light · 2 · the pin and its shade ──────────────────────── */
+
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        border-radius: 2px;
+        background: var(--muted);
+        box-shadow:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.22),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.65);
+    }
+
+    /* A raised blue strip throwing a soft shade. */
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter::before {
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* A pin with a magenta head, its shade falling to the side. */
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -4px 0;
+        border-radius: 1px 1px 0 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -4px;
+        inset-inline-start: 50%;
+        inline-size: 6px;
+        block-size: 6px;
+        translate: -50% 0;
+        border-radius: 50%;
+        background: var(--fx-signal);
+        box-shadow:
+            0 0 0 1px var(--card),
+            4px 3px 2px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    /* The strip hangs over the end, its shade falling beyond. */
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% - 3px);
+        inset-block: 0;
+        inline-size: 0.625rem;
+        border-radius: 0 2px 2px 0;
+        background: linear-gradient(to bottom, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+        box-shadow: 3px 5px 4px hsl(from var(--foreground) h s l / 0.4);
+        rotate: -8deg;
+        transform-origin: 0 100%;
+    }
+
+    /* The shade of a passing cloud. */
+    [data-theme='shade-light'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.25), transparent) 50% 0 / 40% 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-light'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-sh-cloud 4000ms ease-in-out infinite;
+        }
+    }
+
+    /* ── shade-dark · 1 · silverpoint ─────────────────────────────────── */
+
+    [data-theme='shade-dark'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-halo: var(--background);
+        border-radius: 2px;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px), var(--background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.6);
+    }
+
+    /* The blue plate laid over the silver lines, its top edge lit. */
+    [data-theme='shade-dark'] [data-cm='a'] .kp-meter::before {
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.55) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+    }
+
+    /* A pale metal stroke. */
+    [data-theme='shade-dark'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='shade-dark'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -2px;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
+        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+    }
+
+    [data-theme='shade-dark'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        border-radius: inherit;
+        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.55) 0 1px, transparent 1px 3px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-sh-hatch 1200ms ease-out 1 both;
+        }
+    }
+
+    /* ── shade-dark · 2 · the reading lamp ────────────────────────────── */
+
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.875rem;
+        --cm-mo-halo: var(--background);
+        border-radius: 2px;
+        background: var(--background);
+        box-shadow:
+            inset 0 1px 2px hsl(from var(--background) h s l / 0.9),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
+    }
+
+    /* The blue plate lifted out of the shade. */
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter::before {
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
+    }
+
+    /* A pale pin under a pool of lamplight: the target is where the light is. */
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -4px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block: -11px calc(100% - 4px);
+        inset-inline-start: 50%;
+        inline-size: 1.5rem;
+        translate: -50% 0;
+        border-radius: 50% 50% 0 0;
+        background: radial-gradient(farthest-side at 50% 100%, hsl(from var(--foreground) h s l / 0.45), transparent);
+    }
+
+    /* The light spills out beyond the well. */
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% - 2px);
+        inset-block: -7px;
+        inline-size: 1.25rem;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--foreground) 0 2px, transparent 2.5px),
+            radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), transparent);
+    }
+
+    /* The pool of light slides slowly along the well. */
+    [data-theme='shade-dark'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.35), transparent) 50% 50% / 3rem 300% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-sh-lamp 3200ms ease-in-out infinite alternate;
+        }
+    }
+
+    /* ── retro · 1 · the dithered installer bar ───────────────────────── */
+
+    [data-theme='retro'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 1rem;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 2px 2px 0 0 var(--border),
+            inset -2px -2px 0 0 var(--card);
+    }
+
+    /* Navy, its last pixels dithered. */
+    [data-theme='retro'] [data-cm='a'] .kp-meter::before {
+        inset-block: 3px;
+        inset-inline-start: 3px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 6px));
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 6px) 100% no-repeat,
+            repeating-conic-gradient(var(--kp-meter-fill-colour) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
+        transition: none;
+    }
+
+    /* A raised grey slider thumb. */
+    [data-theme='retro'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 6px;
+        inset-block: -2px;
+        inset-inline-start: calc(3px + clamp(0, var(--kp-mark, 0), 1) * (100% - 6px) - var(--cm-mw) / 2);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            inset 1px 1px 0 var(--popover),
+            inset -1px -1px 0 var(--foreground),
+            0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='retro'] [data-cm='a'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* A raised scroll-arrow button past the end. */
+    [data-theme='retro'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '▸';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 0;
+        inline-size: 0.75rem;
+        background: var(--background);
+        box-shadow:
+            inset 1px 1px 0 var(--popover),
+            inset -1px -1px 0 var(--foreground);
+        color: var(--foreground);
+        font-size: 0.625rem;
+    }
+
+    /* The 50 % dither brush across the field, still: nothing blinks. */
+    [data-theme='retro'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 3px;
+        background: repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
+    }
+
+    /* ── retro · 2 · the defragmenter ─────────────────────────────────── */
+
+    [data-theme='retro'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.75rem;
+        --cm-room: 0.625rem;
+        --cm-cells:
+            linear-gradient(90deg, transparent 0 4px, var(--popover) 4px) 0 0 / 5px 100%,
+            linear-gradient(to bottom, transparent 0 5px, var(--popover) 5px 6px) 0 0 / 100% 6px;
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, transparent 0 4px, var(--border) 4px) 0 0 / 5px 100%,
+            linear-gradient(to bottom, transparent 0 5px, var(--border) 5px 6px) 0 0 / 100% 6px,
+            var(--popover);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* Navy cells up to the share, a few teal ones among them. */
+    [data-theme='retro'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+        background:
+            var(--cm-cells),
+            linear-gradient(90deg, transparent 0 20px, var(--accent) 20px 25px, transparent 25px) 0 0 / 35px 6px repeat-x,
+            linear-gradient(90deg, transparent 0 5px, var(--accent) 5px 10px, transparent 10px) 0 6px / 55px 6px repeat-x,
+            var(--kp-meter-fill-colour);
+        transition: none;
+    }
+
+    /* A white cell column in a black frame. */
+    [data-theme='retro'] [data-cm='b'] .kp-meter__mark {
+        --cm-mw: 5px;
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    /* Two more cells outside the field. */
+    [data-theme='retro'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 0;
+        inline-size: 4px;
+        background: linear-gradient(
+            to bottom,
+            var(--kp-meter-fill-colour) 0 5px,
+            transparent 5px 6px,
+            var(--kp-meter-fill-colour) 6px 11px,
+            transparent 11px
+        );
+    }
+
+    /* A teal cell walks the drive, reading it. */
+    [data-theme='retro'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background:
+            var(--cm-cells),
+            linear-gradient(var(--accent), var(--accent)) 50% 0 / 5px 6px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-rt-read 2400ms steps(24) infinite;
+        }
+    }
+
+    /* ── grotesk · 1 · the red block on the baseline ──────────────────── */
+
+    [data-theme='grotesk'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 1.25rem;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 1px no-repeat,
+            var(--muted);
+    }
+
+    [data-theme='grotesk'] [data-cm='a'] .kp-meter::before {
+        inset-block: 0 1px;
+        border-radius: 0;
+    }
+
+    /* A black rule rising from the baseline, flush. */
+    [data-theme='grotesk'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -6px 0;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='grotesk'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        content: '→';
+        inset-inline-start: calc(100% + 2px);
+        inset-block-end: -3px;
+        color: var(--foreground);
+        font: 700 1rem/1 var(--theme-font-display, sans-serif);
+    }
+
+    /* Three black squares cut in, one after another. */
+    [data-theme='grotesk'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 0 50% / 6px 6px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 9px 50% / 6px 6px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 18px 50% / 6px 6px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-gr-cut 1200ms steps(1) infinite;
+        }
+    }
+
+    /* ── grotesk · 2 · the zebra scale ────────────────────────────────── */
+
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --kp-meter-fill: var(--foreground);
+        --cm-mo-ink: var(--primary);
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--foreground) 50%, transparent 50%) 0 100% / calc(100% / 6) 3px repeat-x,
+            var(--card);
+        box-shadow: inset 0 0 0 1px var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter::before {
+        border-radius: 0;
+    }
+
+    /* A red rule with a small red square flag. */
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -5px -1px;
+        border-radius: 0;
+        background: var(--primary);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 100%;
+        inline-size: 5px;
+        block-size: 5px;
+        background: var(--primary);
+    }
+
+    /* A red square set lower, off the line. */
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 4px);
+        inset-block-start: 4px;
+        inline-size: 0.4375rem;
+        block-size: 0.4375rem;
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-cm='b'] .kp-meter[data-kp-loading] {
+            animation: cm-gr-zebra 1200ms steps(1) infinite;
+        }
+    }
+
+    /* ── lapis · 1 · the gilt band ────────────────────────────────────── */
+
+    [data-theme='lapis'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.875rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--primary-foreground);
+        border-radius: 0;
+        background: var(--primary-foreground);
+        box-shadow:
+            inset 0 1px 0 var(--primary),
+            inset 0 -1px 0 var(--primary);
+    }
+
+    /* Gold leaf tooled with a fine lattice. */
+    [data-theme='lapis'] [data-cm='a'] .kp-meter::before {
+        inset-block: 2px;
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(60deg, transparent 0 3px, hsl(from var(--primary-foreground) h s l / 0.4) 3px 4px),
+            repeating-linear-gradient(-60deg, transparent 0 3px, hsl(from var(--primary-foreground) h s l / 0.4) 3px 4px), var(--kp-meter-fill-colour);
+    }
+
+    /* A vermilion reed stroke with its diamond dot above. */
+    [data-theme='lapis'] [data-cm='a'] .kp-meter__mark {
+        --cm-mw: 3px;
+        inset-block: -3px;
+        border-radius: 2px 2px 1px 1px;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    [data-theme='lapis'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 2px);
+        inset-inline-start: 50%;
+        inline-size: 4px;
+        block-size: 4px;
+        translate: -50% 0;
+        rotate: 45deg;
+        background: var(--accent);
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    /* A vermilion toranj past the end. */
+    [data-theme='lapis'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -3px;
+        inline-size: 0.625rem;
+        background: radial-gradient(circle, var(--primary) 0 1.25px, transparent 1.75px), var(--accent);
+        clip-path: polygon(0 50%, 25% 15%, 50% 0, 75% 15%, 100% 50%, 75% 85%, 50% 100%, 25% 85%);
+    }
+
+    /* A burnisher's glint runs along the gold. */
+    [data-theme='lapis'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        background: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.5), transparent) 50% 0 / 25% 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-la-burnish 2800ms ease-in-out infinite;
+        }
+    }
+
+    /* ── lapis · 2 · lapis stone on vellum ────────────────────────────── */
+
+    [data-theme='lapis'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.75rem;
+        --cm-mo-ink: var(--primary-foreground);
+        --cm-mo-halo: var(--foreground);
+        --cm-stone: color-mix(in oklab, var(--background) 65%, var(--primary-foreground));
+        --cm-flecks:
+            radial-gradient(circle at 15% 30%, var(--primary) 0 0.7px, transparent 1.1px) 0 0 / 9px 100%,
+            radial-gradient(circle at 60% 70%, var(--primary) 0 0.6px, transparent 1px) 0 0 / 13px 100%;
+        border-radius: 1px;
+        background: color-mix(in oklab, var(--foreground) 88%, var(--background));
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='lapis'] [data-cm='b'] .kp-meter[data-kp-tone] {
+        --cm-stone: var(--kp-meter-fill-colour);
+    }
+
+    /* The stone: deep lapis flecked with pyrite, a streak of calcite. */
+    [data-theme='lapis'] [data-cm='b'] .kp-meter::before {
+        border-radius: 1px;
+        background:
+            var(--cm-flecks),
+            linear-gradient(100deg, transparent 0 40%, hsl(from var(--foreground) h s l / 0.28) 45%, transparent 50%) 0 0 / 23px 100%,
+            var(--cm-stone);
+    }
+
+    /* A gold leaf stroke. */
+    [data-theme='lapis'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary-foreground);
+    }
+
+    /* A chipped shard of the stone past the end. */
+    [data-theme='lapis'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: -1px;
+        inline-size: 0.4375rem;
+        background: var(--cm-flecks), var(--cm-stone);
+        clip-path: polygon(0 10%, 70% 0, 100% 45%, 60% 100%, 10% 85%);
+    }
+
+    /* The pyrite flecks glint. */
+    [data-theme='lapis'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        background: var(--cm-flecks), hsl(from var(--primary-foreground) h s l / 0.25);
+        opacity: 0.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-la-glint 2400ms ease-in-out infinite;
+        }
+    }
+
+    /* ── nostromo · 1 · the bargraph tube ─────────────────────────────── */
+
+    [data-theme='nostromo'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.875rem;
+        --kp-meter-fill: var(--accent);
+        --cm-mo-ink: var(--popover);
+        --cm-mo-halo: var(--primary);
+        border-radius: 999px;
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.7), hsl(from var(--border-strong) h s l / 0.7)) 0 50% / 100% 1px no-repeat,
+            var(--primary);
+        box-shadow:
+            0 1px 0 hsl(from var(--card) h s l / 0.9),
+            0 -1px 0 hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    /* The glow in the tube: a hot core in a warm glow. */
+    [data-theme='nostromo'] [data-cm='a'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 999px;
+        background: linear-gradient(
+            to bottom,
+            var(--kp-meter-fill-colour),
+            color-mix(in oklab, var(--kp-meter-fill-colour) 50%, var(--popover)) 40% 60%,
+            var(--kp-meter-fill-colour)
+        );
+        box-shadow: 0 0 4px hsl(from var(--kp-meter-fill-colour) h s l / 0.65);
+    }
+
+    /* A cream tick printed on the glass. */
+    [data-theme='nostromo'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--popover);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    /* The overload lamp is lit. */
+    [data-theme='nostromo'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 4px);
+        inset-block-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        translate: 0 -50%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 35%, var(--popover) 0 1px, var(--accent) 2.5px);
+        box-shadow:
+            0 0 0 1.5px var(--primary),
+            0 0 6px 1px hsl(from var(--accent) h s l / 0.7);
+    }
+
+    /* The tube warms: a faint glow breathes along the wire. */
+    [data-theme='nostromo'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset: 1px;
+        border-radius: inherit;
+        background: hsl(from var(--accent) h s l / 0.4);
+        opacity: 0.5;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-no-warm 3000ms ease-in-out infinite;
+        }
+    }
+
+    /* ── nostromo · 2 · the backlit vents ─────────────────────────────── */
+
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 1rem;
+        --kp-meter-fill: var(--accent);
+        --cm-mo-ink: var(--primary);
+        --cm-slots: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 1px 0 / 6px 100% repeat-x;
+        border-radius: 2px;
+        background:
+            linear-gradient(90deg, var(--primary) 0 3px, transparent 3px) 1px 1px / 6px calc(100% - 2px) repeat-x,
+            var(--secondary);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* The slots lit orange from inside, up to the share. */
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px) 1px 0 / 6px 100% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.7));
+    }
+
+    /* Embossed black label tape with a ▼, on a dark line. */
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--primary);
+        box-shadow: 0 0 0 1px var(--popover);
+    }
+
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter__mark::before {
+        content: '▼';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        padding: 1px 2px;
+        translate: -50% 0;
+        border-radius: 1px;
+        background: var(--primary);
+        color: var(--popover);
+        font: 700 0.4375rem/1 var(--theme-font-mono, monospace);
+    }
+
+    /* A cut piece of label tape reads +. */
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        content: '+';
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: 50%;
+        padding: 1px 5px 1px 3px;
+        translate: 0 -50%;
+        background: var(--primary);
+        color: var(--popover);
+        font: 700 0.625rem/1 var(--theme-font-mono, monospace);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 100%, 0 100%);
+    }
+
+    /* A glow runs along the slots, one after another. */
+    [data-theme='nostromo'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-block: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent) 50% 0 / 30% 100% no-repeat;
+        -webkit-mask: var(--cm-slots);
+        mask: var(--cm-slots);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-no-scan 2000ms steps(16) infinite;
+        }
+    }
+
+    /* ── titanium · 1 · the heat-tinted groove ────────────────────────── */
+
+    [data-theme='titanium'] [data-cm='a'] .kp-meter {
+        --kp-meter-height: 0.5rem;
+        --cm-room: 0.625rem;
+        --cm-mo-ink: var(--primary);
+        --cm-mo-halo: var(--background);
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--background) h s l / 0.95),
+            inset 0 2px 1px hsl(from var(--background) h s l / 0.5),
+            inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.2),
+            0 0 0 1px var(--border);
+    }
+
+    /* The oxide heat grows, fixed by where it stands along the groove: gold,
+       bronze, violet, blue. A tone replaces it. */
+    [data-theme='titanium'] [data-cm='a'] .kp-meter::before {
+        inset-block: 1px;
+        border-radius: 0;
+        background: linear-gradient(90deg, var(--warning-foreground), var(--chart-4) 30%, var(--chart-2) 55%, var(--chart-1) 78%, var(--chart-3)) 0
+            0 / calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 100% no-repeat;
+        transition: inline-size var(--fx-duration, 60ms) linear;
+    }
+
+    [data-theme='titanium'] [data-cm='a'] .kp-meter[data-kp-tone]::before {
+        background: var(--kp-meter-fill-colour);
+    }
+
+    /* A milled pointer with two facets. */
+    [data-theme='titanium'] [data-cm='a'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 0;
+        background: var(--primary);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='titanium'] [data-cm='a'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1px);
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: linear-gradient(90deg, var(--primary) 50%, var(--primary-active) 50%);
+        clip-path: polygon(0 0, 100% 0, 100% 30%, 50% 100%, 0 30%);
+    }
+
+    /* A burr of bare bright metal past the end. */
+    [data-theme='titanium'] [data-cm='a'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block: 0;
+        inline-size: 0.375rem;
+        background: linear-gradient(to bottom, var(--primary), var(--primary-active));
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 3px, 100% 100%, 0 100%);
+    }
+
+    /* The cutter runs along the groove at an even, linear pace. */
+    [data-theme='titanium'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+        inset-block: 1px;
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.4) calc(100% - 2px), var(--primary) calc(100% - 2px)) 50%
+            0 / 3rem 100% no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-cm='a'] .kp-meter[data-kp-loading]::after {
+            animation: cm-ti-cut 1400ms linear infinite;
+        }
+    }
+
+    /* ── titanium · 2 · the vernier caliper ───────────────────────────── */
+
+    [data-theme='titanium'] [data-cm='b'] .kp-meter {
+        --kp-meter-height: 0.625rem;
+        --cm-room: 0.625rem;
+        --cm-mo-ink: var(--fx-signal);
+        --cm-mo-halo: var(--background);
+        --cm-knurl:
+            linear-gradient(
+                    45deg,
+                    transparent calc(50% - 0.7px),
+                    hsl(from var(--background) h s l / 0.18) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent calc(50% + 0.7px)
+                )
+                0 0 / 4px 4px,
+            linear-gradient(
+                    -45deg,
+                    transparent calc(50% - 0.7px),
+                    hsl(from var(--background) h s l / 0.18) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent calc(50% + 0.7px)
+                )
+                0 0 / 4px 4px;
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px) 0 0 / 25% 4px repeat-x,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.85) 0 1px, transparent 1px) 0 0 / 5% 2px repeat-x,
+            var(--muted);
+        box-shadow: 0 0 0 1px var(--border);
+    }
+
+    /* The sliding beam: bright metal with a knurled grip. */
+    [data-theme='titanium'] [data-cm='b'] .kp-meter::before {
+        inset-block: 4px 0;
+        border-radius: 0;
+        background:
+            var(--cm-knurl),
+            linear-gradient(to bottom, var(--kp-meter-fill-colour), color-mix(in oklab, var(--kp-meter-fill-colour) 78%, var(--background)));
+        transition: inline-size var(--fx-duration, 60ms) linear;
+    }
+
+    /* The vernier's zero line, filled with the blue oxide, its small scale
+       beside it. */
+    [data-theme='titanium'] [data-cm='b'] .kp-meter__mark {
+        inset-block: -3px;
+        border-radius: 0;
+        background: var(--fx-signal);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='titanium'] [data-cm='b'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 100%;
+        inline-size: 11px;
+        block-size: 3px;
+        background: linear-gradient(90deg, transparent 0 1px, var(--fx-signal) 1px 2px) 0 0 / 2.5px 100% repeat-x;
+    }
+
+    /* The jaw's chamfered tip slides off the scale. */
+    [data-theme='titanium'] [data-cm='b'] .kp-meter[data-kp-over]::after {
+        inset-inline-start: 100%;
+        inset-block: 4px -4px;
+        inline-size: 0.4375rem;
+        background: linear-gradient(to bottom, var(--kp-meter-fill-colour), color-mix(in oklab, var(--kp-meter-fill-colour) 78%, var(--background)));
+        clip-path: polygon(0 0, 100% 0, 100% 45%, 35% 100%, 0 100%);
+    }
+
+    /* The knurl rolls. */
+    [data-theme='titanium'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+        inset-block: 4px 0;
+        background: var(--cm-knurl), hsl(from var(--primary) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-cm='b'] .kp-meter[data-kp-loading]::after {
+            animation: cm-ti-knurl 600ms linear infinite;
+        }
+    }
+}
+
+@keyframes cm-br-tape {
+    to {
+        translate: 14.1421px 0;
+    }
+}
+
+@keyframes cm-br-stack {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes cm-de-glint {
+    from {
+        background-position: -50% 0;
+    }
+
+    to {
+        background-position: 150% 0;
+    }
+}
+
+@keyframes cm-de-lift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}
+
+@keyframes cm-ph-screen {
+    to {
+        background-position: 3px 3px;
+    }
+}
+
+@keyframes cm-ph-shuffle {
+    to {
+        background-position: 3.5rem 0;
+    }
+}
+
+@keyframes cm-sh-hatch {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes cm-sh-cloud {
+    from {
+        background-position: -70% 0;
+    }
+
+    to {
+        background-position: 170% 0;
+    }
+}
+
+@keyframes cm-sh-lamp {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes cm-rt-read {
+    from {
+        background-position:
+            0 0,
+            0 0,
+            0% 0;
+    }
+
+    to {
+        background-position:
+            0 0,
+            0 0,
+            100% 0;
+    }
+}
+
+@keyframes cm-gr-cut {
+    0% {
+        background-size:
+            0 0,
+            0 0,
+            0 0;
+    }
+
+    25% {
+        background-size:
+            6px 6px,
+            0 0,
+            0 0;
+    }
+
+    50% {
+        background-size:
+            6px 6px,
+            6px 6px,
+            0 0;
+    }
+
+    75%,
+    100% {
+        background-size:
+            6px 6px,
+            6px 6px,
+            6px 6px;
+    }
+}
+
+@keyframes cm-gr-zebra {
+    50% {
+        background-position: 10% 100%;
+    }
+}
+
+@keyframes cm-la-burnish {
+    from {
+        background-position: -40% 0;
+    }
+
+    to {
+        background-position: 140% 0;
+    }
+}
+
+@keyframes cm-la-glint {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes cm-no-warm {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes cm-no-scan {
+    from {
+        background-position: -40% 0;
+    }
+
+    to {
+        background-position: 140% 0;
+    }
+}
+
+@keyframes cm-ti-cut {
+    from {
+        background-position: 0% 0;
+    }
+
+    to {
+        background-position: 100% 0;
+    }
+}
+
+@keyframes cm-ti-knurl {
+    to {
+        background-position:
+            4px 0,
+            4px 0;
+    }
+}

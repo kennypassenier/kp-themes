@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-cat-theme-fixed>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>What changed · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1 data-cat-changed-title>What changed since my last verdicts</h1>
+            <p class="cat-intro">
+                Only the blocks that wait for a verdict in the theme on screen: never judged in it, judged on markup that changed since, an approval
+                whose pixels moved (catalogue/pixel-checks.json), or a block with a review note that asks for another look. Everything already judged
+                stays away, so this page is the shortest way through a round. Pick another theme in the menu and the page gathers that theme's blocks.
+            </p>
+            <p class="cat-intro">
+                The blocks are the same as on <a href="./index.html">Every component, one page</a>, with the same verdicts, notes, prompt and review
+                dialog. <b>Play</b> presses a block's try-buttons in turn; <b>K</b> lists the keys.
+            </p>
+            <div data-cat-compose="changed"></div>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./changed.js"></script>
+        <script type="module" src="./intros.js"></script>
+        <script type="module" src="./play.js"></script>
+        <script type="module" src="./checklist.js"></script>
+        <script type="module" src="./shortcuts.js"></script>
+    </body>
+</html>

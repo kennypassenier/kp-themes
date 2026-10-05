@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Fewer clicks per verdict on the review site** [Kenny, 2026-10-05]: every
+  block with try-buttons gets **▶ Play** beside Approve (and in the review
+  dialog), pressing them in turn with a caption and a pause set by the
+  theme's motion (`catalogue/play.js`, `data-cat-play` to order or limit);
+  the look is also a checklist with ticks per block and theme and buttons
+  for the controls it names (`catalogue/checklist.js`); keys A, R, N, P, T
+  and K, with Alt in the dialog's note (`catalogue/shortcuts.js`); the theme
+  menu counts what is left per theme; the dialog can open by itself on the
+  last block; and `catalogue/changed.html` gathers only the open pairs of
+  the theme on screen (`catalogue/open-pairs.js`).
 - **Kenny's phantom and shade-light review** [scope-143, 2026-10-05]: the
   catalogue's try-buttons work on the review page too (a block is wired by
   what it carries, when it is composed, not by its id at import: the key

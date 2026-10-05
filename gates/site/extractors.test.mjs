@@ -266,7 +266,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // motion-symmetry round (2026-10-05) added --kp-sidenav-ease-back, the
     // theme's curve turned around that js/sidenav.js writes for a rail
     // that collapses, a panel that closes and a group that folds: 310 + 1.
-    assert.equal(result.expected, 311, 'AR21 counted the --kp-* properties in css/components.css');
+    // The menu's opaque loading plate sets --kp-busy-opacity itself (2026-10-05): 311 + 1.
+    assert.equal(result.expected, 312, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -316,7 +317,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     assert.equal(result.readCount, 309);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
-    assert.deepEqual(result.unread, ['--kp-chart-height', '--kp-steps']);
+    assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {
