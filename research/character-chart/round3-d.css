@@ -1,4 +1,491 @@
-/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of group d. */
+/* research/character-chart, round 3 (Kenny, 2026-10-06): group d.
+   retro — every aspect remade from the 1995 desktop's own furniture: the
+   bevel (--kp-raised/--kp-pressed/--kp-sunken), the navy title-bar ramp
+   (--kp-ramp), the pixel display font, the hourglass, the file-copy
+   flyout, the segmented progress bar, the Minesweeper board, the
+   dialog's warning triangle. Every token here is the retro register's
+   own (css/retro-register.css, loaded by demo.html before this file), so
+   nothing names a colour. */
 
 @layer kp.signature {
+    /* ══════════════════════════════════════════ retro · shape ══════ */
+
+    /* ── shape 1 · the Excel 97 wizard: a white plot sunk in the chrome */
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart {
+        --cc-paper: var(--popover);
+        --cc-radius: 0;
+        --cc-paper-shadow: var(--kp-sunken);
+        --cc-on-paper: var(--popover);
+        --cc-grid: var(--border-strong);
+        --cc-grid-w: 1px;
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2px;
+        --cc-line-cap: square;
+        --cc-line-join: miter;
+        --cc-area-k: 1;
+        --cc-cross: var(--primary);
+        --cc-cross-w: 1px;
+        --cc-cross-dash: 2 2;
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart__title {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-raised);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--muted);
+        box-shadow: var(--kp-pressed);
+        transform: translate(1px, 1px);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart__swatch {
+        inline-size: 14px;
+        block-size: 14px;
+        border-radius: 0;
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-1'] .kp-chart-zoom {
+        font-family: var(--theme-font-display);
+        background: var(--card);
+        box-shadow: var(--kp-raised);
+        border-radius: 0;
+    }
+
+    /* ── shape 2 · the Paint canvas: flat strokes over a dither fill ── */
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-2'] .kp-chart {
+        --cc-paper: var(--background);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 0;
+        --cc-paper-shadow: var(--kp-sunken);
+        --cc-on-paper: var(--background);
+        --cc-grid: var(--border);
+        --cc-grid-w: 1px;
+        --cc-grid-dash: 1 3;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 3px;
+        --cc-line-cap: square;
+        --cc-line-join: miter;
+        --cc-area-k: 2.4;
+        --cc-area-mask: var(--kp-brush);
+        --cc-cross: var(--foreground);
+        --cc-cross-w: 1px;
+        --cc-cross-dash: 4 3;
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-2'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-2'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--muted);
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-2'] .kp-chart__swatch {
+        border-radius: 0;
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-2'] .kp-chart-zoom {
+        font-family: var(--theme-font-display);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* ── shape 3 · the Minesweeper board: small bevelled tiles ───────── */
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] .kp-chart {
+        --cc-paper:
+            linear-gradient(135deg, var(--popover) 0 50%, var(--card) 50% 100%) 0 0 / 16px 16px,
+            linear-gradient(135deg, var(--popover) 0 50%, var(--card) 50% 100%) 8px 8px / 16px 16px;
+        --cc-radius: 0;
+        --cc-frame: 2px solid var(--border-strong);
+        --cc-on-paper: var(--card);
+        --cc-grid: var(--border-strong);
+        --cc-grid-w: 1px;
+        --cc-grid-dash: 4 2;
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: square;
+        --cc-area-k: 0.6;
+        --cc-cross: var(--primary);
+        --cc-cross-w: 1px;
+        --cc-cross-op: 1;
+        --cc-cross-pin-op: 1;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-raised);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: var(--kp-pressed);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] .kp-chart__swatch {
+        inline-size: 14px;
+        block-size: 14px;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-cc-shape='r3-rt-shape-3'] .kp-chart-zoom {
+        font-family: var(--theme-font-display);
+        background: var(--card);
+        box-shadow: var(--kp-raised);
+        border-radius: 0;
+    }
+
+    /* The snap ring and pinned crosshair read on every retro shape. */
+    [data-theme='retro']
+        :is([data-cc-shape='r3-rt-shape-1'], [data-cc-shape='r3-rt-shape-2'], [data-cc-shape='r3-rt-shape-3'])
+        .kp-chart__source[aria-pressed='true']
+        .kp-chart__swatch {
+        box-shadow: 0 0 0 1px currentColor;
+    }
+
+    /* ══════════════════════════════════════════ retro · tooltip ═════ */
+
+    /* ── tip 1 · the 1995 tooltip: pale yellow, one black line ───────── */
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-1'] .kp-chart__tip {
+        border: 1px solid var(--foreground);
+        border-radius: 0;
+        background: color-mix(in srgb, var(--warning) 35%, var(--background));
+        color: var(--foreground);
+        box-shadow: 2px 2px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-1'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    /* ── tip 2 · the little window: a navy title bar, a close box ────── */
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-2'] .kp-chart__tip {
+        position: relative;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: var(--kp-raised), var(--kp-drop);
+        padding-top: 1.5rem;
+        overflow: clip;
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-2'] .kp-chart__tip::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        block-size: 1.3rem;
+        background: var(--kp-ramp);
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-2'] .kp-chart__tip-head {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding-inline: 0.4rem;
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-2'] .kp-chart__release {
+        position: relative;
+        z-index: 1;
+        color: var(--primary-foreground);
+    }
+
+    /* ── tip 3 · the status bar readout: a sunken strip, ruled cells ── */
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-3'] .kp-chart__tip {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: var(--kp-sunken);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-3'] .kp-chart__tip-row {
+        box-shadow: inset 1px 0 0 var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-cc-tip='r3-rt-tip-3'] .kp-chart__tip-head > b {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════════ retro · loading ═════ */
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 22px) auto auto calc(50% - 16px);
+        inline-size: 32px;
+        block-size: 44px;
+        background: var(--ccl-i);
+        clip-path: polygon(10% 0%, 90% 0%, 90% 10%, 55% 50%, 90% 90%, 90% 100%, 10% 100%, 10% 90%, 45% 50%, 10% 10%);
+    }
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 16px) auto auto calc(50% - 2px);
+        inline-size: 4px;
+        block-size: 4px;
+        border-radius: 50%;
+        background: var(--ccl-j);
+    }
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 8px) auto auto 16%;
+        inline-size: 22px;
+        block-size: 16px;
+        border-radius: 1px 4px 1px 1px;
+        background: var(--ccl-i);
+        box-shadow: 44px 0 0 0 var(--ccl-i);
+    }
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 13px) auto auto calc(16% + 6px);
+        inline-size: 10px;
+        block-size: 13px;
+        background: var(--ccl-j);
+        border: 1px solid var(--ccl-i);
+    }
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 9px) 18%;
+        background: var(--card, var(--popover));
+        box-shadow: var(--kp-sunken);
+    }
+
+    [data-theme='retro'] [data-cc-loading='r3-rt-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 6px) auto calc(50% - 6px) calc(18% + 3px);
+        inline-size: 0;
+        background: repeating-linear-gradient(90deg, var(--ccl-i) 0 13px, transparent 13px 17px);
+    }
+
+    /* ══════════════════════════════════════════ retro · arrival ═════ */
+
+    [data-theme='retro'] [data-cc-arrival='r3-rt-arr-1'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    [data-theme='retro'] [data-cc-arrival='r3-rt-arr-2'][data-cc-arriving] .kp-chart__plot {
+        clip-path: inset(0 calc((1 - var(--cca-k)) * 100%) 0 0);
+    }
+
+    [data-theme='retro'] [data-cc-arrival='r3-rt-arr-3'][data-cc-arriving] .kp-chart__series {
+        transform: translateY(calc((1 - var(--cca-k)) * -90px));
+    }
+
+    /* ══════════════════════════════════════════ retro · update ══════ */
+
+    [data-theme='retro'] [data-cc-update='r3-rt-upd-1'][data-cc-updating] .kp-chart__series {
+        transform: translateY(var(--ccu-y));
+    }
+
+    [data-theme='retro'] [data-cc-update='r3-rt-upd-2'][data-cc-updating] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--ccu-k)) * 9%) -10px -10px);
+    }
+
+    [data-theme='retro'] [data-cc-update='r3-rt-upd-3'][data-cc-updating] .kp-chart__line {
+        stroke-width: calc(var(--cc-line-w, 2px) * (1 + (1 - var(--ccu-k)) * 1.2));
+        filter: drop-shadow(1px 1px 0 var(--popover)) drop-shadow(-1px -1px 0 var(--border-strong));
+    }
+
+    /* ══════════════════════════════════════════ retro · events ══════ */
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-1'] .kp-chart__mark-dot {
+        fill: var(--warning);
+        stroke: var(--foreground);
+        stroke-width: 1.2;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        transform: scale(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-1'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-dasharray: none;
+        opacity: 0.7;
+    }
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-2'] .kp-chart__mark-dot {
+        fill: var(--card);
+        stroke: var(--border-strong);
+        stroke-width: 1;
+        filter: drop-shadow(1px 1px 0 var(--border-strong)) drop-shadow(-1px -1px 0 var(--popover));
+    }
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-2'] .kp-chart__event-line {
+        stroke: var(--border-strong);
+        stroke-dasharray: 2 2;
+        opacity: 0.8;
+    }
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-3'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone, var(--primary));
+        stroke: var(--foreground);
+        stroke-width: 1;
+        clip-path: polygon(0% 15%, 100% 40%, 0% 65%);
+        transform: scale(1.4) translateX(10%);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='retro'] [data-cc-events='r3-rt-events-3'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-dasharray: none;
+        stroke-width: 1.5;
+        opacity: 0.7;
+    }
+
+    /* ══════════════════════════════ retro · motion, reduced motion off */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-cc-loading='r3-rt-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: rt-hourglass-flip 2.4s steps(1, end) infinite alternate;
+        }
+
+        [data-theme='retro'] [data-cc-loading='r3-rt-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: rt-sand-fall 1.2s linear infinite;
+        }
+
+        [data-theme='retro'] [data-cc-loading='r3-rt-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: rt-fly-page 1.8s steps(10, end) infinite;
+        }
+
+        [data-theme='retro'] [data-cc-loading='r3-rt-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: rt-segments-fill 2s steps(8, end) infinite;
+        }
+
+        [data-theme='retro'] [data-cc-arrival='r3-rt-arr-1'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms steps(8, end) both;
+        }
+
+        [data-theme='retro'] [data-cc-arrival='r3-rt-arr-2'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 800ms linear both;
+        }
+
+        [data-theme='retro'] [data-cc-arrival='r3-rt-arr-3'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 650ms steps(3, end) both;
+        }
+
+        [data-theme='retro'] [data-cc-update='r3-rt-upd-1'][data-cc-updating] .kp-chart__plot {
+            animation: rt-tractor 500ms steps(3, end) both;
+        }
+
+        [data-theme='retro'] [data-cc-update='r3-rt-upd-2'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 500ms steps(2, end) both;
+        }
+
+        [data-theme='retro'] [data-cc-update='r3-rt-upd-3'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 550ms steps(2, end) both;
+        }
+    }
+}
+
+/* Keyframes stay unlayered, as aspects.css's own do, so nothing in
+   kp.signature can ever outrank them by source order. */
+
+@keyframes rt-hourglass-flip {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes rt-sand-fall {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(32px);
+    }
+}
+
+@keyframes rt-fly-page {
+    0%,
+    10% {
+        left: calc(16% + 6px);
+        top: calc(50% - 13px);
+    }
+
+    50% {
+        left: calc(16% + 26px);
+        top: calc(50% - 20px);
+    }
+
+    90%,
+    100% {
+        left: calc(16% + 50px);
+        top: calc(50% - 13px);
+    }
+}
+
+@keyframes rt-segments-fill {
+    from {
+        inline-size: 0;
+    }
+
+    to {
+        inline-size: 64%;
+    }
+}
+
+@keyframes rt-tractor {
+    0%,
+    100% {
+        --ccu-y: 0px;
+    }
+
+    35% {
+        --ccu-y: 5px;
+    }
+
+    70% {
+        --ccu-y: -2px;
+    }
 }

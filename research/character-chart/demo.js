@@ -975,6 +975,8 @@ const OPTIONS = Object.fromEntries(
         return [theme, o];
     }),
 );
+/** Themes whose round-3 options are still being built (shown, but not ready to judge). */
+const PENDING = ['cyberpunk', 'pastel'];
 /** The aspects open in round 3, per theme. */
 const openOf = (/** @type {string} */ theme) => ASPECTS.filter(({ id }) => !keptOf(theme, id));
 
@@ -1016,11 +1018,13 @@ for (const theme of Object.keys(OPTIONS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
     const open = openOf(theme).map(({ label }) => label.toLowerCase());
-    p.textContent = open.length
-        ? `Round 3: new options for ${open.length > 1 ? `${open.slice(0, -1).join(', ')} and ${open.at(-1)}` : open[0]}, three each; ` +
-          'everything else is settled as you picked it in round 2 and is no longer a choice. Only the open rows are on the page; the preview at the top shows your picks. ' +
-          'Press Loading at full speed and at ¼, Drawn, and Live update.'
-        : 'Approved in round 2: every aspect is settled as you picked it.';
+    p.textContent = PENDING.includes(theme)
+        ? 'Not ready yet: the new options for this theme are still being built. Skip it for now; it comes back on To judge when it is done.'
+        : open.length
+          ? `Round 3: new options for ${open.length > 1 ? `${open.slice(0, -1).join(', ')} and ${open.at(-1)}` : open[0]}, three each; ` +
+            'everything else is settled as you picked it in round 2 and is no longer a choice. Only the open rows are on the page; the preview at the top shows your picks. ' +
+            'Press Loading at full speed and at ¼, Drawn, and Live update.'
+          : 'Approved in round 2: every aspect is settled as you picked it.';
     look.append(p);
 }
 

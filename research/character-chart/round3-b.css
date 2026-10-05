@@ -1,4 +1,501 @@
-/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of group b. */
+/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of
+   group b. Keyed exactly as aspects.css: `data-cc-loading`/`data-cc-arrival`/
+   `data-cc-events` on the chart's wrapper, loading on the state box and its
+   two pseudo-elements (inked through `--ccl-i`/`--ccl-j`, set from `ink`/
+   `ink2` by demo.js), arrival while the wrapper carries `data-cc-arriving`
+   through the registered `--cca-k` (0 → 1), events on the dots and their
+   lines. All motion is inside the `prefers-reduced-motion: no-preference`
+   block at the end; every still frame already reads as its kind. Reuses
+   aspects.css's own `ccl-grow`, `ccl-spin`, `cca-k` keyframes where the
+   motion is the same; new keyframes are prefixed `r3b-` so they cannot
+   collide with the other groups' files. */
 
 @layer kp.signature {
+    /* ══ terminal: while loading ═══════════════════════════════════════ */
+
+    /* r3-tm-ld-post: a row of status cells lights left to right, like a POST */
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-post'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 7px) 10%;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.25) 0 14px, transparent 14px 20px);
+    }
+
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-post'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 7px) auto auto 10%;
+        inline-size: 80%;
+        background: repeating-linear-gradient(90deg, var(--ccl-j) 0 14px, transparent 14px 20px);
+        clip-path: inset(0 0% 0 0);
+    }
+
+    /* r3-tm-ld-link: two activity lights blink out of step, like TX/RX */
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-link'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 24px) auto auto 30%;
+        inline-size: 18px;
+        block-size: 18px;
+        border-radius: 3px;
+        background: var(--ccl-i);
+        box-shadow: 0 0 0 2px hsl(from var(--ccl-i) h s l / 0.3);
+    }
+
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-link'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% + 6px) auto auto 54%;
+        inline-size: 18px;
+        block-size: 18px;
+        border-radius: 3px;
+        background: var(--ccl-j);
+        box-shadow: 0 0 0 2px hsl(from var(--ccl-j) h s l / 0.3);
+    }
+
+    /* r3-tm-ld-crawl: a row of braille dots grows in behind a riding cursor */
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-crawl'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 7px) auto auto 8%;
+        inline-size: 72%;
+        block-size: 14px;
+        background: radial-gradient(circle, var(--ccl-i) 1.6px, transparent 2px) 0 0 / 7px 7px;
+        overflow: hidden;
+        clip-path: inset(0 0% 0 0);
+    }
+
+    [data-theme='terminal'] [data-cc-loading='r3-tm-ld-crawl'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 7px) auto auto 72%;
+        inline-size: 7px;
+        block-size: 14px;
+        background: var(--ccl-j);
+        border-radius: 1px;
+    }
+
+    /* ══ terminal: how the series arrives ═══════════════════════════════ */
+
+    [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(calc((1 - var(--cca-k)) * 100%) -10px -10px -10px);
+    }
+
+    [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-dial'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-scroll'][data-cc-arriving] .kp-chart__series {
+        transform: translateY(calc((1 - var(--cca-k)) * 46px));
+    }
+
+    /* ══ forest: while loading ═══════════════════════════════════════════ */
+
+    /* r3-fo-ld-trig: a survey marker walks a dotted trail */
+    [data-theme='forest'] [data-cc-loading='r3-fo-ld-trig'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 1px) 6%;
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-j) h s l / 0.45) 0 4px, transparent 4px 10px);
+    }
+
+    [data-theme='forest'] [data-cc-loading='r3-fo-ld-trig'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 10px) auto auto 8%;
+        inline-size: 14px;
+        block-size: 14px;
+        background: var(--ccl-i);
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    /* r3-fo-ld-rings: growth rings spread from the centre of the plot */
+    [data-theme='forest'] [data-cc-loading='r3-fo-ld-rings'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-radial-gradient(circle at 50% 50%, transparent 0 16px, hsl(from var(--ccl-i) h s l / 0.25) 16px 17px);
+    }
+
+    [data-theme='forest'] [data-cc-loading='r3-fo-ld-rings'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 1px) calc(50% - 1px) auto auto;
+        inline-size: 2px;
+        block-size: 2px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px var(--ccl-j);
+        transform: scale(1);
+    }
+
+    /* r3-fo-ld-blaze: a trail blaze is dabbed on in three strokes */
+    [data-theme='forest'] [data-cc-loading='r3-fo-ld-blaze'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 16px) calc(50% - 30px);
+        background:
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 0 / 16px 30px no-repeat,
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 24px 4px / 16px 24px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 48px 0 / 16px 30px no-repeat;
+        transform: rotate(-4deg);
+        clip-path: inset(0 0% 0 0);
+    }
+
+    /* ══ forest: the event dots ══════════════════════════════════════════ */
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-trig'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-trig'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: none;
+        opacity: 0.7;
+    }
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-blaze'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        transform: rotate(12deg) scale(0.95);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-blaze'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 6 3;
+        opacity: 0.7;
+    }
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-cone'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.2;
+        stroke-dasharray: 1.4 1;
+        transform: scaleY(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='forest'] [data-cc-events='r3-fo-ev-cone'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 1 3;
+        opacity: 0.65;
+    }
+
+    /* ══ sepia: while loading ═════════════════════════════════════════════ */
+
+    /* r3-se-ld-blot: an ink blot soaks into the paper and grows */
+    [data-theme='sepia'] [data-cc-loading='r3-se-ld-blot'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 20px) calc(50% - 20px);
+        inline-size: 40px;
+        block-size: 40px;
+        border-radius: 46% 54% 52% 48%;
+        background: var(--ccl-i);
+        box-shadow: 0 0 0 2px hsl(from var(--ccl-j) h s l / 0.5);
+        transform: scale(0.18);
+    }
+
+    /* r3-se-ld-seal: a wax seal lowers and presses flat */
+    [data-theme='sepia'] [data-cc-loading='r3-se-ld-seal'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 18px) calc(50% - 18px);
+        border-radius: 50%;
+        border: 2px solid hsl(from var(--ccl-j) h s l / 0.55);
+    }
+
+    [data-theme='sepia'] [data-cc-loading='r3-se-ld-seal'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 15px) calc(50% - 15px);
+        inline-size: 30px;
+        block-size: 30px;
+        border-radius: 50%;
+        background: var(--ccl-i);
+        transform: scaleY(1);
+    }
+
+    /* r3-se-ld-set: three type blocks are set, one after another */
+    [data-theme='sepia'] [data-cc-loading='r3-se-ld-set'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 10px) calc(50% - 27px);
+        background:
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 0 / 14px 20px no-repeat,
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 18px 0 / 14px 20px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 36px 0 / 14px 20px no-repeat;
+        clip-path: inset(0 0% 0 0);
+    }
+
+    /* ══ blueprint: while loading ═════════════════════════════════════════ */
+
+    /* r3-bp-ld-compass: a compass leg swings round, tracing an arc */
+    [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-compass'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 30px) calc(50% - 30px);
+        border-radius: 50%;
+        border: 1px dashed hsl(from var(--ccl-j) h s l / 0.5);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-compass'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 30% auto 20% calc(50% - 1px);
+        inline-size: 2px;
+        background: var(--ccl-i);
+        transform-origin: 50% 100%;
+        transform: rotate(var(--ccl-a));
+    }
+
+    /* r3-bp-ld-curve: a chevroned construction line grows in from the left */
+    [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-curve'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 10px) auto auto 6%;
+        inline-size: 88%;
+        block-size: 20px;
+        background:
+            repeating-linear-gradient(35deg, var(--ccl-i) 0 3px, transparent 3px 10px),
+            repeating-linear-gradient(-35deg, var(--ccl-j) 0 3px, transparent 3px 10px);
+        overflow: hidden;
+        clip-path: inset(0 0% 0 0);
+    }
+
+    /* r3-bp-ld-square: a set-square's edge slides across, ticking off the paper */
+    [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-square'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: auto 6% calc(50% - 1px);
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-j) h s l / 0.45) 0 1px, transparent 1px 10px);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-square'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 15% auto 15% 40%;
+        inline-size: 46px;
+        background: var(--ccl-i);
+        clip-path: polygon(0 100%, 100% 100%, 0 0);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ccl-j) h s l / 0.6);
+    }
+
+    /* ══ blueprint: the event dots ═══════════════════════════════════════ */
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-section'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        stroke-dasharray: 1.4 1;
+        clip-path: polygon(50% 0%, 100% 70%, 50% 100%, 0% 70%);
+    }
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-section'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 8 2 2 2;
+        opacity: 0.75;
+    }
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-callout'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 60%, 50% 100%, 0% 60%);
+    }
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-callout'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 1 3;
+        opacity: 0.6;
+    }
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-weld'] .kp-chart__mark-dot {
+        fill: var(--cc-on-paper, var(--card));
+        stroke: var(--kp-chart-tone);
+        stroke-width: 2.5;
+        stroke-dasharray: 3 1.2 1 1.2;
+    }
+
+    [data-theme='blueprint'] [data-cc-events='r3-bp-ev-weld'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 6 2 1 2;
+        opacity: 0.7;
+    }
+
+    /* ══ motion: all of it, only when the reader allows it ═══════════════ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cc-loading='r3-tm-ld-post'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-tm-post 1.8s steps(6, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-loading='r3-tm-ld-link'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3b-tm-link-a 0.7s steps(1, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-loading='r3-tm-ld-link'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-tm-link-b 0.95s steps(1, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-loading='r3-tm-ld-crawl'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3b-tm-crawl-grow 2.4s steps(12, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-loading='r3-tm-ld-crawl'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-tm-crawl-head 2.4s steps(12, end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms steps(8, end) both;
+        }
+
+        [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-dial'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 700ms steps(5, end) both;
+        }
+
+        [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-scroll'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 850ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+        }
+
+        [data-theme='forest'] [data-cc-loading='r3-fo-ld-trig'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-fo-trig 2.6s linear infinite;
+        }
+
+        [data-theme='forest'] [data-cc-loading='r3-fo-ld-rings'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-fo-rings 2.2s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+        }
+
+        [data-theme='forest'] [data-cc-loading='r3-fo-ld-blaze'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-fo-blaze 2s steps(1, end) infinite;
+        }
+
+        [data-theme='sepia'] [data-cc-loading='r3-se-ld-blot'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-se-blot 2.4s cubic-bezier(0.3, 0, 0.4, 1) infinite;
+        }
+
+        [data-theme='sepia'] [data-cc-loading='r3-se-ld-seal'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-se-seal 1.8s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme='sepia'] [data-cc-loading='r3-se-ld-set'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-se-set 1.8s steps(3, end) infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-compass'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-spin 2.4s linear infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-curve'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-grow 2.2s linear infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r3-bp-ld-square'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3b-bp-square 2.6s linear infinite;
+        }
+    }
+}
+
+@keyframes r3b-tm-post {
+    0% {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    70%,
+    100% {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+@keyframes r3b-tm-link-a {
+    0%,
+    49% {
+        transform: scale(1);
+    }
+
+    50%,
+    100% {
+        transform: scale(0.3);
+    }
+}
+
+@keyframes r3b-tm-link-b {
+    0%,
+    39% {
+        transform: scale(0.3);
+    }
+
+    40%,
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes r3b-tm-crawl-grow {
+    from {
+        inline-size: 0;
+    }
+}
+
+@keyframes r3b-tm-crawl-head {
+    from {
+        left: 8%;
+    }
+
+    to {
+        left: 72%;
+    }
+}
+
+@keyframes r3b-fo-trig {
+    from {
+        left: 8%;
+    }
+
+    to {
+        left: 78%;
+    }
+}
+
+@keyframes r3b-fo-rings {
+    from {
+        transform: scale(0.08);
+    }
+
+    70%,
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes r3b-fo-blaze {
+    0%,
+    10% {
+        clip-path: inset(0 66% 0 0);
+    }
+
+    40% {
+        clip-path: inset(0 33% 0 0);
+    }
+
+    70%,
+    100% {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+@keyframes r3b-se-blot {
+    from {
+        transform: scale(0.18);
+    }
+
+    70%,
+    to {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes r3b-se-seal {
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    45% {
+        transform: scaleY(0.78);
+    }
+}
+
+@keyframes r3b-se-set {
+    0%,
+    10% {
+        clip-path: inset(0 66% 0 0);
+    }
+
+    45% {
+        clip-path: inset(0 33% 0 0);
+    }
+
+    75%,
+    100% {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+@keyframes r3b-bp-square {
+    from {
+        left: -10%;
+    }
+
+    to {
+        left: 104%;
+    }
 }

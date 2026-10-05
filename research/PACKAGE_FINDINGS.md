@@ -17,3 +17,5 @@
 - kpi: the plain tile edge reads ~1.2-2.3:1; lapis good/bad delta 3.96:1 on the plain tile (.kp-kpi__delta[data-kp-tone]).
 - menu: plain destructive/disabled-reason ink under 4.5:1 in nine themes (cyberpunk, synthwave, sepia, blueprint, solstice, deco, phantom, lapis, titanium); --border-strong under 3:1 against the popover in formal 2.97, dark 2.11, titanium 1.97.
 - drawer: .kp-drawer__head / foot divider is var(--border) (under 3:1) in the package.
+
+- **Chart loading under a plot overlay (nostromo, found 2026-10-06 in chart round 3).** `.kp-chart__plot` is `isolation: isolate` with its own `::after` at `z-index: 1` (nostromo's scanline wash), while `.kp-chart__state` stays at `z-index: auto`, so every loading picture painted under the wash and looked empty (Kenny: "loading didn't show anything for the three options"). The demo lifts the state box (`z-index: 2`, research/character-chart/round3-e.css); the port must give `.kp-chart__state` a z-index above any plot overlay in every register that draws one.

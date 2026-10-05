@@ -1,4 +1,517 @@
-/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of group c. */
+/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of
+   group c (brutalism, deco, phantom, shade-light). One rule names one
+   aspect's key, so every combination with the settled picks of its theme
+   composes. Follows charts.css's and aspects.css's own conventions: the
+   loading pictures reset on the state box's pseudo-elements (aspects.css),
+   the arrival/update hooks read --cca-k / --ccu-k, the shape knobs are the
+   --cc-* custom properties charts.css reads. */
 
 @layer kp.signature {
+    /* ══════════════════════════════════════════ brutalism · loading ═══ */
+
+    /* r3c-bru-load-1: the pile driver slams down onto the stake, over and over */
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 8% auto auto calc(50% - 18px);
+        inline-size: 36px;
+        block-size: 22px;
+        background: var(--ccl-i);
+        box-shadow: 5px 5px 0 var(--ccl-j);
+    }
+
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: auto auto 16% calc(50% - 24px);
+        inline-size: 48px;
+        block-size: 7px;
+        background: var(--ccl-j);
+        box-shadow: 0 0 0 2px var(--ccl-i);
+    }
+
+    /* r3c-bru-load-2: a wrecking ball swings from a fixed point, never easing to rest */
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 6% auto auto calc(50% - 20px);
+        inline-size: 40px;
+        block-size: 52%;
+        background:
+            radial-gradient(circle at 50% calc(100% - 18px), var(--ccl-j) 0 17px, transparent 17.5px),
+            linear-gradient(var(--ccl-i), var(--ccl-i)) no-repeat 50% 0 / 3px calc(100% - 34px);
+        box-shadow: 0 0 0 2px var(--ccl-i);
+        transform-origin: 50% 0%;
+    }
+
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: auto auto 10% calc(50% - 20px);
+        inline-size: 40px;
+        block-size: 18px;
+        background: var(--ccl-i);
+        box-shadow: 4px 4px 0 var(--ccl-j);
+    }
+
+    /* r3c-bru-load-3: four rivets, a strike mark jumps from one to the next */
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 11px) calc(50% - 68px);
+        background:
+            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 0 0 / 46px 22px,
+            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 46px 0 / 46px 22px,
+            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 92px 0 / 46px 22px;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 15px) auto auto calc(50% - 68px);
+        inline-size: 30px;
+        block-size: 30px;
+        background: var(--ccl-j);
+        box-shadow: 0 0 0 3px var(--ccl-i);
+        border-radius: 50%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3c-bru-slam 1.1s cubic-bezier(0.7, 0, 1, 0.3) infinite;
+        }
+
+        [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3c-bru-impact 1.1s steps(1, end) infinite;
+        }
+
+        [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3c-bru-swing 1.6s ease-in-out infinite;
+        }
+
+        [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3c-bru-rivet 1.6s steps(3, end) infinite;
+        }
+    }
+
+    @keyframes r3c-bru-slam {
+        0% {
+            transform: translateY(0);
+        }
+
+        38% {
+            transform: translateY(calc(var(--kp-chart-height, 220px) * 0.34));
+        }
+
+        46%,
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes r3c-bru-impact {
+        0%,
+        37% {
+            background: var(--ccl-j);
+        }
+
+        38%,
+        45% {
+            background: var(--ccl-i);
+        }
+
+        46%,
+        100% {
+            background: var(--ccl-j);
+        }
+    }
+
+    @keyframes r3c-bru-swing {
+        0%,
+        100% {
+            transform: rotate(-20deg);
+        }
+
+        50% {
+            transform: rotate(20deg);
+        }
+    }
+
+    @keyframes r3c-bru-rivet {
+        0% {
+            left: calc(50% - 68px);
+        }
+
+        33% {
+            left: calc(50% - 22px);
+        }
+
+        66%,
+        100% {
+            left: calc(50% + 24px);
+        }
+    }
+
+    /* ══════════════════════════════════════════ brutalism · tip ═══════ */
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-1'] .kp-chart__tip {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--chart-2);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism']
+        [data-cc-tip='r3c-bru-tip-1']
+        .kp-chart__tip
+        :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span, a):not(.kp-chart__delta[data-kp-direction]) {
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-1'] .kp-chart__tip::before {
+        content: '';
+        position: absolute;
+        inset: -3px -3px auto auto;
+        inline-size: 22px;
+        block-size: 10px;
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 5px, var(--primary-foreground) 5px 10px);
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-2'] .kp-chart__tip {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: none;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 16% 100%, 0 82%);
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-3'] .kp-chart__tip {
+        border: 0;
+        outline: 3px dashed var(--primary-foreground);
+        outline-offset: 2px;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        box-shadow: none;
+        transform: rotate(-2deg);
+    }
+
+    [data-theme='brutalism']
+        [data-cc-tip='r3c-bru-tip-3']
+        .kp-chart__tip
+        :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span, a):not(.kp-chart__delta[data-kp-direction]) {
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-3'] .kp-chart__tip .kp-chart__swatch {
+        box-shadow: 0 0 0 2px var(--primary-foreground);
+    }
+
+    /* ══════════════════════════════════════════ deco · events ═════════ */
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-1'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--primary);
+        stroke-width: 1.5;
+        filter: drop-shadow(1px -1px 0 hsl(from var(--primary) h s calc(l + 18))) drop-shadow(-1px 1px 0 hsl(from var(--primary) h s calc(l - 12)));
+    }
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-1'] .kp-chart__event-line {
+        stroke: var(--primary);
+        stroke-width: 1.25;
+        stroke-dasharray: 1 2;
+        opacity: 0.85;
+    }
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-2'] .kp-chart__mark-dot {
+        fill: var(--card);
+        stroke: var(--kp-chart-tone);
+        stroke-width: 2.5;
+        filter: drop-shadow(0 2px 0 var(--primary)) drop-shadow(0 4px 0 hsl(from var(--primary) h s l / 0.55));
+    }
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-2'] .kp-chart__event-line {
+        stroke: var(--primary);
+        stroke-width: 1;
+        stroke-dasharray: 6 2 2 2;
+    }
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-3'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--primary);
+        stroke-width: 1;
+        filter: drop-shadow(0 -5px 0 var(--primary)) drop-shadow(5px 0 0 var(--primary)) drop-shadow(0 5px 0 var(--primary))
+            drop-shadow(-5px 0 0 var(--primary));
+    }
+
+    [data-theme='deco'] [data-cc-events='r3c-deco-ev-3'] .kp-chart__event-line {
+        stroke: var(--primary);
+        stroke-width: 1;
+        stroke-dasharray: 1 1;
+        opacity: 0.9;
+    }
+
+    /* ══════════════════════════════════════════ phantom · loading ═════ */
+
+    [data-theme='phantom'] [data-cc-loading='r3c-pha-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.45) 1.4px, transparent 1.8px) 0 0 / 7px 7px;
+    }
+
+    [data-theme='phantom'] [data-cc-loading='r3c-pha-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 16px) 10%;
+        background: var(--ccl-j);
+    }
+
+    [data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.5) 1.6px, transparent 2px) 0 0 / 8px 8px;
+    }
+
+    [data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        background: radial-gradient(circle, hsl(from var(--ccl-j) h s l / 0.55) 1.6px, transparent 2px) 3px 3px / 8px 8px;
+    }
+
+    [data-theme='phantom'] [data-cc-loading='r3c-pha-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 20px) auto auto -30%;
+        inline-size: 34%;
+        block-size: 40px;
+        background: var(--ccl-i);
+        box-shadow: 3px 3px 0 var(--ccl-j);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-cc-loading='r3c-pha-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3c-pha-safelight 1.4s steps(1, end) infinite;
+        }
+
+        [data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3c-pha-jitter 0.9s steps(4, end) infinite;
+        }
+
+        [data-theme='phantom'] [data-cc-loading='r3c-pha-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3c-pha-scrap 2.2s steps(5, end) infinite;
+        }
+    }
+
+    @keyframes r3c-pha-safelight {
+        0%,
+        45% {
+            left: 10%;
+            background: var(--ccl-j);
+        }
+
+        50%,
+        95% {
+            left: calc(90% - 2px);
+            background: var(--ccl-i);
+        }
+
+        100% {
+            left: 10%;
+            background: var(--ccl-j);
+        }
+    }
+
+    @keyframes r3c-pha-jitter {
+        0%,
+        100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(3px);
+        }
+
+        50% {
+            transform: translateX(-3px);
+        }
+
+        75% {
+            transform: translateX(2px);
+        }
+    }
+
+    @keyframes r3c-pha-scrap {
+        0%,
+        10% {
+            left: -30%;
+            transform: rotate(-4deg);
+        }
+
+        45%,
+        70% {
+            left: calc(50% - 17%);
+            transform: rotate(3deg);
+        }
+
+        100% {
+            left: -30%;
+            transform: rotate(-4deg);
+        }
+    }
+
+    /* ══════════════════════════════════════════ phantom · arrival ═════ */
+
+    [data-cc-arrival='r3c-pha-arr-1'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+        transform: skewX(calc((1 - var(--cca-k)) * 7deg));
+    }
+
+    [data-cc-arrival='r3c-pha-arr-2'][data-cc-arriving] .kp-chart__series {
+        transform: scale(calc(1 + (1 - var(--cca-k)) * 0.22));
+    }
+
+    [data-cc-arrival='r3c-pha-arr-3'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-cc-arrival='r3c-pha-arr-1'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 650ms cubic-bezier(0.6, 0, 0.9, 0.3) both;
+        }
+
+        [data-cc-arrival='r3c-pha-arr-2'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 220ms steps(1, end) both;
+        }
+
+        [data-cc-arrival='r3c-pha-arr-3'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms steps(6, end) both;
+        }
+    }
+
+    /* ══════════════════════════════════════════ phantom · events ══════ */
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-1'] .kp-chart__mark-dot {
+        fill: var(--primary);
+        stroke: none;
+        filter: drop-shadow(1.5px -1.5px 0 var(--foreground)) drop-shadow(-1.5px 1.5px 0 var(--foreground))
+            drop-shadow(1.5px 1.5px 0 var(--foreground)) drop-shadow(-1.5px -1.5px 0 var(--foreground));
+    }
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-1'] .kp-chart__event-line {
+        stroke: var(--primary);
+        stroke-width: 1.25;
+        stroke-dasharray: none;
+    }
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-2'] .kp-chart__mark-dot {
+        fill: var(--foreground);
+        stroke: none;
+        clip-path: inset(32% 0);
+        transform: scale(1.6);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-2'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-width: 3;
+        stroke-dasharray: none;
+    }
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-3'] .kp-chart__mark-dot {
+        fill: var(--card);
+        stroke: var(--primary);
+        stroke-width: 1.5;
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        transform: scale(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='phantom'] [data-cc-events='r3c-pha-ev-3'] .kp-chart__event-line {
+        stroke: var(--primary);
+        stroke-width: 1.25;
+        stroke-dasharray: 2 2;
+    }
+
+    /* ══════════════════════════════════════════ shade-light · shape ═══ */
+
+    /* ── r3c-shl-sh-1 · the sundial: the grid is its own cast shadow ──── */
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart {
+        --cc-paper:
+            repeating-linear-gradient(72deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 46px), var(--card);
+        --cc-radius: 3px;
+        --cc-paper-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.45);
+        --cc-grid-w: 1px;
+        --cc-grid-dash: 10 4;
+        --cc-tick-font: var(--theme-font-display);
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-filter: drop-shadow(0 3px 2.5px hsl(from var(--foreground) h s l / 0.22));
+        --cc-area-k: 2.6;
+        --cc-cross: hsl(from var(--foreground) h s l / 0.4);
+        --cc-cross-dash: 10 4;
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 999px;
+        border-color: var(--border);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.08);
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart-zoom {
+        font-family: var(--theme-font-display);
+        font-variant-caps: small-caps;
+    }
+
+    /* ── r3c-shl-sh-2 · the windowpane: two slanted bands of light ────── */
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] .kp-chart {
+        --cc-paper:
+            linear-gradient(118deg, transparent 0 38%, hsl(from var(--foreground) h s l / 0.07) 38% 58%, transparent 58% 100%), var(--card);
+        --cc-radius: 2px;
+        --cc-frame: 1px solid var(--border);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.3);
+        --cc-grid-w: 0.75px;
+        --cc-tick-font: var(--theme-font-body);
+        --cc-tick-weight: 500;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2.25px;
+        --cc-area-k: 1.6;
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 3px;
+        border-color: var(--border);
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.1);
+        box-shadow: 0 2px 4px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    /* ── r3c-shl-sh-3 · the parasol: shade pools from one corner ──────── */
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart {
+        --cc-paper: radial-gradient(ellipse 90% 80% at 14% 10%, hsl(from var(--foreground) h s l / 0.1), transparent 68%), var(--card);
+        --cc-radius: 8px;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border-strong) h s l / 0.35);
+        --cc-grid-w: 0.75px;
+        --cc-tick-font: var(--theme-font-display);
+        --cc-tick-weight: 400;
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-w: 2px;
+        --cc-area-k: 1.8;
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart__tick {
+        font-style: italic;
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 999px;
+        border-color: transparent;
+        background: hsl(from var(--foreground) h s l / 0.05);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart__source[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.14);
+        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.14);
+    }
 }

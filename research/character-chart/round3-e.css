@@ -1,4 +1,522 @@
-/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of group e. */
+/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of
+   group e — grotesk (loading, tip), lapis (loading), nostromo (loading,
+   arrival) and titanium (events). Keyed the same way as aspects.css:
+   `data-cc-loading`/`data-cc-tip`/`data-cc-arrival`/`data-cc-events` on the
+   chart's wrapper, `data-cc-arriving` while the series comes in. Reuses
+   aspects.css's `cca-k` keyframe (0 → 1) where a plain wipe is enough, and
+   keeps its own custom properties where an option needs a second channel. */
+
+@property --r3no-f {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --r3no-y {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --r3no-g {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
 
 @layer kp.signature {
+    /* ══ grotesk: while loading ═══════════════════════════════════════════ */
+
+    /* The baseline tally: five squares fill in, left to right, in steps. */
+
+    [data-theme='grotesk'] [data-cc-loading='r3-gr-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 10px) calc(50% - 60px);
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.3) 0 2px, transparent 2px 24px);
+    }
+
+    [data-theme='grotesk'] [data-cc-loading='r3-gr-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 10px) calc(50% - 60px);
+        background: linear-gradient(90deg, var(--ccl-i) 0 0) 0 0 / 0% 100% no-repeat;
+    }
+
+    /* The grid build: a hairline grid is laid in from the left, in steps. */
+
+    [data-theme='grotesk'] [data-cc-loading='r3-gr-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.3) 0 1px, transparent 1px 15px),
+            repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.14) 0 1px, transparent 1px 15px);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    /* The red marker: a red square steps along the top over faint ticks. */
+
+    [data-theme='grotesk'] [data-cc-loading='r3-gr-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 10% 6% auto;
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.3) 0 1px, transparent 1px 11px);
+    }
+
+    [data-theme='grotesk'] [data-cc-loading='r3-gr-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(10% - 5px) auto auto 6%;
+        inline-size: 12px;
+        block-size: 12px;
+        background: var(--ccl-j);
+    }
+
+    /* ══ grotesk: the pinned tooltip ════════════════════════════════════ */
+
+    /* The specification label: a white plate in a 2px ink frame. */
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-1'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-1'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-1'] .kp-chart__tip::before {
+        content: '';
+        inset: 0.75rem auto auto 0.75rem;
+        inline-size: 8px;
+        block-size: 8px;
+        background: var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-1'] .kp-chart__tip-head {
+        padding-inline-start: 1.25rem;
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-1'] .kp-chart__tip-head > b {
+        font-weight: 700;
+    }
+
+    /* The index plate: black with white figures and a red rule on top. */
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-2'] .kp-chart__tip {
+        border: 0;
+        border-block-start: 3px solid var(--primary);
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: 0 12px 24px hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-2'] .kp-chart__tip-head > b {
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-2'] .kp-chart__tip :is(.kp-chart__release, a) {
+        color: var(--background);
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-2'] .kp-chart__tip {
+        --cc-dot-ring: var(--background);
+        --cc-swatch-ring: var(--background);
+    }
+
+    /* The punch card: two round holes at the left edge, a red rule at the foot. */
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-3'] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        border-block-end: 3px solid var(--primary);
+        border-radius: 0;
+        background:
+            radial-gradient(circle at 7px 7px, var(--background) 2.4px, transparent 2.8px) top left / 14px 28px no-repeat,
+            radial-gradient(circle at 7px 7px, var(--background) 2.4px, transparent 2.8px) bottom left / 14px 28px no-repeat,
+            var(--card);
+        box-shadow: 0 10px 20px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='grotesk'] [data-cc-tip='r3-gr-tip-3'] .kp-chart__tip-head {
+        padding-inline-start: 1rem;
+    }
+
+    /* ══ lapis: while loading ═══════════════════════════════════════════ */
+
+    /* The gilt brushstroke: a soft gold bar sweeps and back. */
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 9px) auto auto -30%;
+        inline-size: 30%;
+        block-size: 18px;
+        background: linear-gradient(90deg, transparent, hsl(from var(--ccl-i) h s l / 0.85) 45%, hsl(from var(--ccl-i) h s l / 0.85) 55%, transparent);
+    }
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 1px) 6%;
+        block-size: 1px;
+        background: hsl(from var(--ccl-j) h s l / 0.3);
+    }
+
+    /* The girih weave: two sets of gold lines drift diagonally past each other. */
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-linear-gradient(45deg, hsl(from var(--ccl-i) h s l / 0.5) 0 2px, transparent 2px 16px);
+    }
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--ccl-j) h s l / 0.5) 0 2px, transparent 2px 16px);
+    }
+
+    /* The gold dust: fine flecks drift slowly down the page. */
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.55) 1.2px, transparent 1.6px) 0 0 / 14px 14px;
+    }
+
+    [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        background: radial-gradient(circle, hsl(from var(--ccl-j) h s l / 0.45) 1px, transparent 1.4px) 7px 7px / 14px 14px;
+    }
+
+    /* ══ nostromo ═══════════════════════════════════════════════════════ */
+
+    /* Round 2's loading pictures stayed over the state box while the amber
+       CRT's scanline wash (`.kp-chart__plot::after`, z-index 1 in
+       charts.css) painted above it, since the state box itself carries no
+       z-index of its own there: every loading picture under it, ours
+       included, is lifted above that wash. */
+
+    [data-theme='nostromo'] [data-cc-loading] .kp-chart__state[data-kp-state='loading'] {
+        z-index: 2;
+    }
+
+    /* The alert pulse: the screen breathes an amber glow at its centre. */
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+        background: radial-gradient(circle at 50% 50%, hsl(from var(--ccl-i) h s l / 0.4), transparent 65%);
+    }
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 0;
+        box-shadow: inset 0 0 0 2px hsl(from var(--ccl-j) h s l / 0.2);
+    }
+
+    /* The sentry patrol: a blip walks a diamond beat around a faint outline. */
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 26px) calc(50% - 26px);
+        border: 1px solid hsl(from var(--ccl-i) h s l / 0.4);
+        transform: rotate(45deg);
+    }
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 30px) auto auto calc(50% - 4px);
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--ccl-j);
+        box-shadow: 0 0 4px hsl(from var(--ccl-j) h s l / 0.8);
+    }
+
+    /* The static roll: fine interference bars drift up the screen. */
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.22) 0 2px, transparent 2px 6px);
+    }
+
+    [data-theme='nostromo'] [data-cc-loading='r3-no-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: -10% 0 auto;
+        block-size: 20%;
+        background: linear-gradient(180deg, hsl(from var(--ccl-j) h s l / 0.35), transparent);
+    }
+
+    /* ── nostromo: how the series arrives ─────────────────────────────── */
+
+    [data-cc-arrival='r3-no-arr-1'][data-cc-arriving] .kp-chart__series,
+    [data-cc-arrival='r3-no-arr-2'][data-cc-arriving] .kp-chart__series,
+    [data-cc-arrival='r3-no-arr-3'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    [data-cc-arrival='r3-no-arr-1'][data-cc-arriving] .kp-chart__line {
+        opacity: var(--r3no-f);
+    }
+
+    [data-cc-arrival='r3-no-arr-2'][data-cc-arriving] .kp-chart__series {
+        transform: translateY(var(--r3no-y));
+    }
+
+    [data-cc-arrival='r3-no-arr-3'][data-cc-arriving] .kp-chart__line {
+        filter: drop-shadow(0 0 calc(1px + 3px * var(--r3no-g)) var(--kp-chart-series));
+    }
+
+    /* ══ titanium: the event dots ════════════════════════════════════════ */
+
+    /* Countersunk washers: a wide machined ring, the paper showing through. */
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-1'] .kp-chart__mark-dot {
+        fill: var(--card);
+        stroke: var(--border-strong);
+        stroke-width: 4;
+    }
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-1'] .kp-chart__event-line {
+        stroke: var(--border-strong);
+        stroke-dasharray: 1 2 4 2;
+        opacity: 0.8;
+    }
+
+    /* The anodised rivet: a rivet head in the blue oxide accent. */
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-2'] .kp-chart__mark-dot {
+        fill: var(--chart-1);
+        stroke: var(--background);
+        stroke-width: 2;
+        filter: drop-shadow(0 0 2px hsl(from var(--chart-1) h s l / 0.6));
+    }
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-2'] .kp-chart__event-line {
+        stroke: var(--chart-1);
+        stroke-dasharray: 1 1;
+        opacity: 0.85;
+    }
+
+    /* The knurled stud: a knurled ring cut around a solid metal head. */
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-3'] .kp-chart__mark-dot {
+        fill: var(--foreground);
+        stroke: var(--muted-foreground);
+        stroke-width: 5;
+        stroke-dasharray: 1 1.4;
+        paint-order: stroke;
+    }
+
+    [data-theme='titanium'] [data-cc-events='r3-ti-ev-3'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-width: 1.25;
+        opacity: 0.6;
+    }
+
+    /* ══ Motion: all of it, only when the reader allows it ═══════════════ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-cc-loading='r3-gr-load-1'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-gr-tally 2s steps(5, end) infinite;
+        }
+
+        [data-theme='grotesk'] [data-cc-loading='r3-gr-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-gr-grid 2.2s steps(8, end) infinite;
+        }
+
+        [data-theme='grotesk'] [data-cc-loading='r3-gr-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-gr-marker 2.4s steps(6, jump-none) infinite;
+        }
+
+        [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-la-brush 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-la-weave-a 3.2s linear infinite;
+        }
+
+        [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-la-weave-b 3.2s linear infinite;
+        }
+
+        [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-la-dust 3.6s linear infinite;
+        }
+
+        [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-la-dust2 3.6s linear infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc-loading='r3-no-load-1'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-no-pulse 1.8s ease-in-out infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc-loading='r3-no-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-no-patrol 2.4s ease-in-out infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc-loading='r3-no-load-3'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r3e-no-roll 1s linear infinite;
+        }
+
+        [data-theme='nostromo'] [data-cc-loading='r3-no-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3e-no-roll2 1.6s ease-in-out infinite;
+        }
+
+        [data-cc-arrival='r3-no-arr-1'][data-cc-arriving] .kp-chart__plot {
+            animation:
+                cca-k 900ms linear both,
+                r3e-no-flicker 900ms steps(6, jump-none) both;
+        }
+
+        [data-cc-arrival='r3-no-arr-2'][data-cc-arriving] .kp-chart__plot {
+            animation:
+                cca-k 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
+                r3e-no-lift 900ms cubic-bezier(0.3, 1.4, 0.4, 1) both;
+        }
+
+        [data-cc-arrival='r3-no-arr-3'][data-cc-arriving] .kp-chart__plot {
+            animation:
+                cca-k 1000ms linear both,
+                r3e-no-glow 1000ms ease-out both;
+        }
+    }
+}
+
+@keyframes r3e-gr-tally {
+    to {
+        background-size: 100% 100%;
+    }
+}
+
+@keyframes r3e-gr-grid {
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes r3e-gr-marker {
+    from {
+        left: 6%;
+    }
+
+    to {
+        left: 92%;
+    }
+}
+
+@keyframes r3e-la-brush {
+    from {
+        left: -30%;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+@keyframes r3e-la-weave-a {
+    to {
+        background-position: 22px 22px;
+    }
+}
+
+@keyframes r3e-la-weave-b {
+    to {
+        background-position: -22px 22px;
+    }
+}
+
+@keyframes r3e-la-dust {
+    to {
+        background-position: 0 14px;
+    }
+}
+
+@keyframes r3e-la-dust2 {
+    to {
+        background-position: 7px 21px;
+    }
+}
+
+@keyframes r3e-no-pulse {
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes r3e-no-patrol {
+    0%,
+    100% {
+        transform: translate(0, -26px);
+    }
+
+    25% {
+        transform: translate(26px, 0);
+    }
+
+    50% {
+        transform: translate(0, 26px);
+    }
+
+    75% {
+        transform: translate(-26px, 0);
+    }
+}
+
+@keyframes r3e-no-roll {
+    to {
+        background-position: 0 -24px;
+    }
+}
+
+@keyframes r3e-no-roll2 {
+    0%,
+    100% {
+        top: -10%;
+    }
+
+    50% {
+        top: 90%;
+    }
+}
+
+@keyframes r3e-no-flicker {
+    0%,
+    100% {
+        --r3no-f: 1;
+    }
+
+    16% {
+        --r3no-f: 0.25;
+    }
+
+    33% {
+        --r3no-f: 0.85;
+    }
+
+    50% {
+        --r3no-f: 0.35;
+    }
+
+    66% {
+        --r3no-f: 1;
+    }
+
+    83% {
+        --r3no-f: 0.6;
+    }
+}
+
+@keyframes r3e-no-lift {
+    0% {
+        --r3no-y: 0px;
+    }
+
+    55% {
+        --r3no-y: -9px;
+    }
+
+    80% {
+        --r3no-y: 3px;
+    }
+
+    100% {
+        --r3no-y: 0px;
+    }
+}
+
+@keyframes r3e-no-glow {
+    0% {
+        --r3no-g: 1;
+    }
+
+    100% {
+        --r3no-g: 0;
+    }
 }
