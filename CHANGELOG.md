@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+- **Kenny's phantom and shade-light review** [scope-143, 2026-10-05]: the
+  catalogue's try-buttons work on the review page too (a block is wired by
+  what it carries, when it is composed, not by its id at import: the key
+  figures' columns, the trend tiles' data, the meter, the tile set, the
+  remembered board, the data table's reload); the rich menu keeps clear of
+  sticky side bars as well (`coveredEdges` on all four edges) and its
+  loading plate is opaque; the review dialog switches themes in 0.25 s
+  instead of 7 s (hashes are kept across a theme change); the navigation
+  dropdown grows with its longest row (`width: max-content`, nav-dropdown-M1
+  closed); a theme switch restamps only the effect hosts on screen.
+
+- **A dropdown is as wide as its longest link** [nav-dropdown-M1; Kenny,
+  form v18, 2026-10-05]: `.kp-nav__menu` takes `width: max-content` above its
+  12rem floor, so a long link no longer breaks onto two lines (a 38-character
+  link took two or three in all 22 themes). The wider panel is still slid
+  inside the window by `--kp-nav-menu-shift`; the mega menu and the phone
+  drawer keep `width: auto` and are unchanged.
+- **Information that updates in place** [Kenny's picks on
+  research/update-motion, 2026-10-05]: `update(el, next)` in the new
+  `js/update.js` (`@kp-soft/themes/js/update`, also on the root) writes a new
+  value into a text element, a `.kp-state-word` or a spark at once and plays
+  the register's update once at the theme's time (`--kp-update-duration`,
+  max(resize, close) × 1.25 from `themeMotion()`), marked
+  `[data-kp-updating]`. Formal lands a checked stamp (`stamp`), cyberpunk
+  glitches and settles (`glitch`), titanium runs a heat tint across it
+  (`anodise`), each declared in `--kp-update` with its keyframes in
+  kp.signature; the other nineteen registers declare none, so there the value
+  simply changes. Reduced motion: the value changes and nothing plays. The
+  catalogue's Motion page has the block "Information that updates in place".
 - **Every opposite motion is a mirror** [scope-143; Kenny, 2026-10-05]: in
   all 22 themes a dialog opens as its close played backwards and a card
   arrives as its leave played backwards (`--kp-open: reverse-close` in

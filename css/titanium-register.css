@@ -2253,5 +2253,67 @@
             }
         }
     }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration` on
+       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: heat tint. The anodised colours of the leave (gold, violet, blue) run across the value through
+           `mix-blend-mode: color` and cool away; the value keeps its lightness, so it stays readable. ── */
+        [data-theme='titanium'] {
+            --kp-update: anodise;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise'] {
+            position: relative;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise']::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(
+                    110deg,
+                    transparent 15%,
+                    var(--warning-foreground),
+                    var(--chart-2),
+                    var(--chart-1),
+                    var(--chart-3),
+                    transparent 85%
+                )
+                0 0 / 300% 100% no-repeat;
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise var(--kp-update-duration) var(--kp-update-ease) both;
+        }
+
+        /* A chart changes at its last point: the tint runs over its last part. */
+        [data-theme='titanium'] [data-kp-updating='anodise']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-titanium-update-anodise {
+            from {
+                background-position-x: 100%;
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            75% {
+                opacity: 1;
+            }
+
+            to {
+                background-position-x: 0%;
+                opacity: 0;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

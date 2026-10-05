@@ -18,13 +18,13 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 30.5 kB | 11.3 kB | 63% |
 | `css/blueprint-register.css` | 83.6 kB | 42.6 kB | 49% |
 | `css/brutalism-register.css` | 82.0 kB | 44.6 kB | 46% |
-| `css/components.css` | 308.7 kB | 126.7 kB | 59% |
-| `css/cyberpunk-register.css` | 97.0 kB | 54.4 kB | 44% |
+| `css/components.css` | 309.8 kB | 126.8 kB | 59% |
+| `css/cyberpunk-register.css` | 100.7 kB | 56.2 kB | 44% |
 | `css/dark-register.css` | 94.0 kB | 43.1 kB | 54% |
 | `css/deco-register.css` | 69.7 kB | 36.4 kB | 48% |
 | `css/fonts.css` | 27.0 kB | 20.2 kB | 25% |
 | `css/forest-register.css` | 72.0 kB | 40.4 kB | 44% |
-| `css/formal-register.css` | 62.9 kB | 31.8 kB | 49% |
+| `css/formal-register.css` | 64.8 kB | 32.6 kB | 50% |
 | `css/grotesk-register.css` | 74.6 kB | 37.0 kB | 50% |
 | `css/high-contrast-register.css` | 67.5 kB | 33.3 kB | 51% |
 | `css/lapis-register.css` | 75.7 kB | 38.5 kB | 49% |
@@ -41,13 +41,13 @@ the selectors and their order are identical, which is what
 | `css/synthwave-register.css` | 88.1 kB | 49.2 kB | 44% |
 | `css/terminal-register.css` | 78.6 kB | 41.9 kB | 47% |
 | `css/themes.css` | 183.3 kB | 119.1 kB | 35% |
-| `css/titanium-register.css` | 83.1 kB | 40.9 kB | 51% |
+| `css/titanium-register.css` | 85.3 kB | 41.7 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2249.0 kB | 1145.4 kB | 49% |
-| `dist/kp-themes.js` | 685.3 kB | 368.3 kB | 46% |
+| `dist/kp-themes.css` | 2257.8 kB | 1148.9 kB | 49% |
+| `dist/kp-themes.js` | 691.9 kB | 371.8 kB | 46% |
 
-The loose stylesheets together weigh **2305.6 kB** authored and
-**1178.2 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **2314.4 kB** authored and
+**1181.7 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

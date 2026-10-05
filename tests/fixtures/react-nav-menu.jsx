@@ -44,6 +44,7 @@ const LINKS = [
         links: [
             { href: '#profile', label: 'Profile and preferences' },
             { href: '#sessions', label: 'Signed-in devices' },
+            { href: '#applications', label: 'Applications and follow-up per company' },
         ],
     },
 ];

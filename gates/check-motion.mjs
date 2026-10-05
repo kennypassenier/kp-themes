@@ -227,6 +227,9 @@ const OUT_OF_SCOPE = {
     'kp-alarm-sweep': 'a band of a faint tint translating down the plate once per six seconds; a transform, and the tint is under the 10% change',
     'kp-marquee-pass':
         'a row of items translated -50% and back to its start, seamlessly; a transform only, no opacity or colour stop, and paused whenever the band is outside the viewport',
+    // Information that updates in place [research/update-motion, 2026-10-05].
+    'kp-sig-cyberpunk-update-glitch':
+        'a changed value jittering by at most 3px with two drop-shadow copies, once per update for 750 ms; a transform and a filter on one value, far under 341x256 px',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

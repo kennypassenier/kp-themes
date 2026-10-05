@@ -1,5 +1,7 @@
 # Information that updates in place
 
+**Decided (2026-10-05).** Kenny approved the demo at 12:30 with three picks: formal Idea 3 (Checked stamp, `stamp`), cyberpunk Idea 2 (Glitch and settle, `glitch`) and titanium Idea 3 (Heat tint, `anodise`). In the package `update(el, next)` is `js/update.js`; each of those registers declares its idea in `--kp-update` and carries its `kp-sig-<theme>-update-*` keyframes in kp.signature, and catalogue/motion.html#update plays them. The other nineteen themes declare no update motion yet: the value simply changes.
+
 Kenny, 2026-10-05 11:29: "think about an 'update' or 'refresh' type of
 animation that updates info the 'theme way'".
 

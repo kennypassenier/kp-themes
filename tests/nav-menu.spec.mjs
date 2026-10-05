@@ -8,6 +8,10 @@
 // lies inside the window — at 1400px and at 420px — and so does the mega
 // menu's wide panel under its button, which lines up with the bar's edges.
 //
+// nav-dropdown-M1 (Kenny, form v18, 2026-10-05): a label never wraps or is
+// cut. The dropdown's last link is 38 characters, and it stays on one line
+// while the panel, now as wide as that row, still lies inside the window.
+//
 // The mega menu (scope-48, wave 2; research/navbar/README.md, "Mega menu"
 // and its accessibility row): a `data-kp-nav-disclosure` button with
 // `aria-expanded` and `aria-controls`, a panel of plain lists with headings,
@@ -108,6 +112,12 @@ test(
                     await lastLink.hover();
                     const menuFault = await outsideWindow(menu);
                     if (menuFault) faults.push(`${theme.name}, ${width}px, ${channel}: the dropdown lies ${menuFault}`);
+                    const lines = await menu.evaluate((el) => {
+                        const range = document.createRange();
+                        range.selectNodeContents(/** @type {Element} */ (el.querySelector('li:last-child > a')));
+                        return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+                    });
+                    if (lines !== 1) faults.push(`${theme.name}, ${width}px, ${channel}: the dropdown's 38-character link takes ${lines} lines`);
                     await page.mouse.move(0, 890);
                     // The panel only exists once the mega menu does; before it,
                     // the dropdown alone is what this measures.

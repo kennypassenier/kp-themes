@@ -120,7 +120,9 @@ export type Edges = {
     right: number;
     bottom: number;
 };
+export type Covered = Edges;
 /** @typedef {{ left: number, top: number, right: number, bottom: number }} Edges */
+/** How far in from each screen edge the page has something stuck: coveredEdges(). @typedef {Edges} Covered */
 /**
  * Where an open menu goes so that all of it is on the screen (Kenny,
  * 2026-10-05: a menu under a button at the left edge opened off the

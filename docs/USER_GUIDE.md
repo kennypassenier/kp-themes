@@ -560,6 +560,41 @@ A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.
 
+### Information that updates in place
+
+A value a live page changes (a key figure, a table cell, a state word, a
+chart's last point) can show that it changed, the theme's way: call
+`update(el, next)` from `js/update.js` instead of setting the text. It writes
+the new value at once, marks the element `[data-kp-updating]` with the
+register's idea for as long as the theme's update plays, once, and takes the
+mark off; it resolves with the milliseconds it played. Picked by Kenny on
+research/update-motion (2026-10-05): formal lands a stamp's frame round the
+value and lets it soak in (`stamp`), cyberpunk tears off cyan and magenta
+copies, jitters for a beat and locks (`glitch`), titanium runs the anodised
+colours across it and cools away (`anodise`). A register names its idea in
+`--kp-update`; the other nineteen declare none yet, and there the value simply
+changes.
+
+```js
+import { update } from '@kp-soft/themes/js/update';
+
+await update(document.querySelector('#pressure'), '3.41'); // a text value
+await update(row.querySelector('.kp-state-word'), 'Restarting'); // keeps room for every word (setStateWord)
+await update(tile.querySelector('svg[data-kp-spark]'), [...last24h, 3.41]); // a spark: its last point glides
+```
+
+The time is the theme's own: `--kp-update-duration` is the longer of its
+resize and close times from `themeMotion()`, times 1.25, on
+`--kp-update-ease`, its curve without overshoot (formal 300 ms, cyberpunk
+750 ms, titanium 240 ms). The new value is in the page from the first frame
+and readable throughout, and nothing beside it moves: a width the new value
+itself needs is taken at once, with the value. A second update during the
+first restarts it. A spark is an svg, which has no pseudo-elements, so its
+parent carries the mark and the overlay covers the parent's last part: give
+the svg a box of its own (a `div` round it). Call it only on a change, never on
+first paint. With reduced motion asked for, the value changes and nothing
+plays.
+
 ## Back to top [feat-page-1]
 
 Put one on every page that can grow taller than the window; every example

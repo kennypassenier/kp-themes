@@ -311,6 +311,7 @@ function setEmpty(s, empty, strings) {
 export const MENU_GUTTER = 8;
 
 /** @typedef {{ left: number, top: number, right: number, bottom: number }} Edges */
+/** How far in from each screen edge the page has something stuck: coveredEdges(). @typedef {Edges} Covered */
 
 /**
  * Where an open menu goes so that all of it is on the screen (Kenny,
@@ -365,16 +366,18 @@ export function menuPlacement({ button, menu, height, gap, room }) {
 }
 
 /**
- * How far in from the screen's top and bottom edges a menu must stay: what
- * the page declares as covered (its scrolling box's `scroll-padding`, which
- * the package's sticky nav writes), or a bar stuck (fixed or sticky) across
- * the screen at that edge, whichever reaches further. A bar the menu button
- * lives in does not count, nor a small floating control (narrower than half
- * the screen).
+ * How far in from each of the screen's edges a menu must stay: what the page
+ * declares as covered (its scrolling box's `scroll-padding`, which the
+ * package's sticky nav writes), or a bar stuck (fixed or sticky) along the
+ * screen at that edge, whichever reaches further: a header or a footer
+ * across it, a side nav down it. A menu over a side nav hung outside the
+ * page it belongs to (the review page's nav, Kenny, 2026-10-05). A bar the
+ * menu button lives in does not count, nor a small floating control (less
+ * than half the screen along its edge).
  * @param {Window} view
  * @param {Element} wrapper
  * @param {Element} [skip] an element to see through (the open menu)
- * @returns {{ top: number, bottom: number }}
+ * @returns {Covered}
  */
 function coveredEdges(view, wrapper, skip) {
     const doc = view.document;
@@ -384,9 +387,13 @@ function coveredEdges(view, wrapper, skip) {
     const pad = view.getComputedStyle(doc.scrollingElement ?? html);
     const px = (/** @type {string} */ v) => (Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0);
     const box = wrapper.getBoundingClientRect();
-    const x = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
-    /** The stuck bar at this height, if any. @param {number} y */
-    const barAt = (y) => {
+    const midX = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
+    const midY = Math.min(Math.max(box.top + box.height / 2, 1), height - 1);
+    /**
+     * The stuck bar at this point, if any, long enough along its edge.
+     * @param {number} x @param {number} y @param {'width' | 'height'} along
+     */
+    const barAt = (x, y, along) => {
         for (const hit of doc.elementsFromPoint(x, y)) {
             if (skip?.contains(hit)) continue;
             for (let el = /** @type {Element | null} */ (hit); el && el !== html && el !== doc.body; el = el.parentElement) {
@@ -394,25 +401,58 @@ function coveredEdges(view, wrapper, skip) {
                 if (position !== 'fixed' && position !== 'sticky') continue;
                 if (el.contains(wrapper) || wrapper.contains(el)) return null;
                 const r = el.getBoundingClientRect();
-                return r.width >= width / 2 ? r : null;
+                return r[along] >= (along === 'width' ? width : height) / 2 ? r : null;
             }
             return null;
         }
         return null;
     };
-    let top = 0;
-    for (let bar = barAt(0.5), n = 0; bar && n < 4; n += 1) {
-        if (bar.bottom <= top + 0.5) break;
-        top = bar.bottom;
-        bar = top < height ? barAt(top + 0.5) : null;
-    }
-    let bottom = 0;
-    for (let bar = barAt(height - 0.5), n = 0; bar && n < 4; n += 1) {
-        if (height - bar.top <= bottom + 0.5) break;
-        bottom = height - bar.top;
-        bar = bottom < height ? barAt(height - bottom - 0.5) : null;
-    }
-    return { top: Math.max(top, px(pad.scrollPaddingTop)), bottom: Math.max(bottom, px(pad.scrollPaddingBottom)) };
+    /**
+     * How far the bars stacked at one edge reach in, probing past each. The
+     * first is looked for a little way in too: a body margin keeps a side
+     * nav 8 px off the edge (the catalogue's).
+     * @param {number} size the screen along this axis
+     * @param {(inset: number) => DOMRect | null} at the bar `inset` px in from the edge
+     * @param {(bar: DOMRect) => number} reach how far in that bar ends
+     */
+    const stacked = (size, at, reach) => {
+        let inset = 0;
+        /** @type {DOMRect | null} */
+        let first = null;
+        for (const start of [0.5, 8.5, 16.5, 32.5]) if ((first = at(start))) break;
+        for (let bar = first, n = 0; bar && n < 4; n += 1) {
+            if (reach(bar) <= inset + 0.5) break;
+            inset = reach(bar);
+            bar = inset < size ? at(inset + 0.5) : null;
+        }
+        return inset;
+    };
+    const top = stacked(
+        height,
+        (d) => barAt(midX, d, 'width'),
+        (bar) => bar.bottom,
+    );
+    const bottom = stacked(
+        height,
+        (d) => barAt(midX, height - d, 'width'),
+        (bar) => height - bar.top,
+    );
+    const left = stacked(
+        width,
+        (d) => barAt(d, midY, 'height'),
+        (bar) => bar.right,
+    );
+    const right = stacked(
+        width,
+        (d) => barAt(width - d, midY, 'height'),
+        (bar) => width - bar.left,
+    );
+    return {
+        top: Math.max(top, px(pad.scrollPaddingTop)),
+        bottom: Math.max(bottom, px(pad.scrollPaddingBottom)),
+        left: Math.max(left, px(pad.scrollPaddingLeft)),
+        right: Math.max(right, px(pad.scrollPaddingRight)),
+    };
 }
 
 /** The inline properties placeMenu() writes, undone when the menu closes. */
@@ -430,19 +470,25 @@ function unplaceMenu(menu) {
  * place first.
  * @param {MenuState} s
  * @param {Window} view
- * @param {{ top: number, bottom: number }} covered
+ * @param {Covered} covered
  */
 function placeMenu(s, view, covered) {
     const { menu } = s;
     unplaceMenu(menu);
     const html = view.document.documentElement;
     const room = {
-        left: MENU_GUTTER,
-        right: html.clientWidth - MENU_GUTTER,
+        left: covered.left + MENU_GUTTER,
+        right: html.clientWidth - covered.right - MENU_GUTTER,
         top: covered.top + MENU_GUTTER,
         bottom: html.clientHeight - covered.bottom - MENU_GUTTER,
     };
+    // Side bars that leave less than the button's own width between them
+    // are not kept clear: the menu then has the whole screen across.
     const button = s.button.getBoundingClientRect();
+    if (room.right - room.left < button.width) {
+        room.left = MENU_GUTTER;
+        room.right = html.clientWidth - MENU_GUTTER;
+    }
     const box = menu.getBoundingClientRect();
     const style = view.getComputedStyle(menu);
     const cap = parseFloat(style.maxBlockSize);

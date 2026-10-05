@@ -27,7 +27,7 @@ import {
 } from './judgements.js';
 import { readBlocks } from './block-hash.js';
 import { ENGINE, engineLabel, readPixelRatio } from './engine.js';
-import { FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
+import { allNotes, FEEDBACK_KEY, noteFor, NOTES_EVENT, rememberTitles, setNote, themeLabel } from './review-state.js';
 import { mountReviewDialog } from './review-dialog.js';
 
 /**
@@ -263,7 +263,20 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         }
         if (count) count.textContent = open ? `${open} of ${items.length} block(s) left to judge in ${label}.` : `Every block is judged in ${label}.`;
         onRender?.();
-        document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
+        announce();
+    }
+
+    // The prompt (prompt.js) rebuilds itself over every block on this event,
+    // about 20 ms on the review page. A verdict that ends a theme renders
+    // three times in one task (the verdict, the theme change, the next block
+    // in the dialog), so the event is sent once, after the task.
+    let announcing = 0;
+    function announce() {
+        if (announcing) return;
+        announcing = setTimeout(() => {
+            announcing = 0;
+            document.dispatchEvent(new CustomEvent(JUDGEMENT_EVENT));
+        });
     }
 
     /** The callout of a block's review note in the theme on screen, or none. */
@@ -290,12 +303,14 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
     }
 
     function renderNotes() {
+        // Read once for every block, rather than parsed again per block.
+        const notes = allNotes();
         for (const item of items) {
             const theme = blockTheme(item.entry.root);
             item.label.textContent = `Note for ${themeLabel(theme)}`;
             // The one being typed in keeps its text; another document's write
             // to the same note must not move the caret.
-            if (document.activeElement !== item.area) item.area.value = noteFor(item.entry.notePage, item.entry.noteBlock, theme);
+            if (document.activeElement !== item.area) item.area.value = notes[item.entry.notePage]?.[item.entry.noteBlock]?.[theme] ?? '';
             // A note that arrived (another theme's, another document's) answers a refusal.
             if (item.area.value.trim()) showRefusal(item, false);
         }
@@ -308,6 +323,8 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
     // button variants in cyberpunk hashed differently on the review page only.
     let reading = null;
     let again = false;
+    /** The last reading's results per item (readBlocks), kept for a theme change. */
+    let lastReadings = null;
     function measure() {
         if (reading) {
             again = true;
@@ -324,7 +341,6 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
     }
 
     async function readOnce() {
-        const theme = currentTheme();
         // A hidden block reads display:none on its own root; all are shown while reading.
         // So is what the page hid around them: the review page hides a component
         // whose every block left the page, and a block read inside a hidden
@@ -343,7 +359,8 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         const ratio = readPixelRatio();
         const hashes = await readBlocks(items.map(({ entry }) => ({ root: entry.root, source: entry.source, elements: entry.elements })));
         const next = new Map(items.map(({ entry }, i) => [entry.key, hashes[i].hash]));
-        if (theme !== currentTheme()) return; // the theme moved while reading; the next pass counts
+        // A theme switched while reading changes nothing read: since hash
+        // version 10 a block's hash is its markup, the same in every theme.
         // Zoomed while reading: which ratio the hashes hold is not known; read again.
         if (readPixelRatio() !== ratio) {
             again = true;
@@ -362,6 +379,7 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         );
         current = next;
         currentRatio = ratio;
+        lastReadings = hashes;
         render();
     }
 
@@ -468,13 +486,31 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         if (event.key === FEEDBACK_KEY) renderNotes();
     });
     document.addEventListener(NOTES_EVENT, renderNotes);
+    // A theme change reads nothing again (Kenny, 2026-10-05: switching the
+    // review dialog to the next theme took seven to eight seconds, measured in
+    // Firefox over 196 blocks). Since hash version 10 a block's hash is its
+    // markup as written, the same in every theme, so the hashes read once
+    // answer for the new theme too: the register restyles the blocks, and the
+    // panels show the new theme's verdicts and notes at once. Before, every
+    // switch cleared the hashes and read the page twice over (the event's own
+    // pass and the dialog's walk), each time showing all 196 blocks, waiting
+    // for the theme's fonts and up to three seconds for busy data tables.
     document.documentElement.addEventListener(THEME_EVENT, () => {
-        current = new Map();
+        if (lastReadings) {
+            // A verdict stored under an earlier recipe, in the theme now on
+            // screen, carries over as a reading would have carried it.
+            carryOver(
+                items.map(({ entry }, i) => ({
+                    key: entry.key,
+                    theme: blockTheme(entry.root),
+                    ratio: currentRatio,
+                    earlier: lastReadings[i].earlier,
+                    hash: lastReadings[i].hash,
+                })),
+            );
+        }
         render();
         renderNotes();
-        // Give the register a moment to paint before reading it. A timer, not
-        // requestAnimationFrame: a tab in the background never runs a frame.
-        setTimeout(measure, 150);
     });
 
     /**
@@ -485,8 +521,9 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
      * ben voor een thema, dan moet het gaan naar een nieuw thema … zodat ik
      * vanuit 1 dialoog kan vertrekken". So the dialog does not stop at the end
      * of a theme: this switches the page to the next theme in the menu's
-     * order, waits for the register to paint and the blocks to be read again,
-     * and answers with the first theme that still has work. A page that is one
+     * order (once its register is in, where registers load on demand) and
+     * answers with the first theme that still has work; the blocks are not
+     * read again (Kenny, 2026-10-05: the switch took seven to eight seconds). A page that is one
      * theme (a portrait, data-cat-theme-fixed) stays where it is.
      * @returns {Promise<string | null>} the theme it stopped on, or null when the round is over
      */
@@ -519,12 +556,20 @@ export function mountJudging({ entries, toolbar = null, onRender, dialog = Boole
         for (let step = 1; step <= order.length; step += 1) {
             const theme = order[(from + step + order.length) % order.length];
             if (!hasWork(theme)) continue;
-            applyTheme(theme);
-            // The theme event clears the readings and schedules its own pass;
-            // the register needs the same moment to paint that it does there.
-            await new Promise((resolve) => setTimeout(resolve, 200));
-            await measure();
-            render();
+            // A page that fetches its registers on demand (js/lazy-register.js)
+            // holds the change until the register is in; wait for it to land.
+            // A register that never loads gives up after ten seconds, and the
+            // walk goes on from the theme on screen.
+            const landed = new Promise((resolve) => {
+                document.documentElement.addEventListener(THEME_EVENT, resolve, { once: true });
+                setTimeout(resolve, 10_000);
+            });
+            if (applyTheme(theme) !== theme) await landed;
+            if (currentTheme() !== theme) continue;
+            // The hashes read once hold in every theme, and the theme event
+            // has rendered the panels for this one; only a first reading
+            // still running is waited for (its end renders as well).
+            if (reading) await reading;
             if (items.some((item) => !item.judged)) return theme;
         }
         return null;

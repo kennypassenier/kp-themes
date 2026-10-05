@@ -107,6 +107,19 @@ export {
     sparkPaths,
 } from './js/kpi.js';
 /** @typedef {import('./js/kpi.js').Meter} Meter */
+// Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
+export {
+    UPDATE_PROPERTY,
+    UPDATE_STYLE,
+    UPDATING_ATTRIBUTE,
+    markUpdating,
+    unmarkUpdating,
+    update,
+    updateIdea,
+    updatePlays,
+    updateTiming,
+    updateTimingOf,
+} from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
 export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';

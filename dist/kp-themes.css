@@ -7860,6 +7860,7 @@
             position: static;
             display: block;
             opacity: 1;
+            width: auto;
             min-width: 0;
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
             border: 0;
@@ -8069,6 +8070,15 @@
          * on either axis direction. Nothing but js/components.js writes it;
          * unset, the panel sits exactly where the stylesheet put it. */
         translate: var(--kp-nav-menu-shift, 0) 0;
+        /* As wide as its longest row, never narrower than the floor
+         * [nav-dropdown-M1]. Absolutely placed in a small item, the panel's
+         * width is otherwise shrink-to-fit against that item, so a link of
+         * 38 characters broke onto two lines while the panel stayed 192px
+         * (formal, shade-dark, deco, retro; Kenny: a label never wraps or is
+         * cut). A wider panel is still kept inside the window by the shift
+         * above, which measures the panel as it is laid out. The mega menu
+         * and the phone drawer set `width: auto` again. */
+        width: max-content;
         min-width: 12rem;
         margin: 0;
         padding: 0.25rem 0;
@@ -8200,6 +8210,7 @@
     .kp-nav__menu--wide {
         inset-inline-start: var(--kp-nav-mega-start, 0);
         inset-inline-end: var(--kp-nav-mega-end, 0);
+        width: auto;
         min-width: 0;
         /* Three to four columns (NN/g: beyond that, choice overload): never
          * narrower than the knob, never more than four across. */
@@ -8500,10 +8511,10 @@
            around, which js/sidenav.js writes as --kp-sidenav-ease-back
            (Kenny, 2026-10-05: no discrepancy between opening and closing). */
         .kp-sidenav:is(
-                [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not(:hover),
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
-            ) {
+            [data-kp-sidenav-open='false'],
+            [data-kp-sidenav-slim-collapsed]:not(:hover),
+            [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+        ) {
             transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
         }
     }
@@ -12766,6 +12777,15 @@
         display: none;
     }
 
+    /* A menu still loading is a whole plate with its one grey entry on it:
+     * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
+     * open menu show through it (Kenny, shade-light, 2026-10-05). The entry
+     * already reads as waiting; the cursor still says busy. The knob is set
+     * rather than the opacity, which a later layer owns. */
+    .kp-menu-button > .kp-menu[aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
     .kp-menu--rich {
         inline-size: max-content;
         min-inline-size: var(--kp-menu-rich-min, 19rem);
@@ -15820,6 +15840,101 @@
                 color: var(--accent-hover);
                 clip-path: inset(50% 0 50% 0);
                 transform: translateX(8px);
+                opacity: 0;
+            }
+        }
+    }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration`
+       (themeMotion()); a frame-like idea runs linear. The value is never hidden
+       or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── cyberpunk: glitch and settle. Cyan and magenta copies tear off (the leave's colours), it jitters for a beat, a torn line runs through, it locks. ── */
+        [data-theme='cyberpunk'] {
+            --kp-update: glitch;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-updating='glitch'] {
+            position: relative;
+            animation: kp-sig-cyberpunk-update-glitch var(--kp-update-duration) linear;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-updating='glitch']::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(to bottom, transparent 47%, hsl(from var(--accent) h s l / 0.35) 47% 53%, transparent 53%) 0 0 / 100% 100%
+                no-repeat;
+            mix-blend-mode: screen;
+            /* 750 ms is cyberpunk's update time at --kp-motion-scale 1, the one
+               the DI5 test rates; the longhand plays it at the time js/update.js reads. */
+            animation: kp-sig-cyberpunk-update-tear 750ms steps(1, end) both;
+            animation-duration: var(--kp-update-duration);
+        }
+
+        /* A chart changes at its last point: the torn line runs over its last part. */
+        [data-theme='cyberpunk'] [data-kp-updating='glitch']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-cyberpunk-update-glitch {
+            0% {
+                transform: translateX(2px) skewX(-8deg);
+                filter: drop-shadow(3px -2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-3px 2px 0 hsl(from var(--chart-3) h s l / 0.85));
+            }
+
+            12% {
+                transform: translateX(-2px);
+                filter: drop-shadow(-4px 1px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(4px -1px 0 hsl(from var(--chart-3) h s l / 0.85));
+            }
+
+            24% {
+                transform: translateX(3px) skewX(6deg);
+                filter: drop-shadow(2px 2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-2px -2px 0 hsl(from var(--chart-3) h s l / 0.85));
+            }
+
+            36% {
+                transform: translateX(-1px);
+                filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.7)) drop-shadow(2px 0 0 hsl(from var(--chart-3) h s l / 0.7));
+            }
+
+            52% {
+                transform: translateX(1px);
+                filter: drop-shadow(1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(-1px 0 0 hsl(from var(--chart-3) h s l / 0.5));
+            }
+
+            64%,
+            to {
+                transform: none;
+                filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--chart-3) h s l / 0));
+            }
+        }
+
+        @keyframes kp-sig-cyberpunk-update-tear {
+            0% {
+                background-position-y: 20%;
+                opacity: 1;
+            }
+
+            12% {
+                background-position-y: 80%;
+            }
+
+            24% {
+                background-position-y: 40%;
+            }
+
+            36% {
+                background-position-y: 65%;
+            }
+
+            52%,
+            to {
                 opacity: 0;
             }
         }
@@ -30901,6 +31016,68 @@
             to {
                 opacity: 1;
                 background-position: 100% 0;
+            }
+        }
+    }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration` on
+       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: heat tint. The anodised colours of the leave (gold, violet, blue) run across the value through
+           `mix-blend-mode: color` and cool away; the value keeps its lightness, so it stays readable. ── */
+        [data-theme='titanium'] {
+            --kp-update: anodise;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise'] {
+            position: relative;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise']::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(
+                    110deg,
+                    transparent 15%,
+                    var(--warning-foreground),
+                    var(--chart-2),
+                    var(--chart-1),
+                    var(--chart-3),
+                    transparent 85%
+                )
+                0 0 / 300% 100% no-repeat;
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise var(--kp-update-duration) var(--kp-update-ease) both;
+        }
+
+        /* A chart changes at its last point: the tint runs over its last part. */
+        [data-theme='titanium'] [data-kp-updating='anodise']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-titanium-update-anodise {
+            from {
+                background-position-x: 100%;
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            75% {
+                opacity: 1;
+            }
+
+            to {
+                background-position-x: 0%;
+                opacity: 0;
             }
         }
     }
@@ -51138,6 +51315,60 @@
             to {
                 transform: scaleY(0);
                 opacity: 0.2;
+            }
+        }
+    }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration` on
+       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── formal: a checked stamp. A stamp's frame lands round the value, slightly askew, and soaks in. ── */
+        [data-theme='formal'] {
+            --kp-update: stamp;
+        }
+
+        [data-theme='formal'] [data-kp-updating='stamp'] {
+            position: relative;
+        }
+
+        [data-theme='formal'] [data-kp-updating='stamp']::before {
+            content: '';
+            position: absolute;
+            inset: -0.15em -0.35em;
+            z-index: 1;
+            pointer-events: none;
+            border: 1.5px solid var(--primary);
+            border-radius: calc(var(--radius, 0.25rem) * 0.5);
+            animation: kp-sig-formal-update-stamp var(--kp-update-duration) var(--kp-update-ease) both;
+        }
+
+        /* A chart changes at its last point: the stamp lands on its last part. */
+        [data-theme='formal'] [data-kp-updating='stamp']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-formal-update-stamp {
+            0% {
+                opacity: 0;
+                transform: scale(1.3) rotate(-5deg);
+            }
+
+            25% {
+                opacity: 0.9;
+                transform: scale(1) rotate(-2deg);
+            }
+
+            65% {
+                opacity: 0.6;
+                transform: scale(1) rotate(-2deg);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(1) rotate(-2deg);
             }
         }
     }

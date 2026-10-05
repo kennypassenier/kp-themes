@@ -21,7 +21,7 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/kpi.js": { "digest": "f8f3514eaad7d1e5", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/menu-button.js": { "digest": "a0b7c50910046cca", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "575b73e5195e0851", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "1dbb732a78097d4e",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -37,10 +37,10 @@
         "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
     },
     "themes": {
-        "formal": "7b82be24a5aa5a54",
+        "formal": "ce0f1274d0d21aae",
         "light": "a7e764e10d3112e7",
         "dark": "c49602b33d998887",
-        "cyberpunk": "d9a699b94962ba95",
+        "cyberpunk": "c6995090f56499a6",
         "synthwave": "bf98031c667af508",
         "pastel": "46fa1e7800d9fc12",
         "terminal": "88c23f01fda177d0",
@@ -58,7 +58,7 @@
         "grotesk": "9e21f2d934269aa1",
         "lapis": "80b0643931aa6243",
         "nostromo": "a790b5145b36a01d",
-        "titanium": "301739bd8dfccbef"
+        "titanium": "e260edc5011f273a"
     },
     "rules": {
         "blueprint||@container (max-width: 60rem)||[data-kp-hero-grid]": "3808ae5786791ad7",
@@ -555,10 +555,12 @@
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline']": "d1dfdcde28e4a53e",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-glitching": "d1dfdcde28e4a53e",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "3f932c4da8280f36",
+        "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='glitch']": "1775aa48b952bbcd",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark": "bdc5e4a8d800efc4",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(2)": "c8ddfdeab612d1b5",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(3)": "b73b1b40755107c3",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(4)": "15b3642efc99eaec",
+        "cyberpunk||@media (prefers-reduced-motion: no-preference)||svg)": "55f40262c2a83990",
         "cyberpunk||@media (prefers-reduced-motion: reduce)||[data-kp-reveal='rule']:not(.is-in)": "c643916cb28234d8",
         "cyberpunk||@media (prefers-reduced-motion: reduce)||mark:not(.is-cleared)": "e358826d37afbfb7",
         "cyberpunk||||)": "5d765fc70b7ab1b7",
@@ -1473,9 +1475,11 @@
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-resizing]": "45935f14557eb2d5",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline']": "854c2db16a06ff0a",
         "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "0ea8e2cdfd8ed116",
+        "formal||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='stamp']": "8efd5aef2b85e343",
         "formal||@media (prefers-reduced-motion: no-preference)||mark": "d47df1929207c8e5",
         "formal||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(2)": "ed14e3f335463fba",
         "formal||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(3)": "38a8b8649883a2e5",
+        "formal||@media (prefers-reduced-motion: no-preference)||svg)": "243c636ace834d66",
         "formal||@starting-style||.kp-progressbar__fill": "c983617fe7f70e68",
         "formal||||-visible):not()": "e0145e3c179b6be9",
         "formal||||.kp-accordion__summary": "30588c91b239fada",
@@ -4876,10 +4880,12 @@
         "titanium||@media (prefers-reduced-motion: no-preference)||[data-kp-arriving]": "8c50c36530fdfd33",
         "titanium||@media (prefers-reduced-motion: no-preference)||[data-kp-leaving]": "4b244c14636b0fc8",
         "titanium||@media (prefers-reduced-motion: no-preference)||[data-kp-resizing]": "2211fbc660901a90",
+        "titanium||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='anodise']": "75a180ace7b0904a",
         "titanium||@media (prefers-reduced-motion: no-preference)||[data-word]": "36bb6fb07632fc8a",
         "titanium||@media (prefers-reduced-motion: no-preference)||mark": "675f10f50ac3ac85",
         "titanium||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(2)": "4356f8f151762f4a",
         "titanium||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(3)": "b49c96ffc2dbc023",
+        "titanium||@media (prefers-reduced-motion: no-preference)||svg)": "891bd3553aad3521",
         "titanium||||-visible": "7c355476aa4be82e",
         "titanium||||-visible):not()": "3027062199d644b4",
         "titanium||||-visible):not():not()": "e2c23d60d74bb410",
@@ -5096,7 +5102,7 @@
         "||@container kp-kpi (max-width: 12rem)||.kp-kpi__trend": "ec674358b8af7a07",
         "||@container kp-nav (max-width: 40rem)||.kp-nav": "ec4a3a0e85eeff68",
         "||@container kp-nav (max-width: 40rem)||.kp-nav__links": "ff1f2637635830d5",
-        "||@container kp-nav (max-width: 40rem)||.kp-nav__menu": "7131d8eb64c98b61",
+        "||@container kp-nav (max-width: 40rem)||.kp-nav__menu": "fd2baf167341cb09",
         "||@container kp-nav (max-width: 40rem)||.kp-nav__menu--wide": "63d717df707ebbf7",
         "||@container kp-nav (max-width: 40rem)||.kp-nav__toggle": "f6a57a7c65cbed28",
         "||@container kp-page-header (max-width: 40rem)||.kp-button--primary": "5aa8bb9c20260dc5",
@@ -5654,6 +5660,7 @@
         "||||.kp-menu--rich": "cfe06ded02b592db",
         "||||.kp-menu-button": "96a4de0c3bddc16d",
         "||||.kp-menu-button[hidden]": "e78a3546f4ef2cb2",
+        "||||.kp-menu[aria-busy='true']": "683aa104e2b8f4d5",
         "||||.kp-menu[hidden]": "ebe4528323f54e66",
         "||||.kp-menu__group": "b8ce4ba13bd10e9d",
         "||||.kp-menu__heading": "8fa2ae70ae323e31",
@@ -5692,8 +5699,8 @@
         "||||.kp-nav__link": "22a3ead7e0d1f0bb",
         "||||.kp-nav__link[aria-current='page']": "2020e6486b122231",
         "||||.kp-nav__links": "ec38a2c3cfc694ca",
-        "||||.kp-nav__menu": "0ad9c824a6059cf5",
-        "||||.kp-nav__menu--wide": "0431a0d16b9e422f",
+        "||||.kp-nav__menu": "df9b4e4dbd112d4c",
+        "||||.kp-nav__menu--wide": "8f0d14d8ea570427",
         "||||.kp-nav__menu--wide)": "78f4740b439cdd84",
         "||||.kp-nav__menu-heading": "4ccafd0af0304430",
         "||||.kp-nav__menu[data-kp-menu-label]": "e57d35d284801fa4",
@@ -6175,7 +6182,7 @@
             ]
         },
         "data": {
-            "modules": "b90b90d3a95bd7ec",
+            "modules": "6b913d0e8826e956",
             "families": [
                 "data-kp-activation",
                 "data-kp-calendar",
@@ -6247,6 +6254,7 @@
                 "data-kp-undo-action",
                 "data-kp-undo-ms",
                 "data-kp-undo-target",
+                "data-kp-updating",
                 "data-kp-week-starts-on",
                 "data-kp-when",
                 "kp-action-commit",
@@ -6275,7 +6283,10 @@
                 "kp-kpi-toggle",
                 "kp-kpis",
                 "kp-meter",
+                "kp-sig",
+                "kp-soft",
                 "kp-sr-only",
+                "kp-state-word",
                 "kp-tiles",
                 "kp-trend-keys",
                 "kp-tui"
@@ -6623,7 +6634,7 @@
             ]
         },
         "media": {
-            "modules": "d145ca692d79d6c6",
+            "modules": "cde4a57cdf7df1aa",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -6717,6 +6728,10 @@
                 "kp-sharpen-in",
                 "kp-shine",
                 "kp-shout",
+                "kp-sig-cyberpunk-update-glitch",
+                "kp-sig-cyberpunk-update-tear",
+                "kp-sig-formal-update-stamp",
+                "kp-sig-titanium-update-anodise",
                 "kp-slam",
                 "kp-slice-1",
                 "kp-slice-2",
@@ -6987,7 +7002,7 @@
             ]
         },
         "page-effects": {
-            "modules": "d32f79165a615f07",
+            "modules": "7c436c0cf0625cae",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",
@@ -7060,6 +7075,10 @@
                 "kp-sharpen-in",
                 "kp-shine",
                 "kp-shout",
+                "kp-sig-cyberpunk-update-glitch",
+                "kp-sig-cyberpunk-update-tear",
+                "kp-sig-formal-update-stamp",
+                "kp-sig-titanium-update-anodise",
                 "kp-slam",
                 "kp-slice-1",
                 "kp-slice-2",

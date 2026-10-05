@@ -62,6 +62,8 @@ js/gridlayout.js     a resizable grid           │
 js/log.js            a name's own colour        │
 js/progressbar.js    a bar's value from its ARIA│
 js/motion.js         closing, and easing a size │
+js/update.js         a value updated in place,  │
+                     the theme's way            │
 js/actions.js        row buttons on shared      │
                      columns, a table measured  │
 js/kpi.js            a tile's sparkline, filter │

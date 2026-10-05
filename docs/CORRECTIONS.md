@@ -5514,3 +5514,39 @@ rule already does.
 their own look for the twelve new classes (gates/register-pending.json):
 whether "a button on a plate inherits the plate" can be a rule of
 components.css alone.
+
+## fix-96 · A research demo carried a second Copy prompt that knew nothing of the demo (2026-10-05)
+
+**1 · What went wrong.** A research demo page loads catalogue.js, which
+mounted the catalogue's prompt bar ("Copy prompt") beside the review kit's
+own "Copy answer". That bar gathers notes and verdicts from the catalogue's
+store, not the demo's choices, so on research/open-reverse it told Kenny
+"Nothing new since the last copied prompt" while his six picks stood ready
+(11:08); he found "Copy answer" next to "Look again in the dialog".
+
+**2 · Which gate let it through.** No gate counts the copy controls on a
+page; the review kit's check tests only its own button.
+
+**3 · Where else the same fault sits.** On every research demo with the
+review kit, archived ones included. Searched with
+`grep -l "catalogue/catalogue.js" research/*/demo.html` (30 demos) and
+`grep -l "_review/review.js" research/*/demo.html` (7 carry the kit).
+
+**4 · How we prevent recurrence.** catalogue.js mounts no prompt bar on a
+page whose `<html>` carries `data-review` (commit 23e5ffe1). Measured: 0
+bars on the demo, 1 on motion.html.
+
+**5 · What the remedy costs.** Two lines in catalogue.js.
+
+**6 · Who enforces it.** Code: tests/catalogue-review.spec.mjs asserts that
+a demo page with the kit carries no catalogue prompt bar.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next demo review (the character round): one
+copy button, which works. Queued as fix-96-M1 in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** The review kit hides the
+catalogue bar itself instead of catalogue.js.
+
+**9 · When we review the measure.** If the research kit and the catalogue
+ever share one prompt (review-rereview-M1), the exception goes.

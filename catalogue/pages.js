@@ -71,10 +71,7 @@ export const PAGES = [
         // new demo joins this group's list; it moves to 'Archived research'
         // once he has decided on it [scope-81].
         group: 'Research to look at',
-        pages: [
-            // Kenny, 2026-10-05 11:29: an 'update' or 'refresh' animation the theme's way; three ideas each in formal, cyberpunk and titanium.
-            { href: 'research/update-motion/demo.html', label: 'Information that updates in place' },
-        ],
+        pages: [],
     },
     {
         // Every demo here has its decision taken. A new research demo goes in
@@ -82,6 +79,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-05 12:30: Kenny picked formal's checked stamp, cyberpunk's glitch and settle and titanium's heat tint; moved into the package (js/update.js, `--kp-update` in the three registers, catalogue/motion.html#update).
+            { href: 'research/update-motion/demo.html', label: 'Information that updates in place' },
             // Decided 2026-10-05: Kenny approved the reverse of close in full; in formal, cyberpunk and titanium a dialog and an arriving element open as their close turned around (js/motion.js, `--kp-open: reverse-close`).
             { href: 'research/open-reverse/demo.html', label: 'Opening as the reverse of closing' },
             // Decided at scope-143 (2026-10-05): the seven components of round two, moved into the package.

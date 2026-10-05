@@ -153,6 +153,7 @@ export const FILES = [
     'js/patterns.js',
     'js/progressbar.js',
     'js/motion.js',
+    'js/update.js',
     'js/actions.js',
     'js/kpi.js',
     'js/attention.js',

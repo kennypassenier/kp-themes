@@ -3557,6 +3557,7 @@
             position: static;
             display: block;
             opacity: 1;
+            width: auto;
             min-width: 0;
             padding-inline-start: var(--kp-nav-menu-indent, 1rem);
             border: 0;
@@ -3766,6 +3767,15 @@
          * on either axis direction. Nothing but js/components.js writes it;
          * unset, the panel sits exactly where the stylesheet put it. */
         translate: var(--kp-nav-menu-shift, 0) 0;
+        /* As wide as its longest row, never narrower than the floor
+         * [nav-dropdown-M1]. Absolutely placed in a small item, the panel's
+         * width is otherwise shrink-to-fit against that item, so a link of
+         * 38 characters broke onto two lines while the panel stayed 192px
+         * (formal, shade-dark, deco, retro; Kenny: a label never wraps or is
+         * cut). A wider panel is still kept inside the window by the shift
+         * above, which measures the panel as it is laid out. The mega menu
+         * and the phone drawer set `width: auto` again. */
+        width: max-content;
         min-width: 12rem;
         margin: 0;
         padding: 0.25rem 0;
@@ -3897,6 +3907,7 @@
     .kp-nav__menu--wide {
         inset-inline-start: var(--kp-nav-mega-start, 0);
         inset-inline-end: var(--kp-nav-mega-end, 0);
+        width: auto;
         min-width: 0;
         /* Three to four columns (NN/g: beyond that, choice overload): never
          * narrower than the knob, never more than four across. */
@@ -4197,10 +4208,10 @@
            around, which js/sidenav.js writes as --kp-sidenav-ease-back
            (Kenny, 2026-10-05: no discrepancy between opening and closing). */
         .kp-sidenav:is(
-                [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not(:hover),
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
-            ) {
+            [data-kp-sidenav-open='false'],
+            [data-kp-sidenav-slim-collapsed]:not(:hover),
+            [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+        ) {
             transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
         }
     }
@@ -8461,6 +8472,15 @@
 
     .kp-menu-button > .kp-menu[hidden] {
         display: none;
+    }
+
+    /* A menu still loading is a whole plate with its one grey entry on it:
+     * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
+     * open menu show through it (Kenny, shade-light, 2026-10-05). The entry
+     * already reads as waiting; the cursor still says busy. The knob is set
+     * rather than the opacity, which a later layer owns. */
+    .kp-menu-button > .kp-menu[aria-busy='true'] {
+        --kp-busy-opacity: 1;
     }
 
     .kp-menu--rich {

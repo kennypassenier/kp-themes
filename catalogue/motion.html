@@ -31,6 +31,7 @@
                 <li><a href="#size-selector">Boxes named by a selector, and let go</a></li>
                 <li><a href="#leave-options">Leaving: the options</a></li>
                 <li><a href="#motion-js">From a script</a></li>
+                <li><a href="#update">Information that updates in place</a></li>
             </ul>
 
             <section class="cat-block" id="dialog-close">
@@ -347,6 +348,69 @@ await closeDialog(dialog, 'saved');     // close with the theme's motion; resolv
 await leave(row);                       // the theme's exit, then removed
 const { open, close, size, ease } = themeMotion(); // the theme's timings, in ms
 el.animate(frames, { easing: withoutOvershoot(ease) }); // the theme's curve without its overshoot</code></pre>
+            </section>
+
+            <section class="cat-block" id="update">
+                <h2>Information that updates in place</h2>
+                <div class="cat-look">
+                    <b>Look at:</b> a key figure, its chart, a state word and a table cell that a page changes with <code>update(el, next)</code> from
+                    <code>js/update.js</code>. <b>Update</b> changes all four at once (3.26 → 3.41 bar, the chart's last point, Running → Restarting,
+                    08:12 → 08:27); <b>Update again</b> changes them back. Each changed value plays its theme's update once, picked by Kenny on
+                    2026-10-05: in formal a stamp's frame lands round it, slightly askew, and soaks in; in cyberpunk cyan and magenta copies tear off,
+                    it jitters for a beat, a torn line runs through and it locks; in titanium the anodised colours run across it and cool away. The
+                    chart's last point glides to its new place. The new value is there from the first frame and readable throughout, and nothing
+                    beside it moves. Every other theme has no update motion yet: the values simply change. With reduced motion nothing plays. The line
+                    under the buttons says how long the last update played.
+                </div>
+                <div class="cat-stage cat-stage--block" data-cat-update>
+                    <div class="kp-kpi">
+                        <span class="kp-kpi__label">Pressure, pump house 3</span>
+                        <span class="kp-kpi__value"><span data-cat-update-part="figure">3.26</span><small>bar</small></span>
+                        <span class="kp-kpi__trend">Last 24 hours</span>
+                        <div>
+                            <svg
+                                class="kp-kpi__spark"
+                                data-cat-update-part="chart"
+                                data-kp-spark="3.3 3.31 3.29 3.27 3.24 3.22 3.25 3.31 3.36 3.38 3.35 3.33 3.3 3.28 3.3 3.32 3.34 3.37 3.39 3.35 3.31 3.28 3.27 3.26"
+                            ></svg>
+                        </div>
+                    </div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Site</th>
+                                    <th scope="col">State</th>
+                                    <th scope="col" class="kp-text-end">Reading</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pump house 1</td>
+                                    <td><span class="kp-state-word" data-kp-words="Running&#10;Restarting">Running</span></td>
+                                    <td class="kp-text-end kp-numeric">08:10</td>
+                                </tr>
+                                <tr>
+                                    <td>Pump house 3</td>
+                                    <td>
+                                        <span class="kp-state-word" data-kp-words="Running&#10;Restarting" data-cat-update-part="state">Running</span>
+                                    </td>
+                                    <td class="kp-text-end kp-numeric"><span data-cat-update-part="time">08:12</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p class="kp-row">
+                    <button type="button" class="kp-button kp-button--sm" data-cat-update="1">Update</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-cat-update="0">Update again</button>
+                </p>
+                <p class="cat-note" data-cat-update-took aria-live="polite">No update played yet.</p>
+                <pre class="kp-code-block"><code>import { update } from '@kp-soft/themes/js/update';
+
+await update(figure, '3.41');                          // a text value: a key figure, a table cell
+await update(row.querySelector('.kp-state-word'), 'Restarting'); // a state word keeps room for every word
+await update(tile.querySelector('svg[data-kp-spark]'), [...last24h, 3.41]); // a spark: its last point glides; give the svg a box of its own</code></pre>
             </section>
         </main>
 

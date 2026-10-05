@@ -74,6 +74,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/update.html">Information that updates in place</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -1273,6 +1274,88 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
+                    <figure class="sc-example" id="more-motion-update">
+                        <figcaption class="kp-fw-semibold">Information that updates in place</figcaption>
+                        <p class="kp-text-muted">A key figure, its chart, a state word and a table cell that a page changes with <code>update(el, next)</code> from <code>js/update.js</code>. <b>Update</b> changes all four at once (3.26 → 3.41 bar, the chart's last point, Running → Restarting, 08:12 → 08:27); <b>Update again</b> changes them back. Each changed value plays its theme's update once, picked by Kenny on 2026-10-05: in formal a stamp's frame lands round it, slightly askew, and soaks in; in cyberpunk cyan and magenta copies tear off, it jitters for a beat, a torn line runs through and it locks; in titanium the anodised colours run across it and cool away. The chart's last point glides to its new place. The new value is there from the first frame and readable throughout, and nothing beside it moves. Every other theme has no update motion yet: the values simply change. With reduced motion nothing plays. The line under the buttons says how long the last update played.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="sc-example__stage">
+<div class="kp-kpi">
+    <span class="kp-kpi__label">Pressure, pump house 3</span>
+    <span class="kp-kpi__value"><span data-cat-update-part="figure">3.26</span><small>bar</small></span>
+    <span class="kp-kpi__trend">Last 24 hours</span>
+    <div>
+        <svg
+        class="kp-kpi__spark"
+        data-cat-update-part="chart"
+        data-kp-spark="3.3 3.31 3.29 3.27 3.24 3.22 3.25 3.31 3.36 3.38 3.35 3.33 3.3 3.28 3.3 3.32 3.34 3.37 3.39 3.35 3.31 3.28 3.27 3.26"
+        ></svg>
+</div>
+</div>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <thead>
+            <tr>
+                <th scope="col">Site</th>
+                <th scope="col">State</th>
+                <th scope="col" class="kp-text-end">Reading</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Pump house 1</td>
+                <td><span class="kp-state-word" data-kp-words="Running&#10;Restarting">Running</span></td>
+                <td class="kp-text-end kp-numeric">08:10</td>
+            </tr>
+            <tr>
+                <td>Pump house 3</td>
+                <td>
+                    <span class="kp-state-word" data-kp-words="Running&#10;Restarting" data-cat-update-part="state">Running</span>
+                </td>
+                <td class="kp-text-end kp-numeric"><span data-cat-update-part="time">08:12</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+                        </div>
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Pressure, pump house 3&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-cat-update-part</span><span class="kp-code__string">=&quot;figure&quot;</span>&gt;3.26&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">small</span>&gt;bar&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;Last 24 hours&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">svg</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__spark&quot;</span>
+        <span class="kp-code__keyword">data-cat-update-part</span><span class="kp-code__string">=&quot;chart&quot;</span>
+        <span class="kp-code__keyword">data-kp-spark</span><span class="kp-code__string">=&quot;3.3 3.31 3.29 3.27 3.24 3.22 3.25 3.31 3.36 3.38 3.35 3.33 3.3 3.28 3.3 3.32 3.34 3.37 3.39 3.35 3.31 3.28 3.27 3.26&quot;</span>
+        &gt;&lt;/<span class="kp-code__keyword">svg</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Site&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;State&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>&gt;Reading&lt;/<span class="kp-code__keyword">th</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 1&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-state-word&quot;</span> <span class="kp-code__keyword">data-kp-words</span><span class="kp-code__string">=&quot;Running&amp;#10;Restarting&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;08:10&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-state-word&quot;</span> <span class="kp-code__keyword">data-kp-words</span><span class="kp-code__string">=&quot;Running&amp;#10;Restarting&quot;</span> <span class="kp-code__keyword">data-cat-update-part</span><span class="kp-code__string">=&quot;state&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;/<span class="kp-code__keyword">td</span>&gt;
+                &lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-cat-update-part</span><span class="kp-code__string">=&quot;time&quot;</span>&gt;08:12&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;
+            &lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -1280,7 +1363,7 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-kpi-owned</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-spark</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-spark</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-tone</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-when</code></td><td>written</td></tr>
                     </tbody></table></div>

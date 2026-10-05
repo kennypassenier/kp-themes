@@ -148,6 +148,11 @@
             "tags": ["@component:data"],
             "why": "the KPI tile's sparkline and filter toggle, the meter with a mark, the strip's column count [scope-143]"
         },
+        {
+            "path": "js/update.js",
+            "tags": ["@component:data"],
+            "why": "a key figure, a table cell, a state word or a spark updating in place [research/update-motion, 2026-10-05]"
+        },
         { "path": "js/attention.js", "tags": ["@component:feedback"], "why": "the attention band, kept worst first [scope-143]" },
         { "path": "js/tiles.js", "tags": ["@component:data"], "why": "tiles of one height across a board [scope-143]" },
         { "path": "js/freshness.js", "tags": ["@component:feedback"], "why": "the ticking freshness line [scope-143]" },

@@ -176,6 +176,10 @@
             "types": "./js/motion.d.ts",
             "default": "./js/motion.js"
         },
+        "./js/update": {
+            "types": "./js/update.d.ts",
+            "default": "./js/update.js"
+        },
         "./js/wizard": {
             "types": "./js/wizard.d.ts",
             "default": "./js/wizard.js"

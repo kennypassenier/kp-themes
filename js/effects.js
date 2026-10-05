@@ -585,6 +585,19 @@ export const TIMINGS = Object.freeze({
     // One fade, used twice: the brackets, then the readout behind them.
     // The two dimension lines this replaced needed four rows [scope-18].
     'kp-dim-label': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    // Information that updates in place [Kenny's picks on research/update-motion,
+    // 2026-10-05; js/update.js]: once per update, at the theme's
+    // max(size, close) × 1.25 from themeMotion() (formal 300 ms, cyberpunk
+    // 750 ms, titanium 240 ms; the CSS reads it from --kp-update-duration).
+    // The steps are the opacity stops this gate parses (it reads no from/to).
+    // formal's stamp: a frame that lands round the value and soaks in.
+    'kp-sig-formal-update-stamp': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 0.9, 0.6] },
+    // cyberpunk's glitch: a bounded jitter with two drop-shadow copies, and a
+    // torn line on the overlay that shows for half the time and goes.
+    'kp-sig-cyberpunk-update-glitch': { durationMs: 750, cycles: 1, property: 'transform', luminanceSteps: [] },
+    'kp-sig-cyberpunk-update-tear': { durationMs: 750, cycles: 1, property: 'opacity', luminanceSteps: [1] },
+    // titanium's heat tint: a colour-blended band in, across and out.
+    'kp-sig-titanium-update-anodise': { durationMs: 240, cycles: 1, property: 'opacity', luminanceSteps: [1, 1] },
 });
 
 /**

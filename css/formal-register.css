@@ -1753,5 +1753,59 @@
             }
         }
     }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration` on
+       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── formal: a checked stamp. A stamp's frame lands round the value, slightly askew, and soaks in. ── */
+        [data-theme='formal'] {
+            --kp-update: stamp;
+        }
+
+        [data-theme='formal'] [data-kp-updating='stamp'] {
+            position: relative;
+        }
+
+        [data-theme='formal'] [data-kp-updating='stamp']::before {
+            content: '';
+            position: absolute;
+            inset: -0.15em -0.35em;
+            z-index: 1;
+            pointer-events: none;
+            border: 1.5px solid var(--primary);
+            border-radius: calc(var(--radius, 0.25rem) * 0.5);
+            animation: kp-sig-formal-update-stamp var(--kp-update-duration) var(--kp-update-ease) both;
+        }
+
+        /* A chart changes at its last point: the stamp lands on its last part. */
+        [data-theme='formal'] [data-kp-updating='stamp']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-formal-update-stamp {
+            0% {
+                opacity: 0;
+                transform: scale(1.3) rotate(-5deg);
+            }
+
+            25% {
+                opacity: 0.9;
+                transform: scale(1) rotate(-2deg);
+            }
+
+            65% {
+                opacity: 0.6;
+                transform: scale(1) rotate(-2deg);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(1) rotate(-2deg);
+            }
+        }
+    }
 }
 /* ── End of the signature ── */

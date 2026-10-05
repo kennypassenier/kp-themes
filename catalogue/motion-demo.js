@@ -3,6 +3,7 @@
 // document like catalogue/demos.js, so the blocks work on their page, on the
 // review page that gathers them and in a compare column alike.
 import { attachMotion, leave, motionWatchCount } from '../js/motion.js';
+import { update } from '../js/update.js';
 
 let reading = 0;
 
@@ -228,4 +229,39 @@ document.addEventListener('click', (event) => {
             });
     };
     rebuild();
+});
+
+/* ------------------------------------------------------------- update */
+
+// Information that updates in place [Kenny's picks on research/update-motion,
+// 2026-10-05]: Update writes the second state into the key figure, its
+// chart, a state word and a table cell at once through update(), Update
+// again the first; each changed value plays its theme's update once. The
+// note under the buttons says how long the last one played (the longest of
+// the four), which is what a measurement reads.
+const UPDATE_SERIES = [
+    3.3, 3.31, 3.29, 3.27, 3.24, 3.22, 3.25, 3.31, 3.36, 3.38, 3.35, 3.33, 3.3, 3.28, 3.3, 3.32, 3.34, 3.37, 3.39, 3.35, 3.31, 3.28, 3.27,
+];
+const UPDATE_STATES = [
+    { figure: '3.26', chart: [...UPDATE_SERIES, 3.26], state: 'Running', time: '08:12' },
+    { figure: '3.41', chart: [...UPDATE_SERIES, 3.41], state: 'Restarting', time: '08:27' },
+];
+
+document.addEventListener('click', async (event) => {
+    const button = event.target instanceof Element ? event.target.closest('button[data-cat-update]') : null;
+    const block = button?.closest('.cat-block');
+    const stage = block?.querySelector('[data-cat-update]:not(button)');
+    if (!button || !block || !stage) return;
+    const next = UPDATE_STATES[Number(button.getAttribute('data-cat-update'))];
+    const parts = /** @type {const} */ (['figure', 'chart', 'state', 'time']);
+    const took = await Promise.all(
+        parts.map((part) => {
+            const el = stage.querySelector(`[data-cat-update-part="${part}"]`);
+            return el ? update(el, next[part]) : Promise.resolve(0);
+        }),
+    );
+    const note = block.querySelector('[data-cat-update-took]');
+    const longest = Math.max(...took);
+    if (note)
+        note.textContent = longest > 0 ? `The last update played in ${Math.round(longest)} ms.` : 'The values changed; nothing played in this theme.';
 });

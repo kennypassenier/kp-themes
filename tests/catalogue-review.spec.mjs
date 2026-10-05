@@ -198,6 +198,11 @@ test(
         await expect(page.locator('.cat-feedback [data-cat-prompt]')).toHaveText((await text.textContent()) ?? '');
 
         await top.locator('[data-cat-prompt-clear]').click();
+        // A demo that carries the review kit copies its own answer and has no
+        // catalogue prompt bar beside it [fix-96].
+        await page.goto('/research/open-reverse/demo.html');
+        await expect(page.locator('[data-rv-copy]').first()).toBeAttached();
+        await expect(page.locator('[data-cat-prompt-bar]')).toHaveCount(0);
         await expect(top.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
         await expect(text).not.toContainText(note);
         expect(await page.evaluate((key) => localStorage.getItem(key), FEEDBACK)).toBe('{}');

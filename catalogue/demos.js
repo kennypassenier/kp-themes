@@ -11,6 +11,42 @@ import { forgetRememberedExcept } from '../js/remember.js';
 import { attachCalendars, CALENDAR_PICK_EVENT, dayKey, formatDayKey, setCalendarDays, setCalendarLegend, setCalendarState } from '../js/calendar.js';
 import { numericTime } from '../js/chart.js';
 
+/**
+ * Wiring a block needs on itself (its own state, data fed into it, an
+ * observer), whichever page shows the block. A component page has its blocks
+ * when this module runs; the review page gathers them later, under ids with
+ * the page's prefix (`data--kpi-columns`), and says so with `cat-composed`.
+ * So a block is found by what it carries, never by its id, and is wired once,
+ * when it is first seen. Wiring that ran only at import, by id, left every
+ * such block dead on the review page (Kenny, 2026-10-05: the columns' buttons
+ * "change nothing", the trend tiles "stuck on loading").
+ * @type {(() => void)[]}
+ */
+const blockWirings = [];
+/**
+ * @param {string} marker a selector only this kind of block carries
+ * @param {(block: HTMLElement) => void} wire
+ */
+function eachBlock(marker, wire) {
+    /** @type {WeakSet<Element>} */
+    const wired = new WeakSet();
+    const run = () => {
+        for (const found of document.querySelectorAll(marker)) {
+            // A catalogue block, or the section of a site page that carries
+            // the same markup (gates/site: the examples section).
+            const block = /** @type {HTMLElement | null} */ (found.closest('.cat-block, [data-sc-section]'));
+            if (!block || wired.has(block)) continue;
+            wired.add(block);
+            wire(block);
+        }
+    };
+    blockWirings.push(run);
+    run();
+}
+document.addEventListener('cat-composed', () => {
+    for (const run of blockWirings) run();
+});
+
 const WORDS = {
     '': 'Saved. The handover note is visible to the day shift.',
     success: 'Success: incident INC-4471 closed.',
@@ -180,32 +216,41 @@ document.addEventListener('kp-datatable-request', (event) => {
 
 // A table attached before this module listened asked into the void; ask again.
 // One whose first page came in the markup (data-kp-total) never asked.
-import('../js/datatable.js').then(({ dataTable }) => {
-    for (const table of document.querySelectorAll('[data-cat-server]:not([data-kp-total])')) {
-        if (!heard.has(table)) dataTable(table)?.reload();
-    }
-    // catalogue/table.html#datatable-states: a loading table that says, in the
-    // app's own words, how long it has been asking (the handle's busy(), fix-80).
-    // The words are fixed rather than a running clock, so the block reads the
-    // same at every look.
-    // The same block's fourth table counts by itself (busy({ since }), fix-84),
-    // from a start 42 seconds before the page came, and its fifth was failed
-    // by the app with its own reason (fail(reason), fix-85).
-    let tries = 0;
-    const loadedAt = Date.now();
-    const busy = () => {
-        const waiting = [...document.querySelectorAll('[data-cat-busy], [data-cat-busy-since], [data-cat-fail-reason]')].filter((table) => {
-            const handle = dataTable(table);
-            if (handle === null) return true;
-            if (table.hasAttribute('data-cat-busy')) handle.busy(table.getAttribute('data-cat-busy'));
-            if (table.hasAttribute('data-cat-busy-since')) handle.busy({ text: table.getAttribute('data-cat-busy-since'), since: loadedAt - 42_000 });
-            if (table.hasAttribute('data-cat-fail-reason')) handle.fail(table.getAttribute('data-cat-fail-reason'));
-            return false;
-        });
-        if (waiting.length > 0 && tries++ < 60) requestAnimationFrame(busy);
-    };
-    busy();
-});
+// Per block, so a table the review page gathers later gets the same.
+const datatableModule = import('../js/datatable.js');
+eachBlock('[data-cat-server]:not([data-kp-total])', (block) =>
+    datatableModule.then(({ dataTable }) => {
+        for (const table of block.querySelectorAll('[data-cat-server]:not([data-kp-total])')) {
+            if (!heard.has(table)) dataTable(table)?.reload();
+        }
+    }),
+);
+eachBlock('[data-cat-busy], [data-cat-busy-since], [data-cat-fail-reason]', (block) =>
+    datatableModule.then(({ dataTable }) => {
+        // catalogue/table.html#datatable-states: a loading table that says, in the
+        // app's own words, how long it has been asking (the handle's busy(), fix-80).
+        // The words are fixed rather than a running clock, so the block reads the
+        // same at every look.
+        // The same block's fourth table counts by itself (busy({ since }), fix-84),
+        // from a start 42 seconds before the page came, and its fifth was failed
+        // by the app with its own reason (fail(reason), fix-85).
+        let tries = 0;
+        const loadedAt = Date.now();
+        const busy = () => {
+            const waiting = [...block.querySelectorAll('[data-cat-busy], [data-cat-busy-since], [data-cat-fail-reason]')].filter((table) => {
+                const handle = dataTable(table);
+                if (handle === null) return true;
+                if (table.hasAttribute('data-cat-busy')) handle.busy(table.getAttribute('data-cat-busy'));
+                if (table.hasAttribute('data-cat-busy-since'))
+                    handle.busy({ text: table.getAttribute('data-cat-busy-since'), since: loadedAt - 42_000 });
+                if (table.hasAttribute('data-cat-fail-reason')) handle.fail(table.getAttribute('data-cat-fail-reason'));
+                return false;
+            });
+            if (waiting.length > 0 && tries++ < 60) requestAnimationFrame(busy);
+        };
+        busy();
+    }),
+);
 
 /* ------------------------------------------ the data table's edit refusal */
 
@@ -319,8 +364,49 @@ function settleEffects() {
 // ran; a mutation observer's callback runs before either reads them.
 settleEffects();
 new MutationObserver(() => settleEffects()).observe(document.documentElement, { childList: true, subtree: true });
+// A theme change restamps every host, because each attach reads the theme's
+// routine. Stamping all of them at once held the switch for 180 to 270 ms on
+// the review page (measured 2026-10-05), so only what is on screen (or in the
+// open review dialog) is stamped now; the rest are marked stale and stamped
+// when they come into view, or in the idle time after the switch, whichever
+// comes first. Everything is stamped again within a second, so a later
+// reading of the page (block-hash.js) never finds a host in the old theme.
+/** Hosts waiting for a stamp, in page order. @type {Set<Element>} */
+const staleEffects = new Set();
+const staleSeen = new IntersectionObserver((entries) => {
+    for (const entry of entries)
+        if (entry.isIntersecting) {
+            staleSeen.unobserve(entry.target);
+            if (staleEffects.delete(entry.target)) stampEffect(entry.target);
+        }
+});
+/** @type {number} */
+let staleTurn = 0;
+const stampStale = () => {
+    staleTurn = 0;
+    const host = staleEffects.values().next().value;
+    if (!host) return;
+    staleEffects.delete(host);
+    staleSeen.unobserve(host);
+    stampEffect(host);
+    if (staleEffects.size) staleTurn = requestAnimationFrame(stampStale);
+};
 document.addEventListener(THEME_EVENT, () => {
-    for (const host of document.querySelectorAll('[data-cat-effect]')) stampEffect(host);
+    const view = document.documentElement.clientHeight;
+    for (const host of document.querySelectorAll('[data-cat-effect]')) {
+        const box = host.getBoundingClientRect();
+        // On screen with a screen's margin either way, or inside a dialog
+        // the reader has open: stamped now, so what is watched never blinks.
+        if ((box.bottom > -view && box.top < view * 2) || host.closest('dialog[open]')) {
+            staleEffects.delete(host);
+            staleSeen.unobserve(host);
+            stampEffect(host);
+        } else {
+            staleEffects.add(host);
+            staleSeen.observe(host);
+        }
+    }
+    if (staleEffects.size && !staleTurn) staleTurn = requestAnimationFrame(stampStale);
 });
 document.addEventListener('click', (event) => {
     const button = event.target instanceof Element ? event.target.closest('[data-cat-replay]') : null;
@@ -359,9 +445,8 @@ document.addEventListener('click', (event) => {
 // setMeter(); the phone pane is a copy of the tiles. The table's meters are
 // written in the markup the way setMeter() writes them, so the page reads
 // the same before the script, and after Loading is pressed twice.
-if (document.getElementById('meter')) {
+eachBlock('[data-cat-meter-rows], button[data-cat-meter]', (block) => {
     import('../js/kpi.js').then(({ setMeter }) => {
-        const block = /** @type {HTMLElement} */ (document.getElementById('meter'));
         const phone = block.querySelector('[data-cat-meter-phone]');
         const tiles = block.querySelector('[data-cat-meter-tiles]');
         if (phone && tiles) {
@@ -429,12 +514,11 @@ if (document.getElementById('meter')) {
             paint();
         });
     });
-}
+});
 
 // catalogue/data.html#kpi-columns: how many tiles and how wide the strip is;
 // the line says what attachKpiStrips() chose.
-if (document.getElementById('kpi-columns')) {
-    const block = /** @type {HTMLElement} */ (document.getElementById('kpi-columns'));
+eachBlock('[data-cat-kpis-strip]', (block) => {
     const strip = /** @type {HTMLElement | null} */ (block.querySelector('[data-cat-kpis-strip]'));
     const stage = /** @type {HTMLElement | null} */ (block.querySelector('[data-cat-kpis-stage]'));
     const more = /** @type {HTMLTemplateElement | null} */ (block.querySelector('template[data-cat-kpis-more]'));
@@ -527,14 +611,13 @@ if (document.getElementById('kpi-columns')) {
         }
         describe();
     });
-}
+});
 
 // catalogue/data.html#kpi-trend: 24 hours of readings every ten minutes up
 // to the page's now, the same line at every look of the same moment; the
 // tiles' numbers and words come from them. Ten minutes later moves now on;
 // Loading empties the filled tiles; the links say where they would go.
-if (document.getElementById('kpi-trend')) {
-    const block = /** @type {HTMLElement} */ (document.getElementById('kpi-trend'));
+eachBlock('[data-cat-trend]', (block) => {
     const MINUTE = 60_000;
     const STEP = 10 * MINUTE;
     const DAY = 24 * 60 * MINUTE;
@@ -656,7 +739,7 @@ if (document.getElementById('kpi-trend')) {
             }
         });
     });
-}
+});
 // catalogue/data.html#state-word: every state word in the block moves on a
 // step every 1.2 s while the button is pressed; the plain words are set as
 // text, the .kp-state-word ones through setStateWord().
@@ -958,27 +1041,72 @@ const showTileHeight = () => {
     }
     requestAnimationFrame(showTileHeight);
 };
-if (document.querySelector('[data-cat-tiles-set-height]')) requestAnimationFrame(showTileHeight);
+let tileHeightShown = false;
+eachBlock('[data-cat-tiles-set-height]', () => {
+    if (tileHeightShown) return;
+    tileHeightShown = true;
+    requestAnimationFrame(showTileHeight);
+});
 
 /* ------------------------------------ remembered groups on a live board */
 
 // catalogue/structure.html#remember-later: the board rebuilt from scratch,
-// held open while a search runs, and its memory pruned to its groups.
+// held open while a search runs, and its memory pruned to its groups. The
+// new groups are drawn open, as the markup writes them, so what comes back
+// closed is the memory's doing; a line under the buttons says what each
+// press did, since a rebuild that works looks like nothing happened (Kenny,
+// 2026-10-05: "rebuild doet niks?").
+/** @param {Element} block @param {string} said */
+const sayBoard = (block, said) => {
+    let line = block.querySelector('[data-cat-board-log]');
+    if (!line) {
+        line = Object.assign(document.createElement('p'), { className: 'kp-text-muted kp-fs-sm' });
+        line.setAttribute('role', 'status');
+        line.setAttribute('data-cat-board-log', '');
+        block.querySelector('.cat-live__bar')?.after(line);
+    }
+    line.textContent = said;
+};
+/** Two frames on, so js/remember.js has painted what it holds before the line is written. @param {() => void} then */
+const afterPaint = (then) => requestAnimationFrame(() => requestAnimationFrame(then));
+/** @param {Element} board */
+const closedGroups = (board) =>
+    [...board.querySelectorAll('details:not([open]) > summary')].map((summary) => summary.textContent?.trim()).join(', ') || 'none';
 document.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('[data-cat-board]') : null;
     const block = control?.closest('.cat-block');
     const board = block?.querySelector('div[data-cat-board]');
-    if (!control || !board) return;
+    if (!control || !board || control === board || !block) return;
     const what = control.getAttribute('data-cat-board');
-    if (what === 'rebuild') board.replaceChildren(...[...board.children].map((group) => group.cloneNode(true)));
+    if (what === 'rebuild') {
+        const before = closedGroups(board);
+        board.replaceChildren(
+            ...[...board.children].map((group) => {
+                const fresh = /** @type {Element} */ (group.cloneNode(true));
+                fresh.setAttribute('open', '');
+                return fresh;
+            }),
+        );
+        afterPaint(() =>
+            sayBoard(
+                block,
+                `Rebuilt: ${board.children.length} new groups, drawn open. Closed before: ${before}; closed now, from memory: ${closedGroups(board)}.`,
+            ),
+        );
+    }
     if (what === 'hold') {
         const on = /** @type {HTMLInputElement} */ (control).checked;
         board.toggleAttribute('data-kp-remember-hold', on);
         if (on) for (const group of board.querySelectorAll('details')) /** @type {HTMLDetailsElement} */ (group).open = true;
+        // The groups that come back closed glide shut, so what is closed is
+        // read once the fold is done rather than in the next frame.
+        if (on) sayBoard(block, 'Search running: every group open, and nothing opened or closed now is remembered.');
+        else setTimeout(() => sayBoard(block, `Search over: each group is back as you left it; closed: ${closedGroups(board)}.`), 700);
     }
     if (what === 'prune') {
         const names = [...board.querySelectorAll('[data-kp-remember]')].map((group) => group.getAttribute('data-kp-remember') ?? '');
-        console.info(`Forgot ${forgetRememberedExcept('disclosure', 'cat-apps-', names)} stored groups that are no longer on the board.`);
+        const gone = forgetRememberedExcept('disclosure', 'cat-apps-', names);
+        sayBoard(block, `Forgot ${gone} stored ${gone === 1 ? 'group' : 'groups'} no longer on the board; the ${names.length} on it keep theirs.`);
     }
 });
 
@@ -1475,7 +1603,8 @@ const catTourSteps = (at) => [
 /** The button that opened the Help drawer last, for the tour Help starts. @type {HTMLElement | null} */
 let helpOpener = null;
 document.addEventListener('kp-dialog-open', (event) => {
-    if (event.target instanceof Element && event.target.id === 'ov-dr-help') helpOpener = /** @type {CustomEvent} */ (event).detail.trigger;
+    // `overlays--ov-dr-help` on the review page.
+    if (event.target instanceof Element && /(^|--)ov-dr-help$/.test(event.target.id)) helpOpener = /** @type {CustomEvent} */ (event).detail.trigger;
 });
 /** @param {string} said */
 const sayTour = (said) =>
@@ -1516,8 +1645,8 @@ document.addEventListener('click', (event) => {
         runCatTour('wide', helpOpener);
     } else runCatTour(what === 'phone' ? 'phone' : 'wide', /** @type {HTMLElement} */ (button));
 });
-if (document.querySelector('[data-cat-tour-log]')) {
+eachBlock('[data-cat-tour-log]', () => {
     sayTour('No tour yet.');
     // `?tour` starts it, as a consumer's first visit would.
     if (new URLSearchParams(location.search).has('tour')) runCatTour('wide', null);
-}
+});
