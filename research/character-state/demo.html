@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-state">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a state word of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="state.css" />
+        <link rel="stylesheet" href="state-a.css" />
+        <link rel="stylesheet" href="state-b.css" />
+        <link rel="stylesheet" href="state-c.css" />
+        <link rel="stylesheet" href="state-d.css" />
+    </head>
+    <body>
+        <main class="sw-page">
+            <header class="sw-intro">
+                <h1>A state word of its own, per theme: one pick per aspect</h1>
+                <p>
+                    Phase 1 of the character round for the state word (Kenny's standing shape, as the trend tile and the meter): per theme you pick
+                    the shape of the word and its dot, the tone a state reads in, and how the word changes, each from three options and each on its
+                    own. The word is the package's own (<code>.kp-state-word</code>, <code>setStateWord()</code> in <code>js/components.js</code>); an
+                    option only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>state.css</code>), one
+                    attribute per aspect, and keeps the word's width in every state.
+                </p>
+                <p class="sw-motion" data-sw-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the word still changes but the picture behind the
+                    change stands still. Turn it off in the system settings to judge the motion.
+                </p>
+                <p class="sw-meta">
+                    Every chip shows one pump's state, picked from <b>Running</b>, <b>Stopped</b>, <b>Restarting</b>, <b>Starting in 3 min</b> and
+                    <b>Failed</b>; the dot and the word's tone follow the state (good, muted, pending or bad). This theme:
+                    <b data-sw-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="sw-sec"
+                data-review-item="state"
+                data-review-components="state-word"
+                data-review-title="The state word"
+                aria-labelledby="h-state"
+            >
+                <div class="sw-sec__head">
+                    <h2 id="h-state">The state word in <span data-sw-theme-name>this theme</span></h2>
+                    <p>
+                        Three things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it;
+                        the combination at the top shows your picks together. <b>Shape</b> is the dot and the word's plate, a tone shows how Running,
+                        Stopped, Restarting, Starting in 3 min and Failed read, and <b>Change</b> plays when the word moves to a new state; the speed
+                        slows every animation.
+                    </p>
+                </div>
+                <div class="sw-controls" data-review-controls>
+                    <div class="sw-actions" role="group" aria-label="The state of every chip">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Running" aria-pressed="true">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Stopped" aria-pressed="false">Stopped</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Restarting" aria-pressed="false">Restarting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Starting in 3 min" aria-pressed="false">
+                            Starting in 3 min
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Failed" aria-pressed="false">Failed</button>
+                    </div>
+                    <div class="sw-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="sw-log" data-sw-log aria-live="polite">A click on State plays the change.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="sw-preview">
+                    <div class="sw-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-sw-picks>…</p>
+                    </div>
+                    <div class="sw-row" data-sw-preview>
+                        <b>Pump 1</b>
+                        <span class="sw-chip" data-sw data-sw-shape="1" data-sw-tone="1" data-sw-change="1" data-sw-kind="good">
+                            <span
+                                class="kp-state-word"
+                                data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min&#10;Failed"
+                                data-sw-word
+                                >Running</span
+                            >
+                        </span>
+                        <button type="button" class="kp-button kp-button--sm">Stop</button>
+                    </div>
+                </div>
+                <div class="sw-aspects" data-sw-aspects></div>
+                <div class="sw-reference">
+                    <div class="sw-aspect__head">
+                        <h3>For reference: the plain state word, as today</h3>
+                        <p>
+                            The package's state word as it ships, not an option: plain text as wide as the widest word it can show, so a button beside
+                            it never moves when the state changes; the same shape in every theme. The third row is centred
+                            (<code>.kp-state-word--center</code>): the word stays in the middle of its own width.
+                        </p>
+                    </div>
+                    <ul class="kp-stack sw-strip">
+                        <li class="kp-row">
+                            <b>Pump 1</b>
+                            <span
+                                class="kp-state-word"
+                                data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min&#10;Failed"
+                                data-sw-plain
+                                >Running</span
+                            >
+                            <button type="button" class="kp-button kp-button--sm">Stop</button>
+                        </li>
+                        <li class="kp-row">
+                            <b>Pump 2</b>
+                            <span
+                                class="kp-state-word"
+                                data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min&#10;Failed"
+                                data-sw-plain
+                                >Stopped</span
+                            >
+                            <button type="button" class="kp-button kp-button--sm">Start</button>
+                        </li>
+                        <li class="kp-row">
+                            <b>Pump 3</b>
+                            <span
+                                class="kp-state-word kp-state-word--center"
+                                data-kp-words="Running&#10;Stopped&#10;Restarting&#10;Starting in 3 min&#10;Failed"
+                                data-sw-plain
+                                >Restarting</span
+                            >
+                            <button type="button" class="kp-button kp-button--sm">Stop</button>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-state-r1",
+                "reopen": [
+                    "formal|state",
+                    "light|state",
+                    "dark|state",
+                    "cyberpunk|state",
+                    "synthwave|state",
+                    "pastel|state",
+                    "terminal|state",
+                    "forest|state",
+                    "high-contrast|state",
+                    "sepia|state",
+                    "blueprint|state",
+                    "solstice|state",
+                    "brutalism|state",
+                    "deco|state",
+                    "phantom|state",
+                    "shade-light|state",
+                    "shade-dark|state",
+                    "retro|state",
+                    "grotesk|state",
+                    "lapis|state",
+                    "nostromo|state",
+                    "titanium|state"
+                ]
+            }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

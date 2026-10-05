@@ -1,0 +1,177 @@
+/* The page: a centred column, controls in rows of groups, a composed
+   preview, one row of three columns per aspect, the plain list for
+   reference. The list's own drawing is in actions.css. */
+.ac-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.ac-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ac-intro h1,
+.ac-intro p {
+    margin: 0;
+}
+
+.ac-meta,
+.ac-motion,
+.ac-log {
+    color: var(--muted-foreground);
+}
+
+.ac-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ac-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-ac-state][aria-pressed='true'],
+[data-ac-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.ac-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ac-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ac-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ac-sec__head h2,
+.ac-sec__head p {
+    margin: 0;
+}
+
+.ac-sec__head p {
+    color: var(--muted-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+/* One cell: a list of four rows. A fixed minimum height, so a row does
+   not jump when loading turns on and off. */
+.ac-cell {
+    min-block-size: 10rem;
+}
+
+.ac-preview,
+.ac-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ac-preview > .ac-cell,
+.ac-reference > [data-ac-ref] {
+    inline-size: calc((100% - 2 * var(--kp-space-lg, 1.5rem)) / 3);
+}
+
+@media (max-width: 60rem) {
+    .ac-preview > .ac-cell,
+    .ac-reference > [data-ac-ref] {
+        inline-size: auto;
+    }
+}
+
+.ac-preview__head h3,
+.ac-preview__head p,
+.ac-aspect__head h3,
+.ac-aspect__head p {
+    margin: 0;
+}
+
+.ac-preview__head p,
+.ac-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ac-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.ac-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.ac-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* Three columns, one under the other below 60rem; the trio shares its
+   rows (a subgrid) so the three cells start on one line however long
+   each description is. */
+.ac-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .ac-trio {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ac-col {
+    display: grid;
+    grid-row: span 3 / span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ac-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.ac-label__no {
+    color: var(--muted-foreground);
+    font-weight: 400;
+}
+
+.ac-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ac-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}

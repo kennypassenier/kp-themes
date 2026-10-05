@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-actions">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — action columns of their own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="actions.css" />
+        <link rel="stylesheet" href="actions-a.css" />
+        <link rel="stylesheet" href="actions-b.css" />
+        <link rel="stylesheet" href="actions-c.css" />
+        <link rel="stylesheet" href="actions-d.css" />
+    </head>
+    <body>
+        <main class="ac-page">
+            <header class="ac-intro">
+                <h1>Action columns of their own, per theme: one pick per aspect</h1>
+                <p>
+                    The ninth component of the character round, built as the trend tile, the meter and the attention band were (Kenny, 2026-10-05:
+                    keep every aspect separate so one can be picked over another, "it should be like this in the future"). Five things are picked,
+                    each on its own: the shape of the row and its column rail, the picture while the list is still loading, how a row arrives and
+                    leaves (the leave is the arrival's mirror), the tone that sets the primary and the destructive column apart, and how the rail
+                    answers hover and focus. Nothing is ticked for the reviewer.
+                </p>
+                <p class="ac-motion" data-ac-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so a row arrives and leaves at once and the loading picture stands still. Turn reduced
+                    motion off in the system settings to judge arrival, leave and loading.
+                </p>
+                <p class="ac-meta">
+                    <code>js/actions.js</code> is not changed: every list below is laid out by <code>attachActionColumns()</code>, which names each
+                    button's shared column (<code>.kp-action-list</code> is a CSS subgrid; it only sets <code>--kp-action-col</code> and
+                    <code>--kp-action-count</code>). An option only restyles the list from the theme's tokens, in the theme's
+                    <code>kp.signature</code> layer (<code>actions.css</code>), one attribute per aspect, and keeps each row's height steady in every
+                    state. This theme: <b data-ac-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="ac-sec"
+                data-review-item="actions"
+                data-review-components="row-actions action-list"
+                data-review-title="Action columns"
+                aria-labelledby="h-actions"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-actions">Action columns in <span data-ac-theme-name>this theme</span></h2>
+                    <p>
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Loading</b> shows the loading picture, <b>Add row</b> plays how a row
+                        arrives, <b>Resolve top row</b> plays how it leaves (the mirror of arrival), and the speed slows every animation. Move the
+                        pointer over a row's buttons, or tab to one, to judge the rail's hover and focus.
+                    </p>
+                </div>
+                <div class="ac-controls" data-review-controls>
+                    <div class="ac-actions" role="group" aria-label="State of every list">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-state="loading" aria-pressed="false">Loading</button>
+                    </div>
+                    <div class="ac-actions" role="group" aria-label="Rows on every list">
+                        <b>Rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-add>Add row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-resolve>Resolve top row</button>
+                    </div>
+                    <div class="ac-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ac-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="ac-log" data-ac-log aria-live="polite">A row button goes nowhere here; a click says which one and its row.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="ac-preview">
+                    <div class="ac-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-ac-picks>…</p>
+                    </div>
+                    <div
+                        class="ac-cell"
+                        data-ac-cell
+                        data-ac-preview
+                        data-ac-shape="1"
+                        data-ac-loading="1"
+                        data-ac-arrival="1"
+                        data-ac-tone="1"
+                        data-ac-interactive="1"
+                    >
+                        <ul class="kp-action-list" data-ac></ul>
+                        <div class="ac-loading-panel" data-ac-loading-panel hidden></div>
+                    </div>
+                </div>
+                <div class="ac-aspects" data-ac-aspects></div>
+                <div class="ac-reference">
+                    <div class="ac-aspect__head">
+                        <h3>For reference: the plain list, as today</h3>
+                        <p>
+                            The package's action columns as they ship, not an option: a subgrid list where every role's button shares one column at
+                            one width, the primary action last, a hairline rule under each row; the same shape in every theme.
+                        </p>
+                    </div>
+                    <ul class="kp-action-list" data-ac-ref></ul>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-05-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

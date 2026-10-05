@@ -1,0 +1,741 @@
+/* research/character-state, phase 2, group d (shade-dark, retro, grotesk,
+   lapis, nostromo): the state word's three aspects (shape, tone, change —
+   see state.css's header and README.md) for this theme group only, in the
+   model state.css set for formal and titanium. Every rule names one
+   aspect and one option only, so any combination composes; the kind
+   selectors drop out in a register.
+
+   Three custom properties carry the tone signal into whichever element a
+   shape nominates for it, so tone stays one small block reused unchanged
+   across all five themes here:
+     --sw-tint      the tone-2 fill (the lamp/bevel/bar/pool a shape names
+                     as its "coloured surface"), with a neutral fallback
+                     baked into the shape that uses it.
+     --sw-tint-ink  the ink paired with a full-strength --sw-tint fill
+                     (the status pair's own foreground token); unset for
+                     "muted" so the word keeps its ordinary ink there.
+     --sw-accent2   the tone-3 extra (the rim/tick/grid a shape names as
+                     its "warning accent"), set only for pending and bad,
+                     per the brief's "a warning or failed state also …".
+   Tone 3 additionally sets `--sw-dot-ring` on every kind, so the three
+   tone options always differ in computed style even where a shape has no
+   frame of its own to carry `--sw-accent2` — the ring is the one part of
+   the contract every shape shares (`[data-sw]::before`'s `box-shadow`).
+
+   Colour: tokens only (DI9) — `--success/-foreground`, `--warning/-foreground`,
+   `--destructive/-foreground`, `--muted-foreground`, `--border-strong`.
+   Contrast: the word's ink is only ever recoloured for good/pending/bad
+   with that kind's own `-foreground` pair (designed to read against its
+   matching fill), never for "muted" — the word simply keeps its default
+   ink there, which already holds 4.5:1 against the surface it sits on in
+   every shape. A dot, ring or frame that carries the tone is a solid fill
+   or outline of a status token against the card/background it sits on;
+   measured (relative-luminance) against each theme's own card: this holds
+   3:1 for every token in shade-dark, grotesk and nostromo, but retro's
+   `--warning` (1.0:1 — a bright yellow on a near-equal grey) and lapis's
+   `--success`/`--warning` (both ~1.8:1 — dark fills on a dark navy card)
+   do not, so pending there (and good in lapis) use the matching
+   `-foreground` token as the dot/ring/frame fill instead (still a status
+   token, just the member of its pair that actually separates); retro's
+   scope-chip ink is `--success-foreground` for the same reason, measured
+   against the chip's own near-black plate rather than the card.
+   Motion: one `prefers-reduced-motion: no-preference` block per theme, at
+   the end of that theme's rules; no keyframe touches opacity; the Change
+   plays once on `[data-sw-playing]`, never looping at rest. */
+
+@layer kp.signature {
+    /* ════════════════════════ shade-dark ═══════════════════════════════
+       A dark reading room: silverpoint hairlines, a warm reading lamp, ink
+       on a dark plate. */
+
+    /* ── Shape: the silverpoint dot (1), the lamp tag (2), the ink chip (3) ── */
+
+    [data-theme='shade-dark'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-plate: linear-gradient(90deg, color-mix(in oklch, var(--sw-tint, var(--border-strong)) 18%, transparent) 0%, transparent 80%);
+        --sw-font: 0.95em var(--theme-font-display, serif);
+    }
+
+    [data-theme='shade-dark'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.6em;
+        --sw-dot-ring: 0 0 5px 1px var(--sw-dot);
+        --sw-radius: 999px;
+        --sw-pad: 0.15em 0.6em;
+        --sw-plate: radial-gradient(circle at 18% 50%, color-mix(in oklch, var(--sw-tint, var(--sw-dot)) 30%, var(--card)) 0%, var(--card) 75%);
+        --sw-ink: var(--sw-tint-ink, inherit);
+    }
+
+    [data-theme='shade-dark'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-frame: 1px solid var(--sw-accent2, var(--border-strong));
+        --sw-radius: var(--radius);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: color-mix(in oklch, var(--card) 82%, black 18%);
+        --sw-ink: var(--card-foreground);
+    }
+
+    /* ── Tone: the silver colour only (1), the lamp colour (2), the rim warning (3) ── */
+
+    [data-theme='shade-dark'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='shade-dark'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-tint: var(--success);
+        --sw-tint-ink: var(--success-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-tint: var(--warning);
+        --sw-tint-ink: var(--warning-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-tint: var(--destructive);
+        --sw-tint-ink: var(--destructive-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-tint: var(--muted);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+
+    [data-theme='shade-dark'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-dot-ring: 0 0 0 2px var(--success);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-accent2: var(--warning);
+        --sw-dot-ring: 0 0 0 2px var(--warning);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-accent2: var(--destructive);
+        --sw-dot-ring: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='shade-dark'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Change: a glint (1), the lamp dims and lifts (2), reinked (3) ── */
+
+    [data-theme='shade-dark'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-shade-dark-glint 0.6s ease-out;
+    }
+    [data-theme='shade-dark'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-shade-dark-lamp 0.7s ease-in-out;
+    }
+    [data-theme='shade-dark'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-shade-dark-reink 0.5s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-shade-dark-glint {
+            0% {
+                filter: brightness(1);
+            }
+            45% {
+                filter: brightness(1.8);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-shade-dark-lamp {
+            0% {
+                filter: brightness(1);
+            }
+            40% {
+                filter: brightness(0.7);
+            }
+            70% {
+                filter: brightness(1.25);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-shade-dark-reink {
+            0% {
+                filter: brightness(0.6);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+    }
+
+    /* ════════════════════════════ retro ═════════════════════════════════
+       Beige-plastic hardware: a square LED, a bevelled bezel, a green CRT
+       scope well. */
+
+    /* ── Shape: the LED dot (1), the bevelled tag (2), the scope chip (3) ── */
+
+    [data-theme='retro'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 1px;
+        --sw-dot-ring: inset 0 0 0 1px color-mix(in oklch, black 25%, transparent);
+        --sw-font: 0.9em var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='retro'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot-radius: 1px;
+        --sw-dot-ring: inset 0 0 0 1px color-mix(in oklch, black 30%, transparent);
+        --sw-frame: 2px solid var(--sw-accent2, var(--border-strong));
+        --sw-radius: 2px;
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: var(--sw-tint, var(--secondary));
+        --sw-ink: var(--sw-tint-ink, inherit);
+    }
+
+    [data-theme='retro'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot-radius: 1px;
+        --sw-radius: 2px;
+        --sw-pad: 0.1em 0.4em;
+        --sw-plate: repeating-linear-gradient(0deg, color-mix(in oklch, var(--sw-accent2, var(--success)) 35%, black) 0 1px, black 1px 3px);
+        --sw-ink: var(--success-foreground);
+        --sw-font: 0.85em var(--theme-font-mono, monospace);
+    }
+
+    /* ── Tone: the LED colour only (1), the bevel colour (2), the scope warning (3) ── */
+
+    [data-theme='retro'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='retro'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        /* --warning measures under 3:1 against this theme's card/background
+           (the LED would vanish); its paired -foreground token reads dark
+           and holds comfortably, so pending borrows it here as the dot's
+           own fill, not as text. */
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='retro'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='retro'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='retro'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-tint: var(--success);
+        --sw-tint-ink: var(--success-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='retro'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-tint: var(--warning);
+        --sw-tint-ink: var(--warning-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='retro'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-tint: var(--destructive);
+        --sw-tint-ink: var(--destructive-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='retro'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-tint: var(--muted);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+
+    [data-theme='retro'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-dot-ring: 0 0 0 2px var(--success);
+    }
+    [data-theme='retro'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-accent2: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--warning-foreground);
+    }
+    [data-theme='retro'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-accent2: var(--destructive);
+        --sw-dot-ring: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='retro'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Change: the LED blinks (1), switched (2), a trace jumps (3) ── */
+
+    [data-theme='retro'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-retro-blink 0.5s steps(1, jump-end);
+    }
+    [data-theme='retro'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-retro-switch 0.3s steps(1, jump-end);
+    }
+    [data-theme='retro'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-retro-trace 0.3s steps(2, jump-end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-retro-blink {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            15%,
+            45% {
+                filter: brightness(0.25);
+            }
+            30%,
+            60% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-retro-switch {
+            0% {
+                filter: invert(0);
+            }
+            50% {
+                filter: invert(1);
+            }
+            100% {
+                filter: invert(0);
+            }
+        }
+
+        @keyframes sw-retro-trace {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-0.15em);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    /* ═══════════════════════════ grotesk ════════════════════════════════
+       Swiss grid, flat colour, hard edges: a colour-bar square, a transit
+       bar, an index tick. */
+
+    /* ── Shape: the colour bar dot (1), the transit tag (2), the index chip (3) ── */
+
+    [data-theme='grotesk'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot-radius: 0;
+        --sw-font: 800 0.95em var(--theme-font-display, sans-serif);
+    }
+
+    [data-theme='grotesk'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot-radius: 0;
+        --sw-pad: 0.1em 0.5em 0.1em 0.7em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: inset 0.35em 0 0 0 var(--sw-tint, var(--muted-foreground));
+        --sw-ink: var(--sw-tint-ink, inherit);
+        --sw-font: 700 0.85em var(--theme-font-display, sans-serif);
+    }
+
+    [data-theme='grotesk'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot-radius: 0;
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: inset -0.5em -0.5em 0 -0.4em var(--sw-accent2, var(--muted-foreground));
+    }
+
+    /* ── Tone: the flat colour only (1), the bar colour (2), the index warning (3) ── */
+
+    [data-theme='grotesk'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='grotesk'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='grotesk'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='grotesk'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='grotesk'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-tint: var(--success);
+        --sw-tint-ink: var(--success-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='grotesk'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-tint: var(--warning);
+        --sw-tint-ink: var(--warning-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='grotesk'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-tint: var(--destructive);
+        --sw-tint-ink: var(--destructive-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='grotesk'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-tint: var(--muted-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+
+    [data-theme='grotesk'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-dot-ring: 0 0 0 2px var(--success);
+    }
+    [data-theme='grotesk'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-accent2: var(--warning);
+        --sw-dot-ring: 0 0 0 2px var(--warning);
+    }
+    [data-theme='grotesk'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-accent2: var(--destructive);
+        --sw-dot-ring: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='grotesk'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Change: a flat swap (1), the bar redraws (2), ticked (3) ── */
+
+    [data-theme='grotesk'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-grotesk-swap 0.3s steps(2, jump-end);
+    }
+    [data-theme='grotesk'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-grotesk-bar 0.4s ease-out;
+    }
+    [data-theme='grotesk'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-grotesk-tick 0.3s steps(2, jump-end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-grotesk-swap {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.4);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-grotesk-bar {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--sw-tint, var(--muted-foreground));
+            }
+            100% {
+                box-shadow: inset 0.35em 0 0 0 var(--sw-tint, var(--muted-foreground));
+            }
+        }
+
+        @keyframes sw-grotesk-tick {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+
+    /* ════════════════════════════ lapis ═════════════════════════════════
+       Lapis lazuli and gold leaf: a gold dot, a girih lattice, a
+       vellum-and-gold chip. */
+
+    /* ── Shape: the gold dot (1), the girih tag (2), the vellum chip (3) ── */
+
+    [data-theme='lapis'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-font: 0.95em var(--theme-font-display, serif);
+    }
+
+    [data-theme='lapis'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot-ring: 0 0 0 1px var(--sw-dot);
+        --sw-radius: var(--radius);
+        --sw-pad: 0.15em 0.55em;
+        --sw-plate: repeating-conic-gradient(
+            from 45deg,
+            color-mix(in oklch, var(--sw-tint, var(--border-strong)) 22%, transparent) 0deg 15deg,
+            transparent 15deg 90deg
+        );
+        --sw-ink: var(--sw-tint-ink, inherit);
+    }
+
+    [data-theme='lapis'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.45em;
+        --sw-frame: 2px solid var(--sw-accent2, var(--border-strong));
+        --sw-radius: var(--radius);
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: var(--card);
+    }
+
+    /* ── Tone: the gold colour only (1), the lattice colour (2), the rim warning (3) ── */
+
+    [data-theme='lapis'] [data-sw-tone='1'][data-sw-kind='good'] {
+        /* --success and --warning both measure under 2:1 against this
+           theme's navy card/background (dark fill on dark ground); their
+           -foreground tokens read light and hold comfortably, so good and
+           pending borrow them here as the dot's own fill, not as text. */
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='lapis'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='lapis'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='lapis'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='lapis'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-tint: var(--success);
+        --sw-tint-ink: var(--success-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='lapis'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-tint: var(--warning);
+        --sw-tint-ink: var(--warning-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='lapis'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-tint: var(--destructive);
+        --sw-tint-ink: var(--destructive-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='lapis'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-tint: var(--muted-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+
+    [data-theme='lapis'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--success-foreground);
+    }
+    [data-theme='lapis'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-accent2: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--warning-foreground);
+    }
+    [data-theme='lapis'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-accent2: var(--destructive);
+        --sw-dot-ring: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='lapis'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Change: a gleam (1), the lattice shifts (2), reinked (3) ── */
+
+    [data-theme='lapis'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-lapis-gleam 0.55s ease-in-out;
+    }
+    [data-theme='lapis'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-lapis-lattice 0.5s steps(3, jump-end);
+    }
+    [data-theme='lapis'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-lapis-reink 0.5s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-lapis-gleam {
+            0% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.6);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-lapis-lattice {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0.6em 0;
+            }
+        }
+
+        @keyframes sw-lapis-reink {
+            0% {
+                filter: brightness(0.8);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+    }
+
+    /* ═══════════════════════════ nostromo ═══════════════════════════════
+       Cassette futurism: a phosphor CRT dot, an embossed indicator lamp, a
+       scanlined panel window. */
+
+    /* ── Shape: the CRT dot (1), the indicator tag (2), the panel chip (3) ── */
+
+    [data-theme='nostromo'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-case: uppercase;
+        --sw-track: 0.04em;
+        --sw-font: 500 0.85em var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='nostromo'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+        --sw-radius: var(--radius);
+        --sw-pad: 0.12em 0.55em;
+        --sw-plate: var(--sw-tint, var(--muted));
+        --sw-plate-shadow:
+            inset 1px 1px 0 0 color-mix(in oklch, black 12%, transparent), inset -1px -1px 0 0 color-mix(in oklch, white 30%, transparent);
+        --sw-ink: var(--sw-tint-ink, inherit);
+    }
+
+    [data-theme='nostromo'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.45em;
+        --sw-frame: 1px solid var(--sw-accent2, var(--border-strong));
+        --sw-radius: var(--radius);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: repeating-linear-gradient(180deg, color-mix(in oklch, var(--card) 92%, black) 0 2px, var(--card) 2px 4px);
+    }
+
+    /* ── Tone: the phosphor colour only (1), the lamp colour (2), the klaxon warning (3) ── */
+
+    [data-theme='nostromo'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='nostromo'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='nostromo'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='nostromo'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-tint: var(--success);
+        --sw-tint-ink: var(--success-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='nostromo'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-tint: var(--warning);
+        --sw-tint-ink: var(--warning-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='nostromo'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-tint: var(--destructive);
+        --sw-tint-ink: var(--destructive-foreground);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+    [data-theme='nostromo'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-tint: var(--muted);
+        --sw-dot-ring: 0 0 4px 1px var(--sw-dot);
+    }
+
+    [data-theme='nostromo'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-dot-ring: 0 0 0 2px var(--success);
+    }
+    [data-theme='nostromo'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-accent2: var(--warning);
+        --sw-dot-ring: 0 0 0 2px var(--warning);
+    }
+    [data-theme='nostromo'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-accent2: var(--destructive);
+        --sw-dot-ring: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='nostromo'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── Change: a blip (1), the lamp lights (2), rescanned (3) ── */
+
+    [data-theme='nostromo'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-nostromo-blip 0.5s ease-out;
+    }
+    [data-theme='nostromo'] [data-sw-change='2'][data-sw-playing]::before {
+        animation: sw-nostromo-lamp 0.25s steps(2, jump-end);
+    }
+    [data-theme='nostromo'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-nostromo-scan 0.5s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-nostromo-blip {
+            0% {
+                filter: brightness(1);
+            }
+            40% {
+                filter: brightness(1.7);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-nostromo-lamp {
+            0% {
+                filter: brightness(0.5);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-nostromo-scan {
+            0% {
+                background-position: 0 -100%;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,710 @@
+/* research/character-actions, the action columns' character round. Five
+   aspects, each picked on its own from three options, composed freely on
+   the cell wrapping the list (`[data-ac-cell]`, which also carries the
+   list `[data-ac]` and the loading panel `.ac-loading-panel`):
+
+     data-ac-shape="1|2|3"        the row, the divider, the column rail and
+                                   the primary button at rest
+     data-ac-loading="1|2|3"      the picture shown in place of the rows
+                                   while the list is still loading; it
+                                   always moves at full motion in every
+                                   theme, never fades, and stands still
+                                   under reduced motion
+     data-ac-arrival="1|2|3"      what a new row does as it joins the list
+                                   (`[data-kp-arriving]`, set by demo.js the
+                                   way character-attention's demo does) and
+                                   the mirror of that on its way out
+                                   (`[data-kp-leaving]`, js/motion.js's own
+                                   leave(), unchanged)
+     data-ac-tone="1|2|3"         how the primary column and a destructive
+                                   action read beside an ordinary one
+     data-ac-interactive="1|2|3"  the rail's answer to hover and focus
+
+   Every rule names one aspect only and sets that aspect's knobs; a GENERIC
+   rule (no theme prefix) covers every theme that has no bespoke pass yet,
+   a `[data-theme='formal']`/`[data-theme='titanium']` rule overrides it
+   with that theme's own world. In a register the `[data-ac…]` parts drop
+   out of every selector, as trends.css's and attention.css's do.
+
+   The contract every option keeps: tokens only (DI9); the list's own
+   markup (`.kp-action-list`, `.kp-row-actions`, `.kp-button`) and
+   js/actions.js/js/motion.js are not touched; one row height per state
+   (the loading panel reserves the cell's minimum height in demo.css);
+   every animation lives in one `prefers-reduced-motion: no-preference`
+   block or, for the loading picture, stops in the reduced-motion block at
+   the end; nothing fades (no opacity in a keyframe). */
+
+@layer kp.signature {
+    /* ── Shared contract ────────────────────────────────────────────── */
+
+    [data-ac-cell] {
+        position: relative;
+    }
+
+    [data-ac] {
+        --ac-rule: 1px solid var(--border-strong, var(--border)); /* separating rule: 3:1 or more (Kenny); plain --border reads 1.2-1.9:1 */
+    }
+
+    /* titanium's own --border-strong measures 2.58:1 here: the same ink mix
+       titanium's own register already uses for --kp-kpi-border raises every
+       rail that reads var(--ac-rule) past 3:1. */
+    [data-theme='titanium'] [data-ac] {
+        --ac-rule: 1px solid color-mix(in oklab, var(--border-strong) 85%, var(--foreground));
+    }
+
+    [data-ac] > li {
+        position: relative;
+    }
+
+    .ac-loading-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-block-size: 10rem;
+        border: 1px dashed var(--border);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.875rem);
+        text-align: center;
+        overflow: hidden;
+    }
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* GENERIC · 1 · the quiet rail */
+    [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: var(--ac-rule);
+    }
+
+    /* GENERIC · 2 · the boxed rail */
+    [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: var(--ac-rule);
+    }
+
+    [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.25em 0.5em;
+        border-radius: var(--radius, 0.5rem);
+        background: color-mix(in oklch, var(--muted) 60%, transparent);
+    }
+
+    /* GENERIC · 3 · the marked rail */
+    [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: var(--ac-rule);
+    }
+
+    [data-ac-shape='3'] [data-ac] .kp-row-actions {
+        padding-inline-start: 0.6em;
+        border-inline-start: 2px solid var(--border-strong, var(--border));
+    }
+
+    [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        margin-inline-start: 0.35em;
+    }
+
+    /* formal · 1 · the engraved ledger row */
+    [data-theme='formal'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong, var(--border)); /* measured 1.36:1 on plain --border; fixed to reach 3:1 */
+    }
+
+    [data-theme='formal'] [data-ac-shape='1'] [data-ac] .kp-row-actions > :not(.kp-button--primary) {
+        font-variant-caps: small-caps;
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='formal'] [data-ac-shape='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border: 1px solid var(--primary);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary-foreground) 25%, transparent);
+    }
+
+    /* formal · 2 · the annual report row */
+    [data-theme='formal'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 2px solid var(--border-strong, var(--border));
+    }
+
+    [data-theme='formal'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        font-family: var(--font-serif, serif);
+    }
+
+    [data-theme='formal'] [data-ac-shape='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    /* formal · 3 · the certificate row */
+    [data-theme='formal'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px solid color-mix(in oklch, var(--primary) 55%, var(--border));
+    }
+
+    [data-theme='formal'] [data-ac-shape='3'] [data-ac] .kp-row-actions > :not(.kp-button--primary) {
+        border: 0;
+        background: none;
+        text-decoration: underline;
+    }
+
+    [data-theme='formal'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        padding-inline: 1em;
+    }
+
+    /* titanium · 1 · the milled rail */
+    [data-theme='titanium'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: var(--ac-rule); /* plain --border measured 1.37:1; --ac-rule here resolves to the ink-mix fix above */
+    }
+
+    [data-theme='titanium'] [data-ac-shape='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
+    }
+
+    /* titanium · 2 · the instrument rail */
+    [data-theme='titanium'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: var(--ac-rule);
+    }
+
+    [data-theme='titanium'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.2em 0.4em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: color-mix(in oklch, var(--muted) 70%, transparent);
+        box-shadow: inset 0 1px 2px color-mix(in oklab, var(--foreground) 12%, transparent);
+    }
+
+    [data-theme='titanium'] [data-ac-shape='2'] [data-ac] .kp-row-actions > * {
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* titanium · 3 · the anodised rail */
+    [data-theme='titanium'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: var(--ac-rule);
+    }
+
+    [data-theme='titanium'] [data-ac-shape='3'] [data-ac] .kp-row-actions {
+        border-radius: 999px;
+    }
+
+    [data-theme='titanium'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary-foreground) 35%, transparent);
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-dashes {
+        to {
+            background-position: 16px 0;
+        }
+    }
+
+    @keyframes ac-sweep {
+        to {
+            background-position: 0 140%;
+        }
+    }
+
+    @keyframes ac-pulse {
+        50% {
+            inset: -0.4rem;
+        }
+    }
+
+    @keyframes ac-cutter {
+        to {
+            background-position: 24px 0;
+        }
+    }
+
+    @keyframes ac-knurl {
+        to {
+            background-position: 20px 0;
+        }
+    }
+
+    @keyframes ac-lathe {
+        to {
+            background-position: 0 18px;
+        }
+    }
+
+    /* The picture itself (a still frame under reduced motion, same as at
+       full motion): background and shape unconditional, so Loading stays
+       recognisable even when nothing moves. Only `animation` is gated. */
+
+    /* GENERIC · 1 · the marching dashes */
+    [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, var(--muted-foreground) 50%, transparent 0) 0 calc(100% - 2px) / 10px 2px repeat-x;
+    }
+
+    /* GENERIC · 2 · the sweeping band */
+    [data-ac-loading='2'] .ac-loading-panel {
+        background: linear-gradient(180deg, transparent, color-mix(in oklch, var(--muted-foreground) 25%, transparent), transparent) 0 -140% / 100%
+            60% no-repeat;
+    }
+
+    /* GENERIC · 3 · the pulsing rail */
+    [data-ac-loading='3'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-ac-loading='3'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px solid var(--muted-foreground);
+        border-radius: inherit;
+    }
+
+    /* formal · 1 · the dotted leader */
+    [data-theme='formal'] [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, var(--muted-foreground) 40%, transparent 0) 0 calc(100% - 3px) / 8px 1px repeat-x;
+    }
+
+    /* formal · 2 · the ledger is ruled */
+    [data-theme='formal'] [data-ac-loading='2'] .ac-loading-panel {
+        background: repeating-linear-gradient(
+                0deg,
+                transparent 0 1.4rem,
+                color-mix(in oklch, var(--muted-foreground) 35%, transparent) 1.4rem calc(1.4rem + 1px)
+            )
+            0 -140% / 100% 60% no-repeat;
+    }
+
+    /* formal · 3 · the seal is pressed */
+    [data-theme='formal'] [data-ac-loading='3'] .ac-loading-panel::before {
+        border-color: var(--primary);
+        border-radius: 999px;
+        inset: 2rem;
+    }
+
+    /* titanium · 1 · the cutter runs */
+    [data-theme='titanium'] [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 calc(100% - 2px) / 14px 2px repeat-x;
+    }
+
+    /* titanium · 2 · the knurl rolls */
+    [data-theme='titanium'] [data-ac-loading='2'] .ac-loading-panel {
+        background: repeating-linear-gradient(90deg, color-mix(in oklch, var(--muted-foreground) 30%, transparent) 0 2px, transparent 2px 6px) 0 0 /
+            20px 100%;
+    }
+
+    /* titanium · 3 · the lathe turns */
+    [data-theme='titanium'] [data-ac-loading='3'] .ac-loading-panel {
+        background: repeating-linear-gradient(0deg, color-mix(in oklch, var(--muted-foreground) 25%, transparent) 0 2px, transparent 2px 10px) 0 0 /
+            100% 18px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-dashes 900ms linear infinite;
+        }
+
+        [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-sweep 1.4s ease-in-out infinite;
+        }
+
+        [data-ac-loading='3'] .ac-loading-panel::before {
+            animation: ac-pulse 1.1s ease-in-out infinite;
+        }
+
+        [data-theme='formal'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-dashes 1.1s linear infinite;
+        }
+
+        [data-theme='formal'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-sweep 1.6s ease-in-out infinite;
+        }
+
+        [data-theme='titanium'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-cutter 700ms linear infinite;
+        }
+
+        [data-theme='titanium'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-knurl 650ms linear infinite;
+        }
+
+        [data-theme='titanium'] [data-ac-loading='3'] .ac-loading-panel {
+            animation: ac-lathe 800ms linear infinite;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ac-loading-panel,
+        .ac-loading-panel::before {
+            animation: none !important;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* GENERIC · 1 · slides in / out */
+        [data-ac-arrival='1'] [data-kp-arriving] {
+            animation: ac-slide-in var(--kp-motion-duration, 360ms) ease-out;
+        }
+
+        [data-ac-arrival='1'] [data-kp-leaving] {
+            animation: ac-slide-out var(--kp-motion-duration, 360ms) ease-in;
+        }
+
+        @keyframes ac-slide-in {
+            from {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes ac-slide-out {
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* GENERIC · 2 · grows in / out */
+        [data-ac-arrival='2'] [data-kp-arriving] {
+            overflow: clip;
+            animation: ac-grow-in var(--kp-motion-duration, 360ms) ease-out;
+        }
+
+        [data-ac-arrival='2'] [data-kp-leaving] {
+            overflow: clip;
+            animation: ac-grow-out var(--kp-motion-duration, 360ms) ease-in;
+        }
+
+        @keyframes ac-grow-in {
+            from {
+                block-size: 0;
+            }
+        }
+
+        @keyframes ac-grow-out {
+            to {
+                block-size: 0;
+            }
+        }
+
+        /* GENERIC · 3 · steps in / out */
+        [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-step-in 300ms steps(2, end);
+        }
+
+        [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-step-out 300ms steps(2, end);
+        }
+
+        @keyframes ac-step-in {
+            from {
+                transform: translateY(-2em);
+            }
+        }
+
+        @keyframes ac-step-out {
+            to {
+                transform: translateY(-2em);
+            }
+        }
+
+        /* formal · 1 · unrolled / rolled away */
+        [data-theme='formal'] [data-ac-arrival='1'] [data-kp-arriving] {
+            transform-origin: top;
+            animation: ac-unroll 420ms cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
+
+        [data-theme='formal'] [data-ac-arrival='1'] [data-kp-leaving] {
+            transform-origin: top;
+            animation: ac-reroll 300ms ease-in;
+        }
+
+        @keyframes ac-unroll {
+            from {
+                transform: scaleY(0);
+            }
+        }
+
+        @keyframes ac-reroll {
+            to {
+                transform: scaleY(0);
+            }
+        }
+
+        /* formal · 2 · stamped in / filed */
+        [data-theme='formal'] [data-ac-arrival='2'] [data-kp-arriving] {
+            animation: ac-stamp-in 260ms cubic-bezier(0.3, 1.6, 0.6, 1);
+        }
+
+        [data-theme='formal'] [data-ac-arrival='2'] [data-kp-leaving] {
+            animation: ac-file-away 260ms ease-in;
+        }
+
+        @keyframes ac-stamp-in {
+            from {
+                transform: translateY(-1.5em);
+            }
+        }
+
+        @keyframes ac-file-away {
+            to {
+                transform: translateY(-1.5em);
+            }
+        }
+
+        /* formal · 3 · entered / struck from the ledger */
+        [data-theme='formal'] [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-ledger-in 330ms steps(3, end);
+        }
+
+        [data-theme='formal'] [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-ledger-out 330ms steps(3, end);
+        }
+
+        @keyframes ac-ledger-in {
+            from {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes ac-ledger-out {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* titanium · 1 · seated / unseated */
+        [data-theme='titanium'] [data-ac-arrival='1'] [data-kp-arriving] {
+            animation: ac-seat-in 320ms cubic-bezier(0.3, 1.5, 0.5, 1);
+        }
+
+        [data-theme='titanium'] [data-ac-arrival='1'] [data-kp-leaving] {
+            animation: ac-unseat-out 320ms cubic-bezier(0.3, 1.5, 0.5, 1) reverse;
+        }
+
+        @keyframes ac-seat-in {
+            from {
+                transform: translateY(-1.25em);
+            }
+        }
+
+        @keyframes ac-unseat-out {
+            from {
+                transform: translateY(-1.25em);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* titanium · 2 · milled in / out */
+        [data-theme='titanium'] [data-ac-arrival='2'] [data-kp-arriving] {
+            animation: ac-mill-in 300ms steps(4, end);
+        }
+
+        [data-theme='titanium'] [data-ac-arrival='2'] [data-kp-leaving] {
+            animation: ac-mill-out 300ms steps(4, end);
+        }
+
+        @keyframes ac-mill-in {
+            from {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes ac-mill-out {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* titanium · 3 · clicked in / out */
+        [data-theme='titanium'] [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-click-in 260ms ease-out;
+        }
+
+        [data-theme='titanium'] [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-click-out 260ms ease-in;
+        }
+
+        @keyframes ac-click-in {
+            from {
+                transform: rotateX(70deg);
+            }
+        }
+
+        @keyframes ac-click-out {
+            to {
+                transform: rotateX(70deg);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-kp-arriving],
+        [data-kp-leaving] {
+            animation: none !important;
+            transform: none !important;
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* GENERIC · 1 · the plain rail */
+    [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border: 1px solid var(--destructive);
+    }
+
+    /* GENERIC · 2 · the ruled rail */
+    [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-block-end: 2px solid var(--primary-foreground);
+    }
+
+    [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-block-end: 2px solid var(--destructive-foreground);
+    }
+
+    /* GENERIC · 3 · the tabbed rail */
+    [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-start-start-radius: var(--radius, 0.5rem);
+        border-start-end-radius: var(--radius, 0.5rem);
+        transform: translateY(-0.15em);
+    }
+
+    [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        box-shadow: inset 0 2px 0 var(--destructive);
+    }
+
+    /* formal · 1 · the engraved tone */
+    [data-theme='formal'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border: 0;
+        border-inline-start: 2px solid var(--destructive);
+        padding-inline-start: 0.5em;
+        background: none;
+        color: var(--destructive);
+    }
+
+    /* formal · 2 · the ledger tone */
+    [data-theme='formal'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        font-style: italic;
+        background: none;
+        color: var(--destructive);
+    }
+
+    /* formal · 3 · the certificate tone */
+    [data-theme='formal'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 999px;
+        border: 1px solid var(--destructive);
+        background: none;
+        color: var(--destructive);
+    }
+
+    /* titanium · 1 · the machined tone */
+    [data-theme='titanium'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* titanium · 2 · the alarm tone */
+    [data-theme='titanium'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+        background: none;
+        color: var(--destructive);
+    }
+
+    /* titanium · 3 · the anodised tone */
+    [data-theme='titanium'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-block-start: 3px solid var(--destructive);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* GENERIC · 1 · the lit row */
+    [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background: var(--muted);
+    }
+
+    /* GENERIC · 2 · the marked row */
+    [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-inline-start-color: var(--primary);
+    }
+
+    /* GENERIC · 3 · the raised rail */
+    [data-ac-interactive='3'] [data-ac] .kp-row-actions {
+        transition: box-shadow 120ms ease-out;
+    }
+
+    [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions,
+    [data-ac-interactive='3'] [data-ac] > li:focus-within .kp-row-actions {
+        box-shadow: 0 2px 6px color-mix(in oklab, var(--foreground) 18%, transparent);
+    }
+
+    [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline-offset: 4px;
+    }
+
+    /* formal · 1 · the pressed plate */
+    [data-theme='formal'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='formal'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        box-shadow: inset 0 1px 2px color-mix(in oklab, var(--foreground) 15%, transparent);
+        background: none;
+    }
+
+    /* formal · 2 · the traced rule */
+    [data-theme='formal'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 0;
+    }
+
+    [data-theme='formal'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='formal'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-block-end-color: var(--primary);
+    }
+
+    /* formal · 3 · the lifted seal */
+    [data-theme='formal'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        border-radius: 999px;
+    }
+
+    [data-theme='formal'] [data-ac-interactive='3'] [data-ac] > li:hover {
+        border-block-end-color: color-mix(in oklch, var(--primary) 60%, var(--border));
+    }
+
+    /* titanium · 1 · the warmed plate */
+    [data-theme='titanium'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='titanium'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background: color-mix(in oklch, var(--primary) 8%, var(--muted));
+    }
+
+    /* titanium · 2 · the lit groove */
+    [data-theme='titanium'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 0;
+        box-shadow: inset 2px 0 0 transparent;
+        transition: box-shadow 120ms ease-out;
+    }
+
+    [data-theme='titanium'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='titanium'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+
+    /* titanium · 3 · the chamfered edge */
+    [data-theme='titanium'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        clip-path: polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px);
+        outline-offset: 1px;
+    }
+
+    [data-theme='titanium'] [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions {
+        transform: translateY(-1px);
+    }
+}
+
+/* The plain list's destructive label reads 4.11-4.28:1 in solstice, deco
+   and lapis (a package finding); in the demo every option lifts it to
+   4.5:1 or more by mixing ink into the destructive colour. */
+@layer kp.signature {
+    :root:is([data-theme='solstice'], [data-theme='deco'], [data-theme='lapis']) [data-ac] .kp-row-actions > .kp-button--destructive {
+        color: color-mix(in oklab, var(--destructive) 72%, var(--foreground));
+    }
+}

@@ -1,0 +1,167 @@
+/* The page: a centred column, one section with its controls, the combined
+   preview, a row per aspect of three options, and the plain word of today
+   for reference. The chip's own drawing is in state.css and state-a..d.css. */
+.sw-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sw-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sw-intro h1,
+.sw-intro p {
+    margin: 0;
+}
+
+.sw-meta,
+.sw-motion,
+.sw-log {
+    color: var(--muted-foreground);
+}
+
+.sw-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sw-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-sw-state][aria-pressed='true'],
+[data-sw-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.sw-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sw-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sw-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.sw-sec__head h2,
+.sw-sec__head p {
+    margin: 0;
+}
+
+.sw-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.sw-row {
+    display: flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sw-preview,
+.sw-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sw-preview__head h3,
+.sw-preview__head p,
+.sw-aspect__head h3,
+.sw-aspect__head p {
+    margin: 0;
+}
+
+.sw-preview__head p,
+.sw-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sw-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.sw-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* Three columns, one under the other below 48rem. */
+.sw-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 48rem) {
+    .sw-trio {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+}
+
+.sw-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sw-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.sw-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.sw-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sw-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+.sw-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+[data-review-look] p {
+    margin: 0;
+}

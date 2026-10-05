@@ -1,0 +1,1298 @@
+/* research/character-actions, group d: shade-dark, retro, grotesk, lapis,
+   nostromo. Theme-native options per demo.js's THEME_IDEAS (merged from
+   the group's own ideas-d.json, since removed), replacing GENERIC for
+   these five themes, mirroring the contract in actions.css (formal,
+   titanium): one rule names one aspect only, tokens only, a separating
+   border uses `--border-strong` or a mix that reaches 3:1 (never plain
+   `--border`), nothing fades (no opacity in any keyframe), the loading
+   picture always runs at full motion and stands still under reduced
+   motion (actions.css's own `prefers-reduced-motion: reduce` reset
+   already covers `.ac-loading-panel`, `[data-kp-arriving]` and
+   `[data-kp-leaving]` for every theme), and arrival/leave mirror each
+   other for the same option number.
+
+   Closest-faithful notes (the list's markup — `.kp-action-list`,
+   `.kp-row-actions`, `.kp-button` — carries no separate title-bar or
+   icon element to hang a picture on):
+     - retro shape 3 "The title rail" and nostromo shape 3 "The tape
+       rail" read as a coloured strip across the row's own top edge,
+       not a separate bar.
+     - lapis shape 1 "The girih rail" and loading 1 "The girih turns"
+       render the star pattern as a background on the row's foot/rail,
+       not a separate tile.
+     - nostromo shape 1 "The CRT rail" renders scanlines as a background
+       on the row itself, behind the rail. */
+
+@layer kp.signature {
+    /* ════════════════════════════ shade-dark ═══════════════════════════
+       The dim room: a lamp in the dark, glow instead of tint. */
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* shade-dark · shape 1 · the glow rail */
+    [data-theme='shade-dark'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+        background-image: radial-gradient(60% 140% at 100% 50%, color-mix(in oklch, var(--foreground) 8%, transparent), transparent 70%);
+    }
+
+    [data-theme='shade-dark'] [data-ac-shape='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 55%, transparent);
+    }
+
+    /* shade-dark · shape 2 · the gauge rail */
+    [data-theme='shade-dark'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.25em 0.5em;
+        border-radius: var(--radius, 0.5rem);
+        background: color-mix(in oklch, var(--background) 60%, black 10%);
+        box-shadow: inset 0 1px 3px color-mix(in oklab, var(--foreground) 20%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-ac-shape='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px color-mix(in oklch, var(--primary) 50%, transparent),
+            0 0 9px color-mix(in oklch, var(--primary) 60%, transparent);
+    }
+
+    /* shade-dark · shape 3 · the halo rail */
+    [data-theme='shade-dark'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='shade-dark'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 2px color-mix(in oklch, var(--primary) 45%, transparent),
+            0 0 12px color-mix(in oklch, var(--primary) 50%, transparent);
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-sd-ember {
+        to {
+            background-position: 16px 0;
+        }
+    }
+
+    @keyframes ac-sd-drift {
+        to {
+            background-position: 140% 0;
+        }
+    }
+
+    @keyframes ac-sd-halo {
+        50% {
+            box-shadow: 0 0 0 6px color-mix(in oklch, var(--primary) 35%, transparent);
+        }
+    }
+
+    /* shade-dark · loading 1 · the ember line */
+    [data-theme='shade-dark'] [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 calc(100% - 2px) / 14px 2px repeat-x;
+    }
+
+    /* shade-dark · loading 2 · the drifting pool */
+    [data-theme='shade-dark'] [data-ac-loading='2'] .ac-loading-panel {
+        background: radial-gradient(18% 70% at 0% 50%, color-mix(in oklch, var(--primary) 30%, transparent), transparent 70%) -20% 0 / 160% 100%
+            no-repeat;
+    }
+
+    /* shade-dark · loading 3 · the pulsing halo */
+    [data-theme='shade-dark'] [data-ac-loading='3'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-theme='shade-dark'] [data-ac-loading='3'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inset: 2.5rem;
+        border-radius: 999px;
+        box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='shade-dark'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-sd-ember 950ms linear infinite;
+        }
+
+        [data-theme='shade-dark'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-sd-drift 1.6s ease-in-out infinite alternate;
+        }
+
+        [data-theme='shade-dark'] [data-ac-loading='3'] .ac-loading-panel::before {
+            animation: ac-sd-halo 1.3s ease-in-out infinite;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* shade-dark · arrival 1 · lamp swings in / away */
+        [data-theme='shade-dark'] [data-ac-arrival='1'] [data-kp-arriving] {
+            transform-origin: top;
+            animation: ac-sd-swing-in 420ms cubic-bezier(0.3, 1.3, 0.4, 1);
+        }
+
+        [data-theme='shade-dark'] [data-ac-arrival='1'] [data-kp-leaving] {
+            transform-origin: top;
+            animation: ac-sd-swing-out 420ms cubic-bezier(0.3, 1.3, 0.4, 1) reverse;
+        }
+
+        @keyframes ac-sd-swing-in {
+            from {
+                transform: rotateZ(-8deg) translateY(-0.6em);
+            }
+        }
+
+        @keyframes ac-sd-swing-out {
+            from {
+                transform: rotateZ(-8deg) translateY(-0.6em);
+            }
+            to {
+                transform: rotateZ(0) translateY(0);
+            }
+        }
+
+        /* shade-dark · arrival 2 · glow blooms / settles back */
+        [data-theme='shade-dark'] [data-ac-arrival='2'] [data-kp-arriving] {
+            animation: ac-sd-bloom-in 340ms ease-out;
+        }
+
+        [data-theme='shade-dark'] [data-ac-arrival='2'] [data-kp-leaving] {
+            animation: ac-sd-bloom-out 340ms ease-in;
+        }
+
+        @keyframes ac-sd-bloom-in {
+            from {
+                transform: scale(0.82);
+            }
+        }
+
+        @keyframes ac-sd-bloom-out {
+            to {
+                transform: scale(0.82);
+            }
+        }
+
+        /* shade-dark · arrival 3 · flickers in / out */
+        [data-theme='shade-dark'] [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-sd-flicker-in 340ms steps(3, end);
+        }
+
+        [data-theme='shade-dark'] [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-sd-flicker-out 340ms steps(3, end);
+        }
+
+        @keyframes ac-sd-flicker-in {
+            from {
+                transform: translateY(-1.6em);
+            }
+        }
+
+        @keyframes ac-sd-flicker-out {
+            to {
+                transform: translateY(-1.6em);
+            }
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* shade-dark · tone 1 · the glowing edge */
+    [data-theme='shade-dark'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        box-shadow:
+            inset 2px 0 0 var(--primary),
+            0 0 6px color-mix(in oklch, var(--primary) 50%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        box-shadow:
+            inset 2px 0 0 var(--destructive),
+            0 0 6px color-mix(in oklch, var(--destructive) 50%, transparent);
+    }
+
+    /* shade-dark · tone 2 · the halo button */
+    [data-theme='shade-dark'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px color-mix(in oklch, var(--primary) 55%, transparent),
+            0 0 8px color-mix(in oklch, var(--primary) 55%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px color-mix(in oklch, var(--destructive) 55%, transparent),
+            0 0 8px color-mix(in oklch, var(--destructive) 55%, transparent);
+    }
+
+    /* shade-dark · tone 3 · the underlit band */
+    [data-theme='shade-dark'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        box-shadow:
+            inset 0 -3px 0 var(--primary),
+            0 3px 8px -2px color-mix(in oklch, var(--primary) 60%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        box-shadow:
+            inset 0 -3px 0 var(--destructive),
+            0 3px 8px -2px color-mix(in oklch, var(--destructive) 60%, transparent);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* shade-dark · interactive 1 · the warmed glow */
+    [data-theme='shade-dark'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='shade-dark'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background-image: radial-gradient(70% 160% at 100% 50%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 70%);
+    }
+
+    /* shade-dark · interactive 2 · the lit filament */
+    [data-theme='shade-dark'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='shade-dark'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='shade-dark'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-inline-start-color: var(--primary);
+        box-shadow: inset 4px 0 10px -6px color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+
+    /* shade-dark · interactive 3 · the raised lamp */
+    [data-theme='shade-dark'] [data-ac-interactive='3'] [data-ac] .kp-row-actions {
+        transition: box-shadow 140ms ease-out;
+    }
+
+    [data-theme='shade-dark'] [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions,
+    [data-theme='shade-dark'] [data-ac-interactive='3'] [data-ac] > li:focus-within .kp-row-actions {
+        box-shadow: 0 2px 10px color-mix(in oklch, var(--primary) 35%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline-color: var(--primary);
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 30%, transparent);
+    }
+
+    /* ══════════════════════════════ retro ═══════════════════════════════
+       The 1995 desktop: raised and sunken bevels, a navy title strip,
+       the DOS mono face. */
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* retro · shape 1 · the dialog rail */
+    [data-theme='retro'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-ac-shape='1'] [data-ac] .kp-row-actions {
+        padding: 0.2em 0.35em;
+        border-style: solid;
+        border-width: 1px;
+        border-color: color-mix(in oklch, white 70%, var(--border-strong)) color-mix(in oklch, black 45%, var(--border-strong))
+            color-mix(in oklch, black 45%, var(--border-strong)) color-mix(in oklch, white 70%, var(--border-strong));
+        background: var(--muted);
+    }
+
+    [data-theme='retro'] [data-ac-shape='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-style: solid;
+        border-width: 1px;
+        border-color: color-mix(in oklch, white 80%, var(--primary)) color-mix(in oklch, black 50%, var(--primary))
+            color-mix(in oklch, black 50%, var(--primary)) color-mix(in oklch, white 80%, var(--primary));
+    }
+
+    /* retro · shape 2 · the status rail */
+    [data-theme='retro'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.2em 0.4em;
+        border-style: solid;
+        border-width: 1px;
+        border-color: color-mix(in oklch, black 45%, var(--border-strong)) color-mix(in oklch, white 70%, var(--border-strong))
+            color-mix(in oklch, white 70%, var(--border-strong)) color-mix(in oklch, black 45%, var(--border-strong));
+        background: var(--secondary);
+    }
+
+    [data-theme='retro'] [data-ac-shape='2'] [data-ac] .kp-row-actions > * {
+        font-family: var(--kp-dos, var(--theme-font-mono));
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+    }
+
+    /* retro · shape 3 · the title rail */
+    [data-theme='retro'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='retro'] [data-ac-shape='3'] [data-ac] .kp-row-actions {
+        padding-block-start: 0.3em;
+        border-block-start: 3px solid var(--primary);
+    }
+
+    [data-theme='retro'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-style: solid;
+        border-width: 1px;
+        border-color: color-mix(in oklch, white 80%, var(--primary)) color-mix(in oklch, black 50%, var(--primary))
+            color-mix(in oklch, black 50%, var(--primary)) color-mix(in oklch, white 80%, var(--primary));
+        box-shadow: 2px 2px 0 color-mix(in oklab, var(--foreground) 35%, transparent);
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-ro-marquee {
+        to {
+            background-position: 20px 0;
+        }
+    }
+
+    @keyframes ac-ro-scan {
+        to {
+            background-position: 120% 0;
+        }
+    }
+
+    @keyframes ac-ro-hourglass {
+        50% {
+            transform: scaleY(-1);
+        }
+    }
+
+    /* retro · loading 1 · the marquee rail */
+    [data-theme='retro'] [data-ac-loading='1'] .ac-loading-panel {
+        border-style: solid;
+        border-width: 1px;
+        border-color: color-mix(in oklch, black 45%, var(--border-strong)) color-mix(in oklch, white 70%, var(--border-strong))
+            color-mix(in oklch, white 70%, var(--border-strong)) color-mix(in oklch, black 45%, var(--border-strong));
+        background: var(--muted) linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 calc(100% - 4px) / 12px 3px repeat-x;
+    }
+
+    /* retro · loading 2 · the scanning block */
+    [data-theme='retro'] [data-ac-loading='2'] .ac-loading-panel {
+        background: linear-gradient(90deg, transparent 0 20%, var(--primary) 20% 32%, transparent 32%) -20% 0 / 160% 100% no-repeat;
+    }
+
+    /* retro · loading 3 · the hourglass flip */
+    [data-theme='retro'] [data-ac-loading='3'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-theme='retro'] [data-ac-loading='3'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 0 100%, 100% 100%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='retro'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-ro-marquee 700ms steps(6, end) infinite;
+        }
+
+        [data-theme='retro'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-ro-scan 900ms steps(8, end) infinite;
+        }
+
+        [data-theme='retro'] [data-ac-loading='3'] .ac-loading-panel::before {
+            animation: ac-ro-hourglass 1.1s steps(1, end) infinite;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* retro · arrival 1 · pops open / snaps shut */
+        [data-theme='retro'] [data-ac-arrival='1'] [data-kp-arriving] {
+            overflow: clip;
+            animation: ac-ro-pop-in 240ms steps(3, end);
+        }
+
+        [data-theme='retro'] [data-ac-arrival='1'] [data-kp-leaving] {
+            overflow: clip;
+            animation: ac-ro-pop-out 240ms steps(3, end);
+        }
+
+        @keyframes ac-ro-pop-in {
+            from {
+                block-size: 0;
+            }
+        }
+
+        @keyframes ac-ro-pop-out {
+            to {
+                block-size: 0;
+            }
+        }
+
+        /* retro · arrival 2 · slides in off-screen / away */
+        [data-theme='retro'] [data-ac-arrival='2'] [data-kp-arriving] {
+            animation: ac-ro-slide-in 260ms steps(5, end);
+        }
+
+        [data-theme='retro'] [data-ac-arrival='2'] [data-kp-leaving] {
+            animation: ac-ro-slide-out 260ms steps(5, end);
+        }
+
+        @keyframes ac-ro-slide-in {
+            from {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes ac-ro-slide-out {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* retro · arrival 3 · boots up / powers down */
+        [data-theme='retro'] [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-ro-boot-in 320ms steps(3, end);
+        }
+
+        [data-theme='retro'] [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-ro-boot-out 320ms steps(3, end);
+        }
+
+        @keyframes ac-ro-boot-in {
+            from {
+                transform: translateY(-1.4em) scaleY(0.4);
+            }
+        }
+
+        @keyframes ac-ro-boot-out {
+            to {
+                transform: translateY(-1.4em) scaleY(0.4);
+            }
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* retro · tone 1 · the beveled edge (the button's own fill is already
+       its colour, so the edge is cut in the foreground token — the same
+       fix actions.css's own GENERIC tone 2 uses — so it reads as a bevel
+       instead of disappearing into the fill) */
+    [data-theme='retro'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-inline-start: 4px solid var(--primary-foreground);
+    }
+
+    /* retro's own register renders .kp-button--destructive unfilled (card
+       background, the destructive colour as the label only), so its edge
+       reads in that colour directly, not the foreground token. */
+    [data-theme='retro'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-inline-start: 4px solid var(--destructive);
+    }
+
+    /* retro · tone 2 · the beveled lamp */
+    [data-theme='retro'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    [data-theme='retro'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+
+    /* retro · tone 3 · the title strip (primary: foreground token, since
+       that button is filled; destructive: its own colour, since retro's
+       own register leaves that button unfilled — see tone 1 above) */
+    [data-theme='retro'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-block-start: 3px solid var(--primary-foreground);
+    }
+
+    [data-theme='retro'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-block-start: 3px solid var(--destructive);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* retro · interactive 1 · the pressed bevel */
+    [data-theme='retro'] [data-ac-interactive='1'] [data-ac] .kp-row-actions {
+        border-style: solid;
+        border-width: 1px;
+        border-color: transparent;
+    }
+
+    [data-theme='retro'] [data-ac-interactive='1'] [data-ac] > li:hover .kp-row-actions,
+    [data-theme='retro'] [data-ac-interactive='1'] [data-ac] > li:focus-within .kp-row-actions {
+        border-color: color-mix(in oklch, black 45%, var(--border-strong)) color-mix(in oklch, white 70%, var(--border-strong))
+            color-mix(in oklch, white 70%, var(--border-strong)) color-mix(in oklch, black 45%, var(--border-strong));
+    }
+
+    /* retro · interactive 2 · the marquee edge */
+    [data-theme='retro'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 3px dashed transparent;
+    }
+
+    [data-theme='retro'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='retro'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-inline-start-color: var(--primary);
+    }
+
+    /* retro · interactive 3 · the lit title */
+    [data-theme='retro'] [data-ac-interactive='3'] [data-ac] > li {
+        border-block-start: 3px solid transparent;
+    }
+
+    [data-theme='retro'] [data-ac-interactive='3'] [data-ac] > li:hover,
+    [data-theme='retro'] [data-ac-interactive='3'] [data-ac] > li:focus-within {
+        border-block-start-color: var(--primary);
+    }
+
+    [data-theme='retro'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline-style: dotted;
+        outline-width: 2px;
+    }
+
+    /* ══════════════════════════════ grotesk ═════════════════════════════
+       The Swiss transit board: bold rules, a hard grid, flap-display
+       motion. */
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* grotesk · shape 1 · the transit rail */
+    [data-theme='grotesk'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] [data-ac-shape='1'] [data-ac] .kp-row-actions {
+        padding-inline-start: 0.6em;
+        border-inline-start: 4px solid var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-ac-shape='1'] [data-ac] .kp-row-actions > * {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+    }
+
+    /* grotesk · shape 2 · the poster rail */
+    [data-theme='grotesk'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.2em 0.4em;
+        border: 2px solid var(--border-strong);
+    }
+
+    [data-theme='grotesk'] [data-ac-shape='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 0;
+        box-shadow: inset 0 0 0 3px var(--primary-foreground);
+    }
+
+    /* grotesk · shape 3 · the index rail */
+    [data-theme='grotesk'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+        box-shadow: inset 0 -4px 0 -3px var(--destructive);
+    }
+
+    [data-theme='grotesk'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 0;
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        text-underline-offset: 3px;
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-gx-ticks {
+        to {
+            background-position: 18px 0;
+        }
+    }
+
+    @keyframes ac-gx-runner {
+        to {
+            background-position: 130% 0;
+        }
+    }
+
+    @keyframes ac-gx-flap {
+        50% {
+            transform: scaleY(0);
+        }
+    }
+
+    /* grotesk · loading 1 · the marching ticks */
+    [data-theme='grotesk'] [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, var(--primary) 60%, transparent 0) 0 calc(100% - 3px) / 9px 3px repeat-x;
+    }
+
+    /* grotesk · loading 2 · the grid runner */
+    [data-theme='grotesk'] [data-ac-loading='2'] .ac-loading-panel {
+        background: linear-gradient(90deg, transparent 0 46%, var(--primary) 46% 52%, transparent 52%) -30% 0 / 160% 3px no-repeat;
+        background-position-y: 50%;
+    }
+
+    /* grotesk · loading 3 · the flap flip */
+    [data-theme='grotesk'] [data-ac-loading='3'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-theme='grotesk'] [data-ac-loading='3'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inline-size: 2rem;
+        block-size: 2.4rem;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-gx-ticks 650ms steps(2, end) infinite;
+        }
+
+        [data-theme='grotesk'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-gx-runner 850ms steps(6, end) infinite;
+        }
+
+        [data-theme='grotesk'] [data-ac-loading='3'] .ac-loading-panel::before {
+            animation: ac-gx-flap 900ms steps(1, end) infinite alternate;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* grotesk · arrival 1 · slides onto / off the grid */
+        [data-theme='grotesk'] [data-ac-arrival='1'] [data-kp-arriving] {
+            animation: ac-gx-grid-in 240ms steps(4, end);
+        }
+
+        [data-theme='grotesk'] [data-ac-arrival='1'] [data-kp-leaving] {
+            animation: ac-gx-grid-out 240ms steps(4, end);
+        }
+
+        @keyframes ac-gx-grid-in {
+            from {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes ac-gx-grid-out {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* grotesk · arrival 2 · stamps down / lifts away */
+        [data-theme='grotesk'] [data-ac-arrival='2'] [data-kp-arriving] {
+            overflow: clip;
+            animation: ac-gx-stamp-in 180ms linear;
+        }
+
+        [data-theme='grotesk'] [data-ac-arrival='2'] [data-kp-leaving] {
+            overflow: clip;
+            animation: ac-gx-stamp-out 180ms linear;
+        }
+
+        @keyframes ac-gx-stamp-in {
+            from {
+                block-size: 0;
+            }
+        }
+
+        @keyframes ac-gx-stamp-out {
+            to {
+                block-size: 0;
+            }
+        }
+
+        /* grotesk · arrival 3 · flips in / out */
+        [data-theme='grotesk'] [data-ac-arrival='3'] [data-kp-arriving] {
+            transform-origin: top;
+            animation: ac-gx-flip-in 270ms steps(3, end);
+        }
+
+        [data-theme='grotesk'] [data-ac-arrival='3'] [data-kp-leaving] {
+            transform-origin: top;
+            animation: ac-gx-flip-out 270ms steps(3, end);
+        }
+
+        @keyframes ac-gx-flip-in {
+            from {
+                transform: rotateX(-90deg);
+            }
+        }
+
+        @keyframes ac-gx-flip-out {
+            to {
+                transform: rotateX(-90deg);
+            }
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* grotesk · tone 1 · the ruled edge (foreground token: the button's
+       own fill is already this colour) */
+    [data-theme='grotesk'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-inline-start: 4px solid var(--primary-foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='grotesk'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-inline-start: 4px solid var(--destructive-foreground);
+        border-radius: 0;
+    }
+
+    /* grotesk · tone 2 · the boxed button */
+    [data-theme='grotesk'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 0;
+        box-shadow: inset 0 0 0 3px var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 0;
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    /* grotesk · tone 3 · the ruled top (foreground token, same reason) */
+    [data-theme='grotesk'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 0;
+        border-block-start: 4px solid var(--primary-foreground);
+    }
+
+    [data-theme='grotesk'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 0;
+        border-block-start: 4px solid var(--destructive-foreground);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* grotesk · interactive 1 · the grid flash */
+    [data-theme='grotesk'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='grotesk'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background: color-mix(in oklch, var(--primary) 16%, transparent);
+    }
+
+    /* grotesk · interactive 2 · the ruled mark */
+    [data-theme='grotesk'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 4px solid transparent;
+    }
+
+    [data-theme='grotesk'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='grotesk'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-inline-start-color: var(--primary);
+    }
+
+    /* grotesk · interactive 3 · the raised plate */
+    [data-theme='grotesk'] [data-ac-interactive='3'] [data-ac] .kp-row-actions {
+        transition: box-shadow 100ms linear;
+    }
+
+    [data-theme='grotesk'] [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions,
+    [data-theme='grotesk'] [data-ac-interactive='3'] [data-ac] > li:focus-within .kp-row-actions {
+        box-shadow: 4px 4px 0 var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline-width: 3px;
+        outline-offset: 2px;
+    }
+
+    /* ══════════════════════════════ lapis ═══════════════════════════════
+       The illuminated manuscript: gold leaf, vellum, a scribe's hand. */
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* lapis · shape 1 · the girih rail */
+    [data-theme='lapis'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+        background-image:
+            repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 35%, transparent) 0 1px, transparent 1px 10px),
+            repeating-linear-gradient(-45deg, color-mix(in oklch, var(--border-strong) 35%, transparent) 0 1px, transparent 1px 10px);
+        background-repeat: repeat-x;
+        background-position: bottom;
+        background-size: 10px 6px;
+    }
+
+    [data-theme='lapis'] [data-ac-shape='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        font-family: var(--theme-font-display);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    /* lapis · shape 2 · the gilt rail */
+    [data-theme='lapis'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='lapis'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding-inline-start: 0.5em;
+        border-inline-start: 2px solid var(--border-strong);
+        background: var(--card); /* keeps the unfilled destructive label at the plain list's own 4.28:1 (measured 4.09:1 without it) */
+    }
+
+    [data-theme='lapis'] [data-ac-shape='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow: 0 0 0 2px var(--border-strong);
+    }
+
+    /* lapis · shape 3 · the margin rail */
+    [data-theme='lapis'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px double var(--border-strong);
+    }
+
+    [data-theme='lapis'] [data-ac-shape='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        text-decoration: underline wavy;
+        text-underline-offset: 3px;
+        text-decoration-color: var(--border-strong);
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-la-girih {
+        to {
+            background-position: 20px bottom;
+        }
+    }
+
+    @keyframes ac-la-sweep {
+        to {
+            background-position: 130% 0;
+        }
+    }
+
+    @keyframes ac-la-ink {
+        50% {
+            inset: 2.5rem;
+        }
+    }
+
+    /* lapis · loading 1 · the girih turns */
+    [data-theme='lapis'] [data-ac-loading='1'] .ac-loading-panel {
+        background-image:
+            repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 45%, transparent) 0 2px, transparent 2px 12px),
+            repeating-linear-gradient(-45deg, color-mix(in oklch, var(--border-strong) 45%, transparent) 0 2px, transparent 2px 12px);
+        background-size: 20px 20px;
+        background-repeat: repeat-x;
+        background-position: bottom;
+    }
+
+    /* lapis · loading 2 · the illumination sweeps */
+    [data-theme='lapis'] [data-ac-loading='2'] .ac-loading-panel {
+        background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--border-strong) 45%, transparent), transparent) -30% 0 / 160% 100%
+            no-repeat;
+    }
+
+    /* lapis · loading 3 · the ink spreads */
+    [data-theme='lapis'] [data-ac-loading='3'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-theme='lapis'] [data-ac-loading='3'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inset: 3.5rem;
+        border-radius: 999px;
+        border: 2px solid var(--border-strong);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='lapis'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-la-girih 1.4s linear infinite;
+        }
+
+        [data-theme='lapis'] [data-ac-loading='2'] .ac-loading-panel {
+            animation: ac-la-sweep 1.8s ease-in-out infinite;
+        }
+
+        [data-theme='lapis'] [data-ac-loading='3'] .ac-loading-panel::before {
+            animation: ac-la-ink 1.5s ease-in-out infinite;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* lapis · arrival 1 · unfurls / rolled away */
+        [data-theme='lapis'] [data-ac-arrival='1'] [data-kp-arriving] {
+            transform-origin: top;
+            animation: ac-la-unfurl 440ms cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
+
+        [data-theme='lapis'] [data-ac-arrival='1'] [data-kp-leaving] {
+            transform-origin: top;
+            animation: ac-la-reroll 320ms ease-in;
+        }
+
+        @keyframes ac-la-unfurl {
+            from {
+                transform: scaleY(0);
+            }
+        }
+
+        @keyframes ac-la-reroll {
+            to {
+                transform: scaleY(0);
+            }
+        }
+
+        /* lapis · arrival 2 · illuminated in / shadow drawn over */
+        [data-theme='lapis'] [data-ac-arrival='2'] [data-kp-arriving] {
+            overflow: clip;
+            animation: ac-la-illum-in 420ms ease-out;
+        }
+
+        [data-theme='lapis'] [data-ac-arrival='2'] [data-kp-leaving] {
+            overflow: clip;
+            animation: ac-la-illum-out 420ms ease-in;
+        }
+
+        @keyframes ac-la-illum-in {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes ac-la-illum-out {
+            to {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        /* lapis · arrival 3 · inked in / retracts */
+        [data-theme='lapis'] [data-ac-arrival='3'] [data-kp-arriving] {
+            transform-origin: right center;
+            animation: ac-la-ink-in 360ms ease-out;
+        }
+
+        [data-theme='lapis'] [data-ac-arrival='3'] [data-kp-leaving] {
+            transform-origin: right center;
+            animation: ac-la-ink-out 360ms ease-in;
+        }
+
+        @keyframes ac-la-ink-in {
+            from {
+                transform: scaleX(0);
+            }
+        }
+
+        @keyframes ac-la-ink-out {
+            to {
+                transform: scaleX(0);
+            }
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* lapis · tone 1 · the gold edge */
+    [data-theme='lapis'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-inline-start: 3px double color-mix(in oklch, var(--primary) 60%, var(--border-strong));
+    }
+
+    [data-theme='lapis'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-inline-start: 3px double color-mix(in oklch, var(--destructive) 60%, var(--border-strong));
+    }
+
+    /* lapis · tone 2 · the gilt button */
+    [data-theme='lapis'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 2px var(--border-strong),
+            inset 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='lapis'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 2px var(--border-strong),
+            inset 0 0 0 1px var(--destructive);
+    }
+
+    /* lapis · tone 3 · the double rule (primary: foreground token, since
+       that button is filled; destructive: its own colour, since lapis's
+       own register leaves that button unfilled until hover) */
+    [data-theme='lapis'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-block-start: 3px double var(--primary-foreground);
+    }
+
+    [data-theme='lapis'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-block-start: 3px double var(--destructive);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* lapis · interactive 1 · the warmed vellum */
+    [data-theme='lapis'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='lapis'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background: color-mix(in oklch, var(--border-strong) 16%, transparent);
+    }
+
+    /* lapis · interactive 2 · the traced gilt */
+    [data-theme='lapis'] [data-ac-interactive='2'] [data-ac] > li {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='lapis'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='lapis'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        border-inline-start-color: var(--border-strong);
+    }
+
+    /* lapis · interactive 3 · the illuminated ring */
+    [data-theme='lapis'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 2px;
+        border-radius: 999px;
+    }
+
+    [data-theme='lapis'] [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions {
+        filter: saturate(1.15);
+    }
+
+    /* ═════════════════════════════ nostromo ═════════════════════════════
+       The CRT console: scanlines, moulded plastic, blinking indicator
+       lamps, a label-maker tape. */
+
+    /* ── Shape ──────────────────────────────────────────────────────── */
+
+    /* nostromo · shape 1 · the CRT rail */
+    [data-theme='nostromo'] [data-ac-shape='1'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='nostromo'] [data-ac-shape='1'] [data-ac] .kp-row-actions > * {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.02em;
+    }
+
+    /* nostromo · shape 2 · the indicator rail */
+    [data-theme='nostromo'] [data-ac-shape='2'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-ac-shape='2'] [data-ac] .kp-row-actions {
+        padding: 0.2em 0.4em;
+        border-radius: var(--radius, 0.75rem);
+        background: var(--muted);
+        box-shadow: inset 0 1px 2px color-mix(in oklab, var(--foreground) 15%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-ac-shape='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 6px color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+
+    /* nostromo · shape 3 · the tape rail */
+    [data-theme='nostromo'] [data-ac-shape='3'] [data-ac] > li {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-ac-shape='3'] [data-ac] .kp-row-actions {
+        padding-block-start: 0.25em;
+        border-block-start: 2px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-ac-shape='3'] [data-ac] .kp-row-actions > * {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* ── Loading ────────────────────────────────────────────────────── */
+
+    @keyframes ac-no-scan {
+        to {
+            background-position: 130% 0;
+        }
+    }
+
+    @keyframes ac-no-blink {
+        50% {
+            box-shadow: 0 0 0 5px color-mix(in oklch, var(--primary) 20%, transparent);
+        }
+    }
+
+    @keyframes ac-no-tape {
+        to {
+            background-position: 24px 0;
+        }
+    }
+
+    /* nostromo · loading 1 · the scan line */
+    [data-theme='nostromo'] [data-ac-loading='1'] .ac-loading-panel {
+        background: linear-gradient(90deg, transparent 0 48%, var(--primary) 48% 50%, transparent 50%) -30% 0 / 160% 100% no-repeat;
+    }
+
+    /* nostromo · loading 2 · the indicator blinks */
+    [data-theme='nostromo'] [data-ac-loading='2'] .ac-loading-panel {
+        position: relative;
+    }
+
+    [data-theme='nostromo'] [data-ac-loading='2'] .ac-loading-panel::before {
+        content: '';
+        position: absolute;
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        border-radius: 999px;
+        background: var(--primary);
+    }
+
+    /* nostromo · loading 3 · the tape feeds */
+    [data-theme='nostromo'] [data-ac-loading='3'] .ac-loading-panel {
+        background: repeating-linear-gradient(90deg, var(--muted-foreground) 0 3px, transparent 3px 10px) 0 calc(100% - 4px) / 100% 4px repeat-x;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-ac-loading='1'] .ac-loading-panel {
+            animation: ac-no-scan 900ms linear infinite;
+        }
+
+        [data-theme='nostromo'] [data-ac-loading='2'] .ac-loading-panel::before {
+            animation: ac-no-blink 1s steps(1, end) infinite;
+        }
+
+        [data-theme='nostromo'] [data-ac-loading='3'] .ac-loading-panel {
+            animation: ac-no-tape 700ms linear infinite;
+        }
+    }
+
+    /* ── Arrival (and its mirror, leave) ───────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* nostromo · arrival 1 · scans in / out */
+        [data-theme='nostromo'] [data-ac-arrival='1'] [data-kp-arriving] {
+            animation: ac-no-scan-in 320ms steps(4, end);
+        }
+
+        [data-theme='nostromo'] [data-ac-arrival='1'] [data-kp-leaving] {
+            animation: ac-no-scan-out 320ms steps(4, end);
+        }
+
+        @keyframes ac-no-scan-in {
+            from {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes ac-no-scan-out {
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* nostromo · arrival 2 · feeds in / ejects */
+        [data-theme='nostromo'] [data-ac-arrival='2'] [data-kp-arriving] {
+            animation: ac-no-feed-in 300ms steps(5, end);
+        }
+
+        [data-theme='nostromo'] [data-ac-arrival='2'] [data-kp-leaving] {
+            animation: ac-no-feed-out 300ms steps(5, end);
+        }
+
+        @keyframes ac-no-feed-in {
+            from {
+                transform: translateX(-100%);
+            }
+        }
+
+        @keyframes ac-no-feed-out {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        /* nostromo · arrival 3 · warms up / cools down */
+        [data-theme='nostromo'] [data-ac-arrival='3'] [data-kp-arriving] {
+            animation: ac-no-warm-in 360ms cubic-bezier(0.3, 1.4, 0.4, 1);
+        }
+
+        [data-theme='nostromo'] [data-ac-arrival='3'] [data-kp-leaving] {
+            animation: ac-no-warm-out 360ms cubic-bezier(0.3, 1.4, 0.4, 1) reverse;
+        }
+
+        @keyframes ac-no-warm-in {
+            from {
+                transform: scale(0.8);
+            }
+        }
+
+        @keyframes ac-no-warm-out {
+            from {
+                transform: scale(0.8);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+    }
+
+    /* ── Tone ───────────────────────────────────────────────────────── */
+
+    /* nostromo · tone 1 · the indicator edge (foreground token: the
+       button's own fill is already this colour) */
+    [data-theme='nostromo'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-inline-start: 3px solid var(--primary-foreground);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.75rem) / 2));
+    }
+
+    [data-theme='nostromo'] [data-ac-tone='1'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-inline-start: 3px solid var(--destructive-foreground);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.75rem) / 2));
+    }
+
+    /* nostromo · tone 2 · the lit indicator */
+    [data-theme='nostromo'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 7px color-mix(in oklch, var(--primary) 75%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-ac-tone='2'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-radius: 999px;
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 7px color-mix(in oklch, var(--destructive) 75%, transparent);
+    }
+
+    /* nostromo · tone 3 · the tape band (foreground token, same reason) */
+    [data-theme='nostromo'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--primary {
+        border-block-start: 3px solid var(--primary-foreground);
+    }
+
+    [data-theme='nostromo'] [data-ac-tone='3'] [data-ac] .kp-row-actions > .kp-button--destructive {
+        border-block-start: 3px solid var(--destructive-foreground);
+    }
+
+    /* ── Interactive ────────────────────────────────────────────────── */
+
+    /* nostromo · interactive 1 · the warmed panel */
+    [data-theme='nostromo'] [data-ac-interactive='1'] [data-ac] > li:hover,
+    [data-theme='nostromo'] [data-ac-interactive='1'] [data-ac] > li:focus-within {
+        background: color-mix(in oklch, var(--primary) 10%, var(--muted));
+    }
+
+    /* nostromo · interactive 2 · the lit groove */
+    [data-theme='nostromo'] [data-ac-interactive='2'] [data-ac] > li {
+        box-shadow: inset 0 2px 0 transparent;
+        transition: box-shadow 120ms ease-out;
+    }
+
+    [data-theme='nostromo'] [data-ac-interactive='2'] [data-ac] > li:hover,
+    [data-theme='nostromo'] [data-ac-interactive='2'] [data-ac] > li:focus-within {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+
+    /* nostromo · interactive 3 · the scan flash */
+    [data-theme='nostromo'] [data-ac-interactive='3'] [data-ac] .kp-button:focus-visible {
+        outline-width: 3px;
+        outline-offset: 1px;
+    }
+
+    [data-theme='nostromo'] [data-ac-interactive='3'] [data-ac] > li:hover .kp-row-actions {
+        transform: translateY(-1px);
+    }
+}

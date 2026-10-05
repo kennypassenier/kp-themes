@@ -1,0 +1,332 @@
+/* research/character-state, phase 1 (Kenny, form v18 and 2026-10-05 20:03:
+   one pick per aspect, as the meter and the trend tile, "and it should be
+   like this in the future"). The state word (`.kp-state-word`,
+   css/components.css "A state word that keeps its width" [scope-143]) has
+   three aspects, each picked on its own from three options, composed
+   freely on a wrapper around it (`[data-sw]`, carrying the three aspects):
+
+     data-sw-shape="1|2|3"   the dot and the word's plate (frame,
+                              background, font treatment)
+     data-sw-tone="1|2|3"    how the state's kind (good, muted, pending,
+                              bad — set here as data-sw-kind, from the
+                              word itself) reads on the dot and the word
+     data-sw-change="1|2|3"  what plays when the word moves to a new
+                              state (data-sw-playing is toggled on and off
+                              by the demo to retrigger it); never a fade
+
+   Every rule names one aspect only and sets that aspect's knobs only, so
+   any combination composes; in a register the `[data-sw…]` and
+   `[data-sw-kind…]` parts drop out of every selector. Phase 1 builds every
+   theme's three aspects here only for formal and titanium (the rest in
+   state-a.css … state-d.css, by theme group, phase 2). The word's own text
+   and width are the package's (`.kp-state-word`, `data-kp-words`); nothing
+   here changes its content or its width-holding `::after`.
+
+   The contract every option keeps:
+   - Colour: tokens only (DI9). A kind's dot or ring is its status pair's
+     background (`--success`, `--warning`, `--destructive`) or
+     `--muted-foreground` for "muted"; a tone option that also colours the
+     word uses that pair's own foreground, never half of one.
+   - Contrast: the word's text holds 4.5:1 against whatever it sits on in
+     every option and every kind; a dot, a ring or a frame that carries the
+     tone holds 3:1 against its surroundings.
+   - Width: nothing here changes `.kp-state-word`'s own width-holding
+     mechanism (`data-kp-words`, its `::after`); the dot and any plate sit
+     beside it, so a button after the chip never moves when the word
+     changes.
+   - Motion: the Change aspect's animation sits in one
+     `prefers-reduced-motion: no-preference` block at the end, played once
+     when `[data-sw-playing]` is set (toggled off and on by the page on
+     every state change) and never looping at rest; no keyframe touches
+     opacity. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    [data-sw] {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--sw-gap, 0.4em);
+        isolation: isolate;
+        vertical-align: baseline;
+    }
+
+    [data-sw]::before {
+        content: '';
+        display: inline-block;
+        flex: none;
+        inline-size: var(--sw-dot-size, 0.5em);
+        block-size: var(--sw-dot-size, 0.5em);
+        border-radius: var(--sw-dot-radius, 50%);
+        background: var(--sw-dot, var(--muted-foreground));
+        box-shadow: var(--sw-dot-ring, none);
+        transform: var(--sw-dot-transform, none);
+    }
+
+    [data-sw] .kp-state-word {
+        padding: var(--sw-pad, 0);
+        border: var(--sw-frame, none);
+        border-radius: var(--sw-radius, 0);
+        background: var(--sw-plate, none);
+        box-shadow: var(--sw-plate-shadow, none);
+        color: var(--sw-ink, inherit);
+        font: var(--sw-font, inherit);
+        letter-spacing: var(--sw-track, normal);
+        text-transform: var(--sw-case, none);
+    }
+
+    /* ── Formal: the seal (1), the ledger tab (2), the signet (3) ──────── */
+
+    [data-theme='formal'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.6em;
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 1px;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong, var(--border));
+        --sw-radius: 1px;
+        --sw-pad: 0 0.35em 0.2em;
+        --sw-plate-shadow: inset 0 -1px 0 0 var(--border-strong, var(--border));
+    }
+
+    [data-theme='formal'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--border-strong, var(--border));
+        --sw-frame: 1px solid var(--border-strong, var(--border));
+        --sw-radius: 2px;
+        --sw-pad: 0.05em 0.4em;
+        --sw-case: uppercase;
+        --sw-track: 0.06em;
+        --sw-font: 500 0.85em var(--font-sans, inherit);
+    }
+
+    /* ── Formal: tone (1 dot only, 2 red entry, 3 ledger stamp) ────────── */
+
+    [data-theme='formal'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='formal'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-ink: var(--success-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-ink: var(--destructive);
+    }
+    [data-theme='formal'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-ink: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='formal'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='formal'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong, var(--border));
+    }
+
+    /* ── Formal: change (1 re-sealed, 2 entered in the ledger, 3 turned over) ── */
+
+    [data-theme='formal'] [data-sw-change='1'][data-sw-playing] {
+        animation: sw-formal-seal 0.6s ease-out;
+    }
+    [data-theme='formal'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-formal-rule 0.5s ease-out;
+    }
+    [data-theme='formal'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-formal-flip 0.5s steps(2, end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-formal-seal {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-formal-rule {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--border-strong, var(--border));
+            }
+            100% {
+                box-shadow: inset 0 -1px 0 0 var(--border-strong, var(--border));
+            }
+        }
+
+        @keyframes sw-formal-flip {
+            0% {
+                transform: rotateX(0deg);
+            }
+            50% {
+                transform: rotateX(90deg);
+            }
+            100% {
+                transform: rotateX(0deg);
+            }
+        }
+    }
+
+    /* ── Titanium: the milled dot (1), the dial tag (2), the badge chip (3) ── */
+
+    [data-theme='titanium'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 2px var(--border);
+        --sw-frame: 1px solid var(--border-strong, var(--border));
+        --sw-radius: var(--radius, 0.5rem);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: var(--muted);
+    }
+
+    [data-theme='titanium'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong, var(--border));
+        --sw-radius: 999px;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: linear-gradient(135deg, var(--muted) 0%, var(--card) 60%, var(--muted) 100%);
+        --sw-font: 500 0.85em var(--font-mono, ui-monospace, monospace);
+    }
+
+    /* ── Titanium: tone (1 anodised rim only, 2 machined, 3 badge warning) ── */
+
+    [data-theme='titanium'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--success-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--warning-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0 1px var(--destructive);
+    }
+    [data-theme='titanium'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='titanium'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-plate: color-mix(in oklch, var(--success) 20%, var(--muted));
+        --sw-ink: var(--success-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-plate: color-mix(in oklch, var(--warning) 20%, var(--muted));
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='titanium'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate: color-mix(in oklch, var(--destructive) 12%, var(--muted));
+        --sw-ink: var(--destructive);
+    }
+    [data-theme='titanium'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    /* ── Titanium: change (1 click of the dial, 2 knurl rolls, 3 a glint) ── */
+
+    [data-theme='titanium'] [data-sw-change='1'][data-sw-playing] {
+        animation: sw-titanium-click 0.35s steps(2, end);
+    }
+    [data-theme='titanium'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-titanium-knurl 0.6s ease-out;
+    }
+    [data-theme='titanium'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-titanium-glint 0.6s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-titanium-click {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(14deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes sw-titanium-knurl {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 0;
+            }
+        }
+
+        @keyframes sw-titanium-glint {
+            0% {
+                filter: brightness(1);
+            }
+            45% {
+                filter: brightness(1.35);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+    }
+}

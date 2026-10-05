@@ -1,0 +1,698 @@
+/* research/character-state, group b (terminal, forest, high-contrast,
+   sepia, blueprint): the state word's three aspects (shape, tone, change)
+   for this theme group, following the model in state.css (formal,
+   titanium). Selectors: [data-theme='<t>'] [data-sw-<aspect>='<n>'] (a
+   space after the theme, which sits on <html>); shape/tone/change/kind all
+   sit on the same chip element (`[data-sw]`). Tokens only; borders that
+   separate use --border-strong (verified >= 3:1 against --card in all
+   five themes below); a kind's dot/frame/ring colour and a plate's fill +
+   ink are chosen per-theme from the pair that actually clears 3:1 (dot)
+   and 4.5:1 (ink on its own plate) against this theme's --card — not
+   assumed from the model, since a theme's --success/--warning bg tokens
+   read differently light-vs-dark. Every animation sits in one
+   `prefers-reduced-motion: no-preference` block per theme at its aspect's
+   end; no keyframe touches opacity (blinks use transform: scaleY or
+   filter instead); every change plays once on `[data-sw-playing]`, never
+   looping at rest. Deviations from the literal IDEAS text, where the
+   module's markup cannot carry it: terminal shape 1's asterisk is a
+   rotated square spark (no glyph slot exists on the dot); forest shape 1's
+   "serif italic" uses the theme's own (sans) display face italicised, as
+   forest carries no serif token; blueprint shape 2's "dimension tick" is
+   a square dot, not an oblong tick (the shared dot box takes one size
+   var for both axes). */
+
+@layer kp.signature {
+    /* ───────────────────────── Terminal ───────────────────────── */
+
+    /* Shape 1: the top(1) row — an asterisk spark (approximated as a
+       rotated diamond, no glyph slot on the dot box) before the word in
+       reverse video, no plate. */
+    [data-theme='terminal'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.42em;
+        --sw-dot-radius: 1px;
+        --sw-dot-transform: rotate(45deg);
+        --sw-plate: var(--foreground);
+        --sw-ink: var(--background);
+        --sw-pad: 0 0.3em;
+        --sw-font: 600 0.9em var(--theme-font-mono, ui-monospace, monospace);
+        --sw-case: uppercase;
+        --sw-track: 0.04em;
+    }
+
+    /* Shape 2: the box-drawn tag — a double-ruled tag (box-drawing
+       stand-in), the dot a filled character cell. */
+    [data-theme='terminal'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot-radius: 0;
+        --sw-frame: 2px double var(--border-strong);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.4em;
+        --sw-font: 500 0.88em var(--theme-font-mono, ui-monospace, monospace);
+    }
+
+    /* Shape 3: the status line — a block cursor (static at rest; it never
+       idles-blink, since nothing may animate outside a change) before the
+       word, both in the phosphor. */
+    [data-theme='terminal'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 0;
+        --sw-font: 500 0.92em var(--theme-font-mono, ui-monospace, monospace);
+    }
+
+    /* Tone: the kind's colour is read from whichever of the pair clears
+       3:1 against this dark --card — the bright -foreground tint for
+       good/pending/muted, the plain destructive for bad (its own
+       foreground is the near-black text made for sitting ON the red
+       plate, not beside it). */
+    [data-theme='terminal'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='terminal'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='terminal'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='terminal'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--success-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--warning-foreground);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0 1px var(--destructive);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+    }
+
+    /* Change: a blip (the dot flares), redrawn (the rule redraws left to
+       right under the new word) and the cursor blinks faster (two quick
+       beats, then settles — scaleY, never opacity). */
+    [data-theme='terminal'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-terminal-blip 0.5s ease-out;
+    }
+    [data-theme='terminal'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-terminal-redraw 0.5s linear;
+    }
+    [data-theme='terminal'] [data-sw-change='3'][data-sw-playing]::before {
+        animation: sw-terminal-cursor 0.4s steps(2, jump-end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-terminal-blip {
+            0% {
+                filter: brightness(1);
+            }
+            30% {
+                filter: brightness(2.4);
+            }
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-terminal-redraw {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--border-strong, var(--border));
+            }
+            100% {
+                box-shadow: inset 0 -2px 0 0 var(--border-strong, var(--border));
+            }
+        }
+
+        @keyframes sw-terminal-cursor {
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+            25% {
+                transform: scaleY(0.08);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+            75% {
+                transform: scaleY(0.08);
+            }
+        }
+    }
+
+    /* ───────────────────────── Forest ───────────────────────── */
+
+    /* Shape 1: the trail marker — a round blaze before the word, in
+       italic, no plate. */
+    [data-theme='forest'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.55em;
+        --sw-font: 500 italic 0.95em var(--theme-font-display, var(--theme-font-body));
+    }
+
+    /* Shape 2: the wooden tag — a leather-loop tag on the accent (clay)
+       plate, the dot a carved notch. */
+    [data-theme='forest'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot-radius: 2px;
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: var(--radius, 0.5rem);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: var(--accent);
+        --sw-ink: var(--accent-foreground);
+    }
+
+    /* Shape 3: the leaf chip — the dot a small leaf (asymmetric corners),
+       the word on a mossy plate with a contour-ring edge. */
+    [data-theme='forest'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot-radius: 0 60% 0 60%;
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: 999px;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: var(--success);
+        --sw-ink: var(--success-foreground);
+    }
+
+    [data-theme='forest'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='forest'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='forest'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='forest'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong);
+    }
+
+    [data-theme='forest'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--success-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='forest'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--warning-foreground);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='forest'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0 1px var(--destructive);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+    }
+
+    /* Change: a rustle (the leaf turns over), blazed again (painted on
+       once) and the tag swings (a pendulum, overshooting once). */
+    [data-theme='forest'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-forest-rustle 0.6s ease-in-out;
+    }
+    [data-theme='forest'] [data-sw-change='2'][data-sw-playing]::before {
+        animation: sw-forest-blaze 0.55s ease-out;
+    }
+    [data-theme='forest'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-forest-swing 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: top center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-forest-rustle {
+            0% {
+                transform: rotateY(0deg);
+            }
+            50% {
+                transform: rotateY(180deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        @keyframes sw-forest-blaze {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.45);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-forest-swing {
+            0% {
+                transform: rotate(0deg);
+            }
+            30% {
+                transform: rotate(-9deg);
+            }
+            60% {
+                transform: rotate(5deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+    }
+
+    /* ───────────────────────── High-contrast ───────────────────────── */
+
+    /* Shape 1: the ink dot — a heavy dot, the word bold, no plate. */
+    [data-theme='high-contrast'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.6em;
+        --sw-font: 700 1em var(--theme-font-body, sans-serif);
+    }
+
+    /* Shape 2: the framed tag — a hard black frame, the dot filled solid
+       at its left edge. */
+    [data-theme='high-contrast'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 0;
+        --sw-frame: 2px solid var(--border-strong);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.45em;
+    }
+
+    /* Shape 3: the inverse chip — the dot and the word on one ink-filled
+       plate, the word in the paper colour. */
+    [data-theme='high-contrast'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-plate: var(--foreground);
+        --sw-ink: var(--background);
+        --sw-radius: var(--radius, 0.25rem);
+        --sw-pad: 0.1em 0.5em;
+        --sw-font: 700 0.95em var(--theme-font-body, sans-serif);
+    }
+
+    /* Tone 1/2: the dot or the frame alone takes the state's colour at
+       full strength (this theme's bg tokens already read at 6.8–8.2:1
+       against white, so no need for the -foreground swap used in the
+       other four themes of this group). Tone 3: every state (not only
+       warning/failed) inverts the chip's fill, as the brief for this
+       theme asks literally — the word kept in the paper colour on it. */
+    [data-theme='high-contrast'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='high-contrast'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-frame: 2px solid var(--success);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-frame: 2px solid var(--warning);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 2px solid var(--destructive);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 2px solid var(--border-strong);
+    }
+
+    [data-theme='high-contrast'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-plate: var(--success);
+        --sw-ink: var(--success-foreground);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+    }
+    [data-theme='high-contrast'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate: var(--muted);
+        --sw-ink: var(--muted-foreground);
+    }
+
+    /* Change: a hard flash (a single hard jump), the frame redraws (one
+       hard step) and inverted (two hard steps, via filter, never
+       opacity). */
+    [data-theme='high-contrast'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-hc-flash 0.3s steps(2, jump-none);
+    }
+    [data-theme='high-contrast'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-hc-frame 0.3s steps(2, jump-end);
+    }
+    [data-theme='high-contrast'] [data-sw-change='3'][data-sw-playing] {
+        animation: sw-hc-invert 0.4s steps(2, jump-none);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-hc-flash {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.7);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-hc-frame {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--border-strong);
+            }
+            100% {
+                box-shadow: inset 0 0 0 2px var(--border-strong);
+            }
+        }
+
+        @keyframes sw-hc-invert {
+            0% {
+                filter: invert(0);
+            }
+            50% {
+                filter: invert(1);
+            }
+            100% {
+                filter: invert(0);
+            }
+        }
+    }
+
+    /* ───────────────────────── Sepia ───────────────────────── */
+
+    /* Shape 1: the ink blot — a small irregular blot before the word, the
+       word in the nib's hand (the theme's own serif display face,
+       literally "the nib's hand"), no plate. */
+    [data-theme='sepia'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 60% 40% 50% 50%;
+        --sw-font: 400 italic 1em var(--theme-font-display, serif);
+    }
+
+    /* Shape 2: the letterpress tag — a pressed rectangle, the dot a
+       stamped circle at its left. */
+    [data-theme='sepia'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: var(--radius, 0.375rem);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: var(--muted);
+        --sw-plate-shadow: inset 0 1px 2px color-mix(in oklch, var(--foreground) 22%, transparent);
+    }
+
+    /* Shape 3: the barograph mark — the dot on ruled chart paper, the
+       word beside it in a fine nib trace. */
+    [data-theme='sepia'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate: repeating-linear-gradient(to bottom, transparent 0 7px, var(--border-strong) 7px 8px), var(--card);
+    }
+
+    [data-theme='sepia'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='sepia'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='sepia'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='sepia'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='sepia'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='sepia'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong);
+    }
+
+    [data-theme='sepia'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='sepia'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--warning-foreground);
+        --sw-plate-shadow: 0 0 0 1px var(--destructive); /* a ring outside the box: the red-ink rule without a layout shift */
+    }
+    [data-theme='sepia'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0 1px var(--destructive);
+        --sw-plate-shadow: 0 0 0 1px var(--destructive); /* a ring outside the box: the red-ink rule without a layout shift */
+    }
+
+    /* Change: a blot spreads (scale, slowing as it lands), pressed again
+       (one hard step) and signed again (a trace redraws, easing in and
+       out). */
+    [data-theme='sepia'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-sepia-blot 0.55s ease-out;
+    }
+    [data-theme='sepia'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-sepia-press 0.3s steps(2, jump-end);
+    }
+    [data-theme='sepia'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-sepia-sign 0.6s ease-in-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-sepia-blot {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-sepia-press {
+            0% {
+                box-shadow: inset 0 0 0 0 color-mix(in oklch, var(--foreground) 22%, transparent);
+            }
+            100% {
+                box-shadow: inset 0 2px 2px color-mix(in oklch, var(--foreground) 22%, transparent);
+            }
+        }
+
+        @keyframes sw-sepia-sign {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--foreground);
+            }
+            100% {
+                box-shadow: inset 0 -1.5px 0 0 var(--foreground);
+            }
+        }
+    }
+
+    /* ───────────────────────── Blueprint ───────────────────────── */
+
+    /* Shape 1: the pin mark — a small drafting-pin dot, the word in
+       technical mono, no plate. */
+    [data-theme='blueprint'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-font: 500 0.9em var(--theme-font-mono, ui-monospace, monospace);
+    }
+
+    /* Shape 2: the title block — a cell parted by drawn rules, the dot a
+       dimension tick at its left (a square tick, the shared dot box
+       having one size variable for both axes). */
+    [data-theme='blueprint'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot-radius: 0;
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.45em;
+        --sw-font: 500 0.88em var(--theme-font-mono, ui-monospace, monospace);
+    }
+
+    /* Shape 3: the grid chip — the dot on a millimetre-grid tile, the
+       word in mono capitals beside it. */
+    [data-theme='blueprint'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 0;
+        --sw-pad: 0.1em 0.5em;
+        --sw-radius: var(--radius, 0.125rem);
+        --sw-case: uppercase;
+        --sw-track: 0.04em;
+        --sw-font: 500 0.82em var(--theme-font-mono, ui-monospace, monospace);
+        --sw-plate:
+            repeating-linear-gradient(to right, transparent 0 7px, var(--border-strong) 7px 8px),
+            repeating-linear-gradient(to bottom, transparent 0 7px, var(--border-strong) 7px 8px), var(--card);
+    }
+
+    [data-theme='blueprint'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='blueprint'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='blueprint'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 1px solid var(--success-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 1px solid var(--warning-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 1px solid var(--destructive);
+    }
+    [data-theme='blueprint'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--success-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='blueprint'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--warning-foreground);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='blueprint'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0 1px var(--destructive);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+    }
+
+    /* Change: a tick redraws (scale, slowing as it lands), ruled again
+       (the rule redraws left to right) and plotted (hard steps, line by
+       line). */
+    [data-theme='blueprint'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-blueprint-tick 0.5s ease-out;
+    }
+    [data-theme='blueprint'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-blueprint-rule 0.45s linear;
+    }
+    [data-theme='blueprint'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-blueprint-plot 0.5s steps(4, end);
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-blueprint-tick {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-blueprint-rule {
+            0% {
+                box-shadow: inset 0 0 0 0 var(--border-strong, var(--border));
+            }
+            100% {
+                box-shadow: inset 0 -1px 0 0 var(--border-strong, var(--border));
+            }
+        }
+
+        @keyframes sw-blueprint-plot {
+            0% {
+                transform: scaleX(0.05);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+    }
+}

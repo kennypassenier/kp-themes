@@ -1,0 +1,722 @@
+/* research/character-state, group c: solstice, brutalism, deco, phantom,
+   shade-light. Built the way state.css built formal and titanium: one
+   rule names one aspect and sets that aspect's knobs only (the vars the
+   shared block in state.css reads), so any combination composes; tone
+   rules key off `[data-sw-kind]` too. Motifs come straight from each
+   theme's own IDEAS in demo.js — the ember / low sun / warm glass of
+   solstice, the hard offset block of brutalism, the gilt marquee of
+   deco, the red-string evidence of phantom, the pencil-and-leaf-shade of
+   shade-light — never a fade, and the dot's halo tracks `--sw-dot`
+   itself via `var(--sw-dot)` inside `--sw-dot-ring`, so tone recolours
+   the glow for free. Every Change animation plays once on
+   `[data-sw-playing]`, its `@keyframes` living only under
+   `prefers-reduced-motion: no-preference` so reduced motion drops the
+   animation (the keyframe does not exist) without extra selectors. */
+
+@layer kp.signature {
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ solstice — charcoal, amber and rust, the ember        ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── Shape (1 the ember, 2 the low sun chip, 3 the warm tag) ──────── */
+
+    [data-theme='solstice'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.4em color-mix(in oklch, var(--sw-dot) 65%, transparent);
+        --sw-ink: var(--foreground);
+        --sw-font: 400 1em var(--theme-font-display, inherit);
+    }
+
+    [data-theme='solstice'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.3em color-mix(in oklch, var(--sw-dot) 60%, transparent);
+        --sw-radius: var(--radius, 0.625rem);
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: radial-gradient(ellipse 120% 100% at 50% 135%, color-mix(in oklch, var(--primary) 32%, transparent) 0%, var(--muted) 70%);
+        --sw-font: 400 0.95em var(--theme-font-display, inherit);
+        --sw-ink: var(--foreground);
+    }
+
+    [data-theme='solstice'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px color-mix(in oklch, var(--sw-dot) 70%, var(--border-strong));
+        --sw-frame: 1px solid color-mix(in oklch, var(--primary) 25%, var(--border));
+        --sw-radius: var(--radius, 0.625rem);
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: linear-gradient(to top, color-mix(in oklch, var(--primary) 16%, var(--card)) 0%, var(--card) 65%);
+        --sw-ink: var(--foreground);
+    }
+
+    /* ── Tone (1 ember colour only, 2 the glowing chip, 3 the hot halo) ── */
+
+    [data-theme='solstice'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='solstice'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='solstice'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='solstice'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-plate: color-mix(in oklch, var(--success) 22%, var(--muted));
+    }
+    [data-theme='solstice'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-plate: color-mix(in oklch, var(--warning) 22%, var(--muted));
+    }
+    [data-theme='solstice'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate: color-mix(in oklch, var(--destructive) 22%, var(--muted));
+    }
+    [data-theme='solstice'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate: var(--muted);
+    }
+
+    [data-theme='solstice'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-dot-ring: 0 0 0.45em color-mix(in oklch, var(--success) 60%, transparent);
+    }
+    [data-theme='solstice'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-dot-ring: 0 0 0.85em color-mix(in oklch, var(--warning) 75%, transparent);
+    }
+    [data-theme='solstice'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-dot-ring: 0 0 0.85em color-mix(in oklch, var(--destructive) 75%, transparent);
+    }
+    [data-theme='solstice'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.45em color-mix(in oklch, var(--muted-foreground) 50%, transparent);
+    }
+
+    /* ── Change (1 a glint, 2 the sun rises, 3 rekindled) ─────────────── */
+
+    [data-theme='solstice'] [data-sw-change='1'][data-sw-playing] {
+        animation: sw-sol-glint 0.6s ease-out;
+    }
+    [data-theme='solstice'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-sol-rise 0.55s ease-in-out;
+    }
+    [data-theme='solstice'] [data-sw-change='3'][data-sw-playing] {
+        animation: sw-sol-rekindle 0.5s steps(2, end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-sol-glint {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            45% {
+                filter: brightness(1.55);
+            }
+        }
+
+        @keyframes sw-sol-rise {
+            0% {
+                transform: translateY(0.3em);
+                filter: brightness(0.85);
+            }
+            70% {
+                transform: translateY(-0.05em);
+                filter: brightness(1.1);
+            }
+            100% {
+                transform: translateY(0);
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes sw-sol-rekindle {
+            0% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(0.35);
+            }
+            100% {
+                filter: brightness(1.2);
+            }
+        }
+    }
+
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ brutalism — off-white, black border, hard offset      ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── Shape (1 the block dot, 2 the slab tag, 3 the sticker chip) ──── */
+
+    [data-theme='brutalism'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.7em;
+        --sw-dot-radius: 0;
+        --sw-dot: var(--muted-foreground);
+        --sw-case: uppercase;
+        --sw-track: 0.02em;
+        --sw-font: 800 0.95em var(--theme-font-display, inherit);
+    }
+
+    [data-theme='brutalism'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 0;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 3px solid var(--foreground);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: 3px 3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot-radius: 0;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 2px solid var(--foreground);
+        --sw-radius: 3px;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: 2px 2px 0 0 var(--foreground);
+        transform: rotate(-2deg);
+        display: inline-flex;
+    }
+
+    /* ── Tone (1 block colour only, 2 slab colour, 3 hazard sticker) ──── */
+
+    [data-theme='brutalism'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='brutalism'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='brutalism'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-plate: var(--success);
+        --sw-ink: var(--success-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate: var(--muted);
+        --sw-ink: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-frame: 2px solid var(--success-foreground);
+    }
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-frame: 2px solid var(--warning-foreground);
+        --sw-plate-shadow: 0 0 0 2px var(--warning-foreground); /* thickens outside the box: no layout shift */
+    }
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-frame: 2px solid var(--destructive);
+        --sw-plate-shadow: 0 0 0 2px var(--destructive); /* thickens outside the box: no layout shift */
+    }
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 2px solid var(--foreground);
+    }
+
+    /* ── Change (1 a hard slam, 2 the slab shifts, 3 restamped) ───────── */
+
+    [data-theme='brutalism'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-bru-slam 0.3s steps(2, end);
+    }
+    [data-theme='brutalism'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-bru-shift 0.26s steps(2, end);
+    }
+    [data-theme='brutalism'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-bru-restamp 0.3s steps(2, end);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-bru-slam {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.7);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-bru-shift {
+            0% {
+                box-shadow: 3px 3px 0 0 var(--foreground);
+            }
+            50% {
+                box-shadow: -3px 5px 0 0 var(--foreground);
+            }
+            100% {
+                box-shadow: 3px 3px 0 0 var(--foreground);
+            }
+        }
+
+        @keyframes sw-bru-restamp {
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(6deg);
+            }
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+    }
+
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ deco — gold on near-black, jewel-box geometry          ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── Shape (1 the gilt dot, 2 the marquee tag, 3 the sunburst chip) ── */
+
+    [data-theme='deco'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.3em color-mix(in oklch, var(--sw-dot) 55%, transparent);
+        --sw-case: uppercase;
+        --sw-track: 0.09em;
+        --sw-font: 500 0.85em var(--theme-font-display, inherit);
+    }
+
+    [data-theme='deco'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.3em color-mix(in oklch, var(--sw-dot) 55%, transparent);
+        --sw-frame: 1px solid var(--primary);
+        --sw-radius: 0;
+        --sw-pad: 0.15em 0.6em;
+        --sw-plate: repeating-linear-gradient(90deg, color-mix(in oklch, var(--primary) 70%, transparent) 0 2px, transparent 2px 9px), var(--card);
+        --sw-font: 500 0.9em var(--theme-font-display, inherit);
+    }
+
+    [data-theme='deco'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0.3em color-mix(in oklch, var(--sw-dot) 55%, transparent);
+        --sw-frame: 1px solid var(--primary);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate:
+            conic-gradient(from 0deg at 50% 50%, color-mix(in oklch, var(--primary) 16%, transparent) 0deg 10deg, transparent 10deg 20deg),
+            var(--card);
+    }
+
+    /* ── Tone (1 gold colour only, 2 the lit marquee, 3 the gold warning) ── */
+
+    [data-theme='deco'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+    }
+    [data-theme='deco'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+    }
+    [data-theme='deco'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='deco'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-plate: repeating-linear-gradient(90deg, color-mix(in oklch, var(--success) 80%, transparent) 0 2px, transparent 2px 9px), var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-plate: repeating-linear-gradient(90deg, color-mix(in oklch, var(--warning) 80%, transparent) 0 2px, transparent 2px 9px), var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate:
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--destructive) 80%, transparent) 0 2px, transparent 2px 9px), var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate:
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--muted-foreground) 70%, transparent) 0 2px, transparent 2px 9px), var(--card);
+    }
+
+    [data-theme='deco'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success-foreground);
+        --sw-plate:
+            conic-gradient(from 0deg at 50% 50%, color-mix(in oklch, var(--success) 16%, transparent) 0deg 10deg, transparent 10deg 20deg),
+            var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning-foreground);
+        --sw-plate:
+            conic-gradient(from 0deg at 50% 50%, color-mix(in oklch, var(--warning) 32%, transparent) 0deg 10deg, transparent 10deg 20deg),
+            var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate:
+            conic-gradient(from 0deg at 50% 50%, color-mix(in oklch, var(--destructive) 32%, transparent) 0deg 10deg, transparent 10deg 20deg),
+            var(--card);
+    }
+    [data-theme='deco'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate:
+            conic-gradient(from 0deg at 50% 50%, color-mix(in oklch, var(--muted-foreground) 14%, transparent) 0deg 10deg, transparent 10deg 20deg),
+            var(--card);
+    }
+
+    /* ── Change (1 a bulb lights, 2 the marquee chases, 3 regilded) ───── */
+
+    [data-theme='deco'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-deco-bulb 0.55s ease-out;
+    }
+    [data-theme='deco'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-deco-chase 0.6s steps(6, end);
+    }
+    [data-theme='deco'] [data-sw-change='3'][data-sw-playing]::before {
+        animation: sw-deco-gleam 0.6s ease-in-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-deco-bulb {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            45% {
+                filter: brightness(1.6);
+            }
+        }
+
+        @keyframes sw-deco-chase {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 9px 0;
+            }
+        }
+
+        @keyframes sw-deco-gleam {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.4);
+            }
+        }
+    }
+
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ phantom — black, white, one violent red, no glow      ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── Shape (1 the red dot, 2 the evidence tag, 3 the calling card) ── */
+
+    [data-theme='phantom'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.45em;
+        --sw-dot: var(--muted-foreground);
+    }
+    [data-theme='phantom'] [data-sw-shape='1'] .kp-state-word {
+        display: inline-block;
+        transform: skewX(-8deg);
+    }
+
+    [data-theme='phantom'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--foreground);
+        --sw-radius: 999px;
+        --sw-pad: 0.12em 0.6em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--foreground);
+    }
+
+    [data-theme='phantom'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: 0;
+        --sw-pad: 0.1em 0.55em;
+        --sw-plate: linear-gradient(135deg, var(--card) 0% 70%, color-mix(in oklch, var(--accent) 70%, var(--card)) 70% 76%, var(--card) 76% 100%);
+    }
+
+    /* ── Tone (1 string colour only, 2 the stamped colour, 3 the slashed warning) ── */
+
+    [data-theme='phantom'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='phantom'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='phantom'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='phantom'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-plate-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--success);
+    }
+    [data-theme='phantom'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-plate-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--warning);
+    }
+    [data-theme='phantom'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--destructive);
+    }
+    [data-theme='phantom'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--border-strong);
+    }
+
+    [data-theme='phantom'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-plate: linear-gradient(135deg, var(--card) 0% 70%, color-mix(in oklch, var(--success) 70%, var(--card)) 70% 76%, var(--card) 76% 100%);
+    }
+    [data-theme='phantom'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-plate: linear-gradient(135deg, var(--card) 0% 62%, color-mix(in oklch, var(--warning) 80%, var(--card)) 62% 72%, var(--card) 72% 100%);
+    }
+    [data-theme='phantom'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate: linear-gradient(
+            135deg,
+            var(--card) 0% 62%,
+            color-mix(in oklch, var(--destructive) 80%, var(--card)) 62% 72%,
+            var(--card) 72% 100%
+        );
+    }
+    [data-theme='phantom'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate: linear-gradient(
+            135deg,
+            var(--card) 0% 70%,
+            color-mix(in oklch, var(--border-strong) 70%, var(--card)) 70% 76%,
+            var(--card) 76% 100%
+        );
+    }
+
+    /* ── Change (1 pinned, 2 restamped, 3 re-slashed; no glow, hard cuts) ── */
+
+    [data-theme='phantom'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-pha-pin 0.5s ease-out;
+    }
+    [data-theme='phantom'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-pha-restamp 0.3s steps(1, end);
+    }
+    [data-theme='phantom'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-pha-reslash 0.5s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-pha-pin {
+            0% {
+                transform: translateY(-0.5em) scale(0.8);
+            }
+            65% {
+                transform: translateY(0.12em) scale(1.1);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes sw-pha-restamp {
+            0%,
+            49% {
+                transform: scale(1.3);
+            }
+            50%,
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-pha-reslash {
+            0% {
+                transform: scaleX(0.85);
+                transform-origin: left center;
+            }
+            100% {
+                transform: scaleX(1);
+                transform-origin: left center;
+            }
+        }
+    }
+
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ shade-light — paper in the shade, pencil and leaf-light ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── Shape (1 the pencil dot, 2 the leaf-shade tag, 3 the paper chip) ── */
+
+    [data-theme='shade-light'] [data-sw-shape='1'] {
+        --sw-dot-size: 0.5em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0.05em 0.05em 0 0 var(--sw-dot), -0.05em -0.05em 0 0 var(--sw-dot);
+        --sw-ink: var(--foreground);
+        --sw-font: 400 1em var(--theme-font-display, inherit);
+    }
+
+    [data-theme='shade-light'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+        --sw-radius: var(--radius, 0.25rem);
+        --sw-pad: 0.1em 0.5em;
+        --sw-plate:
+            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--foreground) 12%, transparent) 0% 15%, transparent 16%),
+            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--foreground) 9%, transparent) 0% 12%, transparent 13%), var(--card);
+        --sw-ink: var(--foreground);
+    }
+
+    [data-theme='shade-light'] [data-sw-shape='3'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+        --sw-radius: var(--radius, 0.25rem);
+        --sw-pad: 0.12em 0.5em;
+        --sw-plate: var(--card);
+        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
+    }
+
+    /* ── Tone (1 pencil colour only, 2 the shaded colour, 3 the paper warning) ── */
+
+    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+    }
+    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+    }
+    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+    }
+    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+    }
+
+    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-plate:
+            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--success) 20%, transparent) 0% 15%, transparent 16%),
+            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--success) 16%, transparent) 0% 12%, transparent 13%), var(--card);
+    }
+    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-plate:
+            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--warning) 20%, transparent) 0% 15%, transparent 16%),
+            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--warning) 16%, transparent) 0% 12%, transparent 13%), var(--card);
+    }
+    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate:
+            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--destructive) 20%, transparent) 0% 15%, transparent 16%),
+            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--destructive) 16%, transparent) 0% 12%, transparent 13%), var(--card);
+    }
+    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate: var(--card);
+    }
+
+    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--success);
+        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
+    }
+    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--warning);
+        --sw-plate-shadow: 0 3px 6px color-mix(in oklch, var(--warning) 45%, transparent);
+    }
+    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive);
+        --sw-plate-shadow: 0 3px 6px color-mix(in oklch, var(--destructive) 45%, transparent);
+    }
+    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-dot: var(--muted-foreground);
+        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
+    }
+
+    /* ── Change (1 a soft stroke, 2 the leaves shift, 3 lifted) ───────── */
+
+    [data-theme='shade-light'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: sw-shl-stroke 0.5s ease-in-out;
+    }
+    [data-theme='shade-light'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+        animation: sw-shl-leaves 0.55s ease-out;
+    }
+    [data-theme='shade-light'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+        animation: sw-shl-lift 0.5s ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes sw-shl-stroke {
+            0% {
+                transform: scale(0.6);
+            }
+            60% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes sw-shl-leaves {
+            0% {
+                background-position:
+                    -6px 0,
+                    6px 0,
+                    0 0;
+            }
+            100% {
+                background-position:
+                    0 0,
+                    0 0,
+                    0 0;
+            }
+        }
+
+        @keyframes sw-shl-lift {
+            0% {
+                box-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
+                transform: translateY(0);
+            }
+            55% {
+                box-shadow: 0 6px 10px color-mix(in oklch, var(--foreground) 25%, transparent);
+                transform: translateY(-0.18em);
+            }
+            100% {
+                box-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
+                transform: translateY(0);
+            }
+        }
+    }
+}
