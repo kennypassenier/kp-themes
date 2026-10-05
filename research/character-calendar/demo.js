@@ -11,7 +11,16 @@
 // one is, gives the calendars their nights, sets the states, and runs the
 // speed. js/calendar.js is not changed.
 
-import { attachCalendars, CALENDAR_PICK_EVENT, calendarSelect, dayKey, formatDayKey, setCalendarDays, setCalendarLegend, setCalendarState } from '../../js/calendar.js';
+import {
+    attachCalendars,
+    CALENDAR_PICK_EVENT,
+    calendarSelect,
+    dayKey,
+    formatDayKey,
+    setCalendarDays,
+    setCalendarLegend,
+    setCalendarState,
+} from '../../js/calendar.js';
 import { THEMES } from '../../js/theme-registry.js';
 
 /**
@@ -56,7 +65,7 @@ const IDEAS = {
         },
         b: {
             name: 'The hazard roster',
-            text: "A duty roster on a hazard terminal: plates with a cut corner, the number in the condensed display face, a band of hazard stripes along the top of every night that went wrong (amber for some missing, red for none). Today wears a yellow frame and a NOW tag; the picked day a cyan frame. Loading crawls the hazard stripes along every band.",
+            text: 'A duty roster on a hazard terminal: plates with a cut corner, the number in the condensed display face, a band of hazard stripes along the top of every night that went wrong (amber for some missing, red for none). Today wears a yellow frame and a NOW tag; the picked day a cyan frame. Loading crawls the hazard stripes along every band.',
         },
     },
     synthwave: {
@@ -72,7 +81,7 @@ const IDEAS = {
     pastel: {
         a: {
             name: 'The sticker chart',
-            text: "A reward chart on the fridge: plump candy plates with a flat sticker shadow, a star sticker on every good night, an outline star on a partial one, a cross on a night with nothing done. Today is ringed in a dashed candy line; the picked day in a solid one. Loading hops a candy dot across every plate.",
+            text: 'A reward chart on the fridge: plump candy plates with a flat sticker shadow, a star sticker on every good night, an outline star on a partial one, a cross on a night with nothing done. Today is ringed in a dashed candy line; the picked day in a solid one. Loading hops a candy dot across every plate.',
         },
         b: {
             name: 'The washi planner',
@@ -106,7 +115,7 @@ const IDEAS = {
         },
         b: {
             name: 'The inverse plate',
-            text: "Every day an ink plate with white figures, its state told by pattern alone in a band at its foot (solid, hatched, cross-hatched on red, dotted), so it reads in greyscale and in forced colours alike. Today is ringed in the signal yellow; the picked day framed in blue. Loading shows a dashed white line, still.",
+            text: 'Every day an ink plate with white figures, its state told by pattern alone in a band at its foot (solid, hatched, cross-hatched on red, dotted), so it reads in greyscale and in forced colours alike. Today is ringed in the signal yellow; the picked day framed in blue. Loading shows a dashed white line, still.',
         },
     },
     sepia: {
@@ -166,7 +175,7 @@ const IDEAS = {
         },
         b: {
             name: 'The calling card month',
-            text: "Black cards under a halftone screen, every figure a white scrap of cut paper set at its own slant, a night with nothing done on a red card. Today is struck with a red slash in its corner; the picked day framed in white. Loading shuffles the halftone in hard steps.",
+            text: 'Black cards under a halftone screen, every figure a white scrap of cut paper set at its own slant, a night with nothing done on a red card. Today is struck with a red slash in its corner; the picked day framed in white. Loading shuffles the halftone in hard steps.',
         },
     },
     'shade-light': {
@@ -192,7 +201,7 @@ const IDEAS = {
     retro: {
         a: {
             name: 'The tear-off pad',
-            text: "Every day a leaf of a perforated tear-off pad: a row of perforation holes along its top, the figure in the pixel face, a good night on green paper, a partial one on yellow, a night with nothing done on red. Today is ringed in the marker; the picked day in the dotted focus line of 1995. Still: nothing blinks.",
+            text: 'Every day a leaf of a perforated tear-off pad: a row of perforation holes along its top, the figure in the pixel face, a good night on green paper, a partial one on yellow, a night with nothing done on red. Today is ringed in the marker; the picked day in the dotted focus line of 1995. Still: nothing blinks.',
         },
         b: {
             name: 'The 1995 date picker',
@@ -212,7 +221,7 @@ const IDEAS = {
     lapis: {
         a: {
             name: 'Lapis on vellum',
-            text: 'The month on a leaf of ivory vellum ruled in gold inside the lapis page, each day a panel inked in its state, the figure in the Markazi serif. Today is ringed in a gold toranj, the pointed cartouche; the picked day in a gold frame. Loading lets a burnisher\'s glint run across every panel.',
+            text: "The month on a leaf of ivory vellum ruled in gold inside the lapis page, each day a panel inked in its state, the figure in the Markazi serif. Today is ringed in a gold toranj, the pointed cartouche; the picked day in a gold frame. Loading lets a burnisher's glint run across every panel.",
         },
         b: {
             name: 'The girih tiles',
@@ -232,7 +241,7 @@ const IDEAS = {
     titanium: {
         a: {
             name: 'The anodised tiles',
-            text: "Every day a tile of brushed titanium, its night anodised into it in its colour, the figure engraved in the instrument mono. Today is ringed in the blue heat tint; the picked tile has a polished edge. Loading runs the cutter across every tile at an even, linear pace: metal does not ease.",
+            text: 'Every day a tile of brushed titanium, its night anodised into it in its colour, the figure engraved in the instrument mono. Today is ringed in the blue heat tint; the picked tile has a polished edge. Loading runs the cutter across every tile at an even, linear pace: metal does not ease.',
         },
         b: {
             name: 'The date wheel',
@@ -291,7 +300,17 @@ for (const [theme, two] of Object.entries(IDEAS)) {
 const NOW = Date.parse('2026-10-20T12:40:00Z');
 const TODAY = dayKey(NOW);
 const OLDEST = '2026-08-10';
-const SERVICES = ['Readings database', 'Field gateway', 'Reports', 'Maps', 'Alarm relay', 'Work orders', 'Invoices', 'Telemetry archive', 'Mail relay'];
+const SERVICES = [
+    'Readings database',
+    'Field gateway',
+    'Reports',
+    'Maps',
+    'Alarm relay',
+    'Work orders',
+    'Invoices',
+    'Telemetry archive',
+    'Mail relay',
+];
 /** The picked night per month: shown by the month buttons. */
 const PICK = /** @type {Record<string, string>} */ ({ '2026-08': '2026-08-12', '2026-09': '2026-09-22', '2026-10': '2026-10-16' });
 
