@@ -731,3 +731,110 @@ test.describe('datatable sticky header reach [fix-32, scope-90]', { tag: ['@comp
         );
     }
 });
+
+// A group folds as the mirror of its open [scope-143; Kenny's form v21,
+// 2026-10-05: "Spiegelen"]. Opening, the rows arrive and the box eases to
+// its new height; folding, the rows play their arrival backwards while the
+// box eases shut on the open's curve turned around, in the same time, and
+// ends where the open began. The box snapped shut once the rows had gone.
+test.describe('datatable — a group folds as its open played backwards', { tag: ['@component:datatable'] }, () => {
+    /**
+     * Click the group's toggle and step the box's glide through its active
+     * phase: its height at N + 1 evenly spaced moments, first to last, so
+     * moment k of the fold mirrors moment N - k of the open.
+     * @param {import('@playwright/test').Page} page
+     */
+    const glideOf = (page) =>
+        page.evaluate(async () => {
+            const heading = /** @type {HTMLElement} */ (document.querySelector('tr[data-kp-row-group="home"]'));
+            const box = /** @type {HTMLElement} */ (heading.closest('.kp-datatable'));
+            /** @type {HTMLElement} */ (heading.querySelector('[data-kp-group-toggle]')).click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            const glide = box.getAnimations().find((a) => a.effect instanceof KeyframeEffect && a.effect.getKeyframes().some((k) => 'height' in k));
+            const rows = [...box.querySelectorAll('tr[data-kp-group-of="home"]')];
+            const out = rows.filter((row) => row.getAttribute('data-kp-folding') === 'out').length;
+            if (!glide) return { glide: false, out, heights: [], duration: 0, delay: 0 };
+            const paused = performance.now();
+            const at = Number(glide.currentTime);
+            glide.pause();
+            const timing = /** @type {KeyframeEffect} */ (glide.effect).getTiming();
+            const duration = Number(timing.duration);
+            const delay = Number(timing.delay ?? 0);
+            // An odd count of steps, so the middle of the glide, where a
+            // two-step curve jumps, is never one of the moments.
+            const n = Math.ceil(duration / (1000 / 60)) | 1;
+            // A fraction of a ms inside each end and off the step boundaries,
+            // where a stepped curve jumps and its mirror jumps on the far side.
+            const d = 0.37;
+            const heights = [];
+            for (let k = 0; k <= n; k++) {
+                glide.currentTime = delay + d + (k * (duration - 2 * d)) / n;
+                heights.push(box.getBoundingClientRect().height);
+            }
+            // Back to where it would stand, so it ends with the rows.
+            glide.currentTime = at + performance.now() - paused;
+            glide.play();
+            await glide.finished;
+            // The rows are hidden once their arrival has played backwards.
+            for (let wait = 0; wait < 100 && box.querySelector('[data-kp-folding="out"]'); wait++) await new Promise((r) => setTimeout(r, 20));
+            return { glide: true, out, heights, duration, delay, settled: box.getBoundingClientRect().height };
+        });
+
+    /** @param {import('@playwright/test').Page} page @param {string} theme */
+    const ready = async (page, theme) => {
+        await page.goto('/catalogue/table.html');
+        await waitForJudging(page);
+        await page.evaluate((name) => {
+            document.documentElement.setAttribute('data-theme', name);
+            // A block judged in the page's theme is hidden; this one is shown.
+            for (let el = document.querySelector('tr[data-kp-row-group="home"]')?.parentElement; el; el = el.parentElement) el.hidden = false;
+        }, theme);
+        await page.locator('tr[data-kp-row-group="home"]').scrollIntoViewIfNeeded();
+        // The theme switch holds every glide for two frames and the faces' load.
+        await page.waitForFunction(() => {
+            const box = document.querySelector('tr[data-kp-row-group="home"]')?.closest('.kp-datatable');
+            return box !== null && box !== undefined && box.getAnimations().length === 0;
+        });
+        await page.waitForTimeout(400);
+    };
+
+    for (const theme of ['formal', 'cyberpunk', 'terminal']) {
+        test(`${theme}: the box eases shut while the rows go, frame t of the fold is frame T - t of the open`, async ({ page }) => {
+            const errors = /** @type {string[]} */ ([]);
+            page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
+            page.on('pageerror', (error) => errors.push(String(error)));
+            await ready(page, theme);
+            // The first fold also redraws the table's pager, which may still
+            // be arriving from the page's load; the pair measured comes after.
+            await glideOf(page);
+            await page.waitForTimeout(300);
+            const open = await glideOf(page);
+            await page.waitForTimeout(300);
+            const fold = await glideOf(page);
+            expect(fold.glide, 'the box glides shut instead of snapping').toBe(true);
+            expect(fold.out, 'the rows are marked as folding out while they play').toBe(3);
+            expect(open.glide).toBe(true);
+            expect(fold.duration).toBe(open.duration);
+            expect(fold.heights.length).toBe(open.heights.length);
+            const apart = fold.heights.map((h, k) => Math.abs(h - open.heights[open.heights.length - 1 - k]));
+            expect(Math.max(...apart), `fold ${fold.heights.join(', ')} | open ${open.heights.join(', ')}`).toBeLessThanOrEqual(1);
+            // It ends where the open began, and never below it.
+            expect(Math.abs(/** @type {number} */ (fold.settled) - open.heights[0])).toBeLessThan(0.5);
+            expect(Math.min(...fold.heights)).toBeGreaterThanOrEqual(open.heights[0] - 0.5);
+            expect(errors).toEqual([]);
+        });
+    }
+
+    test('under reduced motion the group folds and opens at once', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await ready(page, 'formal');
+        const fold = await glideOf(page);
+        expect(fold.glide).toBe(false);
+        const hidden = await page.evaluate(() =>
+            [...document.querySelectorAll('tr[data-kp-group-of="home"]')].every((row) => /** @type {HTMLElement} */ (row).hidden),
+        );
+        expect(hidden).toBe(true);
+        const open = await glideOf(page);
+        expect(open.glide).toBe(false);
+    });
+});

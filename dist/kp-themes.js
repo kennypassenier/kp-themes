@@ -2691,6 +2691,7 @@ var init_alarm = __esm({
 var motion_exports = {};
 __export(motion_exports, {
   ARRIVE_KEYS: () => ARRIVE_KEYS,
+  FOLDING_OUT: () => FOLDING_OUT,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
   REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
   SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
@@ -2981,14 +2982,14 @@ function sizeMotion(box, change) {
   if (size <= 0 || switching) return { duration: 0, easing: "linear" };
   return { duration: size, easing: sizeEase(box, ease, change) };
 }
-function glide(box, from, to, duration, easing, plain = false) {
+function glide(box, from, to, duration, easing, plain = false, delay = 0) {
   box.style.setProperty("overflow", "clip");
   box.style.setProperty("box-sizing", "border-box");
   box.style.setProperty("--kp-resize-dur", `${Math.round(duration)}ms`);
   if (!plain) box.setAttribute("data-kp-resizing", to > from ? "grow" : "shrink");
   const flow = getComputedStyle(box);
   if (/flex/.test(flow.display) && flow.flexDirection.startsWith("column")) box.setAttribute("data-kp-gliding", "column");
-  const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+  const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing, delay, fill: "backwards" });
   const own = (
     /** @type {any} */
     box
@@ -3236,8 +3237,10 @@ function arriveAsReversedLeave(el2) {
   if (foldFor > 0) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
+    const frames = foldFrames(el2, style);
+    if ("height" in frames[0]) heightFolds.add(el2);
     plays.push(
-      el2.animate(foldFrames(el2, style), {
+      el2.animate(frames, {
         duration: foldFor,
         delay: finiteMs(total - foldAt - foldFor),
         easing: withoutOvershoot(ease),
@@ -3251,6 +3254,7 @@ function arriveAsReversedLeave(el2) {
     if (stopped) return;
     stopped = true;
     entering.delete(el2);
+    heightFolds.delete(el2);
     for (const a of plays) a.cancel();
     if (actor !== el2) actor.remove();
     el2.removeAttribute("data-kp-leaving");
@@ -3391,6 +3395,7 @@ async function leaveOne(el2, hide, exited) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
     const [from, to] = foldFrames(el2, style);
+    if ("height" in from) heightFolds.add(el2);
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
     const folding = el2.animate([from, to], {
@@ -3402,6 +3407,7 @@ async function leaveOne(el2, hide, exited) {
     running2.push(folding.finished.catch(() => void 0));
   }
   await Promise.all(running2);
+  heightFolds.delete(el2);
   if (actor !== el2) actor.remove();
   gone();
   el2.removeAttribute("data-kp-leaving");
@@ -3452,6 +3458,33 @@ function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
     }
   return out;
 }
+function settledHeight(box) {
+  const out = (
+    /** @type {HTMLElement[]} */
+    [...box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`)]
+  );
+  if (out.length === 0) return box.offsetHeight;
+  const how = out.map((el2) => getComputedStyle(el2).display === "table-row" ? ["visibility", "collapse"] : ["position", "absolute"]);
+  const kept = out.map((el2, k) => [el2.style.getPropertyValue(how[k][0]), el2.style.getPropertyPriority(how[k][0])]);
+  out.forEach((el2, k) => el2.style.setProperty(how[k][0], how[k][1], "important"));
+  const height = box.offsetHeight;
+  out.forEach((el2, k) => {
+    if (kept[k][0]) el2.style.setProperty(how[k][0], kept[k][0], kept[k][1]);
+    else el2.style.removeProperty(how[k][0]);
+  });
+  return height;
+}
+function foldingOutFor(box) {
+  let left = 0;
+  for (const el2 of box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`))
+    for (const a of el2.getAnimations({ subtree: true })) {
+      const timing = a.effect?.getComputedTiming();
+      if (!timing || a.playState !== "running" || timing.iterations === Infinity) continue;
+      const rate = Math.abs(a.playbackRate) || 1;
+      left = Math.max(left, (Number(timing.endTime) - Number(timing.localTime ?? 0)) / rate);
+    }
+  return Number.isFinite(left) ? left : 0;
+}
 function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   const own = (
     /** @type {any} */
@@ -3472,20 +3505,21 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     );
     if (running2 && effect) {
       effect.target = null;
-      const natural = box.offsetHeight;
+      const natural = settledHeight(box);
       effect.target = box;
       if (Math.abs(natural - last) < 1) return;
     }
     const from = running2 ? box.offsetHeight : last;
     running2?.finish();
     running2 = null;
-    const to = box.offsetHeight;
+    const to = settledHeight(box);
     last = to;
     if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
-    if (box.querySelector("[data-kp-leaving]")) return;
+    if (followsAFold(box)) return;
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
-    const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
+    const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
+    const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from), false, delay);
     running2 = mine;
     mine.finished.then(() => {
       done();
@@ -3674,7 +3708,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, NAMED_EASES, entering, arriving, finiteMs, batch, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, NAMED_EASES, entering, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -3739,6 +3773,12 @@ var init_motion = __esm({
     arriving = null;
     finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
     batch = null;
+    FOLDING_OUT = "out";
+    heightFolds = /* @__PURE__ */ new WeakSet();
+    followsAFold = (box) => [...box.querySelectorAll("[data-kp-leaving]")].some((el2) => heightFolds.has(
+      /** @type {HTMLElement} */
+      el2
+    ) && el2.getClientRects().length > 0);
     arriveMode = (el2, fallback2) => el2.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
   }
 });
@@ -10263,14 +10303,22 @@ function attachDataTables(root = document, {
         for (const row of [...departing])
           if (groupOf2(row) === key) {
             departing.delete(row);
+            row.removeAttribute("data-kp-folding");
             stopReversing(row);
           }
       }
-      for (const row of going) departing.add(row);
+      for (const row of going) {
+        departing.add(row);
+        row.setAttribute("data-kp-folding", FOLDING_OUT);
+      }
       if (going.length)
         void Promise.all(going.map((row) => playArrivalBackwards(row))).then(() => {
           let held2 = false;
-          for (const row of going) if (departing.delete(row)) held2 = true;
+          for (const row of going)
+            if (departing.delete(row)) {
+              row.removeAttribute("data-kp-folding");
+              held2 = true;
+            }
           if (held2) render();
         });
       render();
@@ -17966,6 +18014,7 @@ export {
   FIELD_EVENT,
   FILE_EVENT,
   FINISH_EVENT,
+  FOLDING_OUT,
   FOLD_SELECTOR,
   FRESHNESS_TIME_ZONE,
   GLYPHS,

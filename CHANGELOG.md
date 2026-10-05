@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **A data table's group folds as the mirror of its open** [scope-143;
+  Kenny's form v21, 2026-10-05]: while the rows play their arrival
+  backwards the table box eases shut on the open's curve turned around, in
+  the same time, ending where the open began (it snapped shut in one frame
+  once they had gone). The rows carry `data-kp-folding="out"`, which
+  `easeSize` leaves out of the box's settled height; the glide ends with the
+  rows' own motion. A box no longer holds its glide for an element whose
+  leave or arrival folds sideways or is not drawn: the catalogue's tables
+  snapped open and shut for the ten seconds the page's first arrivals took.
+  Measured in Firefox over 22 themes (catalogue Tables, group "home"): the
+  fold's glide is the open's frame for frame turned around within 0.017 px,
+  in the open's time (192 to 480 ms), held back only as long as the rows'
+  own playback outlasts it (0 to 312 ms); the fold ends 179 to 545 ms after
+  the click (was 412 to 1029 ms, the box waiting for the rows); in the first
+  seconds after load the box no longer jumps 120 px in one frame either way;
+  under reduced motion both are instant; no console errors.
 - **The trend tile: a figure and a change on half a pair, a label that
   moved the tile** [fix-99, 2026-10-05]: a key figure's change with a tone
   carries its status pair (`--success` under `--success-foreground`,

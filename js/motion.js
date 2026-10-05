@@ -566,8 +566,9 @@ export function sizeMotion(box, change) {
  * clicked smaller, in forest and high-contrast).
  * @param {HTMLElement} box @param {number} from @param {number} to @param {number} duration @param {string} easing
  * @param {boolean} [plain] no `[data-kp-resizing]` character
+ * @param {number} [delay] ms the box holds `from` before it moves
  */
-function glide(box, from, to, duration, easing, plain = false) {
+function glide(box, from, to, duration, easing, plain = false, delay = 0) {
     box.style.setProperty('overflow', 'clip');
     box.style.setProperty('box-sizing', 'border-box');
     // While it glides the box says so, which way and for how long: a
@@ -583,7 +584,7 @@ function glide(box, from, to, duration, easing, plain = false) {
     // their own size (`[data-kp-gliding='column'] > *`, css/components.css).
     const flow = getComputedStyle(box);
     if (/flex/.test(flow.display) && flow.flexDirection.startsWith('column')) box.setAttribute('data-kp-gliding', 'column');
-    const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing });
+    const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing, delay, fill: 'backwards' });
     const own = /** @type {any} */ (box);
     own.__kpGlide = mine;
     const done = () => {
@@ -936,8 +937,10 @@ function arriveAsReversedLeave(el) {
     if (foldFor > 0) {
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
+        const frames = foldFrames(el, style);
+        if ('height' in frames[0]) heightFolds.add(el);
         plays.push(
-            el.animate(foldFrames(el, style), {
+            el.animate(frames, {
                 duration: foldFor,
                 delay: finiteMs(total - foldAt - foldFor),
                 easing: withoutOvershoot(ease),
@@ -951,6 +954,7 @@ function arriveAsReversedLeave(el) {
         if (stopped) return;
         stopped = true;
         entering.delete(el);
+        heightFolds.delete(el);
         for (const a of plays) a.cancel();
         if (actor !== el) actor.remove();
         el.removeAttribute('data-kp-leaving');
@@ -1164,6 +1168,7 @@ async function leaveOne(el, hide, exited) {
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
         const [from, to] = foldFrames(el, style);
+        if ('height' in from) heightFolds.add(el);
         // The space closes slower than a plain resize, so the eye can follow
         // what closes up (Kenny, 2026-10-04: "ik zou het graag iets trager
         // zien gaan, zodat de animatie zichtbaar is"). `--kp-leave-fold`
@@ -1183,6 +1188,7 @@ async function leaveOne(el, hide, exited) {
         running.push(folding.finished.catch(() => undefined));
     }
     await Promise.all(running);
+    heightFolds.delete(el);
     if (actor !== el) actor.remove();
     gone();
     el.removeAttribute('data-kp-leaving');
@@ -1260,6 +1266,72 @@ export function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
     return out;
 }
 
+/** The value of `data-kp-folding` on what folds out of a box: it is gone from the box's layout once its fold has played. */
+export const FOLDING_OUT = 'out';
+
+/**
+ * The height `box` settles at once what folds out of it is gone: the
+ * elements marked `[data-kp-folding="out"]` (a data table's rows while
+ * they play their arrival backwards) are taken out of the flow for one
+ * read. The box then glides shut while they play, the mirror of its glide
+ * open while they arrived (Kenny's form v21, 2026-10-05: the table box
+ * snapped shut once the rows had gone).
+ * @param {HTMLElement} box
+ */
+function settledHeight(box) {
+    const out = /** @type {HTMLElement[]} */ ([...box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`)]);
+    if (out.length === 0) return box.offsetHeight;
+    // Not `display: none`, which would cancel the very animations they are
+    // playing: a table row collapses (its borders go with it, which taking
+    // it out of the flow left a pixel of), anything else leaves the flow.
+    const how = out.map((el) => (getComputedStyle(el).display === 'table-row' ? ['visibility', 'collapse'] : ['position', 'absolute']));
+    const kept = out.map((el, k) => [el.style.getPropertyValue(how[k][0]), el.style.getPropertyPriority(how[k][0])]);
+    out.forEach((el, k) => el.style.setProperty(how[k][0], how[k][1], 'important'));
+    const height = box.offsetHeight;
+    out.forEach((el, k) => {
+        if (kept[k][0]) el.style.setProperty(how[k][0], kept[k][0], kept[k][1]);
+        else el.style.removeProperty(how[k][0]);
+    });
+    return height;
+}
+
+/**
+ * How long what folds out of `box` still plays, in ms: the box's glide
+ * shut ends with it, as its glide open started with their arrival, so
+ * frame t of the fold is frame (T - t) of the open.
+ * @param {HTMLElement} box
+ */
+function foldingOutFor(box) {
+    let left = 0;
+    for (const el of box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`))
+        for (const a of el.getAnimations({ subtree: true })) {
+            const timing = a.effect?.getComputedTiming();
+            if (!timing || a.playState !== 'running' || timing.iterations === Infinity) continue;
+            const rate = Math.abs(a.playbackRate) || 1;
+            left = Math.max(left, (Number(timing.endTime) - Number(timing.localTime ?? 0)) / rate);
+        }
+    return Number.isFinite(left) ? left : 0;
+}
+
+/**
+ * Elements whose leave (or arrival as a leave turned around) folds their
+ * own height: the box around them follows that fold frame by frame.
+ * @type {WeakSet<HTMLElement>}
+ */
+const heightFolds = new WeakSet();
+
+/**
+ * Whether something drawn in `box` folds its own height now, which the box
+ * follows instead of gliding. A fold sideways (a button in a cell) or of
+ * something not drawn (a hidden list) is not the box's height folding: it
+ * held every glide of the box for as long as the page's first arrivals
+ * played, ten seconds on the catalogue's tables, and the table snapped open
+ * and shut meanwhile.
+ * @param {HTMLElement} box
+ */
+const followsAFold = (box) =>
+    [...box.querySelectorAll('[data-kp-leaving]')].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
+
 /**
  * Which arrivals play under `el`: its closest `data-kp-arrive` (`all`,
  * `new` or `none`), else the attach's own default.
@@ -1301,7 +1373,7 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         const effect = /** @type {KeyframeEffect | null} */ (running?.effect ?? null);
         if (running && effect) {
             effect.target = null;
-            const natural = box.offsetHeight;
+            const natural = settledHeight(box);
             effect.target = box;
             if (Math.abs(natural - last) < 1) return;
         }
@@ -1311,15 +1383,18 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         // newer one replaced (tests/register-dark-faults awaited one).
         running?.finish();
         running = null;
-        const to = box.offsetHeight;
+        const to = settledHeight(box);
         last = to;
         if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
-        // Something in it is leaving and folds itself shut; the box follows
-        // that fold frame by frame instead of gliding after it.
-        if (box.querySelector('[data-kp-leaving]')) return;
+        // Something in it is leaving and folds its height shut; the box
+        // follows that fold frame by frame instead of gliding after it.
+        if (followsAFold(box)) return;
         const { size, ease } = themeMotion(box);
         if (size <= 0) return;
-        const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from));
+        // Shutting while rows fold out of it, the box ends as they end: the
+        // open started its glide and their arrival together.
+        const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
+        const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from), false, delay);
         running = mine;
         mine.finished
             .then(() => {

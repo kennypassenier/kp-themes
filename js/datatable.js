@@ -115,7 +115,7 @@ import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
 import { attachSelect, drawsSelect } from './combobox.js';
 import { columnId, paintRemembered } from './remember.js';
-import { playArrivalBackwards, stopReversing } from './motion.js';
+import { FOLDING_OUT, playArrivalBackwards, stopReversing } from './motion.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -2917,6 +2917,9 @@ export function attachDataTables(
             // their arrival backwards (js/motion.js) and are hidden once it
             // has played; they unfolded the theme's way and folded away at
             // once (Kenny, 2026-10-05). Unfolded meanwhile, they turn round.
+            // Meanwhile they carry `data-kp-folding="out"`, so the box around
+            // them glides shut as they play, the mirror of its glide open
+            // (Kenny's form v21: it snapped shut once they had gone).
             const going = fold ? pageRows.filter((row) => groupOf(row) === key && !row.hidden) : [];
             if (fold) folded.add(key);
             else {
@@ -2924,14 +2927,22 @@ export function attachDataTables(
                 for (const row of [...departing])
                     if (groupOf(row) === key) {
                         departing.delete(row);
+                        row.removeAttribute('data-kp-folding');
                         stopReversing(row);
                     }
             }
-            for (const row of going) departing.add(row);
+            for (const row of going) {
+                departing.add(row);
+                row.setAttribute('data-kp-folding', FOLDING_OUT);
+            }
             if (going.length)
                 void Promise.all(going.map((row) => playArrivalBackwards(row))).then(() => {
                     let held = false;
-                    for (const row of going) if (departing.delete(row)) held = true;
+                    for (const row of going)
+                        if (departing.delete(row)) {
+                            row.removeAttribute('data-kp-folding');
+                            held = true;
+                        }
                     if (held) render();
                 });
             render();

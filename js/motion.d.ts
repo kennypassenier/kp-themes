@@ -176,6 +176,8 @@ export declare function repaintedIn(records: Iterable<{
 }>, { keys }?: {
     keys?: readonly string[];
 }): Set<any>;
+/** The value of `data-kp-folding` on what folds out of a box: it is gone from the box's layout once its fold has played. */
+export declare const FOLDING_OUT = "out";
 export type SizeOptions = {
     /**
      * which added elements arrive the theme's way when no `data-kp-arrive` says otherwise: every one (`all`, the default), only those that are not a repaint of a row that just left under the same key (`new`), or none

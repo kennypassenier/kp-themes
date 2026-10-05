@@ -560,6 +560,16 @@ A closing dialog keeps `open` until its motion ends, and its `close` event
 comes then, with its return value. A reader who asked for reduced motion gets
 none: the dialog closes and the box takes its size at once.
 
+Every opposite motion is a mirror: what shuts plays what opened backwards,
+frame t of the one being frame T - t of the other. A box shrinks on its grow
+curve turned around, in the same time. A data table's group folds as its
+open did, turned around: its rows play their arrival backwards while the box
+eases shut, ending where the open began, and the rows are hidden once they
+have played. The rows carry `data-kp-folding="out"` meanwhile; any element a
+page marks so is taken out of the box's settled height while it plays, so the
+box glides shut with it instead of snapping shut once it is gone, and the
+glide ends when the longest of their motions ends.
+
 ### Information that updates in place
 
 A value a live page changes (a key figure, a table cell, a state word, a
