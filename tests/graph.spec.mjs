@@ -13,9 +13,14 @@
 //
 // Written with the port, measured in Firefox on the port's scratch page
 // (40 of 40 at 1280 and 390 px), not run as a suite until Kenny's release go.
+//
+// The last test is the time chart's on the same page [fix-97]: its pinned
+// tooltip in all 22 themes, every change on one line and the warning
+// event's dot at 3:1 or more against the plate.
 import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { ALL_THEMES } from './helpers/sweep-themes.mjs';
 
 const PAGE = '/catalogue/chart.html';
 
@@ -123,3 +128,57 @@ for (const width of [1280, 390]) {
         },
     );
 }
+
+// All 22, not a narrowed sweep: both faults were one theme's (terminal's
+// mono wrapped the change, shade-light's warning ink hid the dot) [fix-97].
+test(
+    "The time chart's pinned tooltip: every change on one line, the warning dot at 3:1 or more, in all 22 themes [fix-97]",
+    { tag: ['@component:data', '@component:catalogue'] },
+    async ({ page }) => {
+        await open(page);
+        const misses = [];
+        for (const theme of ALL_THEMES) {
+            await page.evaluate((t) => {
+                document.documentElement.dataset.theme = t;
+            }, theme);
+            await page.evaluate(() => document.fonts.ready);
+            // Pinned the way the block's look text says: the red marker, the alarm at 07:32.
+            await page.locator('#time-chart .kp-chart__mark[data-kp-tone="critical"] .kp-chart__mark-hit').first().click({ force: true });
+            const tip = page.locator('#time-chart .kp-chart__tip[data-kp-pinned]').first();
+            await expect(tip).toBeVisible();
+            const got = await tip.evaluate((el) => {
+                const cv = document.createElement('canvas');
+                cv.width = cv.height = 1;
+                const cx = /** @type {CanvasRenderingContext2D} */ (cv.getContext('2d', { willReadFrequently: true }));
+                /** @param {string} c */
+                const rgb = (c) => {
+                    cx.clearRect(0, 0, 1, 1);
+                    cx.fillStyle = c;
+                    cx.fillRect(0, 0, 1, 1);
+                    return [...cx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+                };
+                /** @param {number[]} c */
+                const lum = (c) => {
+                    const [r, g, b] = c.map((v) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+                    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                };
+                const plate = lum(rgb(getComputedStyle(el).backgroundColor));
+                const dot = /** @type {HTMLElement} */ (el.querySelector('.kp-chart__dot[data-kp-tone="warning"]'));
+                const shadow = getComputedStyle(dot).boxShadow;
+                const ring = shadow === 'none' ? plate : lum(rgb((shadow.match(/^(?:rgba?|color)\([^)]*\)/) ?? ['transparent'])[0]));
+                const fill = lum(rgb(getComputedStyle(dot).backgroundColor));
+                /** @param {number} a @param {number} b */
+                const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+                const wrapped = [...el.querySelectorAll('.kp-chart__delta')].filter((d) => {
+                    const h = d.getBoundingClientRect().height;
+                    const line = parseFloat(getComputedStyle(d).lineHeight) || parseFloat(getComputedStyle(d).fontSize) * 1.2;
+                    return h > line * 1.5 || d.scrollWidth > d.clientWidth + 1;
+                }).length;
+                return { wrapped, dot: Math.max(ratio(fill, plate), ratio(ring, plate)) };
+            });
+            if (got.wrapped || got.dot < 3) misses.push(`${theme}: ${got.wrapped} wrapped, dot ${got.dot.toFixed(2)}:1`);
+            await page.locator('#time-chart .kp-chart__release').first().click({ force: true });
+        }
+        expect(misses).toEqual([]);
+    },
+);

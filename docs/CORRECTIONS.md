@@ -5550,3 +5550,61 @@ catalogue bar itself instead of catalogue.js.
 
 **9 · When we review the measure.** If the research kit and the catalogue
 ever share one prompt (review-rereview-M1), the exception goes.
+
+## fix-97 · The chart's tooltip: a change that wrapped, a dot that hid (2026-10-05)
+
+**1 · What went wrong.** The character-chart demo showed two faults of the
+plain time chart (`.kp-chart`, scope-143). The tooltip's change column was
+a fixed 4.5rem: in terminal's mono the pinned pressure tooltip's changes
+broke onto two lines, and sweeping every chart of catalogue/chart.html
+found `▼ 74.5 KiB/s` (the Units block) on two lines in 16 of 22 themes,
+the widest change 5.36rem in terminal (Kenny's rule: a label never wraps
+or is cut). And the warning event's dot in the tooltip is filled with
+`--warning-foreground`, a text ink meant for the warning plate: on the
+popover it read 1.07:1 in shade-light, 1.00:1 in high-contrast, 1.04:1 in
+nostromo and 1.38:1 in shade-dark. The 4.5rem was set by eye on the
+pressure chart in formal and never measured against the widest change in
+every theme's font; the dot was never measured at all.
+
+**2 · Which gate let it through.** The toast/alert contrast test
+(tests/nostromo-notes.spec.mjs) covers plates and words, not the
+tooltip's dot; no test measured the chart's change column, and no spec
+pinned the chart's tooltip.
+
+**3 · Where else the same fault sits.** `grep -rn "4.5rem" css/components.css`
+finds two more: the trend tile's float spacer (`.kp-kpi--trend >
+.kp-kpi__label::before`, a space, not a text column) and the slim side
+nav's `--kp-sidenav-slim-width` default (already a knob); neither holds
+text. The tooltip dots: only the time chart's `.kp-chart__dot` in
+`.kp-chart__tip`; the state line's dot sits on the card and is not
+touched.
+
+**4 · How we prevent recurrence.** The change column is
+`minmax(var(--kp-chart-delta-width, 5.5rem), max-content)` with the change
+`white-space: nowrap` (the floor keeps the rows' changes lined up, a wider
+change takes its own width); the tooltip's dot carries
+`box-shadow: 0 0 0 1.5px var(--popover-foreground)`. Measured in Firefox
+after: no change on two lines in 22 themes, the warning dot 5.00:1 or more
+(shade-dark lowest). Plus one assert in tests/graph.spec.mjs, the spec
+that opens catalogue/chart.html: the pinned tooltip in all 22 themes, every
+change on one line and the warning dot at 3:1 or more; red on the old CSS
+(terminal 3 wrapped, shade-light 1.07:1, high-contrast 1.00:1), green on
+the new.
+
+**5 · What the remedy costs.** One knob (AR21 count 312 + 1, read count
+309 + 1), three rules in components.css, one test of 60 lines.
+
+**6 · Who enforces it.** Code: the assert in tests/graph.spec.mjs, at the
+9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next judging of the chart block: every change
+on one line and the event dots visible in each theme. Queued as fix-97-M1
+in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** The change column sizes to
+`max-content` outright, with no floor, and the rows give up lining up.
+
+**9 · When we review the measure.** At the character round's chart
+component: whether a theme's own tooltip keeps the knob and the ring, or
+draws its own.

@@ -6300,9 +6300,13 @@
         outline: 2px solid var(--focus-ring);
     }
 
+    /* The change column: `--kp-chart-delta-width` (default 5.5rem) is its
+ * floor, so the rows' changes line up, and a wider change takes its own
+ * width rather than a second line. A fixed 4.5rem wrapped `▼ 74.5 KiB/s`
+ * in 16 of 22 themes, the widest 5.36rem in terminal's mono [fix-97]. */
     .kp-chart__tip-row {
         display: grid;
-        grid-template-columns: 10px minmax(0, 1fr) auto 4.5rem;
+        grid-template-columns: 10px minmax(0, 1fr) auto minmax(var(--kp-chart-delta-width, 5.5rem), max-content);
         align-items: center;
         gap: 6px;
     }
@@ -6326,6 +6330,10 @@
  * neither is green or red. A status ink is text only on its own plate:
  * `--warning-foreground` on the popover read 1.00:1 in high-contrast and
  * `--info-foreground` 1.00:1 in grotesk [scope-143]. */
+    .kp-chart__delta {
+        white-space: nowrap;
+    }
+
     .kp-chart__delta[data-kp-direction] {
         justify-self: end;
         padding-inline: 0.3em;
@@ -6366,10 +6374,18 @@
     }
 
     .kp-chart__dot {
+        flex: none;
         inline-size: 8px;
         block-size: 8px;
         border-radius: 50%;
         background: var(--kp-chart-tone, var(--info-foreground));
+    }
+
+    /* In the tooltip, a ring in the popover's ink: a tone is a text ink, and
+ * on the popover the warning one read 1.07:1 in shade-light, 1.00:1 in
+ * high-contrast and 1.04:1 in nostromo [fix-97]. */
+    .kp-chart__tip .kp-chart__dot {
+        box-shadow: 0 0 0 1.5px var(--popover-foreground);
     }
 
     .kp-chart__swatch {

@@ -77,6 +77,8 @@ export const PAGES = [
             { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
             // The character round's second component (form v18, 2026-10-05): two time charts of its own per theme, all 22 in one demo.
             { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
+            // The character round, third demo (2026-10-05): the month heatmap in 22 themes, two characters each.
+            { href: 'research/character-calendar/demo.html', label: 'A month heatmap of its own, per theme' },
         ],
     },
     {

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **The time chart's tooltip: a change that wrapped, a dot that hid**
+  [fix-97, 2026-10-05]: the change column is no longer a fixed 4.5rem but
+  at least `--kp-chart-delta-width` (default 5.5rem) and as wide as its
+  change, on one line (`▼ 74.5 KiB/s` wrapped in 16 of 22 themes, and in
+  terminal the pinned pressure tooltip's changes in bar too); an event's dot in the
+  tooltip carries a 1.5px ring in the popover's ink, so the warning dot
+  reads at 5.00:1 or more on the plate in all 22 themes (was 1.07:1 in
+  shade-light, 1.00:1 in high-contrast, 1.04:1 in nostromo, 1.38:1 in
+  shade-dark).
 - **Fewer clicks per verdict on the review site** [Kenny, 2026-10-05]: every
   block with try-buttons gets **▶ Play** beside Approve (and in the review
   dialog), pressing them in turn with a caption and a pause set by the

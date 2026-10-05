@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-calendar">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a month heatmap of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="calendars.css" />
+    </head>
+    <body>
+        <main class="cl-page">
+            <header class="cl-intro">
+                <h1>A month heatmap of its own, per theme</h1>
+                <p>
+                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter and the
+                    time chart comes the month heatmap. Today <code>.kp-calendar</code> has the same shape in every theme (rounded plates in the
+                    status colours, the number over its count, dashed days to come, an inner ring for today, an outer ring for the picked day),
+                    drawn in the theme's colours only. Here every theme gets two calendars of its own, drawn in the theme's own material, beside the
+                    plain calendar as it is today. Pick one of the three per theme.
+                </p>
+                <p class="cl-motion" data-cl-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading day shows its still frame. Turn it off
+                    in the system settings to judge the motion.
+                </p>
+                <p class="cl-meta">
+                    Each column is one month of nine services' nightly backups, "now" fixed at 20/10/2026 14:40 in Brussels: green nights had every
+                    service, amber some, red none (08/10, the power cut), 11/10 had nothing to back up, the report of 14/10 was lost, today (20/10)
+                    still misses two late copies, and the rest of October is still to come; August starts with nine nights from before the first
+                    backup. 16/10 is picked. Every calendar is the package's own (<code>js/calendar.js</code> draws it, so the month buttons, the
+                    keys, picking a day and the live update all work); a character only restyles it from the theme's tokens, in the theme's
+                    <code>kp.signature</code> layer (<code>calendars.css</code>), and keeps the grid's height in every state and month. This theme:
+                    <b data-cl-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="cl-sec"
+                data-review-item="calendar"
+                data-review-components="calendar"
+                data-review-title="The month heatmap"
+                aria-labelledby="h-calendar"
+            >
+                <div class="cl-sec__head">
+                    <h2 id="h-calendar">The month heatmap in <span data-cl-theme-name>this theme</span></h2>
+                    <p>
+                        Two characters drawn in this theme's world, and the plain calendar as it is today. Use the buttons below for every state,
+                        month and loading look; click a day, or move with the arrow keys: the calendar behaves the same in all three columns.
+                    </p>
+                </div>
+                <div class="cl-controls">
+                    <div class="cl-actions" role="group" aria-label="State of every calendar">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="ready" aria-pressed="true">Read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="empty" aria-pressed="false">Nothing to check</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-live>Live update: today's late copies arrive</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="How loading shows in every calendar">
+                        <b>Loading look:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-busy="pulse" aria-pressed="true">Each day's own picture</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-busy="days" aria-pressed="false">
+                            A spinner in each day (<code>kp-calendar--busy-days</code>)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-busy="whole" aria-pressed="false">
+                            One spinner for the calendar (<code>kp-calendar--busy-whole</code>)
+                        </button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Month in every calendar">
+                        <b>Month:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-month="2026-08" aria-pressed="false">August 2026</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-month="2026-09" aria-pressed="false">September 2026</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-month="2026-10" aria-pressed="true">October 2026</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="cl-log" data-cl-log aria-live="polite">No day picked yet.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="cl-trio">
+                    <div class="cl-col" data-cl="a" data-cl-pick="a">
+                        <p class="cl-label"><span class="cl-label__no">Character 1</span> <span data-cl-name="a">…</span></p>
+                        <p class="cl-desc" data-cl-desc="a"></p>
+                        <section
+                            class="kp-calendar"
+                            data-kp-calendar
+                            data-kp-calendar-month="2026-10"
+                            data-kp-calendar-selected="2026-10-16"
+                            data-kp-time-zone="Europe/Brussels"
+                            data-kp-heading-level="3"
+                            data-kp-key="backups-a"
+                            lang="en-GB"
+                            aria-label="Nightly backups, character 1"
+                        ></section>
+                    </div>
+                    <div class="cl-col" data-cl="b" data-cl-pick="b">
+                        <p class="cl-label"><span class="cl-label__no">Character 2</span> <span data-cl-name="b">…</span></p>
+                        <p class="cl-desc" data-cl-desc="b"></p>
+                        <section
+                            class="kp-calendar"
+                            data-kp-calendar
+                            data-kp-calendar-month="2026-10"
+                            data-kp-calendar-selected="2026-10-16"
+                            data-kp-time-zone="Europe/Brussels"
+                            data-kp-heading-level="3"
+                            data-kp-key="backups-b"
+                            lang="en-GB"
+                            aria-label="Nightly backups, character 2"
+                        ></section>
+                    </div>
+                    <div class="cl-col" data-cl="plain" data-cl-pick="plain">
+                        <p class="cl-label"><span class="cl-label__no">Today</span> The plain calendar</p>
+                        <p class="cl-desc">
+                            The package's month heatmap as it ships: rounded plates in the status colours, the number over its count, dashed days
+                            still to come or from before, an inner ring for today and an outer ring in the primary colour for the picked day,
+                            square swatches in the legend, a pulse while it loads; the same shape in every theme.
+                        </p>
+                        <section
+                            class="kp-calendar"
+                            data-kp-calendar
+                            data-kp-calendar-month="2026-10"
+                            data-kp-calendar-selected="2026-10-16"
+                            data-kp-time-zone="Europe/Brussels"
+                            data-kp-heading-level="3"
+                            data-kp-key="backups-plain"
+                            lang="en-GB"
+                            aria-label="Nightly backups, the plain calendar"
+                        ></section>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
