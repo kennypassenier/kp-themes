@@ -329,3 +329,187 @@ Firefox (Playwright's, its own `http.server` on 127.0.0.1:8700, under `flock
 | titanium      | 1      |        4.77 |          9.68 |              5.89 |        12.28 |
 |               | 2      |        4.78 |          9.68 |              5.89 |        12.28 |
 |               | 3      |        4.80 |          9.68 |              5.89 |        12.28 |
+
+## Round 3: one pick per aspect
+
+Kenny, 2026-10-05 18:45, judging formal: "I like the shape of option 1, but the
+loading behaviour of option 2, so you need to keep these things separate so I
+could choose one over another, also do this for the other things you like to
+show me." Nothing is bundled any more. Per theme the meter has five aspects,
+each its own choice group in the review dialog with three options:
+
+| Group id  | Label in the dialog   | What differs                                                             |
+| --------- | --------------------- | ------------------------------------------------------------------------ |
+| `shape`   | Shape                 | the track, the share, the mark, the sign past the end                    |
+| `loading` | While loading         | the loading picture                                                      |
+| `arrival` | How the share arrives | how the share comes in after loading and on **Drawn**                    |
+| `tone`    | When the tone changes | the share re-inked (the picked arrival replayed) or the meter moved once |
+| `mark`    | The mark past the end | how the mark moves, where a mark past the end stands, its glyph          |
+
+Shape 1 is the shape approved in round 1 (forest, retro, grotesk: round 2's new
+shape); shape 2 is the theme's other round-1 character; shape 3 is a new shape
+drawn in the theme's world (forest, retro, grotesk: round 1's second
+character). The other four aspects keep round 2's option names: option N of
+`loading`, `arrival`, `tone` and `mark` is the matching part of round 2's
+option N. Every option's name and what it does is its hint in the dialog and
+its text on the page (`IDEAS` in `demo.js`); the shape's option 1 says
+"Approved in round 1" or "New in round 2".
+
+**How it composes.** Each aspect is one attribute on the meters' wrapper
+(`[data-cm]` plus `data-cm-shape`, `data-cm-loading`, `data-cm-arrival`,
+`data-cm-tone`, `data-cm-mark`), and every rule in `meters.css` names exactly
+one of them, so any combination works. `meters.css` is ordered by aspect, then
+theme, then option. Two entanglements of round 2 were split: a tone that
+re-inks used to replay its own option's arrival keyframes; the arrival now
+names its keyframes in `--cm-arr-o`, `--cm-arr-w` and `--cm-arr-d`, and the
+re-inking tone switches `animation-name` to the toned one, so it replays
+whichever arrival is picked. And three loading pictures moved the track itself
+(synthwave's grid road, sepia's platen, phantom's halftone), which only worked
+on their own shape; each now draws its own pattern on `::after`. The
+round-1 characters' own loading pictures were left out of shapes 2 and 3:
+loading is its own aspect.
+
+**The page.** At the top of the section, "Your combination": the four meters
+of round 2 (62 %, 130 %, an inline 91 %, the package's three signs) drawn with
+the current picks, the picks in words beside them. Below it one row per aspect,
+three meters each that differ in that aspect only, every other aspect at its
+current pick (option 1 until ticked); the mark row shows a meter whose mark
+moves on **Mark past the end** and one whose mark stands at 115 % throughout.
+Ticking an option in the dialog fires `review:choice`; the page writes it on
+the preview and the rows' other aspects, and outlines the ticked option in its
+row. The ticks are kept per theme while the page is open. The controls (State,
+Tone, Speed) are unchanged in the `data-review-controls` container.
+`data-review-round` is `2026-10-05-r3`, reopening `<theme>|meter` in all 22
+themes.
+
+| Theme         | Shape 1                                 | Shape 2                       | Shape 3 (new unless noted)      | Options 1 / 2 / 3 of the other four aspects                     |
+| ------------- | --------------------------------------- | ----------------------------- | ------------------------------- | --------------------------------------------------------------- |
+| formal        | The bound volume and its ribbon         | The ledger column             | The signature line and its seal | Written into the ledger / Stamped and filed / Counted in tenths |
+| light         | Daylight                                | The seam and its circle       | The folded note                 | Morning light / The shadow swings / Through the window          |
+| dark          | The machined channel                    | The spectrometer              | The OLED strip                  | Machined / Milled in passes / Pressed in the die                |
+| cyberpunk     | The neon tube with a glitch tick        | The HUD segment gauge         | The barcode                     | Ignition / Data burst / Packet sync                             |
+| synthwave     | Chrome over the grid                    | The neon sign                 | The VHS tracking bar            | Sunrise / Overdrive / Arcade attract                            |
+| pastel        | Washi tape                              | Gummy candy                   | The bead bracelet               | Boing / Pressed sticker / Dropped in                            |
+| terminal      | The htop meter                          | The oscilloscope              | The download line               | Line by line / Redraw / Typed out                               |
+| forest        | The wooden gauge with the trail's marks | The wooden gauge with a leaf  | The trail on the map (round 1)  | Footsteps / Growth rings / Blazed trail                         |
+| high-contrast | The pattern-coded gauge                 | The ink frame                 | The slotted gauge               | At once / In two steps / In quarters                            |
+| sepia         | The letterpress impression              | The pen stroke and the blot   | The bookbinder’s thread         | The platen / Quill stroke / Set in type                         |
+| blueprint     | The engineer's scale with a break line  | The tolerance band            | The dimension line              | The plotter / Dimensioned / Redrawn                             |
+| solstice      | The standing stones                     | The embers                    | The horizon                     | Long dawn / The shadow lengthens / Stone by stone               |
+| brutalism     | The stacked blocks                      | The slab with an overhang     | The concrete formwork           | Thrown on / Slammed / Block by block                            |
+| deco          | The lobby floor indicator               | The gilt frieze               | The ziggurat                    | The lift ascends / Gilt sweep / Fanfare                         |
+| phantom       | The calling card                        | The ransom collage            | The slashed slab                | Card thrown / Cut out / The stamp                               |
+| shade-light   | The pencil gauge                        | The pin and its shade         | The paper cut-out               | Hatched in / Pressed paper / Passing shade                      |
+| shade-dark    | Silverpoint                             | The reading lamp              | The stitched leather            | Silver drawn / Lifted / Lamp passes                             |
+| retro         | The system monitor                      | The dithered installer bar    | The defragmenter (round 1)      | Task Manager / Winamp / Disk light                              |
+| grotesk       | The transit line                        | The red block on the baseline | The zebra scale (round 1)       | Departure / Express / Timetable                                 |
+| lapis         | The gilt band                           | Lapis stone on vellum         | The tile frieze                 | Gold laid / Reed stroke / Tile by tile                          |
+| nostromo      | The backlit vents                       | The bargraph tube             | The punched tape                | Power up / Relay clack / Warm-up                                |
+| titanium      | The heat-tinted groove                  | The vernier caliper           | The anodised bar                | Cut / Heat tint / Machined tick                                 |
+
+### Measured, round 3
+
+Firefox (Playwright's, its own `http.server` on 127.0.0.1:8731, under `flock
+/tmp/kp-themes-shot.lock`), 2026-10-05, all 22 themes, viewport 1400 × 1000 at
+2×, one run of 4 min 14 s:
+
+- **Console:** 0 errors and page errors on all 44 pages (22 themes × with and without
+  reduced motion) through all 9 states (3 states × 3 tones), and 0 in the dialog run.
+- **Heights:** each of the 34 meter rows and sentences of a theme (preview and 15 aspect meters' rows),
+  offset height of the row and of its meter, in all 9 states: one height each, in every theme and both motion settings
+  (0 rows with more than one).
+- **Every aspect meter renders and differs:** in each theme, each of the five rows' three meters has a width, and
+  computed styles that differ between neighbours in that aspect (shape: track, share and mark styles; loading, in
+  Loading: the meter's and ::after's picture and animation; arrival: the share's animation, duration, easing and
+  transition; tone, in Warning: the meter's animation and the share's animation name; mark, past the end: the glyph,
+  the mark's transition, position and lean): 110 of 110 rows pass (1 ≠ 2 and 2 ≠ 3), and 1 ≠ 3 in 110.
+- **The preview follows the dialog:** a `review:choice` dispatched on the section for each aspect changes the
+  preview's attribute and its computed style in that aspect, and outlines the ticked option: 110 of 110.
+- **Reduced motion:** 0 running animations in any of the 9 states in all 22 themes.
+- **The dialog** (`?next=/kp-themes/review/catalogue/changed.html&review=open`, served locally): every one of the 22
+  steps shows the five groups `shape, loading, arrival, tone, mark` (22/22); Approve is refused with none ticked
+  (22/22) and with four of five ticked (22/22), and goes through with all five (22/22); the ticks reached the
+  preview (22/22). No option is pre-ticked: the kit has no default yet (see Open).
+- **Mark contrast**, per shape and tone, Drawn, still frames: each mark pixel (core or halo) against the pixel of the
+  same meter it covers (a second screenshot with the mark hidden), the mark's best tenth; on the fill = the 130 %
+  meter, on the track = the 62 % meter, both with the mark at 80 %. This differs from round 2's method (a strip 4 to
+  9 px beside the mark), which misread patterned fills and wide ornaments. All 396 values are at or above 3:1; the lowest
+  is formal shape 1, none (3.39).
+
+| Theme         | Shape |  Fill | Fill, warning | Fill, destructive | Track |
+| ------------- | ----: | ----: | ------------: | ----------------: | ----: |
+| formal        |     1 | 11.29 |          5.78 |              6.88 |  3.39 |
+|               |     2 | 15.64 |         15.64 |             15.64 | 15.88 |
+|               |     3 | 11.28 |          5.78 |              6.91 |  6.93 |
+| light         |     1 |   9.4 |          5.78 |              6.48 | 15.32 |
+|               |     2 |   9.4 |          5.78 |              6.48 |  17.2 |
+|               |     3 |   9.4 |          5.78 |              6.48 |  17.2 |
+| dark          |     1 | 16.73 |         10.79 |              8.44 | 14.75 |
+|               |     2 |  17.1 |          17.1 |              17.1 |  17.1 |
+|               |     3 | 16.73 |         10.79 |              6.86 |  17.1 |
+| cyberpunk     |     1 | 14.78 |         11.74 |              8.34 | 13.88 |
+|               |     2 | 16.25 |         11.74 |             10.08 | 11.83 |
+|               |     3 | 16.25 |         11.74 |              5.07 | 13.88 |
+| synthwave     |     1 |  13.7 |         14.22 |              13.7 | 14.48 |
+|               |     2 | 11.81 |         13.33 |             11.81 | 13.44 |
+|               |     3 |  5.98 |         14.24 |              5.66 | 13.48 |
+| pastel        |     1 |  6.45 |          6.14 |              6.17 | 11.26 |
+|               |     2 |  6.45 |          6.14 |              6.17 | 11.26 |
+|               |     3 |  5.22 |          4.96 |                 5 |  7.65 |
+| terminal      |     1 | 12.68 |         12.56 |             13.86 | 14.94 |
+|               |     2 | 11.46 |         11.31 |             11.44 | 15.57 |
+|               |     3 | 15.57 |         15.57 |             15.57 | 15.57 |
+| forest        |     1 |  8.06 |          6.45 |              6.35 | 11.42 |
+|               |     2 |  8.06 |          6.45 |              6.35 | 11.42 |
+|               |     3 |  8.06 |          6.45 |              6.35 | 13.86 |
+| high-contrast |     1 |    21 |            21 |                21 |    21 |
+|               |     2 |    21 |         13.89 |              8.21 |    21 |
+|               |     3 | 10.86 |            21 |              8.21 |    21 |
+| sepia         |     1 |  6.92 |          7.29 |              6.95 |  4.22 |
+|               |     2 |  6.92 |          7.29 |              6.89 | 13.21 |
+|               |     3 |  6.92 |          7.29 |              6.89 | 13.21 |
+| blueprint     |     1 |  8.63 |         13.07 |              6.42 |  7.57 |
+|               |     2 |  5.04 |          4.51 |              6.25 |  7.57 |
+|               |     3 |  9.68 |         15.17 |              4.94 | 13.33 |
+| solstice      |     1 |  7.42 |         15.02 |              5.18 |  6.48 |
+|               |     2 | 11.25 |         15.55 |              9.46 | 12.09 |
+|               |     3 |   6.4 |         13.83 |              4.11 |  9.32 |
+| brutalism     |     1 | 13.31 |         13.31 |             13.31 | 18.73 |
+|               |     2 | 18.73 |         18.73 |             18.73 | 18.73 |
+|               |     3 | 13.31 |         18.23 |              6.31 | 15.94 |
+| deco          |     1 | 12.56 |         16.17 |             13.77 | 15.01 |
+|               |     2 |  8.16 |         16.17 |              8.16 |  8.16 |
+|               |     3 |  6.06 |          4.75 |              4.75 |  8.16 |
+| phantom       |     1 |  5.33 |         12.66 |              5.33 | 18.36 |
+|               |     2 |  5.78 |         18.08 |              5.78 | 15.43 |
+|               |     3 | 18.86 |         18.86 |             18.86 | 18.97 |
+| shade-light   |     1 |  5.39 |          5.89 |              6.18 |  6.07 |
+|               |     2 |  5.39 |          5.85 |              6.18 |   5.3 |
+|               |     3 |  5.39 |          5.85 |              6.18 |   5.3 |
+| shade-dark    |     1 |  5.46 |          6.91 |              4.64 |  6.06 |
+|               |     2 |  5.46 |          6.91 |              4.64 |  6.06 |
+|               |     3 |  5.46 |          5.86 |              4.64 |  4.72 |
+| retro         |     1 | 13.69 |         13.69 |             13.69 | 13.57 |
+|               |     2 | 12.21 |         13.06 |              8.68 | 13.69 |
+|               |     3 | 13.06 |         13.94 |             13.06 | 13.69 |
+| grotesk       |     1 | 18.73 |         18.73 |             18.73 | 18.73 |
+|               |     2 |  4.99 |         18.73 |              6.07 | 17.18 |
+|               |     3 | 18.73 |         18.73 |              6.07 | 18.73 |
+| lapis         |     1 |  7.97 |         14.98 |              6.82 |  4.43 |
+|               |     2 |  6.64 |         14.98 |              6.82 | 11.88 |
+|               |     3 |     5 |          7.11 |              4.11 |  4.58 |
+| nostromo      |     1 |  5.75 |         11.54 |              7.64 | 11.07 |
+|               |     2 |  5.47 |         11.46 |              5.39 | 11.07 |
+|               |     3 |   8.8 |         12.13 |              6.08 |  8.21 |
+| titanium      |     1 |  6.08 |          9.68 |              5.89 | 12.47 |
+|               |     2 |  9.13 |          6.96 |              5.37 |  5.37 |
+|               |     3 | 11.19 |          8.36 |              5.38 | 14.63 |
+
+### Open, round 3
+
+- No option is pre-ticked. The 19 shapes approved in round 1 (formal too, by Kenny's 18:45 verdict) should count as
+  answered with shape 1 ticked; the review kit has no way to pre-tick a choice (a `default` on a choice group), and
+  the kit was not changed in this round. Until it has one, Kenny ticks Shape 1 himself; its hint says it was
+  approved.
+- The page keeps the ticks per theme only while it is open; after a reload the preview starts at option 1 until a
+  choice is ticked again (the dialog itself remembers them).

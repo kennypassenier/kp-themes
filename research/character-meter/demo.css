@@ -1,7 +1,7 @@
 /* The page: a centred column, the controls in one row of groups, and one
-   section with three columns side by side (the three options of the
-   theme's one shape), each holding the same three meters. The meters'
-   own drawing is in meters.css. */
+   section: the composed preview at the top, then one row per aspect with
+   three columns side by side (the aspect's three options). The meters' own
+   drawing is in meters.css. */
 .cm-page {
     display: grid;
     gap: var(--kp-space-lg, 1.5rem);
@@ -98,8 +98,56 @@
     row-gap: var(--kp-space-sm, 0.5rem);
 }
 
-.cm-shape {
+/* The combination: its picks in words beside its meters. */
+.cm-preview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+@media (max-width: 52rem) {
+    .cm-preview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cm-preview__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cm-preview__head h3,
+.cm-preview__head p,
+.cm-aspect__head h3,
+.cm-aspect__head p {
     margin: 0;
+}
+
+.cm-preview__head p,
+.cm-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* One row per aspect, a rule between them. */
+.cm-aspects {
+    display: grid;
+}
+
+.cm-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.cm-aspect__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
 }
 
 .cm-label {

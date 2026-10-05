@@ -30,22 +30,23 @@
     <body>
         <main class="cm-page">
             <header class="cm-intro">
-                <h1>A meter of its own, per theme: how it moves</h1>
+                <h1>A meter of its own, per theme: one pick per aspect</h1>
                 <p>
-                    Round 2 (Kenny, 2026-10-05 18:01). In round 1 you picked a shape for nineteen themes; only the shape was approved, not how it
-                    moves. Each theme now shows its shape three times: forest the wooden gauge with the trail's marks you asked for, retro and grotesk
-                    a new shape each. The three options differ in how the share arrives, how a new tone shows, how the mark moves and stands past the
-                    end, and the loading picture. Pick one of the three per theme.
+                    Round 3 (Kenny, 2026-10-05 18:45: "keep these things separate so I could choose one over another"). Nothing is bundled any more:
+                    per theme you pick the shape, the loading picture, how the share arrives, how a new tone shows and the mark past the end, each
+                    from three options and each on its own. Shape 1 is the shape you approved in round 1 (forest, retro and grotesk: round 2's new
+                    shape); shapes 2 and 3 are the theme's other round-1 shape and a new one (forest, retro, grotesk: round 1's two). The other four
+                    aspects keep round 2's option names.
                 </p>
                 <p class="cm-motion" data-cm-motion hidden>
                     <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading meter shows its still frame. Turn it off
                     in the system settings to judge the motion.
                 </p>
                 <p class="cm-meta">
-                    Each column shows the same three meters: 62 % used with the target at 80 % (the mark on the empty track), 130 % booked with the
-                    mark at 80 % (full, past the end, the mark on the fill), and a small meter inside a sentence (91 %, the mark at 80 %). Every
+                    Each option shows 62 % used with the target at 80 % (the mark on the empty track) and 130 % booked with the mark at 80 % (full,
+                    past the end, the mark on the fill); the combination adds a small meter inside a sentence and the package's three signs. Every
                     option keeps the meter's height in every state, takes its colours from the theme's tokens only, and lives in the theme's
-                    <code>kp.signature</code> layer (<code>meters.css</code>). This theme: <b data-cm-theme-name>…</b>
+                    <code>kp.signature</code> layer (<code>meters.css</code>), one attribute per aspect. This theme: <b data-cm-theme-name>…</b>
                 </p>
             </header>
 
@@ -53,9 +54,11 @@
                 <div class="cm-sec__head">
                     <h2 id="h-meter">The meter in <span data-cm-theme-name>this theme</span></h2>
                     <p>
-                        This theme's shape, three ways it moves. <b>Drawn</b> replays how the share arrives, <b>Loading</b> and
-                        <b>Mark past the end</b> show those states, a tone shows how the meter takes it, and the speed slows every animation. The
-                        words around each meter never move.
+                        Five things to pick, each on its own: the shape, the loading picture, how the share arrives, how a new tone shows, and the
+                        mark past the end. Each row below shows three options of one of them, everything else as you ticked it; the combination at the
+                        top shows your picks together. <b>Drawn</b> replays how the share arrives, <b>Loading</b> and <b>Mark past the end</b>
+                        show those states, a tone shows how the meter takes it, and the speed slows every animation. The words around each meter never
+                        move.
                     </p>
                 </div>
                 <div class="cm-controls" data-review-controls>
@@ -79,100 +82,53 @@
                     </div>
                 </div>
                 <div data-review-look></div>
-                <p class="cm-shape"><b>The shape:</b> <span data-cm-shape-name>…</span>. <span data-cm-shape-text></span></p>
-                <div class="cm-trio">
-                    <div class="cm-col" data-cm="1" data-cm-pick="1">
-                        <p class="cm-label"><span class="cm-label__no">Option 1</span> <span data-cm-name="1">…</span></p>
-                        <p class="cm-desc" data-cm-desc="1"></p>
-                        <div class="cm-meters">
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
-                                <span class="kp-meter" data-cm-meter="disk"></span>
-                            </div>
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="seats">Seats: 130 % booked, comfortable at 80 %</span>
-                                <span class="kp-meter" data-cm-meter="seats"></span>
-                            </div>
-                            <p class="cm-inline">
-                                Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning
-                                at 80 %.
-                            </p>
-                            <div class="cm-row">
-                                <span class="cm-row__label"
-                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
-                                >
-                                <span class="cm-signs">
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
-                                </span>
-                            </div>
-                        </div>
+                <div class="cm-preview">
+                    <div class="cm-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-cm-picks>…</p>
                     </div>
-                    <div class="cm-col" data-cm="2" data-cm-pick="2">
-                        <p class="cm-label"><span class="cm-label__no">Option 2</span> <span data-cm-name="2">…</span></p>
-                        <p class="cm-desc" data-cm-desc="2"></p>
-                        <div class="cm-meters">
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
-                                <span class="kp-meter" data-cm-meter="disk"></span>
-                            </div>
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="seats">Seats: 130 % booked, comfortable at 80 %</span>
-                                <span class="kp-meter" data-cm-meter="seats"></span>
-                            </div>
-                            <p class="cm-inline">
-                                Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning
-                                at 80 %.
-                            </p>
-                            <div class="cm-row">
-                                <span class="cm-row__label"
-                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
-                                >
-                                <span class="cm-signs">
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
-                                </span>
-                            </div>
+                    <div
+                        class="cm-meters"
+                        data-cm
+                        data-cm-preview
+                        data-cm-shape="1"
+                        data-cm-loading="1"
+                        data-cm-arrival="1"
+                        data-cm-tone="1"
+                        data-cm-mark="1"
+                    >
+                        <div class="cm-row">
+                            <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
+                            <span class="kp-meter" data-cm-meter="disk"></span>
                         </div>
-                    </div>
-                    <div class="cm-col" data-cm="3" data-cm-pick="3">
-                        <p class="cm-label"><span class="cm-label__no">Option 3</span> <span data-cm-name="3">…</span></p>
-                        <p class="cm-desc" data-cm-desc="3"></p>
-                        <div class="cm-meters">
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
-                                <span class="kp-meter" data-cm-meter="disk"></span>
-                            </div>
-                            <div class="cm-row">
-                                <span class="cm-row__label" data-cm-label="seats">Seats: 130 % booked, comfortable at 80 %</span>
-                                <span class="kp-meter" data-cm-meter="seats"></span>
-                            </div>
-                            <p class="cm-inline">
-                                Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning
-                                at 80 %.
-                            </p>
-                            <div class="cm-row">
-                                <span class="cm-row__label"
-                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
-                                >
-                                <span class="cm-signs">
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
-                                    <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
-                                </span>
-                            </div>
+                        <div class="cm-row">
+                            <span class="cm-row__label">Seats: 130 % booked, comfortable at 80 %</span>
+                            <span class="kp-meter" data-cm-meter="seats"></span>
+                        </div>
+                        <p class="cm-inline">
+                            Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning at
+                            80 %.
+                        </p>
+                        <div class="cm-row">
+                            <span class="cm-row__label"
+                                >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
+                            >
+                            <span class="cm-signs">
+                                <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
+                                <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
+                                <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
+                            </span>
                         </div>
                     </div>
                 </div>
+                <div class="cm-aspects" data-cm-aspects></div>
             </section>
         </main>
 
-        <!-- Round 2 reopens all 22 themes: in round 1 only the shape was approved (Kenny, 2026-10-05 18:01). -->
+        <!-- Round 3 reopens all 22 themes: every aspect is its own pick now (Kenny, 2026-10-05 18:45). -->
         <script type="application/json" data-review-round>
             {
-                "round": "2026-10-05-r2",
+                "round": "2026-10-05-r3",
                 "reopen": [
                     "formal|meter",
                     "light|meter",
