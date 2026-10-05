@@ -40,6 +40,24 @@
 // step, Left/Right move between steps outside a note, Escape closes. After the
 // last open step the dialog closes and the answer waits at the foot.
 //
+// Controls (Kenny, 2026-10-05: "Als je knoppen zet die bv loading state
+// weergeven, of andere dingen zoals animation, zet die dan ook in de dialog!").
+// A demo marks every container of its own buttons (states, data variants,
+// tones, speed, play) with one attribute:
+//
+//   <div data-review-controls> <div role="group" aria-label="…">…buttons…</div> … </div>
+//
+// A container inside a judged section belongs to that section; one outside
+// every section (in the page's header) belongs to every step. When the dialog
+// shows a step, each of those containers is mirrored into the controls bar
+// above the stage, with the hint "Try every state and the speed before you
+// judge". The demo's own buttons stay the only truth: a click on a mirrored
+// button clicks the demo's button (so the demo's listeners act on the
+// sections shown), and every change the demo makes to its buttons
+// (aria-pressed, disabled, hidden, text) is copied back into the mirror. The
+// demo's copy inside a shown section is hidden in the stage, so nothing is
+// there twice. A demo needs no code of its own for this.
+//
 // Verdicts and notes live in this browser only (localStorage, per demo id,
 // under progress.js storeKey(), which the hub reads too); the answer at the
 // foot of the page is what reaches the conversation.
@@ -348,7 +366,13 @@ dialog.innerHTML = `
         <button type="button" class="kp-button kp-button--ghost rv-dialog__close" aria-label="Close (Escape)" data-rv-close>✕</button>
     </div>
     <div class="rv-dialog__grid">
-        <div class="rv-dialog__stage" data-rv-stage></div>
+        <div class="rv-dialog__view">
+            <details class="rv-controls" open data-rv-controls hidden>
+                <summary class="rv-controls__hint">Try every state and the speed before you judge</summary>
+                <div class="rv-controls__body" data-rv-controls-body></div>
+            </details>
+            <div class="rv-dialog__stage" data-rv-stage></div>
+        </div>
         <div class="rv-dialog__side">
             <p class="rv-meta">Everything on the left is approved together. Tick only what is wrong, and say why.</p>
             <ol class="rv-dialog__list" data-rv-list></ol>
@@ -377,9 +401,98 @@ let moved = [];
 let busy = false;
 
 function putBack() {
+    unmirror();
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
     moved = [];
     stage.replaceChildren();
+}
+
+/* ------------------------------------------------------------ controls */
+
+const controlsBox = $('[data-rv-controls]');
+const controlsBody = $('[data-rv-controls-body]');
+/** @type {MutationObserver[]} */
+let mirrors = [];
+/** The demo's own controls, in document order, that the mirror can act on. */
+const actorsOf = (root) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll('button, input, select, textarea, a[href], summary')]);
+
+function unmirror() {
+    for (const observer of mirrors) observer.disconnect();
+    mirrors = [];
+    controlsBody.replaceChildren();
+    controlsBox.hidden = true;
+}
+
+/**
+ * Mirrors one container of the demo's controls into the bar: a copy without
+ * ids, whose clicks and edits go to the demo's own elements, rebuilt whenever
+ * the demo changes its own (a pressed state, a label, a hidden button).
+ * @param {HTMLElement} source @param {string} heading
+ */
+function mirror(source, heading) {
+    const slot = document.createElement('div');
+    slot.className = 'rv-controls__set';
+    if (heading) {
+        const title = document.createElement('p');
+        title.className = 'rv-controls__title';
+        title.textContent = heading;
+        slot.append(title);
+    }
+    const holder = document.createElement('div');
+    slot.append(holder);
+    const build = () => {
+        const focusAt = actorsOf(holder).indexOf(/** @type {HTMLElement} */ (document.activeElement));
+        const copy = /** @type {HTMLElement} */ (source.cloneNode(true));
+        copy.removeAttribute('data-review-controls');
+        copy.hidden = false;
+        for (const el of [copy, ...copy.querySelectorAll('[id]')]) el.removeAttribute('id');
+        const theirs = actorsOf(source);
+        actorsOf(copy).forEach((mine, i) => {
+            const own = theirs[i];
+            if (!own) return;
+            if (mine.matches('button, a[href], summary')) {
+                mine.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    own.click();
+                });
+            } else {
+                const forward = (event) => {
+                    const from = /** @type {HTMLInputElement} */ (mine);
+                    const to = /** @type {HTMLInputElement} */ (own);
+                    if ('checked' in from && (from.type === 'checkbox' || from.type === 'radio')) to.checked = from.checked;
+                    else to.value = from.value;
+                    to.dispatchEvent(new Event(event.type, { bubbles: true }));
+                };
+                mine.addEventListener('input', forward);
+                mine.addEventListener('change', forward);
+            }
+        });
+        holder.replaceChildren(copy);
+        if (focusAt >= 0) actorsOf(copy)[focusAt]?.focus();
+    };
+    build();
+    const observer = new MutationObserver(build);
+    observer.observe(source, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['aria-pressed', 'aria-checked', 'aria-disabled', 'disabled', 'hidden', 'class', 'value', 'checked'],
+    });
+    mirrors.push(observer);
+    controlsBody.append(slot);
+}
+
+/** The controls of the sections on screen, and those of the whole page. */
+function mirrorControls(sections) {
+    unmirror();
+    const all = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-review-controls]')]);
+    const pageWide = all.filter((el) => !el.closest('[data-review-item]'));
+    const own = sections.map((section) => ({ section, sets: all.filter((el) => el.closest('[data-review-item]') === section) }));
+    const titled = own.filter((o) => o.sets.length).length > 1;
+    for (const el of pageWide) mirror(el, titled ? 'Every section' : '');
+    for (const { section, sets } of own) for (const el of sets) mirror(el, titled ? section.dataset.reviewTitle || section.dataset.reviewItem : '');
+    controlsBox.hidden = !controlsBody.childElementCount;
 }
 
 function frameFor(pair) {
@@ -523,6 +636,7 @@ async function show(at) {
             }
         }
         stage.scrollTop = 0;
+        mirrorControls(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section));
         list.replaceChildren(...shownPairs.map(rowFor));
         const judgedHere = step.pairs.length - shownPairs.length;
         $('[data-rv-position]').textContent =

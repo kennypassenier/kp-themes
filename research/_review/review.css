@@ -130,6 +130,71 @@
     min-block-size: 0;
 }
 
+/* The left column: the demo's controls on top, the sections under them. */
+.rv-dialog__view {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-block-size: 0;
+    min-inline-size: 0;
+}
+
+/* The demo's own buttons (states, variants, speed), mirrored by review.js;
+   the demo's copy inside a section is hidden in the stage. */
+.rv-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    max-block-size: 45dvh;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: var(--kp-space-sm, 0.5rem) 1.25rem;
+    border-block-end: 1px solid var(--border);
+    background: var(--muted);
+}
+
+.rv-controls[hidden],
+.rv-dialog__stage [data-review-controls] {
+    display: none;
+}
+
+.rv-controls__hint {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--foreground);
+    cursor: pointer;
+}
+
+.rv-controls__body,
+.rv-controls__set,
+.rv-controls__set > div > * {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.rv-controls__body {
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.rv-controls__title {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+/* One row per group: its name, then its buttons, wrapping on a phone. */
+.rv-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.rv-controls [role='group'] > b {
+    font-size: 0.8125rem;
+}
+
 .rv-dialog__stage {
     contain: strict;
     overflow: auto;
@@ -258,6 +323,12 @@
 
     .rv-dialog__stage {
         padding: 0.75rem 16px;
+    }
+
+    /* On a phone the bar scrolls on its own and folds away under its hint. */
+    .rv-controls {
+        max-block-size: 30dvh;
+        padding-inline: 16px;
     }
 
     .rv-dialog__side {
