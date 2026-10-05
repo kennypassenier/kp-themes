@@ -1,7 +1,7 @@
-/* The page: a centred column, and one section with its controls in one row
-   of groups and three columns side by side (character 1, character 2, the
-   plain calendar of today), each holding the same month. The calendars' own
-   drawing is in calendars.css. */
+/* The page: a centred column, and one section with its controls, the
+   composed preview, one row of three calendars per aspect, and the plain
+   calendar of today for comparison. The calendars' own drawing is in
+   calendars.css. */
 .cl-page {
     display: grid;
     gap: var(--kp-space-lg, 1.5rem);
@@ -75,6 +75,44 @@
     color: var(--muted-foreground);
 }
 
+/* The preview, every aspect and the plain calendar: a head over its
+   calendars. */
+.cl-preview,
+.cl-aspect,
+.cl-plain {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.cl-preview__head,
+.cl-aspect__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cl-preview__head :is(h3, p),
+.cl-aspect__head :is(h3, p) {
+    margin: 0;
+}
+
+.cl-preview__head p,
+.cl-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.cl-preview > .cl-cal,
+.cl-plain > .cl-cal {
+    max-inline-size: 32rem;
+}
+
+.cl-aspects {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
 /* Three columns, one under the other below 60rem. The columns share the
    trio's rows (a subgrid), so the three calendars start on one line however
    long each description is. */
@@ -131,13 +169,17 @@
 /* Each calendar keeps its own height: the column's row is as tall as the
    tallest calendar, and a stretched calendar would hand the difference to
    its grid. */
-.cl-col > .kp-calendar {
+.cl-col > .cl-cal {
+    align-self: start;
+}
+
+.cl-cal > .kp-calendar {
     align-self: start;
 }
 
 /* The state line holds two lines in every column, so the long error words
    in a column a third of the page wide move nothing under them. */
-.cl-col .kp-calendar__state {
+.cl-cal .kp-calendar__state {
     min-block-size: 3em;
     line-height: 1.5;
 }
@@ -146,6 +188,10 @@
     outline: 3px solid var(--primary);
     outline-offset: 6px;
     border-radius: var(--radius, 0.5rem);
+}
+
+.cl-picked .cl-label__no::after {
+    content: ' · ticked';
 }
 
 [data-review-look] p {

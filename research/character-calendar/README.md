@@ -10,34 +10,82 @@ is today the same shape in every theme: rounded plates in the status colours,
 the number over its count, dashed days to come or from before, an inner ring
 for today, an outer ring in the primary colour for the picked day, square
 swatches in the legend, a pulse while it loads (or the theme's spinner, per
-day or once over the grid). This demo gives every theme two calendars drawn
-in its own world, beside the plain calendar of today.
+day or once over the grid).
+
+## Round two: one pick per aspect
+
+Kenny, 2026-10-05 20:03: "I want separate options for the heatmap as well,
+just like you did for the meters … and it should be like this in the
+future." Round one offered two whole characters per theme; nothing is
+bundled any more. Per theme, five aspects, each with three options, each
+picked on its own in the review dialog, nothing ticked in advance:
+
+| Aspect                | Attribute         | What it covers                                                                                              |
+| --------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------- |
+| Shape                 | `data-cl-shape`   | the grid, the day cells, the weekday header, the title and month buttons                                    |
+| While loading         | `data-cl-loading` | the picture each day shows while the month is read; always moving, still under reduced motion, never a fade |
+| How the month arrives | `data-cl-arrival` | how the days come in after loading and on a month change                                                    |
+| Tones and today       | `data-cl-tone`    | how a good, warning, failed, unknown, busy night reads, and today's ring                                    |
+| The picked day        | `data-cl-select`  | the frame round the picked day, the hover, and the picked day's count                                       |
+
+Options 1 and 2 are round one's two characters split into their parts (its
+rules were scoped `[data-cl='a'|'b']`; each was moved to the aspect it
+touches: loading rules by `[data-kp-tone='loading']` and the busy classes,
+the pick by `aria-selected`, today and the tones by `data-kp-today` and
+`data-kp-tone`, the rest to the shape; the knob blocks were split knob by
+knob). Where the two characters barely differed (the picked day's frame,
+often the same outline at another offset) the hover and the count of the
+picked day are new in both; the loading pictures that stood still in round
+one (formal 1 and 2, light 1 and 2, dark 1 and 2, high-contrast 1 and 2,
+retro 1 and 2, shade-light 1, shade-dark 1) now move. Option 3 of every
+aspect, and all three arrivals, are new.
 
 ## Files
 
 - `demo.html`: one section judged per theme with the review kit
-  (`../_review/review.js`): one choice per theme, "Character 1", "Character 2"
-  or "The plain calendar, as today", each character's name and parts as the
-  option's hint. The controls sit inside the section, so they travel into the
-  review dialog: State (Read, Loading, Nothing to check, Could not read, and
-  the live update in which today's two late copies arrive), Loading look (each
-  day's own picture, `kp-calendar--busy-days`, `kp-calendar--busy-whole`),
-  Month (August, September, October 2026), and the speed of every animation.
-- `calendars.css`: the 44 characters, in `@layer kp.signature`, scoped
-  `[data-theme='<name>'] [data-cl='a'|'b']`. In a register the same rules read
-  `[data-theme='<name>'] .kp-calendar`. The contract and the shared knobs
-  (`--cl-cell-h`, `--cl-<tone>-bg|fg|pat|edge|style|ink|mark`, `--cl-today`,
-  `--cl-pick`, `--cl-busy-*`, …) are at the top of the file; every loop is in
-  one `prefers-reduced-motion: no-preference` block near its end, and the last
-  rule stops the days' own loops under the two spinner looks.
-- `demo.js`: the names and descriptions (`IDEAS`), the review choices and
-  look-at lines built from them, the nights (nine services' made-up nightly
-  backups, "now" fixed at 20/10/2026 14:40 in Brussels), the states driven
-  through the package's own API (`setCalendarState()`, `setCalendarDays()`,
-  `setCalendarLegend()`, `calendarSelect()`), the speed control.
-- `demo.css`: the page layout only; the three columns share their rows (a
-  subgrid) so the calendars start on one line, each calendar keeps its own
-  height, and the state line holds two lines.
+  (`../_review/review.js`): five choices per theme, one per aspect, three
+  options each with its name and what it does as the hint; nothing ticked.
+  At the top "Your combination" shows the ticked options together (an aspect
+  not ticked yet shows option 1) and follows `review:choice`; below it one
+  row per aspect of three calendars that differ in that aspect only; at the
+  foot the plain calendar of today for comparison (not an option). The
+  controls sit in `data-review-controls`, so the dialog mirrors them: State
+  (Read, which replays the arrival; Loading; Nothing to check; Could not
+  read; the live update), Loading look (each day's own picture,
+  `kp-calendar--busy-days`, `kp-calendar--busy-whole`), Month (August,
+  September, October 2026), and the speed of every animation.
+  `data-review-round` is `2026-10-05-r2` and reopens every theme.
+- `calendars.css`: every option, in `@layer kp.signature`, scoped
+  `[data-theme='<name>'] [data-cl-<aspect>='1'|'2'|'3']`; the shared contract
+  and knobs at the top read `[data-cl]` (the wrapper of every calendar but
+  the plain one). Options 1 and 2 follow theme by theme; then the generated
+  block: option 3 of shape, tone, select and loading, the hover and count of
+  every select option, the arrivals and the loops of the formerly still
+  pictures; every animation sits in a `prefers-reduced-motion:
+no-preference` block, and the last rule stops the days' own loops under
+  the two spinner looks. In a register the same rules read
+  `[data-theme='<name>'] .kp-calendar`.
+- `demo.js`: the five aspects (`ASPECTS`), the names and descriptions
+  (`IDEAS`, per theme and aspect three options), the review choices and
+  look-at lines built from them, the rows, `compose()` (writes the five
+  attributes on the preview from the ticks and on every row's wrapper with
+  its own option in its own aspect), the nights (nine services' made-up
+  nightly backups, "now" fixed at 20/10/2026 14:40 in Brussels), the states
+  through the package's API (`setCalendarState()`, `setCalendarDays()`,
+  `setCalendarLegend()`, `calendarSelect()`), the arrival trigger and the
+  speed.
+- `demo.css`: the page layout only; the three calendars of a row share their
+  rows (a subgrid), each calendar keeps its own height, the state line holds
+  two lines.
+
+How the month arrives: the arrival's rule needs the grid not busy, so after
+loading it restarts by itself when `aria-busy` drops. A month change repaints
+the grid in place (no new buttons), so the demo sets `data-cl-arrive` on the
+calendar again when the title changes; in a register `js/calendar.js` would
+have to mark a month change (a hook it does not expose). Arrivals move by
+clip-path, translate, scale, rotate or a 3D turn, never by opacity, and each
+day starts after its own delay from its row and column (`--cl-row`,
+`--cl-col`, set per `tr` and `td`).
 
 October carries every tone: green and amber nights, the red night of the
 power cut (08/10), a night with nothing to back up (11/10), a night whose
@@ -45,7 +93,151 @@ report was lost (14/10), today (20/10, 6 of 9), the nights to come; August
 starts with nine nights from before the first backup. 16/10 is picked.
 js/calendar.js is not changed.
 
-## The characters
+## The options per theme
+
+| Theme         | Aspect                | 1                                               | 2                                             | 3                     |
+| ------------- | --------------------- | ----------------------------------------------- | --------------------------------------------- | --------------------- |
+| formal        | Shape                 | The desk diary                                  | The ledger                                    | The engraved card     |
+|               | While loading         | The desk diary: its loading                     | The ledger: its loading                       | The fountain pen      |
+|               | How the month arrives | Set in type                                     | The page turns                                | Ruled in              |
+|               | Tones and today       | The desk diary: its tones and today             | The ledger: its tones and today               | The margin rule       |
+|               | The picked day        | The desk diary: its pick                        | The ledger: its pick                          | The bookplate         |
+| light         | Shape                 | The seam                                        | Daylight                                      | The pill row          |
+|               | While loading         | The seam: its loading                           | Daylight: its loading                         | The sunbeam           |
+|               | How the month arrives | Morning                                         | Slide up                                      | The wave              |
+|               | Tones and today       | The seam: its tones and today                   | Daylight: its tones and today                 | The coloured dot      |
+|               | The picked day        | The seam: its pick                              | Daylight: its pick                            | The focus halo        |
+| dark          | Shape                 | The readout                                     | The machined pocket                           | The keycap            |
+|               | While loading         | The readout: its loading                        | The machined pocket: its loading              | The status LED        |
+|               | How the month arrives | Boot sequence                                   | Shutter                                       | Pressed in            |
+|               | Tones and today       | The readout: its tones and today                | The machined pocket: its tones and today      | The status bar        |
+|               | The picked day        | The readout: its pick                           | The machined pocket: its pick                 | The marquee select    |
+| cyberpunk     | Shape                 | Neon cells                                      | The hazard roster                             | The data shard        |
+|               | While loading         | Neon cells: its loading                         | The hazard roster: its loading                | The glitch slice      |
+|               | How the month arrives | Glitch in                                       | Data rain                                     | Skew lock             |
+|               | Tones and today       | Neon cells: its tones and today                 | The hazard roster: its tones and today        | The corner tag        |
+|               | The picked day        | Neon cells: its pick                            | The hazard roster: its pick                   | The target lock       |
+| synthwave     | Shape                 | The grid-floor month                            | The VCR timer                                 | The arcade marquee    |
+|               | While loading         | The grid-floor month: its loading               | The VCR timer: its loading                    | The scanning beam     |
+|               | How the month arrives | Out of the horizon                              | Tracking                                      | Neon flicker on       |
+|               | Tones and today       | The grid-floor month: its tones and today       | The VCR timer: its tones and today            | The neon underline    |
+|               | The picked day        | The grid-floor month: its pick                  | The VCR timer: its pick                       | The player select     |
+| pastel        | Shape                 | The sticker chart                               | The washi planner                             | The macaron tray      |
+|               | While loading         | The sticker chart: its loading                  | The washi planner: its loading                | The bouncing jelly    |
+|               | How the month arrives | Pop                                             | Sticker peel                                  | Bubbles               |
+|               | Tones and today       | The sticker chart: its tones and today          | The washi planner: its tones and today        | The sprinkles         |
+|               | The picked day        | The sticker chart: its pick                     | The washi planner: its pick                   | The candy wrapper     |
+| terminal      | Shape                 | cal(1)                                          | The boot log                                  | The hex dump          |
+|               | While loading         | cal(1): its loading                             | The boot log: its loading                     | The progress hashes   |
+|               | How the month arrives | Typed                                           | Scroll                                        | Redraw                |
+|               | Tones and today       | cal(1): its tones and today                     | The boot log: its tones and today             | The flags             |
+|               | The picked day        | cal(1): its pick                                | The boot log: its pick                        | The visual mode       |
+| forest        | Shape                 | The ranger's wall calendar                      | The trail map                                 | The tree rings        |
+|               | While loading         | The ranger's wall calendar: its loading         | The trail map: its loading                    | The firefly           |
+|               | How the month arrives | Leaves unfold                                   | Growth                                        | Falling leaves        |
+|               | Tones and today       | The ranger's wall calendar: its tones and today | The trail map: its tones and today            | The moss and the rust |
+|               | The picked day        | The ranger's wall calendar: its pick            | The trail map: its pick                       | The flagging tape     |
+| high-contrast | Shape                 | The ink grid                                    | The inverse plate                             | The big print         |
+|               | While loading         | The ink grid: its loading                       | The inverse plate: its loading                | The march             |
+|               | How the month arrives | Line by line                                    | Column by column                              | Cell by cell          |
+|               | Tones and today       | The ink grid: its tones and today               | The inverse plate: its tones and today        | The thick bar         |
+|               | The picked day        | The ink grid: its pick                          | The inverse plate: its pick                   | The double frame      |
+| sepia         | Shape                 | The almanac page                                | The letterpress specimen                      | The tipped-in plate   |
+|               | While loading         | The almanac page: its loading                   | The letterpress specimen: its loading         | The ink drop          |
+|               | How the month arrives | Developed                                       | Pressed                                       | Written in            |
+|               | Tones and today       | The almanac page: its tones and today           | The letterpress specimen: its tones and today | The wax seal          |
+|               | The picked day        | The almanac page: its pick                      | The letterpress specimen: its pick            | The pencilled box     |
+| blueprint     | Shape                 | The drafting schedule                           | The title block                               | The stencil grid      |
+|               | While loading         | The drafting schedule: its loading              | The title block: its loading                  | The compass           |
+|               | How the month arrives | Plotted                                         | Projected                                     | Unrolled              |
+|               | Tones and today       | The drafting schedule: its tones and today      | The title block: its tones and today          | The revision cloud    |
+|               | The picked day        | The drafting schedule: its pick                 | The title block: its pick                     | The detail callout    |
+| solstice      | Shape                 | The low sun                                     | The embers                                    | The standing stones   |
+|               | While loading         | The low sun: its loading                        | The embers: its loading                       | The sun dial          |
+|               | How the month arrives | Sunrise                                         | Dawn across                                   | Kindled               |
+|               | Tones and today       | The low sun: its tones and today                | The embers: its tones and today               | The ember line        |
+|               | The picked day        | The low sun: its pick                           | The embers: its pick                          | The halo              |
+| brutalism     | Shape                 | The slab                                        | The sticker sheet                             | The concrete block    |
+|               | While loading         | The slab: its loading                           | The sticker sheet: its loading                | The jackhammer        |
+|               | How the month arrives | Slammed down                                    | Shoved in                                     | Dropped               |
+|               | Tones and today       | The slab: its tones and today                   | The sticker sheet: its tones and today        | The colour block      |
+|               | The picked day        | The slab: its pick                              | The sticker sheet: its pick                   | The fat frame         |
+| deco          | Shape                 | The gilt calendar                               | The marquee                                   | The arched window     |
+|               | While loading         | The gilt calendar: its loading                  | The marquee: its loading                      | The fan               |
+|               | How the month arrives | The curtain rises                               | The fan opens                                 | The marquee           |
+|               | Tones and today       | The gilt calendar: its tones and today          | The marquee: its tones and today              | The gilt corner       |
+|               | The picked day        | The gilt calendar: its pick                     | The marquee: its pick                         | The spotlight         |
+| phantom       | Shape                 | The stamped VOID nights                         | The calling card month                        | The torn ticket       |
+|               | While loading         | The stamped VOID nights: its loading            | The calling card month: its loading           | The red cut           |
+|               | How the month arrives | Cut in                                          | Card dealt                                    | Stamped               |
+|               | Tones and today       | The stamped VOID nights: its tones and today    | The calling card month: its tones and today   | The marker stripe     |
+|               | The picked day        | The stamped VOID nights: its pick               | The calling card month: its pick              | The cut line          |
+| shade-light   | Shape                 | Pencil in the shade                             | The leaf shade                                | The paper fold        |
+|               | While loading         | Pencil in the shade: its loading                | The leaf shade: its loading                   | The window shadow     |
+|               | How the month arrives | The shade passes                                | Unfolded                                      | Settled               |
+|               | Tones and today       | Pencil in the shade: its tones and today        | The leaf shade: its tones and today           | The watercolour wash  |
+|               | The picked day        | Pencil in the shade: its pick                   | The leaf shade: its pick                      | The pencil circle     |
+| shade-dark    | Shape                 | Silverpoint                                     | The reading lamp                              | The night window      |
+|               | While loading         | Silverpoint: its loading                        | The reading lamp: its loading                 | The headlights        |
+|               | How the month arrives | Lamps on                                        | Blinds up                                     | Night falls           |
+|               | Tones and today       | Silverpoint: its tones and today                | The reading lamp: its tones and today         | The window light      |
+|               | The picked day        | Silverpoint: its pick                           | The reading lamp: its pick                    | The lit pane          |
+| retro         | Shape                 | The tear-off pad                                | The 1995 date picker                          | The floppy label      |
+|               | While loading         | The tear-off pad: its loading                   | The 1995 date picker: its loading             | The hourglass         |
+|               | How the month arrives | Repaint                                         | The wipe                                      | The dissolve          |
+|               | Tones and today       | The tear-off pad: its tones and today           | The 1995 date picker: its tones and today     | The status icons      |
+|               | The picked day        | The tear-off pad: its pick                      | The 1995 date picker: its pick                | The marching ants     |
+| grotesk       | Shape                 | The Swiss grid                                  | The transit bullets                           | The poster grid       |
+|               | While loading         | The Swiss grid: its loading                     | The transit bullets: its loading              | The ticker            |
+|               | How the month arrives | On the grid                                     | Column drop                                   | Hard cut              |
+|               | Tones and today       | The Swiss grid: its tones and today             | The transit bullets: its tones and today      | The rule              |
+|               | The picked day        | The Swiss grid: its pick                        | The transit bullets: its pick                 | The red bar           |
+| lapis         | Shape                 | Lapis on vellum                                 | The girih tiles                               | The mosaic            |
+|               | While loading         | Lapis on vellum: its loading                    | The girih tiles: its loading                  | The gold leaf         |
+|               | How the month arrives | Laid in                                         | Gilded                                        | The star              |
+|               | Tones and today       | Lapis on vellum: its tones and today            | The girih tiles: its tones and today          | The enamel            |
+|               | The picked day        | Lapis on vellum: its pick                       | The girih tiles: its pick                     | The gold setting      |
+| nostromo      | Shape                 | The CRT duty roster                             | The indicator panel                           | The keypad            |
+|               | While loading         | The CRT duty roster: its loading                | The indicator panel: its loading              | The radar             |
+|               | How the month arrives | Self test                                       | CRT warm up                                   | Teletype              |
+|               | Tones and today       | The CRT duty roster: its tones and today        | The indicator panel: its tones and today      | The warning lamp      |
+|               | The picked day        | The CRT duty roster: its pick                   | The indicator panel: its pick                 | The hazard select     |
+| titanium      | Shape                 | The anodised tiles                              | The date wheel                                | The watch bezel       |
+|               | While loading         | The anodised tiles: its loading                 | The date wheel: its loading                   | The second hand       |
+|               | How the month arrives | Machined                                        | Wound                                         | Clicked in            |
+|               | Tones and today       | The anodised tiles: its tones and today         | The date wheel: its tones and today           | The index mark        |
+|               | The picked day        | The anodised tiles: its pick                    | The date wheel: its pick                      | The heat-tint ring    |
+
+Every option's full description is its hint in the review dialog and its line on the page (`IDEAS` in demo.js).
+
+## Round two, measured
+
+Firefox (Playwright's, its own `http.server` on 127.0.0.1:8732, under
+`flock /tmp/kp-themes-shot.lock`), 2026-10-05 21:25, viewport 1600 × 1200,
+formal and titanium, each with and without reduced motion; the run took
+39 min 33 s, almost all of it waiting for the lock. The 22-theme run is
+still open.
+
+- **Console:** 0 errors and 0 page errors in both themes, with and without
+  reduced motion, through Loading (in all three looks), Nothing to check,
+  Could not read, the three months, the live update, and Read (replay).
+- **Heights:** every calendar box and grid (17 per page) keeps one height
+  through all of those states and months.
+- **Rows differ:** in every aspect row the three calendars' computed styles
+  differ pairwise (the loading row measured while loading; the arrival row
+  differs only where motion is allowed).
+- **Preview:** follows `review:choice` (tone 3 ticked, then 1).
+- **Loading:** every loading option runs 31 animations (one per day) at full
+  motion and 0 under reduced motion; the arrival runs 31 per calendar after
+  Read at full motion and 0 under reduced motion.
+- **Figures:** lowest computed contrast of a day's figure against its plate
+  colour (patterns not counted), shape and tone rows: formal 4.72 (ok) in
+  shapes 1 to 3 and tones 1 and 2, 16.41 in tone 3; titanium 4.74 (future),
+  tone 3 13.33. Rings not measured yet.
+
+## Round one (kept for provenance)
+
+### The characters
 
 | Theme         | Character 1                                                                                                                                                                                     | Character 2                                                                                                                                                                                      |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -77,7 +269,7 @@ and 2, light 1, dark 1 and 2, high-contrast 1 and 2, retro 1 and 2 (light 2
 keeps the slow daylight band, as the chart's light 2 did). Nothing loops at
 rest in any character. shade-light 1 and shade-dark 1 hatch in once.
 
-## Measured
+### Measured
 
 Firefox (Playwright's, one script, its own `http.server`, under
 `flock /tmp/kp-themes-shot.lock`), 2026-10-05, all 22 themes, viewport
@@ -178,7 +370,7 @@ table holds the latest run per theme.
 |               | 2      |   375 px |  4.74 (before) |          6.09 |  4.13 |  11.19 |   3.1 | cl-ti-knurl             |
 |               | plain  |   378 px | 3.28 (loading) |          6.09 | 11.24 |  11.19 |   1.9 | kp-pulse                |
 
-## Open
+### Open
 
 - **Two tone pairs are close:** dark 1, future and before (2.2: both bare
   black cells, dotted against a dark dashed frame), and shade-dark 2, none and
