@@ -1,21 +1,32 @@
 // research/character-chart: the second component of the character round
-// (Kenny, form v18, 2026-10-05): the time chart, two characters per theme
-// drawn in the theme's own world, beside the plain chart of today, all 22
-// themes in one demo judged through the review kit.
+// (Kenny, form v18, 2026-10-05), all 22 themes in one demo judged through the
+// review kit. Round 2 (Kenny, 2026-10-05 20:03: 19 themes approved with a
+// pick, their loading screens not, "I want those in a separate demo";
+// high-contrast and brutalism new, solstice "the background of character 1,
+// but the riveted tooltip from character 2"; and since today every aspect is
+// its own choice): each theme's time chart has six aspects, each picked on
+// its own from three options: the shape, the loading picture, how the series
+// arrives, how a new reading shows, the event dots and the pinned tooltip.
 //
 // The charts are the package's own: attachCharts() (js/chart.js) draws the
 // plot, the axes, the lines and areas, the tooltip, the legend, the zoom chip,
-// the states and the spark lines, and keeps every behaviour. Each character is
-// CSS only, in charts.css, scoped by `[data-theme]` and the column's
-// `[data-cc]`; this file only says what each one is, gives the charts their
-// readings, sets the states, and runs the speed.
+// the states and the spark lines, and keeps every behaviour. Every aspect is
+// CSS only, keyed by one attribute each on the chart's wrapper
+// (`data-cc-shape`, `data-cc-tip` in charts.css and round2.css;
+// `data-cc-loading`, `data-cc-arrival`, `data-cc-update`, `data-cc-events` in
+// aspects.css), so any combination composes. On the page: one composed
+// preview with the current picks, and per aspect a row of three charts that
+// differ in that aspect only. The controls sit in the section's
+// `data-review-controls` container, which the review kit mirrors into its
+// dialog.
 
 import { attachCharts, chartSelect, chartZoom, setChartData } from '../../js/chart.js';
 import { THEMES } from '../../js/theme-registry.js';
 import { NOW, sampleData } from '../../catalogue/chart-sample.js';
 
 /**
- * The two characters per theme: a name and what each part becomes.
+ * Round 1's two characters per theme: a name and what each part becomes.
+ * Their shape and their tooltip are options in round 2.
  * @type {Record<string, { a: { name: string, text: string }, b: { name: string, text: string } }>}
  */
 const IDEAS = {
@@ -241,52 +252,826 @@ const IDEAS = {
     },
 };
 
+/** @typedef {'shape' | 'loading' | 'arrival' | 'update' | 'events' | 'tip'} Aspect */
+/** @typedef {{ key: string, name: string, text: string, ink?: string, ink2?: string, say?: string }} Option */
+
+/** The six aspects, in the order they are asked. @type {{ id: Aspect, label: string, about: string }[]} */
+const ASPECTS = [
+    {
+        id: 'shape',
+        label: 'Shape',
+        about: 'The drawn chart: the paper, the frame, the grid, the tick labels, the lines and areas, the legend. Compare them as they stand.',
+    },
+    { id: 'loading', label: 'While loading', about: 'The picture the plot shows while the readings load. Press Loading; every option moves.' },
+    { id: 'arrival', label: 'How the series arrives', about: 'How the lines come in once the readings are there. Press Drawn to replay it.' },
+    { id: 'update', label: 'How a new reading shows', about: 'A live update: one new reading at the right end. Press Live update.' },
+    { id: 'events', label: 'The event dots', about: 'The dots above the plot (the alarm, the restart) and their lines down into it.' },
+    {
+        id: 'tip',
+        label: 'The pinned tooltip',
+        about: 'The tooltip, pinned at 07:30 with the alarm and the restart in reach (here and in the preview; elsewhere point at a plot). Keep "The tooltip, pinned" on.',
+    },
+];
+
+/** Round 1's picks (Kenny, 2026-10-05 20:03); high-contrast, solstice and brutalism are open. */
+const PICK = {
+    formal: 'b',
+    light: 'b',
+    dark: 'b',
+    terminal: 'b',
+    phantom: 'b',
+    retro: 'b',
+    lapis: 'b',
+    cyberpunk: 'a',
+    synthwave: 'a',
+    pastel: 'a',
+    forest: 'a',
+    sepia: 'a',
+    blueprint: 'a',
+    deco: 'a',
+    'shade-light': 'a',
+    'shade-dark': 'a',
+    grotesk: 'a',
+    nostromo: 'a',
+    titanium: 'a',
+};
+
+/** What each kind does, the same words in every theme; the name is the theme's own. */
+const KIND = {
+    loading: {
+        type: 'A line is typed out behind a block cursor that blinks, then typed again.',
+        scan: 'Fine scanlines over the plot; a bright band runs down them, over and over.',
+        sweep: 'A beam crosses the plot with its afterglow behind it, left to right, again and again.',
+        cutter: 'A cutter runs across at an even, linear pace and leaves a brushed track behind it.',
+        knurl: 'A knurled band rolls in place at an even pace.',
+        hazard: 'A band of stripes crawls along the middle of the plot.',
+        dash: 'A pen rules a dashed line across, one dash at a time, in hard steps.',
+        pen: 'A stroke is written across the plot, the nib at its head, then written again.',
+        halftone: 'A dot screen lies on the plot; a patch of heavier dots shifts in hard steps.',
+        hatch: 'Hatching is laid in from the left until it covers the plot, then laid again.',
+        blocks: 'Three blocks are cut in, one after another, in hard steps.',
+        hop: 'Three dots in a row; a fourth hops along them and back.',
+        feed: 'The ruled paper feeds through under a still pen, at an even pace.',
+        rise: 'A band of light rises from the foot of the plot to its top, again and again.',
+        glint: 'A glint runs along a double rule across the plot.',
+        march: 'Dashes march round the inside of the frame.',
+        fan: 'Rays fan out from the foot and swing a little to and fro.',
+        radar: 'A beam goes round over still rings, like a sweep on a screen.',
+        drop: 'A block drops from the top onto a floor line, again and again.',
+        dither: 'The dither shifts by a pixel in hard steps while a framed bar fills, step by step.',
+        needle: 'A needle searches to and fro along a graduated arc.',
+        stamp: 'A ruled stamp comes down on the page, once a beat.',
+        tape: 'A strip of striped tape slides across the plot over a dotted line.',
+        embers: 'Sparks rise from a glowing floor at an even pace.',
+        segments: 'A framed bar fills segment by segment, then starts again.',
+    },
+    arrival: {
+        none: 'The lines are there at once, as round 1 drew them.',
+        wipe: 'The lines are revealed from the left, slowing as they land.',
+        steps: 'The lines are revealed from the left in ten hard steps.',
+        linear: 'The lines are revealed from the left at an even, linear pace.',
+        draw: 'A pen draws each line from its start; the area follows under it.',
+        rise: 'The lines grow up from the baseline with a small overshoot.',
+        drop: 'The lines drop in from above and land hard.',
+        centre: 'The lines open from the middle outwards.',
+        scan: 'The lines are revealed from the top down, at an even pace.',
+        glitch: 'The lines tear in from the left in jerky steps, shifting sideways as they come.',
+        stamp: 'The lines are stamped on: a hair larger, then pressed flat at once.',
+    },
+    update: {
+        none: 'The new reading simply appears at the right end, as round 1 drew it.',
+        shift: 'The lines slide one step to the left, slowing as they land, and the new reading is there.',
+        tick: 'The lines move one step to the left in three hard ticks.',
+        tail: 'The newest stretch at the right end is drawn in.',
+        swell: 'The lines swell once and settle back to their width.',
+        jolt: 'The lines jolt up and settle, like a needle taking a reading.',
+        glitch: 'The lines jitter sideways for a moment in hard steps.',
+    },
+    events: {
+        shape: 'The dots and lines exactly as the picked shape draws them.',
+        ring: "Each event is a hollow ring in its tone on the paper, its line solid in the event's tone.",
+        bead: 'Each dot is ringed with a beaded ink edge, like a rivet; its line dotted in ink.',
+        halo: 'Each dot sits in a soft halo of its own tone; its line in long dashes.',
+        pin: 'A smaller dot ringed in ink on a solid ink stem: a map pin.',
+        target: "A solid dot with a crisp outline, its line in short dashes in the event's tone.",
+    },
+};
+
+/**
+ * Per theme, the options of the four aspects that are not taken from round
+ * 1: [kind, name, ink token, second ink token, words typed].
+ * @type {Record<string, { loading: [string, string, string?, string?, string?][], arrival: [string, string][], update: [string, string][], events: [string, string][] }>}
+ */
+const R2 = {
+    formal: {
+        loading: [
+            ['pen', 'The fountain pen', '--primary', '--foreground'],
+            ['dash', 'The ruling pen', '--primary', '--primary'],
+            ['stamp', 'The received stamp', '--primary'],
+        ],
+        arrival: [
+            ['wipe', 'Entered from the left'],
+            ['draw', 'Written in by hand'],
+        ],
+        update: [
+            ['tail', 'The new line entered'],
+            ['shift', 'The page moved on'],
+        ],
+        events: [
+            ['ring', 'Open circles'],
+            ['pin', 'Pins in the margin'],
+        ],
+    },
+    light: {
+        loading: [
+            ['glint', 'Sunlight along the seam', '--primary', '--chart-2'],
+            ['rise', 'Morning rising', '--primary', '--primary'],
+            ['hop', 'Three beads', '--primary', '--primary'],
+        ],
+        arrival: [
+            ['rise', 'Grows into the light'],
+            ['wipe', 'Drawn in, softly'],
+        ],
+        update: [
+            ['shift', 'Slides along'],
+            ['tail', 'A new piece drawn'],
+        ],
+        events: [
+            ['ring', "The divider's open circle"],
+            ['halo', 'A dot in its own light'],
+        ],
+    },
+    dark: {
+        loading: [
+            ['sweep', 'The slit scan', '--primary'],
+            ['cutter', 'The mill pass', '--muted-foreground', '--primary'],
+            ['radar', 'The calibration ring', '--primary'],
+        ],
+        arrival: [
+            ['linear', 'Milled in, evenly'],
+            ['scan', 'Exposed top down'],
+        ],
+        update: [
+            ['tail', 'The new cut'],
+            ['tick', 'Indexed one step'],
+        ],
+        events: [
+            ['ring', 'Engraved rings'],
+            ['target', 'Lit markers'],
+        ],
+    },
+    cyberpunk: {
+        loading: [
+            ['scan', 'The HUD scan', '--primary'],
+            ['type', 'The jack-in prompt', '--primary', , "'> jack_in --gauges'"],
+            ['march', 'The data perimeter', '--accent'],
+        ],
+        arrival: [
+            ['glitch', 'Glitched in'],
+            ['scan', 'Scanned in'],
+        ],
+        update: [
+            ['glitch', 'A glitch'],
+            ['tick', 'A packet in'],
+        ],
+        events: [
+            ['target', 'Lock-on markers'],
+            ['halo', 'Neon beacons'],
+        ],
+    },
+    synthwave: {
+        loading: [
+            ['feed', 'The floor drives on', '--primary', '--accent'],
+            ['rise', 'The sun comes up', '--primary', '--accent'],
+            ['scan', 'The tracking line', '--accent'],
+        ],
+        arrival: [
+            ['rise', 'Up from the horizon'],
+            ['scan', 'Rolled in like tape'],
+        ],
+        update: [
+            ['shift', 'The floor rolls on'],
+            ['swell', 'A neon swell'],
+        ],
+        events: [
+            ['halo', 'Neon beacons'],
+            ['ring', 'Neon rings'],
+        ],
+    },
+    pastel: {
+        loading: [
+            ['blocks', 'Sugar cubes', '--primary', '--accent'],
+            ['halftone', 'The riso dots shuffle', '--primary', '--accent'],
+            ['tape', 'A ribbon pulled through', '--primary', '--accent'],
+        ],
+        arrival: [
+            ['rise', 'Bounces up'],
+            ['centre', 'Unwrapped from the middle'],
+        ],
+        update: [
+            ['jolt', 'A happy hop'],
+            ['swell', 'Puffs up'],
+        ],
+        events: [
+            ['halo', 'Candy drops'],
+            ['ring', 'Sticker rings'],
+        ],
+    },
+    terminal: {
+        loading: [
+            ['type', 'The prompt', '--primary', , "'$ tail -f gauges'"],
+            ['segments', 'The progress bar', '--primary', '--primary'],
+            ['sweep', 'The phosphor sweep', '--primary'],
+        ],
+        arrival: [
+            ['steps', 'Printed column by column'],
+            ['scan', 'Refreshed top down'],
+        ],
+        update: [
+            ['tick', 'One line scrolls'],
+            ['tail', 'The new sample drawn'],
+        ],
+        events: [
+            ['ring', 'Open cells'],
+            ['target', 'Lit cells'],
+        ],
+    },
+    forest: {
+        loading: [
+            ['pen', 'The pencil sketch', '--foreground', '--accent'],
+            ['needle', 'The compass needle', '--primary', '--accent'],
+            ['drop', 'A pine cone drops', '--primary', '--accent'],
+        ],
+        arrival: [
+            ['draw', 'Sketched in'],
+            ['rise', 'Grows from the ground'],
+        ],
+        update: [
+            ['tail', 'The new mile walked'],
+            ['shift', 'The trail moves on'],
+        ],
+        events: [
+            ['pin', 'Trail pins'],
+            ['ring', 'Waymarks'],
+        ],
+    },
+    'high-contrast': {
+        loading: [
+            ['segments', 'The progress bar', '--foreground', '--primary'],
+            ['blocks', 'Three ink squares, cut in', '--foreground', '--primary'],
+            ['march', 'The marching frame', '--foreground'],
+        ],
+        arrival: [
+            ['steps', 'In ten clear steps'],
+            ['wipe', 'Drawn in from the left'],
+            ['linear', 'At an even pace'],
+        ],
+        update: [
+            ['tick', 'One clear tick'],
+            ['tail', 'The new piece drawn'],
+            ['none', 'Just there'],
+        ],
+        events: [
+            ['ring', 'Heavy rings'],
+            ['pin', 'Ink pins'],
+            ['bead', 'Beaded rings'],
+        ],
+    },
+    sepia: {
+        loading: [
+            ['pen', 'The dip pen', '--foreground', '--primary'],
+            ['stamp', 'The platen comes down', '--primary'],
+            ['halftone', "The engraver's dots", '--foreground', '--primary'],
+        ],
+        arrival: [
+            ['draw', 'Written with the nib'],
+            ['stamp', 'Pressed into the paper'],
+        ],
+        update: [
+            ['tail', 'A new stroke'],
+            ['shift', 'The page turns on'],
+        ],
+        events: [
+            ['ring', 'Ink rings'],
+            ['bead', 'Wax-seal beads'],
+        ],
+    },
+    blueprint: {
+        loading: [
+            ['dash', 'The plotter pen', '--foreground', '--accent'],
+            ['sweep', 'The scanner bar', '--foreground'],
+            ['needle', 'The protractor arm', '--foreground', '--accent'],
+        ],
+        arrival: [
+            ['draw', 'Plotted in'],
+            ['linear', 'Traced at an even pace'],
+        ],
+        update: [
+            ['tail', 'The next segment plotted'],
+            ['tick', 'Indexed one step'],
+        ],
+        events: [
+            ['ring', 'Datum circles'],
+            ['target', 'Reference marks'],
+        ],
+    },
+    solstice: {
+        loading: [
+            ['embers', 'Embers rising', '--primary', '--accent'],
+            ['rise', 'The sun rising', '--primary', '--accent'],
+            ['glint', 'Firelight along the rule', '--primary', '--primary'],
+        ],
+        arrival: [
+            ['rise', 'Rises like the sun'],
+            ['wipe', 'Lit from the left'],
+            ['draw', 'Drawn in fire'],
+        ],
+        update: [
+            ['swell', 'Flares once'],
+            ['tail', 'A new ember'],
+            ['shift', 'The day moves on'],
+        ],
+        events: [
+            ['halo', 'Glowing embers'],
+            ['bead', 'Rivets'],
+            ['ring', 'Iron rings'],
+        ],
+    },
+    brutalism: {
+        loading: [
+            ['drop', 'The block drop', '--foreground', '--accent'],
+            ['hazard', 'Hazard tape', '--foreground', '--primary-foreground'],
+            ['blocks', 'Cut in three', '--foreground', '--accent'],
+        ],
+        arrival: [
+            ['drop', 'Dropped in'],
+            ['steps', 'In hard steps'],
+            ['stamp', 'Slammed on'],
+        ],
+        update: [
+            ['jolt', 'A hard jolt'],
+            ['tick', 'A hard tick'],
+            ['none', 'Just there'],
+        ],
+        events: [
+            ['pin', 'Black pins'],
+            ['bead', 'Bolts'],
+            ['ring', 'Fat rings'],
+        ],
+    },
+    deco: {
+        loading: [
+            ['fan', 'The fan rays', '--primary'],
+            ['march', 'The marquee lights', '--primary'],
+            ['needle', 'The elevator dial', '--primary', '--primary'],
+        ],
+        arrival: [
+            ['centre', 'Opens like a curtain'],
+            ['rise', 'Rises like a skyline'],
+        ],
+        update: [
+            ['shift', 'Glides on'],
+            ['tail', 'A new gilt piece'],
+        ],
+        events: [
+            ['bead', 'Jewelled studs'],
+            ['ring', 'Gold rings'],
+        ],
+    },
+    phantom: {
+        loading: [
+            ['stamp', 'The calling-card stamp', '--primary'],
+            ['type', 'The typewriter', '--foreground', , "'TAKE YOUR TIME'"],
+            ['blocks', 'Cut-out letters', '--primary', '--foreground'],
+        ],
+        arrival: [
+            ['stamp', 'Stamped on'],
+            ['glitch', 'Torn in'],
+        ],
+        update: [
+            ['jolt', 'A hard jolt'],
+            ['glitch', 'Torn'],
+        ],
+        events: [
+            ['target', 'Red marks'],
+            ['pin', 'Pinned notes'],
+        ],
+    },
+    'shade-light': {
+        loading: [
+            ['hatch', 'The pencil hatches, over and over', '--foreground'],
+            ['pen', 'The pencil line', '--foreground', '--primary'],
+            ['glint', 'Sun through the leaves', '--primary', '--primary'],
+        ],
+        arrival: [
+            ['draw', 'Drawn in pencil'],
+            ['wipe', 'The shade moves off'],
+        ],
+        update: [
+            ['tail', 'A new pencil stroke'],
+            ['shift', 'Slides on'],
+        ],
+        events: [
+            ['ring', 'Pencil rings'],
+            ['pin', 'Pins'],
+        ],
+    },
+    'shade-dark': {
+        loading: [
+            ['hatch', 'Silverpoint hatching', '--foreground'],
+            ['rise', 'The lamp warms up', '--primary', '--primary'],
+            ['sweep', 'The torch beam', '--primary'],
+        ],
+        arrival: [
+            ['draw', 'Drawn in silver'],
+            ['wipe', 'Lit from the left'],
+        ],
+        update: [
+            ['tail', 'A new silver stroke'],
+            ['shift', 'Slides on'],
+        ],
+        events: [
+            ['ring', 'Silver rings'],
+            ['halo', 'Lamp-lit dots'],
+        ],
+    },
+    retro: {
+        loading: [
+            ['dither', 'The dither bar', '--foreground', '--primary'],
+            ['segments', 'The 1995 progress bar', '--foreground', '--primary'],
+            ['type', 'The DOS prompt', '--foreground', , "'C:\\\\> LOAD GAUGES'"],
+        ],
+        arrival: [
+            ['steps', 'Painted in steps'],
+            ['scan', 'Redrawn top down'],
+        ],
+        update: [
+            ['tick', 'One step on'],
+            ['tail', 'The new column painted'],
+        ],
+        events: [
+            ['pin', 'Push pins'],
+            ['ring', 'Bevel rings'],
+        ],
+    },
+    grotesk: {
+        loading: [
+            ['segments', 'The ruled bar', '--foreground', '--primary'],
+            ['dash', 'The column count', '--foreground', '--primary'],
+            ['drop', 'The square drops', '--foreground', '--primary'],
+        ],
+        arrival: [
+            ['steps', 'Column by column'],
+            ['linear', 'At an even pace'],
+        ],
+        update: [
+            ['tick', 'One column on'],
+            ['tail', 'The new column'],
+        ],
+        events: [
+            ['pin', 'Black pins'],
+            ['target', 'Red marks'],
+        ],
+    },
+    lapis: {
+        loading: [
+            ['radar', 'The astrolabe', '--accent'],
+            ['pen', 'The reed pen', '--accent', '--primary'],
+            ['march', 'The gilt border', '--accent'],
+        ],
+        arrival: [
+            ['draw', 'Written with the reed'],
+            ['centre', 'Unrolled from the middle'],
+        ],
+        update: [
+            ['tail', 'A new stroke of ink'],
+            ['swell', 'A gilt swell'],
+        ],
+        events: [
+            ['bead', 'Gilt studs'],
+            ['ring', 'Gold rings'],
+        ],
+    },
+    nostromo: {
+        loading: [
+            ['type', 'MU-TH-UR at the prompt', '--primary', , "'INTERFACE 2037 READY'"],
+            ['radar', 'The motion tracker', '--primary'],
+            ['scan', 'The CRT warms', '--primary'],
+        ],
+        arrival: [
+            ['scan', 'Drawn by the beam'],
+            ['steps', 'Plotted in steps'],
+        ],
+        update: [
+            ['tick', 'The roll ticks on'],
+            ['jolt', 'The pen kicks'],
+        ],
+        events: [
+            ['target', 'Blips'],
+            ['ring', 'Rings on the glass'],
+        ],
+    },
+    titanium: {
+        loading: [
+            ['cutter', 'The mill pass', '--muted-foreground', '--primary'],
+            ['needle', 'The dial indicator', '--muted-foreground', '--primary'],
+            ['sweep', 'The laser etch', '--primary'],
+        ],
+        arrival: [
+            ['linear', 'Milled in, linearly'],
+            ['draw', 'Etched in'],
+        ],
+        update: [
+            ['tick', 'Indexed one step'],
+            ['tail', 'The new cut'],
+        ],
+        events: [
+            ['bead', 'Screw heads'],
+            ['ring', 'Machined rings'],
+        ],
+    },
+};
+
+/** Round 2's new shapes and tooltips for the three open themes. */
+const NEW = {
+    'high-contrast': {
+        shape: [
+            {
+                key: 'hc1',
+                name: 'The signal board',
+                text: 'White paper with one heavy L of ink along the left and the foot, the grid in grey hairlines, bold 13px figures; three-pixel lines told apart by pattern too (solid, dashed, dotted) and no areas; the legend has an ink bar before each source, the pressed one on signal yellow.',
+            },
+            {
+                key: 'hc2',
+                name: 'The highlighter',
+                text: 'A 2px ink frame with a band of signal yellow along the foot, a dotted ink grid, bold figures; lines drawn 3.5px wide with a white halo so they stay apart where they cross, no areas; the legend underlined in ink, the pressed one highlighted yellow; the crosshair in the strong blue.',
+            },
+            {
+                key: 'hc3',
+                name: 'Large print',
+                text: 'A 3px ink frame with rounded corners, 14px bold figures and a bigger title, a grey grid, four-pixel lines with patterns and a firmer area; the legend is large ink-framed pills, the pressed one filled blue.',
+            },
+        ],
+        tip: [
+            {
+                key: 'hc1',
+                name: 'The inverse plate',
+                text: 'Black with white text and a thick signal-yellow bar on top.',
+            },
+            {
+                key: 'hc2',
+                name: 'The yellow card',
+                text: 'Signal yellow in a 2px ink frame, black text.',
+            },
+            {
+                key: 'hc3',
+                name: 'The large-print card',
+                text: 'White with a 3px blue frame and rounded corners, the text a size larger.',
+            },
+        ],
+    },
+    brutalism: {
+        shape: [
+            {
+                key: 'br1',
+                name: 'The poster',
+                text: 'The plot printed on yellow stock in a 4px black frame with a hard black shadow, a heavy dotted grid, figures in Archivo Black; the first line black, the others red and violet, four pixels wide with square ends and no areas; the legend is chunky white boxes with a hard shadow that press in, black with yellow letters when pressed.',
+            },
+            {
+                key: 'br2',
+                name: 'The concrete block',
+                text: 'Poured grey with aggregate speckle in a 3px black frame, three-pixel rules for the grid, figures in Archivo Black, five-pixel lines with square ends over firm areas; the legend is black slabs with white letters, lavender when pressed.',
+            },
+            {
+                key: 'br3',
+                name: 'The cut-out',
+                text: 'A white card in a 3px black line, lifted off a lavender block that shows at its lower right; a dashed grid, bold figures; every line outlined in black like a cut-out; the legend is round sticker tags, lavender when pressed.',
+            },
+        ],
+        tip: [
+            { key: 'br1', name: 'The hard box', text: 'White in a 3px black line with a hard black shadow, the time in Archivo Black capitals.' },
+            { key: 'br2', name: 'The black slab', text: 'Black with white text and a thick lavender bar down its left side.' },
+            { key: 'br3', name: 'The lavender sticker', text: 'Lavender with rounded corners, a 3px black line and a hard shadow.' },
+        ],
+    },
+    solstice: {
+        shape: [
+            {
+                key: 'a',
+                name: 'The low sun',
+                text: "Round 1's character 1 (the background you liked): a low sun warming the bottom corner, the grid lines as long shadows, serif figures, warm glowing lines over firelit areas; stone pills for the legend.",
+            },
+            {
+                key: 'so2',
+                name: 'The hearth',
+                text: 'Charcoal with a warm glow coming up from the foot, an ember-coloured dotted grid, serif figures; lines glowing softly in their own warmth over fuller areas; the legend is warm pills that glow when pressed.',
+            },
+            {
+                key: 'so3',
+                name: 'Midsummer dusk',
+                text: 'The sky darkening upward from a rust horizon low in the plot, faint hairline grid, light serif figures with a little tracking, fine lines; the legend underlined words, amber under the pressed one.',
+            },
+        ],
+        tip: [
+            {
+                key: 'b',
+                name: 'The riveted iron plate',
+                text: "Round 1's character 2 tooltip (the one you liked): an iron plate with four rivets.",
+            },
+            { key: 'a', name: 'The charcoal slab', text: "Round 1's character 1 tooltip: a charcoal slab with an ember edge." },
+            { key: 'so3', name: 'The bronze plaque', text: 'A plaque with an inner amber rule, its time in amber serif capitals.' },
+        ],
+    },
+};
+
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
+const lower = (/** @type {string} */ name) => name.replace(/^(The|A) /, (m) => m.toLowerCase());
+
+/** Every theme's three options per aspect, built from the tables above. @type {Record<string, Record<Aspect, Option[]>>} */
+const OPTIONS = Object.fromEntries(
+    Object.keys(IDEAS).map((theme) => {
+        const pick = PICK[theme];
+        const r2 = R2[theme];
+        const other = pick === 'a' ? 'b' : 'a';
+        const plain = {
+            key: 'plain',
+            name: 'The plain chart, as today',
+            text: "The package's own chart: the same shape as everywhere, in the theme's colours.",
+        };
+        /** @type {Record<Aspect, Option[]>} */
+        const o = {
+            shape: NEW[theme]?.shape ?? [
+                { key: pick, name: IDEAS[theme][pick].name, text: `Approved in round 1. ${IDEAS[theme][pick].text}` },
+                { key: other, name: IDEAS[theme][other].name, text: `Round 1's other character. ${IDEAS[theme][other].text}` },
+                plain,
+            ],
+            tip: NEW[theme]?.tip ?? [
+                { key: pick, name: `The tooltip of ${lower(IDEAS[theme][pick].name)}`, text: 'Approved in round 1, with the shape you picked.' },
+                { key: other, name: `The tooltip of ${lower(IDEAS[theme][other].name)}`, text: "Round 1's other character's tooltip." },
+                { key: 'plain', name: 'The plain tooltip', text: "The package's popover, as today." },
+            ],
+            loading: r2.loading.map(([key, name, ink, ink2, say]) => ({ key, name, text: KIND.loading[key], ink, ink2, say })),
+            arrival: [...(pick ? [['none', 'As approved: at once']] : []), ...r2.arrival].map(([key, name]) => ({
+                key,
+                name,
+                text: KIND.arrival[key],
+            })),
+            update: [...(pick ? [['none', 'As approved: it appears']] : []), ...r2.update].map(([key, name]) => ({
+                key,
+                name,
+                text: KIND.update[key],
+            })),
+            events: [...(r2.events.length < 3 ? [['shape', 'As the shape draws them']] : []), ...r2.events].map(([key, name]) => ({
+                key,
+                name,
+                text: KIND.events[key],
+            })),
+        };
+        return [theme, o];
+    }),
+);
+
+const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="chart"]'));
 
 /* ------------------------------------------------- the review kit's text */
 
 // Read by ../_review/review.js when it loads, which is after this module:
-// one choice per theme, the two characters' names and parts as its hints.
-const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="chart"]'));
-const hints = (/** @type {'a' | 'b'} */ which) =>
-    Object.fromEntries(Object.entries(IDEAS).map(([theme, two]) => [theme, `${two[which].name}. ${two[which].text}`]));
+// six choices per theme, each option's name and what it does as its hint.
+// What round 1 approved (the shape, the arrival, the update and the tooltip
+// of the picked character) is ticked for him; loading and the event dots are
+// open everywhere, and every aspect in the three open themes.
+const APPROVED = Object.keys(PICK);
 section.setAttribute(
     'data-review-choices',
-    JSON.stringify([
-        {
-            id: 'chart',
-            label: 'The time chart for this theme',
-            options: [
-                { value: 'a', label: 'Character 1', hints: hints('a') },
-                { value: 'b', label: 'Character 2', hints: hints('b') },
-                {
-                    value: 'plain',
-                    label: 'The plain chart, as today',
-                    hint: 'Keep the package chart in this theme: the same shape as everywhere, in the theme’s colours.',
-                },
-            ],
-        },
-    ]),
+    JSON.stringify(
+        ASPECTS.map(({ id, label }) => ({
+            id,
+            label,
+            options: [0, 1, 2].map((at) => ({
+                value: String(at + 1),
+                label: String(at + 1),
+                hints: Object.fromEntries(Object.entries(OPTIONS).map(([theme, o]) => [theme, `${o[id][at].name}. ${o[id][at].text}`])),
+            })),
+            ...(['shape', 'arrival', 'update', 'tip'].includes(id) ? { default: Object.fromEntries(APPROVED.map((theme) => [theme, '1'])) } : {}),
+        })),
+    ),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-for (const [theme, two] of Object.entries(IDEAS)) {
+for (const theme of Object.keys(OPTIONS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
-    p.textContent =
-        `Character 1 is ${two.a.name.replace(/^(The|A) /, (m) => m.toLowerCase())}, character 2 ${two.b.name.replace(/^(The|A) /, (m) => m.toLowerCase())}; the third column is the plain chart of today. ` +
-        'Look at the paper, the lines, the tick labels and the pinned tooltip in each column, then press Loading, No readings and Error: the plot keeps its height, ' +
-        'and the words around it never move. Point at a plot and drag across it: the crosshair, the tooltip and the zoom chip are each character’s own.';
+    p.textContent = PICK[theme]
+        ? `Shape, arrival, update and tooltip are ticked with what you approved in round 1 (${lower(IDEAS[theme][PICK[theme]].name)}); the loading picture and the event dots are yours to pick. ` +
+          'Each row changes one thing only; the preview at the top shows what you ticked so far. Press Loading at full speed and at ¼, Drawn, and Live update.'
+        : 'Every aspect is open in this theme. Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
+          'Press Loading at full speed and at ¼, Drawn, Live update, and look at the pinned tooltip.';
     look.append(p);
 }
+
+/* ------------------------------------------------ the rows of options */
+
+/** One chart group: the zoom chip and the pressure chart, the sparks only in the preview. */
+const groupHtml = (/** @type {boolean} */ sparks) =>
+    '<div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">' +
+    '<div class="kp-chart-group__bar"><span class="kp-chart-zoom" data-kp-chart-zoom hidden></span></div>' +
+    '<figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure"><figcaption class="kp-chart__title">Pressure, bar</figcaption></figure>' +
+    (sparks
+        ? '<div class="cc-sparks"><div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>' +
+          '<div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div></div>'
+        : '') +
+    '</div>';
+
+const preview = /** @type {HTMLElement} */ (section.querySelector('[data-cc-preview]'));
+preview.innerHTML = groupHtml(true);
+const rows = /** @type {HTMLElement} */ (section.querySelector('[data-cc-aspects]'));
+for (const { id, label, about } of ASPECTS) {
+    const box = document.createElement('section');
+    box.className = 'cc-aspect';
+    box.setAttribute('data-cc-aspect', id);
+    box.setAttribute('aria-labelledby', `h-cc-${id}`);
+    const head = document.createElement('div');
+    head.className = 'cc-aspect__head';
+    head.innerHTML = `<h3 id="h-cc-${id}"></h3><p></p>`;
+    /** @type {HTMLElement} */ (head.firstElementChild).textContent = label;
+    /** @type {HTMLElement} */ (head.lastElementChild).textContent = about;
+    const trio = document.createElement('div');
+    trio.className = 'cc-trio';
+    for (const at of [1, 2, 3]) {
+        const cell = document.createElement('div');
+        cell.className = 'cc-col';
+        cell.setAttribute('data-cc-vary', id);
+        cell.setAttribute('data-cc-option', String(at));
+        cell.innerHTML =
+            `<p class="cc-label"><span class="cc-label__no">${label} · ${at}</span> <span data-cc-name></span></p>` +
+            `<p class="cc-desc" data-cc-desc></p><div class="cc-cell" data-cc>${groupHtml(false)}</div>`;
+        trio.append(cell);
+    }
+    box.append(head, trio);
+    rows.append(box);
+}
+
+/* ------------------------------------------------------- the picks */
+
+/** What is ticked in the dialog, per theme; an aspect not ticked yet shows its option 1. */
+/** @type {Record<string, Partial<Record<Aspect, string>>>} */
+const ticked = {};
+const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
+const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+
+/** Writes one wrapper's six attributes (and the loading option's inks and words) from option numbers. */
+function dress(/** @type {Element} */ el, /** @type {Record<Aspect, string>} */ at) {
+    const o = OPTIONS[theme()];
+    if (!o) return;
+    for (const { id } of ASPECTS) el.setAttribute(`data-cc-${id}`, o[id][Number(at[id]) - 1].key);
+    const load = o.loading[Number(at.loading) - 1];
+    const style = /** @type {HTMLElement} */ (el).style;
+    style.setProperty('--ccl-ink', load.ink ? `var(${load.ink})` : '');
+    style.setProperty('--ccl-ink2', load.ink2 ? `var(${load.ink2})` : '');
+    style.setProperty('--ccl-text', load.say ?? '');
+}
+
+/** The preview takes the picks; each row's cell its own option in its own aspect, the picks in the rest. */
+function compose() {
+    const now = picks();
+    const wrap = section.querySelector('[data-cc-preview]');
+    if (wrap) dress(wrap, now);
+    for (const cell of section.querySelectorAll('[data-cc-vary]')) {
+        const vary = /** @type {Aspect} */ (cell.getAttribute('data-cc-vary'));
+        const option = cell.getAttribute('data-cc-option') ?? '1';
+        const inner = cell.querySelector('[data-cc]');
+        if (inner) dress(inner, { ...now, [vary]: option });
+        cell.classList.toggle('cc-picked', ticked[theme()]?.[vary] === option);
+    }
+    const words = section.querySelector('[data-cc-picks]');
+    const o = OPTIONS[theme()];
+    if (words && o) words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${o[id][Number(now[id]) - 1].name}`).join(' · ');
+}
+
+// What is ticked in the review dialog is what the preview shows.
+section.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent<{ id: Aspect, value: string }>} */ (event).detail;
+    (ticked[theme()] ??= {})[id] = value;
+    compose();
+});
 
 /* -------------------------------------------------------- the readings */
 
 // The catalogue's pump houses (catalogue/chart-sample.js), the last 24
-// hours, with the events of that day only.
+// hours, with the events of that day only. A live update moves every
+// source on by one reading: the oldest goes, a new one comes at the end.
 const FULL = sampleData('pressure', '24h');
 const EVENTS = (FULL.events ?? []).filter((ev) => ev.at > NOW - 24 * 3_600_000);
+let moved = 0;
 /** @param {number} n the sources shown @returns {import('../../js/chart.js').ChartData} */
-const pressure = (n) => ({ ...FULL, events: EVENTS, series: FULL.series.slice(0, n) });
+const pressure = (n) => ({
+    ...FULL,
+    events: EVENTS,
+    series: FULL.series.slice(0, n).map((s) => {
+        const values = [...s.values];
+        for (let i = 0; i < moved; i++) values.push(values[values.length - 1] + (i % 2 ? -0.04 : 0.07));
+        return { ...s, start: s.start + moved * s.step, values: values.slice(moved) };
+    }),
+});
 /** A spark line without the catalogue's own colour, so a character's colours reach it. @param {number} k */
 const spark = (k) => {
     const d = sampleData(`spark-${k === 1 ? 1 : 0}`);
@@ -323,6 +1108,23 @@ function release(el) {
     /** @type {HTMLElement | null} */ (tip?.querySelector('.kp-chart__release'))?.click();
 }
 
+/** Plays a one-off motion on every wrapper: sets the flag again so it restarts, and clears it when done. */
+const timers = new Map();
+function flag(/** @type {string} */ attr) {
+    for (const el of section.querySelectorAll('[data-cc-preview], [data-cc]')) {
+        el.removeAttribute(attr);
+        void (/** @type {HTMLElement} */ (el).offsetWidth);
+        el.setAttribute(attr, '');
+    }
+    clearTimeout(timers.get(attr));
+    timers.set(
+        attr,
+        setTimeout(() => {
+            for (const el of section.querySelectorAll(`[${attr}]`)) el.removeAttribute(attr);
+        }, 2200 / rate),
+    );
+}
+
 function draw() {
     for (const el of charts()) {
         if (state.shown === 'loading') {
@@ -346,8 +1148,11 @@ function draw() {
 function showToggles() {
     const filled = state.shown === 'filled';
     for (const el of charts()) {
-        if (filled && state.pin) pinAt(el);
-        else if (!state.pin) release(el);
+        // Pinned only where the tooltip is judged (its own row and the
+        // preview): elsewhere it would hide the plot of a narrow column.
+        const judged = !!el.closest('[data-cc-preview], [data-cc-vary="tip"]');
+        if (filled && state.pin && judged) pinAt(el);
+        else if (!state.pin || !judged) release(el);
         chartSelect(el, null);
         if (state.press && state.sources > 1) chartSelect(el, 0, true);
         const first = el.querySelector('.kp-chart__source');
@@ -360,11 +1165,24 @@ function showToggles() {
 const pressed = (/** @type {string} */ attr, /** @type {string} */ value) => {
     for (const b of document.querySelectorAll(`[${attr}]`)) b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value));
 };
+// Drawn after any other state brings the readings in the way the arrival
+// does; Drawn again replays it.
 for (const b of document.querySelectorAll('[data-cc-state]'))
     b.addEventListener('click', () => {
         state.shown = /** @type {typeof state.shown} */ (b.getAttribute('data-cc-state') ?? 'filled');
         pressed('data-cc-state', state.shown);
         draw();
+        if (state.shown === 'filled') flag('data-cc-arriving');
+    });
+for (const b of document.querySelectorAll('[data-cc-live]'))
+    b.addEventListener('click', () => {
+        if (state.shown !== 'filled') {
+            state.shown = 'filled';
+            pressed('data-cc-state', 'filled');
+        }
+        moved += 1;
+        draw();
+        flag('data-cc-updating');
     });
 for (const b of document.querySelectorAll('[data-cc-sources]'))
     b.addEventListener('click', () => {
@@ -380,28 +1198,25 @@ for (const b of document.querySelectorAll('[data-cc-toggle]'))
         showToggles();
     });
 
-attachCharts(document);
-draw();
-
 /* ------------------------------------------------- the theme's words */
 
 function showTheme() {
-    const theme = document.documentElement.getAttribute('data-theme') ?? 'formal';
-    for (const el of document.querySelectorAll('[data-cc-theme-name]')) el.textContent = LABEL[theme] ?? theme;
+    const now = theme();
+    for (const el of document.querySelectorAll('[data-cc-theme-name]')) el.textContent = LABEL[now] ?? now;
     // On the page, only this theme's look-at line; the dialog reads them all.
-    for (const p of look.querySelectorAll('[data-for]')) p.hidden = p.getAttribute('data-for') !== theme;
-    const two = IDEAS[theme];
-    for (const which of /** @type {const} */ (['a', 'b'])) {
-        const name = document.querySelector(`[data-cc-name="${which}"]`);
-        const desc = document.querySelector(`[data-cc-desc="${which}"]`);
-        if (name) name.textContent = two ? two[which].name : '';
-        if (desc) desc.textContent = two ? two[which].text : '';
+    for (const p of look.querySelectorAll('[data-for]')) p.hidden = p.getAttribute('data-for') !== now;
+    const o = OPTIONS[now];
+    for (const cell of section.querySelectorAll('[data-cc-vary]')) {
+        const option = o?.[/** @type {Aspect} */ (cell.getAttribute('data-cc-vary'))]?.[Number(cell.getAttribute('data-cc-option')) - 1];
+        const name = cell.querySelector('[data-cc-name]');
+        const desc = cell.querySelector('[data-cc-desc]');
+        if (name) name.textContent = option?.name ?? '';
+        if (desc) desc.textContent = option?.text ?? '';
     }
+    compose();
     // A theme's register may change the chart's size or type: draw again.
     requestAnimationFrame(() => draw());
 }
-showTheme();
-new MutationObserver(showTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
 /* ------------------------------------------------------------- speed */
 
@@ -443,14 +1258,7 @@ for (const b of speedButtons)
     });
 showSpeed();
 
-/* ----------------------------------------------------- the pick shown */
-
-// What is ticked in the review dialog is what the page marks.
-section.addEventListener('review:choice', (event) => {
-    const { value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
-    for (const col of section.querySelectorAll('[data-cc-pick]')) col.classList.toggle('cc-picked', col.getAttribute('data-cc-pick') === value);
-});
-new MutationObserver(() => {
-    // A pick for one theme says nothing about the next.
-    for (const col of document.querySelectorAll('.cc-picked')) col.classList.remove('cc-picked');
-}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+attachCharts(document);
+showTheme();
+draw();
+new MutationObserver(showTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

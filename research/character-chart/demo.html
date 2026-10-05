@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes — a time chart of its own, per theme</title>
+        <title>kp-themes — a time chart of its own, per theme: one pick per aspect</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -26,29 +26,31 @@
         </script>
         <link rel="stylesheet" href="demo.css" />
         <link rel="stylesheet" href="charts.css" />
+        <link rel="stylesheet" href="round2.css" />
+        <link rel="stylesheet" href="aspects.css" />
     </head>
     <body>
         <main class="cc-page">
             <header class="cc-intro">
-                <h1>A time chart of its own, per theme</h1>
+                <h1>A time chart of its own, per theme: one pick per aspect</h1>
                 <p>
-                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter comes the
-                    time chart. Today <code>.kp-chart</code> has the same shape in every theme (a clear plot, three grid lines, the lines over a soft
-                    area, the popover as its tooltip, round legend buttons), drawn in the theme's colours only. Here every theme gets two charts of
-                    its own, drawn in the theme's own material, beside the plain chart as it is today. Pick one of the three per theme.
+                    Round 2 (Kenny, 2026-10-05 20:03): nineteen themes kept the character they picked in round 1, but not its loading screen, and
+                    every aspect is its own pick now. Per theme you pick the shape, the loading picture, how the series arrives, how a new reading
+                    shows, the event dots and the pinned tooltip, each from three options. Where round 1 already decided (the shape, the arrival, the
+                    update and the tooltip of the character you picked) option 1 is that and it is ticked for you; the loading picture (three new ones
+                    per theme, every one of them moving) and the event dots are open everywhere. High-contrast and brutalism get three new shapes;
+                    solstice's shape 1 is the low sun with the riveted plate as tooltip 1. In those three themes every aspect is open.
                 </p>
                 <p class="cc-motion" data-cc-motion hidden>
-                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading chart shows its still frame. Turn it off
-                    in the system settings to judge the motion.
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading chart shows its still frame and the
+                    series arrive at once. Turn it off in the system settings to judge the motion.
                 </p>
                 <p class="cc-meta">
-                    Each column is one chart group: its range buttons and zoom chip, the pressure of the pump houses over the last 24 hours (the alarm
-                    level as a dashed line, three events above the plot), and two of the group's spark lines. Every chart is the package's own (<code
-                        >js/chart.js</code
-                    >
-                    draws it, so hover, drag to zoom, click to pin, the keys and the legend all work); a character only restyles it from the theme's
-                    tokens, in the theme's <code>kp.signature</code> layer (<code>charts.css</code>), and keeps the plot's height in every state. This
-                    theme: <b data-cc-theme-name>…</b>
+                    Every chart is the package's own (<code>js/chart.js</code> draws it, so hover, drag to zoom, click to pin, the keys and the legend
+                    all work): the pressure of the pump houses over the last 24 hours, the alarm level dashed, three events above the plot. Every
+                    option keeps the plot's height in every state, takes its colours from the theme's tokens only, and lives in the theme's
+                    <code>kp.signature</code> layer, one attribute per aspect (<code>charts.css</code>, <code>round2.css</code>,
+                    <code>aspects.css</code>). This theme: <b data-cc-theme-name>…</b>
                 </p>
             </header>
 
@@ -62,18 +64,20 @@
                 <div class="cc-sec__head">
                     <h2 id="h-chart">The time chart in <span data-cc-theme-name>this theme</span></h2>
                     <p>
-                        Two characters drawn in this theme's world, and the plain chart as it is today. Use the buttons (in the review dialog they sit
-                        above the columns) for every state; point at a plot, drag across it, press a legend button: the chart behaves the same in all
-                        three columns.
+                        Six things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together, with two spark lines. <b>Loading</b> shows the loading pictures,
+                        <b>Drawn</b> replays how the series arrives, <b>Live update</b> adds one new reading, and the speed slows every animation. The
+                        words around each chart never move.
                     </p>
                 </div>
                 <div class="cc-controls" data-review-controls>
                     <div class="cc-actions" role="group" aria-label="State of every chart">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cc-state="filled" aria-pressed="true">Readings</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-state="filled" aria-pressed="true">Drawn</button>
                         <button type="button" class="kp-button kp-button--sm" data-cc-state="loading" aria-pressed="false">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-cc-state="empty" aria-pressed="false">No readings</button>
                         <button type="button" class="kp-button kp-button--sm" data-cc-state="error" aria-pressed="false">Error</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-live>Live update</button>
                     </div>
                     <div class="cc-actions" role="group" aria-label="Sources in every chart">
                         <b>Sources:</b>
@@ -96,75 +100,47 @@
                     </div>
                 </div>
                 <div data-review-look></div>
-                <div class="cc-trio">
-                    <div class="cc-col" data-cc="a" data-cc-pick="a">
-                        <p class="cc-label"><span class="cc-label__no">Character 1</span> <span data-cc-name="a">…</span></p>
-                        <p class="cc-desc" data-cc-desc="a"></p>
-                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
-                            <div class="kp-chart-group__bar">
-                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
-                                </div>
-                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
-                            </div>
-                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
-                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
-                            </figure>
-                            <div class="cc-sparks">
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
-                            </div>
-                        </div>
+                <div class="cc-preview">
+                    <div class="cc-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-cc-picks>…</p>
                     </div>
-                    <div class="cc-col" data-cc="b" data-cc-pick="b">
-                        <p class="cc-label"><span class="cc-label__no">Character 2</span> <span data-cc-name="b">…</span></p>
-                        <p class="cc-desc" data-cc-desc="b"></p>
-                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
-                            <div class="kp-chart-group__bar">
-                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
-                                </div>
-                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
-                            </div>
-                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
-                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
-                            </figure>
-                            <div class="cc-sparks">
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="cc-col" data-cc="plain" data-cc-pick="plain">
-                        <p class="cc-label"><span class="cc-label__no">Today</span> The plain chart</p>
-                        <p class="cc-desc">
-                            The package's time chart as it ships: a clear plot with three grid lines, the lines in the theme's chart colours over a
-                            soft area, the popover as the tooltip, round legend buttons, a pulsing block while it loads, the same shape in every
-                            theme.
-                        </p>
-                        <div class="kp-chart-group cc-group" data-kp-chart-group data-kp-chart-span="24h">
-                            <div class="kp-chart-group__bar">
-                                <div class="kp-chart-ranges" role="group" aria-label="Time range">
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
-                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
-                                </div>
-                                <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
-                            </div>
-                            <figure class="kp-chart" data-kp-chart data-cc-chart="pressure" aria-label="Pressure">
-                                <figcaption class="kp-chart__title">Pressure, bar</figcaption>
-                            </figure>
-                            <div class="cc-sparks">
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-0" aria-label="Pump house 1 pressure"></div>
-                                <div class="kp-chart" data-kp-chart="spark" data-cc-chart="spark-1" aria-label="Pump house 3 pressure"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="cc-cell cc-cell--preview" data-cc-preview></div>
                 </div>
+                <div class="cc-aspects" data-cc-aspects></div>
             </section>
         </main>
 
+        <!-- Round 2 reopens all 22 themes: the loading picture is a pick of its own everywhere (Kenny, 2026-10-05 20:03). -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r2",
+                "reopen": [
+                    "formal|chart",
+                    "light|chart",
+                    "dark|chart",
+                    "cyberpunk|chart",
+                    "synthwave|chart",
+                    "pastel|chart",
+                    "terminal|chart",
+                    "forest|chart",
+                    "high-contrast|chart",
+                    "sepia|chart",
+                    "blueprint|chart",
+                    "solstice|chart",
+                    "brutalism|chart",
+                    "deco|chart",
+                    "phantom|chart",
+                    "shade-light|chart",
+                    "shade-dark|chart",
+                    "retro|chart",
+                    "grotesk|chart",
+                    "lapis|chart",
+                    "nostromo|chart",
+                    "titanium|chart"
+                ]
+            }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

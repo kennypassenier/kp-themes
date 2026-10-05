@@ -1,5 +1,7 @@
 # A time chart of its own, per theme
 
+**Judged (2026-10-05 20:03).** Kenny judged all 22 themes from To judge: 19 approved with a pick, 3 not approved. His condition on every approval: the loading screens are NOT approved; he wants them as a separate aspect ("I want those in a separate demo"). Picks: Character 2 for formal, light, dark, terminal, phantom, retro, lapis; Character 1 for cyberpunk, synthwave, pastel, forest, sepia, blueprint, deco, shade-light, shade-dark, grotesk, nostromo, titanium. Not approved: high-contrast ("don't like the options, get new ones"), solstice ("I like the background of character 1, but the riveted tooltip from character 2, combine them"), brutalism ("don't like it, get a new proposal").
+
 Kenny, form v18 (2026-10-05): the character round, one component at a time,
 all 22 themes in one demo. The meter came first
 (`research/character-meter`); this is the second component, the time chart.
@@ -234,3 +236,107 @@ table leaves out.
 none`.
 - The range buttons are the theme's own `.kp-button`; no character restyles
   them.
+
+## Round 2: one pick per aspect
+
+Kenny, 2026-10-05 20:03 (the verdicts at the top), and his standing rule of
+the same day that every aspect is its own choice. The demo now works like
+`research/character-meter` round 3: per theme six aspects, each picked on
+its own from three options, in the review dialog as six choice groups.
+
+- **Shape** (the drawn chart: paper, frame, grid, tick labels, lines and
+  areas, legend). The 19 approved themes: 1 = the character picked in
+  round 1 (ticked by `default`), 2 = the other character, 3 = the plain
+  chart. High-contrast and brutalism: three new shapes (`round2.css`).
+  Solstice: 1 = the low sun (round 1's character 1), 2 the hearth and 3
+  midsummer dusk (new).
+- **While loading**: open in every theme, three new pictures per theme, every
+  one of them animated at full motion and still under reduced motion; no
+  fades. One generic picture per kind in `aspects.css`
+  (`data-cc-loading="cutter"`, `"type"`, `"scan"`, …, 25 kinds), inked from
+  the theme's tokens through `--ccl-ink`/`--ccl-ink2` and, for a typed
+  prompt, `--ccl-text`, which demo.js sets per option.
+- **How the series arrives** (after Loading, and on Drawn) and **how a new
+  reading shows** (Live update moves every source on by one reading). The
+  approved themes: 1 = round 1's own (at once, ticked), 2 and 3 animated;
+  the three open themes: three animated. js/chart.js draws the SVG anew on
+  every pointer move, so the motion runs on the plot as a registered
+  `--cca-k`/`--ccu-k` (0 → 1) that the series read; the wrapper carries
+  `data-cc-arriving`/`data-cc-updating` while it plays.
+- **The event dots**: open everywhere; the approved themes' option 1 is the
+  dots as the shape draws them.
+- **The pinned tooltip**: the approved themes: 1 = the picked character's
+  (ticked), 2 = the other character's, 3 = the plain popover. Solstice: 1 =
+  the riveted iron plate (round 1's character 2, his request), 2 = the
+  charcoal slab, 3 = a bronze plaque (new). High-contrast and brutalism:
+  three new tooltips. The tooltip is pinned only in its own row and the
+  preview; elsewhere it would hide a third-width plot.
+
+Each aspect is one attribute on the chart's wrapper: `data-cc-shape` and
+`data-cc-tip` (charts.css, round 1's rules split by a one-off script: the
+tooltip's rules keyed on `data-cc-tip`, the rest on `data-cc-shape`, the
+round-1 loading rules removed; round2.css), `data-cc-loading`,
+`data-cc-arrival`, `data-cc-update`, `data-cc-events` (aspects.css). demo.js
+maps the option number per theme to its key (`OPTIONS`, built from `PICK`,
+`R2`, `NEW` and round 1's `IDEAS`). The page shows "Your combination" at the
+top (the ticked picks, option 1 where nothing is ticked, following
+`review:choice`), then one row per aspect with three charts that differ in
+that aspect only. `data-review-round` "2026-10-05-r2" reopens all 22 themes.
+
+### The options per theme
+
+The loading, arrival, update and event kinds are in brackets.
+
+| Theme                | Shape 1 · 2 · 3                                                                          | While loading 1 · 2 · 3                                                                            | Arrives 1 · 2 · 3                                                                              | New reading 1 · 2 · 3                                                                      | Event dots 1 · 2 · 3                                                                               | Pinned tooltip 1 · 2 · 3                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| formal               | The ledger graph · The annual report · The plain chart, as today                         | The fountain pen (pen) · The ruling pen (dash) · The received stamp (stamp)                        | As approved: at once (none) · Entered from the left (wipe) · Written in by hand (draw)         | As approved: it appears (none) · The new line entered (tail) · The page moved on (shift)   | As the shape draws them (shape) · Open circles (ring) · Pins in the margin (pin)                   | The tooltip of the ledger graph · The tooltip of the annual report · The plain tooltip                         |
+| light                | Daylight · The seam · The plain chart, as today                                          | Sunlight along the seam (glint) · Morning rising (rise) · Three beads (hop)                        | As approved: at once (none) · Grows into the light (rise) · Drawn in, softly (wipe)            | As approved: it appears (none) · Slides along (shift) · A new piece drawn (tail)           | As the shape draws them (shape) · The divider's open circle (ring) · A dot in its own light (halo) | The tooltip of Daylight · The tooltip of the seam · The plain tooltip                                          |
+| dark                 | The machined pocket · The spectrometer · The plain chart, as today                       | The slit scan (sweep) · The mill pass (cutter) · The calibration ring (radar)                      | As approved: at once (none) · Milled in, evenly (linear) · Exposed top down (scan)             | As approved: it appears (none) · The new cut (tail) · Indexed one step (tick)              | As the shape draws them (shape) · Engraved rings (ring) · Lit markers (target)                     | The tooltip of the machined pocket · The tooltip of the spectrometer · The plain tooltip                       |
+| cyberpunk            | The neon HUD · The hazard terminal · The plain chart, as today                           | The HUD scan (scan) · The jack-in prompt (type) · The data perimeter (march)                       | As approved: at once (none) · Glitched in (glitch) · Scanned in (scan)                         | As approved: it appears (none) · A glitch (glitch) · A packet in (tick)                    | As the shape draws them (shape) · Lock-on markers (target) · Neon beacons (halo)                   | The tooltip of the neon HUD · The tooltip of the hazard terminal · The plain tooltip                           |
+| synthwave            | The grid floor horizon · The VHS playback · The plain chart, as today                    | The floor drives on (feed) · The sun comes up (rise) · The tracking line (scan)                    | As approved: at once (none) · Up from the horizon (rise) · Rolled in like tape (scan)          | As approved: it appears (none) · The floor rolls on (shift) · A neon swell (swell)         | As the shape draws them (shape) · Neon beacons (halo) · Neon rings (ring)                          | The tooltip of the grid floor horizon · The tooltip of the VHS playback · The plain tooltip                    |
+| pastel               | Candy · Washi tape and riso · The plain chart, as today                                  | Sugar cubes (blocks) · The riso dots shuffle (halftone) · A ribbon pulled through (tape)           | As approved: at once (none) · Bounces up (rise) · Unwrapped from the middle (centre)           | As approved: it appears (none) · A happy hop (jolt) · Puffs up (swell)                     | As the shape draws them (shape) · Candy drops (halo) · Sticker rings (ring)                        | The tooltip of Candy · The tooltip of Washi tape and riso · The plain tooltip                                  |
+| terminal             | The oscilloscope · The braille plot · The plain chart, as today                          | The prompt (type) · The progress bar (segments) · The phosphor sweep (sweep)                       | As approved: at once (none) · Printed column by column (steps) · Refreshed top down (scan)     | As approved: it appears (none) · One line scrolls (tick) · The new sample drawn (tail)     | As the shape draws them (shape) · Open cells (ring) · Lit cells (target)                           | The tooltip of the oscilloscope · The tooltip of the braille plot · The plain tooltip                          |
+| forest               | The ranger's logbook · The contour map · The plain chart, as today                       | The pencil sketch (pen) · The compass needle (needle) · A pine cone drops (drop)                   | As approved: at once (none) · Sketched in (draw) · Grows from the ground (rise)                | As approved: it appears (none) · The new mile walked (tail) · The trail moves on (shift)   | As the shape draws them (shape) · Trail pins (pin) · Waymarks (ring)                               | The tooltip of the ranger's logbook · The tooltip of the contour map · The plain tooltip                       |
+| high-contrast (open) | The signal board · The highlighter · Large print                                         | The progress bar (segments) · Three ink squares, cut in (blocks) · The marching frame (march)      | In ten clear steps (steps) · Drawn in from the left (wipe) · At an even pace (linear)          | One clear tick (tick) · The new piece drawn (tail) · Just there (none)                     | Heavy rings (ring) · Ink pins (pin) · Beaded rings (bead)                                          | The inverse plate · The yellow card · The large-print card                                                     |
+| sepia                | A nib on laid paper · The letterpress specimen · The plain chart, as today               | The dip pen (pen) · The platen comes down (stamp) · The engraver's dots (halftone)                 | As approved: at once (none) · Written with the nib (draw) · Pressed into the paper (stamp)     | As approved: it appears (none) · A new stroke (tail) · The page turns on (shift)           | As the shape draws them (shape) · Ink rings (ring) · Wax-seal beads (bead)                         | The tooltip of a nib on laid paper · The tooltip of the letterpress specimen · The plain tooltip               |
+| blueprint            | The millimetre paper · The drawing frame · The plain chart, as today                     | The plotter pen (dash) · The scanner bar (sweep) · The protractor arm (needle)                     | As approved: at once (none) · Plotted in (draw) · Traced at an even pace (linear)              | As approved: it appears (none) · The next segment plotted (tail) · Indexed one step (tick) | As the shape draws them (shape) · Datum circles (ring) · Reference marks (target)                  | The tooltip of the millimetre paper · The tooltip of the drawing frame · The plain tooltip                     |
+| solstice (open)      | The low sun · The hearth · Midsummer dusk                                                | Embers rising (embers) · The sun rising (rise) · Firelight along the rule (glint)                  | Rises like the sun (rise) · Lit from the left (wipe) · Drawn in fire (draw)                    | Flares once (swell) · A new ember (tail) · The day moves on (shift)                        | Glowing embers (halo) · Rivets (bead) · Iron rings (ring)                                          | The riveted iron plate · The charcoal slab · The bronze plaque                                                 |
+| brutalism (open)     | The poster · The concrete block · The cut-out                                            | The block drop (drop) · Hazard tape (hazard) · Cut in three (blocks)                               | Dropped in (drop) · In hard steps (steps) · Slammed on (stamp)                                 | A hard jolt (jolt) · A hard tick (tick) · Just there (none)                                | Black pins (pin) · Bolts (bead) · Fat rings (ring)                                                 | The hard box · The black slab · The lavender sticker                                                           |
+| deco                 | The gilt rules · The sunburst · The plain chart, as today                                | The fan rays (fan) · The marquee lights (march) · The elevator dial (needle)                       | As approved: at once (none) · Opens like a curtain (centre) · Rises like a skyline (rise)      | As approved: it appears (none) · Glides on (shift) · A new gilt piece (tail)               | As the shape draws them (shape) · Jewelled studs (bead) · Gold rings (ring)                        | The tooltip of the gilt rules · The tooltip of the sunburst · The plain tooltip                                |
+| phantom              | The calling card · The stamped ledger · The plain chart, as today                        | The calling-card stamp (stamp) · The typewriter (type) · Cut-out letters (blocks)                  | As approved: at once (none) · Stamped on (stamp) · Torn in (glitch)                            | As approved: it appears (none) · A hard jolt (jolt) · Torn (glitch)                        | As the shape draws them (shape) · Red marks (target) · Pinned notes (pin)                          | The tooltip of the calling card · The tooltip of the stamped ledger · The plain tooltip                        |
+| shade-light          | Pencil in the shade · The leaf shade · The plain chart, as today                         | The pencil hatches, over and over (hatch) · The pencil line (pen) · Sun through the leaves (glint) | As approved: at once (none) · Drawn in pencil (draw) · The shade moves off (wipe)              | As approved: it appears (none) · A new pencil stroke (tail) · Slides on (shift)            | As the shape draws them (shape) · Pencil rings (ring) · Pins (pin)                                 | The tooltip of Pencil in the shade · The tooltip of the leaf shade · The plain tooltip                         |
+| shade-dark           | Silverpoint · The reading lamp · The plain chart, as today                               | Silverpoint hatching (hatch) · The lamp warms up (rise) · The torch beam (sweep)                   | As approved: at once (none) · Drawn in silver (draw) · Lit from the left (wipe)                | As approved: it appears (none) · A new silver stroke (tail) · Slides on (shift)            | As the shape draws them (shape) · Silver rings (ring) · Lamp-lit dots (halo)                       | The tooltip of Silverpoint · The tooltip of the reading lamp · The plain tooltip                               |
+| retro                | The spreadsheet chart of 1995 · The plotter on fanfold paper · The plain chart, as today | The dither bar (dither) · The 1995 progress bar (segments) · The DOS prompt (type)                 | As approved: at once (none) · Painted in steps (steps) · Redrawn top down (scan)               | As approved: it appears (none) · One step on (tick) · Repainted (none)                     | As the shape draws them (shape) · Push pins (pin) · Bevel rings (ring)                             | The tooltip of the spreadsheet chart of 1995 · The tooltip of the plotter on fanfold paper · The plain tooltip |
+| grotesk              | The Swiss grid · The zebra scale · The plain chart, as today                             | The ruled bar (segments) · The column count (dash) · The square drops (drop)                       | As approved: at once (none) · Column by column (steps) · At an even pace (linear)              | As approved: it appears (none) · One column on (tick) · The new column (tail)              | As the shape draws them (shape) · Black pins (pin) · Red marks (target)                            | The tooltip of the Swiss grid · The tooltip of the zebra scale · The plain tooltip                             |
+| lapis                | The gilt lattice · Lapis on vellum · The plain chart, as today                           | The astrolabe (radar) · The reed pen (pen) · The gilt border (march)                               | As approved: at once (none) · Written with the reed (draw) · Unrolled from the middle (centre) | As approved: it appears (none) · A new stroke of ink (tail) · A gilt swell (swell)         | As the shape draws them (shape) · Gilt studs (bead) · Gold rings (ring)                            | The tooltip of the gilt lattice · The tooltip of Lapis on vellum · The plain tooltip                           |
+| nostromo             | The amber CRT · The strip-chart recorder · The plain chart, as today                     | MU-TH-UR at the prompt (type) · The motion tracker (radar) · The CRT warms (scan)                  | As approved: at once (none) · Drawn by the beam (scan) · Plotted in steps (steps)              | As approved: it appears (none) · The roll ticks on (tick) · The pen kicks (jolt)           | As the shape draws them (shape) · Blips (target) · Rings on the glass (ring)                       | The tooltip of the amber CRT · The tooltip of the strip-chart recorder · The plain tooltip                     |
+| titanium             | The engraved dial face · The vernier · The plain chart, as today                         | The mill pass (cutter) · The dial indicator (needle) · The laser etch (sweep)                      | As approved: at once (none) · Milled in, linearly (linear) · Etched in (draw)                  | As approved: it appears (none) · Indexed one step (tick) · The new cut (tail)              | As the shape draws them (shape) · Screw heads (bead) · Machined rings (ring)                       | The tooltip of the engraved dial face · The tooltip of the vernier · The plain tooltip                         |
+
+### Measured (round 2)
+
+Firefox (Playwright's, its own `http.server`, under
+`flock /tmp/kp-themes-shot.lock`), 2026-10-05, 22 themes × full and reduced
+motion, through Drawn, Loading, No readings, Error, Drawn, Live update, every
+Show toggle and one, three and two sources:
+
+- **Console:** 0 errors and 0 page errors in all 44 runs.
+- **Chart boxes:** every plot keeps one height through every state (44 of 44).
+- **Rows:** in every row the three options differ in that row's aspect
+  (retro's update row had round 1's "at once" twice; fixed after the run, not
+  measured again). One height per row holds where the shape is the same in
+  all three cells; the shape row differs by the frame of each shape (as in
+  round 1, a framed shape is its frame taller than 220px), which the run did
+  not separate from the other rows.
+- **The preview** follows `review:choice` for every aspect and option, in
+  all 44 runs.
+- **Loading:** at full motion every loading option runs 3 to 5 animations
+  (66 of 66); under reduced motion 0 running animations in the whole section,
+  loading, arrival and update included.
+- **The dialog** (formal): six choice groups of three; shape, arrival,
+  update and tooltip ticked with 1, loading and the event dots open; the 15
+  controls mirrored; ticking loading 2 moves the preview from pen to dash;
+  0 errors.
+- **Contrast** of the new shapes (high-contrast, brutalism, solstice 2 and 3)
+  and tooltips: not measured yet; the first run's clipped shots fell outside
+  the viewport, and the rerun could not get the shared screenshot lock
+  before the time box ended.

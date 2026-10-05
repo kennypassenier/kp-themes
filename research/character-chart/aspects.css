@@ -1,0 +1,1053 @@
+/* research/character-chart, round 2: the four aspects that are not the
+   shape, each keyed by one attribute on the chart's wrapper, so any
+   combination composes with any shape (charts.css, round2.css):
+
+   - `data-cc-loading="<kind>"`: the loading picture, drawn on the state
+     box (`.kp-chart__state[data-kp-state='loading']`) and its two
+     pseudo-elements; `::before` is the still frame, the motion runs on top.
+     Every kind moves at full motion and stands still under reduced motion.
+     Its inks come from the theme's tokens through `--ccl-ink` and
+     `--ccl-ink2` (set per option by demo.js), its words through
+     `--ccl-text`.
+   - `data-cc-arrival="<kind>"`: how the series comes in once the readings
+     arrive, while the wrapper carries `data-cc-arriving` (demo.js sets it
+     after Loading and on Drawn). The SVG is drawn anew on every pointer
+     move, so the motion runs on the plot, which stays: a registered
+     `--cca-k` (0 → 1) that the series inherit.
+   - `data-cc-update="<kind>"`: how a new reading shows, while the wrapper
+     carries `data-cc-updating` (Live update in the demo), the same way
+     through `--ccu-k`.
+   - `data-cc-events="<kind>"`: the event dots above the plot and their
+     lines, still.
+
+   `none` and `shape` are the picked character's own: nothing is added. */
+
+@property --cca-k {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --ccu-k {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --ccu-y {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --ccl-a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@layer kp.signature {
+    /* ══ While loading ═══════════════════════════════════════════════════ */
+
+    [data-theme] [data-cc-loading] .kp-chart__state[data-kp-state='loading'] {
+        --ccl-i: var(--ccl-ink, var(--primary));
+        --ccl-j: var(--ccl-ink2, var(--chart-2));
+        position: relative;
+        overflow: clip;
+        border: 0;
+        border-radius: inherit;
+        background: transparent;
+        opacity: 1;
+        animation: none;
+    }
+
+    [data-theme] [data-cc-loading] .kp-chart__state[data-kp-state='loading']::before,
+    [data-theme] [data-cc-loading] .kp-chart__state[data-kp-state='loading']::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        pointer-events: none;
+        animation: none;
+        transform: none;
+        clip-path: none;
+        mask: none;
+        filter: none;
+    }
+
+    /* type: a prompt typed out behind a block cursor */
+    [data-theme] [data-cc-loading='type'] .kp-chart__state[data-kp-state='loading']::before {
+        content: var(--ccl-text, '> reading the gauges');
+        inset: calc(50% - 0.75em) auto auto 8%;
+        overflow: hidden;
+        inline-size: 21ch;
+        block-size: 1.5em;
+        border-inline-end: 0.6em solid var(--ccl-i);
+        color: var(--ccl-i);
+        font: 600 0.8125rem/1.5 var(--theme-font-mono, ui-monospace, monospace);
+        white-space: nowrap;
+    }
+
+    /* scan: scanlines, a bright band runs down them */
+    [data-theme] [data-cc-loading='scan'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.14) 0 1px, transparent 1px 4px);
+    }
+
+    [data-theme] [data-cc-loading='scan'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: -18% 0 auto;
+        block-size: 18%;
+        background: linear-gradient(
+            180deg,
+            transparent,
+            hsl(from var(--ccl-i) h s l / 0.55) 80%,
+            var(--ccl-i) 80% calc(80% + 2px),
+            transparent calc(80% + 2px)
+        );
+    }
+
+    /* sweep: a beam crosses with its afterglow behind it */
+    [data-theme] [data-cc-loading='sweep'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            linear-gradient(
+                0deg,
+                transparent calc(50% - 0.5px),
+                hsl(from var(--ccl-i) h s l / 0.4) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.12) 0 1px, transparent 1px 10%);
+    }
+
+    [data-theme] [data-cc-loading='sweep'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 0 auto 0 0;
+        inline-size: 30%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--ccl-i) h s l / 0.35) calc(100% - 3px), var(--ccl-i) calc(100% - 3px));
+    }
+
+    /* cutter: a cutter runs at an even pace and leaves a brushed track */
+    [data-theme] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 30% auto 30% 0;
+        inline-size: 100%;
+        background: repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.3) 0 1px, hsl(from var(--ccl-i) h s l / 0.1) 1px 3px);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--ccl-i) h s l / 0.6),
+            inset 0 -1px 0 hsl(from var(--ccl-j) h s l / 0.6);
+    }
+
+    [data-theme] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 24% auto 24% 0;
+        inline-size: 8px;
+        background: linear-gradient(90deg, var(--ccl-j), var(--ccl-i) 50%, var(--ccl-j));
+        box-shadow: 0 0 0 1px hsl(from var(--ccl-i) h s l / 0.5);
+    }
+
+    /* knurl: a knurled band rolls */
+    [data-theme] [data-cc-loading='knurl'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 14px) 10%;
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--ccl-i) h s l / 0.55) 0 2px, transparent 2px 7px),
+            repeating-linear-gradient(-45deg, hsl(from var(--ccl-j) h s l / 0.55) 0 2px, transparent 2px 7px);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ccl-i) h s l / 0.7);
+    }
+
+    /* hazard: hazard stripes crawl along a band */
+    [data-theme] [data-cc-loading='hazard'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 12px) 0;
+        background: repeating-linear-gradient(-45deg, var(--ccl-i) 0 12px, var(--ccl-j) 12px 24px);
+        background-size: 34px 34px;
+    }
+
+    /* dash: a plotter pen draws a dashed line in steps */
+    [data-theme] [data-cc-loading='dash'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 1px) auto auto 6%;
+        inline-size: 88%;
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, var(--ccl-i) 0 10px, transparent 10px 16px);
+    }
+
+    [data-theme] [data-cc-loading='dash'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 5px) auto auto 94%;
+        inline-size: 10px;
+        block-size: 10px;
+        background: var(--ccl-j);
+        border-radius: 50%;
+    }
+
+    /* pen: a stroke written across, the nib at its head */
+    [data-theme] [data-cc-loading='pen'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(55% - 1px) auto auto 8%;
+        inline-size: 84%;
+        block-size: 2px;
+        background: var(--ccl-i);
+        border-radius: 2px;
+        transform-origin: 0 50%;
+    }
+
+    [data-theme] [data-cc-loading='pen'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(55% - 14px) auto auto 92%;
+        inline-size: 4px;
+        block-size: 16px;
+        background: var(--ccl-j);
+        transform: rotate(30deg);
+        transform-origin: 50% 100%;
+    }
+
+    /* halftone: the screen shifts in hard steps */
+    [data-theme] [data-cc-loading='halftone'] .kp-chart__state[data-kp-state='loading']::before {
+        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.5) 1.6px, transparent 2px) 0 0 / 9px 9px;
+    }
+
+    [data-theme] [data-cc-loading='halftone'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 20% 30%;
+        background: radial-gradient(circle, var(--ccl-j) 2.4px, transparent 2.8px) 0 0 / 9px 9px;
+    }
+
+    /* hatch: hatching laid in from the left */
+    [data-theme] [data-cc-loading='hatch'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--ccl-i) h s l / 0.45) 0 1px, transparent 1px 6px);
+    }
+
+    /* blocks: three blocks cut in, one after another */
+    [data-theme] [data-cc-loading='blocks'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 10px) calc(50% - 46px);
+        background:
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 0 / 20px 20px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 36px 0 / 20px 20px no-repeat,
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 72px 0 / 20px 20px no-repeat;
+    }
+
+    /* hop: three dots, one hops along them */
+    [data-theme] [data-cc-loading='hop'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 6px) calc(50% - 40px);
+        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.45) 5px, transparent 5.5px) 0 0 / 28px 12px repeat-x;
+    }
+
+    [data-theme] [data-cc-loading='hop'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 6px) auto auto calc(50% - 40px);
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 50%;
+        background: var(--ccl-j);
+    }
+
+    /* feed: the paper feeds through under a still pen */
+    [data-theme] [data-cc-loading='feed'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.35) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.18) 0 1px, transparent 1px 12px);
+    }
+
+    [data-theme] [data-cc-loading='feed'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 0 auto 0 70%;
+        inline-size: 2px;
+        background: var(--ccl-j);
+    }
+
+    /* rise: a band of light rises from the foot */
+    [data-theme] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: auto 0 0;
+        block-size: 2px;
+        background: var(--ccl-i);
+    }
+
+    [data-theme] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 100% 0 auto;
+        block-size: 35%;
+        background: linear-gradient(
+            0deg,
+            hsl(from var(--ccl-i) h s l / 0.05),
+            hsl(from var(--ccl-j) h s l / 0.45) 85%,
+            var(--ccl-j) 85% calc(85% + 2px),
+            transparent calc(85% + 2px)
+        );
+    }
+
+    /* glint: a glint runs along a double rule */
+    [data-theme] [data-cc-loading='glint'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 4px) 6%;
+        border-block: 1px solid var(--ccl-i);
+    }
+
+    [data-theme] [data-cc-loading='glint'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 22px) auto calc(50% - 22px) -25%;
+        inline-size: 22%;
+        background: linear-gradient(105deg, transparent 30%, hsl(from var(--ccl-j) h s l / 0.85) 50%, transparent 70%);
+    }
+
+    /* march: dashes march around the frame */
+    [data-theme] [data-cc-loading='march'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 10px;
+        background:
+            repeating-linear-gradient(90deg, var(--ccl-i) 0 8px, transparent 8px 14px) 0 0 / 100% 2px no-repeat,
+            repeating-linear-gradient(90deg, var(--ccl-i) 0 8px, transparent 8px 14px) 0 100% / 100% 2px no-repeat,
+            repeating-linear-gradient(0deg, var(--ccl-i) 0 8px, transparent 8px 14px) 0 0 / 2px 100% no-repeat,
+            repeating-linear-gradient(0deg, var(--ccl-i) 0 8px, transparent 8px 14px) 100% 0 / 2px 100% no-repeat;
+    }
+
+    /* fan: rays fan round from the foot */
+    [data-theme] [data-cc-loading='fan'] .kp-chart__state[data-kp-state='loading']::before {
+        background: repeating-conic-gradient(
+            from calc(-90deg + var(--ccl-a)) at 50% 100%,
+            hsl(from var(--ccl-i) h s l / 0.35) 0 3deg,
+            transparent 3deg 12deg
+        );
+    }
+
+    /* radar: a beam goes round over still rings */
+    [data-theme] [data-cc-loading='radar'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            conic-gradient(from var(--ccl-a) at 50% 50%, hsl(from var(--ccl-i) h s l / 0.45), transparent 50deg 360deg),
+            repeating-radial-gradient(circle at 50% 50%, transparent 0 28px, hsl(from var(--ccl-i) h s l / 0.3) 28px 29px);
+    }
+
+    /* drop: a block drops onto the floor, again and again */
+    [data-theme] [data-cc-loading='drop'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: auto 10% 14% 10%;
+        block-size: 3px;
+        background: var(--ccl-i);
+    }
+
+    [data-theme] [data-cc-loading='drop'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 8% auto auto calc(50% - 12px);
+        inline-size: 24px;
+        block-size: 24px;
+        background: var(--ccl-j);
+        box-shadow: 0 0 0 2px var(--ccl-i);
+    }
+
+    /* dither: the dither shifts, pixel by pixel */
+    [data-theme] [data-cc-loading='dither'] .kp-chart__state[data-kp-state='loading']::before {
+        background: conic-gradient(
+                hsl(from var(--ccl-i) h s l / 0.35) 25%,
+                transparent 0 50%,
+                hsl(from var(--ccl-i) h s l / 0.35) 0 75%,
+                transparent 0
+            )
+            0 0 / 4px 4px;
+    }
+
+    [data-theme] [data-cc-loading='dither'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 9px) 25%;
+        border: 2px solid var(--ccl-i);
+        background: linear-gradient(90deg, var(--ccl-j) 0 0) 0 0 / 0% 100% no-repeat;
+    }
+
+    /* needle: a gauge needle searches its arc */
+    [data-theme] [data-cc-loading='needle'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 20% calc(50% - 30%) -40%;
+        border-radius: 50%;
+        border: 2px solid hsl(from var(--ccl-i) h s l / 0.5);
+        background: repeating-conic-gradient(from -90deg at 50% 50%, var(--ccl-i) 0 1deg, transparent 1deg 15deg);
+        mask: radial-gradient(circle at 50% 50%, transparent 58%, #000 59%);
+    }
+
+    [data-theme] [data-cc-loading='needle'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 30% auto 0 calc(50% - 1.5px);
+        inline-size: 3px;
+        background: var(--ccl-j);
+        transform-origin: 50% 100%;
+        transform: rotate(-50deg);
+    }
+
+    /* stamp: a stamp comes down on the page */
+    [data-theme] [data-cc-loading='stamp'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 26px) calc(50% - 60px);
+        border: 3px solid var(--ccl-i);
+        outline: 1px solid var(--ccl-i);
+        outline-offset: -8px;
+        transform: rotate(-6deg);
+    }
+
+    /* tape: a strip of tape slides across */
+    [data-theme] [data-cc-loading='tape'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 16px) auto calc(50% - 16px) -32%;
+        inline-size: 30%;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--ccl-i) h s l / 0.55) 0 6px, hsl(from var(--ccl-j) h s l / 0.55) 6px 12px);
+        transform: rotate(-4deg);
+    }
+
+    [data-theme] [data-cc-loading='tape'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 1px) 8%;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.5) 0 4px, transparent 4px 9px);
+        block-size: 2px;
+    }
+
+    /* embers: sparks rise from a glowing floor */
+    [data-theme] [data-cc-loading='embers'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: auto 0 0;
+        block-size: 20%;
+        background: linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.5), transparent);
+    }
+
+    [data-theme] [data-cc-loading='embers'] .kp-chart__state[data-kp-state='loading']::after {
+        background:
+            radial-gradient(circle, var(--ccl-j) 1.5px, transparent 2px) 0 0 / 37px 41px,
+            radial-gradient(circle, var(--ccl-i) 1.2px, transparent 1.7px) 13px 19px / 29px 33px;
+    }
+
+    /* fill: a segmented bar fills, segment by segment */
+    [data-theme] [data-cc-loading='segments'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 10px) 20%;
+        border: 2px solid var(--ccl-i);
+        background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), var(--ccl-i) calc(10% - 2px) 10%);
+    }
+
+    [data-theme] [data-cc-loading='segments'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 6px) auto calc(50% - 6px) calc(20% + 4px);
+        inline-size: 0;
+        background: repeating-linear-gradient(90deg, var(--ccl-j) 0 12px, transparent 12px 16px);
+    }
+
+    /* ══ How the series arrives ═════════════════════════════════════════ */
+
+    [data-cc-arrival][data-cc-arriving] :is(.kp-chart__series, .kp-chart__point) {
+        transform-box: view-box;
+        transform-origin: 50% 100%;
+    }
+
+    [data-cc-arrival='wipe'][data-cc-arriving] .kp-chart__series,
+    [data-cc-arrival='steps'][data-cc-arriving] .kp-chart__series,
+    [data-cc-arrival='linear'][data-cc-arriving] .kp-chart__series,
+    [data-cc-arrival='glitch'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    [data-cc-arrival='draw'][data-cc-arriving] .kp-chart__line {
+        stroke-dasharray: 3000px;
+        stroke-dashoffset: calc((1 - var(--cca-k)) * 3000px);
+    }
+
+    [data-cc-arrival='draw'][data-cc-arriving] .kp-chart__area {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    [data-cc-arrival='rise'][data-cc-arriving] .kp-chart__series {
+        transform: scaleY(var(--cca-k));
+    }
+
+    [data-cc-arrival='drop'][data-cc-arriving] .kp-chart__series {
+        transform: translateY(calc((var(--cca-k) - 1) * 120px));
+    }
+
+    [data-cc-arrival='centre'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 50%));
+    }
+
+    [data-cc-arrival='scan'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px -10px calc((1 - var(--cca-k)) * 100%) -10px);
+    }
+
+    [data-cc-arrival='glitch'][data-cc-arriving] .kp-chart__series {
+        transform: translateX(var(--ccu-y));
+    }
+
+    [data-cc-arrival='stamp'][data-cc-arriving] .kp-chart__series {
+        transform-origin: 50% 50%;
+        transform: scale(calc(1 + (1 - var(--cca-k)) * 0.12));
+    }
+
+    /* ══ How a new reading shows ═════════════════════════════════════════ */
+
+    [data-cc-update='shift'][data-cc-updating] .kp-chart__series,
+    [data-cc-update='tick'][data-cc-updating] .kp-chart__series {
+        transform: translateX(calc((1 - var(--ccu-k)) * 14px));
+    }
+
+    [data-cc-update='tail'][data-cc-updating] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--ccu-k)) * 9%) -10px -10px);
+    }
+
+    [data-cc-update='swell'][data-cc-updating] .kp-chart__line {
+        stroke-width: calc(var(--cc-line-w, 2px) * (1 + (1 - var(--ccu-k)) * 1.4));
+    }
+
+    [data-cc-update='jolt'][data-cc-updating] .kp-chart__series {
+        transform: translateY(var(--ccu-y));
+    }
+
+    [data-cc-update='glitch'][data-cc-updating] .kp-chart__series {
+        transform: translateX(var(--ccu-y));
+    }
+
+    /* ══ The event dots ══════════════════════════════════════════════════ */
+
+    [data-theme] [data-cc-events='ring'] .kp-chart__mark-dot {
+        fill: var(--cc-on-paper, var(--card));
+        stroke: var(--kp-chart-tone);
+        stroke-width: 2.5;
+    }
+
+    [data-theme] [data-cc-events='ring'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: none;
+        opacity: 0.6;
+    }
+
+    [data-theme] [data-cc-events='bead'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 2.5;
+        stroke-dasharray: 2 1.6;
+    }
+
+    [data-theme] [data-cc-events='bead'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-dasharray: 1 3;
+        opacity: 0.6;
+    }
+
+    [data-theme] [data-cc-events='halo'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: hsl(from var(--kp-chart-tone) h s l / 0.35);
+        stroke-width: 7;
+        paint-order: stroke;
+    }
+
+    [data-theme] [data-cc-events='halo'] .kp-chart__event-line {
+        stroke-dasharray: 6 4;
+    }
+
+    [data-theme] [data-cc-events='pin'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        transform: scale(0.75);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme] [data-cc-events='pin'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-dasharray: none;
+        stroke-width: 1.5;
+        opacity: 0.55;
+    }
+
+    [data-theme] [data-cc-events='target'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--cc-on-paper, var(--card));
+        stroke-width: 2;
+        filter: drop-shadow(0 0 0 var(--kp-chart-tone)) drop-shadow(0 0 1.5px var(--kp-chart-tone));
+        outline: none;
+    }
+
+    [data-theme] [data-cc-events='target'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 2 2;
+        opacity: 0.8;
+    }
+
+    /* ══ Motion: all of it, only when the reader allows it ═══════════════ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme] [data-cc-loading='type'] .kp-chart__state[data-kp-state='loading']::before {
+            animation:
+                ccl-type 2.6s steps(21, end) infinite,
+                ccl-caret 0.8s steps(1, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='scan'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-down 1.8s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='sweep'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-across 1.6s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-grow 2.4s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-head 2.4s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='knurl'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-roll 0.9s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='hazard'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-crawl 0.8s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='dash'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-grow 2.2s steps(12, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='dash'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-pen-head 2.2s steps(12, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='pen'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-write 2.6s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='pen'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-nib 2.6s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='halftone'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-shuffle 1.2s steps(4, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='hatch'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-lay 2.4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='blocks'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-cut 1.8s steps(1, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='hop'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-hop 1.5s cubic-bezier(0.3, 1.5, 0.5, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='feed'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-feed 1.2s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-up 3.2s cubic-bezier(0.3, 0, 0.6, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='glint'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-glint 2.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='march'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-march 0.7s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='fan'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-turn 3s ease-in-out infinite alternate;
+        }
+
+        [data-theme] [data-cc-loading='radar'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-spin 2.4s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='drop'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-drop 1.4s cubic-bezier(0.5, 0, 1, 0.6) infinite;
+        }
+
+        [data-theme] [data-cc-loading='dither'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-dither 0.5s steps(2, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='dither'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-bar 2s steps(8, end) infinite;
+        }
+
+        [data-theme] [data-cc-loading='needle'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-needle 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+        }
+
+        [data-theme] [data-cc-loading='stamp'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: ccl-stamp 1.6s cubic-bezier(0.6, 0, 1, 0.4) infinite;
+        }
+
+        [data-theme] [data-cc-loading='tape'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-tape 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        [data-theme] [data-cc-loading='embers'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-embers 4s linear infinite;
+        }
+
+        [data-theme] [data-cc-loading='segments'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: ccl-segments 2.4s steps(10, end) infinite;
+        }
+
+        /* the series arrives */
+        [data-cc-arrival='wipe'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        [data-cc-arrival='steps'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 1000ms steps(10, end) both;
+        }
+
+        [data-cc-arrival='linear'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 1200ms linear both;
+        }
+
+        [data-cc-arrival='draw'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 1400ms cubic-bezier(0.45, 0, 0.3, 1) both;
+        }
+
+        [data-cc-arrival='rise'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 800ms cubic-bezier(0.3, 1.35, 0.5, 1) both;
+        }
+
+        [data-cc-arrival='drop'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 700ms cubic-bezier(0.5, 0, 1, 0.5) both;
+        }
+
+        [data-cc-arrival='centre'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        [data-cc-arrival='scan'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 800ms linear both;
+        }
+
+        [data-cc-arrival='glitch'][data-cc-arriving] .kp-chart__plot {
+            animation:
+                cca-k 700ms steps(7, end) both,
+                ccu-glitch 700ms steps(1, end) both;
+        }
+
+        [data-cc-arrival='stamp'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 260ms cubic-bezier(0.6, 0, 1, 0.4) both;
+        }
+
+        /* a new reading */
+        [data-cc-update='shift'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        [data-cc-update='tick'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 600ms steps(3, end) both;
+        }
+
+        [data-cc-update='tail'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 800ms cubic-bezier(0.45, 0, 0.3, 1) both;
+        }
+
+        [data-cc-update='swell'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-k 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        [data-cc-update='jolt'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-jolt 600ms cubic-bezier(0.3, 0, 0.3, 1) both;
+        }
+
+        [data-cc-update='glitch'][data-cc-updating] .kp-chart__plot {
+            animation: ccu-glitch 500ms steps(1, end) both;
+        }
+    }
+}
+
+@keyframes ccl-type {
+    from {
+        inline-size: 0;
+    }
+}
+
+@keyframes ccl-caret {
+    50% {
+        border-inline-end-color: transparent;
+    }
+}
+
+@keyframes ccl-down {
+    to {
+        transform: translateY(700%);
+    }
+}
+
+@keyframes ccl-across {
+    from {
+        left: -30%;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+@keyframes ccl-grow {
+    from {
+        inline-size: 0;
+    }
+}
+
+@keyframes ccl-head {
+    from {
+        left: 0;
+    }
+
+    to {
+        left: calc(100% - 8px);
+    }
+}
+
+@keyframes ccl-pen-head {
+    from {
+        left: 6%;
+    }
+
+    to {
+        left: 94%;
+    }
+}
+
+@keyframes ccl-roll {
+    to {
+        background-position:
+            14px 0,
+            14px 0;
+    }
+}
+
+@keyframes ccl-crawl {
+    to {
+        background-position: 34px 0;
+    }
+}
+
+@keyframes ccl-write {
+    from {
+        transform: scaleX(0);
+    }
+
+    70%,
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes ccl-nib {
+    from {
+        left: 8%;
+    }
+
+    70%,
+    to {
+        left: 92%;
+    }
+}
+
+@keyframes ccl-shuffle {
+    to {
+        background-position: 36px 18px;
+    }
+}
+
+@keyframes ccl-lay {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    70%,
+    to {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes ccl-cut {
+    0% {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    25% {
+        clip-path: inset(0 61% 0 0);
+    }
+
+    50% {
+        clip-path: inset(0 22% 0 0);
+    }
+
+    75%,
+    100% {
+        clip-path: inset(0);
+    }
+}
+
+@keyframes ccl-hop {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    16% {
+        transform: translate(14px, -14px);
+    }
+
+    33% {
+        transform: translate(28px, 0);
+    }
+
+    50% {
+        transform: translate(42px, -14px);
+    }
+
+    66% {
+        transform: translate(56px, 0);
+    }
+
+    83% {
+        transform: translate(28px, -18px);
+    }
+}
+
+@keyframes ccl-feed {
+    to {
+        background-position:
+            -12px 0,
+            -12px 0;
+    }
+}
+
+@keyframes ccl-up {
+    to {
+        transform: translateY(-390%);
+    }
+}
+
+@keyframes ccl-glint {
+    to {
+        left: 105%;
+    }
+}
+
+@keyframes ccl-march {
+    to {
+        background-position:
+            14px 0,
+            -14px 100%,
+            0 -14px,
+            100% 14px;
+    }
+}
+
+@keyframes ccl-turn {
+    to {
+        --ccl-a: 9deg;
+    }
+}
+
+@keyframes ccl-spin {
+    to {
+        --ccl-a: 360deg;
+    }
+}
+
+@keyframes ccl-drop {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(calc(var(--kp-chart-height, 220px) * 0.7));
+    }
+}
+
+@keyframes ccl-dither {
+    to {
+        background-position: 2px 0;
+    }
+}
+
+@keyframes ccl-bar {
+    to {
+        background-size: 100% 100%;
+    }
+}
+
+@keyframes ccl-needle {
+    to {
+        transform: rotate(50deg);
+    }
+}
+
+@keyframes ccl-stamp {
+    from {
+        transform: rotate(-6deg) scale(1.6);
+        outline-offset: -2px;
+    }
+
+    40%,
+    to {
+        transform: rotate(-6deg) scale(1);
+    }
+}
+
+@keyframes ccl-tape {
+    to {
+        left: 104%;
+    }
+}
+
+@keyframes ccl-embers {
+    to {
+        background-position:
+            0 -164px,
+            13px -113px;
+    }
+}
+
+@keyframes ccl-segments {
+    to {
+        inline-size: calc(60% - 8px);
+    }
+}
+
+@keyframes cca-k {
+    from {
+        --cca-k: 0;
+    }
+
+    to {
+        --cca-k: 1;
+    }
+}
+
+@keyframes ccu-k {
+    from {
+        --ccu-k: 0;
+    }
+
+    to {
+        --ccu-k: 1;
+    }
+}
+
+@keyframes ccu-jolt {
+    0% {
+        --ccu-y: 0px;
+    }
+
+    25% {
+        --ccu-y: -6px;
+    }
+
+    55% {
+        --ccu-y: 3px;
+    }
+
+    80% {
+        --ccu-y: -1px;
+    }
+
+    100% {
+        --ccu-y: 0px;
+    }
+}
+
+@keyframes ccu-glitch {
+    0% {
+        --ccu-y: 0px;
+    }
+
+    20% {
+        --ccu-y: 5px;
+    }
+
+    40% {
+        --ccu-y: -4px;
+    }
+
+    60% {
+        --ccu-y: 3px;
+    }
+
+    80% {
+        --ccu-y: -2px;
+    }
+
+    100% {
+        --ccu-y: 0px;
+    }
+}

@@ -1,7 +1,8 @@
 /* The page: a centred column, and one section with its controls in one row
-   of groups and three columns side by side (character 1, character 2, the
-   plain chart of today), each holding the same chart group. The charts' own
-   drawing is in charts.css. */
+   of groups, the composed preview, then one row per aspect with three
+   columns side by side (the aspect's three options), each holding the same
+   chart group. The charts' own drawing is in charts.css, round2.css and
+   aspects.css. */
 .cc-page {
     display: grid;
     gap: var(--kp-space-lg, 1.5rem);
@@ -84,12 +85,75 @@
     }
 }
 
+/* The three columns of a row share their rows (label, description, chart),
+   so the three charts start on one line. */
 .cc-col {
     display: grid;
-    grid-template-rows: auto auto 1fr;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
     gap: var(--kp-space-sm, 0.5rem);
     align-content: start;
     min-inline-size: 0;
+}
+
+@media (max-width: 60rem) {
+    .cc-col {
+        grid-row: auto;
+        grid-template-rows: auto;
+    }
+}
+
+.cc-cell {
+    min-inline-size: 0;
+    padding: 10px 12px 12px 0;
+}
+
+/* The combination: its picks in words beside its chart. */
+.cc-preview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+@media (max-width: 52rem) {
+    .cc-preview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cc-preview__head,
+.cc-aspect__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cc-preview__head h3,
+.cc-preview__head p,
+.cc-aspect__head h3,
+.cc-aspect__head p {
+    margin: 0;
+}
+
+.cc-preview__head p,
+.cc-aspect__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* One row per aspect, a rule between them. */
+.cc-aspects {
+    display: grid;
+}
+
+.cc-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
 }
 
 .cc-label {
