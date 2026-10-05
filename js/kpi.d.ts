@@ -149,10 +149,12 @@ export declare function kpiColumns(n: number, width: number, { allowed, minTileP
 /**
  * Put one strip on its column count now: kpiColumns() over its shown
  * tiles, its inner width (or `width`), `--kp-kpi-min` (9rem) and its column
- * gap; writes `--kp-kpis-columns` and `data-kp-kpis-span-last`. A trend
- * tile's label is one line and never cut, so while one does not fit its
- * tile the strip takes its next smaller allowed count: the tile grows to
- * its label, and every tile in the row with it [fix-99].
+ * gap; writes `--kp-kpis-columns` and `data-kp-kpis-span-last`. A tile's
+ * label is one line and never cut, so while one does not fit its tile the
+ * strip takes its next smaller allowed count: the tile grows to its label,
+ * and every tile in the row with it [fix-99]. The count thus respects the
+ * widest label as well as `--kp-kpi-min`, at desk width and in a phone
+ * pane alike [fix-101].
  * @param {HTMLElement} strip
  * @param {number} [width] px; else measured
  */

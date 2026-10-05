@@ -1686,6 +1686,35 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'Three sizes',
+                why: 'The bar as it always was is the small one; `.kp-progressbar--md` and `.kp-progressbar--lg` make it one and a half and two times as tall. The theme draws the same bar larger — its marks, cells and patterns grow with the track — and the label and the number in the same row step up the type scale with it (13, 16 and 18px at a 16px root). Pick by how much the bar matters on the page: small beside a line of text or in a table, medium for the bar a panel is about, large for the one task a page is waiting on.',
+                markup: `
+<div class="kp-progress-group">
+<div class="kp-progress__wrap">
+<span class="kp-progress__label">Small</span>
+<div class="kp-progressbar" role="progressbar" aria-label="Small" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<span class="kp-progress__value">40%</span>
+</div>
+<div class="kp-progress__wrap">
+<span class="kp-progress__label">Medium</span>
+<div class="kp-progressbar kp-progressbar--md" role="progressbar" aria-label="Medium" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<span class="kp-progress__value">40%</span>
+</div>
+<div class="kp-progress__wrap">
+<span class="kp-progress__label">Large</span>
+<div class="kp-progressbar kp-progressbar--lg" role="progressbar" aria-label="Large" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<span class="kp-progress__value">40%</span>
+</div>
+</div>
+`,
+            },
+            {
                 title: 'Busy, with no idea how far',
                 why: 'Without an amount the bar says so twice: `data-kp-indeterminate` for the eye and no `aria-valuenow` for a screen reader. It moves while it waits, and stands still, still reading as busy, for a reader who asked for less motion.',
                 markup: `
@@ -1700,6 +1729,8 @@ export const DESCRIPTORS = [
             { name: '.kp-progressbar__track', what: 'The ground the value is measured against; the theme draws it.' },
             { name: '.kp-progressbar__fill', what: 'The share done, clipped to the value, so a pattern in it never stretches and only the clip moves.' },
             { name: '.kp-progressbar__head', what: 'The mark on the fill’s leading edge; a theme gives it a shape or leaves it empty.' },
+            { name: '.kp-progressbar--md', what: 'The medium size: one and a half times the small bar, the theme’s drawing grown with it, and the label and number beside it at the body size.' },
+            { name: '.kp-progressbar--lg', what: 'The large size: twice the small bar, for the one task a page waits on; the label and number one step above the body size.' },
             { name: '[data-kp-indeterminate]', what: 'Busy without an amount: a moving band, and diagonal stripes standing still under reduced motion.' },
             { name: '.kp-progress__wrap', what: 'The bar with something beside it, on one centre line.' },
             { name: '.kp-progress__value', what: 'The number, quiet and small, after the bar.' },
@@ -2669,7 +2700,7 @@ export const DESCRIPTORS = [
         title: 'Closing and resizing',
         group: 'Theming',
         classes: [],
-        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing'],
+        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing', 'settling'],
         exports: [],
         intro: 'A dialog leaves the way it came, and a box that changes size eases to its new height, growing and shrinking alike. Nothing here has a speed of its own: every duration and curve is read from the theme’s dialog entrance.',
         whenToUse:
@@ -2698,6 +2729,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-folding', what: 'Written on an accordion item (`<details>`) while it folds shut; `open` goes only when the fold ends. Whatever counts only what is shown (a tile set) treats it as shut from the fold’s first frame. Read it, do not set it.' },
             { name: 'data-kp-tiles-easing', what: 'Written on the grids of a tile set while their tiles ease to the set’s new height: the rows follow the tiles, and each tile clips what it has not yet grown to show. Read it, do not set it.' },
             { name: 'data-kp-arrive', what: '`none` on a box whose rows a live view redraws: nothing in it plays an arrival, so a refresh does not replay every row.' },
+            { name: 'data-kp-settling', what: 'On a root while its first render is drawn: nothing under it arrives and no box glides, it takes its size at once. js/auto.js writes it on the root of every `attachAll()` until its modules have attached and two frames are painted; set it yourself on a part a framework renders in several passes, and take it off when that part is drawn.' },
             { name: '--kp-size-ease', what: 'A theme\u2019s own curve for its size changes, held from overshooting. Default: the dialog entrance\u2019s curve.' },
             { name: '--kp-size-steps', what: '`line` moves a size one line of text at a time, growing and shrinking alike (terminal).' },
             { name: '--kp-motion-scale', what: 'On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.' },

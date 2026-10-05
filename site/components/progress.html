@@ -245,6 +245,58 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Three sizes</figcaption>
+                        <p class="kp-text-muted">The bar as it always was is the small one; `.kp-progressbar--md` and `.kp-progressbar--lg` make it one and a half and two times as tall. The theme draws the same bar larger — its marks, cells and patterns grow with the track — and the label and the number in the same row step up the type scale with it (13, 16 and 18px at a 16px root). Pick by how much the bar matters on the page: small beside a line of text or in a table, medium for the bar a panel is about, large for the one task a page is waiting on.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-progress-group">
+    <div class="kp-progress__wrap">
+        <span class="kp-progress__label">Small</span>
+        <div class="kp-progressbar" role="progressbar" aria-label="Small" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+            <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+        </div>
+        <span class="kp-progress__value">40%</span>
+    </div>
+    <div class="kp-progress__wrap">
+        <span class="kp-progress__label">Medium</span>
+        <div class="kp-progressbar kp-progressbar--md" role="progressbar" aria-label="Medium" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+            <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+        </div>
+        <span class="kp-progress__value">40%</span>
+    </div>
+    <div class="kp-progress__wrap">
+        <span class="kp-progress__label">Large</span>
+        <div class="kp-progressbar kp-progressbar--lg" role="progressbar" aria-label="Large" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" style="--kp-value: 0.4">
+            <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+        </div>
+        <span class="kp-progress__value">40%</span>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Small&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Small&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.4&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;40%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Medium&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Medium&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.4&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;40%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Large&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Large&quot;</span> <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.4&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;40%&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Busy, with no idea how far</figcaption>
                         <p class="kp-text-muted">Without an amount the bar says so twice: `data-kp-indeterminate` for the eye and no `aria-valuenow` for a screen reader. It moves while it waits, and stands still, still reading as busy, for a reader who asked for less motion.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -262,43 +314,45 @@
                     <p class="kp-prose">Every option and state, one block each, taken from the review catalogue so the two cannot drift apart.</p>
                     <figure class="sc-example" id="more-feedback-progress">
                         <figcaption class="kp-fw-semibold">Progress</figcaption>
-                        <p class="kp-text-muted">Four signature bars, each drawn the theme's own way: empty, a third, full, and busy without an amount. Every bar is one line high and keeps its width from the first frame; only the fill moves inside it. The empty bar must still show its track, so an empty bar is not an invisible one, and the full one must read as finished. The busy bar must never be mistaken for the full one above it — "done" and "no idea yet" must look different in every theme. With a reduced-motion preference nothing in any bar moves, and the busy bar still reads as busy while standing still. The percentage beside the second bar sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. Under them stands a group of three labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of them is called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is the fault this group exists to prevent [fix-64].</p>
+                        <p class="kp-text-muted">Four signature bars, each drawn the theme's own way: empty, a third, full, and busy without an amount. Every bar is one line high and keeps its width from the first frame; only the fill moves inside it. The empty bar must still show its track, so an empty bar is not an invisible one, and the full one must read as finished. The busy bar must never be mistaken for the full one above it — "done" and "no idea yet" must look different in every theme. With a reduced-motion preference nothing in any bar moves, and the busy bar still reads as busy while standing still. The percentage beside the second bar sits on its centre line, in the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. Under them stands a group of three labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of them is called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is the fault this group exists to prevent [fix-64]. All of it stands three times, side by side: Small (the bar as it always was), Medium and Large (<code>.kp-progressbar--md</code>, <code>--lg</code>). A larger size is the same drawing larger — the theme's own marks, cells and patterns grow with the track, never a taller box around marks of the old size — and its label and reading step up the type scale with it, still on one line and on the bar's centre line.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="sc-example__stage">
-<div class="kp-stack">
-    <div
-    class="kp-progressbar"
-    role="progressbar"
-    aria-label="Export not started"
-    aria-valuemin="0"
-    aria-valuemax="100"
-    aria-valuenow="0"
-    style="--kp-value: 0"
-    >
-    <span class="kp-progressbar__track" aria-hidden="true"
-    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-        ></span>
-</div>
-<div class="kp-progress__wrap">
-    <div
-    class="kp-progressbar"
-    role="progressbar"
-    aria-label="Export progress"
-    aria-valuemin="0"
-    aria-valuemax="100"
-    aria-valuenow="35"
-    style="--kp-value: 0.35"
-    >
-    <span class="kp-progressbar__track" aria-hidden="true"
-    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-        ></span>
-</div>
-<span class="kp-progress__value">35%</span>
+<div class="sc-example__stage sc-example__stage--row">
+<div class="cat-cell">
+    <h3>Small</h3>
+    <div class="kp-stack">
+        <div
+        class="kp-progressbar"
+        role="progressbar"
+        aria-label="Export not started, small"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        style="--kp-value: 0"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <div class="kp-progress__wrap">
+        <div
+        class="kp-progressbar"
+        role="progressbar"
+        aria-label="Export progress, small"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="35"
+        style="--kp-value: 0.35"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <span class="kp-progress__value">35%</span>
 </div>
 <div
 class="kp-progressbar"
 role="progressbar"
-aria-label="Export finished"
+aria-label="Export finished, small"
 aria-valuemin="0"
 aria-valuemax="100"
 aria-valuenow="100"
@@ -308,7 +362,7 @@ style="--kp-value: 1"
 ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
     ></span>
 </div>
-<div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service" data-kp-indeterminate>
+<div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service, small" data-kp-indeterminate>
     <span class="kp-progressbar__track" aria-hidden="true"
     ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
         ></span>
@@ -320,7 +374,7 @@ style="--kp-value: 1"
         <div
         class="kp-progressbar"
         role="progressbar"
-        aria-label="CPU"
+        aria-label="CPU, small"
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow="22"
@@ -337,7 +391,7 @@ style="--kp-value: 1"
     <div
     class="kp-progressbar"
     role="progressbar"
-    aria-label="Memory"
+    aria-label="Memory, small"
     aria-valuemin="0"
     aria-valuemax="100"
     aria-valuenow="64"
@@ -354,7 +408,7 @@ style="--kp-value: 1"
     <div
     class="kp-progressbar"
     role="progressbar"
-    aria-label="Disk"
+    aria-label="Disk, small"
     aria-valuemin="0"
     aria-valuemax="100"
     aria-valuenow="61"
@@ -368,41 +422,264 @@ style="--kp-value: 1"
 </div>
 </div>
 </div>
+<div class="cat-cell">
+    <h3>Medium</h3>
+    <div class="kp-stack">
+        <div
+        class="kp-progressbar kp-progressbar--md"
+        role="progressbar"
+        aria-label="Export not started, medium"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        style="--kp-value: 0"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <div class="kp-progress__wrap">
+        <div
+        class="kp-progressbar kp-progressbar--md"
+        role="progressbar"
+        aria-label="Export progress, medium"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="35"
+        style="--kp-value: 0.35"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <span class="kp-progress__value">35%</span>
+</div>
+<div
+class="kp-progressbar kp-progressbar--md"
+role="progressbar"
+aria-label="Export finished, medium"
+aria-valuemin="0"
+aria-valuemax="100"
+aria-valuenow="100"
+style="--kp-value: 1"
+>
+<span class="kp-progressbar__track" aria-hidden="true"
+><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+    ></span>
+</div>
+<div
+class="kp-progressbar kp-progressbar--md"
+role="progressbar"
+aria-label="Waiting for the export service, medium"
+data-kp-indeterminate
+>
+<span class="kp-progressbar__track" aria-hidden="true"
+><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+    ></span>
+</div>
+</div>
+<div class="kp-progress-group" style="margin-block-start: 1rem">
+    <div class="kp-progress__wrap">
+        <span class="kp-progress__label">CPU</span>
+        <div
+        class="kp-progressbar kp-progressbar--md"
+        role="progressbar"
+        aria-label="CPU, medium"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="22"
+        style="--kp-value: 0.22"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <span class="kp-progress__value">22%</span>
+</div>
+<div class="kp-progress__wrap">
+    <span class="kp-progress__label">Memory</span>
+    <div
+    class="kp-progressbar kp-progressbar--md"
+    role="progressbar"
+    aria-label="Memory, medium"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="64"
+    style="--kp-value: 0.64"
+    >
+    <span class="kp-progressbar__track" aria-hidden="true"
+    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+        ></span>
+</div>
+<span class="kp-progress__value">64%</span>
+</div>
+<div class="kp-progress__wrap">
+    <span class="kp-progress__label">Disk</span>
+    <div
+    class="kp-progressbar kp-progressbar--md"
+    role="progressbar"
+    aria-label="Disk, medium"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="61"
+    style="--kp-value: 0.61"
+    >
+    <span class="kp-progressbar__track" aria-hidden="true"
+    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+        ></span>
+</div>
+<span class="kp-progress__value">61%</span>
+</div>
+</div>
+</div>
+<div class="cat-cell">
+    <h3>Large</h3>
+    <div class="kp-stack">
+        <div
+        class="kp-progressbar kp-progressbar--lg"
+        role="progressbar"
+        aria-label="Export not started, large"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        style="--kp-value: 0"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <div class="kp-progress__wrap">
+        <div
+        class="kp-progressbar kp-progressbar--lg"
+        role="progressbar"
+        aria-label="Export progress, large"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="35"
+        style="--kp-value: 0.35"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <span class="kp-progress__value">35%</span>
+</div>
+<div
+class="kp-progressbar kp-progressbar--lg"
+role="progressbar"
+aria-label="Export finished, large"
+aria-valuemin="0"
+aria-valuemax="100"
+aria-valuenow="100"
+style="--kp-value: 1"
+>
+<span class="kp-progressbar__track" aria-hidden="true"
+><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+    ></span>
+</div>
+<div
+class="kp-progressbar kp-progressbar--lg"
+role="progressbar"
+aria-label="Waiting for the export service, large"
+data-kp-indeterminate
+>
+<span class="kp-progressbar__track" aria-hidden="true"
+><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+    ></span>
+</div>
+</div>
+<div class="kp-progress-group" style="margin-block-start: 1rem">
+    <div class="kp-progress__wrap">
+        <span class="kp-progress__label">CPU</span>
+        <div
+        class="kp-progressbar kp-progressbar--lg"
+        role="progressbar"
+        aria-label="CPU, large"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="22"
+        style="--kp-value: 0.22"
+        >
+        <span class="kp-progressbar__track" aria-hidden="true"
+        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+            ></span>
+    </div>
+    <span class="kp-progress__value">22%</span>
+</div>
+<div class="kp-progress__wrap">
+    <span class="kp-progress__label">Memory</span>
+    <div
+    class="kp-progressbar kp-progressbar--lg"
+    role="progressbar"
+    aria-label="Memory, large"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="64"
+    style="--kp-value: 0.64"
+    >
+    <span class="kp-progressbar__track" aria-hidden="true"
+    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+        ></span>
+</div>
+<span class="kp-progress__value">64%</span>
+</div>
+<div class="kp-progress__wrap">
+    <span class="kp-progress__label">Disk</span>
+    <div
+    class="kp-progressbar kp-progressbar--lg"
+    role="progressbar"
+    aria-label="Disk, large"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="61"
+    style="--kp-value: 0.61"
+    >
+    <span class="kp-progressbar__track" aria-hidden="true"
+    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+        ></span>
+</div>
+<span class="kp-progress__value">61%</span>
+</div>
+</div>
+</div>
+</div>
                         </div>
-                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span>
-    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
-    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export not started&quot;</span>
-    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
-    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
-    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;0&quot;</span>
-    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
-    &gt;
-    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
-    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
-        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
-    &lt;<span class="kp-code__keyword">div</span>
-    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
-    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export progress&quot;</span>
-    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
-    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
-    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
-    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.35&quot;</span>
-    &gt;
-    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
-    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
-        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
-&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;35%&lt;/<span class="kp-code__keyword">span</span>&gt;
+                        <details class="sc-example__code"><summary>Markup</summary><pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Small&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export not started, small&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export progress, small&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.35&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;35%&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span>
 <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
 <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export finished&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export finished, small&quot;</span>
 <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
 <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
 <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;100&quot;</span>
@@ -412,7 +689,7 @@ style="--kp-value: 1"
 &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
     &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export service&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export service, small&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
     &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
         &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
@@ -424,7 +701,7 @@ style="--kp-value: 1"
         &lt;<span class="kp-code__keyword">div</span>
         <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
         <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU, small&quot;</span>
         <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
         <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
         <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;22&quot;</span>
@@ -441,7 +718,7 @@ style="--kp-value: 1"
     &lt;<span class="kp-code__keyword">div</span>
     <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
     <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory, small&quot;</span>
     <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
     <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
     <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;64&quot;</span>
@@ -458,7 +735,7 @@ style="--kp-value: 1"
     &lt;<span class="kp-code__keyword">div</span>
     <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span>
     <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
-    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Disk&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Disk, small&quot;</span>
     <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
     <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
     <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;61&quot;</span>
@@ -469,6 +746,227 @@ style="--kp-value: 1"
         &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;61%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Medium&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export not started, medium&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export progress, medium&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.35&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;35%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export finished, medium&quot;</span>
+<span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+<span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;100&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 1&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export service, medium&quot;</span>
+<span class="kp-code__keyword">data-kp-indeterminate</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;CPU&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU, medium&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;22&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.22&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;22%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory, medium&quot;</span>
+    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;64&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.64&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;64%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Disk&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Disk, medium&quot;</span>
+    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;61&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.61&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;61%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;cat-cell&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Large&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export not started, large&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export progress, large&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;35&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.35&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;35%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Export finished, large&quot;</span>
+<span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+<span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+<span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;100&quot;</span>
+<span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 1&quot;</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span>
+<span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+<span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+<span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export service, large&quot;</span>
+<span class="kp-code__keyword">data-kp-indeterminate</span>
+&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+    &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;margin-block-start: 1rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;CPU&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>
+        <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+        <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+        <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;CPU, large&quot;</span>
+        <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+        <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+        <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;22&quot;</span>
+        <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.22&quot;</span>
+        &gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+        &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+            &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;22%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Memory&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Memory, large&quot;</span>
+    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;64&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.64&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;64%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__label&quot;</span>&gt;Disk&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>
+    <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span>
+    <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span>
+    <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Disk, large&quot;</span>
+    <span class="kp-code__keyword">aria-valuemin</span><span class="kp-code__string">=&quot;0&quot;</span>
+    <span class="kp-code__keyword">aria-valuemax</span><span class="kp-code__string">=&quot;100&quot;</span>
+    <span class="kp-code__keyword">aria-valuenow</span><span class="kp-code__string">=&quot;61&quot;</span>
+    <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-value: 0.61&quot;</span>
+    &gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>
+    &gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>
+        &gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__value&quot;</span>&gt;61%&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre></details>
                     </figure>
@@ -495,6 +993,7 @@ style="--kp-value: 1"
                             <tr><td><code>label</code></td><td><code>string</code></td><td>required</td><td></td></tr>
                             <tr><td><code>valueText</code></td><td><code>string</code></td><td>optional</td><td>aria-valuetext, e.g. &quot;3 of 10 files&quot;.</td></tr>
                             <tr><td><code>showValue</code></td><td><code>boolean</code></td><td>optional</td><td>Render the percentage beside the bar.</td></tr>
+                            <tr><td><code>size</code></td><td><code>'sm' | 'md' | 'lg'</code></td><td>optional</td><td>The bar's size; default 'sm', the unmodified bar.</td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>style</code></td><td><code>import('react').CSSProperties</code></td><td>optional</td><td></td></tr>
                     </tbody></table></div>
@@ -506,14 +1005,18 @@ style="--kp-value: 1"
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
-                            <tr><td><code>--kp-progress-group-gap</code></td><td><code>var(--kp-space-xs)</code></td></tr>
+                            <tr><td><code>--kp-progress-group-gap</code></td><td><code>calc(var(--kp-space-xs) * var(--kp-progress-group-scale, 1))</code></td></tr>
+                            <tr><td><code>--kp-progress-group-scale</code></td><td><code>1</code></td></tr>
                             <tr><td><code>--kp-progressbar-duration</code></td><td><code>240ms</code></td></tr>
                             <tr><td><code>--kp-progressbar-ease</code></td><td><code>ease-out</code></td></tr>
                             <tr><td><code>--kp-progressbar-height</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-progressbar-max-width</code></td><td><code>32rem</code></td></tr>
+                            <tr><td><code>--kp-progressbar-scale</code></td><td><code>1</code></td></tr>
+                            <tr><td><code>--kp-progressbar-text</code></td><td><code>var(--kp-text-sm, 0.8125rem)</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-value</code></td><td><code>0</code></td></tr>
                     </tbody></table></div>
@@ -536,6 +1039,8 @@ style="--kp-value: 1"
                             <tr><td><code>.kp-progressbar__track</code></td><td>The ground the value is measured against; the theme draws it.</td></tr>
                             <tr><td><code>.kp-progressbar__fill</code></td><td>The share done, clipped to the value, so a pattern in it never stretches and only the clip moves.</td></tr>
                             <tr><td><code>.kp-progressbar__head</code></td><td>The mark on the fill’s leading edge; a theme gives it a shape or leaves it empty.</td></tr>
+                            <tr><td><code>.kp-progressbar--md</code></td><td>The medium size: one and a half times the small bar, the theme’s drawing grown with it, and the label and number beside it at the body size.</td></tr>
+                            <tr><td><code>.kp-progressbar--lg</code></td><td>The large size: twice the small bar, for the one task a page waits on; the label and number one step above the body size.</td></tr>
                             <tr><td><code>[data-kp-indeterminate]</code></td><td>Busy without an amount: a moving band, and diagonal stripes standing still under reduced motion.</td></tr>
                             <tr><td><code>.kp-progress__wrap</code></td><td>The bar with something beside it, on one centre line.</td></tr>
                             <tr><td><code>.kp-progress__value</code></td><td>The number, quiet and small, after the bar.</td></tr>

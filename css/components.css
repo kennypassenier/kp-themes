@@ -1237,7 +1237,10 @@
 
     .kp-kpi[data-kp-tone='destructive'] {
         --kp-kpi-meter-fill: var(--destructive);
-        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border));
+        /* Mixed with the frame that holds 3:1, not the hairline [fix-101]:
+         * with `--border` it read 2.07:1 (lapis) to 2.94:1 on the page in
+         * eleven themes. */
+        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border-strong));
         box-shadow: inset 3px 0 0 var(--destructive);
     }
 
@@ -1507,6 +1510,20 @@
         grid-column: 1 / -1;
     }
 
+    /* A tile of a strip with columns is framed in `--border-strong`, the
+ * boundary DI1 holds at 3:1 against the page, the card and the popover:
+ * its frame is what parts it from the next tile and from the page, and
+ * `--border` read 1.21:1 (synthwave, shade-dark) to 2.72:1 (retro) in 20
+ * of 22 themes [fix-101]. Knob `--kp-kpi-border`: dark and titanium, whose
+ * `--border-strong` stays under 3:1 (an open DI1 finding), set a share of
+ * `--foreground` in it. `:where()` keeps the
+ * strip out of the weight, so a tone, a hover and a pressed toggle still
+ * draw their own edge. Its label, figure and words keep one line box each
+ * whatever the state (the rules with the trend tile's, below). */
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi {
+        border-color: var(--kp-kpi-border, var(--border-strong));
+    }
+
     /* --- A key figure with its 24-hour trend [scope-143] ------------------ */
 
     /* `.kp-kpi--trend`: the whole tile is a link (its `.kp-kpi__link`
@@ -1528,8 +1545,11 @@
         contain: layout;
     }
 
+    /* At rest a trend tile in a strip with columns is framed in
+ * `--border-strong` already [fix-101], so a hover draws `--ring`, as a
+ * link tile and a toggle do. */
     .kp-kpi--trend:hover {
-        border-color: var(--border-strong);
+        border-color: var(--ring);
     }
 
     .kp-kpi--trend:has(.kp-kpi__link:focus-visible) {
@@ -1537,33 +1557,47 @@
         outline-offset: 2px;
     }
 
-    /* The label is one line, never wrapped and never cut [fix-99]: the
- * name and its note stay on the tile's first line, clear of the link in
- * the corner, and step down with the tile's width (container query units,
+    /* The label is one line, never wrapped and never cut [fix-99], in a
+ * trend tile and in every tile of a strip with columns [fix-101], where
+ * it was cut (223 px in a 220 px box in dark and deco) or wrapped by the
+ * narrow tile's rule: the name and its note stay on the tile's first
+ * line, clear of the trend's link in the corner, and step down with the tile's width (container query units,
  * from `--kp-text-xs` to seven eighths of it, as the calendar's title does
  * [fix-98]). Where it still does not fit, the tile grows: attachKpiStrips()
  * (js/kpi.js) takes the strip to its next allowed column count until every
- * trend label fits. The tile is a size container, so its content cannot
+ * label fits, in the phone pane too. The tile is a size container, so its content cannot
  * widen it from CSS: `min-inline-size: fit-content` and a `max-content`
  * track both left it at 228.5 px with the label over its edge. */
-    .kp-kpi--trend > .kp-kpi__label {
+    .kp-kpi--trend > .kp-kpi__label,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__label {
         min-inline-size: 0;
-        padding-inline-end: 4.5rem;
         overflow: visible;
         font-size: clamp(calc(var(--kp-text-xs, 0.75rem) * 0.875), 5cqi, var(--kp-text-xs, 0.75rem));
+        /* The line box of the label at its full size, so a label that steps
+         * down does not lower its tile (2.3 px, the strip's height moving
+         * with its column count [fix-101]). */
+        line-height: calc(var(--kp-text-xs, 0.75rem) * var(--kp-line-height, 1.5));
         text-overflow: clip;
         white-space: nowrap;
     }
 
+    .kp-kpi--trend > .kp-kpi__label {
+        padding-inline-end: 4.5rem;
+    }
+
     /* Every state as tall as filled: the value line keeps its height under
- * a skeleton, and the words under it keep two lines (three in a narrow
- * tile; knob `--kp-kpi-trend-lines`), so a row of trends does not shrink
- * while it loads. */
-    .kp-kpi--trend > .kp-kpi__value {
+ * a skeleton or a dash, and the words under it keep two lines (three in a
+ * narrow trend tile; knob `--kp-kpi-trend-lines`), so a row of trends, or
+ * of the tiles of a strip with columns, does not shrink while it loads or
+ * grow when a figure's words take a second line (79.4 to 121.2 px in one
+ * strip before [fix-101]). */
+    .kp-kpi--trend > .kp-kpi__value,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__value {
         min-block-size: 1lh;
     }
 
-    .kp-kpi--trend > .kp-kpi__trend {
+    .kp-kpi--trend > .kp-kpi__trend,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__trend {
         min-block-size: calc(var(--kp-kpi-trend-lines, 2) * 1lh);
     }
 
@@ -5177,7 +5211,7 @@
     .kp-progress__wrap {
         display: inline-flex;
         align-items: center;
-        gap: var(--kp-space-sm);
+        gap: calc(var(--kp-space-sm) * var(--kp-progressbar-scale, 1));
         /* Never wider than its container: the bar inside gives way, so a
          * phone does not scroll sideways (DI11). */
         max-inline-size: 100%;
@@ -5210,7 +5244,8 @@
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
-        gap: var(--kp-progress-group-gap, var(--kp-space-xs)) var(--kp-space-sm);
+        gap: var(--kp-progress-group-gap, calc(var(--kp-space-xs) * var(--kp-progress-group-scale, 1)))
+            calc(var(--kp-space-sm) * var(--kp-progress-group-scale, 1));
     }
 
     .kp-progress-group .kp-progress__wrap {
@@ -5226,7 +5261,7 @@
     }
 
     .kp-progress__label {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
         color: var(--muted-foreground);
     }
 
@@ -5236,7 +5271,7 @@
     }
 
     .kp-progress__value {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
         color: var(--muted-foreground);
     }
 
@@ -5281,11 +5316,25 @@
  * Knobs: --kp-progressbar-height (0.75rem), --kp-progressbar-max-width
  * (32rem; none inside a group), --kp-progressbar-duration (240ms) and
  * --kp-progressbar-ease (ease-out), the values the approved research round
- * used (research/progress-signature/base.css). */
+ * used (research/progress-signature/base.css).
+ *
+ * Three sizes [Kenny, 2026-10-05: "zodat dit de kleine is, een midden en
+ * een grotere optie"]: the bar as it was is the small one, and
+ * `.kp-progressbar--md` and `.kp-progressbar--lg` are the other two. A size
+ * is one number, --kp-progressbar-scale (1, 1.5, 2), that every part of the
+ * drawing is multiplied by — the base track here and each register's own
+ * bar, its height and its glyphs, cells and pitches alike — so a theme's bar
+ * grows as one drawing rather than as a taller box around the same marks.
+ * 1.5 and 2 because every register's small height is a whole multiple of
+ * 2px (12 to 22px), so both steps land on whole pixels in every theme; the
+ * reading beside the bar steps up the type scale with it (13, 16, 18px)
+ * through --kp-progressbar-text. The size sits on the bar; the wrap and the
+ * group around it read it from there, so the label and the gaps follow. */
     .kp-progressbar {
         --kp-value: 0;
         --kp-steps: 10;
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-scale: 1;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
         position: relative;
         display: block;
         inline-size: 100%;
@@ -5300,8 +5349,32 @@
         inset: 0;
         display: block;
         overflow: hidden;
-        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        border-radius: calc(var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)) * var(--kp-progressbar-scale, 1));
         background: var(--muted);
+    }
+
+    /* The sizes: one number each, set on the bar (which states its own, so
+ * an ancestor's never leaks into a small bar) and read by the row around
+ * it, so the reading and the gap grow with the track. A group takes the
+ * gaps of the largest size it holds and gives no size to its rows. */
+    .kp-progressbar--md,
+    .kp-progress__wrap:has(> .kp-progressbar--md) {
+        --kp-progressbar-scale: 1.5;
+        --kp-progressbar-text: var(--kp-text-md, 1rem);
+    }
+
+    .kp-progressbar--lg,
+    .kp-progress__wrap:has(> .kp-progressbar--lg) {
+        --kp-progressbar-scale: 2;
+        --kp-progressbar-text: calc(var(--kp-text-md, 1rem) * 1.125);
+    }
+
+    .kp-progress-group:has(.kp-progressbar--md) {
+        --kp-progress-group-scale: 1.5;
+    }
+
+    .kp-progress-group:has(.kp-progressbar--lg) {
+        --kp-progress-group-scale: 2;
     }
 
     /* The fill spans the track and is clipped to the value, so a pattern in

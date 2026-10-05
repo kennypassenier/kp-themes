@@ -1498,11 +1498,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='blueprint'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
         --bp-line: var(--primary);
         --bp-scale: var(--border-strong);
-        --bp-arrow: 0.45rem;
-        --bp-chain: 22px;
+        --bp-arrow: calc(0.45rem * var(--kp-progressbar-scale, 1));
+        --bp-chain: calc(22px * var(--kp-progressbar-scale, 1));
+        --bp-hatch: calc(1.5px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='blueprint'] .kp-progressbar__track {
@@ -1526,7 +1527,11 @@
         background:
             linear-gradient(var(--bp-line), var(--bp-line)) top / 100% 2px no-repeat,
             linear-gradient(var(--bp-line), var(--bp-line)) bottom / 100% 2px no-repeat,
-            repeating-linear-gradient(-45deg, var(--bp-line) 0 1.5px, transparent 1.5px 4.5px),
+            repeating-linear-gradient(
+                -45deg,
+                var(--bp-line) 0 var(--bp-hatch),
+                transparent var(--bp-hatch) calc(4.5px * var(--kp-progressbar-scale, 1))
+            ),
             var(--background);
         transition: clip-path var(--fx-duration, 160ms) linear;
     }
@@ -1587,10 +1592,10 @@
         inline-size: calc(100% + var(--bp-chain));
         background: repeating-linear-gradient(
             90deg,
-            var(--bp-line) 0 13px,
-            transparent 13px 16px,
-            var(--bp-line) 16px 19px,
-            transparent 19px var(--bp-chain)
+            var(--bp-line) 0 calc(13px * var(--kp-progressbar-scale, 1)),
+            transparent calc(13px * var(--kp-progressbar-scale, 1)) calc(16px * var(--kp-progressbar-scale, 1)),
+            var(--bp-line) calc(16px * var(--kp-progressbar-scale, 1)) calc(19px * var(--kp-progressbar-scale, 1)),
+            transparent calc(19px * var(--kp-progressbar-scale, 1)) var(--bp-chain)
         );
     }
 

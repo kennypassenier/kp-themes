@@ -263,109 +263,335 @@
                     the muted ink on the page’s ground, and must read at 4.5:1 — it is a label, not a plate. Under them stands a group of three
                     labelled bars: their tracks must all begin in the same column and end in the same column, whatever the label in front of them is
                     called, and the readings must line up on their last digit. A bar that starts where the word before it happened to end is the fault
-                    this group exists to prevent [fix-64].
+                    this group exists to prevent [fix-64]. All of it stands three times, side by side: Small (the bar as it always was), Medium and
+                    Large (<code>.kp-progressbar--md</code>, <code>--lg</code>). A larger size is the same drawing larger — the theme's own marks,
+                    cells and patterns grow with the track, never a taller box around marks of the old size — and its label and reading step up the
+                    type scale with it, still on one line and on the bar's centre line.
                 </div>
-                <div class="cat-stage cat-stage--block">
-                    <div class="kp-stack">
-                        <div
-                            class="kp-progressbar"
-                            role="progressbar"
-                            aria-label="Export not started"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                            aria-valuenow="0"
-                            style="--kp-value: 0"
-                        >
-                            <span class="kp-progressbar__track" aria-hidden="true"
-                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-                            ></span>
-                        </div>
-                        <div class="kp-progress__wrap">
+                <div class="cat-stage cat-grid">
+                    <div class="cat-cell">
+                        <h3>Small</h3>
+                        <div class="kp-stack">
                             <div
                                 class="kp-progressbar"
                                 role="progressbar"
-                                aria-label="Export progress"
+                                aria-label="Export not started, small"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
-                                aria-valuenow="35"
-                                style="--kp-value: 0.35"
+                                aria-valuenow="0"
+                                style="--kp-value: 0"
                             >
                                 <span class="kp-progressbar__track" aria-hidden="true"
                                     ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
                                 ></span>
                             </div>
-                            <span class="kp-progress__value">35%</span>
+                            <div class="kp-progress__wrap">
+                                <div
+                                    class="kp-progressbar"
+                                    role="progressbar"
+                                    aria-label="Export progress, small"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="35"
+                                    style="--kp-value: 0.35"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">35%</span>
+                            </div>
+                            <div
+                                class="kp-progressbar"
+                                role="progressbar"
+                                aria-label="Export finished, small"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="100"
+                                style="--kp-value: 1"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service, small" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
                         </div>
-                        <div
-                            class="kp-progressbar"
-                            role="progressbar"
-                            aria-label="Export finished"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                            aria-valuenow="100"
-                            style="--kp-value: 1"
-                        >
-                            <span class="kp-progressbar__track" aria-hidden="true"
-                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-                            ></span>
-                        </div>
-                        <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export service" data-kp-indeterminate>
-                            <span class="kp-progressbar__track" aria-hidden="true"
-                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-                            ></span>
+                        <div class="kp-progress-group" style="margin-block-start: 1rem">
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">CPU</span>
+                                <div
+                                    class="kp-progressbar"
+                                    role="progressbar"
+                                    aria-label="CPU, small"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="22"
+                                    style="--kp-value: 0.22"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">22%</span>
+                            </div>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Memory</span>
+                                <div
+                                    class="kp-progressbar"
+                                    role="progressbar"
+                                    aria-label="Memory, small"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="64"
+                                    style="--kp-value: 0.64"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">64%</span>
+                            </div>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Disk</span>
+                                <div
+                                    class="kp-progressbar"
+                                    role="progressbar"
+                                    aria-label="Disk, small"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="61"
+                                    style="--kp-value: 0.61"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">61%</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="kp-progress-group" style="margin-block-start: 1rem">
-                        <div class="kp-progress__wrap">
-                            <span class="kp-progress__label">CPU</span>
+                    <div class="cat-cell">
+                        <h3>Medium</h3>
+                        <div class="kp-stack">
                             <div
-                                class="kp-progressbar"
+                                class="kp-progressbar kp-progressbar--md"
                                 role="progressbar"
-                                aria-label="CPU"
+                                aria-label="Export not started, medium"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
-                                aria-valuenow="22"
-                                style="--kp-value: 0.22"
+                                aria-valuenow="0"
+                                style="--kp-value: 0"
                             >
                                 <span class="kp-progressbar__track" aria-hidden="true"
                                     ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
                                 ></span>
                             </div>
-                            <span class="kp-progress__value">22%</span>
+                            <div class="kp-progress__wrap">
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="Export progress, medium"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="35"
+                                    style="--kp-value: 0.35"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">35%</span>
+                            </div>
+                            <div
+                                class="kp-progressbar kp-progressbar--md"
+                                role="progressbar"
+                                aria-label="Export finished, medium"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="100"
+                                style="--kp-value: 1"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <div
+                                class="kp-progressbar kp-progressbar--md"
+                                role="progressbar"
+                                aria-label="Waiting for the export service, medium"
+                                data-kp-indeterminate
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
                         </div>
-                        <div class="kp-progress__wrap">
-                            <span class="kp-progress__label">Memory</span>
-                            <div
-                                class="kp-progressbar"
-                                role="progressbar"
-                                aria-label="Memory"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                                aria-valuenow="64"
-                                style="--kp-value: 0.64"
-                            >
-                                <span class="kp-progressbar__track" aria-hidden="true"
-                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
-                                ></span>
+                        <div class="kp-progress-group" style="margin-block-start: 1rem">
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">CPU</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="CPU, medium"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="22"
+                                    style="--kp-value: 0.22"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">22%</span>
                             </div>
-                            <span class="kp-progress__value">64%</span>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Memory</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="Memory, medium"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="64"
+                                    style="--kp-value: 0.64"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">64%</span>
+                            </div>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Disk</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="Disk, medium"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="61"
+                                    style="--kp-value: 0.61"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">61%</span>
+                            </div>
                         </div>
-                        <div class="kp-progress__wrap">
-                            <span class="kp-progress__label">Disk</span>
+                    </div>
+                    <div class="cat-cell">
+                        <h3>Large</h3>
+                        <div class="kp-stack">
                             <div
-                                class="kp-progressbar"
+                                class="kp-progressbar kp-progressbar--lg"
                                 role="progressbar"
-                                aria-label="Disk"
+                                aria-label="Export not started, large"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
-                                aria-valuenow="61"
-                                style="--kp-value: 0.61"
+                                aria-valuenow="0"
+                                style="--kp-value: 0"
                             >
                                 <span class="kp-progressbar__track" aria-hidden="true"
                                     ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
                                 ></span>
                             </div>
-                            <span class="kp-progress__value">61%</span>
+                            <div class="kp-progress__wrap">
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="Export progress, large"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="35"
+                                    style="--kp-value: 0.35"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">35%</span>
+                            </div>
+                            <div
+                                class="kp-progressbar kp-progressbar--lg"
+                                role="progressbar"
+                                aria-label="Export finished, large"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="100"
+                                style="--kp-value: 1"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                            <div
+                                class="kp-progressbar kp-progressbar--lg"
+                                role="progressbar"
+                                aria-label="Waiting for the export service, large"
+                                data-kp-indeterminate
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div class="kp-progress-group" style="margin-block-start: 1rem">
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">CPU</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="CPU, large"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="22"
+                                    style="--kp-value: 0.22"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">22%</span>
+                            </div>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Memory</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="Memory, large"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="64"
+                                    style="--kp-value: 0.64"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">64%</span>
+                            </div>
+                            <div class="kp-progress__wrap">
+                                <span class="kp-progress__label">Disk</span>
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="Disk, large"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="61"
+                                    style="--kp-value: 0.61"
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span class="kp-progress__value">61%</span>
+                            </div>
                         </div>
                     </div>
                 </div>

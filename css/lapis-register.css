@@ -1355,11 +1355,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='lapis'] .kp-progressbar {
-        --kp-progressbar-height: 1.375rem;
+        --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size). */
+        --lp-px: calc(1px * var(--kp-progressbar-scale, 1));
         --lp-gold: var(--primary);
-        --lp-star: 0.95rem;
-        --lp-band: 0.75rem;
-        --lp-bead: 0.5rem;
+        --lp-star: calc(0.95rem * var(--kp-progressbar-scale, 1));
+        --lp-band: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --lp-bead: calc(0.5rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='lapis'] .kp-progressbar__track {
@@ -1368,8 +1370,12 @@
         overflow: visible;
         border-radius: var(--kp-radius-pill, 999px);
         background:
-            radial-gradient(circle, color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 1.4px, transparent 1.9px) 0 50% / var(--lp-bead) 100%
-                repeat-x,
+            radial-gradient(
+                    circle,
+                    color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 calc(1.4 * var(--lp-px)),
+                    transparent calc(1.9 * var(--lp-px))
+                )
+                0 50% / var(--lp-bead) 100% repeat-x,
             var(--background);
         box-shadow:
             0 0 0 1px var(--border-strong),
@@ -1377,10 +1383,11 @@
     }
 
     [data-theme='lapis'] .kp-progressbar__fill {
-        inset: 2px;
+        inset: calc(2 * var(--lp-px));
         border-radius: inherit;
         background:
-            radial-gradient(circle, var(--primary-foreground) 0 1.1px, transparent 1.6px) calc(-2px) 50% / var(--lp-bead) 100% repeat-x,
+            radial-gradient(circle, var(--primary-foreground) 0 calc(1.1 * var(--lp-px)), transparent calc(1.6 * var(--lp-px)))
+                calc(-2 * var(--lp-px)) 50% / var(--lp-bead) 100% repeat-x,
             var(--lp-gold);
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round 999px);
         transition: clip-path var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
@@ -1410,17 +1417,18 @@
         background:
             radial-gradient(
                 circle,
-                var(--lp-gold) 0 1.6px,
-                var(--accent) 2.1px 3.2px,
-                color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px,
-                transparent 4.6px
+                var(--lp-gold) 0 calc(1.6 * var(--lp-px)),
+                var(--accent) calc(2.1 * var(--lp-px)) calc(3.2 * var(--lp-px)),
+                color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) calc(3.6 * var(--lp-px)) calc(4.2 * var(--lp-px)),
+                transparent calc(4.6 * var(--lp-px))
             ),
             var(--accent);
     }
 
     [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
         background:
-            radial-gradient(circle, var(--lp-gold) 0 1.6px, transparent 2.1px) 0 50% / var(--lp-bead) 100% repeat-x,
+            radial-gradient(circle, var(--lp-gold) 0 calc(1.6 * var(--lp-px)), transparent calc(2.1 * var(--lp-px))) 0 50% / var(--lp-bead) 100%
+                repeat-x,
             var(--background);
     }
 

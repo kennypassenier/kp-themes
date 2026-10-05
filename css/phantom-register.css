@@ -1921,10 +1921,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='phantom'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
-        --kp-ps-slant: 0.375rem;
-        --kp-ps-shard: 0.3125rem;
-        --kp-ps-gap: 3px;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-slant: calc(0.375rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-shard: calc(0.3125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-gap: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dot: calc(5px * var(--kp-progressbar-scale, 1));
+        --kp-ps-stripe: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-pitch: calc(13px * var(--kp-progressbar-scale, 1));
         --kp-ps-edge: calc(var(--kp-value) * (100% - var(--kp-ps-slant)));
         /* The cut's slant, full from the first two percent, none at zero, so an
            empty card shows no red at all. */
@@ -1942,7 +1945,12 @@
         position: absolute;
         inset: 2px 2px 2px 2px;
         background:
-            radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 28%, transparent) 0.9px, transparent 1px) 0 0 / 5px 5px,
+            radial-gradient(
+                    circle at center,
+                    color-mix(in srgb, var(--foreground) 28%, transparent) calc(0.9px * var(--kp-progressbar-scale, 1)),
+                    transparent calc(1px * var(--kp-progressbar-scale, 1))
+                )
+                0 0 / var(--kp-ps-dot) var(--kp-ps-dot),
             var(--background);
         clip-path: polygon(calc(var(--kp-ps-slant) - 1px) 0, 100% 0, calc(100% - var(--kp-ps-slant) + 1px) 100%, 0 100%);
     }
@@ -1995,7 +2003,7 @@
             animation: none;
             transform: none;
             clip-path: none;
-            background: repeating-linear-gradient(-69deg, var(--primary) 0 6px, transparent 6px 13px);
+            background: repeating-linear-gradient(-69deg, var(--primary) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-pitch));
         }
     }
 

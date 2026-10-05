@@ -1466,12 +1466,14 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='deco'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --dc-rib: calc(4px * var(--kp-progressbar-scale, 1));
+        --dc-rib-pitch: calc(5px * var(--kp-progressbar-scale, 1));
         --dc-gold: var(--primary);
         --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
-        --dc-tip: 0.45rem;
-        --dc-jewel: 0.4rem;
-        --dc-chevron: 0.8rem;
+        --dc-tip: calc(0.45rem * var(--kp-progressbar-scale, 1));
+        --dc-jewel: calc(0.4rem * var(--kp-progressbar-scale, 1));
+        --dc-chevron: calc(0.8rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='deco'] .kp-progressbar__track {
@@ -1484,7 +1486,7 @@
         --dc-at: calc(var(--kp-value) * 100%);
         inset: 1px;
         background:
-            linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x,
+            linear-gradient(90deg, var(--dc-gold) 0 var(--dc-rib), var(--dc-flute) var(--dc-rib)) 0 0 / var(--dc-rib-pitch) 100% repeat-x,
             var(--dc-gold);
         clip-path: polygon(
             0 0,

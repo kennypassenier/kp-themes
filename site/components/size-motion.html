@@ -213,6 +213,7 @@
                             <tr><td><code>data-kp-leaving</code></td><td>read, selector, written</td></tr>
                             <tr><td><code>data-kp-resizing</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reversing</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-settling</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-size-motion</code></td><td>selector</td></tr>
                     </tbody></table></div>
                 </section>
@@ -254,6 +255,7 @@
                             <tr><td><code>data-kp-folding</code></td><td>Written on an accordion item (`&lt;details&gt;`) while it folds shut; `open` goes only when the fold ends. Whatever counts only what is shown (a tile set) treats it as shut from the fold’s first frame. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-tiles-easing</code></td><td>Written on the grids of a tile set while their tiles ease to the set’s new height: the rows follow the tiles, and each tile clips what it has not yet grown to show. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-arrive</code></td><td>`none` on a box whose rows a live view redraws: nothing in it plays an arrival, so a refresh does not replay every row.</td></tr>
+                            <tr><td><code>data-kp-settling</code></td><td>On a root while its first render is drawn: nothing under it arrives and no box glides, it takes its size at once. js/auto.js writes it on the root of every `attachAll()` until its modules have attached and two frames are painted; set it yourself on a part a framework renders in several passes, and take it off when that part is drawn.</td></tr>
                             <tr><td><code>--kp-size-ease</code></td><td>A theme’s own curve for its size changes, held from overshooting. Default: the dialog entrance’s curve.</td></tr>
                             <tr><td><code>--kp-size-steps</code></td><td>`line` moves a size one line of text at a time, growing and shrinking alike (terminal).</td></tr>
                             <tr><td><code>--kp-motion-scale</code></td><td>On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.</td></tr>

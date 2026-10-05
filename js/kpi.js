@@ -281,21 +281,23 @@ function lengthPx(el, text, fallback) {
     return n;
 }
 
-/** A trend tile's label: one line, never wrapped and never cut [fix-99]. */
-const TREND_LABEL = ':scope > .kp-kpi--trend:not([hidden]) > .kp-kpi__label';
+/** A tile's label in a strip with columns: one line, never wrapped and never cut [fix-99, fix-101]. */
+const TILE_LABEL = ':scope > .kp-kpi:not([hidden]) > .kp-kpi__label';
 
-/** Every trend label in the strip fits its tile. @param {HTMLElement} strip */
-function trendLabelsFit(strip) {
-    return [...strip.querySelectorAll(TREND_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
+/** Every label in the strip fits its tile. @param {HTMLElement} strip */
+function labelsFit(strip) {
+    return [...strip.querySelectorAll(TILE_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
 }
 
 /**
  * Put one strip on its column count now: kpiColumns() over its shown
  * tiles, its inner width (or `width`), `--kp-kpi-min` (9rem) and its column
- * gap; writes `--kp-kpis-columns` and `data-kp-kpis-span-last`. A trend
- * tile's label is one line and never cut, so while one does not fit its
- * tile the strip takes its next smaller allowed count: the tile grows to
- * its label, and every tile in the row with it [fix-99].
+ * gap; writes `--kp-kpis-columns` and `data-kp-kpis-span-last`. A tile's
+ * label is one line and never cut, so while one does not fit its tile the
+ * strip takes its next smaller allowed count: the tile grows to its label,
+ * and every tile in the row with it [fix-99]. The count thus respects the
+ * widest label as well as `--kp-kpi-min`, at desk width and in a phone
+ * pane alike [fix-101].
  * @param {HTMLElement} strip
  * @param {number} [width] px; else measured
  */
@@ -313,7 +315,7 @@ export function fitKpiStrip(strip, width) {
         const { columns, spanLast } = kpiColumns(n, inner, { allowed, minTilePx, gapPx });
         strip.style.setProperty('--kp-kpis-columns', String(columns));
         strip.toggleAttribute('data-kp-kpis-span-last', spanLast);
-        if (columns <= 1 || columns >= last || trendLabelsFit(strip)) return;
+        if (columns <= 1 || columns >= last || labelsFit(strip)) return;
         last = columns;
         minTilePx = (inner - (columns - 1) * gapPx) / columns + 1;
     }
@@ -354,7 +356,7 @@ export function attachKpiStrips(root = document) {
         subtree: true,
         childList: true,
         attributes: true,
-        // A theme's type changes how wide a trend label is [fix-99].
+        // A theme's type changes how wide a label is [fix-99, fix-101].
         attributeFilter: ['hidden', 'data-kp-kpis-columns', 'data-theme'],
     });
     doc.fonts?.addEventListener('loadingdone', scan);

@@ -1921,13 +1921,14 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='synthwave'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-sw-road: calc(2.25rem * var(--kp-progressbar-scale, 1));
         --kp-sw-void: var(--sidebar-background);
         --kp-sw-core: var(--kp-core, hsl(from var(--foreground) h 20% 98%));
     }
 
     [data-theme='synthwave'] .kp-progressbar__track {
-        border-radius: var(--radius);
+        border-radius: calc(var(--radius) * var(--kp-progressbar-scale, 1));
         background: var(--kp-sw-void);
     }
 
@@ -1937,7 +1938,11 @@
         inset: 0;
         background:
             linear-gradient(hsl(from var(--border-strong) h s l / 0.5) 0 0) 0 50% / 100% 1px no-repeat,
-            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.38) 0 1px, transparent 1px 1.5rem);
+            repeating-linear-gradient(
+                90deg,
+                hsl(from var(--border-strong) h s l / 0.38) 0 1px,
+                transparent 1px calc(1.5rem * var(--kp-progressbar-scale, 1))
+            );
     }
 
     [data-theme='synthwave'] .kp-progressbar__track::after {
@@ -1996,9 +2001,14 @@
         content: '';
         position: absolute;
         inset-block: 0;
-        inset-inline-start: -2.25rem;
-        inline-size: calc(100% + 4.5rem);
-        background: linear-gradient(90deg, var(--kp-sw-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 3px repeat-x;
+        inset-inline-start: calc(-1 * var(--kp-sw-road));
+        inline-size: calc(100% + 2 * var(--kp-sw-road));
+        background: linear-gradient(
+                90deg,
+                var(--kp-sw-core) 0 calc(1.25rem * var(--kp-progressbar-scale, 1)),
+                transparent calc(1.25rem * var(--kp-progressbar-scale, 1))
+            )
+            0 50% / var(--kp-sw-road) 3px repeat-x;
         filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
     }
 
@@ -2465,7 +2475,7 @@
             transform: translateX(0);
         }
         to {
-            transform: translateX(2.25rem);
+            transform: translateX(var(--kp-sw-road));
         }
     }
 

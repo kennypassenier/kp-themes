@@ -825,6 +825,73 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
         });
     }
 
+    // The first render of a page is not news [fix-100]: since every
+    // opposite motion became a mirror (fff6fe45) the table's own chrome
+    // (pager, group buttons, edit buttons) arrived as a leave turned
+    // around on load, 263 elements in one queue of about ten seconds, and
+    // the pager's bar stood 186 px tall instead of 52 until a click. Only
+    // what is added after the page settled arrives: a group opened.
+    test('nothing in a table arrives on load, its pager bar is settled from the first frame, a group opened later arrives', async ({ page }) => {
+        await page.addInitScript(() => {
+            const seen = /** @type {Element[]} */ ([]);
+            /** @type {any} */ (window).__kpArrived = seen;
+            new MutationObserver((records) => {
+                for (const record of records) {
+                    const el = /** @type {Element} */ (record.target);
+                    // The server-mode demo's request log is news: a line
+                    // for each answer, the first 400 ms after its request.
+                    if (
+                        el.hasAttribute('data-kp-arriving') &&
+                        el.closest('.kp-datatable') &&
+                        !el.closest('[data-cat-server-log]') &&
+                        !seen.includes(el)
+                    )
+                        seen.push(el);
+                }
+            }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ['data-kp-arriving'] });
+        });
+        const errors = /** @type {string[]} */ ([]);
+        page.on('pageerror', (error) => errors.push(String(error)));
+        await page.goto('/catalogue/table.html');
+        // The bar under the table with the group, which a click redraws.
+        const bar = () =>
+            page.evaluate(() =>
+                Math.round(
+                    document
+                        .querySelector('tr[data-kp-row-group="home"]')
+                        ?.closest('.kp-datatable')
+                        ?.querySelector('[data-kp-datatable-pager]')
+                        ?.closest('.kp-datatable__bar')
+                        ?.getBoundingClientRect().height ?? -1,
+                ),
+            );
+        await page.evaluate(() => {
+            for (let el = document.querySelector('tr[data-kp-row-group="home"]')?.parentElement; el; el = el.parentElement) el.hidden = false;
+        });
+        await page.waitForTimeout(500);
+        const early = await bar();
+        await page.waitForTimeout(2500);
+        expect(await page.evaluate(() => /** @type {any} */ (window).__kpArrived.length), 'elements in a table that arrived on load').toBe(0);
+        const toggle = page.locator('tr[data-kp-row-group="home"] [data-kp-group-toggle]');
+        await toggle.click();
+        await page.waitForTimeout(1500);
+        await toggle.click();
+        await expect
+            .poll(() =>
+                page.evaluate(
+                    () =>
+                        /** @type {any} */ (window).__kpArrived.filter((/** @type {Element} */ el) => el.matches('tr[data-kp-group-of="home"]'))
+                            .length,
+                ),
+            )
+            .toBe(3);
+        await page.waitForTimeout(1500);
+        // Two clicks redrew the pager: the bar's settled height, which it
+        // must have had from the first frame (52 px in formal; 186 before).
+        expect(early, 'the pager bar half a second in, against its height once redrawn').toBe(await bar());
+        expect(errors).toEqual([]);
+    });
+
     test('under reduced motion the group folds and opens at once', async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await ready(page, 'formal');

@@ -1158,8 +1158,11 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='solstice'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --kp-ps-head: 0.875rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-inset: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dash: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dash-pitch: calc(12px * var(--kp-progressbar-scale, 1));
         --kp-ps-gold: color-mix(in oklab, var(--primary) 55%, var(--foreground));
     }
 
@@ -1172,7 +1175,7 @@
     }
 
     [data-theme='solstice'] .kp-progressbar__fill {
-        inset-block: 2px;
+        inset-block: var(--kp-ps-inset);
         border-radius: var(--radius);
         background: linear-gradient(90deg, var(--accent), var(--primary) 62%, var(--kp-ps-gold));
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0 round 0 var(--radius) var(--radius) 0);
@@ -1198,7 +1201,7 @@
                 var(--primary) calc(100% - var(--kp-ps-head) / 2),
                 transparent 0
             )
-            center / 100% calc(100% - 4px) no-repeat;
+            center / 100% calc(100% - 2 * var(--kp-ps-inset)) no-repeat;
         animation: kp-progressbar-solstice-arc 2400ms var(--fx-ease) infinite;
     }
 
@@ -1218,13 +1221,14 @@
             inline-size: auto;
             animation: none;
             transform: none;
-            background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px) center / 100% 3px no-repeat;
+            background: repeating-linear-gradient(90deg, var(--accent) 0 var(--kp-ps-dash), transparent var(--kp-ps-dash) var(--kp-ps-dash-pitch))
+                center / 100% calc(3px * var(--kp-progressbar-scale, 1)) no-repeat;
         }
 
         [data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
             inset-inline-end: auto;
             inset-inline-start: calc(50% - var(--kp-ps-head) / 2);
-            box-shadow: 0 0 0 4px var(--muted);
+            box-shadow: 0 0 0 calc(4px * var(--kp-progressbar-scale, 1)) var(--muted);
         }
     }
 

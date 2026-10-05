@@ -1734,12 +1734,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='brutalism'] .kp-progressbar {
-        --kp-progressbar-height: 1.375rem;
+        --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
         --br-line: var(--kp-line, 3px);
-        --br-drop: 4px;
+        --br-drop: calc(4px * var(--kp-progressbar-scale, 1));
         --br-ink: var(--border-strong);
-        --br-block: 1.375rem;
-        --br-pitch: 20px; /* horizontal repeat of a 45° stripe at 14.142px */
+        --br-block: calc(1.375rem * var(--kp-progressbar-scale, 1));
+        --br-pitch: calc(20px * var(--kp-progressbar-scale, 1)); /* horizontal repeat of a 45° stripe at 14.142px */
+        --br-stripe: calc(14.1421px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='brutalism'] .kp-progressbar__track {
@@ -1751,7 +1752,13 @@
     }
 
     [data-theme='brutalism'] .kp-progressbar__fill {
-        background: repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px), var(--primary);
+        background:
+            repeating-linear-gradient(
+                -45deg,
+                var(--secondary) 0 calc(4.5px * var(--kp-progressbar-scale, 1)),
+                transparent calc(4.5px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
+            ),
+            var(--primary);
         transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
@@ -1779,7 +1786,11 @@
         inset-block: 0;
         inset-inline-start: calc(-1 * var(--br-pitch));
         inline-size: calc(100% + var(--br-pitch));
-        background: repeating-linear-gradient(-45deg, var(--br-ink) 0 3px, transparent 3px 14.1421px);
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--br-ink) 0 calc(3px * var(--kp-progressbar-scale, 1)),
+            transparent calc(3px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
+        );
     }
 
     [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {

@@ -118,7 +118,7 @@ const PAGES = (() => {
 })();
 
 /** The attributes an attach function never sets or sets to a moment, not a state. */
-const VOLATILE = new Set(['style', 'data-kp-effects-done', 'data-kp-auto-ready', 'data-n1', 'data-n2']);
+const VOLATILE = new Set(['style', 'data-kp-effects-done', 'data-kp-auto-ready', 'data-kp-settling', 'data-n1', 'data-n2']);
 /** Attributes whose values carry a generated counter. */
 const ID_LIKE = /^(id|for|aria-controls|aria-labelledby|aria-describedby|aria-owns|aria-activedescendant|list|form|data-kp-for)$/;
 

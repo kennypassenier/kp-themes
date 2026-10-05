@@ -1257,7 +1257,10 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='formal'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size);
+           the 1px rules and the 2px pen stay the register's line weight. */
+        --kp-ps-px: calc(1px * var(--kp-progressbar-scale, 1));
         /* 1 when the value has reached the end, 0 below it: closes the account. */
         --kp-ps-closed: clamp(0, (var(--kp-value) - 0.999) * 1000, 1);
         /* 1 once anything is entered, 0 at nothing. */
@@ -1268,13 +1271,13 @@
         border-radius: 0;
         background:
             linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 100% 1px no-repeat,
-            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 8px no-repeat,
-            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 8px no-repeat;
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat;
     }
 
     [data-theme='formal'] .kp-progressbar__fill {
-        inset-block: 4px auto;
-        block-size: 4px;
+        inset-block: calc(4 * var(--kp-ps-px)) auto;
+        block-size: calc(4 * var(--kp-ps-px));
         background: var(--primary);
         transition: clip-path 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
@@ -1283,7 +1286,7 @@
         content: '';
         position: absolute;
         inset-inline: 0;
-        inset-block-start: 10px;
+        inset-block-start: calc(10 * var(--kp-ps-px));
         block-size: 1px;
         background: var(--primary);
         opacity: var(--kp-ps-closed);
@@ -1293,7 +1296,7 @@
     [data-theme='formal'] .kp-progressbar__head {
         inline-size: 2px;
         translate: -100% 0;
-        inset-block: 0 2px;
+        inset-block: 0 calc(2 * var(--kp-ps-px));
         background: var(--primary);
         opacity: calc(var(--kp-ps-entered) - var(--kp-ps-closed));
         transition:
@@ -1306,7 +1309,8 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: radial-gradient(circle, var(--primary) 0 1.4px, transparent 1.9px) 0 50% / 7px 4px repeat-x;
+        background: radial-gradient(circle, var(--primary) 0 calc(1.4 * var(--kp-ps-px)), transparent calc(1.9 * var(--kp-ps-px))) 0 50% /
+            calc(7 * var(--kp-ps-px)) calc(4 * var(--kp-ps-px)) repeat-x;
         transform-origin: left center;
         transition: transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }

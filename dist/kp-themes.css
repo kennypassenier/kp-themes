@@ -5540,7 +5540,10 @@
 
     .kp-kpi[data-kp-tone='destructive'] {
         --kp-kpi-meter-fill: var(--destructive);
-        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border));
+        /* Mixed with the frame that holds 3:1, not the hairline [fix-101]:
+         * with `--border` it read 2.07:1 (lapis) to 2.94:1 on the page in
+         * eleven themes. */
+        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border-strong));
         box-shadow: inset 3px 0 0 var(--destructive);
     }
 
@@ -5810,6 +5813,20 @@
         grid-column: 1 / -1;
     }
 
+    /* A tile of a strip with columns is framed in `--border-strong`, the
+ * boundary DI1 holds at 3:1 against the page, the card and the popover:
+ * its frame is what parts it from the next tile and from the page, and
+ * `--border` read 1.21:1 (synthwave, shade-dark) to 2.72:1 (retro) in 20
+ * of 22 themes [fix-101]. Knob `--kp-kpi-border`: dark and titanium, whose
+ * `--border-strong` stays under 3:1 (an open DI1 finding), set a share of
+ * `--foreground` in it. `:where()` keeps the
+ * strip out of the weight, so a tone, a hover and a pressed toggle still
+ * draw their own edge. Its label, figure and words keep one line box each
+ * whatever the state (the rules with the trend tile's, below). */
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi {
+        border-color: var(--kp-kpi-border, var(--border-strong));
+    }
+
     /* --- A key figure with its 24-hour trend [scope-143] ------------------ */
 
     /* `.kp-kpi--trend`: the whole tile is a link (its `.kp-kpi__link`
@@ -5831,8 +5848,11 @@
         contain: layout;
     }
 
+    /* At rest a trend tile in a strip with columns is framed in
+ * `--border-strong` already [fix-101], so a hover draws `--ring`, as a
+ * link tile and a toggle do. */
     .kp-kpi--trend:hover {
-        border-color: var(--border-strong);
+        border-color: var(--ring);
     }
 
     .kp-kpi--trend:has(.kp-kpi__link:focus-visible) {
@@ -5840,33 +5860,47 @@
         outline-offset: 2px;
     }
 
-    /* The label is one line, never wrapped and never cut [fix-99]: the
- * name and its note stay on the tile's first line, clear of the link in
- * the corner, and step down with the tile's width (container query units,
+    /* The label is one line, never wrapped and never cut [fix-99], in a
+ * trend tile and in every tile of a strip with columns [fix-101], where
+ * it was cut (223 px in a 220 px box in dark and deco) or wrapped by the
+ * narrow tile's rule: the name and its note stay on the tile's first
+ * line, clear of the trend's link in the corner, and step down with the tile's width (container query units,
  * from `--kp-text-xs` to seven eighths of it, as the calendar's title does
  * [fix-98]). Where it still does not fit, the tile grows: attachKpiStrips()
  * (js/kpi.js) takes the strip to its next allowed column count until every
- * trend label fits. The tile is a size container, so its content cannot
+ * label fits, in the phone pane too. The tile is a size container, so its content cannot
  * widen it from CSS: `min-inline-size: fit-content` and a `max-content`
  * track both left it at 228.5 px with the label over its edge. */
-    .kp-kpi--trend > .kp-kpi__label {
+    .kp-kpi--trend > .kp-kpi__label,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__label {
         min-inline-size: 0;
-        padding-inline-end: 4.5rem;
         overflow: visible;
         font-size: clamp(calc(var(--kp-text-xs, 0.75rem) * 0.875), 5cqi, var(--kp-text-xs, 0.75rem));
+        /* The line box of the label at its full size, so a label that steps
+         * down does not lower its tile (2.3 px, the strip's height moving
+         * with its column count [fix-101]). */
+        line-height: calc(var(--kp-text-xs, 0.75rem) * var(--kp-line-height, 1.5));
         text-overflow: clip;
         white-space: nowrap;
     }
 
+    .kp-kpi--trend > .kp-kpi__label {
+        padding-inline-end: 4.5rem;
+    }
+
     /* Every state as tall as filled: the value line keeps its height under
- * a skeleton, and the words under it keep two lines (three in a narrow
- * tile; knob `--kp-kpi-trend-lines`), so a row of trends does not shrink
- * while it loads. */
-    .kp-kpi--trend > .kp-kpi__value {
+ * a skeleton or a dash, and the words under it keep two lines (three in a
+ * narrow trend tile; knob `--kp-kpi-trend-lines`), so a row of trends, or
+ * of the tiles of a strip with columns, does not shrink while it loads or
+ * grow when a figure's words take a second line (79.4 to 121.2 px in one
+ * strip before [fix-101]). */
+    .kp-kpi--trend > .kp-kpi__value,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__value {
         min-block-size: 1lh;
     }
 
-    .kp-kpi--trend > .kp-kpi__trend {
+    .kp-kpi--trend > .kp-kpi__trend,
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi > .kp-kpi__trend {
         min-block-size: calc(var(--kp-kpi-trend-lines, 2) * 1lh);
     }
 
@@ -9480,7 +9514,7 @@
     .kp-progress__wrap {
         display: inline-flex;
         align-items: center;
-        gap: var(--kp-space-sm);
+        gap: calc(var(--kp-space-sm) * var(--kp-progressbar-scale, 1));
         /* Never wider than its container: the bar inside gives way, so a
          * phone does not scroll sideways (DI11). */
         max-inline-size: 100%;
@@ -9513,7 +9547,8 @@
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
-        gap: var(--kp-progress-group-gap, var(--kp-space-xs)) var(--kp-space-sm);
+        gap: var(--kp-progress-group-gap, calc(var(--kp-space-xs) * var(--kp-progress-group-scale, 1)))
+            calc(var(--kp-space-sm) * var(--kp-progress-group-scale, 1));
     }
 
     .kp-progress-group .kp-progress__wrap {
@@ -9529,7 +9564,7 @@
     }
 
     .kp-progress__label {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
         color: var(--muted-foreground);
     }
 
@@ -9539,7 +9574,7 @@
     }
 
     .kp-progress__value {
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
         color: var(--muted-foreground);
     }
 
@@ -9584,11 +9619,25 @@
  * Knobs: --kp-progressbar-height (0.75rem), --kp-progressbar-max-width
  * (32rem; none inside a group), --kp-progressbar-duration (240ms) and
  * --kp-progressbar-ease (ease-out), the values the approved research round
- * used (research/progress-signature/base.css). */
+ * used (research/progress-signature/base.css).
+ *
+ * Three sizes [Kenny, 2026-10-05: "zodat dit de kleine is, een midden en
+ * een grotere optie"]: the bar as it was is the small one, and
+ * `.kp-progressbar--md` and `.kp-progressbar--lg` are the other two. A size
+ * is one number, --kp-progressbar-scale (1, 1.5, 2), that every part of the
+ * drawing is multiplied by — the base track here and each register's own
+ * bar, its height and its glyphs, cells and pitches alike — so a theme's bar
+ * grows as one drawing rather than as a taller box around the same marks.
+ * 1.5 and 2 because every register's small height is a whole multiple of
+ * 2px (12 to 22px), so both steps land on whole pixels in every theme; the
+ * reading beside the bar steps up the type scale with it (13, 16, 18px)
+ * through --kp-progressbar-text. The size sits on the bar; the wrap and the
+ * group around it read it from there, so the label and the gaps follow. */
     .kp-progressbar {
         --kp-value: 0;
         --kp-steps: 10;
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-scale: 1;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
         position: relative;
         display: block;
         inline-size: 100%;
@@ -9603,8 +9652,32 @@
         inset: 0;
         display: block;
         overflow: hidden;
-        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        border-radius: calc(var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)) * var(--kp-progressbar-scale, 1));
         background: var(--muted);
+    }
+
+    /* The sizes: one number each, set on the bar (which states its own, so
+ * an ancestor's never leaks into a small bar) and read by the row around
+ * it, so the reading and the gap grow with the track. A group takes the
+ * gaps of the largest size it holds and gives no size to its rows. */
+    .kp-progressbar--md,
+    .kp-progress__wrap:has(> .kp-progressbar--md) {
+        --kp-progressbar-scale: 1.5;
+        --kp-progressbar-text: var(--kp-text-md, 1rem);
+    }
+
+    .kp-progressbar--lg,
+    .kp-progress__wrap:has(> .kp-progressbar--lg) {
+        --kp-progressbar-scale: 2;
+        --kp-progressbar-text: calc(var(--kp-text-md, 1rem) * 1.125);
+    }
+
+    .kp-progress-group:has(.kp-progressbar--md) {
+        --kp-progress-group-scale: 1.5;
+    }
+
+    .kp-progress-group:has(.kp-progressbar--lg) {
+        --kp-progress-group-scale: 2;
     }
 
     /* The fill spans the track and is clipped to the value, so a pattern in
@@ -15224,7 +15297,11 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='cyberpunk'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at this bar's size: dash pitches, lane
+           offsets and stream travel are counted in it so the bar grows as one
+           drawing; 1-2px rules and frame lines stay the theme's line weight. */
+        --kp-cp-px: calc(1px * var(--kp-progressbar-scale, 1));
         --kp-cp-void: var(--sidebar-background);
         --kp-cp-cut: var(--kp-progressbar-height);
     }
@@ -15238,7 +15315,12 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.32) 0 6px, transparent 6px 10px) 0 50% / 100% 2px no-repeat;
+        background: repeating-linear-gradient(
+                90deg,
+                hsl(from var(--primary) h s l / 0.32) 0 calc(6 * var(--kp-cp-px)),
+                transparent calc(6 * var(--kp-cp-px)) calc(10 * var(--kp-cp-px))
+            )
+            0 50% / 100% 2px no-repeat;
     }
 
     [data-theme='cyberpunk'] .kp-progressbar__track::after {
@@ -15268,7 +15350,7 @@
         position: absolute;
         inset-block: 0;
         inset-inline-start: 0;
-        inline-size: 3rem;
+        inline-size: calc(3rem * var(--kp-progressbar-scale, 1));
         background: linear-gradient(90deg, transparent, hsl(from var(--fx-hot, var(--foreground)) h s 96% / 0.75), transparent);
         transform: translateX(-100%);
     }
@@ -15293,12 +15375,12 @@
     }
 
     [data-theme='cyberpunk'] .kp-progressbar__head::after {
-        /* Parallel to the cut, 3px of void between them. */
-        inset-inline-start: calc(5px - var(--kp-cp-cut));
+        /* Parallel to the cut, 3px of void between them (at scale 1). */
+        inset-inline-start: calc(calc(5 * var(--kp-cp-px)) - var(--kp-cp-cut));
         inset-block: 2px;
-        inline-size: calc(var(--kp-cp-cut) + 1px);
+        inline-size: calc(var(--kp-cp-cut) + var(--kp-cp-px));
         background: var(--accent);
-        clip-path: polygon(0 0, 5px 0, 100% 100%, calc(100% - 5px) 100%);
+        clip-path: polygon(0 0, calc(5 * var(--kp-cp-px)) 0, 100% 100%, calc(100% - calc(5 * var(--kp-cp-px))) 100%);
         /* Only between the ends: an empty rail and a full face carry no packet. */
         opacity: clamp(0, min(var(--kp-value), 1 - var(--kp-value)) * 1000, 1);
     }
@@ -15320,8 +15402,8 @@
         content: '';
         position: absolute;
         inset-block: 0;
-        inset-inline-start: -216px;
-        inline-size: calc(100% + 432px);
+        inset-inline-start: calc(-216 * var(--kp-cp-px));
+        inline-size: calc(100% + calc(432 * var(--kp-cp-px)));
         transform: none;
     }
 
@@ -15330,55 +15412,74 @@
         background:
             linear-gradient(
                     90deg,
-                    transparent 6px,
-                    var(--kp-cp-dash) 6px 28px,
-                    transparent 28px 36px,
-                    var(--kp-cp-dash) 36px 44px,
-                    transparent 44px 52px,
-                    var(--kp-cp-dash) 52px 92px,
-                    transparent 92px 100px,
-                    var(--kp-cp-dash) 100px 114px,
-                    transparent 114px 122px,
-                    var(--kp-cp-dash) 122px 138px,
-                    transparent 138px
+                    transparent calc(6 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(6 * var(--kp-cp-px)) calc(28 * var(--kp-cp-px)),
+                    transparent calc(28 * var(--kp-cp-px)) calc(36 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(36 * var(--kp-cp-px)) calc(44 * var(--kp-cp-px)),
+                    transparent calc(44 * var(--kp-cp-px)) calc(52 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(52 * var(--kp-cp-px)) calc(92 * var(--kp-cp-px)),
+                    transparent calc(92 * var(--kp-cp-px)) calc(100 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(100 * var(--kp-cp-px)) calc(114 * var(--kp-cp-px)),
+                    transparent calc(114 * var(--kp-cp-px)) calc(122 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(122 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
                 )
-                0 3px / 144px 2px repeat-x,
+                0 calc(3 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x,
             linear-gradient(
                     90deg,
-                    transparent 4px,
-                    var(--kp-cp-dash) 4px 14px,
-                    transparent 14px 20px,
-                    var(--kp-cp-dash) 20px 54px,
-                    transparent 54px 62px,
-                    var(--kp-cp-dash) 62px 68px,
-                    transparent 68px 76px,
-                    var(--kp-cp-dash) 76px 104px,
-                    transparent 104px 112px,
-                    var(--kp-cp-dash) 112px 138px,
-                    transparent 138px
+                    transparent calc(4 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(4 * var(--kp-cp-px)) calc(14 * var(--kp-cp-px)),
+                    transparent calc(14 * var(--kp-cp-px)) calc(20 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(20 * var(--kp-cp-px)) calc(54 * var(--kp-cp-px)),
+                    transparent calc(54 * var(--kp-cp-px)) calc(62 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(62 * var(--kp-cp-px)) calc(68 * var(--kp-cp-px)),
+                    transparent calc(68 * var(--kp-cp-px)) calc(76 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(76 * var(--kp-cp-px)) calc(104 * var(--kp-cp-px)),
+                    transparent calc(104 * var(--kp-cp-px)) calc(112 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(112 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
                 )
-                0 6px / 144px 2px repeat-x,
+                0 calc(6 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x,
             linear-gradient(
                     90deg,
-                    transparent 10px,
-                    var(--kp-cp-dash) 10px 40px,
-                    transparent 40px 48px,
-                    var(--kp-cp-dash) 48px 60px,
-                    transparent 60px 68px,
-                    var(--kp-cp-dash) 68px 112px,
-                    transparent 112px 120px,
-                    var(--kp-cp-dash) 120px 138px,
-                    transparent 138px
+                    transparent calc(10 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(10 * var(--kp-cp-px)) calc(40 * var(--kp-cp-px)),
+                    transparent calc(40 * var(--kp-cp-px)) calc(48 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(48 * var(--kp-cp-px)) calc(60 * var(--kp-cp-px)),
+                    transparent calc(60 * var(--kp-cp-px)) calc(68 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(68 * var(--kp-cp-px)) calc(112 * var(--kp-cp-px)),
+                    transparent calc(112 * var(--kp-cp-px)) calc(120 * var(--kp-cp-px)),
+                    var(--kp-cp-dash) calc(120 * var(--kp-cp-px)) calc(138 * var(--kp-cp-px)),
+                    transparent calc(138 * var(--kp-cp-px))
                 )
-                0 9px / 144px 2px repeat-x;
+                0 calc(9 * var(--kp-cp-px)) / calc(144 * var(--kp-cp-px)) 2px repeat-x;
     }
 
     [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
         background:
-            linear-gradient(90deg, transparent 58px, var(--accent) 58px 70px, transparent 70px) 0 3px / 216px 2px repeat-x,
-            linear-gradient(90deg, transparent 150px, var(--accent) 150px 166px, transparent 166px) 0 6px / 216px 2px repeat-x,
-            linear-gradient(90deg, transparent 24px, var(--accent) 24px 32px, transparent 32px 176px, var(--accent) 176px 188px, transparent 188px) 0
-                9px / 216px 2px repeat-x;
+            linear-gradient(
+                    90deg,
+                    transparent calc(58 * var(--kp-cp-px)),
+                    var(--accent) calc(58 * var(--kp-cp-px)) calc(70 * var(--kp-cp-px)),
+                    transparent calc(70 * var(--kp-cp-px))
+                )
+                0 calc(3 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(150 * var(--kp-cp-px)),
+                    var(--accent) calc(150 * var(--kp-cp-px)) calc(166 * var(--kp-cp-px)),
+                    transparent calc(166 * var(--kp-cp-px))
+                )
+                0 calc(6 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(24 * var(--kp-cp-px)),
+                    var(--accent) calc(24 * var(--kp-cp-px)) calc(32 * var(--kp-cp-px)),
+                    transparent calc(32 * var(--kp-cp-px)) calc(176 * var(--kp-cp-px)),
+                    var(--accent) calc(176 * var(--kp-cp-px)) calc(188 * var(--kp-cp-px)),
+                    transparent calc(188 * var(--kp-cp-px))
+                )
+                0 calc(9 * var(--kp-cp-px)) / calc(216 * var(--kp-cp-px)) 2px repeat-x;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -15848,7 +15949,7 @@
             transform: translateX(0);
         }
         to {
-            transform: translateX(144px);
+            transform: translateX(calc(144 * var(--kp-cp-px)));
         }
     }
 
@@ -15857,7 +15958,7 @@
             transform: translateX(0);
         }
         to {
-            transform: translateX(216px);
+            transform: translateX(calc(216 * var(--kp-cp-px)));
         }
     }
 
@@ -18586,9 +18687,11 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='retro'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
-        --kp-rp-block: 0.5rem;
-        --kp-rp-gap: 2px;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
+        --kp-rp-block: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        --kp-rp-gap: calc(2px * var(--kp-progressbar-scale, 1));
+        /* One dither cell of the indeterminate checker. */
+        --kp-rp-dot: calc(2px * var(--kp-progressbar-scale, 1));
         --kp-rp-pitch: calc(var(--kp-rp-block) + var(--kp-rp-gap));
         /* The run of blocks: a whole number of them, centred in the field, so
            100% is the last block whole and never a sliver. */
@@ -18627,7 +18730,7 @@
         animation: none;
         background:
             repeating-linear-gradient(90deg, transparent 0 var(--kp-rp-block), var(--popover) var(--kp-rp-block) var(--kp-rp-pitch)),
-            repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
+            repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / var(--kp-rp-dot) var(--kp-rp-dot);
     }
 
     [data-theme='retro'] .kp-spinner {
@@ -21029,13 +21132,14 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='synthwave'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-sw-road: calc(2.25rem * var(--kp-progressbar-scale, 1));
         --kp-sw-void: var(--sidebar-background);
         --kp-sw-core: var(--kp-core, hsl(from var(--foreground) h 20% 98%));
     }
 
     [data-theme='synthwave'] .kp-progressbar__track {
-        border-radius: var(--radius);
+        border-radius: calc(var(--radius) * var(--kp-progressbar-scale, 1));
         background: var(--kp-sw-void);
     }
 
@@ -21045,7 +21149,11 @@
         inset: 0;
         background:
             linear-gradient(hsl(from var(--border-strong) h s l / 0.5) 0 0) 0 50% / 100% 1px no-repeat,
-            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.38) 0 1px, transparent 1px 1.5rem);
+            repeating-linear-gradient(
+                90deg,
+                hsl(from var(--border-strong) h s l / 0.38) 0 1px,
+                transparent 1px calc(1.5rem * var(--kp-progressbar-scale, 1))
+            );
     }
 
     [data-theme='synthwave'] .kp-progressbar__track::after {
@@ -21104,9 +21212,14 @@
         content: '';
         position: absolute;
         inset-block: 0;
-        inset-inline-start: -2.25rem;
-        inline-size: calc(100% + 4.5rem);
-        background: linear-gradient(90deg, var(--kp-sw-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 3px repeat-x;
+        inset-inline-start: calc(-1 * var(--kp-sw-road));
+        inline-size: calc(100% + 2 * var(--kp-sw-road));
+        background: linear-gradient(
+                90deg,
+                var(--kp-sw-core) 0 calc(1.25rem * var(--kp-progressbar-scale, 1)),
+                transparent calc(1.25rem * var(--kp-progressbar-scale, 1))
+            )
+            0 50% / var(--kp-sw-road) 3px repeat-x;
         filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
     }
 
@@ -21573,7 +21686,7 @@
             transform: translateX(0);
         }
         to {
-            transform: translateX(2.25rem);
+            transform: translateX(var(--kp-sw-road));
         }
     }
 
@@ -23585,10 +23698,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='phantom'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
-        --kp-ps-slant: 0.375rem;
-        --kp-ps-shard: 0.3125rem;
-        --kp-ps-gap: 3px;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-slant: calc(0.375rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-shard: calc(0.3125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-gap: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dot: calc(5px * var(--kp-progressbar-scale, 1));
+        --kp-ps-stripe: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-pitch: calc(13px * var(--kp-progressbar-scale, 1));
         --kp-ps-edge: calc(var(--kp-value) * (100% - var(--kp-ps-slant)));
         /* The cut's slant, full from the first two percent, none at zero, so an
            empty card shows no red at all. */
@@ -23606,7 +23722,12 @@
         position: absolute;
         inset: 2px 2px 2px 2px;
         background:
-            radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 28%, transparent) 0.9px, transparent 1px) 0 0 / 5px 5px,
+            radial-gradient(
+                    circle at center,
+                    color-mix(in srgb, var(--foreground) 28%, transparent) calc(0.9px * var(--kp-progressbar-scale, 1)),
+                    transparent calc(1px * var(--kp-progressbar-scale, 1))
+                )
+                0 0 / var(--kp-ps-dot) var(--kp-ps-dot),
             var(--background);
         clip-path: polygon(calc(var(--kp-ps-slant) - 1px) 0, 100% 0, calc(100% - var(--kp-ps-slant) + 1px) 100%, 0 100%);
     }
@@ -23659,7 +23780,7 @@
             animation: none;
             transform: none;
             clip-path: none;
-            background: repeating-linear-gradient(-69deg, var(--primary) 0 6px, transparent 6px 13px);
+            background: repeating-linear-gradient(-69deg, var(--primary) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-pitch));
         }
     }
 
@@ -25986,12 +26107,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='terminal'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
         /* The run between the brackets, a whole number of cells, so the last
            cell is never cut and 100% is exactly every cell. */
         --kp-tp-run: round(down, 100% - 2ch, 1ch);
         font-family: var(--theme-font-mono);
-        font-size: 1rem;
+        font-size: calc(1rem * var(--kp-progressbar-scale, 1));
         line-height: var(--kp-progressbar-height);
         white-space: nowrap;
         color: var(--foreground);
@@ -26046,7 +26167,7 @@
     }
 
     [data-theme='terminal'] .kp-progressbar__head {
-        inset-block: 0.1875rem;
+        inset-block: calc(0.1875rem * var(--kp-progressbar-scale, 1));
         inline-size: 1ch;
         background: var(--foreground);
         box-shadow: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));
@@ -28306,12 +28427,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='brutalism'] .kp-progressbar {
-        --kp-progressbar-height: 1.375rem;
+        --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
         --br-line: var(--kp-line, 3px);
-        --br-drop: 4px;
+        --br-drop: calc(4px * var(--kp-progressbar-scale, 1));
         --br-ink: var(--border-strong);
-        --br-block: 1.375rem;
-        --br-pitch: 20px; /* horizontal repeat of a 45° stripe at 14.142px */
+        --br-block: calc(1.375rem * var(--kp-progressbar-scale, 1));
+        --br-pitch: calc(20px * var(--kp-progressbar-scale, 1)); /* horizontal repeat of a 45° stripe at 14.142px */
+        --br-stripe: calc(14.1421px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='brutalism'] .kp-progressbar__track {
@@ -28323,7 +28445,13 @@
     }
 
     [data-theme='brutalism'] .kp-progressbar__fill {
-        background: repeating-linear-gradient(-45deg, var(--secondary) 0 4.5px, transparent 4.5px 14.1421px), var(--primary);
+        background:
+            repeating-linear-gradient(
+                -45deg,
+                var(--secondary) 0 calc(4.5px * var(--kp-progressbar-scale, 1)),
+                transparent calc(4.5px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
+            ),
+            var(--primary);
         transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
@@ -28351,7 +28479,11 @@
         inset-block: 0;
         inset-inline-start: calc(-1 * var(--br-pitch));
         inline-size: calc(100% + var(--br-pitch));
-        background: repeating-linear-gradient(-45deg, var(--br-ink) 0 3px, transparent 3px 14.1421px);
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--br-ink) 0 calc(3px * var(--kp-progressbar-scale, 1)),
+            transparent calc(3px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
+        );
     }
 
     [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
@@ -28905,6 +29037,10 @@
         /* The month heatmap's nav goes on two rows below this width: the
            widest month and the three buttons in this type [fix-98]. */
         --kp-calendar-nav-fit: 22rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.98:1 on the page and 2.58:1 on the card here (DI1, open), so
+           three twentieths of the ink go in it: 3.96:1 and 3.43:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 85%, var(--foreground));
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -30484,12 +30620,15 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='titanium'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --ti-cut: 0.4rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --ti-cut: calc(0.4rem * var(--kp-progressbar-scale, 1));
         --ti-edge: var(--border-strong);
         --ti-iris: linear-gradient(90deg, var(--chart-1), var(--chart-2) 55%, var(--chart-3));
-        --ti-slug: 0.35rem;
+        --ti-slug: calc(0.35rem * var(--kp-progressbar-scale, 1));
         --ti-weave: color-mix(in oklab, var(--foreground) 9%, transparent);
+        --ti-weave-pitch: calc(5px * var(--kp-progressbar-scale, 1));
+        --ti-mask-bar: calc(0.6rem * var(--kp-progressbar-scale, 1));
+        --ti-mask-pitch: calc(0.95rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='titanium'] .kp-progressbar__track {
@@ -30515,9 +30654,9 @@
             linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 1px 100% no-repeat,
             linear-gradient(var(--ti-edge), var(--ti-edge)) right top / 1px 100% no-repeat,
             linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
-                0 0 / 5px 5px,
+                0 0 / var(--ti-weave-pitch) var(--ti-weave-pitch),
             linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
-                0 0 / 5px 5px,
+                0 0 / var(--ti-weave-pitch) var(--ti-weave-pitch),
             var(--muted);
     }
 
@@ -30546,8 +30685,8 @@
         clip-path: none;
         animation: none;
         opacity: 0.7;
-        -webkit-mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
-        mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
+        -webkit-mask: repeating-linear-gradient(110deg, var(--foreground) 0 var(--ti-mask-bar), transparent var(--ti-mask-bar) var(--ti-mask-pitch));
+        mask: repeating-linear-gradient(110deg, var(--foreground) 0 var(--ti-mask-bar), transparent var(--ti-mask-bar) var(--ti-mask-pitch));
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -32743,9 +32882,10 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='pastel'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
-        --kp-ps-head: 1rem;
-        --kp-ps-inset: 0.1875rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-inset: calc(0.1875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-drop: calc(2px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='pastel'] .kp-progressbar__track {
@@ -32763,16 +32903,20 @@
         opacity: 0.55;
         mask:
             linear-gradient(black 0 0) center / 100% 2px no-repeat,
-            radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center / 0.75rem 0.375rem space no-repeat;
+            radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center / calc(0.75rem * var(--kp-progressbar-scale, 1))
+                calc(0.375rem * var(--kp-progressbar-scale, 1)) space no-repeat;
     }
 
     [data-theme='pastel'] .kp-progressbar__fill {
-        inset-block: var(--kp-ps-inset) calc(var(--kp-ps-inset) + 2px);
+        inset-block: var(--kp-ps-inset) calc(var(--kp-ps-inset) + var(--kp-ps-drop));
         inset-inline: 0;
         border-radius: 999px;
         background: var(--primary);
-        box-shadow: 2px 2px 0 0 color-mix(in srgb, var(--fx-overprint) 85%, transparent);
-        clip-path: inset(-2px calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) -2px -2px round 999px);
+        box-shadow: var(--kp-ps-drop) var(--kp-ps-drop) 0 0 color-mix(in srgb, var(--fx-overprint) 85%, transparent);
+        clip-path: inset(
+            calc(-1 * var(--kp-ps-drop)) calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) calc(-1 * var(--kp-ps-drop))
+                calc(-1 * var(--kp-ps-drop)) round 999px
+        );
         transition: clip-path 420ms var(--fx-ease);
     }
 
@@ -32785,7 +32929,7 @@
         background: radial-gradient(circle closest-side, var(--primary) 0 28%, var(--card) calc(28% + 0.6px));
         box-shadow:
             inset 0 0 0 2px var(--primary),
-            1px 2px 0 0 color-mix(in srgb, var(--primary) 55%, black);
+            calc(1px * var(--kp-progressbar-scale, 1)) var(--kp-ps-drop) 0 0 color-mix(in srgb, var(--primary) 55%, black);
         transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
         transition: transform 420ms var(--fx-ease);
     }
@@ -32814,7 +32958,8 @@
             position: absolute;
             inset: 0;
             background: var(--primary);
-            mask: radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center / 1.5rem 0.5rem space no-repeat;
+            mask: radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center /
+                calc(1.5rem * var(--kp-progressbar-scale, 1)) calc(0.5rem * var(--kp-progressbar-scale, 1)) space no-repeat;
         }
     }
 
@@ -34883,30 +35028,31 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='shade-light'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-sl-radius: calc(var(--radius, 0.25rem) * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='shade-light'] .kp-progressbar__track {
-        border-radius: var(--radius, 0.25rem);
+        border-radius: var(--kp-sl-radius);
         background: var(--muted);
         box-shadow:
             inset 0 0 0 1px var(--border),
-            inset 0 2px 3px hsl(from var(--foreground) h s l / 0.22);
+            inset 0 calc(2px * var(--kp-progressbar-scale, 1)) calc(3px * var(--kp-progressbar-scale, 1)) hsl(from var(--foreground) h s l / 0.22);
     }
 
     [data-theme='shade-light'] .kp-progressbar__fill {
         inset: 1px;
-        border-radius: calc(var(--radius, 0.25rem) - 1px);
+        border-radius: calc(var(--kp-sl-radius) - 1px);
         background:
             linear-gradient(hsl(from var(--card) h s l / 0.55), hsl(from var(--card) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
             linear-gradient(hsl(from var(--foreground) h s l / 0.25), hsl(from var(--foreground) h s l / 0.25)) 0 100% / 100% 1px no-repeat,
             var(--primary);
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 1px));
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--kp-sl-radius) - 1px));
         transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
     [data-theme='shade-light'] .kp-progressbar__head {
-        inline-size: 1.25rem;
+        inline-size: calc(1.25rem * var(--kp-progressbar-scale, 1));
         inset-block: 1px;
         background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.16) 40%, transparent);
         /* Nothing entered, nothing to throw a shade. */
@@ -34922,7 +35068,11 @@
         inset: 1px;
         inline-size: auto;
         clip-path: none;
-        background: repeating-linear-gradient(-60deg, hsl(from var(--foreground) h s l / 0.7) 0 1.5px, transparent 1.5px 5px);
+        background: repeating-linear-gradient(
+            -60deg,
+            hsl(from var(--foreground) h s l / 0.7) 0 calc(1.5px * var(--kp-progressbar-scale, 1)),
+            transparent calc(1.5px * var(--kp-progressbar-scale, 1)) calc(5px * var(--kp-progressbar-scale, 1))
+        );
         animation: kp-ps-shade-light-hatch 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
     }
 
@@ -36700,7 +36850,7 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='forest'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
         /* One planting slot: half the bar's height, so a tree keeps its shape
            at any height the bar is given. */
         --kp-fo-pitch: calc(var(--kp-progressbar-height) / 2);
@@ -36723,7 +36873,7 @@
     }
 
     [data-theme='forest'] .kp-progressbar__track {
-        border-radius: 3px;
+        border-radius: calc(3px * var(--kp-progressbar-scale, 1));
         background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
     }
 
@@ -38811,12 +38961,14 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='deco'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --dc-rib: calc(4px * var(--kp-progressbar-scale, 1));
+        --dc-rib-pitch: calc(5px * var(--kp-progressbar-scale, 1));
         --dc-gold: var(--primary);
         --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
-        --dc-tip: 0.45rem;
-        --dc-jewel: 0.4rem;
-        --dc-chevron: 0.8rem;
+        --dc-tip: calc(0.45rem * var(--kp-progressbar-scale, 1));
+        --dc-jewel: calc(0.4rem * var(--kp-progressbar-scale, 1));
+        --dc-chevron: calc(0.8rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='deco'] .kp-progressbar__track {
@@ -38829,7 +38981,7 @@
         --dc-at: calc(var(--kp-value) * 100%);
         inset: 1px;
         background:
-            linear-gradient(90deg, var(--dc-gold) 0 4px, var(--dc-flute) 4px) 0 0 / 5px 100% repeat-x,
+            linear-gradient(90deg, var(--dc-gold) 0 var(--dc-rib), var(--dc-flute) var(--dc-rib)) 0 0 / var(--dc-rib-pitch) 100% repeat-x,
             var(--dc-gold);
         clip-path: polygon(
             0 0,
@@ -40449,8 +40601,12 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='light'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
-        --kp-ps-bead: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size). */
+        --kp-ps-px: calc(1px * var(--kp-progressbar-scale, 1));
+        --kp-ps-bead: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* The three waiting dots: one dot, drawn once, at the bar's size. */
+        --kp-ps-dot-step: calc(1rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='light'] .kp-progressbar__track {
@@ -40459,8 +40615,8 @@
     }
 
     [data-theme='light'] .kp-progressbar__fill {
-        inset-block: calc(50% - 2px);
-        block-size: 4px;
+        inset-block: calc(50% - 2 * var(--kp-ps-px));
+        block-size: calc(4 * var(--kp-ps-px));
         background: var(--primary);
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round var(--kp-radius-pill, 999px));
         transition: clip-path 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
@@ -40488,11 +40644,27 @@
         clip-path: none;
         animation: none;
         background:
-            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% - 1rem) 50% / 0.75rem 0.75rem
-                no-repeat,
-            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) 50% 50% / 0.75rem 0.75rem no-repeat,
-            radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem
-                no-repeat;
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                calc(50% - var(--kp-ps-dot-step)) 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                50% 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--fx-signal) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                calc(50% + var(--kp-ps-dot-step)) 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat;
     }
 
     [data-theme='light'] {
@@ -42424,7 +42596,7 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='grotesk'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
         --gr-ink: var(--border-strong);
         --gr-red: var(--primary);
         --gr-base: 2px;
@@ -42455,7 +42627,7 @@
     }
 
     [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset-block: 45% calc(var(--gr-base) + 2px);
+        inset-block: 45% calc(var(--gr-base) + 2px * var(--kp-progressbar-scale, 1));
         inset-inline: 0;
         inline-size: auto;
         clip-path: none;
@@ -44473,11 +44645,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='blueprint'] .kp-progressbar {
-        --kp-progressbar-height: 1.125rem;
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
         --bp-line: var(--primary);
         --bp-scale: var(--border-strong);
-        --bp-arrow: 0.45rem;
-        --bp-chain: 22px;
+        --bp-arrow: calc(0.45rem * var(--kp-progressbar-scale, 1));
+        --bp-chain: calc(22px * var(--kp-progressbar-scale, 1));
+        --bp-hatch: calc(1.5px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='blueprint'] .kp-progressbar__track {
@@ -44501,7 +44674,11 @@
         background:
             linear-gradient(var(--bp-line), var(--bp-line)) top / 100% 2px no-repeat,
             linear-gradient(var(--bp-line), var(--bp-line)) bottom / 100% 2px no-repeat,
-            repeating-linear-gradient(-45deg, var(--bp-line) 0 1.5px, transparent 1.5px 4.5px),
+            repeating-linear-gradient(
+                -45deg,
+                var(--bp-line) 0 var(--bp-hatch),
+                transparent var(--bp-hatch) calc(4.5px * var(--kp-progressbar-scale, 1))
+            ),
             var(--background);
         transition: clip-path var(--fx-duration, 160ms) linear;
     }
@@ -44562,10 +44739,10 @@
         inline-size: calc(100% + var(--bp-chain));
         background: repeating-linear-gradient(
             90deg,
-            var(--bp-line) 0 13px,
-            transparent 13px 16px,
-            var(--bp-line) 16px 19px,
-            transparent 19px var(--bp-chain)
+            var(--bp-line) 0 calc(13px * var(--kp-progressbar-scale, 1)),
+            transparent calc(13px * var(--kp-progressbar-scale, 1)) calc(16px * var(--kp-progressbar-scale, 1)),
+            var(--bp-line) calc(16px * var(--kp-progressbar-scale, 1)) calc(19px * var(--kp-progressbar-scale, 1)),
+            transparent calc(19px * var(--kp-progressbar-scale, 1)) var(--bp-chain)
         );
     }
 
@@ -46674,14 +46851,18 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='nostromo'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-np-bezel: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-np-window: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-np-glow-r: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-np-glow-room: calc(-4px * var(--kp-progressbar-scale, 1));
         --kp-np-lit: var(--sidebar-primary);
         --kp-np-unlit: var(--sidebar-accent);
         --kp-np-glow: hsl(from var(--sidebar-primary) h s l / 0.55);
         /* One LED: a rounded-off lens inside its pitch, 2px of window between
            neighbours and 2px above and below. */
         --kp-np-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
-        border-radius: 0.3rem;
+        border-radius: calc(0.3rem * var(--kp-progressbar-scale, 1));
         background: var(--secondary);
         /* The moulded bezel: the 3:1 boundary, the lit top edge of the plastic. */
         box-shadow:
@@ -46690,8 +46871,8 @@
     }
 
     [data-theme='nostromo'] .kp-progressbar__track {
-        inset: 3px;
-        border-radius: 0.15rem;
+        inset: var(--kp-np-bezel);
+        border-radius: calc(0.15rem * var(--kp-progressbar-scale, 1));
         background: var(--sidebar-background);
         box-shadow: inset 0 1px 2px hsl(from var(--sidebar-background) h s 4% / 0.9);
     }
@@ -46699,16 +46880,18 @@
     [data-theme='nostromo'] .kp-progressbar__track::before {
         content: '';
         position: absolute;
-        inset: 2px 1px;
+        inset: var(--kp-np-window) 1px;
         background: var(--kp-np-unlit);
         mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
     }
 
     [data-theme='nostromo'] .kp-progressbar__fill {
-        inset: 2px 1px;
+        inset: var(--kp-np-window) 1px;
         background: none;
-        filter: drop-shadow(0 0 3px var(--kp-np-glow));
-        clip-path: inset(-4px calc((1 - round(down, var(--kp-value) * var(--kp-steps), 1) / var(--kp-steps)) * 100%) -4px 0);
+        filter: drop-shadow(0 0 var(--kp-np-glow-r) var(--kp-np-glow));
+        clip-path: inset(
+            var(--kp-np-glow-room) calc((1 - round(down, var(--kp-value) * var(--kp-steps), 1) / var(--kp-steps)) * 100%) var(--kp-np-glow-room) 0
+        );
         transition: none;
     }
 
@@ -46722,7 +46905,7 @@
     }
 
     [data-theme='nostromo'] .kp-progressbar__head {
-        inset-block: 2px;
+        inset-block: var(--kp-np-window);
         inset-inline-start: 1px;
         inline-size: calc((100cqi - 2px) / var(--kp-steps));
         opacity: calc(mod(var(--kp-value) * var(--kp-steps), 1) * 0.9);
@@ -47277,6 +47460,10 @@
         /* The month heatmap's nav goes on two rows below this width: the
            widest month and the three buttons in this type [fix-98]. */
         --kp-calendar-nav-fit: 25rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.22:1 on the page and 2.11:1 on the card here (DI1, open), so
+           a fifth of the ink goes in it: 3.55:1 and 3.36:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -49114,8 +49301,11 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='dark'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
-        --kp-ps-cut: 4px;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-cut: calc(4px * var(--kp-progressbar-scale, 1));
+        /* The indeterminate hatch: stripe and pitch grow with the bar. */
+        --kp-ps-stripe: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-hatch: calc(6px * var(--kp-progressbar-scale, 1));
         /* The film along the scale. --kp-px is the pointer's share across the
            page (0.5 at rest, written by js/effects.js); it slides the film by
            up to a fifth of the scale, the way the anodised edge turns with the
@@ -49140,13 +49330,13 @@
     }
 
     [data-theme='dark'] .kp-progressbar__fill {
-        inset-block: 2px;
+        inset-block: calc(2px * var(--kp-progressbar-scale, 1));
         background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
         transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
     }
 
     [data-theme='dark'] .kp-progressbar__head {
-        inline-size: 6px;
+        inline-size: calc(6px * var(--kp-progressbar-scale, 1));
         translate: -100% 0;
         background:
             linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
@@ -49160,8 +49350,8 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
-        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
     }
 
     [data-theme='dark'] {
@@ -50946,7 +51136,10 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='formal'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size);
+           the 1px rules and the 2px pen stay the register's line weight. */
+        --kp-ps-px: calc(1px * var(--kp-progressbar-scale, 1));
         /* 1 when the value has reached the end, 0 below it: closes the account. */
         --kp-ps-closed: clamp(0, (var(--kp-value) - 0.999) * 1000, 1);
         /* 1 once anything is entered, 0 at nothing. */
@@ -50957,13 +51150,13 @@
         border-radius: 0;
         background:
             linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 100% 1px no-repeat,
-            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 8px no-repeat,
-            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 8px no-repeat;
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(8 * var(--kp-ps-px)) no-repeat;
     }
 
     [data-theme='formal'] .kp-progressbar__fill {
-        inset-block: 4px auto;
-        block-size: 4px;
+        inset-block: calc(4 * var(--kp-ps-px)) auto;
+        block-size: calc(4 * var(--kp-ps-px));
         background: var(--primary);
         transition: clip-path 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
@@ -50972,7 +51165,7 @@
         content: '';
         position: absolute;
         inset-inline: 0;
-        inset-block-start: 10px;
+        inset-block-start: calc(10 * var(--kp-ps-px));
         block-size: 1px;
         background: var(--primary);
         opacity: var(--kp-ps-closed);
@@ -50982,7 +51175,7 @@
     [data-theme='formal'] .kp-progressbar__head {
         inline-size: 2px;
         translate: -100% 0;
-        inset-block: 0 2px;
+        inset-block: 0 calc(2 * var(--kp-ps-px));
         background: var(--primary);
         opacity: calc(var(--kp-ps-entered) - var(--kp-ps-closed));
         transition:
@@ -50995,7 +51188,8 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: radial-gradient(circle, var(--primary) 0 1.4px, transparent 1.9px) 0 50% / 7px 4px repeat-x;
+        background: radial-gradient(circle, var(--primary) 0 calc(1.4 * var(--kp-ps-px)), transparent calc(1.9 * var(--kp-ps-px))) 0 50% /
+            calc(7 * var(--kp-ps-px)) calc(4 * var(--kp-ps-px)) repeat-x;
         transform-origin: left center;
         transition: transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
@@ -53142,21 +53336,21 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='sepia'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --kp-ps-head: 0.75rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(0.75rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='sepia'] .kp-progressbar__track {
         border-radius: 0;
-        background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center / 0.4375rem 0.1875rem space
-            no-repeat;
+        background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center /
+            calc(0.4375rem * var(--kp-progressbar-scale, 1)) calc(0.1875rem * var(--kp-progressbar-scale, 1)) space no-repeat;
     }
 
     [data-theme='sepia'] .kp-progressbar__fill {
         background:
-            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px) / 100% 3px no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px) / 100% 1px no-repeat,
-            linear-gradient(var(--card), var(--card)) center / 100% 0.5rem no-repeat;
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px * var(--kp-progressbar-scale, 1)) / 100% 3px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px * var(--kp-progressbar-scale, 1)) / 100% 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) center / 100% calc(0.5rem * var(--kp-progressbar-scale, 1)) no-repeat;
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0);
         transition: clip-path var(--fx-duration) var(--fx-ease);
     }
@@ -53170,7 +53364,7 @@
     }
 
     [data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        --kp-ps-dinkus: 3.25rem;
+        --kp-ps-dinkus: calc(3.25rem * var(--kp-progressbar-scale, 1));
         inset-inline: 0;
         inline-size: auto;
         background: none;
@@ -53191,9 +53385,9 @@
     }
 
     [data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
-        --d: 0.3125rem;
-        --g: 0.5rem;
-        --o: 0.3125rem;
+        --d: calc(0.3125rem * var(--kp-progressbar-scale, 1));
+        --g: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        --o: calc(0.3125rem * var(--kp-progressbar-scale, 1));
         background: var(--primary);
         clip-path: polygon(
             var(--o) 50%,
@@ -54928,8 +55122,11 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='solstice'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --kp-ps-head: 0.875rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-inset: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dash: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dash-pitch: calc(12px * var(--kp-progressbar-scale, 1));
         --kp-ps-gold: color-mix(in oklab, var(--primary) 55%, var(--foreground));
     }
 
@@ -54942,7 +55139,7 @@
     }
 
     [data-theme='solstice'] .kp-progressbar__fill {
-        inset-block: 2px;
+        inset-block: var(--kp-ps-inset);
         border-radius: var(--radius);
         background: linear-gradient(90deg, var(--accent), var(--primary) 62%, var(--kp-ps-gold));
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0 round 0 var(--radius) var(--radius) 0);
@@ -54968,7 +55165,7 @@
                 var(--primary) calc(100% - var(--kp-ps-head) / 2),
                 transparent 0
             )
-            center / 100% calc(100% - 4px) no-repeat;
+            center / 100% calc(100% - 2 * var(--kp-ps-inset)) no-repeat;
         animation: kp-progressbar-solstice-arc 2400ms var(--fx-ease) infinite;
     }
 
@@ -54988,13 +55185,14 @@
             inline-size: auto;
             animation: none;
             transform: none;
-            background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px) center / 100% 3px no-repeat;
+            background: repeating-linear-gradient(90deg, var(--accent) 0 var(--kp-ps-dash), transparent var(--kp-ps-dash) var(--kp-ps-dash-pitch))
+                center / 100% calc(3px * var(--kp-progressbar-scale, 1)) no-repeat;
         }
 
         [data-theme='solstice'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
             inset-inline-end: auto;
             inset-inline-start: calc(50% - var(--kp-ps-head) / 2);
-            box-shadow: 0 0 0 4px var(--muted);
+            box-shadow: 0 0 0 calc(4px * var(--kp-progressbar-scale, 1)) var(--muted);
         }
     }
 
@@ -56782,7 +56980,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='high-contrast'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        /* The head and the waiting stripes, at the bar's size; the 1px ticks
+           and the 2px border stay the register's line weight. */
+        --kp-ps-head: calc(8px * var(--kp-progressbar-scale, 1));
+        --kp-ps-head-ink: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-stripe: calc(6px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='high-contrast'] .kp-progressbar__track,
@@ -56809,9 +57012,9 @@
     }
 
     [data-theme='high-contrast'] .kp-progressbar__head {
-        inline-size: 8px;
+        inline-size: var(--kp-ps-head);
         translate: -100% 0;
-        background: linear-gradient(90deg, var(--accent) 0 6px, var(--foreground) 6px);
+        background: linear-gradient(90deg, var(--accent) 0 var(--kp-ps-head-ink), var(--foreground) var(--kp-ps-head-ink));
         transition: transform 120ms linear;
     }
 
@@ -56820,7 +57023,11 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--foreground) 0 var(--kp-ps-stripe),
+            var(--accent) var(--kp-ps-stripe) calc(2 * var(--kp-ps-stripe))
+        );
     }
 
     [data-theme='high-contrast'] {
@@ -58624,11 +58831,13 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='lapis'] .kp-progressbar {
-        --kp-progressbar-height: 1.375rem;
+        --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size). */
+        --lp-px: calc(1px * var(--kp-progressbar-scale, 1));
         --lp-gold: var(--primary);
-        --lp-star: 0.95rem;
-        --lp-band: 0.75rem;
-        --lp-bead: 0.5rem;
+        --lp-star: calc(0.95rem * var(--kp-progressbar-scale, 1));
+        --lp-band: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --lp-bead: calc(0.5rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='lapis'] .kp-progressbar__track {
@@ -58637,8 +58846,12 @@
         overflow: visible;
         border-radius: var(--kp-radius-pill, 999px);
         background:
-            radial-gradient(circle, color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 1.4px, transparent 1.9px) 0 50% / var(--lp-bead) 100%
-                repeat-x,
+            radial-gradient(
+                    circle,
+                    color-mix(in oklab, var(--lp-gold) 55%, transparent) 0 calc(1.4 * var(--lp-px)),
+                    transparent calc(1.9 * var(--lp-px))
+                )
+                0 50% / var(--lp-bead) 100% repeat-x,
             var(--background);
         box-shadow:
             0 0 0 1px var(--border-strong),
@@ -58646,10 +58859,11 @@
     }
 
     [data-theme='lapis'] .kp-progressbar__fill {
-        inset: 2px;
+        inset: calc(2 * var(--lp-px));
         border-radius: inherit;
         background:
-            radial-gradient(circle, var(--primary-foreground) 0 1.1px, transparent 1.6px) calc(-2px) 50% / var(--lp-bead) 100% repeat-x,
+            radial-gradient(circle, var(--primary-foreground) 0 calc(1.1 * var(--lp-px)), transparent calc(1.6 * var(--lp-px)))
+                calc(-2 * var(--lp-px)) 50% / var(--lp-bead) 100% repeat-x,
             var(--lp-gold);
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round 999px);
         transition: clip-path var(--fx-duration, 220ms) var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
@@ -58679,17 +58893,18 @@
         background:
             radial-gradient(
                 circle,
-                var(--lp-gold) 0 1.6px,
-                var(--accent) 2.1px 3.2px,
-                color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) 3.6px 4.2px,
-                transparent 4.6px
+                var(--lp-gold) 0 calc(1.6 * var(--lp-px)),
+                var(--accent) calc(2.1 * var(--lp-px)) calc(3.2 * var(--lp-px)),
+                color-mix(in oklab, var(--lp-gold) 70%, var(--accent)) calc(3.6 * var(--lp-px)) calc(4.2 * var(--lp-px)),
+                transparent calc(4.6 * var(--lp-px))
             ),
             var(--accent);
     }
 
     [data-theme='lapis'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
         background:
-            radial-gradient(circle, var(--lp-gold) 0 1.6px, transparent 2.1px) 0 50% / var(--lp-bead) 100% repeat-x,
+            radial-gradient(circle, var(--lp-gold) 0 calc(1.6 * var(--lp-px)), transparent calc(2.1 * var(--lp-px))) 0 50% / var(--lp-bead) 100%
+                repeat-x,
             var(--background);
     }
 
@@ -60695,29 +60910,37 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='shade-dark'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-sd-radius: calc(var(--radius, 0.25rem) * var(--kp-progressbar-scale, 1));
+        /* The gap between the frame and the fill. */
+        --kp-sd-inset: calc(2px * var(--kp-progressbar-scale, 1));
+        /* The three indeterminate dots: core, halo, glow and their pitch. */
+        --kp-sd-core: calc(2.5px * var(--kp-progressbar-scale, 1));
+        --kp-sd-halo: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-sd-glow: calc(7px * var(--kp-progressbar-scale, 1));
+        --kp-sd-pitch: calc(1rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='shade-dark'] .kp-progressbar__track {
-        border-radius: var(--radius, 0.25rem);
+        border-radius: var(--kp-sd-radius);
         background: var(--background);
         box-shadow: inset 0 0 0 1px var(--border);
     }
 
     [data-theme='shade-dark'] .kp-progressbar__fill {
-        inset: 2px;
-        border-radius: calc(var(--radius, 0.25rem) - 2px);
+        inset: var(--kp-sd-inset);
+        border-radius: calc(var(--kp-sd-radius) - var(--kp-sd-inset));
         background: linear-gradient(90deg, hsl(from var(--primary) h s calc(l - 22)), var(--primary) 70%, hsl(from var(--primary) h s calc(l + 8)));
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 2px));
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--kp-sd-radius) - var(--kp-sd-inset)));
         transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
     [data-theme='shade-dark'] .kp-progressbar__head {
-        inline-size: 3.5rem;
+        inline-size: calc(3.5rem * var(--kp-progressbar-scale, 1));
         translate: -50% 0;
         background:
-            linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px calc(100% - 4px)
-                no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px
+                calc(100% - 2 * var(--kp-sd-inset)) no-repeat,
             radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.14) 55%, transparent);
         opacity: clamp(0, var(--kp-value) * 1000, 1);
         transition:
@@ -60731,12 +60954,27 @@
         clip-path: none;
         border-radius: 0;
         background:
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% - 1rem) 50% / 1rem
-                100% no-repeat,
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) 50% 50% / 1rem 100%
-                no-repeat,
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% + 1rem) 50% / 1rem
-                100% no-repeat;
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                calc(50% - var(--kp-sd-pitch)) 50% / var(--kp-sd-pitch) 100% no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                50% 50% / var(--kp-sd-pitch) 100% no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                calc(50% + var(--kp-sd-pitch)) 50% / var(--kp-sd-pitch) 100% no-repeat;
         animation: kp-ps-shade-dark-focus 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
     }
 

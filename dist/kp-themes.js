@@ -579,11 +579,38 @@ function asOf(root, present, attach) {
     }
   }
 }
-var presentUnder;
+function afterPaint(fn) {
+  if (typeof requestAnimationFrame !== "function") {
+    setTimeout(fn, 0);
+    return;
+  }
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+function settleAfter(root, done) {
+  holds.set(root, (holds.get(root) ?? 0) + 1);
+  root.setAttribute(SETTLING_ATTRIBUTE, "");
+  let held2 = true;
+  const release = () => {
+    if (!held2) return;
+    held2 = false;
+    const left = (holds.get(root) ?? 1) - 1;
+    holds.set(root, left);
+    if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
+  };
+  done.then(
+    () => afterPaint(release),
+    () => afterPaint(release)
+  );
+  return release;
+}
+var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
 var init_as_of = __esm({
   "js/as-of.js"() {
     "use strict";
     presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
+    SETTLING_ATTRIBUTE = "data-kp-settling";
+    holds = /* @__PURE__ */ new WeakMap();
+    settling = (el2) => el2.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
   }
 });
 
@@ -3485,6 +3512,11 @@ function foldingOutFor(box) {
     }
   return Number.isFinite(left) ? left : 0;
 }
+function firstRender(el2) {
+  let painted = false;
+  afterPaint(() => painted = true);
+  return () => !painted || settling(el2);
+}
 function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   const own = (
     /** @type {any} */
@@ -3497,6 +3529,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   const keys = [...arriveKeys, ...ARRIVE_KEYS];
   let last = box.offsetHeight;
   let running2 = null;
+  const fresh = firstRender(box);
   const settle = () => {
     if (!box.isConnected) return;
     const effect = (
@@ -3514,7 +3547,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     running2 = null;
     const to = settledHeight(box);
     last = to;
-    if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
     if (followsAFold(box)) return;
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
@@ -3537,7 +3570,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   };
   watch();
   const list = new MutationObserver((records) => {
-    const modeOf = (target) => arriveMode(target instanceof Element ? target : box, fallback2);
+    const modeOf = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
     const any = records.some((record) => modeOf(record.target) !== "none");
     const motion = records.length && any ? arrival(box) : null;
     let repainted = null;
@@ -3590,8 +3623,7 @@ function attachFold(details) {
   watching += 1;
   let running2 = null;
   let folding = false;
-  let shown2 = false;
-  requestAnimationFrame(() => shown2 = true);
+  const fresh = firstRender(details);
   const shutHeight = () => {
     const style = getComputedStyle(details);
     return layoutHeight(
@@ -3631,7 +3663,7 @@ function attachFold(details) {
   const watcher = new MutationObserver((records) => {
     const was = records[0].oldValue !== null;
     const now = details.open;
-    if (!shown2 || was === now || !details.isConnected) return;
+    if (fresh() || was === now || !details.isConnected) return;
     const { size, ease } = themeMotion(details);
     if (size <= 0) return;
     let from;
@@ -3712,6 +3744,7 @@ var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watchin
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
+    init_as_of();
     SIZE_ATTRIBUTE = "data-kp-size-motion";
     SIZE_SELECTOR = [
       ".kp-dialog",
@@ -13189,8 +13222,8 @@ function lengthPx(el2, text, fallback2) {
   if (m[2] === "em") return n * parseFloat(view?.getComputedStyle(el2).fontSize || "16");
   return n;
 }
-function trendLabelsFit(strip) {
-  return [...strip.querySelectorAll(TREND_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
+function labelsFit(strip) {
+  return [...strip.querySelectorAll(TILE_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
 }
 function fitKpiStrip(strip, width) {
   const view = strip.ownerDocument.defaultView;
@@ -13207,7 +13240,7 @@ function fitKpiStrip(strip, width) {
     const { columns, spanLast } = kpiColumns(n, inner, { allowed, minTilePx, gapPx });
     strip.style.setProperty("--kp-kpis-columns", String(columns));
     strip.toggleAttribute("data-kp-kpis-span-last", spanLast);
-    if (columns <= 1 || columns >= last || trendLabelsFit(strip)) return;
+    if (columns <= 1 || columns >= last || labelsFit(strip)) return;
     last = columns;
     minTilePx = (inner - (columns - 1) * gapPx) / columns + 1;
   }
@@ -13250,7 +13283,7 @@ function attachKpiStrips(root = document) {
     subtree: true,
     childList: true,
     attributes: true,
-    // A theme's type changes how wide a trend label is [fix-99].
+    // A theme's type changes how wide a label is [fix-99, fix-101].
     attributeFilter: ["hidden", "data-kp-kpis-columns", "data-theme"]
   });
   doc.fonts?.addEventListener("loadingdone", scan);
@@ -13260,7 +13293,7 @@ function attachKpiStrips(root = document) {
     doc.fonts?.removeEventListener("loadingdone", scan);
   };
 }
-var SPARK, numbersIn, KPI_TOGGLE, KPI_TOGGLE_EVENT, FLIPPED, METER, KPI_STRIP, TREND_LABEL;
+var SPARK, numbersIn, KPI_TOGGLE, KPI_TOGGLE_EVENT, FLIPPED, METER, KPI_STRIP, TILE_LABEL;
 var init_kpi = __esm({
   "js/kpi.js"() {
     "use strict";
@@ -13272,7 +13305,7 @@ var init_kpi = __esm({
     FLIPPED = /* @__PURE__ */ new WeakSet();
     METER = ".kp-meter, .kp-kpi__meter";
     KPI_STRIP = ".kp-kpis[data-kp-kpis-columns]";
-    TREND_LABEL = ":scope > .kp-kpi--trend:not([hidden]) > .kp-kpi__label";
+    TILE_LABEL = ":scope > .kp-kpi:not([hidden]) > .kp-kpi__label";
   }
 });
 
@@ -17204,12 +17237,16 @@ function attachAll(root = document) {
       })
     );
   }
+  const ready = Promise.all(pending).then(() => void 0);
+  const mark = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
+  const settled = mark ? settleAfter(mark, ready) : () => void 0;
   const detach = () => {
     detached = true;
+    settled();
     for (const one of detaches) if (typeof one === "function") one();
     effects.detach();
   };
-  return Object.assign(detach, { ready: Promise.all(pending).then(() => void 0), modules });
+  return Object.assign(detach, { ready, modules });
 }
 if (typeof document !== "undefined") {
   applyStoredTheme();

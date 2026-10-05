@@ -41,7 +41,7 @@ import { attachRemembered, restoreRemembered } from './remember.js';
 import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTooltips } from './overlays.js';
 import { attachThemePickers } from './theme-picker.js';
 import { attachEffects } from './effects.js';
-import { asOf, presentUnder } from './as-of.js';
+import { asOf, presentUnder, settleAfter } from './as-of.js';
 
 /**
  * @typedef {object} Need
@@ -202,12 +202,22 @@ export function attachAll(root = document) {
             }),
         );
     }
+    const ready = Promise.all(pending).then(() => undefined);
+    // What the modules draw now is the page's first render, not news: the
+    // root settles until they have all attached and two frames are painted,
+    // and js/motion.js lets nothing arrive or glide under it meanwhile
+    // [fix-100]. A module fetched later than motion (the data table, three
+    // thousand lines) drew its whole chrome into an eased box, and 263
+    // elements arrived on the catalogue's first frame.
+    const mark = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
+    const settled = mark ? settleAfter(mark, ready) : () => undefined;
     const detach = () => {
         detached = true;
+        settled();
         for (const one of detaches) if (typeof one === 'function') one();
         effects.detach();
     };
-    return Object.assign(detach, { ready: Promise.all(pending).then(() => undefined), modules });
+    return Object.assign(detach, { ready, modules });
 }
 
 if (typeof document !== 'undefined') {

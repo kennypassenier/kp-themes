@@ -5821,3 +5821,220 @@ column step, or draws its own; and when a strip without
 reach (its tiles keep the package's auto-fit).
 
 **Approved by Kenny, 2026-10-05** (form v22: Klopt).
+
+## fix-100 · A page's first render arrived as news (2026-10-05)
+
+**1 · What went wrong.** Since every opposite motion became a mirror
+(fff6fe45, scope-143) an element added to an eased box arrives as the
+theme's leave played backwards, several one by one in one queue
+(`arriveInTurn`). The first render of a page counted as such an addition:
+js/auto.js fetches each module on its own, and the data table (about
+3,700 lines) attached after js/motion.js had started watching its box, so
+its whole chrome (pager, group buttons, edit buttons, the combobox's list)
+was an insertion. `data-kp-arrive="new"`, which the table sets, holds back
+only a row added back under the key of one that just left; on a first
+render nothing has left. Measured in Firefox, 2026-10-05, with the old
+js/motion.js served: on catalogue/index.html 346 elements arrived in the
+first 2 s (154 edit buttons, 28 cells, 21 alerts, 20 buttons, 19 combobox
+options), on catalogue/table.html 331, in formal, cyberpunk and terminal
+alike; the queue ran for about ten seconds. The pager's buttons folded in
+width as they arrived, their text wrapped, and the bottom bar stood
+186 px tall in formal (169 cyberpunk, 171 terminal) instead of 52/53 until
+the first click redrew it. The fold (`attachFold`) had a first-render rule
+of its own, one frame (port spec J3); the eased box had none.
+
+**2 · Which gate let it through.** No test looks at a page in its first
+seconds: the motion tests (tests/datatable.spec.mjs, the table-fold pair
+of c12213b3) wait until the box is still and measure a click; fff6fe45
+measured the mirror on a click in 22 themes, never a load.
+
+**3 · Where else the same fault sits.** What turns an insertion into
+motion: `grep -n "new MutationObserver" js/*.js` finds 8 in four files;
+besides js/motion.js (the eased box's list, the fold's `open`, the
+attach's late scan, the theme switch) js/overlays.js measures a scroll box
+and scans for popovers, js/progressbar.js syncs a value, js/effects.js
+re-arms the theme's buses: none animates what it is given.
+`grep -n "\.animate(" js/*.js | grep -v motion.js` finds three, in
+js/tiles.js (a tile set's height on a count change) and js/update.js (a
+chart's line and area on new data), each played on a change the page
+asks for, not on a first render. `grep -rln "data-kp-arriving" js/ css/`
+finds js/motion.js, the one place that sets it, and 14 registers that
+draw it. `grep -n "requestAnimationFrame(() => (shown" js/*.js`, the
+fold's own first-frame rule, found one (js/motion.js), now the shared one.
+
+**4 · How we prevent recurrence.** One rule, in one place: a first render
+is not news. `firstRender()` (js/motion.js) says whether what changes in
+a box now is still its first render: until two frames are painted after
+motion attached to it, and while it is under a root wearing
+`data-kp-settling` (`SETTLING_ATTRIBUTE`, js/as-of.js). In that time
+nothing in the box arrives and the box takes its size at once; the fold
+takes its state at once by the same rule (it was one frame). js/auto.js
+holds the root of every `attachAll()` (the `<html>` element for the
+document) settling until every module it fetched has attached and two
+frames are painted (`settleAfter()`), so a module fetched later than
+motion draws its chrome as part of the page. A consumer whose framework
+renders in several passes may wear the attribute on that part. Only what
+is added after the page settled arrives: a group opened (its three rows
+arrive in turn), a new toast, a line in a log; a dialog still opens as
+its close turned around (a user's open, not a mutation). Measured in
+Firefox after, same pages and themes: 0 elements arrive in the first 2 s
+on index.html and data.html, 1 on table.html (the server-mode demo's
+request log, a line appended 0.8 s after load when its simulated answer
+comes: news); every shown pager bar 52 px (formal) or 53 px from the
+first sampled frame to 3 s; no console errors; a toast appended after
+load arrives (`data-kp-arriving`, 2 to 3 animations), a dialog's
+showModal plays 3 animations; the table-fold pair and the reduced-motion
+test of c12213b3 pass. Plus the assert in tests/datatable.spec.mjs ("nothing
+in a table arrives on load, its pager bar is settled from the first frame,
+a group opened later arrives"): 330 arrivals on the old motion.js, 0 on
+the new, and the three rows of group "home" arrive when it is opened.
+
+**5 · What the remedy costs.** No knob, no CSS; about 60 lines in
+js/as-of.js (the attribute, `afterPaint()`, `settleAfter()`,
+`settling()`), 10 in js/auto.js, 20 in js/motion.js; one test of about 60
+lines. A box no longer glides to its first size on load either (it took
+its size during the queue before). A real insertion in the first two
+frames after a box is attached does not arrive; a page that wants a
+deliberate entrance on load draws it in CSS, as the registers' page
+entrances do. `<html>` carries `data-kp-settling` for two frames after
+`data-kp-auto-ready` (tests/auto-lazy.spec.mjs counts it volatile).
+
+**6 · Who enforces it.** Code: the assert in tests/datatable.spec.mjs, at
+the 9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next look at a catalogue page in any theme:
+the pager bar at its own height from the first frame, nothing moving on
+load but the theme's page entrance, a group opened and a toast still
+arriving. Queued as fix-100-M1 in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** If a component still draws
+after the root has settled (a module whose first render waits on data),
+its attach holds the root with `settleAfter()` until that render is in;
+if a wanted arrival in the first frames goes missing, the two frames
+become one, as the fold had.
+
+**9 · When we review the measure.** When a page renders in several passes
+after its boot (a framework mount, a lazy section): whether
+`data-kp-settling` is enough for it or the package needs an attach option
+for it; and at the character round's motion component.
+
+
+## fix-101 · The plain key-figure strip: a height that moved, a label cut or wrapped, a frame under 3:1 (2026-10-05)
+
+**1 · What went wrong.** The character-columns demo's measurement showed
+four faults of the plain strip with columns (`.kp-kpis[data-kp-kpis-columns]`,
+scope-143). Its height moved with its state and its figures: the label,
+the figure and the words had no fixed line boxes, so a loading tile was
+lower than a drawn one and a figure whose words took a second line raised
+the row (on catalogue/data.html#kpi-columns, the catalogue's five figures
+at full width 79.4 to 114 px in one strip, the long label 97.4 to 139.2,
+the eight figures in the 334 px pane 353.6 to 520.8; moving in all 22
+themes). The long label "Pressure, far end of the ring" was cut with an
+ellipsis (215 px of text in a 199 px box at 700 px, 64 readings in 16
+themes) and wrapped wherever a tile was 12rem or narrower, the narrow
+tile's container rule (176 readings in 22 themes: the long label at full
+width and in the phone pane, where kpiColumns() picked two columns from
+`--kp-kpi-min` alone, fix-64, and not from the labels). The tile's frame
+was `--border`, a hairline: 1.23:1 (shade-light) to 2.15:1 (retro) on the
+page and 1.21:1 to 2.72:1 on the card, under 3:1 in 20 of 22 themes; the
+destructive tile's frame, `--destructive` mixed into that hairline, read
+2.70:1 (shade-dark) to 2.98:1 in ten themes. The fourth fault, the change
+on half a status pair (fix-70), was already repaired at HEAD by fix-99's
+rule, which is not scoped to the trend tile: the change measured 4.51:1
+(forest, good) and 4.79:1 (deco, bad) or more before and after. The strip
+was judged with short labels in formal and in its loaded state only.
+
+**2 · Which gate let it through.** tests/kpi-columns.spec.mjs checks the
+column count and one height per row with the catalogue's tiles in formal;
+nothing swept the strip across themes, its states, a longer label or its
+frame. `check-invariants.mjs` holds `--border-strong` at 3:1 (DI1, advice
+for dark and titanium); `--border` is ungated by design, a hairline, and
+nothing said a tile's only edge must not be one.
+
+**3 · Where else the same fault sits.** A box framed in the hairline:
+`grep -n "border: 1px solid var(--border);" css/components.css` finds 19
+(the theme picker's swatch, the spec sheet, `.kp-card`, `.kp-kpi`, the
+trend chip, the chart's tip, the graph's kind and box, the nav's search
+trigger, the log, the tag, the data table's search, the card-mode row,
+the diff, the reorder item and handle, the split, the upload's file, the
+grid tile); only `.kp-kpi` in a strip with columns is fixed here, the
+others not measured. A label cut with an ellipsis:
+`grep -n "text-overflow: ellipsis" css/components.css` finds 9, among them
+the plain `.kp-kpi__label` outside a strip with columns (queued as
+kpi-label-cut-M1). A narrow container that wraps a label:
+`grep -n "white-space: normal" css/components.css` finds 4, the key
+figure's (line 1299) the only label among them; it still applies outside
+a strip with columns. A change or figure on half a pair:
+`grep -n -B4 "color: var(--\(success\|destructive\)-foreground)" css/components.css | grep "kp-kpi"`
+finds the delta's two tones and the destructive figure, all on their
+plates since fix-99. A boundary token under 3:1:
+`node gates/check-invariants.mjs | grep "border-strong"` names dark (2.22,
+2.11, 2.02:1) and titanium (2.98, 2.58, 2.42:1) on the background, card
+and popover.
+
+**4 · How we prevent recurrence.** A tile in a strip with columns is
+framed in `--border-strong`, the boundary token, through a knob
+`--kp-kpi-border` (`:where()` keeps the strip out of the weight, so a
+tone, a hover and a pressed toggle still draw their own edge): 3.08:1
+(sepia) or more on the page and 3.22:1 (terminal) or more on the card.
+Dark and titanium, whose `--border-strong` stays under 3:1, set the knob
+to the ink mix the registers use for such rules: a fifth of
+`--foreground` in it in dark (3.53:1 page, 3.35:1 card), three twentieths
+in titanium (3.95:1, 3.42:1). The destructive tile mixes its tone into
+`--border-strong` instead of the hairline: 4.21:1 (dark) or more. A
+trend tile's hover, which drew `--border-strong`, draws `--ring` as a
+link tile and a toggle do. The label follows fix-99 through the same
+rule, its selector extended to every tile of a strip with columns: one
+line, `nowrap`, never cut, stepping down with the tile's width (10.5 to
+12 px), on the line box of the full-size label
+(`--kp-text-xs × --kp-line-height`), so a label that steps down no longer
+lowers its tile (2.3 px). fitKpiStrip() (js/kpi.js) checks every label of
+the strip, not only a trend tile's, and takes the next allowed column
+count while one does not fit, so the count respects the widest label as
+well as `--kp-kpi-min`, in the phone pane too. The figure keeps one line
+box (`1lh`) under a skeleton or a dash and the words two lines
+(`--kp-kpi-trend-lines`), the trend tile's rules extended the same way.
+Measured in Firefox before (a `git archive HEAD` copy) and after on
+catalogue/data.html#kpi-columns, 22 themes, at full width (1280 px
+window), at 700 px and in the phone pane at 334 px, with the catalogue's
+five figures, the long label and the eight figures, drawn, loading, empty
+and failed: one tile height, 121.2 px, in every theme, strip, state and
+set; 0 labels wrapped or cut; no console errors. Plus the third test in
+tests/kpi-columns.spec.mjs: in 22 themes, at the three widths, the three
+sets and three states, the tiles one height, every label one line and
+uncut, the frame at 3:1 on the page and the card, every change at 4.5:1;
+run by its own logic in Firefox, 666 misses on the old CSS (420 frames,
+132 wrapped labels, 66 heights, 48 cut labels), none on the new.
+
+**5 · What the remedy costs.** One knob (AR21 count 314 + 1, read count
+311 + 1), two rules and three selector extensions in components.css, a
+new mix in the destructive tile's frame, one line in dark-register.css and
+in titanium-register.css, about a dozen lines changed in js/kpi.js, one test
+of about 175 lines. The frames are darker: a tile reads as a framed box
+(a new look in 20 themes, to judge). Where a label needs it the strip has
+fewer, wider tiles: the long label takes three columns at full width
+(was five) and one in the phone pane (was two); the catalogue's own five
+keep five, three and two. The tiles are 121.2 px in every state, the
+height of a drawn tile whose words take two lines (a strip with one-line
+words was 101.7 px, so most strips are 19.5 px taller).
+
+**6 · Who enforces it.** Code: the assert in tests/kpi-columns.spec.mjs,
+at the 9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the assert), and at Kenny's next judging of the strip block in each
+theme: the strip one height in every state, every label on one line, the
+tiles' frames visible. Queued as fix-101-M1 in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** The frame goes back to the
+hairline and the tiles are parted by a 3:1 ground instead (the card on a
+`--muted` strip); and if the reserved second line of words reads as a
+gap, the words take one line with the strip growing to the longest.
+
+**9 · When we review the measure.** At the character round's strip
+component: whether a theme's own strip keeps the knob and the reserved
+lines, or draws its own; when a plain tile outside a strip with columns
+is fixed (kpi-label-cut-M1: its label still cuts or wraps, its frame is
+still the hairline); and when dark's and titanium's `--border-strong`
+reach DI1's floor, which would make their mix redundant.

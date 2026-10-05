@@ -1308,7 +1308,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='high-contrast'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        /* The head and the waiting stripes, at the bar's size; the 1px ticks
+           and the 2px border stay the register's line weight. */
+        --kp-ps-head: calc(8px * var(--kp-progressbar-scale, 1));
+        --kp-ps-head-ink: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-stripe: calc(6px * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='high-contrast'] .kp-progressbar__track,
@@ -1335,9 +1340,9 @@
     }
 
     [data-theme='high-contrast'] .kp-progressbar__head {
-        inline-size: 8px;
+        inline-size: var(--kp-ps-head);
         translate: -100% 0;
-        background: linear-gradient(90deg, var(--accent) 0 6px, var(--foreground) 6px);
+        background: linear-gradient(90deg, var(--accent) 0 var(--kp-ps-head-ink), var(--foreground) var(--kp-ps-head-ink));
         transition: transform 120ms linear;
     }
 
@@ -1346,7 +1351,11 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--foreground) 0 var(--kp-ps-stripe),
+            var(--accent) var(--kp-ps-stripe) calc(2 * var(--kp-ps-stripe))
+        );
     }
 
     [data-theme='high-contrast'] {

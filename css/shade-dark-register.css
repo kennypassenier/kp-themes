@@ -1344,29 +1344,37 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='shade-dark'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-sd-radius: calc(var(--radius, 0.25rem) * var(--kp-progressbar-scale, 1));
+        /* The gap between the frame and the fill. */
+        --kp-sd-inset: calc(2px * var(--kp-progressbar-scale, 1));
+        /* The three indeterminate dots: core, halo, glow and their pitch. */
+        --kp-sd-core: calc(2.5px * var(--kp-progressbar-scale, 1));
+        --kp-sd-halo: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-sd-glow: calc(7px * var(--kp-progressbar-scale, 1));
+        --kp-sd-pitch: calc(1rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='shade-dark'] .kp-progressbar__track {
-        border-radius: var(--radius, 0.25rem);
+        border-radius: var(--kp-sd-radius);
         background: var(--background);
         box-shadow: inset 0 0 0 1px var(--border);
     }
 
     [data-theme='shade-dark'] .kp-progressbar__fill {
-        inset: 2px;
-        border-radius: calc(var(--radius, 0.25rem) - 2px);
+        inset: var(--kp-sd-inset);
+        border-radius: calc(var(--kp-sd-radius) - var(--kp-sd-inset));
         background: linear-gradient(90deg, hsl(from var(--primary) h s calc(l - 22)), var(--primary) 70%, hsl(from var(--primary) h s calc(l + 8)));
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 2px));
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--kp-sd-radius) - var(--kp-sd-inset)));
         transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
     [data-theme='shade-dark'] .kp-progressbar__head {
-        inline-size: 3.5rem;
+        inline-size: calc(3.5rem * var(--kp-progressbar-scale, 1));
         translate: -50% 0;
         background:
-            linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px calc(100% - 4px)
-                no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s calc(l + 20)), hsl(from var(--foreground) h s calc(l + 20))) 50% 50% / 2px
+                calc(100% - 2 * var(--kp-sd-inset)) no-repeat,
             radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.14) 55%, transparent);
         opacity: clamp(0, var(--kp-value) * 1000, 1);
         transition:
@@ -1380,12 +1388,27 @@
         clip-path: none;
         border-radius: 0;
         background:
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% - 1rem) 50% / 1rem
-                100% no-repeat,
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) 50% 50% / 1rem 100%
-                no-repeat,
-            radial-gradient(circle, var(--primary) 0 2.5px, hsl(from var(--foreground) h s l / 0.14) 3px, transparent 7px) calc(50% + 1rem) 50% / 1rem
-                100% no-repeat;
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                calc(50% - var(--kp-sd-pitch)) 50% / var(--kp-sd-pitch) 100% no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                50% 50% / var(--kp-sd-pitch) 100% no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 var(--kp-sd-core),
+                    hsl(from var(--foreground) h s l / 0.14) var(--kp-sd-halo),
+                    transparent var(--kp-sd-glow)
+                )
+                calc(50% + var(--kp-sd-pitch)) 50% / var(--kp-sd-pitch) 100% no-repeat;
         animation: kp-ps-shade-dark-focus 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
     }
 

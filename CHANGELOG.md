@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+- **The plain key-figure strip keeps one height, one-line labels and a
+  frame that reads** [fix-101, 2026-10-05]: in a strip with columns
+  (`data-kp-kpis-columns`) the label, the figure and two lines of words
+  keep their line boxes in every state, so the strip no longer moves
+  (79.4 to 139.2 px in one strip before, 121.2 px tiles now in all 22
+  themes); every label is one line, never cut, stepping down with the
+  tile, and attachKpiStrips() takes fewer columns while one does not fit,
+  in a phone pane too; the tile is framed in `--border-strong`, at 3:1 or
+  more on the page (was 1.21 to 2.72:1 in 20 themes), through the new knob
+  `--kp-kpi-border` that dark and titanium mix a share of ink into. The
+  destructive tile's frame mixes into `--border-strong`; a trend tile's
+  hover draws `--ring`.
+- **A page's first render no longer arrives as news** [fix-100]: since
+  every opposite motion became a mirror, the chrome a late module drew into
+  an eased box on load (a data table's pager, group and edit buttons, a
+  combobox's list) arrived as the theme's leave played backwards, 346
+  elements on the catalogue's index in a queue of about ten seconds, and
+  the table's pager bar stood 186 px tall instead of 52 until a click. A
+  box now takes what it is given in its first two frames, and under a root
+  wearing `data-kp-settling`, at once; js/auto.js holds the root of every
+  `attachAll()` so until its modules have attached and two frames are
+  painted (`SETTLING_ATTRIBUTE`, `settleAfter()` in js/as-of.js). Only what
+  is added after that arrives: an opened group, a new toast. Measured in
+  Firefox on catalogue index, data and table in formal, cyberpunk and
+  terminal: 0 arrivals in the first 2 s (was 331 to 346), the bar 52/53 px
+  from the first frame, no console errors.
+- **The progress bar in three sizes** [9.3.0, feature; Kenny, 2026-10-05:
+  "zodat dit de kleine is, een midden en een grotere optie"]: the bar as it
+  was is the small one, and `.kp-progressbar--md` and `.kp-progressbar--lg`
+  (React: `size="md" | "lg"`) make it 1.5 and 2 times as tall. One number,
+  `--kp-progressbar-scale`, that the base track and all 22 registers'
+  signature bars multiply their drawing by (heights, glyphs, cells,
+  pitches, travel distances; line weights stay), so each theme's bar grows
+  as one drawing; the label and reading in the same row step to 16 and
+  18px (`--kp-progressbar-text`). The small bar is pixel-identical to 9.2.1.
 - **A data table's group folds as the mirror of its open** [scope-143;
   Kenny's form v21, 2026-10-05]: while the rows play their arrival
   backwards the table box eases shut on the open's curve turned around, in

@@ -35,6 +35,8 @@
 // comes and goes, and any element marked `data-kp-size-motion`. Boxes that
 // appear later (a framework's render) are picked up as they arrive.
 
+import { afterPaint, settling } from './as-of.js';
+
 /** Any box a consumer wants eased, beside the components below. */
 export const SIZE_ATTRIBUTE = 'data-kp-size-motion';
 
@@ -1341,6 +1343,26 @@ const followsAFold = (box) =>
 const arriveMode = (el, fallback) => el.closest('[data-kp-arrive]')?.getAttribute('data-kp-arrive') || fallback;
 
 /**
+ * Whether what changes in `el` now is still its first render, which is not
+ * news [fix-100]: until two frames are painted after motion attached to it,
+ * and while it is under a root that is settling (js/as-of.js; js/auto.js
+ * holds the page's root so until every module it fetched has drawn). In
+ * that time nothing in it arrives and its box takes its size at once, as a
+ * fold already took its first state at once. Since every opposite motion
+ * became a mirror (fff6fe45) a first render arrived as a leave turned
+ * around: 263 elements on the catalogue's index in one queue of about ten
+ * seconds, the data table's pager folded to a third of its width and its
+ * bar 186 px tall instead of 52 until the first click redrew it.
+ * @param {Element} el
+ * @returns {() => boolean}
+ */
+function firstRender(el) {
+    let painted = false;
+    afterPaint(() => (painted = true));
+    return () => !painted || settling(el);
+}
+
+/**
  * @typedef {object} SizeOptions
  * @property {'all' | 'new' | 'none'} [arrive] which added elements arrive the theme's way when no `data-kp-arrive` says otherwise: every one (`all`, the default), only those that are not a repaint of a row that just left under the same key (`new`), or none
  * @property {readonly string[]} [arriveKeys] more attributes that carry a row's stable id, read before `data-kp-key`, `data-kp-row-key` and `id`
@@ -1362,6 +1384,7 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
     let last = box.offsetHeight;
     /** @type {Animation | null} */
     let running = null;
+    const fresh = firstRender(box);
     const settle = () => {
         if (!box.isConnected) return;
         // During a glide a child may change size only because the box's
@@ -1385,7 +1408,7 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         running = null;
         const to = settledHeight(box);
         last = to;
-        if (switching || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+        if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
         // Something in it is leaving and folds its height shut; the box
         // follows that fold frame by frame instead of gliding after it.
         if (followsAFold(box)) return;
@@ -1436,7 +1459,8 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         // (the homelab dashboard's live repaint, 2026-10-04); with
         // `data-kp-arrive="new"` a redrawn row stays still and only a row
         // with a key not seen a moment ago arrives [port spec G].
-        const modeOf = (/** @type {Node} */ target) => arriveMode(target instanceof Element ? target : box, fallback);
+        // A first render arrives as nothing: it is the page, not news.
+        const modeOf = (/** @type {Node} */ target) => (fresh() ? 'none' : arriveMode(target instanceof Element ? target : box, fallback));
         const any = records.some((record) => modeOf(record.target) !== 'none');
         const motion = records.length && any ? arrival(box) : null;
         /** @type {Set<any> | null} */
@@ -1505,8 +1529,7 @@ function attachFold(details) {
     // A fold drawn for the first time takes the state it is given at once: a
     // page that rebuilds its groups paints each one's remembered state before
     // the first frame (port spec J3), and that is not a change to glide.
-    let shown = false;
-    requestAnimationFrame(() => (shown = true));
+    const fresh = firstRender(details);
     const shutHeight = () => {
         const style = getComputedStyle(details);
         return (
@@ -1563,7 +1586,7 @@ function attachFold(details) {
     const watcher = new MutationObserver((records) => {
         const was = records[0].oldValue !== null;
         const now = details.open;
-        if (!shown || was === now || !details.isConnected) return;
+        if (fresh() || was === now || !details.isConnected) return;
         const { size, ease } = themeMotion(details);
         if (size <= 0) return;
         let from;

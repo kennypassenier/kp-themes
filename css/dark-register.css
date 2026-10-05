@@ -36,6 +36,10 @@
         /* The month heatmap's nav goes on two rows below this width: the
            widest month and the three buttons in this type [fix-98]. */
         --kp-calendar-nav-fit: 25rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.22:1 on the page and 2.11:1 on the card here (DI1, open), so
+           a fifth of the ink goes in it: 3.55:1 and 3.36:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -1873,8 +1877,11 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='dark'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
-        --kp-ps-cut: 4px;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-cut: calc(4px * var(--kp-progressbar-scale, 1));
+        /* The indeterminate hatch: stripe and pitch grow with the bar. */
+        --kp-ps-stripe: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-hatch: calc(6px * var(--kp-progressbar-scale, 1));
         /* The film along the scale. --kp-px is the pointer's share across the
            page (0.5 at rest, written by js/effects.js); it slides the film by
            up to a fifth of the scale, the way the anodised edge turns with the
@@ -1899,13 +1906,13 @@
     }
 
     [data-theme='dark'] .kp-progressbar__fill {
-        inset-block: 2px;
+        inset-block: calc(2px * var(--kp-progressbar-scale, 1));
         background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
         transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
     }
 
     [data-theme='dark'] .kp-progressbar__head {
-        inline-size: 6px;
+        inline-size: calc(6px * var(--kp-progressbar-scale, 1));
         translate: -100% 0;
         background:
             linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
@@ -1919,8 +1926,8 @@
         inline-size: auto;
         clip-path: none;
         animation: none;
-        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
-        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 2px, transparent 2px 6px);
+        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
     }
 
     [data-theme='dark'] {

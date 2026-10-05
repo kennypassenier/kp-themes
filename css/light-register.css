@@ -1079,8 +1079,12 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='light'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
-        --kp-ps-bead: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* One pixel of the drawing at the bar's size (1px at the small size). */
+        --kp-ps-px: calc(1px * var(--kp-progressbar-scale, 1));
+        --kp-ps-bead: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        /* The three waiting dots: one dot, drawn once, at the bar's size. */
+        --kp-ps-dot-step: calc(1rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='light'] .kp-progressbar__track {
@@ -1089,8 +1093,8 @@
     }
 
     [data-theme='light'] .kp-progressbar__fill {
-        inset-block: calc(50% - 2px);
-        block-size: 4px;
+        inset-block: calc(50% - 2 * var(--kp-ps-px));
+        block-size: calc(4 * var(--kp-ps-px));
         background: var(--primary);
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round var(--kp-radius-pill, 999px));
         transition: clip-path 320ms var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
@@ -1118,11 +1122,27 @@
         clip-path: none;
         animation: none;
         background:
-            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% - 1rem) 50% / 0.75rem 0.75rem
-                no-repeat,
-            radial-gradient(circle, var(--primary) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) 50% 50% / 0.75rem 0.75rem no-repeat,
-            radial-gradient(circle, var(--fx-signal) 0 3.5px, var(--background) 4px 5.5px, transparent 6px) calc(50% + 1rem) 50% / 0.75rem 0.75rem
-                no-repeat;
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                calc(50% - var(--kp-ps-dot-step)) 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--primary) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                50% 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat,
+            radial-gradient(
+                    circle,
+                    var(--fx-signal) 0 calc(3.5 * var(--kp-ps-px)),
+                    var(--background) calc(4 * var(--kp-ps-px)) calc(5.5 * var(--kp-ps-px)),
+                    transparent calc(6 * var(--kp-ps-px))
+                )
+                calc(50% + var(--kp-ps-dot-step)) 50% / var(--kp-ps-bead) var(--kp-ps-bead) no-repeat;
     }
 
     [data-theme='light'] {

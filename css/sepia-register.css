@@ -1628,21 +1628,21 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='sepia'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --kp-ps-head: 0.75rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(0.75rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='sepia'] .kp-progressbar__track {
         border-radius: 0;
-        background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center / 0.4375rem 0.1875rem space
-            no-repeat;
+        background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center /
+            calc(0.4375rem * var(--kp-progressbar-scale, 1)) calc(0.1875rem * var(--kp-progressbar-scale, 1)) space no-repeat;
     }
 
     [data-theme='sepia'] .kp-progressbar__fill {
         background:
-            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px) / 100% 3px no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px) / 100% 1px no-repeat,
-            linear-gradient(var(--card), var(--card)) center / 100% 0.5rem no-repeat;
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px * var(--kp-progressbar-scale, 1)) / 100% 3px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px * var(--kp-progressbar-scale, 1)) / 100% 1px no-repeat,
+            linear-gradient(var(--card), var(--card)) center / 100% calc(0.5rem * var(--kp-progressbar-scale, 1)) no-repeat;
         clip-path: inset(0 calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) 0 0);
         transition: clip-path var(--fx-duration) var(--fx-ease);
     }
@@ -1656,7 +1656,7 @@
     }
 
     [data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        --kp-ps-dinkus: 3.25rem;
+        --kp-ps-dinkus: calc(3.25rem * var(--kp-progressbar-scale, 1));
         inset-inline: 0;
         inline-size: auto;
         background: none;
@@ -1677,9 +1677,9 @@
     }
 
     [data-theme='sepia'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
-        --d: 0.3125rem;
-        --g: 0.5rem;
-        --o: 0.3125rem;
+        --d: calc(0.3125rem * var(--kp-progressbar-scale, 1));
+        --g: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        --o: calc(0.3125rem * var(--kp-progressbar-scale, 1));
         background: var(--primary);
         clip-path: polygon(
             var(--o) 50%,

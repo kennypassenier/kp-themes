@@ -313,6 +313,10 @@ export type ProgressProps = {
      * Render the percentage beside the bar.
      */
     showValue?: boolean;
+    /**
+     * The bar's size; default 'sm', the unmodified bar.
+     */
+    size?: 'sm' | 'md' | 'lg';
     className?: string;
     style?: import('react').CSSProperties;
 };

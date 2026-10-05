@@ -873,11 +873,12 @@ export const Pagination = forwardRef(PaginationInner);
  * @property {string} label
  * @property {string} [valueText]    aria-valuetext, e.g. "3 of 10 files".
  * @property {boolean} [showValue]   Render the percentage beside the bar.
+ * @property {'sm'|'md'|'lg'} [size]  The bar's size; default 'sm', the unmodified bar.
  * @property {string} [className]
  * @property {import('react').CSSProperties} [style]
  */
 /** @param {ProgressProps} props @param {import('react').ForwardedRef<HTMLDivElement>} ref */
-function ProgressInner({ value, max = 100, label, valueText, showValue = false, className = '', style, ...rest }, ref) {
+function ProgressInner({ value, max = 100, label, valueText, showValue = false, size = 'sm', className = '', style, ...rest }, ref) {
     // No value means busy without an amount [scope-140]: the bar says so with
     // data-kp-indeterminate and by leaving aria-valuenow out, which is how a
     // screen reader learns the amount is unknown. The label is what makes it
@@ -887,7 +888,7 @@ function ProgressInner({ value, max = 100, label, valueText, showValue = false, 
     const bar = (
         <div
             ref={ref}
-            className={`kp-progressbar ${className}`.trim()}
+            className={['kp-progressbar', size === 'sm' ? '' : `kp-progressbar--${size}`, className].filter(Boolean).join(' ')}
             role="progressbar"
             style={/** @type {import('react').CSSProperties} */ ({ ...style, '--kp-value': String(share) })}
             aria-label={label}

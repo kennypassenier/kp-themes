@@ -30,6 +30,10 @@
         /* The month heatmap's nav goes on two rows below this width: the
            widest month and the three buttons in this type [fix-98]. */
         --kp-calendar-nav-fit: 22rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.98:1 on the page and 2.58:1 on the card here (DI1, open), so
+           three twentieths of the ink go in it: 3.96:1 and 3.43:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 85%, var(--foreground));
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
         --kp-word-stagger: 28ms;
@@ -1609,12 +1613,15 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='titanium'] .kp-progressbar {
-        --kp-progressbar-height: 0.875rem;
-        --ti-cut: 0.4rem;
+        --kp-progressbar-height: calc(0.875rem * var(--kp-progressbar-scale, 1));
+        --ti-cut: calc(0.4rem * var(--kp-progressbar-scale, 1));
         --ti-edge: var(--border-strong);
         --ti-iris: linear-gradient(90deg, var(--chart-1), var(--chart-2) 55%, var(--chart-3));
-        --ti-slug: 0.35rem;
+        --ti-slug: calc(0.35rem * var(--kp-progressbar-scale, 1));
         --ti-weave: color-mix(in oklab, var(--foreground) 9%, transparent);
+        --ti-weave-pitch: calc(5px * var(--kp-progressbar-scale, 1));
+        --ti-mask-bar: calc(0.6rem * var(--kp-progressbar-scale, 1));
+        --ti-mask-pitch: calc(0.95rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='titanium'] .kp-progressbar__track {
@@ -1640,9 +1647,9 @@
             linear-gradient(var(--ti-edge), var(--ti-edge)) left top / 1px 100% no-repeat,
             linear-gradient(var(--ti-edge), var(--ti-edge)) right top / 1px 100% no-repeat,
             linear-gradient(45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
-                0 0 / 5px 5px,
+                0 0 / var(--ti-weave-pitch) var(--ti-weave-pitch),
             linear-gradient(-45deg, transparent calc(50% - 0.6px), var(--ti-weave) calc(50% - 0.6px) calc(50% + 0.6px), transparent calc(50% + 0.6px))
-                0 0 / 5px 5px,
+                0 0 / var(--ti-weave-pitch) var(--ti-weave-pitch),
             var(--muted);
     }
 
@@ -1671,8 +1678,8 @@
         clip-path: none;
         animation: none;
         opacity: 0.7;
-        -webkit-mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
-        mask: repeating-linear-gradient(110deg, var(--foreground) 0 0.6rem, transparent 0.6rem 0.95rem);
+        -webkit-mask: repeating-linear-gradient(110deg, var(--foreground) 0 var(--ti-mask-bar), transparent var(--ti-mask-bar) var(--ti-mask-pitch));
+        mask: repeating-linear-gradient(110deg, var(--foreground) 0 var(--ti-mask-bar), transparent var(--ti-mask-bar) var(--ti-mask-pitch));
     }
 
     @media (prefers-reduced-motion: no-preference) {

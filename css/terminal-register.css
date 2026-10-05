@@ -1762,12 +1762,12 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='terminal'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
         /* The run between the brackets, a whole number of cells, so the last
            cell is never cut and 100% is exactly every cell. */
         --kp-tp-run: round(down, 100% - 2ch, 1ch);
         font-family: var(--theme-font-mono);
-        font-size: 1rem;
+        font-size: calc(1rem * var(--kp-progressbar-scale, 1));
         line-height: var(--kp-progressbar-height);
         white-space: nowrap;
         color: var(--foreground);
@@ -1822,7 +1822,7 @@
     }
 
     [data-theme='terminal'] .kp-progressbar__head {
-        inset-block: 0.1875rem;
+        inset-block: calc(0.1875rem * var(--kp-progressbar-scale, 1));
         inline-size: 1ch;
         background: var(--foreground);
         box-shadow: var(--kp-bloom, 0 0 0.4em hsl(from var(--primary) h s l / 0.28));

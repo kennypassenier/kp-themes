@@ -2548,9 +2548,11 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='retro'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
-        --kp-rp-block: 0.5rem;
-        --kp-rp-gap: 2px;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
+        --kp-rp-block: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        --kp-rp-gap: calc(2px * var(--kp-progressbar-scale, 1));
+        /* One dither cell of the indeterminate checker. */
+        --kp-rp-dot: calc(2px * var(--kp-progressbar-scale, 1));
         --kp-rp-pitch: calc(var(--kp-rp-block) + var(--kp-rp-gap));
         /* The run of blocks: a whole number of them, centred in the field, so
            100% is the last block whole and never a sliver. */
@@ -2589,7 +2591,7 @@
         animation: none;
         background:
             repeating-linear-gradient(90deg, transparent 0 var(--kp-rp-block), var(--popover) var(--kp-rp-block) var(--kp-rp-pitch)),
-            repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
+            repeating-conic-gradient(var(--primary) 0 25%, transparent 0 50%) 0 0 / var(--kp-rp-dot) var(--kp-rp-dot);
     }
 
     [data-theme='retro'] .kp-spinner {

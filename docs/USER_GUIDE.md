@@ -465,6 +465,36 @@ the bar is one. Knobs: `--kp-progressbar-height` (0.75rem),
 `--kp-progressbar-duration` (240ms), `--kp-progressbar-ease` (ease-out) and
 `--kp-progress-group-gap`.
 
+### Three sizes
+
+The bar comes in three sizes. The plain `.kp-progressbar` is the small one,
+the bar as it has always been; add `.kp-progressbar--md` or
+`.kp-progressbar--lg` for the other two:
+
+```html
+<div class="kp-progress__wrap">
+    <div class="kp-progressbar kp-progressbar--lg" role="progressbar" aria-label="Import" aria-valuenow="40"></div>
+    <span class="kp-progress__value">40%</span>
+</div>
+```
+
+| Size   | Class                 | Track          | Label and reading | Use it for                                         |
+| ------ | --------------------- | -------------- | ----------------- | -------------------------------------------------- |
+| Small  | `.kp-progressbar`     | the theme's own | 13px (`--kp-text-sm`) | beside a line of text, in a table row, in a list |
+| Medium | `.kp-progressbar--md` | × 1.5          | 16px (`--kp-text-md`) | the bar a panel or card is about              |
+| Large  | `.kp-progressbar--lg` | × 2            | 18px              | the one task the whole page is waiting on          |
+
+A size is one number, `--kp-progressbar-scale` (1, 1.5, 2), and the theme
+multiplies its whole drawing by it — the track, and its own marks, cells
+and patterns — so a larger bar is the same bar larger, not a taller box.
+Line weights (hairlines, the theme's rule) stay as they are. The track
+heights land on whole pixels in every theme, because each theme's small
+height is a whole multiple of 2px. The size sits on the bar; a
+`.kp-progress__wrap` around it reads it from there, so its label, its
+reading and the gap between them grow with it, and a `.kp-progress-group`
+takes the gaps of the largest size it holds. In React it is the `size` prop:
+`<Progress value={40} label="Import" size="lg" showValue />`.
+
 ## Closing and resizing [scope-142]
 
 A dialog leaves the way it came, and a box whose content changes eases to its

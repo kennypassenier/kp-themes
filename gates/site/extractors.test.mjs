@@ -272,7 +272,13 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // title takes a row of its own: 313 + 1.
     // fix-99 added --kp-kpi-trend-label-lines and its correction took it out
     // again (a label is one line; the tile grows to it): 314.
-    assert.equal(result.expected, 314, 'AR21 counted the --kp-* properties in css/components.css');
+    // fix-101 added --kp-kpi-border, the frame of a tile in a strip with
+    // columns, set by the two registers whose --border-strong is under 3:1: 314 + 1.
+    // The progress bar's three sizes (2026-10-05) added three: the scale every
+    // register multiplies its bar by (--kp-progressbar-scale), the reading's
+    // size beside it (--kp-progressbar-text) and the group's gaps
+    // (--kp-progress-group-scale): 315 + 3.
+    assert.equal(result.expected, 318, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -321,7 +327,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // round's --kp-sidenav-ease-back: 308 + 1. And fix-97's
     // --kp-chart-delta-width: 309 + 1. And fix-98's --kp-calendar-nav-fit: 310 + 1.
     // fix-99's --kp-kpi-trend-label-lines came and went: 311.
-    assert.equal(result.readCount, 311);
+    // fix-101's --kp-kpi-border: 311 + 1. The progress bar's three sizes:
+    // --kp-progressbar-scale, -text and --kp-progress-group-scale: 312 + 3.
+    assert.equal(result.readCount, 315);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);

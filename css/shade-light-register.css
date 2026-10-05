@@ -1496,30 +1496,31 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='shade-light'] .kp-progressbar {
-        --kp-progressbar-height: 0.75rem;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-sl-radius: calc(var(--radius, 0.25rem) * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='shade-light'] .kp-progressbar__track {
-        border-radius: var(--radius, 0.25rem);
+        border-radius: var(--kp-sl-radius);
         background: var(--muted);
         box-shadow:
             inset 0 0 0 1px var(--border),
-            inset 0 2px 3px hsl(from var(--foreground) h s l / 0.22);
+            inset 0 calc(2px * var(--kp-progressbar-scale, 1)) calc(3px * var(--kp-progressbar-scale, 1)) hsl(from var(--foreground) h s l / 0.22);
     }
 
     [data-theme='shade-light'] .kp-progressbar__fill {
         inset: 1px;
-        border-radius: calc(var(--radius, 0.25rem) - 1px);
+        border-radius: calc(var(--kp-sl-radius) - 1px);
         background:
             linear-gradient(hsl(from var(--card) h s l / 0.55), hsl(from var(--card) h s l / 0.55)) 0 0 / 100% 1px no-repeat,
             linear-gradient(hsl(from var(--foreground) h s l / 0.25), hsl(from var(--foreground) h s l / 0.25)) 0 100% / 100% 1px no-repeat,
             var(--primary);
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--radius, 0.25rem) - 1px));
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0 round calc(var(--kp-sl-radius) - 1px));
         transition: clip-path 260ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
     [data-theme='shade-light'] .kp-progressbar__head {
-        inline-size: 1.25rem;
+        inline-size: calc(1.25rem * var(--kp-progressbar-scale, 1));
         inset-block: 1px;
         background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.16) 40%, transparent);
         /* Nothing entered, nothing to throw a shade. */
@@ -1535,7 +1536,11 @@
         inset: 1px;
         inline-size: auto;
         clip-path: none;
-        background: repeating-linear-gradient(-60deg, hsl(from var(--foreground) h s l / 0.7) 0 1.5px, transparent 1.5px 5px);
+        background: repeating-linear-gradient(
+            -60deg,
+            hsl(from var(--foreground) h s l / 0.7) 0 calc(1.5px * var(--kp-progressbar-scale, 1)),
+            transparent calc(1.5px * var(--kp-progressbar-scale, 1)) calc(5px * var(--kp-progressbar-scale, 1))
+        );
         animation: kp-ps-shade-light-hatch 600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) 1 both;
     }
 

@@ -1517,7 +1517,7 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='grotesk'] .kp-progressbar {
-        --kp-progressbar-height: 1rem;
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
         --gr-ink: var(--border-strong);
         --gr-red: var(--primary);
         --gr-base: 2px;
@@ -1548,7 +1548,7 @@
     }
 
     [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset-block: 45% calc(var(--gr-base) + 2px);
+        inset-block: 45% calc(var(--gr-base) + 2px * var(--kp-progressbar-scale, 1));
         inset-inline: 0;
         inline-size: auto;
         clip-path: none;

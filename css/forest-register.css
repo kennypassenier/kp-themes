@@ -1319,7 +1319,7 @@
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
     [data-theme='forest'] .kp-progressbar {
-        --kp-progressbar-height: 1.25rem;
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
         /* One planting slot: half the bar's height, so a tree keeps its shape
            at any height the bar is given. */
         --kp-fo-pitch: calc(var(--kp-progressbar-height) / 2);
@@ -1342,7 +1342,7 @@
     }
 
     [data-theme='forest'] .kp-progressbar__track {
-        border-radius: 3px;
+        border-radius: calc(3px * var(--kp-progressbar-scale, 1));
         background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
     }
 
