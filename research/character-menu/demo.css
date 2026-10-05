@@ -1,0 +1,189 @@
+/* The page: a centred column, the menu button's own section with its
+   controls, the combination preview, a row per aspect of three menu
+   buttons that differ in that aspect only, and the plain menu below for
+   reference. The buttons' own drawing is in menu.css and menu-a..d.css. */
+.mb-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.mb-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.mb-intro h1,
+.mb-intro p {
+    margin: 0;
+}
+
+.mb-meta,
+.mb-motion,
+.mb-log {
+    color: var(--muted-foreground);
+}
+
+.mb-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.mb-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-mb-speed][aria-pressed='true'],
+[data-mb-action='loading'][aria-pressed='true'],
+[data-mb-action='filled'][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.mb-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.mb-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.mb-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.mb-sec__head h2,
+.mb-sec__head p {
+    margin: 0;
+}
+
+.mb-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Every menu button sits in its own strip, with room below for its open
+   menu, so three strips side by side never have one menu covering the
+   next one's button. */
+.mb-strip {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    min-block-size: 23rem;
+    padding-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.mb-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.mb-aspect {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.mb-aspect__head h3,
+.mb-aspect__head p,
+.mb-preview__head h3,
+.mb-preview__head p {
+    margin: 0;
+}
+
+.mb-aspect__head p,
+.mb-preview__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.mb-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+/* Three columns need room for the package's own open menu
+   (`--kp-menu-rich-max`, up to 26rem) beside the catalogue's side
+   navigation (15rem, sticky next to this page, not part of it); below
+   that combined width the three stack to one column instead, so an open
+   menu is never crowded off past the viewport or under the nav. One
+   column is also what 334px reads as, so no second breakpoint is
+   needed for the phone width. */
+@media (max-width: 100rem) {
+    .mb-trio {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+}
+
+/* An open menu is `position: absolute` inside its strip and would
+   otherwise paint behind the next row's heading (later in the document,
+   so later in the paint order): lifting the strip that holds it keeps
+   the menu hoverable instead of covered. Demo-only; the package's own
+   stacking is untouched. */
+.mb-strip:has(.kp-menu-button > .kp-menu:not([hidden])) {
+    position: relative;
+    z-index: 1;
+}
+
+.mb-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.mb-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.mb-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.mb-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.mb-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.mb-preview,
+.mb-reference {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.mb-reference {
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-menu">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a menu button of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="menu.css" />
+        <link rel="stylesheet" href="menu-a.css" />
+        <link rel="stylesheet" href="menu-b.css" />
+        <link rel="stylesheet" href="menu-c.css" />
+        <link rel="stylesheet" href="menu-d.css" />
+    </head>
+    <body>
+        <main class="mb-page">
+            <header class="mb-intro">
+                <h1>A menu button of its own, per theme: one pick per aspect</h1>
+                <p>
+                    Phase 1 of the character round for the menu button (<code>.kp-menu-button</code>, js/menu-button.js): five things to pick, each on
+                    its own from three options, and any combination composes. Nothing is bundled; a row below changes one aspect only, everything else
+                    as ticked. Shape, loading, open and close, and interaction are CSS only, on the package's own markup and behaviour.
+                </p>
+                <p class="mb-motion" data-mb-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading picture shows its still frame and the
+                    menu appears and disappears at once. Turn it off in the system settings to judge the motion.
+                </p>
+                <p class="mb-meta">
+                    Every menu button is the package's own (<code>js/menu-button.js</code> fills it, opens and closes it, and answers the keys); an
+                    option only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>menu.css</code> and the
+                    four group files), one attribute per aspect. This theme: <b data-mb-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="mb-sec"
+                data-review-item="menu"
+                data-review-components="menu-button"
+                data-review-title="The menu button"
+                aria-labelledby="h-menu"
+            >
+                <div class="mb-sec__head">
+                    <h2 id="h-menu">The menu button in <span data-mb-theme-name>this theme</span></h2>
+                    <p>
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as ticked; the
+                        combination at the top shows your picks together. <b>Open</b> plays the arrival, <b>Close</b> plays the leave the same way in
+                        reverse, <b>Loading</b> shows the one entry a fill waits behind, the tone row shows a destructive entry and a disabled reason,
+                        and the speed slows every animation. Tab to the button and press ↓ to open on the keyboard.
+                    </p>
+                </div>
+                <div class="mb-controls" data-review-controls>
+                    <div class="mb-actions" role="group" aria-label="Open or close every menu">
+                        <b>Menu:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="open">Open</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="close">Close</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="filled" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="focus">Focus the second entry</button>
+                    </div>
+                    <div class="mb-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="mb-log" data-mb-log aria-live="polite">A pick fires <code>kp-menu-select</code>; this line says which.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="mb-preview">
+                    <div class="mb-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-mb-picks>…</p>
+                    </div>
+                    <div
+                        class="mb-strip"
+                        data-mb-preview
+                        data-mb-shape="1"
+                        data-mb-loading="1"
+                        data-mb-open="1"
+                        data-mb-tone="1"
+                        data-mb-interact="1"
+                    >
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="preview" data-mb-slot>
+                            <button type="button" class="kp-button">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action" hidden></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-aspects" data-mb-aspects></div>
+                <div class="mb-reference">
+                    <div class="mb-aspect__head">
+                        <h3>For reference: the plain menu, as today</h3>
+                        <p>The package's rich menu as it ships, not an option: a plate with groups in small muted capitals, label over hint.</p>
+                    </div>
+                    <div class="mb-strip">
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="reference" data-mb-slot>
+                            <button type="button" class="kp-button">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action" hidden></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-character-menu-p1",
+                "reopen": [
+                    "formal|menu",
+                    "light|menu",
+                    "dark|menu",
+                    "cyberpunk|menu",
+                    "synthwave|menu",
+                    "pastel|menu",
+                    "terminal|menu",
+                    "forest|menu",
+                    "high-contrast|menu",
+                    "sepia|menu",
+                    "blueprint|menu",
+                    "solstice|menu",
+                    "brutalism|menu",
+                    "deco|menu",
+                    "phantom|menu",
+                    "shade-light|menu",
+                    "shade-dark|menu",
+                    "retro|menu",
+                    "grotesk|menu",
+                    "lapis|menu",
+                    "nostromo|menu",
+                    "titanium|menu"
+                ]
+            }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

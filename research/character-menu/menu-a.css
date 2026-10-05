@@ -1,0 +1,1329 @@
+/* research/character-menu, theme group a: light, dark, cyberpunk, synthwave,
+   pastel. The spec for each theme's five aspects is in demo.js (IDEAS); this
+   file fills it in. @layer kp.signature keeps it under the registers,
+   tokens only, no opacity keyframes; every animation plays only under
+   `prefers-reduced-motion: no-preference`, so a loading picture always
+   animates at full motion and stands still under reduced motion. One
+   selector names one aspect, so any of the three picks of the five aspects
+   composes on the same `.kp-menu-button`. */
+@layer kp.signature {
+    /* ---------------------------------------------------- light -------- */
+
+    /* Shape 1, the soft card: a wide soft shadow in place of a hard border,
+       muted small-capital headings, a solid rule between groups. */
+    [data-theme='light'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        border-color: transparent;
+        border-radius: calc(var(--radius, 0.5rem) + 0.25rem);
+        box-shadow: 0 1.25rem 2.5rem -1rem hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    [data-theme='light'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-variant-caps: small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='light'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group {
+        border-block-start: 1px solid var(--mb-edge, var(--border-strong));
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Shape 2, daylight: a pale wash lightening toward the top, headings
+       sit on it plainly, entries keep generous air. */
+    [data-theme='light'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
+        background-image: linear-gradient(180deg, hsl(from var(--primary) h s l / 0.08), transparent 65%);
+    }
+
+    [data-theme='light'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-weight: 700;
+        color: var(--foreground);
+    }
+
+    [data-theme='light'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__item {
+        padding-block: calc(0.4375rem + 2px);
+    }
+
+    /* Shape 3, the paper sheet: a lifted corner folded over the top right,
+       faint writing rules behind the groups, hints in a soft grey. */
+    [data-theme='light'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
+        background-image: repeating-linear-gradient(0deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.6) 0 1px, transparent 1px 1.5rem);
+        clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0 100%);
+    }
+
+    [data-theme='light'] [data-mb-shape='3'] .kp-menu-button > .kp-menu::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: 0;
+        block-size: 0;
+        border-inline-start: 0.8rem solid transparent;
+        border-block-end: 0.8rem solid var(--muted);
+    }
+
+    [data-theme='light'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__hint {
+        font-style: italic;
+    }
+
+    /* Loading 1, the dashed baseline: a dashed line under the loading row
+       drifts to the right, then starts again. */
+    [data-theme='light'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(90deg, var(--mb-edge, var(--border-strong)) 0 6px, transparent 6px 11px);
+        background-size: 22px 2px;
+        background-repeat: repeat-x;
+        background-position: 0 100%;
+    }
+
+    /* Loading 2, daylight: a slow band of light crosses the loading row. */
+    [data-theme='light'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(100deg, transparent 0%, hsl(from var(--primary) h s l / 0.14) 20%, transparent 40%);
+        background-size: 250% 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* Loading 3, a cloud passes: a soft shadow drifts across the row and
+       returns. */
+    [data-theme='light'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: radial-gradient(ellipse 2.5rem 1rem at 0% 50%, hsl(from var(--foreground) h s l / 0.1), transparent 70%);
+        background-repeat: no-repeat;
+    }
+
+    /* Tone 1, the coloured tab: a soft drop shadow in the destructive
+       colour; a disabled reason reads muted under a dashed rule. */
+    [data-theme='light'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: 0 0.375rem 0.75rem -0.375rem var(--destructive);
+    }
+
+    [data-theme='light'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        border-block-start: 1px dashed var(--mb-edge, var(--border-strong));
+        padding-block-start: 0.1875rem;
+    }
+
+    /* Tone 2, the soft outline: a soft outline in its own ink rings the
+       destructive entry; the disabled reason sits smaller and lighter. */
+    [data-theme='light'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 0 0 1px var(--destructive);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    [data-theme='light'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Tone 3, the warm edge: a warm band glows along the destructive
+       entry's top edge; the disabled reason carries a soft dot. */
+    [data-theme='light'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 2px 0 var(--destructive);
+    }
+
+    [data-theme='light'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::before {
+        content: '● ';
+        color: var(--muted-foreground);
+    }
+
+    /* Interact 1, the soft lift: a hovered or focused entry lifts on a soft
+       shadow; a press settles it flat again. */
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        transform: translateY(-1px);
+        box-shadow: 0 0.375rem 0.75rem -0.5rem hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* Interact 2, the glow: a hovered or focused entry's plate glows a
+       touch warmer; a press dims it back for a moment. */
+    [data-theme='light'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        background: hsl(from var(--primary) h s l / 0.1);
+    }
+
+    [data-theme='light'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: hsl(from var(--primary) h s l / 0.04);
+    }
+
+    /* Interact 3, the round pill: a hovered or focused entry gets a soft
+       rounded fill; a press shrinks the fill by a hair. */
+    [data-theme='light'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        border-radius: 999px;
+        background: var(--accent);
+    }
+
+    [data-theme='light'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        border-radius: 999px;
+        background: hsl(from var(--accent) h s l / 0.6);
+    }
+
+    /* ----------------------------------------------------- dark -------- */
+
+    /* Shape 1, the status board: a black panel bevel, mono capital
+       headings lit faintly, a hairline between every group. */
+    [data-theme='dark'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.6),
+            inset 0 -1px 0 hsl(0 0% 0% / 0.6);
+    }
+
+    [data-theme='dark'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-mono, monospace);
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group {
+        border-block-start: 1px solid var(--mb-edge, var(--border-strong));
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Shape 2, the machined panel: entries in a recessed slot with an
+       inner shadow above and a lit lip below, headings in mono. */
+    [data-theme='dark'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__item {
+        box-shadow:
+            inset 0 2px 3px hsl(0 0% 0% / 0.5),
+            inset 0 -1px 0 hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.5);
+    }
+
+    [data-theme='dark'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    /* Shape 3, the oscilloscope: a dark well with a dotted graticule
+       behind the groups and a lit rim, mono throughout. */
+    [data-theme='dark'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
+        border-color: var(--primary);
+        background-image: radial-gradient(hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.5) 1px, transparent 1px);
+        background-size: 10px 10px;
+    }
+
+    [data-theme='dark'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__heading,
+    [data-theme='dark'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__label {
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    /* Loading 1, the ticker baseline: a dashed baseline ticks along like a
+       ticker tape, then starts again. */
+    [data-theme='dark'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(90deg, var(--primary) 0 5px, transparent 5px 9px);
+        background-size: 18px 2px;
+        background-repeat: repeat-x;
+        background-position: 0 100%;
+    }
+
+    /* Loading 2, the slot is scanned: a lit band sweeps along the row as a
+       scanner reads a slot. */
+    [data-theme='dark'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(90deg, transparent 0%, hsl(from var(--primary) h s l / 0.4) 10%, transparent 20%);
+        background-size: 400% 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* Loading 3, the status lamp: a small lamp steps between three places
+       on the row, one after the other. */
+    [data-theme='dark'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.625rem;
+        inset-block-start: 50%;
+        inline-size: 0.4375rem;
+        block-size: 0.4375rem;
+        margin-block-start: -0.21875rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0.375rem var(--primary);
+    }
+
+    /* Tone 1, the alarm lamp: the destructive entry's label lights like an
+       alarm lamp; the disabled reason reads in a dim mono line. */
+    [data-theme='dark'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label {
+        text-shadow: 0 0 0.5rem var(--destructive);
+    }
+
+    [data-theme='dark'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    /* Tone 2, the machined tab: the destructive entry sits on a flat
+       recessed tab with a square corner; the disabled reason carries a dim
+       bracket. */
+    [data-theme='dark'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 0 0 1px var(--destructive);
+        border-radius: 0;
+    }
+
+    [data-theme='dark'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::before {
+        content: '[ ';
+    }
+
+    [data-theme='dark'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::after {
+        content: ' ]';
+    }
+
+    /* Tone 3, the red rim: a red rim lights the destructive entry's left
+       edge; a disabled entry's reason sits behind a faint hatch. */
+    [data-theme='dark'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    [data-theme='dark'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.4) 0 1px, transparent 1px 4px);
+    }
+
+    /* Interact 1, the lit slot: a hovered or focused entry's slot lights
+       from within; a press dims it, as a switch thrown. */
+    [data-theme='dark'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 0 0 1px var(--primary);
+        background: hsl(from var(--primary) h s l / 0.1);
+    }
+
+    [data-theme='dark'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: hsl(from var(--primary) h s l / 0.04);
+    }
+
+    /* Interact 2, the scan line: a hovered or focused entry gets a thin
+       scan line; a press holds it still and bright. */
+    [data-theme='dark'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+
+    [data-theme='dark'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    /* Interact 3, the panel glow: a hovered or focused entry's row glows
+       at its rim; a press snaps the glow off and straight back on. */
+    [data-theme='dark'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 0 0 1px var(--mb-edge, var(--border-strong));
+    }
+
+    [data-theme='dark'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* ------------------------------------------------- cyberpunk -------- */
+
+    /* Shape 1, the neon trace: cut corners on the plate, tech mono
+       headings with a cyan halo, a faint circuit grid behind the groups. */
+    [data-theme='cyberpunk'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        clip-path: polygon(0.625rem 0, 100% 0, 100% calc(100% - 0.625rem), calc(100% - 0.625rem) 100%, 0 100%, 0 0.625rem);
+        background-image:
+            linear-gradient(90deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.3) 1px, transparent 1px),
+            linear-gradient(0deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.3) 1px, transparent 1px);
+        background-size: 12px 12px;
+    }
+
+    [data-theme='cyberpunk'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-mono, monospace);
+        text-shadow: 0 0 0.375rem var(--info);
+    }
+
+    /* Shape 2, the glitch HUD: yellow brackets mark the plate's corners,
+       hazard tape along the top edge, entries in a square data face. */
+    [data-theme='cyberpunk'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
+        border-image: none;
+        box-shadow:
+            inset 0.5rem 0 0 -0.4375rem var(--primary),
+            inset -0.5rem 0 0 -0.4375rem var(--primary),
+            inset 0 0.5rem 0 -0.4375rem var(--primary),
+            inset 0 -0.5rem 0 -0.4375rem var(--primary);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-shape='2'] .kp-menu-button > .kp-menu::before {
+        content: '';
+        display: block;
+        block-size: 6px;
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+        background-image: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--background) 6px 12px);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__label {
+        font-family: var(--theme-font-mono, monospace);
+        text-transform: uppercase;
+    }
+
+    /* Shape 3, the holo card: a cyan rim glows around the plate, diagonal
+       scan lines cross the groups, headings in the display face. */
+    [data-theme='cyberpunk'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
+        border-color: var(--info);
+        box-shadow: 0 0 0.75rem hsl(from var(--info) h s l / 0.5);
+        background-image: repeating-linear-gradient(135deg, hsl(from var(--info) h s l / 0.06) 0 2px, transparent 2px 10px);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-display, sans-serif);
+    }
+
+    /* Loading 1, the packet runs: a packet of light runs along the row's
+       baseline, then starts again. */
+    [data-theme='cyberpunk'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(90deg, var(--info) 0 12%, transparent 12%);
+        background-size: 2.5rem 2px;
+        background-repeat: repeat-x;
+        background-position: 0 100%;
+    }
+
+    /* Loading 2, the glitch bar: a glitch bar jumps across the row in
+       hard steps. */
+    [data-theme='cyberpunk'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(90deg, var(--primary) 0 18%, transparent 18%);
+        background-size: 5rem 3px;
+        background-repeat: repeat-x;
+        background-position: 0 50%;
+    }
+
+    /* Loading 3, packet rain: packets of light rain down the row in
+       columns, looping. */
+    [data-theme='cyberpunk'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(0deg, var(--info) 0 2px, transparent 2px 6px);
+        background-size: 5px 100%;
+        background-repeat: repeat-x;
+    }
+
+    /* Tone 1, the hazard frame: the destructive entry is framed all round
+       in hazard colour; the disabled reason sits behind a faint glitch. */
+    [data-theme='cyberpunk'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        text-shadow:
+            1px 0 var(--destructive),
+            -1px 0 var(--info);
+    }
+
+    /* Tone 2, the cut-corner chip: the destructive entry sits on a
+       cut-corner chip in its colour; the disabled reason in a dim RGB
+       split. */
+    [data-theme='cyberpunk'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        clip-path: polygon(0.5rem 0, 100% 0, 100% 100%, 0 100%, 0 0.5rem);
+        background: hsl(from var(--destructive) h s l / 0.14);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    /* Tone 3, the warning scanline: a scanline in the destructive colour
+       crosses that entry once; the disabled reason carries a no-signal
+       glyph. */
+    [data-theme='cyberpunk'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 50% 0 -50% var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::after {
+        content: ' ⌁';
+    }
+
+    /* Tone contrast fix: the package's own destructive label and disabled
+       reason ink read under 4.5:1 against this theme's menu plate; the
+       foreground token clears it while the box-shadow markers above still
+       carry each option's own character. */
+    [data-theme='cyberpunk'] [data-mb-tone] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label,
+    [data-theme='cyberpunk'] [data-mb-tone] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        color: var(--foreground);
+    }
+
+    /* Interact 1, the RGB split: a hovered or focused entry's label gets a
+       faint RGB split; a press snaps it back to one line. */
+    [data-theme='cyberpunk']
+        [data-mb-interact='1']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus])
+        .kp-menu__label {
+        text-shadow:
+            1px 0 var(--destructive),
+            -1px 0 var(--info);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active .kp-menu__label {
+        text-shadow: none;
+    }
+
+    /* Interact 2, the cyan edge: a hovered or focused entry lights a cyan
+       edge; a press brightens the edge for a moment. */
+    [data-theme='cyberpunk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 2px 0 0 var(--info);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        box-shadow:
+            inset 2px 0 0 var(--info),
+            0 0 0.5rem hsl(from var(--info) h s l / 0.6);
+    }
+
+    /* Interact 3, the data flicker: a hovered or focused entry flickers
+       once into a brighter face; a press holds the brighter face. */
+    [data-theme='cyberpunk'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        background: hsl(from var(--primary) h s l / 0.1);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: hsl(from var(--primary) h s l / 0.22);
+    }
+
+    /* ------------------------------------------------- synthwave -------- */
+
+    /* Shape 1, the grid-floor horizon: a perspective grid floor under a
+       pink horizon behind the groups, display headings with a pink drop. */
+    [data-theme='synthwave'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        background-image:
+            linear-gradient(0deg, hsl(from var(--primary) h s l / 0.14), transparent 55%),
+            repeating-linear-gradient(90deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.35) 0 1px, transparent 1px 14px);
+    }
+
+    [data-theme='synthwave'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-display, sans-serif);
+        text-shadow: 0 1px 0 var(--primary);
+    }
+
+    /* Shape 2, the VCR display: OSD-style numerals and scanlines over the
+       plate, a hard square face, headings in capitals. */
+    [data-theme='synthwave'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
+        background-image: repeating-linear-gradient(0deg, hsl(from var(--info) h s l / 0.05) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='synthwave'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-mono, monospace);
+        text-transform: uppercase;
+    }
+
+    /* Shape 3, the arcade marquee: a pink frame glows around the plate,
+       headings sit on a cyan wash, entries in the arcade display face. */
+    [data-theme='synthwave'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
+        border-color: var(--primary);
+        box-shadow: 0 0 0.875rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        background: hsl(from var(--info) h s l / 0.12);
+        font-family: var(--theme-font-display, sans-serif);
+    }
+
+    /* Loading 1, the grid drives: the grid floor on the row drives toward
+       the reader, looping. */
+    [data-theme='synthwave'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(90deg, var(--primary) 0 3px, transparent 3px 11px);
+        background-size: 200% 2px;
+        background-repeat: repeat-x;
+        background-position: 0 100%;
+    }
+
+    /* Loading 2, the tracking rolls: a tracking band rolls down the row,
+       as a VCR losing sync. */
+    [data-theme='synthwave'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(0deg, transparent 0%, hsl(from var(--info) h s l / 0.3) 40%, transparent 80%);
+        background-size: 100% 400%;
+        background-repeat: no-repeat;
+    }
+
+    /* Loading 3, the sun rises: a striped sun swells up over the horizon
+       and sinks again. */
+    [data-theme='synthwave'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.625rem;
+        inset-block-end: 2px;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 50% 50% 0 0;
+        background-image: repeating-linear-gradient(0deg, var(--primary) 0 1px, transparent 1px 2px);
+    }
+
+    /* Tone 1, the arcade warning: the destructive entry's plate flashes
+       once under the label; the disabled reason sits in dim OSD text. */
+    [data-theme='synthwave'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 -2px 0 var(--destructive);
+        background: hsl(from var(--destructive) h s l / 0.1);
+    }
+
+    [data-theme='synthwave'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    /* Tone 2, the inverse block: the destructive entry inverts to a solid
+       block in its colour; the disabled reason carries a dim scanline. */
+    [data-theme='synthwave'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        background: var(--destructive);
+    }
+
+    [data-theme='synthwave'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label {
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='synthwave'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        box-shadow: inset 0 -1px 0 var(--mb-edge, var(--border-strong));
+    }
+
+    /* Tone 3, the laser edge: a laser-thin edge in the destructive colour
+       runs along that entry; the disabled reason reads behind a faint
+       grid. */
+    [data-theme='synthwave'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+
+    [data-theme='synthwave'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        background-image: linear-gradient(90deg, hsl(from var(--mb-edge, var(--border-strong)) h s l / 0.3) 1px, transparent 1px);
+        background-size: 6px 100%;
+    }
+
+    /* Tone contrast fix: the package's own destructive label reads under
+       4.5:1 in options 1 and 3 (option 2's inverse block already sets its
+       own readable ink), and the disabled reason under 4.5:1 in all
+       three; the foreground token clears both. */
+    [data-theme='synthwave'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label,
+    [data-theme='synthwave'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label,
+    [data-theme='synthwave'] [data-mb-tone] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        color: var(--foreground);
+    }
+
+    /* Interact 1, the laser sweep: a hovered or focused entry gets a
+       laser-thin underline that sweeps in; a press holds it at full
+       length. */
+    [data-theme='synthwave'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    [data-theme='synthwave'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        box-shadow: inset 0 -2px 0 var(--info);
+    }
+
+    /* Interact 2, the glass glow: a hovered or focused entry's plate
+       glows like glass; a press dims the glow for a moment. */
+    [data-theme='synthwave'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.6);
+        background: hsl(from var(--primary) h s l / 0.08);
+    }
+
+    [data-theme='synthwave'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: hsl(from var(--primary) h s l / 0.03);
+    }
+
+    /* Interact 3, the VCR flicker: a hovered or focused entry flickers
+       into inverse once; a press holds the inverse while pressed. */
+    [data-theme='synthwave'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        background: var(--primary);
+    }
+
+    [data-theme='synthwave']
+        [data-mb-interact='3']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus])
+        .kp-menu__label {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='synthwave'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: var(--info);
+    }
+
+    /* ---------------------------------------------------- pastel -------- */
+
+    /* Shape 1, the sticker chart: a candy plate with a flat sticker
+       shadow, a rounded face, a soft dot between the groups. */
+    [data-theme='pastel'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        border-radius: calc(var(--radius, 0.5rem) + 0.375rem);
+        box-shadow: 3px 3px 0 var(--mb-edge, var(--border-strong));
+    }
+
+    [data-theme='pastel'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-display, sans-serif);
+    }
+
+    [data-theme='pastel'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group::before {
+        content: '● ';
+        color: var(--primary);
+    }
+
+    /* Shape 2, the washi planner: a strip of washi tape crosses the
+       plate's top, a dotted planner face, hints handwritten-soft. */
+    [data-theme='pastel'] [data-mb-shape='2'] .kp-menu-button > .kp-menu::before {
+        content: '';
+        display: block;
+        block-size: 0.5rem;
+        margin-block-end: var(--kp-space-xs, 0.25rem);
+        background-image: repeating-linear-gradient(135deg, var(--accent) 0 6px, var(--secondary) 6px 12px);
+    }
+
+    [data-theme='pastel'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        border-block-end: 1px dotted var(--mb-edge, var(--border-strong));
+        padding-block-end: 0.3125rem;
+    }
+
+    [data-theme='pastel'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__hint {
+        font-style: italic;
+        font-weight: 300;
+    }
+
+    /* Shape 3, the cloud card: a wide round plate with a dashed candy
+       outline, a soft blob of colour behind the headings. */
+    [data-theme='pastel'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
+        border-style: dashed;
+        border-color: var(--primary);
+        border-radius: calc(var(--radius, 0.5rem) + 0.625rem);
+    }
+
+    [data-theme='pastel'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        background-image: radial-gradient(circle at 10% 50%, hsl(from var(--accent) h s l / 0.7), transparent 70%);
+    }
+
+    /* Loading 1, the candy hop: a candy dot hops along the row, bouncing,
+       and starts again. */
+    [data-theme='pastel'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.625rem;
+        inset-block-end: 2px;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    /* Loading 2, the tape drifts: the washi tape on the row drifts gently
+       side to side. */
+    [data-theme='pastel'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(135deg, var(--accent) 0 5px, transparent 5px 10px);
+        background-size: 200% 100%;
+        background-repeat: repeat-x;
+    }
+
+    /* Loading 3, sprinkles: two sprinkles in soft colours hop along the
+       row in turn. */
+    [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before,
+    [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 2px;
+        inline-size: 0.3125rem;
+        block-size: 0.3125rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+        inset-inline-start: 0.625rem;
+    }
+
+    [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        inset-inline-start: 1.25rem;
+        background: var(--info);
+    }
+
+    /* Tone 1, the heart sticker: the destructive entry carries a small
+       heart-shaped mark turned askew; the disabled reason sits in a soft
+       grey bubble. */
+    [data-theme='pastel'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive::after {
+        content: '♥';
+        margin-inline-start: 0.375rem;
+        color: var(--destructive);
+        display: inline-block;
+        transform: rotate(-10deg);
+    }
+
+    [data-theme='pastel'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        border-radius: 999px;
+        background: var(--muted);
+        padding-inline: 0.375rem;
+    }
+
+    /* Tone 2, the taped label: the destructive entry sits under a strip
+       of coloured tape; the disabled reason reads under a dashed line. */
+    [data-theme='pastel'] [data-mb-tone='2'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    [data-theme='pastel'] [data-mb-tone='2'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        border-block-end: 1px dashed var(--mb-edge, var(--border-strong));
+    }
+
+    /* Tone 3, the candy band: a candy-coloured band runs along the
+       destructive entry's top; the disabled reason carries a soft dot. */
+    [data-theme='pastel'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 2px 0 var(--destructive);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    [data-theme='pastel'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::before {
+        content: '● ';
+        color: var(--primary);
+    }
+
+    /* Interact 1, the happy hop: a hovered or focused entry hops up a
+       touch with an overshoot; a press squashes it back down. */
+    [data-theme='pastel'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        transform: translateY(-2px);
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    [data-theme='pastel'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        transform: translateY(1px) scaleY(0.95);
+        transition: transform 0.1s ease-out;
+    }
+
+    /* Interact 2, the sticker peel: a hovered or focused entry tilts a few
+       degrees like a peeling sticker; a press flattens it straight. */
+    [data-theme='pastel'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        transform: rotate(-2deg);
+        transform-origin: left center;
+    }
+
+    [data-theme='pastel'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        transform: rotate(0deg);
+    }
+
+    /* Interact 3, the soft bubble: a hovered or focused entry gets a soft
+       rounded bubble behind it; a press shrinks the bubble by a hair. */
+    [data-theme='pastel'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        border-radius: 999px;
+        background: var(--accent);
+    }
+
+    [data-theme='pastel'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        border-radius: 999px;
+        background: hsl(from var(--accent) h s l / 0.6);
+    }
+
+    /* ----------------------------------------- the leave, every theme -- */
+
+    /* data-mb-leaving is demo.js's own doing (the module hides the menu at
+       once, with no leave of its own): the open animation plays on arrival
+       (`:not([hidden])` restarts it whenever `hidden` lifts), the leave
+       plays its exact reverse while demo.js still holds the menu open,
+       then demo.js calls the real close. Every loading picture keeps
+       moving while the picture plays. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* light */
+        [data-theme='light'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top center;
+            animation: mb-light-unfold calc(0.3s / var(--mb-speed, 1)) ease-out;
+        }
+
+        [data-theme='light'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-light-unfold;
+            animation-direction: reverse;
+        }
+
+        [data-theme='light'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top center;
+            animation: mb-light-sunrise calc(0.32s / var(--mb-speed, 1)) ease-out;
+        }
+
+        [data-theme='light'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-light-sunrise;
+            animation-direction: reverse;
+        }
+
+        [data-theme='light'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top right;
+            animation: mb-light-pop calc(0.28s / var(--mb-speed, 1)) cubic-bezier(0.3, 1.4, 0.6, 1);
+        }
+
+        [data-theme='light'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-light-pop;
+            animation-direction: reverse;
+        }
+
+        [data-theme='light'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-light-dashes calc(0.9s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='light'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-light-daylight calc(1.6s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='light'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-light-cloud calc(2.2s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        /* dark */
+        [data-theme='dark'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-dark-switch calc(0.26s / var(--mb-speed, 1)) steps(1, jump-start);
+        }
+
+        [data-theme='dark'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-dark-switch;
+            animation-direction: reverse;
+        }
+
+        [data-theme='dark'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-dark-slide calc(0.28s / var(--mb-speed, 1)) steps(4, end);
+        }
+
+        [data-theme='dark'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-dark-slide;
+            animation-direction: reverse;
+        }
+
+        [data-theme='dark'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-dark-power calc(0.3s / var(--mb-speed, 1)) steps(3, end);
+        }
+
+        [data-theme='dark'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-dark-power;
+            animation-direction: reverse;
+        }
+
+        [data-theme='dark'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-dark-ticker calc(1s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-dark-scan calc(1.1s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-dark-lamp calc(1.2s / var(--mb-speed, 1)) steps(1, jump-start) infinite;
+        }
+
+        /* cyberpunk */
+        [data-theme='cyberpunk'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-cyberpunk-jack calc(0.24s / var(--mb-speed, 1)) steps(5, end);
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-cyberpunk-jack;
+            animation-direction: reverse;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-cyberpunk-strike calc(0.26s / var(--mb-speed, 1)) steps(1, jump-start);
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-cyberpunk-strike;
+            animation-direction: reverse;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top center;
+            animation: mb-cyberpunk-boot calc(0.28s / var(--mb-speed, 1)) steps(5, end);
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-cyberpunk-boot;
+            animation-direction: reverse;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-cyberpunk-packet calc(0.9s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-cyberpunk-glitch calc(0.5s / var(--mb-speed, 1)) steps(4, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-cyberpunk-rain calc(0.8s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        /* synthwave */
+        [data-theme='synthwave'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: bottom center;
+            animation: mb-synthwave-horizon calc(0.32s / var(--mb-speed, 1)) ease-out;
+        }
+
+        [data-theme='synthwave'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-synthwave-horizon;
+            animation-direction: reverse;
+        }
+
+        [data-theme='synthwave'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-synthwave-tape calc(0.26s / var(--mb-speed, 1)) steps(6, end);
+        }
+
+        [data-theme='synthwave'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-synthwave-tape;
+            animation-direction: reverse;
+        }
+
+        [data-theme='synthwave'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-synthwave-strike calc(0.34s / var(--mb-speed, 1)) steps(1, jump-start);
+        }
+
+        [data-theme='synthwave'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-synthwave-strike;
+            animation-direction: reverse;
+        }
+
+        [data-theme='synthwave'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-synthwave-grid calc(1s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='synthwave'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-synthwave-tracking calc(1.3s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='synthwave'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-synthwave-sun calc(1.4s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        /* pastel */
+        [data-theme='pastel'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top right;
+            animation: mb-pastel-pop calc(0.3s / var(--mb-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        [data-theme='pastel'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-pastel-pop;
+            animation-direction: reverse;
+        }
+
+        [data-theme='pastel'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top center;
+            animation: mb-pastel-unwrap calc(0.3s / var(--mb-speed, 1)) ease-out;
+        }
+
+        [data-theme='pastel'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-pastel-unwrap;
+            animation-direction: reverse;
+        }
+
+        [data-theme='pastel'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: mb-pastel-bounce calc(0.4s / var(--mb-speed, 1)) ease-out;
+        }
+
+        [data-theme='pastel'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: mb-pastel-bounce;
+            animation-direction: reverse;
+        }
+
+        [data-theme='pastel'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-pastel-hop calc(0.7s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='pastel'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-pastel-tape calc(1.4s / var(--mb-speed, 1)) ease-in-out infinite alternate;
+        }
+
+        [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+            animation: mb-pastel-sprinkle calc(0.8s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='pastel'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-pastel-sprinkle calc(0.8s / var(--mb-speed, 1)) ease-in-out calc(0.4s / var(--mb-speed, 1)) infinite;
+        }
+    }
+
+    @keyframes mb-light-unfold {
+        from {
+            transform: scaleY(0.08);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+
+    @keyframes mb-light-sunrise {
+        from {
+            transform: translateY(10px);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes mb-light-pop {
+        from {
+            transform: scale(0.97);
+        }
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes mb-light-dashes {
+        from {
+            background-position-x: 0;
+        }
+        to {
+            background-position-x: 22px;
+        }
+    }
+
+    @keyframes mb-light-daylight {
+        from {
+            background-position-x: 0%;
+        }
+        to {
+            background-position-x: -150%;
+        }
+    }
+
+    @keyframes mb-light-cloud {
+        from {
+            background-position-x: -10%;
+        }
+        to {
+            background-position-x: 110%;
+        }
+    }
+
+    @keyframes mb-dark-switch {
+        0% {
+            clip-path: inset(0 0 100% 0);
+        }
+        20% {
+            clip-path: inset(0 0 0 0);
+        }
+        35% {
+            clip-path: inset(0 0 100% 0);
+        }
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes mb-dark-slide {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes mb-dark-power {
+        0% {
+            filter: brightness(0.4);
+        }
+        33% {
+            filter: brightness(0.65);
+        }
+        66% {
+            filter: brightness(0.85);
+        }
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+    @keyframes mb-dark-ticker {
+        from {
+            background-position-x: 0;
+        }
+        to {
+            background-position-x: 18px;
+        }
+    }
+
+    @keyframes mb-dark-scan {
+        from {
+            background-position-x: 0%;
+        }
+        to {
+            background-position-x: -300%;
+        }
+    }
+
+    @keyframes mb-dark-lamp {
+        0%,
+        100% {
+            inset-inline-start: 0.625rem;
+        }
+        50% {
+            inset-inline-start: calc(100% - 1.5rem);
+        }
+    }
+
+    @keyframes mb-cyberpunk-jack {
+        0% {
+            transform: translateX(-16px);
+        }
+        20% {
+            transform: translateX(6px);
+        }
+        40% {
+            transform: translateX(-4px);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes mb-cyberpunk-strike {
+        0% {
+            box-shadow: 0 0 0 var(--info);
+        }
+        15% {
+            box-shadow: 0 0 0.75rem hsl(from var(--info) h s l / 0.6);
+        }
+        30% {
+            box-shadow: 0 0 0 var(--info);
+        }
+        100% {
+            box-shadow: 0 0 0.75rem hsl(from var(--info) h s l / 0.6);
+        }
+    }
+
+    @keyframes mb-cyberpunk-boot {
+        from {
+            clip-path: inset(0 0 94% 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes mb-cyberpunk-packet {
+        from {
+            background-position-x: 0;
+        }
+        to {
+            background-position-x: 2.5rem;
+        }
+    }
+
+    @keyframes mb-cyberpunk-glitch {
+        0% {
+            background-position-x: 0;
+        }
+        25% {
+            background-position-x: 2rem;
+        }
+        50% {
+            background-position-x: 1rem;
+        }
+        75% {
+            background-position-x: 3.5rem;
+        }
+        100% {
+            background-position-x: 5rem;
+        }
+    }
+
+    @keyframes mb-cyberpunk-rain {
+        from {
+            background-position-y: 0;
+        }
+        to {
+            background-position-y: 6px;
+        }
+    }
+
+    @keyframes mb-synthwave-horizon {
+        from {
+            transform: translateY(14px);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes mb-synthwave-tape {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes mb-synthwave-strike {
+        0% {
+            border-color: var(--primary);
+        }
+        40% {
+            border-color: var(--info);
+        }
+        70% {
+            border-color: var(--primary);
+        }
+        100% {
+            border-color: var(--info);
+        }
+    }
+
+    @keyframes mb-synthwave-grid {
+        from {
+            background-position-x: 0%;
+        }
+        to {
+            background-position-x: -100%;
+        }
+    }
+
+    @keyframes mb-synthwave-tracking {
+        from {
+            background-position-y: -100%;
+        }
+        to {
+            background-position-y: 100%;
+        }
+    }
+
+    @keyframes mb-synthwave-sun {
+        0%,
+        100% {
+            block-size: 0.625rem;
+        }
+        50% {
+            block-size: 0.9375rem;
+        }
+    }
+
+    @keyframes mb-pastel-pop {
+        0% {
+            transform: scale(0.88);
+        }
+        60% {
+            transform: scale(1.04);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes mb-pastel-unwrap {
+        from {
+            transform: scaleY(0.1);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+
+    @keyframes mb-pastel-bounce {
+        0% {
+            transform: translateY(-14px);
+        }
+        55% {
+            transform: translateY(3px);
+        }
+        80% {
+            transform: translateY(-1px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes mb-pastel-hop {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @keyframes mb-pastel-tape {
+        from {
+            background-position-x: 0%;
+        }
+        to {
+            background-position-x: -30%;
+        }
+    }
+
+    @keyframes mb-pastel-sprinkle {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-4px);
+        }
+    }
+}
