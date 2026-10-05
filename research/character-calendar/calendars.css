@@ -149,8 +149,8 @@
         --cl-mark: var(--cl-muted-mark, none);
     }
     [data-cl] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='none'] {
-        --cl-bg: var(--cl-none-bg, transparent);
-        --cl-fg: var(--cl-none-fg, var(--muted-foreground));
+        --cl-bg: var(--cl-none-bg, var(--cl-ground, transparent));
+        --cl-fg: var(--cl-none-fg, var(--cl-ground-soft, var(--muted-foreground)));
         --cl-pat: var(--cl-none-pat, none);
         --cl-edge: var(--cl-none-edge, var(--border));
         --cl-edge-style: var(--cl-none-style, solid);
@@ -158,8 +158,8 @@
         --cl-mark: var(--cl-none-mark, none);
     }
     [data-cl] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='future'] {
-        --cl-bg: var(--cl-future-bg, transparent);
-        --cl-fg: var(--cl-future-fg, var(--muted-foreground));
+        --cl-bg: var(--cl-future-bg, var(--cl-ground, transparent));
+        --cl-fg: var(--cl-future-fg, var(--cl-ground-soft, var(--muted-foreground)));
         --cl-pat: var(--cl-future-pat, none);
         --cl-edge: var(--cl-future-edge, var(--muted-foreground));
         --cl-edge-style: var(--cl-future-style, dashed);
@@ -167,8 +167,8 @@
         --cl-mark: var(--cl-future-mark, none);
     }
     [data-cl] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='before'] {
-        --cl-bg: var(--cl-before-bg, transparent);
-        --cl-fg: var(--cl-before-fg, var(--muted-foreground));
+        --cl-bg: var(--cl-before-bg, var(--cl-ground, transparent));
+        --cl-fg: var(--cl-before-fg, var(--cl-ground-soft, var(--muted-foreground)));
         --cl-pat: var(--cl-before-pat, none);
         --cl-edge: var(--cl-before-edge, var(--muted-foreground));
         --cl-edge-style: var(--cl-before-style, dashed);
@@ -353,6 +353,7 @@
         --cl-num-size: 0.95em;
         --cl-count-font: var(--theme-font-mono);
         --cl-pad-op: 1;
+        --cl-ground: var(--card);
     }
     [data-theme='formal'] [data-cl-tone='2'] .kp-calendar {
         --cl-none-bg: var(--card);
@@ -984,6 +985,9 @@
     }
     [data-theme='synthwave'] [data-cl-shape='2'] .kp-calendar__count {
         color: var(--primary);
+    }
+    [data-theme='synthwave'] [data-cl-shape='2'] .kp-calendar__day[data-kp-tone='bad'] .kp-calendar__count {
+        color: inherit;
     }
     [data-theme='synthwave'] [data-cl-tone='2'] .kp-calendar__day[data-kp-tone='bad'] .kp-calendar__count {
         color: inherit;
@@ -2157,6 +2161,7 @@
         --cl-count-weight: 700;
         --cl-pad-fg: var(--foreground);
         --cl-pad-op: 0.6;
+        --cl-ground-soft: var(--accent-foreground);
         padding: 0.75rem;
         border: 3px solid var(--foreground);
         background: var(--accent);
@@ -2287,7 +2292,7 @@
         --cl-future-style: dotted;
         --cl-before-edge: var(--border);
         --cl-before-style: dashed;
-        --cl-today: inset 0 0 0 1px var(--primary);
+        --cl-today: inset 0 0 0 1px hsl(from var(--primary) h s 74%);
     }
     [data-theme='deco'] [data-cl-loading='1'] .kp-calendar {
         --cl-loading-bg: var(--background);
@@ -2321,7 +2326,7 @@
         inline-size: 2.15em;
         aspect-ratio: 1;
         translate: -50% -50%;
-        border: 2px solid var(--primary);
+        border: 2px solid hsl(from var(--primary) h s 74%);
         border-radius: 50%;
         background: repeating-conic-gradient(from 0deg, hsl(from var(--primary) h s l / 0.3) 0 7deg, transparent 7deg 20deg);
         mask: radial-gradient(circle, transparent 0 0.62em, var(--foreground) 0.66em);
@@ -3190,6 +3195,9 @@
         --cl-num-size: 1.35em;
         --cl-pad-fg: var(--card);
         --cl-pad-op: 0.7;
+        --cl-ground-ink: var(--background);
+        --cl-ground-soft: var(--card);
+        --cl-ground-accent: hsl(from var(--primary) h s 32%);
         padding: 0.75rem;
         border: 3px double var(--primary);
         border-radius: var(--radius);
@@ -3197,34 +3205,34 @@
         color: var(--background);
     }
     [data-theme='lapis'] [data-cl-tone='1'] .kp-calendar {
-        --cl-ok-edge: hsl(from var(--background) h s l / 0.35);
-        --cl-warn-edge: hsl(from var(--background) h s l / 0.35);
-        --cl-bad-edge: hsl(from var(--background) h s l / 0.35);
-        --cl-muted-bg: hsl(from var(--background) h s l / 0.1);
-        --cl-muted-fg: var(--background);
-        --cl-muted-edge: hsl(from var(--background) h s l / 0.25);
-        --cl-none-fg: var(--background);
-        --cl-none-edge: hsl(from var(--background) h s l / 0.5);
+        --cl-ok-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
+        --cl-warn-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
+        --cl-bad-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
+        --cl-muted-bg: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.1);
+        --cl-muted-fg: var(--cl-ground-ink, var(--foreground));
+        --cl-muted-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.25);
+        --cl-none-fg: var(--cl-ground-ink, var(--foreground));
+        --cl-none-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.5);
         --cl-none-style: dashed;
-        --cl-future-fg: var(--card);
-        --cl-future-edge: hsl(from var(--card) h s l / 0.5);
+        --cl-future-fg: var(--cl-ground-soft, var(--muted-foreground));
+        --cl-future-edge: hsl(from var(--cl-ground-soft, var(--muted-foreground)) h s l / 0.5);
         --cl-future-style: dotted;
-        --cl-before-fg: var(--card);
+        --cl-before-fg: var(--cl-ground-soft, var(--muted-foreground));
         --cl-before-edge: transparent;
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--background) h s l / 0.14) 0 1px, transparent 1px 5px);
+        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.14) 0 1px, transparent 1px 5px);
         --cl-none-mark: '?';
         --cl-today: 0 0 transparent;
     }
     [data-theme='lapis'] [data-cl-loading='1'] .kp-calendar {
         --cl-loading-bg: hsl(from var(--primary) h s l / 0.2);
-        --cl-loading-fg: var(--background);
-        --cl-loading-edge: hsl(from var(--background) h s l / 0.25);
+        --cl-loading-fg: var(--cl-ground-ink, var(--foreground));
+        --cl-loading-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.25);
         --cl-busy-bg: var(--foreground);
         --cl-busy-frame: 3px double var(--primary);
         --cl-busy-shadow: none;
     }
     [data-theme='lapis'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 3px double var(--background);
+        --cl-pick: 3px double var(--cl-ground-ink, var(--foreground));
         --cl-pick-offset: 2px;
     }
     [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar :is(.kp-calendar__grid th, .kp-calendar__state, .kp-calendar__legend) {
@@ -3253,7 +3261,7 @@
     [data-theme='lapis'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
         content: '';
         inset: -0.05em -0.5em;
-        border: 2px solid var(--primary);
+        border: 2px solid hsl(from var(--primary) h s 72%);
         border-radius: 50%;
         box-shadow: 0 0 0 1.5px var(--foreground);
     }
@@ -3283,12 +3291,13 @@
         --cl-muted-style: double;
         --cl-none-bg: var(--background);
         --cl-none-edge: var(--border-strong);
+        --cl-none-fg: var(--foreground);
         --cl-none-style: dashed;
         --cl-future-edge: var(--border-strong);
         --cl-future-style: dotted;
         --cl-before-edge: transparent;
         --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.16) 0 1px, transparent 1px 5px);
-        --cl-today: inset 0 0 0 1px var(--primary);
+        --cl-today: inset 0 0 0 1px hsl(from var(--primary) h s 72%);
     }
     [data-theme='lapis'] [data-cl-loading='2'] .kp-calendar {
         --cl-loading-bg: var(--background);
@@ -3298,7 +3307,7 @@
         --cl-busy-shadow: none;
     }
     [data-theme='lapis'] [data-cl-select='2'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
+        --cl-pick: 2px solid var(--cl-ground-accent, var(--primary));
         --cl-pick-offset: 2px;
     }
     /* The faint gold girih lattice tooled into every tile. */
@@ -3392,10 +3401,10 @@
         --cl-warn-ink: var(--cl-amber);
         --cl-warn-mark: '▯';
         --cl-bad-bg: var(--cl-amber);
-        --cl-bad-fg: var(--foreground);
-        --cl-bad-ink: var(--foreground);
+        --cl-bad-fg: var(--cl-amber-on, var(--foreground));
+        --cl-bad-ink: var(--cl-amber-on, var(--foreground));
         --cl-muted-bg: hsl(from var(--cl-phosphor) h s l / 0.08);
-        --cl-muted-fg: hsl(from var(--cl-phosphor) h s l / 0.7);
+        --cl-muted-fg: hsl(from var(--cl-phosphor) h s l / 0.8);
         --cl-muted-edge: hsl(from var(--cl-phosphor) h s l / 0.2);
         --cl-none-fg: hsl(from var(--cl-phosphor) h s l / 0.75);
         --cl-none-edge: hsl(from var(--cl-phosphor) h s l / 0.45);
@@ -3474,6 +3483,9 @@
     }
     /* ── nostromo · 2 · the indicator panel ───────────────────────────── */
     [data-theme='nostromo'] [data-cl-shape='2'] .kp-calendar {
+        --cl-phosphor: var(--foreground);
+        --cl-amber: hsl(from var(--warning) h s 24%);
+        --cl-amber-on: var(--warning-foreground);
         --cl-r: 0.4rem;
         --cl-swatch-r: 0.2rem;
         --cl-edge-w: 1px;
@@ -3507,7 +3519,7 @@
         --cl-future-style: dotted;
         --cl-before-bg: var(--muted);
         --cl-before-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px var(--foreground);
+        --cl-today: inset 0 0 0 2px var(--foreground), inset 0 0 0 4px var(--card);
     }
     [data-theme='nostromo'] [data-cl-loading='2'] .kp-calendar {
         --cl-loading-bg: hsl(from var(--muted) h s calc(l - 8));
@@ -3573,6 +3585,10 @@
     }
     /* Loading: the lamps scan along the panel (at rest, every lamp dark). */
     [data-theme='nostromo'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::before {
+        content: '';
+        inline-size: 7px;
+        block-size: 7px;
+        border-radius: 50%;
         background: hsl(from var(--accent) h s l / 0.3);
     }
     /* ══ titanium ═══════════════════════════════════════════════════════ */
@@ -4526,7 +4542,7 @@
     }
     [data-theme='deco'] [data-cl-shape='3'] .kp-calendar__title {
         font-family: var(--theme-font-display);
-        letter-spacing: 0.2em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
     }
     [data-theme='deco'] [data-cl-shape='3'] .kp-calendar__grid th {
@@ -4673,6 +4689,9 @@
     [data-theme='nostromo'] [data-cl-shape='3'] .kp-calendar {
         --cl-cell-h: 3.25rem;
         --cl-gap: 6px;
+        --cl-phosphor: var(--foreground);
+        --cl-amber: hsl(from var(--warning) h s 24%);
+        --cl-amber-on: var(--warning-foreground);
         --cl-r: 3px;
         --cl-swatch-r: 3px;
         --cl-edge-w: 2px;
@@ -5735,7 +5754,7 @@
         --cl-future-style: dashed;
         --cl-before-style: dotted;
         --cl-none-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px var(--accent);
+        --cl-today: inset 0 0 0 2px hsl(from var(--accent) h s 66%);
         --cl-warn-mark: '✦';
         --cl-bad-mark: '✕';
         --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 5px);
@@ -6508,7 +6527,7 @@
         font-weight: 700;
     }
     [data-theme='nostromo'] [data-cl-select='3'] .kp-calendar {
-        --cl-pick: 3px dashed var(--primary);
+        --cl-pick: 3px dashed var(--cl-phosphor, var(--primary));
         --cl-pick-offset: 2px;
     }
     [data-theme='titanium'] [data-cl-select='1'] .kp-calendar__day:hover {

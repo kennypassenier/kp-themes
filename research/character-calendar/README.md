@@ -215,8 +215,8 @@ Every option's full description is its hint in the review dialog and its line on
 Firefox (Playwright's, its own `http.server` on 127.0.0.1:8732, under
 `flock /tmp/kp-themes-shot.lock`), 2026-10-05 21:25, viewport 1600 × 1200,
 formal and titanium, each with and without reduced motion; the run took
-39 min 33 s, almost all of it waiting for the lock. The 22-theme run is
-still open.
+39 min 33 s, almost all of it waiting for the lock. The 22-theme run
+follows below.
 
 - **Console:** 0 errors and 0 page errors in both themes, with and without
   reduced motion, through Loading (in all three looks), Nothing to check,
@@ -234,6 +234,70 @@ still open.
   colour (patterns not counted), shape and tone rows: formal 4.72 (ok) in
   shapes 1 to 3 and tones 1 and 2, 16.41 in tone 3; titanium 4.74 (future),
   tone 3 13.33. Rings not measured yet.
+
+### All 22 themes (2026-10-05 21:30 to 22:00)
+
+Firefox (Playwright's), its own `http.server` on 127.0.0.1:8741, no
+screenshot lock (DOM, computed style and contrast reads only), four
+processes in parallel; 22 themes × full and reduced motion, viewport
+1600 × 1200. One run: 4 min 8 s (re-measure after the fixes); the three
+themes fixed last: 47 s. Colours are resolved through a canvas and
+composited over their ancestors; a figure's plate also counts its own
+`::before` where that covers it and a day's radial dot; patterns are not
+composited.
+
+- **Console:** 0 errors in 44 runs, through Loading (three looks), Nothing to
+  check, Could not read, the three months, the live update and Read.
+- **Heights:** one height per calendar box and grid (17 per page) in all 44.
+- **Rows differ:** shape, tone and the pick differ pairwise in every theme;
+  loading differs while loading in every theme; the arrival differs at full
+  motion in 21 themes by its computed style, and in high-contrast by its
+  order alone (1 and 3 both wipe down: row by row against day by day, 80
+  and 14 ms steps).
+- **Loading:** every loading option runs ≥ 31 animations at full motion and
+  0 under reduced motion in all 22; arrivals 0 under reduced motion.
+- **Figures:** lowest number against its plate over every tone, every
+  calendar, October, August, September, Nothing to check and Could not
+  read: 4.51 (forest), all ≥ 4.5.
+- **Rings:** a marker counts when it is absent on a day of the same tone
+  (box-shadow, outline, border, the colours of a pseudo's gradient), against
+  the plate (inset) or the ground (outset); lowest today 3.18 (solstice,
+  tone 2), lowest pick 3.03 (brutalism, shape 2), all ≥ 3.
+- **Labels and title:** title, weekday heads, month buttons, legend, number
+  and count read back through a Range per text node (more than one line is
+  wrapped) and against their box (wider is cut): 0 wrapped, 0 cut at desk
+  width and in a 334 px pane. Under full motion the number 20 reads 2 px
+  wider than its box in lapis and pastel tone 2 for one frame of Nothing to
+  check (a scale in flight; 0 under reduced motion); not counted.
+- **334 px pane:** the grid itself needs 322 to 352 px: wider than 334 in
+  all 22 themes, the plain calendar too (346 px), so the package's own
+  minimum day width, not an option; open.
+- **Dialog** (`?theme=formal&next=/catalogue/changed.html&review=open`):
+  open, five groups (Shape, While loading, How the month arrives, Tones and
+  today, The picked day) of three, nothing ticked, 0 errors.
+
+Failures found and fixed (tokens only, one aspect per rule):
+
+| Theme · option            | Measured before                                     | Cause                                                            | Fix                                                                                                                | After            |
+| ------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| formal shape 2            | before-days 2.05                                    | figures on the grey ruling showing through the 1px gaps          | shape names `--cl-ground: var(--card)`; the contract's empty tones read it                                         | ≥ 4.5            |
+| brutalism shape 2         | before-days 4.34                                    | muted ink on the accent slab                                     | shape names `--cl-ground-soft: var(--accent-foreground)`                                                           | ≥ 4.5            |
+| lapis shape 2, 3          | future/before 1.0, muted 1.15, none 1.17; pick 1.17 | tone 1 and pick 1 inked for shape 1's ivory leaf                 | shape 1 names `--cl-ground-ink/-soft/-accent`; tone 1, loading 1, pick 1 and 2 read them (lapis ground by default) | ≥ 4.5; pick ≥ 3  |
+| lapis tone 2              | future/before 1.78; none 1.17 after the first fix   | muted ink on the ivory leaf; none-days ink on lapis              | contract fallback; `--cl-none-fg: var(--foreground)`                                                               | ≥ 4.5            |
+| lapis pick 2              | 1.88                                                | gold outline on the ivory leaf                                   | `--cl-ground-accent` (gold at 32 % lightness) on shape 1                                                           | ≥ 3              |
+| lapis today, tone 1, 2, 3 | 2.74, 2.74, 2.78                                    | gold / vermilion ring on the amber plate and the card            | gold at 72 %, vermilion at 66 %                                                                                    | ≥ 3              |
+| deco today, tone 1        | 2.71                                                | gold ring on the amber plate                                     | gold at 74 % (ring and cartouche)                                                                                  | ≥ 3              |
+| nostromo shape 2, 3       | ok/warn 1.17, bad 1.55; today 1.17; muted 4.42      | tone 1 reads `--cl-phosphor`/`--cl-amber`, only shape 1 set them | shapes 2 and 3 name their own (foreground, warning at 24 %, warning-foreground on it); muted at 0.8                | ≥ 4.5; today ≥ 3 |
+| nostromo tone 2           | today 2.5                                           | dark ring on the amber key                                       | a card-coloured inner line inside the ring                                                                         | ≥ 3              |
+| nostromo pick 3           | 1.07                                                | dark dashes on the dark CRT panel                                | dashes in `--cl-phosphor` (the ground's ink)                                                                       | ≥ 3              |
+| nostromo loading 2        | 0 animations                                        | the lamp was shape 2's `::before`; elsewhere nothing moved       | the loading picture draws its own lamp                                                                             | 31               |
+| synthwave shape 2         | bad count 1.06                                      | pink count on the red plate                                      | the count takes the plate's ink on a bad night                                                                     | ≥ 4.5            |
+| deco shape 3              | month buttons cut (46 in 42 px)                     | the title's 0.2em tracking squeezes the nav                      | tracking 0.08em                                                                                                    | 0 cut            |
+
+The contract change: `none`, `future` and `before` fall back to
+`--cl-ground` for their plate and `--cl-ground-soft` for their ink before
+the transparent / muted-foreground defaults, so a shape that draws its own
+ground names it once and every tone option reads on it.
 
 ## Round one (kept for provenance)
 
