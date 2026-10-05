@@ -6121,3 +6121,40 @@ puts it back into the top layer itself (a close without the putBack, then
 the body's children (a research demo with its own `.cat-main`), or when
 review.js is loaded other than as a module script in the page, since
 `booted` then rests on the load event instead.
+
+## fix-104 · The helpers measured and repaired contrast as if it were a rule (2026-10-05)
+
+Approved by Kenny in form v24 (2026-10-05, "contrast-as-gate: Klopt").
+
+**1 · What went wrong.** Through the afternoon and evening of the
+character round, every helper brief asked text at 4.5:1 and edges at 3:1,
+measured and repaired, in the finishing rounds too. Since scope-76
+contrast is only a reading in `npm run advice`. It cost hours and was the
+main reason Kenny asked twice why the round took so long; he named it at
+23:04.
+
+**2 · Which gate let it through.** None: the briefs were written from
+memory instead of from docs/RULES.md, where contrast sits under advice.
+
+**3 · Where else the same fault sits.** The three shared briefs (phase 1,
+theme group, finisher) and the release-check list; all four received an
+override at 23:05. Searched with `grep -ln "4.5:1"` over the scratchpad's
+`*-brief.md` and `release-check.md`.
+
+**4 · How we prevent a repeat.** A memory rule, "kp-themes: contrast is
+advice" (no measurement or repair as a rule), and briefs take their
+requirements from docs/RULES.md, not from memory.
+
+**5 · What the remedy costs.** Nothing; tonight's contrast changes stay,
+they do no harm.
+
+**6 · Who enforces it.** Discipline (memory and briefs); no hook reads a
+brief.
+
+**7 · How and when we measure.** At the next round: its first brief names
+no contrast requirement. Queued as fix-104-M1 in docs/MINI_ROUNDS.md.
+
+**8 · Fallback.** A standing rule that project briefs quote their
+requirements from RULES.md.
+
+**9 · When we review the measure.** When Kenny makes contrast a gate again.
