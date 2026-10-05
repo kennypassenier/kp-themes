@@ -1,240 +1,466 @@
 // research/character-meter: the first component of the character round
-// (Kenny, form v18, 2026-10-05): the meter, two characters per theme drawn
-// in the theme's own world, beside the plain meter of today, all 22 themes in
-// one demo judged through the review kit.
+// (Kenny, form v18, 2026-10-05), all 22 themes in one demo judged through the
+// review kit. Round 2 (Kenny, 2026-10-05 18:01: "onthoud de goedgekeurde
+// items, maar geef nu nog is drie opties, telkens met loading, mark past the
+// end, de drie tone opties en speed of every animation, maar wel in de
+// dialog"; "Dus enkel de 'vorm' is goedgekeurd"): each theme keeps the shape
+// picked in round 1 (forest: the wooden gauge with the trail's marks; retro
+// and grotesk: new shapes), and three options say how that shape moves.
 //
 // The meters are the package's own: setMeter() (js/kpi.js) writes their
-// share, mark, tone, loading state and ARIA. Each character is CSS only, in
-// meters.css, scoped by `[data-theme]` and the column's `[data-cm]`; this
-// file only says what each one is, sets the states, and runs the speed.
+// share, mark, tone, loading state and ARIA. The shape and the options are
+// CSS only, in meters.css, scoped by `[data-theme]` and the column's
+// `[data-cm]`; this file says what each one is, sets the states, and runs
+// the speed. The controls sit in the section's `data-review-controls`
+// container, which the review kit mirrors into its dialog.
 
 import { setMeter } from '../../js/kpi.js';
 import { THEMES } from '../../js/theme-registry.js';
 
 /**
- * The two characters per theme: a name and what each part becomes.
- * @type {Record<string, { a: { name: string, text: string }, b: { name: string, text: string } }>}
+ * Per theme: the shape, and the three ways it moves.
+ * @type {Record<string, { shape: { name: string, text: string }, options: { name: string, text: string }[] }>}
  */
 const IDEAS = {
     formal: {
-        a: {
-            name: 'The ledger column',
-            text: 'A column ruled in a ledger: a hairline above and below and a faint column rule every tenth; the share is the navy entry written into it. The mark is a tick-and-tie: two ink hairlines with paper between, standing out of the column. Past the end the entry is closed with the double rule and carried forward, "c/f". Loading is a dotted leader, "to be entered", still.',
-        },
-        b: {
+        shape: {
             name: 'The bound volume and its ribbon',
-            text: "The track is a book's fore-edge, page after page; the share is the navy buckram binding laid over it. The mark is a gold ribbon bookmark with a swallowtail, hanging out below the book. Past the end one more volume leans past the shelf. Loading riffles the pages: a shade runs slowly along the edge.",
+            text: "The track is a book's fore-edge, page after page; the share is the navy buckram binding laid over it; the mark is a gold ribbon bookmark hanging out below the book; past the end one more volume leans past the shelf.",
         },
+        options: [
+            {
+                name: 'Written into the ledger',
+                text: "The binding is laid on as a pen writes an entry, unhurried. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, » after it. Loading: the pages riffle: a shade runs slowly along the fore-edge.",
+            },
+            {
+                name: 'Stamped and filed',
+                text: 'A clerk’s stamp: the binding is pressed on in one firm stroke. The share opens from its middle line slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, › after it. Loading: the ribbon bookmark slides along the fore-edge and back.',
+            },
+            {
+                name: 'Counted in tenths',
+                text: 'The bookkeeper adds the column a tenth at a time. The share is drawn in from the left in 10 hard steps; a new tone swells the meter once, slowing as it lands; the mark moves in 5 hard steps, and a mark past the end leans over the end, ‡ beside it. Loading: a dotted leader is written dot by dot, "to be entered".',
+            },
+        ],
     },
     light: {
-        a: {
-            name: 'The seam and its circle',
-            text: "Light's divider as a meter: a 1px seam, the share an indigo pill laid over it, and the mark the divider's own open circle resting on the seam. Past the end the seam runs on to a small cyan circle. Loading is the seam dashed, still: nothing loops.",
-        },
-        b: {
+        shape: {
             name: 'Daylight',
-            text: 'A soft pill in the light: the indigo share brightens towards its end as if the sun is on it, and the mark is a thin gnomon throwing a short shadow. Past the end the light spills out in a cyan glint. Loading lets a band of daylight cross the track, slowly.',
+            text: 'A soft pill in the light: the indigo share brightens towards its end, the mark is a thin gnomon with a short shadow, and past the end the light spills out in a cyan glint.',
         },
+        options: [
+            {
+                name: 'Morning light',
+                text: "The share comes up like the morning, slowing as it arrives. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: a band of daylight crosses the track, slowly.",
+            },
+            {
+                name: 'The shadow swings',
+                text: 'A sundial: the gnomon’s shadow swings over the scale. The share stretches out from the start slowing as it lands; a new tone swells the meter once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, › beside it. Loading: the thin shadow of a gnomon sweeps across the track.',
+            },
+            {
+                name: 'Through the window',
+                text: 'Light through a window, pane by pane. The share is drawn in from the left in 4 hard steps; a new tone knocks the meter up and back once, slowing as it lands; the mark moves in 4 hard steps, and a mark past the end stands just outside the end, › after it. Loading: window panes of light drift along the track.',
+            },
+        ],
     },
     dark: {
-        a: {
-            name: 'The spectrometer',
-            text: 'A black slit with a ruler tick every tenth above and below. The share is one emission line whose colour is read from the oxide film at that point, cyan at the start, violet, magenta, lime at the end; the mark is dark\'s closing bracket "]" in near-white. Past the end a second bracket in magenta. Loading shows the calibration spectrum, faint and still: nothing moves that the reader did not move.',
-        },
-        b: {
+        shape: {
             name: 'The machined channel',
-            text: "A channel with its corners cut at forty-five degrees; the share is bright machined metal with the oxide film along its top edge, laid along the whole scale. The mark is a V milled into the edge with a dark cut through the metal. Past the end the part runs out of the channel with a chamfered tip. Loading is the empty channel's engraved scale, still.",
+            text: 'A channel with its corners cut at forty-five degrees; the share is bright machined metal with the oxide film along its top edge; the mark is a V milled into the edge; past the end the part runs out with a chamfered tip.',
         },
+        options: [
+            {
+                name: 'Machined',
+                text: "The part is cut at an even feed; nothing moves that you did not move. The share stretches out from the start at an even pace; a new tone draws the share again in the new colour; the mark moves at an even pace, and a mark past the end stops at the meter's end, ▸ after it. Loading: the empty channel’s engraved scale, still.",
+            },
+            {
+                name: 'Milled in passes',
+                text: 'The cutter takes five passes. The share stretches out from the start in 5 hard steps; a new tone knocks the meter up and back once, at an even pace; the mark moves in 4 hard steps, and a mark past the end stands just outside the end, › after it. Loading: engraved cross-hatching in the channel, still.',
+            },
+            {
+                name: 'Pressed in the die',
+                text: 'The part is struck in one blow from its middle line. The share opens from its middle line at an even pace; a new tone swells the meter once, at an even pace; the mark moves at an even pace, and a mark past the end leans over the end, ▸ beside it. Loading: a row of centre-punch dots, still.',
+            },
+        ],
     },
     cyberpunk: {
-        a: {
+        shape: {
             name: 'The neon tube with a glitch tick',
-            text: 'A yellow neon tube in a dark glass sleeve, glowing. The mark is a cyan tick that glitches every three seconds: it jumps, and a violet copy tears off for a frame. Past the end the tube reads OVR in red. Loading is the tube trying to strike: a flicker twice, then dark (under three changes a second).',
+            text: 'A yellow neon tube in a dark glass sleeve; the mark is a cyan tick that glitches every three seconds; past the end the tube reads OVR in red.',
         },
-        b: {
-            name: 'The HUD segment gauge',
-            text: "A notched readout: the share is yellow plates split by void slits, the leading plate cut at forty-five degrees, over a rail of dim yellow dashes. The mark is a cyan target notch with a void cut through the plates. Past the end a red notched plate. Loading is the data stream: cyan packets run along the rail, the theme's one loop.",
-        },
+        options: [
+            {
+                name: 'Ignition',
+                text: "The tube strikes in hard stutters. The share is drawn in from the left in 6 hard steps; a new tone jolts the meter sideways, in 4 hard steps; the mark moves in 3 hard steps, and a mark past the end stops at the meter's end, » after it. Loading: the tube tries to strike, flickers twice, then dark.",
+            },
+            {
+                name: 'Data burst',
+                text: 'The share is cut in by a blade of light. The share is cut in from the left with a slanted edge slowing as it lands; a new tone draws the share again in the new colour; the mark moves in 2 hard steps, and a mark past the end stands just outside the end, ▶ after it. Loading: yellow hazard stripes run along the sleeve.',
+            },
+            {
+                name: 'Packet sync',
+                text: 'The share syncs in eight packets. The share stretches out from the start in 8 hard steps; a new tone knocks the meter up and back once, in 3 hard steps; the mark moves in 2 hard steps, and a mark past the end leans over the end, ! beside it. Loading: a cyan data packet hops along the tube.',
+            },
+        ],
     },
     synthwave: {
-        a: {
-            name: 'The neon sign',
-            text: "The '84 rule: the tube's core is light and the colour lives in the glow, pink around a lavender core, over an unlit tube. The mark is a cyan tube. Past the end the sign bends into a glowing ›. Loading lights the tube from left to right, holds, and lets it go dark, smoothly; nothing flickers.",
-        },
-        b: {
+        shape: {
             name: 'Chrome over the grid',
-            text: 'The track is the floor grid on the void with the pink horizon on top; the share is chrome: sky above, a dark horizon line through the middle, the sunset below. The mark is the striped sun, half risen over a laser-yellow line. Past the end a cyan ». Loading drives along the grid.',
+            text: 'The track is the floor grid with the pink horizon on top; the share is chrome, sky, horizon line and sunset; the mark is the striped sun, half risen; past the end a cyan ».',
         },
+        options: [
+            {
+                name: 'Sunrise',
+                text: "The chrome rises like the sun over the grid, slow and smooth. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, » after it. Loading: the camera drives along the grid floor.",
+            },
+            {
+                name: 'Overdrive',
+                text: 'The chrome shoots out, overshoots and settles. The share stretches out from the start overshooting and settling; a new tone swells the meter once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, › after it. Loading: a cyan laser scanline sweeps the grid and back.',
+            },
+            {
+                name: 'Arcade attract',
+                text: 'An arcade cabinet’s attract mode: the chrome fills in twelve steps. The share is drawn in from the left in 12 hard steps; a new tone knocks the meter up and back once, slowing as it lands; the mark moves in 6 hard steps, and a mark past the end leans over the end, » beside it. Loading: pink grid lines rush past.',
+            },
+        ],
     },
     pastel: {
-        a: {
+        shape: {
             name: 'Washi tape',
-            text: 'The share is a strip of plum washi tape with white stripes, its far end torn, the sky second pass showing off register beside it, on a dotted riso pill. The mark is a round sticker on a pin. Past the end the tape runs over and its corner curls. Loading drifts the stripes of a pale tape along the track.',
+            text: 'A strip of plum washi tape with white stripes, its far end torn, the sky second pass off register, on a dotted pill; the mark is a round sticker on a pin; past the end the corner curls.',
         },
-        b: {
-            name: 'Gummy candy',
-            text: 'A sticker of a pill with its hard flat shadow; the share is plum candy with a gloss stripe and a shine at its end. The mark is a candy stick in white and mint with a plum outline. Past the end a gummy drop. Loading: a mint candy hops along three plum ones.',
-        },
+        options: [
+            {
+                name: 'Boing',
+                text: "The tape springs out, overshoots and settles. The share stretches out from the start overshooting and settling; a new tone draws the share again in the new colour; the mark moves overshooting and settling, and a mark past the end stops at the meter's end, ♥ after it. Loading: the stripes of a pale tape drift along the track.",
+            },
+            {
+                name: 'Pressed sticker',
+                text: 'The tape is pressed down with a thumb, squashing a little. The share opens from its middle line overshooting and settling; a new tone swells the meter once, overshooting and settling; the mark moves overshooting and settling, and a mark past the end leans over the end, ♥ beside it. Loading: a mint candy rolls along the pill and back.',
+            },
+            {
+                name: 'Dropped in',
+                text: 'The tape drops onto the page and bounces. The share drops in from above overshooting and settling; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, ★ after it. Loading: plum dots are stuck on one by one.',
+            },
+        ],
     },
     terminal: {
-        a: {
+        shape: {
             name: 'The htop meter',
-            text: 'One line of htop: [||||||||        ] between square brackets, the share a run of phosphor bars, one per character cell, and dots where nothing is. The mark is the block caret, blinking once a second (the loop the theme allows). Past the end a + after the bracket. Loading walks a lit cell along the line.',
+            text: 'One line of htop: [||||||||   ] between square brackets, one phosphor bar per character cell; the mark is the block caret; past the end a + after the bracket.',
         },
-        b: {
-            name: 'The oscilloscope',
-            text: 'A graticule with a division every tenth; the share is the trace, a bright phosphor line over its afterglow. The mark is the yellow cursor. Past the end the reading says OL, as a multimeter does when it is overloaded. Loading sweeps the beam across the screen with its fading tail.',
-        },
+        options: [
+            {
+                name: 'Line by line',
+                text: "The bars are printed cell by cell, as a terminal draws. The share is drawn in from the left in 16 hard steps; a new tone draws the share again in the new colour; the mark moves in 4 hard steps, and a mark past the end stops at the meter's end, + after it. Loading: a lit cell walks along the line.",
+            },
+            {
+                name: 'Redraw',
+                text: 'The screen redraws in eight hard frames. The share stretches out from the start in 8 hard steps; a new tone jolts the meter sideways, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end stands just outside the end, > after it. Loading: a row of phosphor dots crawls along, three steps to a cell.',
+            },
+            {
+                name: 'Typed out',
+                text: 'Typed at a teletype, character by character. The share is drawn in from the left in 32 hard steps; a new tone knocks the meter up and back once, in 2 hard steps; the mark moves in 3 hard steps, and a mark past the end leans over the end, ▶ beside it. Loading: the block cursor runs along the line.',
+            },
+        ],
     },
     forest: {
-        a: {
-            name: 'The wooden gauge with a leaf',
-            text: 'A groove routed into light wood, the grain running along it; the share is the same wood stained forest green, with a knot. The mark is a stem with a leaf on top. Past the end the gauge sprouts a leaf. Loading carries a leaf through the empty groove on the wind.',
+        shape: {
+            name: "The wooden gauge with the trail's marks",
+            text: 'Your combination: the width and filling of the wooden gauge (a groove routed into light wood, the share the same wood stained forest green, with a knot) with the icons of the trail on the map: a trig point (the survey triangle with its dot, on a post) as the mark and a clay trail blaze past the end. No leaf.',
         },
-        b: {
-            name: 'The trail on the map',
-            text: 'Two contour lines and the planned trail in clay dashes; the share is the trail walked, in forest ink. The mark is a trig point: the black survey triangle with its dot, on a post. Past the end a clay trail blaze points on. Loading walks the dashes along the trail.',
-        },
+        options: [
+            {
+                name: 'Footsteps',
+                text: "The share is walked in at a hiker’s even pace. The share is drawn in from the left at an even pace; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: footsteps in forest ink walk along the groove.",
+            },
+            {
+                name: 'Growth rings',
+                text: 'The wood grows out from the start, slowing like a tree in autumn. The share stretches out from the start slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, › after it. Loading: the grain of the wood runs through the groove.',
+            },
+            {
+                name: 'Blazed trail',
+                text: 'From blaze to blaze: the share arrives in six legs. The share is drawn in from the left in 6 hard steps; a new tone swells the meter once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, › beside it. Loading: a clay blaze hops from tree to tree along the groove.',
+            },
+        ],
     },
     'high-contrast': {
-        a: {
-            name: 'The ink frame',
-            text: 'A 2px ink frame filled with solid ink, no colour needed; the mark is a white slot between two ink edges, readable on the ink and on the paper alike. Past the end a yellow plate in an ink frame with a +. Loading shows three ink squares, still: no loops, ever.',
-        },
-        b: {
+        shape: {
             name: 'The pattern-coded gauge',
-            text: 'The share is ink hatching, so it reads by pattern as well as by tone, in greyscale and forced colours too, closed by a solid ink edge. The mark is a yellow column in ink edges. Past the end a solid ink arrowhead. Loading is a dashed ink line through the empty frame, still.',
+            text: 'The share is ink hatching closed by a solid ink edge, readable by pattern as well as by tone; the mark is a yellow column in ink edges; past the end a solid ink arrowhead.',
         },
+        options: [
+            {
+                name: 'At once',
+                text: "No motion to read: the share is there at once. The share is drawn in from the left at once; a new tone draws the share again in the new colour; the mark moves at once, and a mark past the end stops at the meter's end, + after it. Loading: a dashed ink line through the empty frame, still.",
+            },
+            {
+                name: 'In two steps',
+                text: 'Half, then all: two hard steps. The share is drawn in from the left in 2 hard steps; a new tone knocks the meter up and back once, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end stands just outside the end, ▶ after it. Loading: a row of ink dots, still.',
+            },
+            {
+                name: 'In quarters',
+                text: 'Four hard steps, a quarter each. The share is drawn in from the left in 4 hard steps; a new tone jolts the meter sideways, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end leans over the end, ▶ beside it. Loading: an ink dash line, still.',
+            },
+        ],
     },
     sepia: {
-        a: {
-            name: 'The pen stroke and the blot',
-            text: "A pencilled guide line of dots; the share is a brown ink stroke from a nib, tapered where the pen came down and pooled where it stops. The mark is a hairline with the lozenge of the theme's divider on top. Past the end the ink blots. Loading writes the stroke slowly and lets it fade, as a pen does.",
-        },
-        b: {
+        shape: {
             name: 'The letterpress impression',
-            text: 'A blind impression pressed into the paper; the share is inked into it, a little squashed at its edges and speckled where the ink did not take. The mark is a brass rule with a pilcrow ¶ above it. Past the end the ink is squeezed out in a smear. Loading presses the platen: the impression deepens and lifts.',
+            text: 'A blind impression pressed into the paper; the share is inked into it, speckled where the ink did not take; the mark is a brass rule with a pilcrow above it; past the end the ink is squeezed out.',
         },
+        options: [
+            {
+                name: 'The platen',
+                text: "The press comes down: the impression is pressed in from its middle. The share opens from its middle line slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, ¶ after it. Loading: the platen presses, the impression deepens and lifts.",
+            },
+            {
+                name: 'Quill stroke',
+                text: 'Drawn with a quill, its leading edge slanted. The share is cut in from the left with a slanted edge slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, ¶ beside it. Loading: a dotted pencil guide is drawn along the track.',
+            },
+            {
+                name: 'Set in type',
+                text: 'The compositor sets the line sort by sort. The share is drawn in from the left in 8 hard steps; a new tone swells the meter once, slowing as it lands; the mark moves in 4 hard steps, and a mark past the end stands just outside the end, ❧ after it. Loading: a sort of type moves along the stick.',
+            },
+        ],
     },
     blueprint: {
-        a: {
+        shape: {
             name: "The engineer's scale with a break line",
-            text: 'A printed scale: a short tick every 5 %, a long one every 25 %, on a baseline; the share is the drawn line weight along the baseline with a cyan tint above. The mark is an amber datum triangle on its leader. Past the end the drawing uses the break line, the zigzag that says "longer than drawn". Loading runs the plotter pen along the baseline at an even pace.',
+            text: 'A printed scale with a tick every 5 % and 25 %; the share is the drawn line weight with a cyan tint; the mark is an amber datum triangle; past the end the break line.',
         },
-        b: {
-            name: 'The tolerance band',
-            text: 'An outlined band on the millimetre grid; the share is a tinted bar drawn in outline. The mark is the amber centre line, a chain line that runs on above and below. Past the end the out-of-tolerance region is hatched in amber. Loading traces the outline with a moving dash.',
-        },
+        options: [
+            {
+                name: 'The plotter',
+                text: "The plotter pen draws the line weight at an even pace. The share is drawn in from the left at an even pace; a new tone draws the share again in the new colour; the mark moves at an even pace, and a mark past the end stops at the meter's end, ▸ after it. Loading: the plotter pen runs along the baseline.",
+            },
+            {
+                name: 'Dimensioned',
+                text: 'The dimension line is pulled out to its length. The share stretches out from the start slowing as it lands; a new tone knocks the meter up and back once, at an even pace; the mark moves at an even pace, and a mark past the end stands just outside the end, ↦ after it. Loading: a chain line, dash and dot, runs along the scale.',
+            },
+            {
+                name: 'Redrawn',
+                text: 'Revised in quarters, one long tick at a time. The share is drawn in from the left in 4 hard steps; a new tone jolts the meter sideways, in 4 hard steps; the mark moves in 5 hard steps, and a mark past the end leans over the end, ▸ beside it. Loading: the amber datum line travels along the scale and back.',
+            },
+        ],
     },
     solstice: {
-        a: {
+        shape: {
             name: 'The standing stones',
-            text: 'A band of earth split by the horizon; the share is ridged ground caught by the low sun, each ridge lit on one side. The mark is a standing stone, lit on its sunward edge, throwing its long shadow along the ground, the stone the solstice sun lines up with. Past the end the sun rises over the horizon. Loading lets a warm dawn rise and fade, unhurried.',
+            text: 'Ridged ground caught by the low sun; the mark is a standing stone throwing its long shadow; past the end the sun rises over the horizon.',
         },
-        b: {
-            name: 'The embers',
-            text: 'A charcoal log; the share is embers, amber with hot specks and rust, breathing slowly. The mark is a dark iron poker with a pale edge. Past the end sparks fly up. Loading shows faint embers breathing along the whole log. Firelight, not neon.',
-        },
+        options: [
+            {
+                name: 'Long dawn',
+                text: "The light spreads like a winter dawn, slowly. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: a warm dawn rises and goes, unhurried.",
+            },
+            {
+                name: 'The shadow lengthens',
+                text: 'The ground stretches out like a shadow at day’s end. The share stretches out from the start easing in and out; a new tone swells the meter once, easing in and out; the mark moves easing in and out, and a mark past the end leans over the end, › beside it. Loading: the low sun crosses the horizon and back.',
+            },
+            {
+                name: 'Stone by stone',
+                text: 'Seven stones in the circle, raised one by one. The share is drawn in from the left in 7 hard steps; a new tone knocks the meter up and back once, slowing as it lands; the mark moves in 7 hard steps, and a mark past the end stands just outside the end, › after it. Loading: a row of standing stones is raised, one by one.',
+            },
+        ],
     },
     brutalism: {
-        a: {
-            name: 'The slab with an overhang',
-            text: 'A box in the 3px black line with the hard shadow; the share is the yellow plate with a black line at its edge. The mark is a black post with a lavender cap. Past the end a yellow block is slammed out over the edge of the box. Loading runs the yellow-and-black tape through the box.',
-        },
-        b: {
+        shape: {
             name: 'The stacked blocks',
-            text: 'Ten boxes in a row, each in the black line; the share fills them with lavender. The mark is a yellow peg with a tab sticking up. Past the end one more block is thrown on top, off the row. Loading drops the blocks in one at a time.',
+            text: 'Ten boxes in a row in the black line, filled lavender up to the share; the mark is a yellow peg; past the end one more block is thrown on top.',
         },
+        options: [
+            {
+                name: 'Thrown on',
+                text: "The blocks are thrown down from above and land hard. The share drops in from above speeding up until it lands; a new tone jolts the meter sideways, in 3 hard steps; the mark moves at once, and a mark past the end stops at the meter's end, ! after it. Loading: the blocks drop in one at a time.",
+            },
+            {
+                name: 'Slammed',
+                text: 'The row is slammed out in three hard frames. The share stretches out from the start in 3 hard steps; a new tone knocks the meter up and back once, in 2 hard steps; the mark moves at once, and a mark past the end stands just outside the end, ▶ after it. Loading: black hazard tape runs through the boxes.',
+            },
+            {
+                name: 'Block by block',
+                text: 'Ten blocks, ten hard steps. The share is drawn in from the left in 10 hard steps; a new tone swells the meter once, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end leans over the end, ■ beside it. Loading: a black block hops along the row.',
+            },
+        ],
     },
     deco: {
-        a: {
-            name: 'The gilt frieze',
-            text: "A black band between two double gold rules; the share is flat gold that ends in the Empire State's chevron. The mark is an emerald lozenge set on a dark spire. Past the end the chevrons go on: ›››. Loading lets a glint run along the gilt.",
-        },
-        b: {
+        shape: {
             name: 'The lobby floor indicator',
-            text: 'The lamps over a lobby lift: a row of windows, lit in gold up to the share, dark beyond. The mark is a gold arrow pointing down at the floor you want. Past the end an arrow up: higher than the top floor. Loading moves one lit lamp along the row, the lift travelling.',
+            text: 'A row of lift lamps lit in gold up to the share; the mark is a gold arrow pointing down; past the end an arrow up.',
         },
+        options: [
+            {
+                name: 'The lift ascends',
+                text: "Floor by floor, the lamps light up as the lift rises. The share is drawn in from the left in 10 hard steps; a new tone draws the share again in the new colour; the mark moves in 10 hard steps, and a mark past the end stops at the meter's end, ▲ after it. Loading: one lit lamp moves along the row, the lift travelling.",
+            },
+            {
+                name: 'Gilt sweep',
+                text: 'The gold is swept on in one grand gesture. The share is drawn in from the left slowing as it lands; a new tone swells the meter once, easing in and out; the mark moves easing in and out, and a mark past the end stands just outside the end, › after it. Loading: fine gold rays slide along the frieze.',
+            },
+            {
+                name: 'Fanfare',
+                text: 'The gold opens from its middle line like a curtain going up. The share opens from its middle line slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, ▼ beside it. Loading: a pair of gold lamps glides up and down the row.',
+            },
+        ],
     },
     phantom: {
-        a: {
+        shape: {
             name: 'The calling card',
-            text: 'A slab cut at the -8° slant, black under a halftone screen; the share is the red plate with its deep red second plate off register. The mark is a white shard of paper. Past the end a white burst with a black "!". Loading slides the halftone screen.',
+            text: 'A slab cut at -8°, black under a halftone; the share is the red plate with its second plate off register; the mark is a white shard; past the end a white burst with "!".',
         },
-        b: {
-            name: 'The ransom collage',
-            text: 'The share is a strip of cut paper pieces, red, white and red, glued at a slant with black cuts between. The mark is a black shard edged in white. Past the end the strip tears off in a jagged white shard. Loading shuffles the pieces in hard steps.',
-        },
+        options: [
+            {
+                name: 'Card thrown',
+                text: "The card is flung in, its edge slanted. The share is cut in from the left with a slanted edge slowing as it lands; a new tone jolts the meter sideways, in 3 hard steps; the mark moves in 2 hard steps, and a mark past the end stops at the meter's end, ! after it. Loading: the halftone screen slides.",
+            },
+            {
+                name: 'Cut out',
+                text: 'Cut from the paper in five quick snips. The share is drawn in from the left in 5 hard steps; a new tone knocks the meter up and back once, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end leans over the end, ! beside it. Loading: red halftone dots shift in hard steps.',
+            },
+            {
+                name: 'The stamp',
+                text: 'Stamped in two blows. The share opens from its middle line in 2 hard steps; a new tone swells the meter once, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end stands just outside the end, » after it. Loading: a red shard jumps along the slab.',
+            },
+        ],
     },
     'shade-light': {
-        a: {
+        shape: {
             name: 'The pencil gauge',
-            text: 'An outline drawn in pencil on the paper; the share is the blue plate hatched over in pencil. The mark is a graphite stroke with a soft shade beside it. Past the end a patch of pencil scribble. Loading hatches the empty gauge in once and leaves it, as every reveal here runs once.',
+            text: 'An outline drawn in pencil; the share is the blue plate hatched over in pencil; the mark is a graphite stroke with a soft shade; past the end a patch of scribble.',
         },
-        b: {
-            name: 'The pin and its shade',
-            text: 'A groove in the paper; the share is a raised blue strip throwing a soft shade. The mark is a pin with a magenta head standing in the gauge, its shade falling to the side. Past the end the strip hangs over the edge, its shade falling beyond. Loading lets the shade of a passing cloud cross the paper.',
-        },
+        options: [
+            {
+                name: 'Hatched in',
+                text: "The plate is drawn in once, slowing at the end. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: the empty gauge is hatched in once.",
+            },
+            {
+                name: 'Pressed paper',
+                text: 'The plate is pressed into the paper from its middle. The share opens from its middle line slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end leans over the end, › beside it. Loading: a pencil line is drawn through the gauge once.',
+            },
+            {
+                name: 'Passing shade',
+                text: 'The plate stretches out as a shade passes over the paper. The share stretches out from the start easing in and out; a new tone swells the meter once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, › after it. Loading: a soft band of shade moves along the gauge and back.',
+            },
+        ],
     },
     'shade-dark': {
-        a: {
+        shape: {
             name: 'Silverpoint',
-            text: 'The dark half of the pencil gauge: fine silver lines hatched across the dark ground, the share the blue plate laid over them with a lit top edge. The mark is a pale metal stroke. Past the end a patch of silver scribble. Loading hatches the empty gauge in once.',
+            text: 'Fine silver lines hatched across the dark ground; the share is the blue plate with a lit top edge; the mark is a pale metal stroke; past the end silver scribble.',
         },
-        b: {
-            name: 'The reading lamp',
-            text: 'A deep well; the share is the blue plate lifted out of the shade. The mark carries the light: a pale pin with a pool of lamplight around it, so the target is where the light is. Past the end the light spills out beyond the well. Loading slides the pool of light slowly along the well.',
-        },
+        options: [
+            {
+                name: 'Silver drawn',
+                text: "The plate is drawn in once, slowing at the end. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: the empty gauge is hatched in once.",
+            },
+            {
+                name: 'Lifted',
+                text: 'The plate is lifted out of the shade from its middle. The share opens from its middle line slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end leans over the end, › beside it. Loading: a silver line is drawn through the gauge once.',
+            },
+            {
+                name: 'Lamp passes',
+                text: 'The plate stretches out as a lamp passes. The share stretches out from the start easing in and out; a new tone swells the meter once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, › after it. Loading: a pale band of lamplight moves along the gauge and back.',
+            },
+        ],
     },
     retro: {
-        a: {
-            name: 'The dithered installer bar',
-            text: 'A sunken field with the bevel inside its boundary; the share is navy whose last few pixels are dithered, 1995-style. The mark is a raised grey slider thumb. Past the end a raised scroll-arrow button. Loading fills the field with the 50 % dither brush, still: nothing blinks.',
+        shape: {
+            name: 'The system monitor',
+            text: 'New, unlike the installer bar and the defragmenter: a sunken black panel of LED segments as Task Manager and Winamp drew a level. Unlit segments glow dark green, the share is lit (yellow for a warning, red for danger), the mark is a white peak-hold segment in a black frame, and past the end the red clip lamp is lit.',
         },
-        b: {
-            name: 'The defragmenter',
-            text: 'Two rows of tiny cells, as the 1995 disk defragmenter drew a drive: navy cells up to the share, a few teal ones among them, white cells beyond. The mark is a white cell column in a black frame. Past the end two more cells sit outside the field. Loading walks a teal cell along the drive, reading it.',
-        },
+        options: [
+            {
+                name: 'Task Manager',
+                text: "The level climbs segment by segment, as a 1996 system monitor redraws. The share is drawn in from the left in 12 hard steps; a new tone draws the share again in the new colour; the mark moves in 6 hard steps, and a mark past the end stops at the meter's end, ▸ after it. Loading: the history grid scrolls one step at a time.",
+            },
+            {
+                name: 'Winamp',
+                text: 'The LEDs jump up at once and the peak-hold segment falls back step by step, like Winamp’s spectrum. The share stretches out from the start in 4 hard steps; a new tone knocks the meter up and back once, in 2 hard steps; the mark moves in 12 hard steps, and a mark past the end stands just outside the end, » after it. Loading: a chase of lit LEDs runs along the panel.',
+            },
+            {
+                name: 'Disk light',
+                text: "The drive light: the level comes in four hard blocks. The share is drawn in from the left in 4 hard steps; a new tone jolts the meter sideways, in 2 hard steps; the mark moves in 2 hard steps, and a mark past the end stops at the meter's end, ! after it. Loading: one red drive lamp jumps along the panel and back.",
+            },
+        ],
     },
     grotesk: {
-        a: {
-            name: 'The red block on the baseline',
-            text: 'A black baseline; the share is a flat red block standing on it. The mark is a black rule rising from the baseline, flush. Past the end an oversized black →. Loading cuts in three black squares, one after another, in hard steps.',
+        shape: {
+            name: 'The transit line',
+            text: 'New, unlike the red block and the zebra scale: the route diagram of Swiss transit signage. The line served so far runs in red with a station tick every sixth, the rest in grey; the mark is the interchange, a white capsule in a black outline across the line; past the end the line runs on to a black terminus bar.',
         },
-        b: {
-            name: 'The zebra scale',
-            text: 'A frame with a black-and-white zebra scale of twelve columns along its foot; the share is solid black. The mark is a red rule with a small red square flag. Past the end a red square set lower, off the line. Loading hops the zebra one column and back.',
-        },
+        options: [
+            {
+                name: 'Departure',
+                text: "The line is served station by station. The share is drawn in from the left in 6 hard steps; a new tone draws the share again in the new colour; the mark moves in 6 hard steps, and a mark past the end stops at the meter's end, → after it. Loading: a black train stops at each station.",
+            },
+            {
+                name: 'Express',
+                text: 'Non-stop: the red runs out in one fast stroke. The share is drawn in from the left slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves slowing as it lands, and a mark past the end stands just outside the end, → after it. Loading: red dashes, a line under construction, run along.',
+            },
+            {
+                name: 'Timetable',
+                text: 'The timetable flips over in four beats. The share stretches out from the start in 4 hard steps; a new tone jolts the meter sideways, in 2 hard steps; the mark moves in 3 hard steps, and a mark past the end leans over the end, + beside it. Loading: the station ticks are printed one by one.',
+            },
+        ],
     },
     lapis: {
-        a: {
+        shape: {
             name: 'The gilt band',
-            text: "Deep lapis ruled in gold above and below; the share is gold leaf tooled with a fine lattice. The mark is a vermilion reed stroke with its diamond dot, the nuqta, above it. Past the end a vermilion toranj, the pointed cartouche. Loading lets a burnisher's glint run along the gold.",
+            text: 'Deep lapis ruled in gold; the share is gold leaf tooled with a fine lattice; the mark is a vermilion reed stroke with its nuqta; past the end a vermilion toranj.',
         },
-        b: {
-            name: 'Lapis stone on vellum',
-            text: 'The track is ivory vellum ruled in gold; the share is the stone itself, deep lapis flecked with gold pyrite and a streak of calcite. The mark is a gold leaf stroke. Past the end a chipped shard of the stone. Loading lets the pyrite flecks glint.',
-        },
+        options: [
+            {
+                name: 'Gold laid',
+                text: "The gold leaf is laid on and burnished, slowly. The share is drawn in from the left slowing as it lands; a new tone draws the share again in the new colour; the mark moves easing in and out, and a mark past the end stops at the meter's end, › after it. Loading: a burnisher's glint runs along the gold.",
+            },
+            {
+                name: 'Reed stroke',
+                text: 'Drawn with the reed pen, its edge slanted. The share is cut in from the left with a slanted edge slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, › beside it. Loading: the tooled gold dots are punched along the band.',
+            },
+            {
+                name: 'Tile by tile',
+                text: 'Set like a mosaic, tile by tile. The share is drawn in from the left in 8 hard steps; a new tone swells the meter once, slowing as it lands; the mark moves in 4 hard steps, and a mark past the end stands just outside the end, ✦ after it. Loading: a vermilion tile moves along the band.',
+            },
+        ],
     },
     nostromo: {
-        a: {
-            name: 'The bargraph tube',
-            text: 'A dark glass tube set into the beige case, a wire along it; the share glows orange in the tube, a hot core in a warm glow, like a 1979 bargraph tube. The mark is a cream tick printed on the glass. Past the end the overload lamp is lit. Loading warms the tube: a faint glow breathing along the wire.',
-        },
-        b: {
+        shape: {
             name: 'The backlit vents',
-            text: 'A row of vent slots in the beige plastic; up to the share the slots are lit orange from inside. The mark is a strip of embossed black label tape with ▼, on a dark line. Past the end a cut piece of label tape reads +. Loading runs a glow along the slots, one after another.',
+            text: 'Vent slots in the beige plastic lit orange from inside up to the share; the mark is black label tape with ▼; past the end a cut piece of label tape reads +.',
         },
+        options: [
+            {
+                name: 'Power up',
+                text: "The vents light up one by one as the ship powers up. The share is drawn in from the left in 8 hard steps; a new tone draws the share again in the new colour; the mark moves in 4 hard steps, and a mark past the end stops at the meter's end, + after it. Loading: a glow runs along the slots, one after another.",
+            },
+            {
+                name: 'Relay clack',
+                text: 'The relays close in three loud clacks. The share stretches out from the start in 3 hard steps; a new tone jolts the meter sideways, in 3 hard steps; the mark moves in 2 hard steps, and a mark past the end stands just outside the end, ▼ after it. Loading: an orange lamp scans the vents and back.',
+            },
+            {
+                name: 'Warm-up',
+                text: 'The tubes warm up: slow to start, then on. The share is drawn in from the left slowing as it lands; a new tone knocks the meter up and back once, slowing as it lands; the mark moves easing in and out, and a mark past the end leans over the end, ▼ beside it. Loading: the vent slots glow in turn.',
+            },
+        ],
     },
     titanium: {
-        a: {
+        shape: {
             name: 'The heat-tinted groove',
-            text: 'A groove engraved into the metal, dark at its top edge and lit along its lower lip; the share is the oxide that heat grows, gold, bronze, violet, blue, fixed by where it stands along the groove. The mark is a milled pointer with two facets. Past the end a burr of bare bright metal. Loading runs the cutter along the groove at an even, linear pace: metal does not ease.',
+            text: 'An engraved groove; the share is the heat-tint oxide, gold, bronze, violet, blue, fixed by position; the mark is a two-faceted milled pointer; past the end a bright burr.',
         },
-        b: {
-            name: 'The vernier caliper',
-            text: "The main scale engraved along the top; the share is the caliper's sliding beam, bright metal with a knurled grip. The mark is the vernier's zero line filled with the blue oxide, its small scale beside it. Past the end the jaw's chamfered tip slides off the scale. Loading rolls the knurl, linearly.",
-        },
+        options: [
+            {
+                name: 'Cut',
+                text: "The cutter runs at an even feed: metal does not ease. The share is drawn in from the left at an even pace; a new tone draws the share again in the new colour; the mark moves at an even pace, and a mark past the end stops at the meter's end, ▸ after it. Loading: the cutter runs along the groove at an even, linear pace.",
+            },
+            {
+                name: 'Heat tint',
+                text: 'Heated in four bands, gold, bronze, violet, blue, one after another. The share is drawn in from the left in 4 hard steps; a new tone knocks the meter up and back once, at an even pace; the mark moves at an even pace, and a mark past the end stands just outside the end, ▸ after it. Loading: a brushed-metal sheen sweeps the groove.',
+            },
+            {
+                name: 'Machined tick',
+                text: 'A precise stroke from the start, like a dial indicator. The share stretches out from the start at an even pace; a new tone jolts the meter sideways, at an even pace; the mark moves at an even pace, and a mark past the end leans over the end, ▸ beside it. Loading: the knurl is rolled into the groove.',
+            },
+        ],
     },
 };
 
@@ -243,36 +469,29 @@ const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 /* ------------------------------------------------- the review kit's text */
 
 // Read by ../_review/review.js when it loads, which is after this module:
-// one choice per theme, the two characters' names and parts as its hints.
+// one choice per theme, the three options' names and parts as its hints.
 const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="meter"]'));
-const hints = (/** @type {'a' | 'b'} */ which) =>
-    Object.fromEntries(Object.entries(IDEAS).map(([theme, two]) => [theme, `${two[which].name}. ${two[which].text}`]));
+const hints = (/** @type {number} */ at) =>
+    Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea.options[at].name}. ${idea.options[at].text}`]));
 section.setAttribute(
     'data-review-choices',
     JSON.stringify([
         {
             id: 'meter',
-            label: 'The meter for this theme',
-            options: [
-                { value: 'a', label: 'Character 1', hints: hints('a') },
-                { value: 'b', label: 'Character 2', hints: hints('b') },
-                {
-                    value: 'plain',
-                    label: 'The plain meter, as today',
-                    hint: 'Keep the package meter in this theme: the same shape as everywhere, in the theme’s colours.',
-                },
-            ],
+            label: 'How the meter moves in this theme',
+            options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: `Option ${at + 1}`, hints: hints(at) })),
         },
     ]),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-for (const [theme, two] of Object.entries(IDEAS)) {
+for (const [theme, idea] of Object.entries(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
+    const [one, two, three] = idea.options.map((o) => o.name);
     p.textContent =
-        `Character 1 is ${two.a.name.replace(/^The /, 'the ')}, character 2 ${two.b.name.replace(/^The /, 'the ')}; the third column is the plain meter of today. ` +
-        'Look at the three meters in each column, then press Loading, Mark past the end and the two tones: the words around the meters never move, ' +
-        'and the mark reads on the fill and on the track alike.';
+        `The shape is ${idea.shape.name.replace(/^The /, 'the ')}, the same in all three columns; option 1 is ${one}, option 2 ${two}, option 3 ${three}. ` +
+        'Press Drawn to replay how the share arrives, then Loading, Mark past the end and the tones, at full speed and at ¼; ' +
+        'the words around the meters never move, and the mark reads on the fill and on the track alike.';
     look.append(p);
 }
 
@@ -285,25 +504,31 @@ const METERS = {
     quota: { value: 0.91, mark: 0.8, label: 'of the quota used', markLabel: 'the warning level' },
     sign: { value: 1.3, mark: null, label: 'booked', markLabel: '' },
 };
-const state = { loading: false, markover: false, tone: /** @type {'' | 'warning' | 'destructive'} */ ('') };
+const state = { view: /** @type {'drawn' | 'loading' | 'markover'} */ ('drawn'), tone: /** @type {'' | 'warning' | 'destructive'} */ ('') };
 
-function draw() {
+function draw(loading = state.view === 'loading') {
     for (const el of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-cm-meter]'))) {
         const key = el.getAttribute('data-cm-meter') ?? 'disk';
         const m = METERS[key];
-        const mark = key === 'disk' && state.markover ? 1.15 : m.mark;
-        setMeter(el, { value: m.value, mark, tone: state.tone || null, label: m.label, markLabel: m.markLabel, loading: state.loading });
+        const mark = key === 'disk' && state.view === 'markover' ? 1.15 : m.mark;
+        setMeter(el, { value: m.value, mark, tone: state.tone || null, label: m.label, markLabel: m.markLabel, loading });
     }
     for (const label of document.querySelectorAll('[data-cm-label="disk"]'))
-        label.textContent = state.markover ? 'Disk: 62 % used, target 115 %' : 'Disk: 62 % used, target 80 %';
+        label.textContent = state.view === 'markover' ? 'Disk: 62 % used, target 115 %' : 'Disk: 62 % used, target 80 %';
 }
 
-for (const button of document.querySelectorAll('[data-cm-toggle]'))
+// Drawn always replays the arrival: one frame loading, then the share comes
+// in the way the option brings it.
+const stateButtons = [...document.querySelectorAll('[data-cm-state]')];
+for (const button of stateButtons)
     button.addEventListener('click', () => {
-        const key = /** @type {'loading' | 'markover'} */ (button.getAttribute('data-cm-toggle'));
-        state[key] = !state[key];
-        button.setAttribute('aria-pressed', String(state[key]));
-        draw();
+        const view = /** @type {'drawn' | 'loading' | 'markover'} */ (button.getAttribute('data-cm-state'));
+        const replay = view === 'drawn' && state.view === 'drawn';
+        state.view = view;
+        for (const b of stateButtons) b.setAttribute('aria-pressed', String(b === button));
+        if (!replay) return draw();
+        draw(true);
+        requestAnimationFrame(() => requestAnimationFrame(() => draw()));
     });
 const toneButtons = [...document.querySelectorAll('[data-cm-tone]')];
 for (const button of toneButtons)
@@ -321,12 +546,16 @@ function showTheme() {
     for (const el of document.querySelectorAll('[data-cm-theme-name]')) el.textContent = LABEL[theme] ?? theme;
     // On the page, only this theme's look-at line; the dialog reads them all.
     for (const p of look.querySelectorAll('[data-for]')) p.hidden = p.getAttribute('data-for') !== theme;
-    const two = IDEAS[theme];
-    for (const which of /** @type {const} */ (['a', 'b'])) {
-        const name = document.querySelector(`[data-cm-name="${which}"]`);
-        const desc = document.querySelector(`[data-cm-desc="${which}"]`);
-        if (name) name.textContent = two ? two[which].name : '';
-        if (desc) desc.textContent = two ? two[which].text : '';
+    const idea = IDEAS[theme];
+    const shapeName = document.querySelector('[data-cm-shape-name]');
+    const shapeText = document.querySelector('[data-cm-shape-text]');
+    if (shapeName) shapeName.textContent = idea ? idea.shape.name : '';
+    if (shapeText) shapeText.textContent = idea ? idea.shape.text : '';
+    for (const at of [0, 1, 2]) {
+        const name = document.querySelector(`[data-cm-name="${at + 1}"]`);
+        const desc = document.querySelector(`[data-cm-desc="${at + 1}"]`);
+        if (name) name.textContent = idea ? idea.options[at].name : '';
+        if (desc) desc.textContent = idea ? idea.options[at].text : '';
     }
 }
 showTheme();

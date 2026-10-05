@@ -1,6 +1,6 @@
 /* The page: a centred column, the controls in one row of groups, and one
-   section with three columns side by side (character 1, character 2, the
-   plain meter of today), each holding the same three meters. The meters'
+   section with three columns side by side (the three options of the
+   theme's one shape), each holding the same three meters. The meters'
    own drawing is in meters.css. */
 .cm-page {
     display: grid;
@@ -85,10 +85,21 @@
 
 .cm-col {
     display: grid;
-    grid-template-rows: auto auto 1fr;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
     gap: var(--kp-space-sm, 0.5rem);
     align-content: start;
     min-inline-size: 0;
+}
+
+/* Name, description and meters keep one line across the three columns,
+   whatever the length of each description. */
+.cm-trio {
+    row-gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cm-shape {
+    margin: 0;
 }
 
 .cm-label {
@@ -151,4 +162,10 @@
 
 [data-review-look] p {
     margin: 0;
+}
+
+@media (max-width: 52rem) {
+    .cm-col:not(:first-child) .cm-label {
+        padding-block-start: var(--kp-space-lg, 1.5rem);
+    }
 }

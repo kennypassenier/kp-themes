@@ -30,12 +30,12 @@
     <body>
         <main class="cm-page">
             <header class="cm-intro">
-                <h1>A meter of its own, per theme</h1>
+                <h1>A meter of its own, per theme: how it moves</h1>
                 <p>
-                    Kenny, form v18 (2026-10-05): the character round starts with the meter, one component at a time, all 22 themes in one demo. Today
-                    <code>.kp-meter</code> has the same shape in every theme (a track, a fill, a tick for the mark, a small ▸ past the end), drawn in
-                    the theme's colours only. Here every theme gets two meters of its own, drawn in the theme's own material the way its exits were,
-                    beside the plain meter as it is today. Pick one of the three per theme.
+                    Round 2 (Kenny, 2026-10-05 18:01). In round 1 you picked a shape for nineteen themes; only the shape was approved, not how it
+                    moves. Each theme now shows its shape three times: forest the wooden gauge with the trail's marks you asked for, retro and grotesk
+                    a new shape each. The three options differ in how the share arrives, how a new tone shows, how the mark moves and stands past the
+                    end, and the loading picture. Pick one of the three per theme.
                 </p>
                 <p class="cm-motion" data-cm-motion hidden>
                     <b>Your system asks for reduced motion</b>, so nothing on this page moves: every loading meter shows its still frame. Turn it off
@@ -44,46 +44,46 @@
                 <p class="cm-meta">
                     Each column shows the same three meters: 62 % used with the target at 80 % (the mark on the empty track), 130 % booked with the
                     mark at 80 % (full, past the end, the mark on the fill), and a small meter inside a sentence (91 %, the mark at 80 %). Every
-                    character keeps the meter's height in every state, takes its colours from the theme's tokens only, and lives in the theme's
-                    <code>kp.signature</code> layer (<code>meters.css</code>), so it can move into the register as it stands. This theme:
-                    <b data-cm-theme-name>…</b>
+                    option keeps the meter's height in every state, takes its colours from the theme's tokens only, and lives in the theme's
+                    <code>kp.signature</code> layer (<code>meters.css</code>). This theme: <b data-cm-theme-name>…</b>
                 </p>
-                <div class="cm-controls">
-                    <div class="cm-actions" role="group" aria-label="States of every meter on this page">
-                        <b>Every meter:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-toggle="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-toggle="markover" aria-pressed="false">
-                            Mark past the end
-                        </button>
-                    </div>
-                    <div class="cm-actions" role="group" aria-label="Tone of every meter on this page">
-                        <b>Tone:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="" aria-pressed="true">None</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="warning" aria-pressed="false">Warning</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="destructive" aria-pressed="false">Destructive</button>
-                    </div>
-                    <div class="cm-actions" role="group" aria-label="Animation speed">
-                        <b>Speed of every animation:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="1" aria-pressed="true">Full</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="0.5" aria-pressed="false">½</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="0.25" aria-pressed="false">¼</button>
-                    </div>
-                </div>
             </header>
 
             <section class="cm-sec" data-review-item="meter" data-review-components="meter" data-review-title="The meter" aria-labelledby="h-meter">
                 <div class="cm-sec__head">
                     <h2 id="h-meter">The meter in <span data-cm-theme-name>this theme</span></h2>
                     <p>
-                        Two characters drawn in this theme's world, and the plain meter as it is today. Press <b>Loading</b>,
-                        <b>Mark past the end</b> and the tones above to see every state; the words around each meter never move.
+                        This theme's shape, three ways it moves. <b>Drawn</b> replays how the share arrives, <b>Loading</b> and
+                        <b>Mark past the end</b> show those states, a tone shows how the meter takes it, and the speed slows every animation. The
+                        words around each meter never move.
                     </p>
                 </div>
+                <div class="cm-controls" data-review-controls>
+                    <div class="cm-actions" role="group" aria-label="State of every meter">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-state="drawn" aria-pressed="true">Drawn</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-state="markover" aria-pressed="false">Mark past the end</button>
+                    </div>
+                    <div class="cm-actions" role="group" aria-label="Tone of every meter">
+                        <b>Tone:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="" aria-pressed="true">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="destructive" aria-pressed="false">Destructive</button>
+                    </div>
+                    <div class="cm-actions" role="group" aria-label="Speed of every animation">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
                 <div data-review-look></div>
+                <p class="cm-shape"><b>The shape:</b> <span data-cm-shape-name>…</span>. <span data-cm-shape-text></span></p>
                 <div class="cm-trio">
-                    <div class="cm-col" data-cm="a" data-cm-pick="a">
-                        <p class="cm-label"><span class="cm-label__no">Character 1</span> <span data-cm-name="a">…</span></p>
-                        <p class="cm-desc" data-cm-desc="a"></p>
+                    <div class="cm-col" data-cm="1" data-cm-pick="1">
+                        <p class="cm-label"><span class="cm-label__no">Option 1</span> <span data-cm-name="1">…</span></p>
+                        <p class="cm-desc" data-cm-desc="1"></p>
                         <div class="cm-meters">
                             <div class="cm-row">
                                 <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
@@ -97,11 +97,21 @@
                                 Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning
                                 at 80 %.
                             </p>
+                            <div class="cm-row">
+                                <span class="cm-row__label"
+                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
+                                >
+                                <span class="cm-signs">
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="cm-col" data-cm="b" data-cm-pick="b">
-                        <p class="cm-label"><span class="cm-label__no">Character 2</span> <span data-cm-name="b">…</span></p>
-                        <p class="cm-desc" data-cm-desc="b"></p>
+                    <div class="cm-col" data-cm="2" data-cm-pick="2">
+                        <p class="cm-label"><span class="cm-label__no">Option 2</span> <span data-cm-name="2">…</span></p>
+                        <p class="cm-desc" data-cm-desc="2"></p>
                         <div class="cm-meters">
                             <div class="cm-row">
                                 <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
@@ -115,14 +125,21 @@
                                 Quota <span class="kp-meter kp-meter--inline" data-cm-meter="quota"></span> 91 % of 50 GB used this month, the warning
                                 at 80 %.
                             </p>
+                            <div class="cm-row">
+                                <span class="cm-row__label"
+                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
+                                >
+                                <span class="cm-signs">
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
+                                    <span class="kp-meter kp-meter--inline kp-meter--over-break" data-cm-meter="sign"></span>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="cm-col" data-cm="plain" data-cm-pick="plain">
-                        <p class="cm-label"><span class="cm-label__no">Today</span> The plain meter</p>
-                        <p class="cm-desc">
-                            The package's meter as it ships: a rounded track, the fill in the theme's primary colour, a thin tick for the mark and a
-                            small ▸ past the end, the same shape in every theme.
-                        </p>
+                    <div class="cm-col" data-cm="3" data-cm-pick="3">
+                        <p class="cm-label"><span class="cm-label__no">Option 3</span> <span data-cm-name="3">…</span></p>
+                        <p class="cm-desc" data-cm-desc="3"></p>
                         <div class="cm-meters">
                             <div class="cm-row">
                                 <span class="cm-row__label" data-cm-label="disk">Disk: 62 % used, target 80 %</span>
@@ -137,7 +154,9 @@
                                 at 80 %.
                             </p>
                             <div class="cm-row">
-                                <span class="cm-row__label">Today's other signs past the end (130 %): hatched, a spill, a break</span>
+                                <span class="cm-row__label"
+                                    >The package's signs past the end (130 %): hatched, a spill, a break; the shape draws its own</span
+                                >
                                 <span class="cm-signs">
                                     <span class="kp-meter kp-meter--inline kp-meter--over-hatch" data-cm-meter="sign"></span>
                                     <span class="kp-meter kp-meter--inline kp-meter--over-spill" data-cm-meter="sign"></span>
@@ -150,6 +169,36 @@
             </section>
         </main>
 
+        <!-- Round 2 reopens all 22 themes: in round 1 only the shape was approved (Kenny, 2026-10-05 18:01). -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r2",
+                "reopen": [
+                    "formal|meter",
+                    "light|meter",
+                    "dark|meter",
+                    "cyberpunk|meter",
+                    "synthwave|meter",
+                    "pastel|meter",
+                    "terminal|meter",
+                    "forest|meter",
+                    "high-contrast|meter",
+                    "sepia|meter",
+                    "blueprint|meter",
+                    "solstice|meter",
+                    "brutalism|meter",
+                    "deco|meter",
+                    "phantom|meter",
+                    "shade-light|meter",
+                    "shade-dark|meter",
+                    "retro|meter",
+                    "grotesk|meter",
+                    "lapis|meter",
+                    "nostromo|meter",
+                    "titanium|meter"
+                ]
+            }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
