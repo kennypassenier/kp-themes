@@ -30,25 +30,23 @@
     <body>
         <main class="gr-page">
             <header class="gr-intro">
-                <h1>A network graph of its own, per theme</h1>
+                <h1>A network graph of its own, per theme: one pick per aspect</h1>
                 <p>
-                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
-                    chart and the month heatmap comes the network graph. Today <code>.kp-graph</code> has the same shape in every theme (a hub in the
-                    middle, the other sites on a ring, round nodes with a ring and a core in their own hue, links by kind in a colour and a dash,
-                    labels with a halo, the kinds as pills above the picture), drawn in the theme's colours only. Here every theme gets two graphs of
-                    its own, drawn in the theme's own material, beside the plain graph as it is today. Pick one of the three per theme.
+                    Round 2 (Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, like the meter). Nothing is bundled any more: per
+                    theme you pick the shape, the loading picture, how the network arrives, how a pick and a hidden kind read, and how a live update
+                    shows, each from three options and each on its own. Options 1 and 2 come from round 1's two characters wherever they differed;
+                    where both did the same, option 1 is what they did and the others are new. Option 3 is new everywhere.
                 </p>
                 <p class="gr-motion" data-gr-motion hidden>
-                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
-                    the system settings to judge the motion.
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading pictures are still frames and the network
+                    stands at once. Turn it off in the system settings to judge the motion.
                 </p>
                 <p class="gr-meta">
-                    Each column is the northern water network: a control centre, six pump houses (number 6 still being built, number 5 set differently
-                    on site than in the plan), two reservoirs, a treatment plant, and two addresses outside the network (the weather service and the
-                    energy supplier). Telemetry, remote control, the radio spare path and the planned links each have their kind. Every graph is the
-                    package's own (<code>js/graph.js</code> draws it, so hovering, picking, the arrow keys, the kinds and Show all work); a character
-                    only restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>graphs.css</code>), and keeps the
-                    picture's height in every state. This theme: <b data-gr-theme-name>…</b>
+                    Every graph is the northern water network: a control centre, six pump houses (number 6 still being built, number 5 set differently
+                    on site than in the plan), two reservoirs, a treatment plant, and two addresses outside the network. Every graph is the package's
+                    own (<code>js/graph.js</code> draws it, so hovering, picking, the arrow keys, the kinds and Show all work); each option only
+                    restyles it from the theme's tokens, in the theme's <code>kp.signature</code> layer (<code>graphs.css</code>), one attribute per
+                    aspect, and keeps the picture's height in every state. This theme: <b data-gr-theme-name>…</b>
                 </p>
             </header>
 
@@ -62,9 +60,10 @@
                 <div class="gr-sec__head">
                     <h2 id="h-graph">The network graph in <span data-gr-theme-name>this theme</span></h2>
                     <p>
-                        Two characters drawn in this theme's world, and the plain graph as it is today. Use the buttons (in the review dialog they sit
-                        above the columns) for every state and every kind of network; hover a node, click one, or tab into the picture and walk it
-                        with the arrow keys: the graph behaves the same in all three columns.
+                        Five things to pick, each on its own. Each row below shows three options of one of them, everything else as you ticked it; the
+                        combination at the top shows your picks together. <b>Drawn</b> replays how the network arrives, <b>Loading</b> shows the
+                        loading picture, <b>Live update</b> hands over new numbers for one site, and the speed slows every animation. Hover a node,
+                        click one, or tab into a picture and walk it with the arrow keys.
                     </p>
                 </div>
                 <div class="gr-controls" data-review-controls>
@@ -96,35 +95,74 @@
                     <p class="gr-log" data-gr-log aria-live="polite">Nothing picked. Every kind of link is shown.</p>
                 </div>
                 <div data-review-look></div>
-                <div class="gr-trio">
-                    <div class="gr-col" data-gr="a" data-gr-pick="a">
-                        <p class="gr-label"><span class="gr-label__no">Character 1</span> <span data-gr-name="a">…</span></p>
-                        <p class="gr-desc" data-gr-desc="a"></p>
-                        <figure class="kp-graph" data-kp-graph data-kp-key="network-a" aria-label="The northern network, character 1"></figure>
+                <div class="gr-preview">
+                    <div class="gr-preview__head">
+                        <h3>Your combination</h3>
+                        <p data-gr-picks>…</p>
                     </div>
-                    <div class="gr-col" data-gr="b" data-gr-pick="b">
-                        <p class="gr-label"><span class="gr-label__no">Character 2</span> <span data-gr-name="b">…</span></p>
-                        <p class="gr-desc" data-gr-desc="b"></p>
-                        <figure class="kp-graph" data-kp-graph data-kp-key="network-b" aria-label="The northern network, character 2"></figure>
-                    </div>
-                    <div class="gr-col" data-gr="plain" data-gr-pick="plain">
-                        <p class="gr-label"><span class="gr-label__no">Today</span> The plain graph</p>
-                        <p class="gr-desc">
-                            The package's network graph as it ships: a hub in the middle and the sites on a ring, round nodes with a ring and a core
-                            in their own hue, links by kind in a colour and a dash, labels with a halo in the page's colour, the kinds as pills above
-                            the picture, a pulsing ring while it loads; the same shape in every theme.
-                        </p>
+                    <div
+                        class="gr-graph"
+                        data-cg
+                        data-gr-preview
+                        data-cg-shape="1"
+                        data-cg-loading="1"
+                        data-cg-arrival="1"
+                        data-cg-focus="1"
+                        data-cg-live="1"
+                    >
                         <figure
                             class="kp-graph"
                             data-kp-graph
-                            data-kp-key="network-plain"
-                            aria-label="The northern network, the plain graph"
+                            data-kp-key="network-preview"
+                            aria-label="The northern network, your combination"
                         ></figure>
                     </div>
+                </div>
+                <div class="gr-aspects" data-gr-aspects></div>
+                <div class="gr-plain">
+                    <div class="gr-plain__head">
+                        <h3>For reference: the plain graph of today</h3>
+                        <p>
+                            The package's network graph as it ships, not an option: a hub in the middle and the sites on a ring, round nodes with a
+                            ring and a core in their own hue, links by kind in a colour and a dash, labels with a halo in the page's colour, the kinds
+                            as pills above the picture, a pulsing ring while it loads; the same shape in every theme. It follows the same buttons.
+                        </p>
+                    </div>
+                    <figure class="kp-graph" data-kp-graph data-kp-key="network-plain" aria-label="The northern network, the plain graph"></figure>
                 </div>
             </section>
         </main>
 
+        <!-- Round 2 reopens all 22 themes: every aspect is its own pick now (Kenny, 2026-10-05 20:03). -->
+        <script type="application/json" data-review-round>
+            {
+                "round": "2026-10-05-r2",
+                "reopen": [
+                    "formal|graph",
+                    "light|graph",
+                    "dark|graph",
+                    "cyberpunk|graph",
+                    "synthwave|graph",
+                    "pastel|graph",
+                    "terminal|graph",
+                    "forest|graph",
+                    "high-contrast|graph",
+                    "sepia|graph",
+                    "blueprint|graph",
+                    "solstice|graph",
+                    "brutalism|graph",
+                    "deco|graph",
+                    "phantom|graph",
+                    "shade-light|graph",
+                    "shade-dark|graph",
+                    "retro|graph",
+                    "grotesk|graph",
+                    "lapis|graph",
+                    "nostromo|graph",
+                    "titanium|graph"
+                ]
+            }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

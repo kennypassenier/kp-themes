@@ -1,198 +1,912 @@
-// research/character-graph: the fourth component of the character round
-// (Kenny, form v18, 2026-10-05): the network graph, two characters per theme
-// drawn in the theme's own world, beside the plain graph of today, all 22
-// themes in one demo judged through the review kit.
+// research/character-graph: the fourth component of the character round,
+// all 22 themes in one demo judged through the review kit. Round 2 (Kenny,
+// 2026-10-05 20:03: every demo gets separate options per aspect, like the
+// meter, "and it should be like this in the future"): nothing is bundled any
+// more. Each theme's network graph has five aspects, each picked on its own
+// from three options: the shape, the loading picture, how the network
+// arrives, how a pick and a hidden kind read, and how a live update shows.
 //
 // The graphs are the package's own: attachGraphs() (js/graph.js) builds the
 // kinds, Show all, the picture and the hint, and keeps every behaviour
-// (hover, picking, the keys, the kinds, the live update). Each character is
-// CSS only, in graphs.css, scoped by `[data-theme]` and the column's
-// `[data-gr]`; this file only says what each one is, gives the graphs their
-// network, sets the states, and runs the speed. js/graph.js is not changed.
+// (hover, picking, the keys, the kinds, the live update). Every aspect is CSS
+// only, in graphs.css, keyed by one attribute each on the graph's wrapper
+// (`data-cg-shape`, `data-cg-loading`, `data-cg-arrival`, `data-cg-focus`,
+// `data-cg-live`), so any combination composes. This file marks the moment
+// on each graph (`data-cg-moment`: "arrive" when a drawn network comes in,
+// "live" on a live update) and the site and link a live update changed
+// (`data-cg-changed`), which js/graph.js does not say. On the page: one
+// composed preview showing the current picks, and per aspect a row of three
+// graphs that differ in that aspect only. The controls sit in the section's
+// `data-review-controls` container, which the review kit mirrors into its
+// dialog. js/graph.js is not changed.
 
 import { attachGraphs, GRAPH_CHANGE_EVENT, graphHideKind, graphSelect, setGraphData, setGraphState } from '../../js/graph.js';
 import { THEMES } from '../../js/theme-registry.js';
 
-/** @param {string} an @param {string} at @param {string} bn @param {string} bt */
-const two = (an, at, bn, bt) => ({ a: { name: an, text: at }, b: { name: bn, text: bt } });
+/** @typedef {[name: string, text: string]} Option */
+/** @typedef {'shape' | 'loading' | 'arrival' | 'focus' | 'live'} Aspect */
+
+/** The five aspects, in the order they are asked. @type {{ id: Aspect, label: string, about: string }[]} */
+const ASPECTS = [
+    {
+        id: 'shape',
+        label: 'Shape',
+        about: 'The paper, the nodes, the links, the labels and the kinds above. Compare them as they stand, then hover a node.',
+    },
+    { id: 'loading', label: 'While loading', about: 'The picture while the network is read; it always moves. Press Loading.' },
+    { id: 'arrival', label: 'How the network arrives', about: 'How the drawn network comes in after loading. Press Drawn to replay it.' },
+    {
+        id: 'focus',
+        label: 'The picked node and the hidden kind',
+        about: 'How a pick, the dimmed rest and a hidden kind read. In this row Pump house 3 is always picked and the radio links are always hidden.',
+    },
+    {
+        id: 'live',
+        label: 'Live update',
+        about: 'How a site and its link show that their numbers just changed. Press Live update: a different site changes each time.',
+    },
+];
 
 /**
- * The two characters per theme: a name and what each part becomes.
- * @type {Record<string, { a: { name: string, text: string }, b: { name: string, text: string } }>}
+ * Per theme, three options for each aspect: [name, what it does]. Shape 1
+ * and 2 are round 1's two characters; the rest is said in each text.
+ * @type {Record<string, Record<Aspect, Option[]>>}
  */
 const IDEAS = {
-    formal: two(
-        'The organisation chart',
-        "A printed organisation chart on paper: hairline links, each node a small open circle with a thin navy rule and a pale core, the hub in a double weight, labels in the serif's small capitals on a paper halo. The kinds are small-caps entries with a rule under the one that is on. Dimming greys the rest to a pencil tint. Loading is a still dotted circle; nothing moves.",
-        'The engraved plate',
-        'A steel-engraved map plate: a ruled border with a fine inner frame, links engraved as fine lines, nodes as solid dots inside an engraved ring, labels in serif italic. The kinds are boxed like a map key. Still while loading: an engraved dotted ring.',
-    ),
-    light: two(
-        'The soft canvas',
-        'A pale sky canvas with a soft lift: nodes are white discs on a soft shadow with their hue as a thin rim and a small core, links in soft rounded strokes, labels on a white halo. The kinds are soft pills. Dimming fades to a mist. Loading is a still dashed ring.',
-        'Daylight',
-        'White cards in daylight: every node a white disc with a wide pastel rim in its hue, links slightly thicker and round-capped, the hub with a sunny amber rim, labels in the body face on a white halo. Loading: a band of light runs around the ring.',
-    ),
-    dark: two(
-        'The status board',
-        'A black operations board: links as thin lit lines, each node a black disc with a lit rim in its hue, labels in ticker mono on black. The kinds are square lit chips. Dimming drops everything else to a dull outline. Still while loading: a dim dashed ring.',
-        'The machined panel',
-        'A machined black panel with a fine inner bevel: each node a chamfered pocket (a dark disc with a thick rim lit from below), links engraved and lit, labels in mono capitals. The kinds are flat machined tabs. Still while loading.',
-    ),
-    cyberpunk: two(
-        'The neon circuit',
-        'A neon circuit on a black board with a faint trace grid: links are neon tubes in their kind colour with a glow, nodes are glowing rings with a dark core window, the hub ringed in hazard yellow, labels in tech mono capitals. The kinds are cut-corner neon chips. Dimming kills the glow. Loading: a packet runs around the dashed ring.',
-        'The netrunner map',
-        'A netrunner HUD: square-capped data links, nodes with a thick broken ring (ICE segments), labels in condensed display capitals on black, the kinds as hazard-taped tabs. Dimming leaves a cold outline. Loading: the ICE ring spins.',
-    ),
-    synthwave: two(
-        'The grid-floor constellation',
-        'A constellation over a perspective grid floor and a pink horizon glow: links as thin glowing star lines, nodes as stars (bright core, soft glow ring), labels in VT323 on night. The kinds are glass chips. Dimming leaves only faint stars. Loading: the horizon ring pulses in pink.',
-        'The arcade vector screen',
-        'An 80s vector arcade screen: everything drawn in glowing outline only (hollow nodes, glowing links), scanlines over the picture, labels in VT323 capitals. The kinds are outlined in neon. Loading: the vector ring rotates.',
-    ),
-    pastel: two(
-        'Candy beads and licorice',
-        'Candy beads on licorice strings: each node a fat candy bead in its hue with a bead highlight, links as thick round-capped licorice strings, labels in the rounded face on a cream halo. The kinds are candy pills with a flat sticker shadow. Dimming fades to sugar. Loading: the bead ring hops round.',
-        'The pinboard doodle',
-        'A riso doodle on a dotted pad: nodes are hand-drawn dotted circles in their hue, links are dashed doodle lines, labels on a cream halo, the kinds as washi-tape chips. Loading: the doodle ring drifts.',
-    ),
-    terminal: two(
-        'The box-drawing map',
-        'A text-mode network map: the picture is a black terminal with a caret line, links are thin square-capped lines in the phosphor, every node a [bracketed] square-ish ring, labels in the mono with no halo glow, the kinds as [x] / [ ] toggles. Dimming leaves the rest at half bright. Loading: a dashed ring ticks like a text spinner.',
-        'traceroute',
-        'A traceroute print: links dotted like hop dots, nodes as small inverse-video blocks, labels in mono capitals, the hub in reverse video. The kinds read as plain text with an underline. Loading: the dots march.',
-    ),
-    forest: two(
-        'The trail map',
-        'A ranger’s trail map on kraft paper with contour rings: links as trails (a dashed walk), every node a cairn (a stacked stone ring in its hue), the hub as a ranger station with a heavy ring, labels in serif italic on a paper halo. The kinds are wooden trail markers. Loading: the trail walks around.',
-        'The canopy',
-        'Looking up into a canopy: links as twigs (thicker, round-capped, in bark), nodes as leaves (a green-tinted disc with a dark vein ring), labels in the body face on moss. The kinds are leaf tags. Loading: a leaf ring sways.',
-    ),
-    'high-contrast': two(
-        'Patterned edges, shaped nodes',
-        'Every link kind told apart by its pattern as well as its colour (heavier dashes), every node a circle with a different shaped core (square, diamond, triangle, round) so no hue is needed, thick black rings, bold labels on a full halo. Picked nodes get a yellow ring. Still: nothing moves.',
-        'The ink plate',
-        'Black ink on white: nodes inverse (black disc, white core), links thick in their kind pattern, labels bold on white, the hub in a double weight, the kinds as framed buttons. Still: nothing moves.',
-    ),
-    sepia: two(
-        'The family tree',
-        'A nib-drawn family tree on aged paper: links as fine ink lines, every node an ink ring with a sepia wash, the hub in a double rule, labels in serif italic on paper. The kinds are an engraved key. Dimming fades to faded ink. Loading: the nib draws the ring.',
-        'The letterpress chart',
-        'A letterpress chart: links printed as heavier ink rules with blind-impressed nodes (a dark ring, a pale pressed core), labels in serif small capitals, the kinds as printed borders. Loading: the platen presses.',
-    ),
-    blueprint: two(
-        'The wiring schematic',
-        'A wiring schematic on blueprint paper with a millimetre grid: links as white-ink wires, every node a junction dot in a thin ring, the hub as a terminal block in amber, labels in technical mono capitals. The kinds are boxed like a legend. Loading: the plotter dashes the ring.',
-        'The drafting sheet',
-        'A drafting sheet: links as chain lines, nodes as circles with centre crosses (thin dash ring), labels in mono on the blue, the kinds as title-block cells. Loading: the dash marches round.',
-    ),
-    solstice: two(
-        'The low sun',
-        'Charcoal paper lit from below by a low sun: links in warm light, nodes as glowing suns (bright core, soft rim), labels in the serif on charcoal. The kinds are glowing chips. Dimming lets the light fall. Loading: a dawn rises in the ring.',
-        'The embers',
-        'Embers on charcoal: links as glowing coals in a long dash, nodes as embers with a hot rim, the hub as the fire, labels in the serif. Loading: the ember ring breathes.',
-    ),
-    brutalism: two(
-        'Slabs and heavy lines',
-        'Concrete slabs and heavy lines: links 4px wide in square caps, every node a thick black ring with a hard shadow, labels in heavy capitals on a solid halo, the kinds as black-bordered blocks with the hard shadow. The pick gets the yellow fill. Loading: the slab ring stamps.',
-        'The sticker sheet',
-        'A lavender sticker sheet: links black and heavy, nodes as fat stickers in their hue with a black outline, labels heavy on white, the kinds as askew stickers. Loading: the sticker ring drops in.',
-    ),
-    deco: two(
-        'Gilt rays',
-        'A gilt sunburst on lacquer: links as fine gold rays, nodes as gold-framed medallions (a gold ring, a core in its hue), the hub in a double gold ring, labels in the display face capitals. The kinds are gold-framed plaques. Loading: a glint runs the gold ring.',
-        'The marquee',
-        'A theatre marquee: links as rows of bulbs (round dots), nodes ringed in bulbs, labels in display capitals, the kinds as marquee plaques. Loading: the bulbs chase round.',
-    ),
-    phantom: two(
-        'Stamped tags and string',
-        'An evidence board: links as red string, nodes as stamped tags (a paper disc with a red stamped ring), labels in slanted capitals on white, the kinds as cut-out ransom chips. Dimming leaves the board grey. Loading: the halftone slides.',
-        'The calling card',
-        'Black calling cards under a halftone: nodes as black discs with a red slash ring, links in white, labels on black in display capitals, the kinds as slanted cards. Loading: the halftone shuffles.',
-    ),
-    'shade-light': two(
-        'Pencil in the shade',
-        'A pencil sketch on paper in soft shade: links as soft pencil lines, nodes as lifted paper discs with a pencil rim, labels in the body face. The kinds are lifted paper chips. Loading: the sketch hatches in.',
-        'The leaf shade',
-        'Dappled leaf shade over the sheet: soft links, nodes in a sunny rim, labels on paper. Loading: a cloud’s shade passes.',
-    ),
-    'shade-dark': two(
-        'Silverpoint',
-        'Silverpoint on dark paper: links as silver hairlines, nodes as silver rings with a dark core window, labels in the body face. The kinds are silver hairline chips. Loading: the silver hatches in.',
-        'The reading lamp',
-        'A warm reading lamp over the sheet: a warm pool of light behind the hub, links in warm ink, nodes ringed warm, labels on the dark. Loading: the pool slides.',
-    ),
-    retro: two(
-        'The 1995 network diagram',
-        'A 1995 network diagram in a white well with a bevel: links as one-pixel lines, every node a bevelled disc (a raised ring in grey with its hue as core), labels in the pixel face, the kinds as raised grey buttons that sink when off. Still while loading: a dither ring.',
-        'The paint program',
-        'A 1995 paint program: links in solid primary colours, nodes as flat filled discs with a black outline, labels in the pixel face on a white halo, the kinds as tool buttons. Still.',
-    ),
-    grotesk: two(
-        'The transit map',
-        'A Swiss transit map: links as thick coloured lines, nodes as white interchange stations with a heavy black ring, labels in bold grotesque on white. The kinds are flat colour bars. Loading: a line runs around.',
-        'The Swiss grid',
-        'The Swiss grid: thin black links, nodes as solid black discs, the hub in red, labels in bold grotesque flush beside them, the kinds as boxed bold words. Loading: three squares cut in.',
-    ),
-    lapis: two(
-        'The girih lattice',
-        'A girih lattice on lapis: links as gold lattice lines, nodes as lapis medallions in a gold ring, the hub in a double gold frame, labels in the display face on lapis. The kinds are gold-framed tiles. Loading: a glint runs the frame.',
-        'Lapis on vellum',
-        'Lapis ink on ivory vellum: links in lapis ink, nodes as gold-rimmed lapis dots, labels in the serif on vellum, the kinds as gold-framed chips. Loading: a burnisher’s glint.',
-    ),
-    nostromo: two(
-        'The CRT radar sweep',
-        'A green-black CRT in the beige case with scanlines: links as phosphor traces, nodes as blips (a bright core, a fading ring), labels in mono capitals in phosphor, the kinds as phosphor tabs. A radar sweep turns over the picture while it loads; at rest nothing moves.',
-        'The indicator panel',
-        'The ship’s indicator panel: links as embossed lines, nodes as lit indicator lamps in a thick bezel, labels on embossed label tape, the kinds as keys. Loading: the lamps scan.',
-    ),
-    titanium: two(
-        'The milled plate',
-        'A milled titanium plate: links engraved, every node a riveted boss (a ring of rivets around an anodised core in its hue), the hub with a blue heat-tint ring, labels in instrument mono. The kinds are machined tabs. Loading: the cutter runs the ring.',
-        'The instrument dial',
-        'An instrument dial: links as fine engraved lines, nodes as recessed apertures ringed in their anodised hue, a knurled ring on the hub, labels in mono. Loading: the knurl rolls.',
-    ),
+    formal: {
+        shape: [
+            [
+                'The organisation chart',
+                'Hairline links, small open circles with a thin navy rule and a pale core, the hub in a double weight, labels in the serif’s small capitals; the kinds are small-caps entries with a rule under the one that is on.',
+            ],
+            [
+                'The engraved plate',
+                'A ruled border with a fine inner frame, links engraved as fine lines, solid dots inside an engraved ring, labels in serif italic; the kinds boxed like a map key.',
+            ],
+            [
+                'The annual report',
+                'Tracked serif capitals, hairline rules in the ink, every site a solid dot in a hairline ring, the hub ringed in a dotted rule; the kinds as tracked capitals with no box.',
+            ],
+        ],
+        loading: [
+            ['Counted dot by dot', 'Character 1’s dotted circle, now moving: the dots step slowly round, one at a time.'],
+            ['Engraved round', 'Character 2’s engraved ring, now cut again and again by a fine burin line.'],
+            ['The guilloché border', 'A navy rule of dots and dashes runs slowly round, like the border of a share certificate.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Inked in', 'The links are drawn with the pen from end to end, then each site is set down on them, one after another.'],
+            ['Typeset', 'The sites are set one by one like type, without motion; the links are ruled in once every site stands.'],
+        ],
+        focus: [
+            ['Pencil tint', 'As character 1 had it: the rest of the chart turns to a grey pencil tint; a hidden kind’s key turns grey.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            [
+                'Red-ink tick',
+                'The pick is ringed in red ink; the rest stays half visible in grey pencil; a hidden kind is struck through in the key.',
+            ],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['Re-inked', 'The changed site’s ring and its link are inked over in navy for a moment, then dry to their own colour.'],
+            ['Amended in the margin', 'The changed site blinks three times like a correction mark; its link is ruled again.'],
+        ],
+    },
+    light: {
+        shape: [
+            [
+                'The soft canvas',
+                'White discs on a soft shadow with their hue as a thin rim, soft round links, labels on a white halo; the kinds are soft pills.',
+            ],
+            ['Daylight', 'Every node a white disc with a wide pastel rim, round-capped links, a sunny amber hub over a warm wash; plain chips.'],
+            [
+                'The paper cut-out',
+                'Cut paper on the page: each site a white disc with a grey cut edge and a full hue core, solid round links, semi-bold labels; the kinds as paper tabs with a printed edge below.',
+            ],
+        ],
+        loading: [
+            ['A soft dashed ring', 'Character 1’s soft dashed ring, now gliding slowly round.'],
+            ['A band of daylight', 'As character 2 had it: one amber band of light runs round the ring.'],
+            ['Pearls on a string', 'A string of round pearls in the primary slides round the ring.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Lifted onto the canvas', 'Each site rises a little into place, one after another, while the links draw out softly.'],
+            ['Unfolding', 'The sites grow from a point with a soft overshoot, the links follow them out.'],
+        ],
+        focus: [
+            ['Misted', 'As character 1 had it: the rest fades back into a soft mist at 22 %, the links nearly vanish.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['The highlighter', 'The pick gets a wide amber highlighter ring; the rest stays at half strength; a hidden kind is struck through.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['A soft ripple', 'The changed site’s ring swells in the primary and settles; its link glows thicker for a moment.'],
+            ['Sunlit', 'The changed site pops up in the sun and its link takes an amber light for a moment.'],
+        ],
+    },
+    dark: {
+        shape: [
+            ['The status board', 'Black discs with a lit rim in their hue, thin lit links, ticker-mono labels; the kinds are square lit chips.'],
+            ['The machined panel', 'Chamfered pockets lit from below, engraved lit links, mono capitals; the kinds are flat machined tabs.'],
+            [
+                'The OLED readout',
+                'Pure black glass, every site a solid lit dot with no ring, links as thin lit lines, labels in mono on black; the kinds as underlined text.',
+            ],
+        ],
+        loading: [
+            ['The ticking ring', 'Character 1’s dim dashed ring, now ticking round a step at a time like a status board.'],
+            ['The scanning light', 'Character 2’s machined ring with a lit segment that sweeps round it.'],
+            ['The busy dots', 'Three lit dots chase each other round, as a phone’s busy sign.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Powered up', 'The sites switch on one after another; the links light once every site is on.'],
+            ['Slid in', 'Each site slides up into its pocket and the links are drawn between them.'],
+        ],
+        focus: [
+            ['Dull outline', 'As character 1 had it: the rest drops to a dull grey outline at 35 %.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Spotlit', 'The pick glows in the primary; the rest dims to 25 %; a hidden kind gets a dashed outline in the key.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The lit pulse', 'The changed site’s rim flashes white-hot and its link carries a pulse of light.'],
+            ['The status blink', 'The changed site blinks three times like a status lamp; its link thickens for a moment.'],
+        ],
+    },
+    cyberpunk: {
+        shape: [
+            [
+                'The neon circuit',
+                'A trace grid on black, neon tube links with a glow, glowing rings with a dark core, a hazard-yellow hub; cut-corner neon chips.',
+            ],
+            ['The netrunner map', 'Square-capped data links, thick broken ICE rings, condensed display capitals; hazard-taped tabs.'],
+            [
+                'The holo HUD',
+                'A cyan holo overlay: thin square links, nodes as hexagon-cut rings with a bright core, mono labels, scan lines over the glass; the kinds as bracketed HUD tags.',
+            ],
+        ],
+        loading: [
+            ['The packet run', 'As character 1 had it: one bright packet runs round the dashed ring.'],
+            ['The ICE spins', 'As character 2 had it: the broken ICE ring spins fast.'],
+            ['The glitch', 'The ring is torn into data blocks that jump and jitter in hazard yellow.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Jacked in', 'The neon links flicker on like tubes igniting, then the sites switch on in a burst.'],
+            ['The data burst', 'Every site shoots out from the hub to its place, the links trace after them.'],
+        ],
+        focus: [
+            ['Glow killed', 'As character 1 had it: everything not picked loses its colour and its glow.'],
+            ['Cold outline', 'As character 2 had it: the rest goes grey and darker, a cold outline.'],
+            [
+                'Target lock',
+                'The pick gets a hazard-yellow lock ring with a glow; the rest drops to 20 %; a hidden kind is struck through like a dead link.',
+            ],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The glitch', 'The changed site glitches sideways for a moment; its link carries a packet.'],
+            ['The neon surge', 'The changed site’s ring and its link surge in hazard yellow and cool back.'],
+        ],
+    },
+    synthwave: {
+        shape: [
+            [
+                'The grid-floor constellation',
+                'A perspective floor and a pink horizon, star nodes with a glow ring, glowing star lines, VT323 labels; glass chips.',
+            ],
+            ['The arcade vector screen', 'Outline-only nodes and glowing links under scanlines, VT323 capitals; neon-outlined chips.'],
+            [
+                'The chrome sunset',
+                'A striped sunset disc behind the hub, chrome-white rings with a pink core, thick neon links, VT323 labels; the kinds as chrome-edged chips.',
+            ],
+        ],
+        loading: [
+            ['The horizon breathes', 'Character 1’s pink horizon ring, now breathing in and out.'],
+            ['The vector ring', 'As character 2 had it: the vector ring runs round.'],
+            ['The VHS roll', 'A tracking band rolls down the screen over a pink ring, as a tape finding its place.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Stars come out', 'The stars appear one by one across the sky, then the lines between them are drawn.'],
+            ['Vector draw', 'The vector beam draws every link fast, then the nodes snap in.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Neon spotlight', 'The pick glows pink; the rest dims to a quarter; a hidden kind is outlined dashed in the key.'],
+            ['Night falls', 'Everything but the pick turns grey and dark, as lights going out across the city; a hidden kind is struck through.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The laser flash', 'The changed site’s ring flashes pink and its link carries a laser pulse.'],
+            ['The arcade pop', 'The changed site pops like a score, its link surges cyan.'],
+        ],
+    },
+    pastel: {
+        shape: [
+            ['Candy beads and licorice', 'Fat candy beads with a highlight, thick round licorice strings, bold labels; sticker-shadow chips.'],
+            ['The pinboard doodle', 'A dotted pad, dotted hand-drawn rings, dashed doodle links; washi-tape chips.'],
+            [
+                'The gumdrops',
+                'Soft gumdrops on a pink sheet: every site a filled pastel blob with a white sugar ring, soft links, rounded labels; the kinds as round candy buttons.',
+            ],
+        ],
+        loading: [
+            ['The beads hop', 'As character 1 had it: the bead ring hops round a bead at a time.'],
+            ['The doodle drifts', 'As character 2 had it: the dashed doodle drifts round.'],
+            ['The bouncing gumdrop', 'One fat candy dot bounces round the ring and squashes as it lands.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Beads dropped in', 'The beads drop one by one onto their strings with a little bounce.'],
+            ['Popped', 'Every site pops from a point like a bubble, the strings follow.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['The sticker', 'The pick wears a thick ink ring like a sticker; the rest fades to sugar at 35 %; a hidden kind is struck through.'],
+            ['The heart', 'The pick hops up in a pink ring; the rest stays at half; a hidden kind’s chip is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['A happy hop', 'The changed site hops twice; its string flashes pink.'],
+            ['The wobble', 'The changed site wobbles like jelly; its string is drawn again.'],
+        ],
+    },
+    terminal: {
+        shape: [
+            ['The box-drawing map', 'A framed text screen, square-capped phosphor links, dashed square-ish rings; [x] / [ ] kinds.'],
+            ['traceroute', 'Hop-dot links, inverse-video node blocks, the hub in reverse video; underlined kinds.'],
+            [
+                'The ASCII plot',
+                'Plain characters on the screen: every site an open circle in the phosphor with a + core, links in fine dotted ink, bold labels; the kinds as > prompts.',
+            ],
+        ],
+        loading: [
+            ['The text spinner', 'As character 1 had it: the dashed ring ticks round like a spinner.'],
+            ['Hops marching', 'As character 2 had it: the hop dots march round.'],
+            ['The blinking cursor', 'A block cursor blinks on the ring while it ticks a step at a time.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Printed line by line', 'The sites are printed one by one, as a command writes its output; the links come after.'],
+            ['Scrolled up', 'The whole network scrolls up into place in four steps, as a screen filling.'],
+        ],
+        focus: [
+            ['Half bright', 'As character 1 had it: the rest drops to half brightness.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Reverse video', 'The pick is drawn in reverse video; the rest dims to a quarter; a hidden kind is struck through.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The cursor blink', 'The changed site blinks three times like a cursor; its link runs a dotted packet.'],
+            ['Bold for a beat', 'The changed site’s ring and its link turn bold phosphor for a beat.'],
+        ],
+    },
+    forest: {
+        shape: [
+            ['The trail map', 'Contour rings on kraft, trail-dash links, cairn rings, a ranger station hub, serif italic labels; wooden markers.'],
+            ['The canopy', 'Thick bark twigs, leaf discs with a dark vein ring, body-face labels; leaf tags.'],
+            [
+                'The mushroom ring',
+                'A moss floor: every site a cap in its hue on a pale stem ring, links as roots in a thin root brown, serif labels; the kinds as round wooden tokens.',
+            ],
+        ],
+        loading: [
+            ['The trail walks', 'As character 1 had it: the trail dashes walk round.'],
+            ['The canopy sways', 'Character 2’s thick leaf ring, now swaying gently in the wind.'],
+            ['Fireflies', 'A few lit firefly dots drift round the clearing at different paces.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['The trail is walked', 'The trails are walked in from the station outwards, each site set down as the trail reaches it.'],
+            ['Sprouting', 'Every site grows up from the ground with a little sway, the roots follow.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['In the clearing', 'The pick stands in a sunlit ring; the rest falls back into the shade at 35 %; a hidden kind is struck through.'],
+            ['Blazed', 'The pick is blazed with a bold trail ring; the rest is mossed over in green; a hidden kind’s marker is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The rustle', 'The changed site rustles like a leaf in the wind; its trail is walked again.'],
+            ['The firefly', 'The changed site’s ring lights up in firefly yellow; its link glows.'],
+        ],
+    },
+    'high-contrast': {
+        shape: [
+            [
+                'Patterned edges, shaped nodes',
+                'Every kind its own heavy pattern, every node a different core shape, thick black rings, a 2px frame; framed kinds.',
+            ],
+            ['The ink plate', 'Black discs with a white core, heavy patterned links, a double-weight hub; framed buttons.'],
+            [
+                'The signage',
+                'Wayfinding signage: heavy square-capped links, every site a thick ring with a solid square core, bold large labels on a full halo; the kinds as heavy black tabs with white text.',
+            ],
+        ],
+        loading: [
+            ['The heavy dash', 'Character 1’s heavy dashed ring, now stepping round in clear jumps.'],
+            ['The running bar', 'Character 2’s solid ring with one heavy black bar running round it.'],
+            ['The countdown', 'A thick ring that is counted off in four hard quarters, then starts again.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Placed', 'Each site is placed in one hard step, one after another; the links are drawn in after.'],
+            ['Stamped', 'Every site is stamped down at once in two hard steps, then the links appear.'],
+        ],
+        focus: [
+            ['The yellow ring', 'As character 1 had it: the pick gets a 6px focus-yellow ring, the rest drops to 40 %.'],
+            [
+                'The yellow ring, heavier',
+                'As character 2 had it: the same focus-yellow ring on the ink plate, with the package’s dimming of the rest.',
+            ],
+            [
+                'Boxed',
+                'The pick gets a double ring (yellow inside black); the rest keeps full ink but loses its colour; a hidden kind is struck through.',
+            ],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The thick flash', 'The changed site’s ring and its link turn focus-yellow and heavy for a moment, in two hard steps.'],
+            ['The blink', 'The changed site blinks three times in full ink; its link is drawn again.'],
+        ],
+    },
+    sepia: {
+        shape: [
+            ['The family tree', 'Fine nib lines, washed ink rings, a vignette, serif italic labels; an engraved key.'],
+            ['The letterpress chart', 'Speckled paper, blind-impressed nodes, heavier ink rules, small-caps labels; printed borders.'],
+            [
+                'The old atlas',
+                'An atlas plate: links as fine dotted roads, each site a town dot in a red-ink ring, a compass rose behind the hub, serif labels; the kinds as cartouche boxes.',
+            ],
+        ],
+        loading: [
+            ['The nib draws', 'As character 1 had it: the nib draws the ring again and again.'],
+            ['The platen presses', 'Character 2’s heavy ring, now pressed in by the platen with each beat.'],
+            ['The pendulum', 'A short ink rule swings back and forth along the ring, like a clock’s pendulum.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Written by hand', 'Each link is written in with the nib, then the sites are inked one by one.'],
+            ['Printed', 'The whole plate is printed in one pressing: everything comes down at once from slightly larger.'],
+        ],
+        focus: [
+            ['Faded ink', 'As character 1 had it: the rest fades to faded sepia ink at 35 %.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Circled in red', 'The pick is circled in red ink; the rest stays at half; a hidden kind is struck through in the key.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['Re-inked', 'The changed site’s ring is inked over in dark ink, its link is written again.'],
+            ['The seal', 'The changed site is pressed like a seal and its link darkens for a moment.'],
+        ],
+    },
+    blueprint: {
+        shape: [
+            [
+                'The wiring schematic',
+                'A millimetre grid, white-ink wires, junction dots in a thin ring, an amber terminal block hub, mono capitals; a boxed legend.',
+            ],
+            ['The drafting sheet', 'A 40 px grid in a drawn frame, chain lines, dash-and-dot rings; title-block cells.'],
+            [
+                'The pin board',
+                'An electronics layout: thick trace links with square ends, every site a square pad (a ring with a square core), a dimension frame; the kinds as silk-screened labels.',
+            ],
+        ],
+        loading: [
+            ['The plotter dashes', 'As character 1 had it: the plotter dashes the ring in amber.'],
+            ['The dash marches', 'As character 2 had it: the chain line marches round.'],
+            ['The compass draws', 'A white arc is drawn round with the compass, rubbed out and drawn again.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Plotted', 'The plotter draws every wire in turn, then sets each junction dot.'],
+            ['Measured out', 'Every site is measured out from the hub along its line, and the wires follow.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Redlined', 'The pick is ringed in a redline; the rest goes faint like a back sheet; a hidden kind is struck through.'],
+            ['Callout', 'The pick gets an amber callout ring; the rest stays at half; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['Revised', 'The changed wire is drawn again and the site’s ring flashes amber, as a revision cloud.'],
+            ['The signal', 'A pulse runs down the changed wire and the site’s ring blinks.'],
+        ],
+    },
+    solstice: {
+        shape: [
+            ['The low sun', 'A glow rising from the foot, warm links, sun-lit node rings with a glow; glowing chips.'],
+            ['The embers', 'Coal-dash links, hot warning rims, the fire as the hub; ember chips.'],
+            [
+                'The sundial',
+                'A sundial’s face: every site a gnomon dot on a fine bronze ring, links as hour lines, the hub a heavy bronze disc; the kinds as bronze plates.',
+            ],
+        ],
+        loading: [
+            ['A dawn rises', 'Character 1’s sun ring, now rising and settling like a slow dawn.'],
+            ['The embers glow', 'Character 2’s ember ring, now flickering as coals do.'],
+            ['The shadow turns', 'A gnomon’s shadow turns round the ring, as the sun crosses the sky.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Sunrise', 'The network rises from below the horizon into place; the links are lit as the sun reaches them.'],
+            ['Kindled', 'Every site is lit like a flame, flickering on; the links catch after.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['In the sun', 'The pick is lit by the sun with a warm glow; the rest falls into the evening at 30 %; a hidden kind is struck through.'],
+            ['The hot coal', 'The pick glows red-hot; the rest cools to grey ash; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['A flare', 'The changed site flares in the sun’s colour and its link glows for a moment.'],
+            ['A spark', 'The changed site jumps like a spark from the fire; its link flickers.'],
+        ],
+    },
+    brutalism: {
+        shape: [
+            ['Slabs and heavy lines', '4px square-capped links, 4px black rings with a hard shadow, heavy capitals; black-bordered blocks.'],
+            ['The sticker sheet', 'A lavender sheet, fat hue-filled stickers in black outline, heavy black links; askew sticker kinds.'],
+            [
+                'The poster grid',
+                'A raw poster: a thick black frame, links as heavy black rules, every site a solid square-cut block in its hue, black capitals on yellow; the kinds as flat colour slabs.',
+            ],
+        ],
+        loading: [
+            ['The slab stamps', 'As character 1 had it: the heavy slab ring stamps round in three hard steps.'],
+            ['The stickers drop', 'Character 2’s heavy ring, dropped onto the sheet again and again.'],
+            ['The jackhammer', 'A thick black ring that shakes in hard jolts, as a jackhammer at work.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Slammed down', 'Every site is slammed down from above with a hard stop, one after another.'],
+            ['Stamped', 'The sites are stamped on in two hard steps, the heavy rules after.'],
+        ],
+        focus: [
+            ['The yellow pick', 'As character 1 had it: the pick is filled yellow with a 6px black ring.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            [
+                'Crossed out',
+                'The pick keeps full colour in a heavy ring; the rest is greyed hard; a hidden kind is struck through with a thick line.',
+            ],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The shake', 'The changed site shakes hard, its rule thickens for a moment.'],
+            ['The stamp', 'The changed site is stamped again from larger and its rule flashes yellow.'],
+        ],
+    },
+    deco: {
+        shape: [
+            ['Gilt rays', 'A lacquer sunburst in a double gold frame, fine gold rays, gold-framed medallions; gold plaques.'],
+            ['The marquee', 'Every link a row of bulbs, nodes ringed in bulbs, display capitals; marquee plaques.'],
+            [
+                'The fan',
+                'A gilded fan motif: links as triple fine gold lines, each site a stepped ziggurat ring (gold over black), tracked capitals; the kinds as stepped plaques.',
+            ],
+        ],
+        loading: [
+            ['A glint runs the gold', 'As character 1 had it: a gold glint runs round the ring.'],
+            ['The bulbs chase', 'As character 2 had it: the bulbs chase round.'],
+            ['The spotlight', 'A gold spotlight beam sweeps the stage while the ring of gold steps round.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Curtain up', 'The network rises like a curtain, then the gold rays are drawn from the hub.'],
+            ['The lights come up', 'The bulbs of each site light one after another, the rays light after.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['In the spotlight', 'The pick is lit in a gold spotlight; the rest goes dark at 30 %; a hidden kind is struck through.'],
+            ['Gold-framed', 'The pick gets a double gold frame; the rest loses its colour; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The glint', 'A glint of gold runs down the changed ray and the site’s ring flashes gold.'],
+            ['The bulb flash', 'The changed site flashes on and off like a marquee bulb; its ray thickens.'],
+        ],
+    },
+    phantom: {
+        shape: [
+            ['Stamped tags and string', 'White card, red string, stamped ring tags, slanted capitals; askew ransom chips.'],
+            ['The calling card', 'Black cards under a halftone, a red slash ring, white links; slanted card kinds.'],
+            [
+                'The ransom note',
+                'Cut-out letters on black: every site a white disc with a heavy black ring, links in red and black, mixed-weight capitals; the kinds as cut-out blocks.',
+            ],
+        ],
+        loading: [
+            ['The stamp beats', 'As character 1 had it: the red stamp ring beats on and off.'],
+            ['The halftone shuffles', 'As character 2 had it: the red dashes shuffle round.'],
+            ['The calling-card spin', 'A red slash cuts round the ring in hard jumps while the halftone slides.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Pinned up', 'Each tag is pinned on with a jolt, slightly askew, one after another; the strings are pulled taut after.'],
+            ['All-out attack', 'Every site slashes in from the side at once, the links cut in behind.'],
+        ],
+        focus: [
+            ['The board goes grey', 'As character 1 had it: everything not picked turns grey.'],
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['The target', 'The pick gets a red target ring; the rest goes dark; a hidden kind is struck through like a struck name.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The slash', 'The changed site is slashed sideways in a jolt; its string snaps red.'],
+            ['The calling card', 'The changed site’s ring flashes red three times; its string is pulled again.'],
+        ],
+    },
+    'shade-light': {
+        shape: [
+            ['Pencil in the shade', 'Hatched paper, soft pencil links, lifted discs with a pencil rim; lifted paper chips.'],
+            ['The leaf shade', 'Dappled shade over the sheet, soft links, a sunny hub rim; plain chips.'],
+            [
+                'The paper lantern',
+                'Translucent paper lanterns: every site a pale disc with a warm inner glow and a fine rim, links as thin cords, body-face labels; the kinds as paper slips.',
+            ],
+        ],
+        loading: [
+            ['The sketch hatches', 'Character 1’s soft pencil ring, now hatched round stroke by stroke.'],
+            ['A cloud’s shade passes', 'Character 2’s wide shaded ring, with a cloud’s shadow passing slowly over the sheet.'],
+            ['The pencil circles', 'The pencil goes round and round, a short grey stroke circling the ring.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Sketched', 'Each link is sketched in with the pencil, the discs are laid on after.'],
+            ['Out of the shade', 'The sites step out of the shade into place, from slightly smaller, one after another.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Lifted into the light', 'The pick lifts on a deeper shadow; the rest sinks into the shade at 40 %; a hidden kind is struck through.'],
+            ['The sunny spot', 'The pick stands in a warm sunny ring; the rest is shaded grey; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['A sunbeam', 'A warm light crosses the changed site’s ring and its link.'],
+            ['Retraced', 'The changed link is retraced in pencil; the site lifts a little and settles.'],
+        ],
+    },
+    'shade-dark': {
+        shape: [
+            ['Silverpoint', 'Silver hairlines, silver rings over a dark core; silver hairline chips.'],
+            ['The reading lamp', 'A warm pool behind the hub, warm links and rims; plain chips.'],
+            [
+                'Moonlit',
+                'A blue-grey night: every site a moon disc (a pale ring with a crescent core), links as fine pale lines, labels on the dark; the kinds as pale outlined tags.',
+            ],
+        ],
+        loading: [
+            ['The silver hatches', 'Character 1’s fine silver ring, now drawn round stroke by stroke.'],
+            ['The pool breathes', 'Character 2’s warm pool ring, now breathing slowly.'],
+            ['The moth', 'A small silver mark circles the lamp’s ring, quick and unsteady.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Drawn in silver', 'Each silver line is drawn in, then the rings are set on them.'],
+            ['The lamp comes on', 'The sites switch on from the hub outwards, as a lamp lighting the desk.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Under the lamp', 'The pick is lit warm under the lamp; the rest falls into the dark at 30 %; a hidden kind is struck through.'],
+            ['The silver ring', 'The pick gets a bright silver ring; the rest goes grey; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The warm flicker', 'The changed site’s ring flickers warm like a lamp; its link glows.'],
+            ['Silver retraced', 'The changed link is drawn again in silver, the site blinks once.'],
+        ],
+    },
+    retro: {
+        shape: [
+            ['The 1995 network diagram', 'A sunken white well, one-pixel links, bevelled grey discs; raised kind buttons that sink when off.'],
+            ['The paint program', 'Flat filled discs in a black outline, solid primary links; tool-button kinds.'],
+            [
+                'The dialog box',
+                'A window in a title bar: links as dotted one-pixel lines, every site an icon square (a ring cut square, a hue core), pixel-face labels; the kinds as check boxes.',
+            ],
+        ],
+        loading: [
+            ['The hourglass dither', 'Character 1’s dithered ring, now stepping round like the hourglass cursor.'],
+            ['Marching ants', 'Character 2’s dashed ring as a selection: the marching ants.'],
+            ['The progress blocks', 'Blue blocks fill the ring one by one, as the setup program’s progress bar.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Painted in', 'Every site is painted in one click after another, the lines drawn in one-pixel steps.'],
+            ['The window opens', 'The network zooms out of the middle in outline steps, as a window opening.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Selected', 'The pick gets the selection blue ring; the rest turns grey as disabled items do; a hidden kind is struck through.'],
+            ['Inverted', 'The pick is drawn in an inverted heavy ring; the rest stays at 40 %; a hidden kind’s button gets a dotted focus outline.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['Repainted', 'The changed site blinks three times like an icon being repainted; its line flashes blue.'],
+            ['The marching ants', 'The changed link carries the marching ants for a moment and the site’s ring turns blue.'],
+        ],
+    },
+    grotesk: {
+        shape: [
+            ['The transit map', '5px round-capped coloured lines, white interchange rings, bold labels; flat colour bars.'],
+            ['The Swiss grid', 'Hairline links, solid black discs, a red hub, bold labels flush beside them; boxed bold kinds.'],
+            [
+                'The Bauhaus primer',
+                'Primary geometry: links as straight black rules, every site a flat disc in red, blue or yellow with no ring, the hub a black square; the kinds as flat primary blocks.',
+            ],
+        ],
+        loading: [
+            ['A line runs', 'As character 1 had it: a coloured line runs round.'],
+            ['Three blocks cut in', 'As character 2 had it: three black blocks cut round in steps.'],
+            ['The rotating square', 'A heavy red quarter turns round the ring in four exact steps, like a Swiss clock.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Lines laid', 'The lines are laid one after the other, then the stations are set down on them.'],
+            ['The grid snaps', 'Every site slides in on its axis and snaps into the grid.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Red pick', 'The pick takes a red ring; the rest drops to 25 %; a hidden kind is struck through.'],
+            ['Black frame', 'The pick takes a square black frame; the rest loses its colour; a hidden kind’s bar gets a dashed outline.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The train passes', 'A train runs along the changed line and the station’s ring flashes red.'],
+            ['Re-set', 'The changed station pops and its line is laid again.'],
+        ],
+    },
+    lapis: {
+        shape: [
+            ['The girih lattice', 'A girih lattice on lapis in a double gold frame, gold lattice links, gold-ringed medallions; gold-framed tiles.'],
+            ['Lapis on vellum', 'Ivory vellum, lapis ink links, gold-rimmed lapis dots, serif italic labels; gold-framed chips.'],
+            [
+                'The star tile',
+                'An eight-pointed star tile: every site a star-cut medallion in gold with a lapis core, links in gold, display labels; the kinds as eight-cornered tiles.',
+            ],
+        ],
+        loading: [
+            ['A glint runs the frame', 'As character 1 had it: a gold glint runs round.'],
+            ['The burnisher', 'Character 2’s lapis ring, now polished round by the burnisher’s glint.'],
+            ['The tile is laid', 'The ring is laid tile by tile in gold, then cleared and laid again.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Inlaid', 'Every gold line is inlaid from the hub outwards, then the medallions are set.'],
+            ['The pattern turns', 'The whole pattern turns into place round the hub, as a lattice settling.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Gilded', 'The pick is gilded with a gold glow; the rest goes dim at 30 %; a hidden kind is struck through.'],
+            ['Framed in gold', 'The pick gets a double gold frame; the rest loses its colour; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The gold glint', 'A glint runs down the changed gold line and the medallion flashes.'],
+            ['The medallion turns', 'The changed medallion turns once and its line shines brighter.'],
+        ],
+    },
+    nostromo: {
+        shape: [
+            ['The CRT radar', 'A green-black CRT in the beige bezel under scanlines, phosphor traces and blips; phosphor tabs.'],
+            ['The indicator panel', 'Embossed links, lit indicator lamps in a thick bezel, label-tape kinds.'],
+            [
+                'The vector monitor',
+                'An amber vector monitor: every site a hollow amber diamond-cut ring, links as thin amber vectors, mono capitals in amber; the kinds as amber bracket tabs.',
+            ],
+        ],
+        loading: [
+            ['The radar sweep', 'As character 1 had it: a radar sweep turns over the picture and the blip ring waits.'],
+            ['The lamps scan', 'As character 2 had it: the lamps scan round.'],
+            ['MOTHER computes', 'A row of block characters fills the ring and is wiped, as MOTHER answering.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Blips acquired', 'The blips light one by one as the sweep finds them, the traces after.'],
+            ['Switched on', 'The panel switches on: every lamp blinks on at once, the lines light after.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Target locked', 'The pick gets a bright phosphor lock ring; the rest drops to a dim trace; a hidden kind is struck through.'],
+            ['The warning lamp', 'The pick is ringed in the warning amber; the rest is greyed; a hidden kind is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The ping', 'The changed blip pings bright and its trace carries a pulse.'],
+            ['The lamp blinks', 'The changed lamp blinks three times and its line lights amber.'],
+        ],
+    },
+    titanium: {
+        shape: [
+            ['The milled plate', 'A brushed plate, engraved links, knurled (dotted) rings, a blue heat-tint hub, instrument mono; machined tabs.'],
+            ['The instrument dial', 'Recessed apertures ringed in their anodised hue, a knurled hub ring, fine links; round chips.'],
+            [
+                'The anodised parts',
+                'Anodised parts on a bead-blasted plate: each site a thick ring in its anodised hue with a bright machined core, links as fine laser-etched lines, mono labels; the kinds as anodised pills.',
+            ],
+        ],
+        loading: [
+            ['The cutter runs', 'As character 1 had it: the cutter runs round the ring.'],
+            ['The knurl rolls', 'As character 2 had it: the knurled ring rolls.'],
+            ['The lathe', 'A bright chip of metal is turned off the ring, spinning fast, with a blue heat-tint.'],
+        ],
+        arrival: [
+            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
+            ['Machined in', 'Every link is cut by the cutter in one pass, then each part is pressed into its seat.'],
+            ['Dialled in', 'The parts turn into place like a dial being set, the links etched after.'],
+        ],
+        focus: [
+            [
+                'The package’s dimming',
+                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
+            ],
+            ['Heat-tinted', 'The pick takes a blue heat-tint ring; the rest is brushed grey; a hidden kind is struck through.'],
+            ['Engraved mark', 'The pick gets a fine engraved double ring; the rest stays at half; a hidden kind’s pill is outlined dashed.'],
+        ],
+        live: [
+            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
+            ['The glint', 'A bright glint runs along the changed link and the part’s ring flashes blue.'],
+            ['The click', 'The changed part clicks a notch round, like a dial; its link is etched again.'],
+        ],
+    },
 };
 
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
+const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="graph"]'));
 
 /* ------------------------------------------------- the review kit's text */
 
 // Read by ../_review/review.js when it loads, which is after this module:
-// one choice per theme, the two characters' names and parts as its hints.
-const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="graph"]'));
-const hints = (/** @type {'a' | 'b'} */ which) =>
-    Object.fromEntries(Object.entries(IDEAS).map(([theme, t]) => [theme, `${t[which].name}. ${t[which].text}`]));
+// five choices per theme, each option's name and what it does as its hint.
+// Nothing is ticked for the reviewer.
+const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
+    Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at][0]}. ${idea[aspect][at][1]}`]));
 section.setAttribute(
     'data-review-choices',
-    JSON.stringify([
-        {
-            id: 'graph',
-            label: 'The network graph for this theme',
-            options: [
-                { value: 'a', label: 'Character 1', hints: hints('a') },
-                { value: 'b', label: 'Character 2', hints: hints('b') },
-                {
-                    value: 'plain',
-                    label: 'The plain graph, as today',
-                    hint: 'Keep the package graph in this theme: the same shape as everywhere, in the theme’s colours.',
-                },
-            ],
-        },
-    ]),
+    JSON.stringify(
+        ASPECTS.map(({ id, label }) => ({
+            id,
+            label,
+            options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+        })),
+    ),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-const lower = (/** @type {string} */ name) => name.replace(/^(The|A) /, (m) => m.toLowerCase());
-for (const [theme, t] of Object.entries(IDEAS)) {
+for (const [theme, idea] of Object.entries(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
     p.textContent =
-        `Character 1 is ${lower(t.a.name)}, character 2 ${lower(t.b.name)}; the third column is the plain graph of today. ` +
-        'Look at the paper, the nodes, the hub, the links of each kind, the labels and the kinds above, then hover a node: the rest dims. ' +
-        'Press Loading, Nothing to draw and Could not read: the picture keeps its height. Try fifteen long names, size by flow, the live update, pick a node and hide a kind.';
+        `Five picks, each on its own. Shape 1 is ${idea.shape[0][0].replace(/^The /, 'the ')}, shape 2 ${idea.shape[1][0].replace(/^The /, 'the ')}, shape 3 ${idea.shape[2][0].replace(/^The /, 'the ')}. ` +
+        'Each row changes one thing only; the combination at the top shows what you ticked so far. ' +
+        'Press Drawn, Loading and Live update at full speed and at ¼; try fifteen long names and size by flow: the pictures keep their height.';
     look.append(p);
 }
+
+/* ------------------------------------------------ the rows of options */
+
+const rows = /** @type {HTMLElement} */ (section.querySelector('[data-gr-aspects]'));
+for (const { id, label, about } of ASPECTS) {
+    const box = document.createElement('section');
+    box.className = 'gr-aspect';
+    box.setAttribute('data-gr-aspect', id);
+    box.setAttribute('aria-labelledby', `h-gr-${id}`);
+    const head = document.createElement('div');
+    head.className = 'gr-aspect__head';
+    head.innerHTML = `<h3 id="h-gr-${id}"></h3><p></p>`;
+    /** @type {HTMLElement} */ (head.firstElementChild).textContent = label;
+    /** @type {HTMLElement} */ (head.lastElementChild).textContent = about;
+    const trio = document.createElement('div');
+    trio.className = 'gr-trio';
+    for (const at of [1, 2, 3]) {
+        const cell = document.createElement('div');
+        cell.className = 'gr-col';
+        cell.setAttribute('data-gr-vary', id);
+        cell.setAttribute('data-gr-option', String(at));
+        cell.innerHTML =
+            `<p class="gr-label"><span class="gr-label__no">${label} · ${at}</span> <span data-gr-name></span></p>` +
+            '<p class="gr-desc" data-gr-desc></p>' +
+            `<div class="gr-graph" data-cg><figure class="kp-graph" data-kp-graph data-kp-key="network-${id}-${at}"></figure></div>`;
+        cell.querySelector('figure')?.setAttribute('aria-label', `The northern network, ${label.toLowerCase()} ${at}`);
+        trio.append(cell);
+    }
+    box.append(head, trio);
+    rows.append(box);
+}
+
+/* ------------------------------------------------------- the picks */
+
+/** What is ticked in the dialog, per theme; an aspect not ticked yet shows its option 1. */
+/** @type {Record<string, Partial<Record<Aspect, string>>>} */
+const ticked = {};
+const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
+const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+
+/** Writes the five aspects on every wrapper: the preview takes the picks, each row's cell its own option in its own aspect. */
+function compose() {
+    const now = picks();
+    const preview = section.querySelector('[data-gr-preview]');
+    for (const { id } of ASPECTS) preview?.setAttribute(`data-cg-${id}`, now[id]);
+    for (const cell of section.querySelectorAll('[data-gr-vary]')) {
+        const vary = /** @type {Aspect} */ (cell.getAttribute('data-gr-vary'));
+        const option = cell.getAttribute('data-gr-option') ?? '1';
+        const wrap = cell.querySelector('[data-cg]');
+        for (const { id } of ASPECTS) wrap?.setAttribute(`data-cg-${id}`, id === vary ? option : now[id]);
+        cell.classList.toggle('gr-picked', ticked[theme()]?.[vary] === option);
+    }
+    const words = section.querySelector('[data-gr-picks]');
+    const idea = IDEAS[theme()];
+    if (words && idea)
+        words.textContent = ASPECTS.map(
+            ({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1][0]}${ticked[theme()]?.[id] ? '' : ' (not ticked yet)'}`,
+        ).join(' · ');
+}
+
+// What is ticked in the review dialog is what the preview shows.
+section.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent<{ id: Aspect, value: string }>} */ (event).detail;
+    (ticked[theme()] ??= {})[id] = value;
+    compose();
+});
 
 /* ---------------------------------------------------------- the network */
 
@@ -208,6 +922,9 @@ const KINDS = [
     { kind: 'planned', label: 'Planned', hint: 'A link that is ordered but not live yet', style: 'long-dash', colour: 'var(--muted-foreground)' },
 ];
 
+/** The sites a live update changes, one per press, each with a telemetry link to the hub. */
+const CHANGING = ['ph4', 'ph1', 'north', 'ph3', 'plant', 'ph2', 'south', 'ph5'];
+
 /** @param {{ weights: boolean, tick: number }} o @returns {import('../../js/graph.js').GraphData} */
 function network({ weights, tick }) {
     const sites = [
@@ -221,21 +938,31 @@ function network({ weights, tick }) {
         ['south', 'Reservoir South', 'level sensor and an inlet valve'],
         ['plant', 'Treatment plant', 'where the water comes from'],
     ];
+    const changed = tick ? CHANGING[(tick - 1) % CHANGING.length] : '';
     return {
         nodes: [
             { id: 'centre', label: 'Control centre', description: 'where every reading arrives', weight: weights ? 1 : null },
             ...sites.map(([id, label, description], i) => ({
                 id,
                 label,
-                description: id === 'ph5' ? `${description}; its settings on site differ from the plan` : description,
+                description:
+                    (id === 'ph5' ? `${description}; its settings on site differ from the plan` : description) +
+                    (id === changed ? `; ${120 + tick * 7} m³ an hour now` : ''),
                 flag: id === 'ph5' ? /** @type {const} */ ('mismatch') : null,
-                weight: weights ? ((i * 37 + tick * 13) % 100) / 100 : null,
+                weight: weights ? ((i * 37 + (id === changed ? tick * 29 : 0)) % 100) / 100 : null,
             })),
             { id: 'weather', label: 'Weather service', description: 'an address outside the network', external: true },
             { id: 'energy', label: 'Energy supplier', description: 'an address outside the network', external: true },
         ],
         edges: [
-            ...sites.filter(([id]) => id !== 'ph6').map(([id]) => ({ from: id, to: 'centre', kind: 'telemetry', detail: 'readings every minute' })),
+            ...sites
+                .filter(([id]) => id !== 'ph6')
+                .map(([id]) => ({
+                    from: id,
+                    to: 'centre',
+                    kind: 'telemetry',
+                    detail: id === changed ? `readings every minute, ${tick} new` : 'readings every minute',
+                })),
             { from: 'centre', to: 'ph1', kind: 'control', detail: 'pump start and stop' },
             { from: 'centre', to: 'ph3', kind: 'control', detail: 'pump start and stop, valve' },
             { from: 'centre', to: 'plant', kind: 'control', detail: 'intake rate' },
@@ -243,15 +970,15 @@ function network({ weights, tick }) {
             { from: 'ph4', to: 'centre', kind: 'radio', detail: 'spare path' },
             { from: 'centre', to: 'ph6', kind: 'planned', detail: 'fibre ordered' },
             { from: 'centre', to: 'energy', kind: 'planned', detail: 'tariff feed ordered' },
-            { from: 'weather', to: 'centre', kind: 'telemetry', detail: tick % 2 ? 'rain radar every 5 min' : 'rain radar every 10 min' },
+            { from: 'weather', to: 'centre', kind: 'telemetry', detail: 'rain radar every 10 min' },
         ],
         kinds: KINDS,
         hub: 'centre',
     };
 }
 
-/** @param {{ weights: boolean }} o @returns {import('../../js/graph.js').GraphData} */
-function longNetwork({ weights }) {
+/** @param {{ weights: boolean, tick: number }} o @returns {import('../../js/graph.js').GraphData} */
+function longNetwork({ weights, tick }) {
     const names = [
         'Booster site A',
         'Booster site B',
@@ -268,18 +995,37 @@ function longNetwork({ weights }) {
         'Booster site M',
         'Booster site N',
     ];
-    const edges = names.map((_, i) => ({ from: `n${i}`, to: 'hub', kind: i % 4 === 3 ? 'radio' : 'telemetry' }));
-    edges.push({ from: 'hub', to: 'n2', kind: 'control' }, { from: 'hub', to: 'n2', kind: 'planned' });
+    const changed = tick ? (tick * 5) % names.length : -1;
+    const edges = names.map((_, i) => ({
+        from: `n${i}`,
+        to: 'hub',
+        kind: i % 4 === 3 ? 'radio' : 'telemetry',
+        detail: i === changed ? `${tick} new` : '',
+    }));
+    edges.push({ from: 'hub', to: 'n2', kind: 'control', detail: '' }, { from: 'hub', to: 'n2', kind: 'planned', detail: '' });
     return {
         nodes: [
             { id: 'hub', label: 'Control centre', description: 'where every reading arrives' },
-            ...names.map((label, i) => ({ id: `n${i}`, label, description: `site ${i + 1}`, weight: weights ? (i % 5) / 4 : null })),
+            ...names.map((label, i) => ({
+                id: `n${i}`,
+                label,
+                description: i === changed ? `site ${i + 1}, ${tick} new readings` : `site ${i + 1}`,
+                weight: weights ? ((i + (i === changed ? tick : 0)) % 5) / 4 : null,
+            })),
         ],
         edges,
         kinds: KINDS,
         hub: 'hub',
     };
 }
+
+/** The site and its link to the hub that the last live update changed. */
+const changedNow = () =>
+    state.tick === 0
+        ? null
+        : state.long
+          ? { node: `n${(state.tick * 5) % 14}`, hub: 'hub' }
+          : { node: CHANGING[(state.tick - 1) % CHANGING.length], hub: 'centre' };
 
 const WORDS = {
     loading: 'Reading the network: 4 of 12 sites answered.',
@@ -288,6 +1034,8 @@ const WORDS = {
 };
 
 const graphs = () => /** @type {HTMLElement[]} */ ([...section.querySelectorAll('[data-kp-graph]')]);
+/** The focus row always shows a pick and a hidden kind, whatever the buttons say. */
+const inFocusRow = (/** @type {Element} */ el) => el.closest('[data-gr-vary="focus"]') !== null;
 
 const state = {
     shown: /** @type {'ready' | 'loading' | 'empty' | 'error'} */ ('ready'),
@@ -298,14 +1046,28 @@ const state = {
     tick: 0,
 };
 
-function draw() {
+/** Marks the site and the link a live update changed, on a graph just drawn. @param {HTMLElement} el */
+function markChanged(el) {
+    const changed = changedNow();
+    if (!changed) return;
+    el.querySelector(`.kp-graph__node[data-kp-id="${changed.node}"]`)?.setAttribute('data-cg-changed', '');
+    el.querySelector(`.kp-graph__edge[data-kp-from="${changed.node}"][data-kp-to="${changed.hub}"]`)?.setAttribute('data-cg-changed', '');
+}
+
+/** @param {'arrive' | 'live'} moment */
+function draw(moment = 'arrive') {
     for (const el of graphs()) {
-        if (state.shown !== 'ready') setGraphState(el, state.shown, WORDS[state.shown]);
-        else {
-            setGraphData(el, state.long ? longNetwork(state) : network(state));
-            graphSelect(el, state.pick ? [state.long ? 'n2' : 'ph3'] : []);
-            graphHideKind(el, 'telemetry', state.hide);
+        el.setAttribute('data-cg-moment', moment);
+        if (state.shown !== 'ready') {
+            setGraphState(el, state.shown, WORDS[state.shown]);
+            continue;
         }
+        setGraphData(el, state.long ? longNetwork(state) : network(state));
+        const focusRow = inFocusRow(el);
+        graphSelect(el, state.pick || focusRow ? [state.long ? 'n2' : 'ph3'] : []);
+        graphHideKind(el, 'telemetry', state.hide && !focusRow);
+        graphHideKind(el, 'radio', focusRow);
+        if (moment === 'live') markChanged(el);
     }
 }
 
@@ -313,6 +1075,7 @@ const pressed = (/** @type {string} */ attr, /** @type {string} */ value) => {
     for (const b of section.querySelectorAll(`[${attr}]`)) b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value));
 };
 
+// Drawn always replays the arrival: the network is handed over again.
 for (const b of section.querySelectorAll('[data-gr-state]'))
     b.addEventListener('click', () => {
         state.shown = /** @type {typeof state.shown} */ (b.getAttribute('data-gr-state') ?? 'ready');
@@ -320,14 +1083,15 @@ for (const b of section.querySelectorAll('[data-gr-state]'))
         draw();
     });
 
-// A live update: the same network with new numbers (the weather feed's
-// rate, and the flows when sized by flow), handed over in one
-// setGraphData(); ids that stay keep their pick and the focus.
+// A live update: the same network with new numbers for one site (its
+// description and its link's detail, and its flow when sized by flow),
+// handed over in one setGraphData(); ids that stay keep their pick and the
+// focus. A different site changes on each press.
 section.querySelector('[data-gr-live]')?.addEventListener('click', () => {
     state.tick += 1;
     state.shown = 'ready';
     pressed('data-gr-state', 'ready');
-    for (const el of graphs()) setGraphData(el, state.long ? longNetwork(state) : network(state));
+    draw('live');
 });
 
 for (const b of section.querySelectorAll('[data-gr-toggle]'))
@@ -335,7 +1099,13 @@ for (const b of section.querySelectorAll('[data-gr-toggle]'))
         const what = /** @type {'long' | 'weights' | 'pick' | 'hide'} */ (b.getAttribute('data-gr-toggle'));
         state[what] = !state[what];
         b.setAttribute('aria-pressed', String(state[what]));
-        if (state.shown === 'ready') draw();
+        if (state.shown !== 'ready') return;
+        if (what === 'long' || what === 'weights') return draw();
+        for (const el of graphs()) {
+            if (inFocusRow(el)) continue;
+            if (what === 'pick') graphSelect(el, state.pick ? [state.long ? 'n2' : 'ph3'] : []);
+            else graphHideKind(el, 'telemetry', state.hide);
+        }
     });
 
 const log = section.querySelector('[data-gr-log]');
@@ -352,25 +1122,29 @@ section.addEventListener(GRAPH_CHANGE_EVENT, (event) => {
 });
 
 attachGraphs(section);
+compose();
 draw();
 
 /* ------------------------------------------------- the theme's words */
 
 function showTheme() {
-    const theme = document.documentElement.getAttribute('data-theme') ?? 'formal';
-    for (const el of document.querySelectorAll('[data-gr-theme-name]')) el.textContent = LABEL[theme] ?? theme;
+    const now = theme();
+    for (const el of document.querySelectorAll('[data-gr-theme-name]')) el.textContent = LABEL[now] ?? now;
     // On the page, only this theme's look-at line; the dialog reads them all.
-    for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== theme;
-    const t = IDEAS[theme];
-    for (const which of /** @type {const} */ (['a', 'b'])) {
-        const name = document.querySelector(`[data-gr-name="${which}"]`);
-        const desc = document.querySelector(`[data-gr-desc="${which}"]`);
-        if (name) name.textContent = t ? t[which].name : '';
-        if (desc) desc.textContent = t ? t[which].text : '';
+    for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== now;
+    const idea = IDEAS[now];
+    for (const cell of section.querySelectorAll('[data-gr-vary]')) {
+        const option = idea?.[/** @type {Aspect} */ (cell.getAttribute('data-gr-vary'))]?.[Number(cell.getAttribute('data-gr-option')) - 1];
+        const name = cell.querySelector('[data-gr-name]');
+        const desc = cell.querySelector('[data-gr-desc]');
+        if (name) name.textContent = option?.[0] ?? '';
+        if (desc) desc.textContent = option?.[1] ?? '';
     }
+    compose();
 }
 showTheme();
 new MutationObserver(showTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
 /* ------------------------------------------------------------- speed */
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -410,15 +1184,3 @@ for (const b of speedButtons)
         showSpeed();
     });
 showSpeed();
-
-/* ----------------------------------------------------- the pick shown */
-
-// What is ticked in the review dialog is what the page marks.
-section.addEventListener('review:choice', (event) => {
-    const { value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
-    for (const col of section.querySelectorAll('[data-gr-pick]')) col.classList.toggle('gr-picked', col.getAttribute('data-gr-pick') === value);
-});
-new MutationObserver(() => {
-    // A pick for one theme says nothing about the next.
-    for (const col of document.querySelectorAll('.gr-picked')) col.classList.remove('gr-picked');
-}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

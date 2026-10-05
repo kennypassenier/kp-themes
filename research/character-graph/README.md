@@ -14,35 +14,63 @@ settings differ from the plan a dotted warning ring, the links drawn by kind
 (a colour and a dash each), labels pointing away from the hub on a halo in
 the page's colour, the kinds as pills above the picture with Show all, a
 hover or a pick dimming everything else, and a pulsing ellipse while it
-loads. This demo gives every theme two graphs drawn in its own world, beside
-the plain graph of today.
+loads. Round 1 gave every theme two graphs drawn in its own world, beside
+the plain graph of today; round 2 splits them into aspects (below).
 
-## Files
+## Structure (round 2: one pick per aspect)
+
+Kenny, 2026-10-05 20:03: every demo gets separate options per aspect, like
+the meter (`research/character-meter`), "and it should be like this in the
+future". Nothing is bundled any more: per theme the graph has five aspects,
+each picked on its own from three options, and any combination composes.
+
+| Aspect                              | Attribute         | Options                                                                                                                                                                   |
+| ----------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shape                               | `data-cg-shape`   | 1 and 2: round 1's two characters; 3: new                                                                                                                                 |
+| While loading                       | `data-cg-loading` | 1 and 2: round 1's loading pictures, now always moving and never a fade (the still ones were given motion, the opacity pulses became a breath, a sway or a stamp); 3: new |
+| How the network arrives             | `data-cg-arrival` | 1: at once, as both characters had it; 2 and 3: new                                                                                                                       |
+| The picked node and the hidden kind | `data-cg-focus`   | 1 and 2: round 1's where the characters differed, else 1 is the package's own dimming; the rest new                                                                       |
+| Live update                         | `data-cg-live`    | 1: in place, as both characters had it; 2 and 3: new                                                                                                                      |
 
 - `demo.html`: one section judged per theme with the review kit
-  (`../_review/review.js`): one choice per theme, "Character 1",
-  "Character 2" or "The plain graph, as today", each character's name and
-  parts as the option's hint. The controls sit inside the section, so they
-  travel into the review dialog: State (Drawn, Loading, Nothing to draw,
-  Could not read, and a live update that hands over the same network with new
-  numbers), Network (fifteen long names, size by flow, pick a node, hide a
-  kind), and the speed of every animation.
-- `graphs.css`: the 44 characters, in `@layer kp.signature`, scoped
-  `[data-theme='<name>'] [data-gr='a'|'b']`. In a register the same rules read
-  `[data-theme='<name>'] .kp-graph`. The contract and the shared knobs
-  (`--gr-paper`, `--gr-pat`, `--gr-under`, `--gr-over`, `--gr-frame`,
-  `--gr-edge-*`, `--gr-ring*`, `--gr-core*`, `--gr-hub*`, `--gr-ext*`,
-  `--gr-label`, `--gr-halo`, `--gr-font`, `--gr-chip-*`, `--gr-skel-*`, …)
-  are at the top of the file; every loop is in one
-  `prefers-reduced-motion: no-preference` block near the end, and only the
-  loading picture (and nostromo 1's radar sweep) ever moves.
-- `demo.js`: the names and descriptions (`IDEAS`), the review choices and
-  look-at lines built from them, the network (the catalogue's northern water
-  network and its fifteen-long-name variant), the states driven through the
-  package's own API (`setGraphData()`, `setGraphState()`, `graphSelect()`,
-  `graphHideKind()`), the `kp-graph-change` line, the speed control.
-- `demo.css`: the page layout only; the three columns share their rows (a
-  subgrid), so the three pictures start on one line.
+  (`../_review/review.js`): five choices per theme, one per aspect, each
+  option's name and what it does as its hint; nothing is ticked for the
+  reviewer. The controls sit in the section's `data-review-controls`
+  container, so they travel into the review dialog: State (Drawn, which
+  replays the arrival; Loading; Nothing to draw; Could not read; Live update,
+  which hands over new numbers for one site, a different one on each press),
+  Network (fifteen long names, size by flow, pick a node, hide a kind), and
+  the speed of every animation. At the top "Your combination" composes the
+  ticked options (an aspect not ticked yet shows its option 1, and says so);
+  below it one row per aspect of three graphs that differ in that aspect only,
+  the others as ticked. In the focus row Pump house 3 is always picked and the
+  radio links always hidden. The plain graph of today follows below the rows
+  for reference, not as an option. `data-review-round` "2026-10-05-r2"
+  reopens all 22 pairs.
+- `graphs.css`: in `@layer kp.signature`, ordered by aspect, then theme, then
+  option; every rule names one aspect only
+  (`[data-theme='<name>'] [data-cg-<aspect>='<n>'] …`), so no rule assumes a
+  shape with a loading picture. A shape sets the drawing knobs (`--gr-paper`,
+  `--gr-pat`, `--gr-under`, `--gr-over`, `--gr-frame`, `--gr-edge-*`,
+  `--gr-ring*`, `--gr-core*`, `--gr-hub*`, `--gr-ext*`, `--gr-label`,
+  `--gr-halo`, `--gr-font`, `--gr-chip-*`), a loading picture `--gr-skel*`
+  and `--gr-load-over*`, a focus `--gr-pick*`, `--gr-node-dim`, `--gr-dim*`
+  and `--gr-off-*`, an arrival `--gr-arr-*`, `--gr-stagger`, `--gr-estagger`,
+  `--gr-node-at`, `--gr-edge-at`, a live update `--gr-live-*`. Every
+  animation sits in one `prefers-reduced-motion: no-preference` block at the
+  end; no keyframe touches opacity. In a register the `[data-cg…]` parts drop
+  out of every selector.
+- `demo.js`: the aspects (`ASPECTS`), the names and descriptions per theme
+  (`IDEAS`, `[name, text]` per option), the review choices and look-at lines
+  built from them, the rows, `compose()` (writes the five attributes on the
+  preview and on every row's wrapper on each `review:choice`), the network,
+  the states through the package's own API (`setGraphData()`,
+  `setGraphState()`, `graphSelect()`, `graphHideKind()`), the moment
+  (`data-cg-moment` on each graph: `arrive` when a drawn network comes in,
+  `live` on a live update) and the changed site and link
+  (`data-cg-changed`), the speed control.
+- `demo.css`: the page layout only; the three columns of a row share their
+  rows (a subgrid), so the three pictures start on one line.
 
 js/graph.js is not changed.
 
@@ -75,11 +103,16 @@ Found while building; each would want a change in the module, so none of the
   character that wanted to dim the paper while one node is read can use
   `[data-kp-focus]`, which is what the shared `--kp-graph-dim` already does
   for the edges.
+- **Nothing says what a live update changed, nor that a draw is an
+  arrival.** setGraphData() redraws every part, so an arrival would replay on
+  every live update; the demo marks the moment (`data-cg-moment`) and the
+  changed site and link (`data-cg-changed`) itself. A register would need
+  the module to write both.
 - **The loading picture is one ellipse** (`.kp-graph__skeleton`): every
   loading character here is that one shape, drawn differently (a dashed
   circle, a plotter line, a chase of bulbs, a sweep behind it).
 
-## The characters
+## Round 1: the characters
 
 | Theme         | Character 1                                                                                                                      | Character 2                                                                                                              |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -112,7 +145,7 @@ keeps the slow band of daylight, as the chart's and the calendar's light 2
 did). Nothing loops at rest in any character; nostromo 1's sweep runs only
 while the network is being read.
 
-## Measured
+## Measured (round 1, the bundled characters)
 
 Firefox (Playwright's, one script, its own `http.server`, under
 `flock /tmp/kp-themes-shot.lock`), 2026-10-05, all 22 themes, viewport
@@ -226,3 +259,121 @@ reduced motion.
   side at desk width.
 - The keys (arrows, Enter, Esc) and the focus ring in each character: the
   module's, unchanged, and the release suite covers them.
+
+## Round 2: the options per aspect
+
+The names; each option's full description is in `demo.js` (`IDEAS`) and in
+the review dialog's hints.
+
+| Theme         | Aspect               | 1                             | 2                        | 3                     |
+| ------------- | -------------------- | ----------------------------- | ------------------------ | --------------------- |
+| formal        | Shape                | The organisation chart        | The engraved plate       | The annual report     |
+|               | While loading        | Counted dot by dot            | Engraved round           | The guilloché border  |
+|               | Arrives              | At once                       | Inked in                 | Typeset               |
+|               | Pick and hidden kind | Pencil tint                   | The package’s dimming    | Red-ink tick          |
+|               | Live update          | In place                      | Re-inked                 | Amended in the margin |
+| light         | Shape                | The soft canvas               | Daylight                 | The paper cut-out     |
+|               | While loading        | A soft dashed ring            | A band of daylight       | Pearls on a string    |
+|               | Arrives              | At once                       | Lifted onto the canvas   | Unfolding             |
+|               | Pick and hidden kind | Misted                        | The package’s dimming    | The highlighter       |
+|               | Live update          | In place                      | A soft ripple            | Sunlit                |
+| dark          | Shape                | The status board              | The machined panel       | The OLED readout      |
+|               | While loading        | The ticking ring              | The scanning light       | The busy dots         |
+|               | Arrives              | At once                       | Powered up               | Slid in               |
+|               | Pick and hidden kind | Dull outline                  | The package’s dimming    | Spotlit               |
+|               | Live update          | In place                      | The lit pulse            | The status blink      |
+| cyberpunk     | Shape                | The neon circuit              | The netrunner map        | The holo HUD          |
+|               | While loading        | The packet run                | The ICE spins            | The glitch            |
+|               | Arrives              | At once                       | Jacked in                | The data burst        |
+|               | Pick and hidden kind | Glow killed                   | Cold outline             | Target lock           |
+|               | Live update          | In place                      | The glitch               | The neon surge        |
+| synthwave     | Shape                | The grid-floor constellation  | The arcade vector screen | The chrome sunset     |
+|               | While loading        | The horizon breathes          | The vector ring          | The VHS roll          |
+|               | Arrives              | At once                       | Stars come out           | Vector draw           |
+|               | Pick and hidden kind | The package’s dimming         | Neon spotlight           | Night falls           |
+|               | Live update          | In place                      | The laser flash          | The arcade pop        |
+| pastel        | Shape                | Candy beads and licorice      | The pinboard doodle      | The gumdrops          |
+|               | While loading        | The beads hop                 | The doodle drifts        | The bouncing gumdrop  |
+|               | Arrives              | At once                       | Beads dropped in         | Popped                |
+|               | Pick and hidden kind | The package’s dimming         | The sticker              | The heart             |
+|               | Live update          | In place                      | A happy hop              | The wobble            |
+| terminal      | Shape                | The box-drawing map           | traceroute               | The ASCII plot        |
+|               | While loading        | The text spinner              | Hops marching            | The blinking cursor   |
+|               | Arrives              | At once                       | Printed line by line     | Scrolled up           |
+|               | Pick and hidden kind | Half bright                   | The package’s dimming    | Reverse video         |
+|               | Live update          | In place                      | The cursor blink         | Bold for a beat       |
+| forest        | Shape                | The trail map                 | The canopy               | The mushroom ring     |
+|               | While loading        | The trail walks               | The canopy sways         | Fireflies             |
+|               | Arrives              | At once                       | The trail is walked      | Sprouting             |
+|               | Pick and hidden kind | The package’s dimming         | In the clearing          | Blazed                |
+|               | Live update          | In place                      | The rustle               | The firefly           |
+| high-contrast | Shape                | Patterned edges, shaped nodes | The ink plate            | The signage           |
+|               | While loading        | The heavy dash                | The running bar          | The countdown         |
+|               | Arrives              | At once                       | Placed                   | Stamped               |
+|               | Pick and hidden kind | The yellow ring               | The yellow ring, heavier | Boxed                 |
+|               | Live update          | In place                      | The thick flash          | The blink             |
+| sepia         | Shape                | The family tree               | The letterpress chart    | The old atlas         |
+|               | While loading        | The nib draws                 | The platen presses       | The pendulum          |
+|               | Arrives              | At once                       | Written by hand          | Printed               |
+|               | Pick and hidden kind | Faded ink                     | The package’s dimming    | Circled in red        |
+|               | Live update          | In place                      | Re-inked                 | The seal              |
+| blueprint     | Shape                | The wiring schematic          | The drafting sheet       | The pin board         |
+|               | While loading        | The plotter dashes            | The dash marches         | The compass draws     |
+|               | Arrives              | At once                       | Plotted                  | Measured out          |
+|               | Pick and hidden kind | The package’s dimming         | Redlined                 | Callout               |
+|               | Live update          | In place                      | Revised                  | The signal            |
+| solstice      | Shape                | The low sun                   | The embers               | The sundial           |
+|               | While loading        | A dawn rises                  | The embers glow          | The shadow turns      |
+|               | Arrives              | At once                       | Sunrise                  | Kindled               |
+|               | Pick and hidden kind | The package’s dimming         | In the sun               | The hot coal          |
+|               | Live update          | In place                      | A flare                  | A spark               |
+| brutalism     | Shape                | Slabs and heavy lines         | The sticker sheet        | The poster grid       |
+|               | While loading        | The slab stamps               | The stickers drop        | The jackhammer        |
+|               | Arrives              | At once                       | Slammed down             | Stamped               |
+|               | Pick and hidden kind | The yellow pick               | The package’s dimming    | Crossed out           |
+|               | Live update          | In place                      | The shake                | The stamp             |
+| deco          | Shape                | Gilt rays                     | The marquee              | The fan               |
+|               | While loading        | A glint runs the gold         | The bulbs chase          | The spotlight         |
+|               | Arrives              | At once                       | Curtain up               | The lights come up    |
+|               | Pick and hidden kind | The package’s dimming         | In the spotlight         | Gold-framed           |
+|               | Live update          | In place                      | The glint                | The bulb flash        |
+| phantom       | Shape                | Stamped tags and string       | The calling card         | The ransom note       |
+|               | While loading        | The stamp beats               | The halftone shuffles    | The calling-card spin |
+|               | Arrives              | At once                       | Pinned up                | All-out attack        |
+|               | Pick and hidden kind | The board goes grey           | The package’s dimming    | The target            |
+|               | Live update          | In place                      | The slash                | The calling card      |
+| shade-light   | Shape                | Pencil in the shade           | The leaf shade           | The paper lantern     |
+|               | While loading        | The sketch hatches            | A cloud’s shade passes   | The pencil circles    |
+|               | Arrives              | At once                       | Sketched                 | Out of the shade      |
+|               | Pick and hidden kind | The package’s dimming         | Lifted into the light    | The sunny spot        |
+|               | Live update          | In place                      | A sunbeam                | Retraced              |
+| shade-dark    | Shape                | Silverpoint                   | The reading lamp         | Moonlit               |
+|               | While loading        | The silver hatches            | The pool breathes        | The moth              |
+|               | Arrives              | At once                       | Drawn in silver          | The lamp comes on     |
+|               | Pick and hidden kind | The package’s dimming         | Under the lamp           | The silver ring       |
+|               | Live update          | In place                      | The warm flicker         | Silver retraced       |
+| retro         | Shape                | The 1995 network diagram      | The paint program        | The dialog box        |
+|               | While loading        | The hourglass dither          | Marching ants            | The progress blocks   |
+|               | Arrives              | At once                       | Painted in               | The window opens      |
+|               | Pick and hidden kind | The package’s dimming         | Selected                 | Inverted              |
+|               | Live update          | In place                      | Repainted                | The marching ants     |
+| grotesk       | Shape                | The transit map               | The Swiss grid           | The Bauhaus primer    |
+|               | While loading        | A line runs                   | Three blocks cut in      | The rotating square   |
+|               | Arrives              | At once                       | Lines laid               | The grid snaps        |
+|               | Pick and hidden kind | The package’s dimming         | Red pick                 | Black frame           |
+|               | Live update          | In place                      | The train passes         | Re-set                |
+| lapis         | Shape                | The girih lattice             | Lapis on vellum          | The star tile         |
+|               | While loading        | A glint runs the frame        | The burnisher            | The tile is laid      |
+|               | Arrives              | At once                       | Inlaid                   | The pattern turns     |
+|               | Pick and hidden kind | The package’s dimming         | Gilded                   | Framed in gold        |
+|               | Live update          | In place                      | The gold glint           | The medallion turns   |
+| nostromo      | Shape                | The CRT radar                 | The indicator panel      | The vector monitor    |
+|               | While loading        | The radar sweep               | The lamps scan           | MOTHER computes       |
+|               | Arrives              | At once                       | Blips acquired           | Switched on           |
+|               | Pick and hidden kind | The package’s dimming         | Target locked            | The warning lamp      |
+|               | Live update          | In place                      | The ping                 | The lamp blinks       |
+| titanium      | Shape                | The milled plate              | The instrument dial      | The anodised parts    |
+|               | While loading        | The cutter runs               | The knurl rolls          | The lathe             |
+|               | Arrives              | At once                       | Machined in              | Dialled in            |
+|               | Pick and hidden kind | The package’s dimming         | Heat-tinted              | Engraved mark         |
+|               | Live update          | In place                      | The glint                | The click             |

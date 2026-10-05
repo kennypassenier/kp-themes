@@ -1,10 +1,35 @@
-/* research/character-graph: two characters of the network graph `.kp-graph`
-   per theme, in the theme's kp.signature layer, so each can move into its
-   register as it stands. `[data-gr='a']` and `[data-gr='b']` are the demo's
-   two columns; in a register the same rules read
-   `[data-theme='<name>'] .kp-graph`.
+/* research/character-graph, round 2 (Kenny, 2026-10-05 20:03: every demo
+   gets separate options per aspect, like the meter, "and it should be like
+   this in the future"). Nothing is bundled: every aspect of the network
+   graph is its own pick, three options each, composed freely on the graph's
+   wrapper (`[data-cg]`, which carries the five aspects):
 
-   The contract every character keeps:
+     data-cg-shape="1|2|3"    the paper, the nodes, the links, the labels and
+                              the kinds (1 and 2: round 1's two characters;
+                              3: new)
+     data-cg-loading="1|2|3"  the loading picture, always moving (1 and 2:
+                              round 1's, now moving where they stood still and
+                              never a fade; 3: new)
+     data-cg-arrival="1|2|3"  how the drawn network comes in (1: at once, as
+                              both characters had it; 2 and 3: new)
+     data-cg-focus="1|2|3"    the picked node and the hidden kind (1 and 2:
+                              round 1's where they differed, else the
+                              package's own and a new one; 3: new)
+     data-cg-live="1|2|3"     a live update: the site and link that changed
+                              (1: in place, as both characters had it; 2 and
+                              3: new)
+
+   Every rule names one aspect only, so any combination composes: a shape
+   sets the drawing knobs, a loading picture the `--gr-skel*` and
+   `--gr-load-over*` knobs, a focus the `--gr-pick*`, `--gr-node-dim`,
+   `--gr-dim*` and `--gr-off-*` knobs, an arrival the `--gr-arr-*` knobs, a
+   live update the `--gr-live-*` knobs. The demo marks the moment on the
+   graph (`data-cg-moment="arrive"` when a drawn network comes in, `"live"`
+   on a live update) and the site and link that changed (`data-cg-changed`):
+   js/graph.js redraws every part on every setGraphData() and says neither.
+   In a register the `[data-cg…]` parts drop out of every selector.
+
+   The contract every option keeps:
    - The markup is the package's: js/graph.js builds every part, and nothing
      here needs more than the classes and attributes it already writes:
      `.kp-graph` (`data-kp-state`, `data-kp-focus`), `.kp-graph__bar`,
@@ -17,31 +42,32 @@
      `.kp-graph__ring`, `.kp-graph__core`, `.kp-graph__flag` and
      `.kp-graph__label`, the loading `.kp-graph__skeleton`.
    - Surfaces to draw on: the box's background (the paper and its pattern,
-     `--gr-paper`, `--gr-pat`), its ::before (under the picture: a sweep, a
-     pool of light) and ::after (over it: scanlines, a halftone); the strokes
-     and fills of the SVG parts; the chips of the kinds.
+     `--gr-paper`, `--gr-pat`), its ::before (under the picture) and ::after
+     (over it; while loading, `--gr-load-over`); the strokes and fills of the
+     SVG parts; the chips of the kinds.
    - Colour: tokens only. A link takes its kind's colour mixed toward the
      label ink (`--gr-edge-mix`), a node keeps `--kp-graph-hue` at the
-     character's mix toward the ink (`--gr-node-mix`), so both hold 3:1 on
-     the character's paper; labels are `--gr-label` on a `--gr-halo` halo.
+     shape's mix toward the ink (`--gr-node-mix`), so both hold 3:1 on the
+     shape's paper; labels are `--gr-label` on a `--gr-halo` halo.
    - Height: the package's `--kp-graph-h` in every state; nothing here adds
-     height to the box, and a frame is a border of the same 1px or drawn
-     inside (box-shadow inset).
+     height to the box. Motion moves, scales and redraws strokes, never the
+     box.
    - Motion: every animation sits in one `prefers-reduced-motion:
-     no-preference` block at the end; nothing loops at rest, only the loading
-     picture (and nostromo 1's sweep while loading). */
+     no-preference` block at the end. Nothing loops at rest; the loading
+     picture always moves; an arrival and a live update play once. Nothing
+     fades: no animation here touches opacity. */
 
 @layer kp.signature {
     /* ── The shared part of every character ───────────────────────────── */
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph {
+    [data-cg] .kp-graph {
         --gr-paper: var(--background);
         --gr-label: var(--foreground);
         --gr-halo: var(--gr-paper);
         --kp-graph-dim: var(--gr-dim, 0.08);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__box {
+    [data-cg] .kp-graph__box {
         isolation: isolate;
         overflow: clip;
         border: var(--gr-frame, 1px solid var(--border));
@@ -53,8 +79,8 @@
         box-shadow: var(--gr-shadow, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::before,
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::after {
+    [data-cg] .kp-graph__box::before,
+    [data-cg] .kp-graph__box::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -64,50 +90,50 @@
         background: var(--gr-under, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__box::after {
+    [data-cg] .kp-graph__box::after {
         z-index: 1;
         background: var(--gr-over, none);
         background-size: var(--gr-over-size, auto);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__note {
+    [data-cg] .kp-graph__note {
         color: var(--gr-label);
         font-family: var(--gr-font, inherit);
         text-transform: var(--gr-case, none);
         letter-spacing: var(--gr-track, normal);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__edge {
+    [data-cg] .kp-graph__edge {
         stroke: color-mix(in oklch, var(--kp-graph-edge-colour, var(--chart-3)) var(--gr-edge-mix, 75%), var(--gr-label));
         stroke-width: var(--gr-edge-w, 1.6);
         stroke-linecap: var(--gr-cap, butt);
         filter: var(--gr-edge-glow, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__sample line {
+    [data-cg] .kp-graph__sample line {
         stroke: color-mix(in oklch, var(--kp-graph-edge-colour, var(--chart-3)) var(--gr-edge-mix, 75%), var(--gr-label));
         stroke-width: var(--gr-sample-w, 2);
         stroke-linecap: var(--gr-cap, butt);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__edge.is-on {
+    [data-cg] .kp-graph__edge.is-on {
         stroke-width: var(--gr-edge-on-w, 2.6);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='dash'] {
+    [data-cg] .kp-graph [data-kp-style='dash'] {
         stroke-dasharray: var(--gr-dash, 6 3);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='dot'] {
+    [data-cg] .kp-graph [data-kp-style='dot'] {
         stroke-dasharray: var(--gr-dot, 2 4);
         stroke-linecap: round;
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph [data-kp-style='long-dash'] {
+    [data-cg] .kp-graph [data-kp-style='long-dash'] {
         stroke-dasharray: var(--gr-long, 12 4);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__node {
+    [data-cg] .kp-graph__node {
         --kp-graph-node-colour: color-mix(
             in oklch,
             oklch(from var(--chart-1) l max(c, 0.12) var(--kp-graph-hue, 210)) var(--gr-node-mix, 80%),
@@ -115,7 +141,7 @@
         );
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__ring {
+    [data-cg] .kp-graph__ring {
         fill: var(--gr-ring-fill, var(--gr-paper));
         stroke: var(--gr-ring, var(--kp-graph-node-colour));
         stroke-width: var(--gr-ring-w, 2.5);
@@ -124,43 +150,48 @@
         filter: var(--gr-node-glow, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__core {
+    [data-cg] .kp-graph__core {
         fill: var(--gr-core, var(--kp-graph-node-colour));
         opacity: var(--gr-core-op, 1);
         stroke: var(--gr-core-edge, none);
         stroke-width: var(--gr-core-edge-w, 0);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__node--hub .kp-graph__ring {
+    [data-cg] .kp-graph__node--hub .kp-graph__ring {
         fill: var(--gr-hub-fill, var(--gr-ring-fill, var(--gr-paper)));
         stroke: var(--gr-hub, var(--gr-ring, var(--kp-graph-node-colour)));
         stroke-width: var(--gr-hub-w, var(--gr-ring-w, 2.5));
         stroke-dasharray: var(--gr-hub-dash, var(--gr-ring-dash, none));
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__node--external .kp-graph__ring {
+    [data-cg] .kp-graph__node--external .kp-graph__ring {
         fill: var(--gr-ext-fill, var(--gr-paper));
         stroke: var(--gr-ext, color-mix(in oklch, var(--muted-foreground) 50%, var(--gr-label)));
         stroke-width: var(--gr-ext-w, 2);
         stroke-dasharray: var(--gr-ext-dash, 3 3);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__flag {
+    [data-cg] .kp-graph__flag {
         stroke: var(--gr-flag, color-mix(in oklch, var(--warning) 55%, var(--gr-label)));
         stroke-width: 2;
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__node.is-picked .kp-graph__ring {
+    [data-cg] .kp-graph__node.is-picked .kp-graph__ring {
         stroke: var(--gr-pick, var(--gr-ring, var(--kp-graph-node-colour)));
         stroke-width: var(--gr-pick-w, 5);
+        stroke-dasharray: var(--gr-pick-dash, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__node.is-dim {
+    [data-cg] .kp-graph__node.is-picked {
+        filter: var(--gr-pick-glow, none);
+    }
+
+    [data-cg] .kp-graph__node.is-dim {
         opacity: var(--gr-node-dim, 0.3);
         filter: var(--gr-dim-filter, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__label {
+    [data-cg] .kp-graph__label {
         fill: var(--gr-label);
         stroke: var(--gr-halo);
         stroke-width: var(--gr-halo-w, 4px);
@@ -173,7 +204,7 @@
         text-transform: var(--gr-case, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__kind {
+    [data-cg] .kp-graph__kind {
         border: var(--gr-chip-border, 1px solid var(--border));
         border-radius: var(--gr-chip-radius, 999px);
         background: var(--gr-chip-bg, var(--card));
@@ -185,22 +216,195 @@
         clip-path: var(--gr-chip-clip, none);
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__kind[aria-pressed='false'] {
+    [data-cg] .kp-graph__kind[aria-pressed='false'] {
         background: var(--gr-chip-off-bg, var(--gr-chip-bg, var(--card)));
         box-shadow: var(--gr-chip-off-shadow, var(--gr-chip-shadow, none));
         color: var(--muted-foreground);
+        text-decoration: var(--gr-off-deco, none);
+        outline: var(--gr-off-outline, none);
+        outline-offset: -4px;
     }
 
-    :is([data-gr='a'], [data-gr='b']) .kp-graph__skeleton {
+    [data-cg] .kp-graph__skeleton {
         stroke: var(--gr-skel, color-mix(in oklch, var(--gr-label) 30%, var(--gr-paper)));
         stroke-width: var(--gr-skel-w, 10);
         stroke-dasharray: var(--gr-skel-dash, none);
         stroke-linecap: var(--gr-skel-cap, butt);
+        transform-box: fill-box;
+        transform-origin: center;
     }
 
-    /* ══ formal ═══════════════════════════════════════════════════════════ */
+    /* Arrival and live update move the parts about their own centre, or
+       (--gr-arr-box: view-box) about the picture's. */
+    [data-cg] .kp-graph__node,
+    [data-cg] .kp-graph__edge {
+        transform-box: var(--gr-arr-box, fill-box);
+        transform-origin: center;
+    }
 
-    [data-theme='formal'] [data-gr='a'] .kp-graph {
+    [data-cg] .kp-graph__kind {
+        transform-origin: center;
+    }
+
+    /* A loading picture may lay a moving pattern over the box. */
+    [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+        inset: var(--gr-load-over-inset, 0);
+        background: var(--gr-load-over, var(--gr-over, none));
+        background-size: var(--gr-load-over-size, var(--gr-over-size, auto));
+        transform-origin: var(--gr-load-over-origin, 50% 50%);
+    }
+
+    /* The order things arrive in: --gr-i counts the links and the nodes. */
+
+    [data-cg] .kp-graph__node:nth-of-type(2) {
+        --gr-i: 0;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(3) {
+        --gr-i: 1;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(4) {
+        --gr-i: 2;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(5) {
+        --gr-i: 3;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(6) {
+        --gr-i: 4;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(7) {
+        --gr-i: 5;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(8) {
+        --gr-i: 6;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(9) {
+        --gr-i: 7;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(10) {
+        --gr-i: 8;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(11) {
+        --gr-i: 9;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(12) {
+        --gr-i: 10;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(13) {
+        --gr-i: 11;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(14) {
+        --gr-i: 12;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(15) {
+        --gr-i: 13;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(16) {
+        --gr-i: 14;
+    }
+
+    [data-cg] .kp-graph__node:nth-of-type(17) {
+        --gr-i: 15;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(1) {
+        --gr-i: 0;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(2) {
+        --gr-i: 1;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(3) {
+        --gr-i: 2;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(4) {
+        --gr-i: 3;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(5) {
+        --gr-i: 4;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(6) {
+        --gr-i: 5;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(7) {
+        --gr-i: 6;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(8) {
+        --gr-i: 7;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(9) {
+        --gr-i: 8;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(10) {
+        --gr-i: 9;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(11) {
+        --gr-i: 10;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(12) {
+        --gr-i: 11;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(13) {
+        --gr-i: 12;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(14) {
+        --gr-i: 13;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(15) {
+        --gr-i: 14;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(16) {
+        --gr-i: 15;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(17) {
+        --gr-i: 16;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(18) {
+        --gr-i: 17;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(19) {
+        --gr-i: 18;
+    }
+
+    [data-cg] .kp-graph__edge:nth-of-type(20) {
+        --gr-i: 19;
+    }
+
+    /* ══ Shape (data-cg-shape): the paper, the nodes, the links, the labels and the kinds above. ══ */
+
+    /* formal · shape 1 · The organisation chart */
+
+    [data-theme='formal'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-font: var(--theme-font-display);
         --gr-caps: all-small-caps;
@@ -214,19 +418,17 @@
         --gr-hub-w: 3;
         --gr-ring-dash: none;
         --gr-node-mix: 45%;
-        --gr-dim-filter: grayscale(1);
         --gr-chip-radius: 0;
         --gr-chip-border: 0;
         --gr-chip-bg: transparent;
         --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
         --gr-chip-off-shadow: none;
         --gr-chip-case: none;
-        --gr-skel-w: 2;
-        --gr-skel-dash: 1 6;
-        --gr-skel-cap: round;
     }
 
-    [data-theme='formal'] [data-gr='b'] .kp-graph {
+    /* formal · shape 2 · The engraved plate */
+
+    [data-theme='formal'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-frame: 1px solid var(--foreground);
         --gr-shadow: inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--border-strong, var(--border));
@@ -243,17 +445,42 @@
         --gr-chip-radius: 0;
         --gr-chip-border: 1px solid var(--foreground);
         --gr-chip-bg: var(--card);
-        --gr-skel-w: 1.5;
-        --gr-skel-dash: 1 4;
     }
 
-    [data-theme='formal'] [data-gr='b'] .kp-graph__core {
+    [data-theme='formal'] [data-cg-shape='2'] .kp-graph__core {
         r: 5px;
     }
 
-    /* ══ light ════════════════════════════════════════════════════════════ */
+    /* formal · shape 3 · The annual report */
 
-    [data-theme='light'] [data-gr='a'] .kp-graph {
+    [data-theme='formal'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-track: 0.1em;
+        --gr-size: 10.5px;
+        --gr-weight: 600;
+        --gr-edge-w: 0.9;
+        --gr-edge-mix: 40%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 0.9;
+        --gr-node-mix: 55%;
+        --gr-hub-w: 2;
+        --gr-hub-dash: 1.5 2;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-case: uppercase;
+        --gr-chip-track: 0.1em;
+    }
+
+    [data-theme='formal'] [data-cg-shape='3'] .kp-graph__core {
+        r: 6px;
+    }
+
+    /* light · shape 1 · The soft canvas */
+
+    [data-theme='light'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--primary) 4%, var(--background));
         --gr-halo: var(--card);
         --gr-ring-fill: var(--card);
@@ -263,19 +490,17 @@
         --gr-cap: round;
         --gr-edge-w: 2;
         --gr-edge-on-w: 3;
-        --gr-node-dim: 0.22;
-        --gr-dim: 0.12;
         --gr-chip-border: 0;
         --gr-chip-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 16%, transparent);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 8 6;
     }
 
-    [data-theme='light'] [data-gr='a'] .kp-graph__core {
+    [data-theme='light'] [data-cg-shape='1'] .kp-graph__core {
         r: 4px;
     }
 
-    [data-theme='light'] [data-gr='b'] .kp-graph {
+    /* light · shape 2 · Daylight */
+
+    [data-theme='light'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-under: radial-gradient(circle at 50% 45%, color-mix(in oklch, var(--warning) 14%, transparent), transparent 60%);
         --gr-ring-fill: var(--card);
@@ -288,16 +513,30 @@
         --gr-edge-w: 2.4;
         --gr-edge-on-w: 3.4;
         --gr-chip-bg: var(--card);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 60 400;
-        --gr-skel-cap: round;
-        --gr-skel: color-mix(in oklch, var(--warning) 60%, var(--foreground));
-        --gr-skel-anim: gr-march 2400ms linear infinite;
     }
 
-    /* ══ dark ═════════════════════════════════════════════════════════════ */
+    /* light · shape 3 · The paper cut-out */
 
-    [data-theme='dark'] [data-gr='a'] .kp-graph {
+    [data-theme='light'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-ring-fill: var(--card);
+        --gr-ring: color-mix(in oklch, var(--foreground) 70%, var(--card));
+        --gr-ring-w: 1.5;
+        --gr-core-op: 1;
+        --gr-cap: round;
+        --gr-edge-w: 1.8;
+        --gr-edge-mix: 60%;
+        --gr-weight: 600;
+        --gr-halo: var(--background);
+        --gr-chip-radius: 6px;
+        --gr-chip-border: 1px solid var(--border);
+        --gr-chip-shadow: 0 2px 0 var(--border);
+        --gr-chip-bg: var(--card);
+    }
+
+    /* dark · shape 1 · The status board */
+
+    [data-theme='dark'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 70%, oklch(from var(--background) 0 0 h));
         --gr-font: var(--theme-font-mono);
         --gr-size: 11.5px;
@@ -307,16 +546,14 @@
         --gr-edge-w: 1.2;
         --gr-edge-on-w: 2.2;
         --gr-node-mix: 70%;
-        --gr-dim-filter: grayscale(1);
-        --gr-node-dim: 0.35;
         --gr-chip-radius: 2px;
         --gr-chip-bg: var(--gr-paper);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 4 6;
     }
 
-    [data-theme='dark'] [data-gr='b'] .kp-graph {
+    /* dark · shape 2 · The machined panel */
+
+    [data-theme='dark'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-shadow:
             inset 0 1px 0 color-mix(in oklch, var(--foreground) 12%, transparent),
@@ -334,12 +571,34 @@
         --gr-chip-bg: color-mix(in oklch, var(--card) 70%, oklch(from var(--background) 0 0 h));
         --gr-chip-case: uppercase;
         --gr-chip-track: 0.05em;
-        --gr-skel-w: 4;
     }
 
-    /* ══ cyberpunk ════════════════════════════════════════════════════════ */
+    /* dark · shape 3 · The OLED readout */
 
-    [data-theme='cyberpunk'] [data-gr='a'] .kp-graph {
+    [data-theme='dark'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: oklch(from var(--background) 0.13 0 h);
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11.5px;
+        --gr-ring-w: 2;
+        --gr-ring-fill: var(--kp-graph-node-colour);
+        --gr-core-op: 0;
+        --gr-node-mix: 85%;
+        --gr-edge-w: 1.2;
+        --gr-edge-mix: 80%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] [data-cg-shape='3'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    /* cyberpunk · shape 1 · The neon circuit */
+
+    [data-theme='cyberpunk'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-pat:
             linear-gradient(color-mix(in oklch, var(--primary) 8%, transparent) 1px, transparent 1px),
@@ -357,26 +616,21 @@
         --gr-core-op: 0.35;
         --gr-hub: var(--primary);
         --gr-hub-w: 3.5;
-        --gr-dim-filter: grayscale(1);
         --gr-chip-radius: 0;
         --gr-chip-clip: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
         --gr-chip-bg: var(--background);
         --gr-chip-border: 1px solid var(--primary);
         --gr-chip-font: var(--theme-font-mono);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 30 300;
-        --gr-skel-cap: square;
-        --gr-skel-anim: gr-march 1400ms linear infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='cyberpunk'] [data-gr='a'] .kp-graph__node {
+    [data-theme='cyberpunk'] [data-cg-shape='1'] .kp-graph__node {
         --gr-node-glow: drop-shadow(0 0 4px var(--kp-graph-node-colour));
     }
 
-    [data-theme='cyberpunk'] [data-gr='b'] .kp-graph {
+    /* cyberpunk · shape 2 · The netrunner map */
+
+    [data-theme='cyberpunk'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 80%, oklch(from var(--background) 0 0 h));
         --gr-font: var(--theme-font-display);
         --gr-case: uppercase;
@@ -388,21 +642,45 @@
         --gr-ring-dash: 9 4;
         --gr-hub-dash: 14 4;
         --gr-core-op: 0.6;
-        --gr-dim-filter: grayscale(1) brightness(0.8);
         --gr-chip-radius: 0;
         --gr-chip-bg: var(--gr-paper);
         --gr-chip-border: 2px solid var(--primary);
         --gr-chip-case: uppercase;
         --gr-chip-font: var(--theme-font-display);
-        --gr-skel: var(--primary);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 26 10;
-        --gr-skel-anim: gr-march 900ms linear infinite;
     }
 
-    /* ══ synthwave ════════════════════════════════════════════════════════ */
+    /* cyberpunk · shape 3 · The holo HUD */
 
-    [data-theme='synthwave'] [data-gr='a'] .kp-graph {
+    [data-theme='cyberpunk'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-over: repeating-linear-gradient(to bottom, color-mix(in oklch, var(--accent) 7%, transparent) 0 1px, transparent 1px 4px);
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-track: 0.08em;
+        --gr-cap: square;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 85%;
+        --gr-ring: var(--accent);
+        --gr-ring-w: 2;
+        --gr-ring-fill: var(--background);
+        --gr-core-op: 1;
+        --gr-hub-dash: 6 3;
+        --gr-chip-radius: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-border: 1px solid var(--accent);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+        --gr-chip-clip: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] [data-cg-shape='3'] .kp-graph__ring {
+        clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+    }
+
+    /* synthwave · shape 1 · The grid-floor constellation */
+
+    [data-theme='synthwave'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-under:
             linear-gradient(to top, color-mix(in oklch, var(--primary) 22%, transparent), transparent 30%),
@@ -420,17 +698,15 @@
         --gr-node-mix: 70%;
         --gr-chip-bg: color-mix(in oklch, var(--card) 70%, transparent);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-anim: gr-pulse 1600ms ease-in-out infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='synthwave'] [data-gr='a'] .kp-graph__node {
+    [data-theme='synthwave'] [data-cg-shape='1'] .kp-graph__node {
         --gr-node-glow: drop-shadow(0 0 6px var(--kp-graph-node-colour));
     }
 
-    [data-theme='synthwave'] [data-gr='b'] .kp-graph {
+    /* synthwave · shape 2 · The arcade vector screen */
+
+    [data-theme='synthwave'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 75%, oklch(from var(--background) 0 0 h));
         --gr-over: repeating-linear-gradient(
             to bottom,
@@ -450,20 +726,38 @@
         --gr-chip-radius: 0;
         --gr-chip-font: var(--theme-font-mono);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--accent);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 80 40;
-        --gr-skel-anim: gr-march 2000ms linear infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='synthwave'] [data-gr='b'] .kp-graph__node {
+    [data-theme='synthwave'] [data-cg-shape='2'] .kp-graph__node {
         --gr-node-glow: drop-shadow(0 0 3px var(--kp-graph-node-colour));
     }
 
-    /* ══ pastel ═══════════════════════════════════════════════════════════ */
+    /* synthwave · shape 3 · The chrome sunset */
 
-    [data-theme='pastel'] [data-gr='a'] .kp-graph {
+    [data-theme='synthwave'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under:
+            radial-gradient(circle at 50% 46%, color-mix(in oklch, var(--accent) 26%, transparent) 0 70px, transparent 71px),
+            repeating-linear-gradient(to bottom, transparent 0 9px, color-mix(in oklch, var(--background) 100%, transparent) 9px 12px);
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 15px;
+        --gr-cap: round;
+        --gr-edge-w: 2.4;
+        --gr-edge-mix: 80%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 2.5;
+        --gr-ring-fill: var(--background);
+        --gr-core: var(--accent);
+        --gr-core-op: 1;
+        --gr-chip-radius: 4px;
+        --gr-chip-bg: var(--background);
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    /* pastel · shape 1 · Candy beads and licorice */
+
+    [data-theme='pastel'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-cap: round;
         --gr-edge-w: 3.5;
@@ -480,24 +774,20 @@
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-shadow: 2px 2px 0 var(--foreground);
         --gr-chip-off-shadow: none;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 12;
-        --gr-skel-dash: 0.5 26;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 1800ms steps(9) infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='pastel'] [data-gr='a'] .kp-graph__node {
+    [data-theme='pastel'] [data-cg-shape='1'] .kp-graph__node {
         --gr-ring-fill: var(--kp-graph-node-colour);
     }
 
-    [data-theme='pastel'] [data-gr='a'] .kp-graph__core {
+    [data-theme='pastel'] [data-cg-shape='1'] .kp-graph__core {
         r: 4px;
         transform: translate(-3px, -3px);
     }
 
-    [data-theme='pastel'] [data-gr='b'] .kp-graph {
+    /* pastel · shape 2 · The pinboard doodle */
+
+    [data-theme='pastel'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1.5px);
         --gr-pat-size: 14px 14px;
@@ -515,16 +805,39 @@
             color-mix(in oklch, var(--primary) 18%, var(--card)) 0 6px,
             color-mix(in oklch, var(--primary) 9%, var(--card)) 6px 12px
         );
-        --gr-skel: var(--accent);
-        --gr-skel-w: 4;
-        --gr-skel-dash: 10 8;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 3000ms linear infinite;
     }
 
-    /* ══ terminal ═════════════════════════════════════════════════════════ */
+    /* pastel · shape 3 · The gumdrops */
 
-    [data-theme='terminal'] [data-gr='a'] .kp-graph {
+    [data-theme='pastel'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--accent) 8%, var(--card));
+        --gr-halo: var(--card);
+        --gr-cap: round;
+        --gr-edge-w: 2.6;
+        --gr-edge-mix: 60%;
+        --gr-ring: var(--card);
+        --gr-ring-w: 3;
+        --gr-core-op: 1;
+        --gr-node-mix: 65%;
+        --gr-weight: 600;
+        --gr-chip-radius: 999px;
+        --gr-chip-border: 2px solid var(--card);
+        --gr-chip-bg: color-mix(in oklch, var(--primary) 18%, var(--card));
+        --gr-chip-shadow: 0 2px 0 color-mix(in oklch, var(--primary) 50%, var(--foreground));
+    }
+
+    [data-theme='pastel'] [data-cg-shape='3'] .kp-graph__core {
+        r: 9px;
+    }
+
+    [data-theme='pastel'] [data-cg-shape='3'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+        --gr-ring: color-mix(in oklch, var(--kp-graph-node-colour) 60%, var(--foreground));
+    }
+
+    /* terminal · shape 1 · The box-drawing map */
+
+    [data-theme='terminal'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-frame: 1px solid var(--foreground);
         --gr-radius: 0;
@@ -538,27 +851,24 @@
         --gr-ring-w: 2;
         --gr-ring-dash: 6 3;
         --gr-core-op: 1;
-        --gr-node-dim: 0.45;
         --gr-chip-radius: 0;
         --gr-chip-border: 0;
         --gr-chip-bg: transparent;
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 12 12;
-        --gr-skel-anim: gr-march 1000ms steps(4) infinite;
     }
 
-    [data-theme='terminal'] [data-gr='a'] .kp-graph__kind::before {
+    [data-theme='terminal'] [data-cg-shape='1'] .kp-graph__kind::before {
         content: '[x]';
         font-family: var(--theme-font-mono);
     }
 
-    [data-theme='terminal'] [data-gr='a'] .kp-graph__kind[aria-pressed='false']::before {
+    [data-theme='terminal'] [data-cg-shape='1'] .kp-graph__kind[aria-pressed='false']::before {
         content: '[ ]';
     }
 
-    [data-theme='terminal'] [data-gr='b'] .kp-graph {
+    /* terminal · shape 2 · traceroute */
+
+    [data-theme='terminal'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-radius: 0;
         --gr-font: var(--theme-font-mono);
@@ -578,20 +888,46 @@
         --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
         --gr-chip-font: var(--theme-font-mono);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 2 10;
-        --gr-skel-anim: gr-march 800ms linear infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='terminal'] [data-gr='b'] .kp-graph__node {
+    [data-theme='terminal'] [data-cg-shape='2'] .kp-graph__node {
         --gr-ring-fill: var(--kp-graph-node-colour);
     }
 
-    /* ══ forest ═══════════════════════════════════════════════════════════ */
+    /* terminal · shape 3 · The ASCII plot */
 
-    [data-theme='forest'] [data-gr='a'] .kp-graph {
+    [data-theme='terminal'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 12px;
+        --gr-weight: 700;
+        --gr-cap: square;
+        --gr-edge-w: 1.2;
+        --gr-edge-mix: 50%;
+        --gr-dash: 4 2;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1.5;
+        --gr-core-op: 0.9;
+        --gr-node-mix: 55%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] [data-cg-shape='3'] .kp-graph__core {
+        r: 3px;
+    }
+
+    [data-theme='terminal'] [data-cg-shape='3'] .kp-graph__kind::before {
+        content: '> ';
+        font-family: var(--theme-font-mono);
+    }
+
+    /* forest · shape 1 · The trail map */
+
+    [data-theme='forest'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-under: repeating-radial-gradient(circle at 30% 70%, transparent 0 22px, color-mix(in oklch, var(--primary) 10%, transparent) 22px 23px);
         --gr-font: var(--theme-font-display);
@@ -609,14 +945,11 @@
         --gr-hub-dash: none;
         --gr-chip-radius: 3px 10px 10px 3px;
         --gr-chip-bg: color-mix(in oklch, var(--primary) 10%, var(--card));
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 8 7;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 2400ms linear infinite;
     }
 
-    [data-theme='forest'] [data-gr='b'] .kp-graph {
+    /* forest · shape 2 · The canopy */
+
+    [data-theme='forest'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--primary) 6%, var(--background));
         --gr-cap: round;
         --gr-edge-w: 3;
@@ -627,19 +960,39 @@
         --gr-core-op: 0.85;
         --gr-chip-radius: 999px 2px 999px 2px;
         --gr-chip-bg: color-mix(in oklch, var(--primary) 12%, var(--card));
-        --gr-skel: var(--primary);
-        --gr-skel-w: 8;
-        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='forest'] [data-gr='b'] .kp-graph__node {
+    [data-theme='forest'] [data-cg-shape='2'] .kp-graph__node {
         --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 22%, var(--gr-paper));
     }
 
-    /* ══ high-contrast ════════════════════════════════════════════════════ */
+    /* forest · shape 3 · The mushroom ring */
 
-    [data-theme='high-contrast'] [data-gr='a'] .kp-graph {
+    [data-theme='forest'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--primary) 9%, var(--card));
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-cap: round;
+        --gr-edge-w: 1.6;
+        --gr-edge-mix: 45%;
+        --gr-dash: 3 4;
+        --gr-ring: color-mix(in oklch, var(--foreground) 80%, var(--card));
+        --gr-ring-w: 2;
+        --gr-ring-fill: var(--card);
+        --gr-core-op: 1;
+        --gr-node-mix: 65%;
+        --gr-chip-radius: 999px;
+        --gr-chip-border: 2px solid color-mix(in oklch, var(--primary) 50%, var(--foreground));
+        --gr-chip-bg: var(--card);
+    }
+
+    [data-theme='forest'] [data-cg-shape='3'] .kp-graph__core {
+        r: 7px;
+    }
+
+    /* high-contrast · shape 1 · Patterned edges, shaped nodes */
+
+    [data-theme='high-contrast'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-frame: 2px solid var(--foreground);
         --gr-weight: 700;
@@ -653,31 +1006,25 @@
         --gr-ring: var(--foreground);
         --gr-ring-w: 3;
         --gr-node-mix: 70%;
-        --gr-pick: var(--ring);
-        --gr-pick-w: 6;
-        --gr-node-dim: 0.4;
-        --gr-dim: 0.15;
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-radius: 0;
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 10 4;
     }
 
-    /* The cores' shapes tell the nodes apart without their hue. */
-    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 1) .kp-graph__core {
+    [data-theme='high-contrast'] [data-cg-shape='1'] .kp-graph__node:nth-of-type(4n + 1) .kp-graph__core {
         clip-path: inset(15%);
     }
 
-    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 2) .kp-graph__core {
+    [data-theme='high-contrast'] [data-cg-shape='1'] .kp-graph__node:nth-of-type(4n + 2) .kp-graph__core {
         clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
     }
 
-    [data-theme='high-contrast'] [data-gr='a'] .kp-graph__node:nth-of-type(4n + 3) .kp-graph__core {
+    [data-theme='high-contrast'] [data-cg-shape='1'] .kp-graph__node:nth-of-type(4n + 3) .kp-graph__core {
         clip-path: polygon(50% 0, 100% 100%, 0 100%);
     }
 
-    [data-theme='high-contrast'] [data-gr='b'] .kp-graph {
+    /* high-contrast · shape 2 · The ink plate */
+
+    [data-theme='high-contrast'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-weight: 700;
         --gr-size: 13px;
@@ -692,18 +1039,41 @@
         --gr-core: var(--background);
         --gr-ring-w: 2;
         --gr-hub-w: 5;
-        --gr-pick: var(--ring);
-        --gr-pick-w: 6;
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-radius: 0;
         --gr-chip-bg: var(--background);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 4;
     }
 
-    /* ══ sepia ════════════════════════════════════════════════════════════ */
+    /* high-contrast · shape 3 · The signage */
 
-    [data-theme='sepia'] [data-gr='a'] .kp-graph {
+    [data-theme='high-contrast'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-weight: 800;
+        --gr-size: 14px;
+        --gr-halo-w: 6px;
+        --gr-cap: square;
+        --gr-edge-w: 3.5;
+        --gr-edge-on-w: 5;
+        --gr-edge-mix: 45%;
+        --gr-dash: 12 5;
+        --gr-dot: 3 5;
+        --gr-long: 20 5;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 4;
+        --gr-core: var(--foreground);
+        --gr-chip-radius: 0;
+        --gr-chip-border: 2px solid var(--foreground);
+        --gr-chip-bg: var(--foreground);
+        --gr-chip-fg: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-cg-shape='3'] .kp-graph__core {
+        clip-path: inset(18%);
+    }
+
+    /* sepia · shape 1 · The family tree */
+
+    [data-theme='sepia'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-under: radial-gradient(ellipse at 50% 50%, transparent 55%, color-mix(in oklch, var(--foreground) 8%, transparent));
         --gr-font: var(--theme-font-display);
@@ -717,25 +1087,20 @@
         --gr-core-op: 0.55;
         --gr-node-mix: 50%;
         --gr-hub-w: 3;
-        --gr-node-dim: 0.35;
-        --gr-dim-filter: sepia(1);
         --gr-chip-radius: 0;
         --gr-chip-border: 0;
         --gr-chip-bg: transparent;
         --gr-chip-shadow: inset 0 -1px 0 var(--foreground);
         --gr-chip-off-shadow: none;
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 1.5;
-        --gr-skel-dash: 1400;
-        --gr-skel-anim: gr-write 3000ms ease-in-out infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='sepia'] [data-gr='a'] .kp-graph__node {
+    [data-theme='sepia'] [data-cg-shape='1'] .kp-graph__node {
         --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 18%, var(--card));
     }
 
-    [data-theme='sepia'] [data-gr='b'] .kp-graph {
+    /* sepia · shape 2 · The letterpress chart */
+
+    [data-theme='sepia'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 6%, transparent) 0.6px, transparent 1px);
         --gr-pat-size: 5px 5px;
@@ -752,14 +1117,40 @@
         --gr-node-mix: 45%;
         --gr-chip-radius: 0;
         --gr-chip-border: 2px double var(--foreground);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 6;
-        --gr-skel-anim: gr-pulse 1800ms ease-in-out infinite;
     }
 
-    /* ══ blueprint ════════════════════════════════════════════════════════ */
+    /* sepia · shape 3 · The old atlas */
 
-    [data-theme='blueprint'] [data-gr='a'] .kp-graph {
+    [data-theme='sepia'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-under: repeating-conic-gradient(
+            from 0deg at 50% 46%,
+            color-mix(in oklch, var(--foreground) 5%, transparent) 0 2deg,
+            transparent 2deg 45deg
+        );
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 45%;
+        --gr-dash: 4 3;
+        --gr-ring: color-mix(in oklch, var(--destructive) 70%, var(--foreground));
+        --gr-ring-w: 1.6;
+        --gr-core: var(--foreground);
+        --gr-core-op: 1;
+        --gr-hub-w: 3;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--foreground);
+        --gr-chip-shadow: inset 0 0 0 2px var(--card), inset 0 0 0 3px var(--foreground);
+        --gr-chip-bg: var(--card);
+    }
+
+    [data-theme='sepia'] [data-cg-shape='3'] .kp-graph__core {
+        r: 3.5px;
+    }
+
+    /* blueprint · shape 1 · The wiring schematic */
+
+    [data-theme='blueprint'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-pat:
             linear-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px),
@@ -783,17 +1174,15 @@
         --gr-chip-bg: var(--background);
         --gr-chip-case: uppercase;
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--accent);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 14 4 2 4;
-        --gr-skel-anim: gr-march 2000ms linear infinite;
     }
 
-    [data-theme='blueprint'] [data-gr='a'] .kp-graph__core {
+    [data-theme='blueprint'] [data-cg-shape='1'] .kp-graph__core {
         r: 3.5px;
     }
 
-    [data-theme='blueprint'] [data-gr='b'] .kp-graph {
+    /* blueprint · shape 2 · The drafting sheet */
+
+    [data-theme='blueprint'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-pat:
             linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
@@ -815,15 +1204,39 @@
         --gr-chip-border: 1px solid var(--foreground);
         --gr-chip-bg: var(--background);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 1.5;
-        --gr-skel-dash: 10 6;
-        --gr-skel-anim: gr-march 1200ms linear infinite;
     }
 
-    /* ══ solstice ═════════════════════════════════════════════════════════ */
+    /* blueprint · shape 3 · The pin board */
 
-    [data-theme='solstice'] [data-gr='a'] .kp-graph {
+    [data-theme='blueprint'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 14%, transparent) 1px, transparent 1.5px);
+        --gr-pat-size: 16px 16px;
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 10.5px;
+        --gr-cap: square;
+        --gr-edge-w: 3;
+        --gr-edge-on-w: 4.5;
+        --gr-edge-mix: 35%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 2;
+        --gr-core: var(--foreground);
+        --gr-core-op: 1;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-case: uppercase;
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-cg-shape='3'] .kp-graph__core {
+        clip-path: inset(20%);
+    }
+
+    /* solstice · shape 1 · The low sun */
+
+    [data-theme='solstice'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-under: radial-gradient(ellipse 80% 45% at 50% 105%, color-mix(in oklch, var(--primary) 26%, transparent), transparent 70%);
         --gr-font: var(--theme-font-display);
@@ -834,18 +1247,16 @@
         --gr-ring-w: 2;
         --gr-node-mix: 75%;
         --gr-chip-bg: color-mix(in oklch, var(--primary) 12%, var(--card));
-        --gr-skel: var(--primary);
-        --gr-skel-w: 4;
-        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='solstice'] [data-gr='a'] .kp-graph__node {
+    [data-theme='solstice'] [data-cg-shape='1'] .kp-graph__node {
         --gr-node-glow: drop-shadow(0 0 5px var(--kp-graph-node-colour));
         --gr-ring-fill: color-mix(in oklch, var(--kp-graph-node-colour) 25%, var(--background));
     }
 
-    [data-theme='solstice'] [data-gr='b'] .kp-graph {
+    /* solstice · shape 2 · The embers */
+
+    [data-theme='solstice'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 85%, oklch(from var(--background) 0 0 h));
         --gr-font: var(--theme-font-display);
         --gr-size: 13px;
@@ -861,14 +1272,38 @@
         --gr-hub-w: 4;
         --gr-chip-bg: var(--gr-paper);
         --gr-chip-border: 1px solid color-mix(in oklch, var(--warning) 60%, transparent);
-        --gr-skel: color-mix(in oklch, var(--destructive) 60%, var(--warning));
-        --gr-skel-w: 6;
-        --gr-skel-anim: gr-pulse 2800ms ease-in-out infinite;
     }
 
-    /* ══ brutalism ════════════════════════════════════════════════════════ */
+    /* solstice · shape 3 · The sundial */
 
-    [data-theme='brutalism'] [data-gr='a'] .kp-graph {
+    [data-theme='solstice'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under: repeating-conic-gradient(
+            from 0deg at 50% 46%,
+            color-mix(in oklch, var(--primary) 9%, transparent) 0 1deg,
+            transparent 1deg 15deg
+        );
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-edge-w: 1.3;
+        --gr-edge-mix: 55%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 1.8;
+        --gr-core-op: 1;
+        --gr-hub-fill: var(--primary);
+        --gr-hub-w: 3;
+        --gr-chip-radius: 2px;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--background);
+    }
+
+    [data-theme='solstice'] [data-cg-shape='3'] .kp-graph__core {
+        r: 4px;
+    }
+
+    /* brutalism · shape 1 · Slabs and heavy lines */
+
+    [data-theme='brutalism'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-frame: 3px solid var(--foreground);
         --gr-radius: 0;
@@ -885,24 +1320,16 @@
         --gr-ring: var(--foreground);
         --gr-ring-w: 4;
         --gr-node-glow: drop-shadow(3px 3px 0 var(--foreground));
-        --gr-pick: var(--foreground);
-        --gr-pick-w: 6;
         --gr-chip-radius: 0;
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-shadow: 3px 3px 0 var(--foreground);
         --gr-chip-off-shadow: none;
         --gr-chip-case: uppercase;
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 14;
-        --gr-skel-dash: 40 20;
-        --gr-skel-anim: gr-march 900ms steps(3) infinite;
     }
 
-    [data-theme='brutalism'] [data-gr='a'] .kp-graph__node.is-picked .kp-graph__ring {
-        fill: var(--warning);
-    }
+    /* brutalism · shape 2 · The sticker sheet */
 
-    [data-theme='brutalism'] [data-gr='b'] .kp-graph {
+    [data-theme='brutalism'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--accent) 22%, var(--background));
         --gr-halo: var(--background);
         --gr-frame: 3px solid var(--foreground);
@@ -919,27 +1346,53 @@
         --gr-chip-radius: 0;
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-bg: var(--background);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 8;
-        --gr-skel-anim: gr-drop 1200ms ease-in infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='brutalism'] [data-gr='b'] .kp-graph__node {
+    [data-theme='brutalism'] [data-cg-shape='2'] .kp-graph__node {
         --gr-ring-fill: var(--kp-graph-node-colour);
     }
 
-    [data-theme='brutalism'] [data-gr='b'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
+    [data-theme='brutalism'] [data-cg-shape='2'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
         rotate: -2deg;
     }
 
-    [data-theme='brutalism'] [data-gr='b'] .kp-graph__kinds li:nth-child(even) .kp-graph__kind {
+    [data-theme='brutalism'] [data-cg-shape='2'] .kp-graph__kinds li:nth-child(even) .kp-graph__kind {
         rotate: 1.5deg;
     }
 
-    /* ══ deco ═════════════════════════════════════════════════════════════ */
+    /* brutalism · shape 3 · The poster grid */
 
-    [data-theme='deco'] [data-gr='a'] .kp-graph {
+    [data-theme='brutalism'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-frame: 3px solid var(--foreground);
+        --gr-radius: 0;
+        --gr-weight: 900;
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-cap: square;
+        --gr-edge-w: 3;
+        --gr-edge-mix: 25%;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 3;
+        --gr-core-op: 0;
+        --gr-node-mix: 85%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 3px solid var(--foreground);
+        --gr-chip-bg: var(--warning);
+        --gr-chip-fg: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-shape='3'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    [data-theme='brutalism'] [data-cg-shape='3'] .kp-graph__ring {
+        clip-path: inset(8%);
+    }
+
+    /* deco · shape 1 · Gilt rays */
+
+    [data-theme='deco'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-under: repeating-conic-gradient(
             from 0deg at 50% 46%,
@@ -963,13 +1416,11 @@
         --gr-chip-bg: var(--background);
         --gr-chip-case: uppercase;
         --gr-chip-track: 0.08em;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 40 160;
-        --gr-skel-anim: gr-march 2200ms linear infinite;
     }
 
-    [data-theme='deco'] [data-gr='b'] .kp-graph {
+    /* deco · shape 2 · The marquee */
+
+    [data-theme='deco'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 85%, oklch(from var(--background) 0 0 h));
         --gr-font: var(--theme-font-display);
         --gr-case: uppercase;
@@ -990,20 +1441,47 @@
         --gr-chip-border: 2px solid var(--primary);
         --gr-chip-bg: var(--gr-paper);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 8;
-        --gr-skel-dash: 0.1 18;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 700ms steps(2) infinite;
     }
 
-    [data-theme='deco'] [data-gr='b'] .kp-graph [data-kp-style='solid'] {
+    [data-theme='deco'] [data-cg-shape='2'] .kp-graph [data-kp-style='solid'] {
         stroke-dasharray: 0.1 5;
     }
 
-    /* ══ phantom ══════════════════════════════════════════════════════════ */
+    /* deco · shape 3 · The fan */
 
-    [data-theme='phantom'] [data-gr='a'] .kp-graph {
+    [data-theme='deco'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat: repeating-radial-gradient(circle at 50% 110%, transparent 0 18px, color-mix(in oklch, var(--primary) 9%, transparent) 18px 19px);
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-track: 0.12em;
+        --gr-size: 10.5px;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 45%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 1.5;
+        --gr-core-op: 0.9;
+        --gr-hub-w: 3;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--background);
+        --gr-chip-shadow: 3px 3px 0 -1px var(--background), 3px 3px 0 0 var(--primary);
+        --gr-chip-case: uppercase;
+        --gr-chip-track: 0.12em;
+    }
+
+    [data-theme='deco'] [data-cg-shape='3'] .kp-graph__ring {
+        stroke-dasharray: none;
+        paint-order: stroke;
+    }
+
+    [data-theme='deco'] [data-cg-shape='3'] .kp-graph__core {
+        r: 5px;
+    }
+
+    /* phantom · shape 1 · Stamped tags and string */
+
+    [data-theme='phantom'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-label: var(--card-foreground);
         --gr-font: var(--theme-font-display);
@@ -1018,26 +1496,24 @@
         --gr-ring-dash: 12 2 3 2;
         --gr-ring-fill: var(--card);
         --gr-node-mix: 60%;
-        --gr-dim-filter: grayscale(1);
         --gr-chip-radius: 0;
         --gr-chip-bg: var(--card);
         --gr-chip-fg: var(--card-foreground);
         --gr-chip-border: 2px solid var(--card-foreground);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 6;
-        --gr-skel-anim: gr-pulse 1400ms steps(2) infinite;
     }
 
-    [data-theme='phantom'] [data-gr='a'] .kp-graph__edge[data-kp-kind='telemetry'] {
+    [data-theme='phantom'] [data-cg-shape='1'] .kp-graph__edge[data-kp-kind='telemetry'] {
         stroke: color-mix(in oklch, var(--primary) 85%, var(--card-foreground));
     }
 
-    [data-theme='phantom'] [data-gr='a'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
+    [data-theme='phantom'] [data-cg-shape='1'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
         rotate: -3deg;
     }
 
-    [data-theme='phantom'] [data-gr='b'] .kp-graph {
+    /* phantom · shape 2 · The calling card */
+
+    [data-theme='phantom'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--background) 80%, oklch(from var(--background) 0 0 h));
         --gr-label: var(--foreground);
         --gr-over: radial-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1.6px);
@@ -1056,15 +1532,44 @@
         --gr-chip-border: 2px solid var(--primary);
         --gr-chip-clip: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
         --gr-chip-case: uppercase;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 8;
-        --gr-skel-dash: 20 8;
-        --gr-skel-anim: gr-march 1000ms steps(5) infinite;
     }
 
-    /* ══ shade-light ══════════════════════════════════════════════════════ */
+    /* phantom · shape 3 · The ransom note */
 
-    [data-theme='shade-light'] [data-gr='a'] .kp-graph {
+    [data-theme='phantom'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-label: var(--foreground);
+        --gr-font: var(--theme-font-display);
+        --gr-case: uppercase;
+        --gr-size: 12.5px;
+        --gr-weight: 800;
+        --gr-cap: square;
+        --gr-edge-w: 2.4;
+        --gr-edge-mix: 40%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 3;
+        --gr-ring-fill: var(--foreground);
+        --gr-core-op: 1;
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--foreground);
+        --gr-chip-fg: var(--background);
+        --gr-chip-border: 0;
+        --gr-chip-case: uppercase;
+    }
+
+    [data-theme='phantom'] [data-cg-shape='3'] .kp-graph__kinds li:nth-child(even) .kp-graph__kind {
+        rotate: 2deg;
+    }
+
+    [data-theme='phantom'] [data-cg-shape='3'] .kp-graph__kinds li:nth-child(odd) .kp-graph__kind {
+        rotate: -1.5deg;
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* shade-light · shape 1 · Pencil in the shade */
+
+    [data-theme='shade-light'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-under: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 6px);
         --gr-cap: round;
@@ -1078,13 +1583,11 @@
         --gr-node-mix: 60%;
         --gr-chip-border: 0;
         --gr-chip-shadow: 0 2px 5px color-mix(in oklch, var(--foreground) 18%, transparent);
-        --gr-skel: color-mix(in oklch, var(--foreground) 40%, var(--card));
-        --gr-skel-w: 3;
-        --gr-skel-dash: 2 3;
-        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
     }
 
-    [data-theme='shade-light'] [data-gr='b'] .kp-graph {
+    /* shade-light · shape 2 · The leaf shade */
+
+    [data-theme='shade-light'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-under:
             radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 6%, transparent) 0 40px, transparent 41px),
@@ -1096,14 +1599,36 @@
         --gr-node-mix: 60%;
         --gr-hub: color-mix(in oklch, var(--warning) 50%, var(--foreground));
         --gr-chip-bg: var(--card);
-        --gr-skel-w: 10;
-        --gr-skel: color-mix(in oklch, var(--foreground) 20%, var(--card));
-        --gr-skel-anim: gr-pulse 3000ms ease-in-out infinite;
     }
 
-    /* ══ shade-dark ═══════════════════════════════════════════════════════ */
+    /* shade-light · shape 3 · The paper lantern */
 
-    [data-theme='shade-dark'] [data-gr='a'] .kp-graph {
+    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-cap: round;
+        --gr-edge-w: 1.4;
+        --gr-edge-mix: 50%;
+        --gr-ring: color-mix(in oklch, var(--foreground) 70%, var(--card));
+        --gr-ring-w: 1.4;
+        --gr-core-op: 0.5;
+        --gr-node-mix: 60%;
+        --gr-hub: color-mix(in oklch, var(--warning) 55%, var(--foreground));
+        --gr-chip-radius: 2px;
+        --gr-chip-border: 1px solid var(--border);
+        --gr-chip-bg: var(--card);
+    }
+
+    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph__core {
+        r: 9px;
+    }
+
+    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph__node {
+        --gr-node-glow: drop-shadow(0 0 4px color-mix(in oklch, var(--warning) 40%, transparent));
+    }
+
+    /* shade-dark · shape 1 · Silverpoint */
+
+    [data-theme='shade-dark'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-edge-w: 1;
         --gr-edge-on-w: 2;
@@ -1115,13 +1640,11 @@
         --gr-node-mix: 60%;
         --gr-chip-bg: transparent;
         --gr-chip-border: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
-        --gr-skel: color-mix(in oklch, var(--foreground) 50%, var(--background));
-        --gr-skel-w: 1;
-        --gr-skel-dash: 2 2;
-        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
     }
 
-    [data-theme='shade-dark'] [data-gr='b'] .kp-graph {
+    /* shade-dark · shape 2 · The reading lamp */
+
+    [data-theme='shade-dark'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-under: radial-gradient(ellipse 45% 50% at 50% 46%, color-mix(in oklch, var(--warning) 14%, transparent), transparent 75%);
         --gr-cap: round;
@@ -1130,14 +1653,33 @@
         --gr-node-mix: 70%;
         --gr-hub: color-mix(in oklch, var(--warning) 70%, var(--foreground));
         --gr-chip-bg: var(--card);
-        --gr-skel: color-mix(in oklch, var(--warning) 40%, var(--background));
-        --gr-skel-w: 10;
-        --gr-skel-anim: gr-pulse 3000ms ease-in-out infinite;
     }
 
-    /* ══ retro ════════════════════════════════════════════════════════════ */
+    /* shade-dark · shape 3 · Moonlit */
 
-    [data-theme='retro'] [data-gr='a'] .kp-graph {
+    [data-theme='shade-dark'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-under: radial-gradient(circle at 80% 15%, color-mix(in oklch, var(--foreground) 8%, transparent) 0 50px, transparent 120px);
+        --gr-cap: round;
+        --gr-edge-w: 1.2;
+        --gr-edge-mix: 45%;
+        --gr-ring: color-mix(in oklch, var(--foreground) 80%, var(--background));
+        --gr-ring-w: 1.6;
+        --gr-core-op: 0.9;
+        --gr-node-mix: 60%;
+        --gr-chip-radius: 999px;
+        --gr-chip-bg: transparent;
+        --gr-chip-border: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
+    }
+
+    [data-theme='shade-dark'] [data-cg-shape='3'] .kp-graph__core {
+        transform: translate(2px, -2px);
+        r: 6px;
+    }
+
+    /* retro · shape 1 · The 1995 network diagram */
+
+    [data-theme='retro'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-frame: 2px solid;
         --gr-radius: 0;
@@ -1159,16 +1701,15 @@
         --gr-chip-shadow: inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--card);
         --gr-chip-off-shadow: inset 1px 1px 0 var(--foreground), inset -1px -1px 0 var(--card);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--muted-foreground);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 1 1;
     }
 
-    [data-theme='retro'] [data-gr='a'] .kp-graph__box {
+    [data-theme='retro'] [data-cg-shape='1'] .kp-graph__box {
         border-color: var(--muted-foreground) var(--card) var(--card) var(--muted-foreground);
     }
 
-    [data-theme='retro'] [data-gr='b'] .kp-graph {
+    /* retro · shape 2 · The paint program */
+
+    [data-theme='retro'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-radius: 0;
         --gr-font: var(--theme-font-mono);
@@ -1183,19 +1724,51 @@
         --gr-chip-bg: var(--muted);
         --gr-chip-border: 1px solid var(--foreground);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 4 4;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='retro'] [data-gr='b'] .kp-graph__node {
+    [data-theme='retro'] [data-cg-shape='2'] .kp-graph__node {
         --gr-ring-fill: var(--kp-graph-node-colour);
     }
 
-    /* ══ grotesk ══════════════════════════════════════════════════════════ */
+    /* retro · shape 3 · The dialog box */
 
-    [data-theme='grotesk'] [data-gr='a'] .kp-graph {
+    [data-theme='retro'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--card);
+        --gr-frame: 2px solid var(--foreground);
+        --gr-shadow: inset 0 18px 0 var(--primary);
+        --gr-radius: 0;
+        --gr-font: var(--theme-font-mono);
+        --gr-weight: 400;
+        --gr-size: 12px;
+        --gr-edge-w: 1;
+        --gr-edge-mix: 50%;
+        --gr-dash: 2 2;
+        --gr-ring: var(--foreground);
+        --gr-ring-w: 1.5;
+        --gr-ring-fill: var(--card);
+        --gr-core-op: 1;
+        --gr-node-mix: 85%;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: transparent;
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__ring {
+        clip-path: inset(12%);
+    }
+
+    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__kind::before {
+        content: '\2611 ';
+    }
+
+    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__kind[aria-pressed='false']::before {
+        content: '\2610 ';
+    }
+
+    /* grotesk · shape 1 · The transit map */
+
+    [data-theme='grotesk'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-weight: 700;
         --gr-size: 12.5px;
@@ -1214,14 +1787,11 @@
         --gr-chip-border: 0;
         --gr-chip-bg: transparent;
         --gr-sample-w: 5;
-        --gr-skel: var(--primary);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 60 30;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 1600ms linear infinite;
     }
 
-    [data-theme='grotesk'] [data-gr='b'] .kp-graph {
+    /* grotesk · shape 2 · The Swiss grid */
+
+    [data-theme='grotesk'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-weight: 700;
         --gr-size: 12.5px;
@@ -1236,15 +1806,44 @@
         --gr-chip-radius: 0;
         --gr-chip-border: 2px solid var(--foreground);
         --gr-chip-bg: var(--background);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 16;
-        --gr-skel-dash: 16 40;
-        --gr-skel-anim: gr-march 1200ms steps(3) infinite;
     }
 
-    /* ══ lapis ════════════════════════════════════════════════════════════ */
+    /* grotesk · shape 3 · The Bauhaus primer */
 
-    [data-theme='lapis'] [data-gr='a'] .kp-graph {
+    [data-theme='grotesk'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-weight: 700;
+        --gr-size: 12.5px;
+        --gr-cap: butt;
+        --gr-edge-w: 2.5;
+        --gr-edge-mix: 30%;
+        --gr-ring-w: 0;
+        --gr-core-op: 0;
+        --gr-node-mix: 90%;
+        --gr-hub-fill: var(--foreground);
+        --gr-hub-w: 0;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 0;
+        --gr-chip-bg: var(--foreground);
+        --gr-chip-fg: var(--background);
+    }
+
+    [data-theme='grotesk'] [data-cg-shape='3'] .kp-graph__node {
+        --gr-ring-fill: var(--kp-graph-node-colour);
+    }
+
+    [data-theme='grotesk'] [data-cg-shape='3'] .kp-graph__node--hub .kp-graph__ring {
+        clip-path: inset(14%);
+    }
+
+    [data-theme='grotesk'] [data-cg-shape='3'] .kp-graph__ring {
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+    }
+
+    /* lapis · shape 1 · The girih lattice */
+
+    [data-theme='lapis'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--background);
         --gr-pat:
             repeating-linear-gradient(60deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 28px),
@@ -1263,13 +1862,11 @@
         --gr-chip-radius: 0;
         --gr-chip-border: 1px solid var(--primary);
         --gr-chip-bg: var(--background);
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 30 200;
-        --gr-skel-anim: gr-march 2400ms linear infinite;
     }
 
-    [data-theme='lapis'] [data-gr='b'] .kp-graph {
+    /* lapis · shape 2 · Lapis on vellum */
+
+    [data-theme='lapis'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-label: var(--card-foreground);
         --gr-font: var(--theme-font-display);
@@ -1284,14 +1881,39 @@
         --gr-chip-border: 1px solid var(--primary);
         --gr-chip-bg: var(--card);
         --gr-chip-fg: var(--card-foreground);
-        --gr-skel: var(--primary);
-        --gr-skel-w: 4;
-        --gr-skel-anim: gr-pulse 2400ms ease-in-out infinite;
     }
 
-    /* ══ nostromo ═════════════════════════════════════════════════════════ */
+    /* lapis · shape 3 · The star tile */
 
-    [data-theme='nostromo'] [data-gr='a'] .kp-graph {
+    [data-theme='lapis'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat: repeating-conic-gradient(
+            from 22.5deg at 50% 46%,
+            color-mix(in oklch, var(--primary) 8%, transparent) 0 22.5deg,
+            transparent 22.5deg 45deg
+        );
+        --gr-font: var(--theme-font-display);
+        --gr-size: 13px;
+        --gr-edge-w: 1.6;
+        --gr-edge-mix: 45%;
+        --gr-ring: var(--primary);
+        --gr-ring-w: 3;
+        --gr-ring-fill: var(--background);
+        --gr-core-op: 0.9;
+        --gr-hub-w: 4;
+        --gr-chip-radius: 0;
+        --gr-chip-border: 1px solid var(--primary);
+        --gr-chip-bg: var(--background);
+        --gr-chip-clip: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
+    }
+
+    [data-theme='lapis'] [data-cg-shape='3'] .kp-graph__ring {
+        clip-path: polygon(50% 0, 62% 26%, 100% 38%, 74% 62%, 82% 100%, 50% 84%, 18% 100%, 26% 62%, 0 38%, 38% 26%);
+    }
+
+    /* nostromo · shape 1 · The CRT radar */
+
+    [data-theme='nostromo'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: color-mix(in oklch, var(--foreground) 6%, oklch(from var(--background) 0 0 h));
         --gr-label: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
         --gr-frame: 1px solid var(--border);
@@ -1318,24 +1940,15 @@
         --gr-chip-border: 1px solid var(--gr-label);
         --gr-chip-font: var(--theme-font-mono);
         --gr-chip-case: uppercase;
-        --gr-skel: color-mix(in oklch, var(--gr-label) 50%, var(--gr-paper));
-        --gr-skel-w: 1.5;
-        --gr-skel-dash: 3 5;
     }
 
-    /* The radar sweep turns while the network is read. */
-    [data-theme='nostromo'] [data-gr='a'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
-        inset: -40%;
-        background: conic-gradient(from 0deg, color-mix(in oklch, var(--success) 40%, transparent), transparent 70deg);
-        border-radius: 50%;
-        z-index: 0;
-    }
-
-    [data-theme='nostromo'] [data-gr='a'] .kp-graph__kind[aria-pressed='false'] {
+    [data-theme='nostromo'] [data-cg-shape='1'] .kp-graph__kind[aria-pressed='false'] {
         color: color-mix(in oklch, var(--gr-label) 60%, var(--gr-paper));
     }
 
-    [data-theme='nostromo'] [data-gr='b'] .kp-graph {
+    /* nostromo · shape 2 · The indicator panel */
+
+    [data-theme='nostromo'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--card);
         --gr-shadow:
             inset 0 2px 0 color-mix(in oklch, oklch(from var(--background) 1 0 h) 30%, transparent),
@@ -1358,26 +1971,52 @@
         --gr-chip-off-shadow: inset 0 2px 0 var(--foreground);
         --gr-chip-case: uppercase;
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 10;
-        --gr-skel-dash: 0.1 30;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 1200ms steps(6) infinite;
     }
 
-    /* Knobs that read the node's own colour are set on the node. */
-    [data-theme='nostromo'] [data-gr='b'] .kp-graph__node {
+    [data-theme='nostromo'] [data-cg-shape='2'] .kp-graph__node {
         --gr-ring-fill: var(--kp-graph-node-colour);
         --gr-core: color-mix(in oklch, var(--kp-graph-node-colour) 40%, oklch(from var(--background) 1 0 h));
     }
 
-    [data-theme='nostromo'] [data-gr='b'] .kp-graph__core {
+    [data-theme='nostromo'] [data-cg-shape='2'] .kp-graph__core {
         r: 4px;
     }
 
-    /* ══ titanium ═════════════════════════════════════════════════════════ */
+    /* nostromo · shape 3 · The vector monitor */
 
-    [data-theme='titanium'] [data-gr='a'] .kp-graph {
+    [data-theme='nostromo'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: color-mix(in oklch, var(--foreground) 6%, oklch(from var(--background) 0 0 h));
+        --gr-label: color-mix(in oklch, var(--warning) 75%, oklch(from var(--background) 1 0 h));
+        --gr-frame: 1px solid var(--border);
+        --gr-radius: 6px;
+        --gr-font: var(--theme-font-mono);
+        --gr-case: uppercase;
+        --gr-size: 11px;
+        --gr-edge-mix: 20%;
+        --gr-edge-w: 1.2;
+        --gr-ring: var(--gr-label);
+        --gr-ring-w: 1.5;
+        --gr-ring-fill: var(--gr-paper);
+        --gr-core-op: 0;
+        --gr-chip-radius: 0;
+        --gr-chip-bg: var(--gr-paper);
+        --gr-chip-fg: var(--gr-label);
+        --gr-chip-border: 1px solid var(--gr-label);
+        --gr-chip-font: var(--theme-font-mono);
+        --gr-chip-case: uppercase;
+    }
+
+    [data-theme='nostromo'] [data-cg-shape='3'] .kp-graph__ring {
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    [data-theme='nostromo'] [data-cg-shape='3'] .kp-graph__kind[aria-pressed='false'] {
+        color: color-mix(in oklch, var(--gr-label) 60%, var(--gr-paper));
+    }
+
+    /* titanium · shape 1 · The milled plate */
+
+    [data-theme='titanium'] [data-cg-shape='1'] .kp-graph {
         --gr-paper: var(--card);
         --gr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 3px);
         --gr-shadow:
@@ -1400,13 +2039,11 @@
         --gr-chip-bg: color-mix(in oklch, var(--foreground) 5%, var(--card));
         --gr-chip-shadow: inset 0 1px 0 color-mix(in oklch, oklch(from var(--background) 1 0 h) 50%, transparent);
         --gr-chip-font: var(--theme-font-mono);
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 20 180;
-        --gr-skel-anim: gr-march 1800ms linear infinite;
     }
 
-    [data-theme='titanium'] [data-gr='b'] .kp-graph {
+    /* titanium · shape 2 · The instrument dial */
+
+    [data-theme='titanium'] [data-cg-shape='2'] .kp-graph {
         --gr-paper: var(--background);
         --gr-font: var(--theme-font-mono);
         --gr-size: 11.5px;
@@ -1422,40 +2059,2002 @@
         --gr-chip-radius: 999px;
         --gr-chip-bg: var(--card);
         --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='titanium'] [data-cg-shape='2'] .kp-graph__core {
+        r: 5px;
+    }
+
+    /* titanium · shape 3 · The anodised parts */
+
+    [data-theme='titanium'] [data-cg-shape='3'] .kp-graph {
+        --gr-paper: var(--background);
+        --gr-pat: radial-gradient(color-mix(in oklch, var(--foreground) 5%, transparent) 0.6px, transparent 1px);
+        --gr-pat-size: 3px 3px;
+        --gr-font: var(--theme-font-mono);
+        --gr-size: 11.5px;
+        --gr-edge-w: 1;
+        --gr-edge-mix: 45%;
+        --gr-ring-w: 5;
+        --gr-node-mix: 70%;
+        --gr-ring-fill: var(--card);
+        --gr-core: color-mix(in oklch, var(--foreground) 20%, var(--card));
+        --gr-core-op: 1;
+        --gr-chip-radius: 999px;
+        --gr-chip-bg: color-mix(in oklch, var(--primary) 14%, var(--card));
+        --gr-chip-border: 1px solid color-mix(in oklch, var(--primary) 50%, var(--foreground));
+        --gr-chip-font: var(--theme-font-mono);
+    }
+
+    [data-theme='titanium'] [data-cg-shape='3'] .kp-graph__core {
+        r: 4px;
+    }
+
+    /* ══ While loading (data-cg-loading): the picture while the network is read; always moving. ══ */
+
+    /* formal · loading 1 · Counted dot by dot */
+
+    [data-theme='formal'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel-w: 2;
+        --gr-skel-dash: 1 6;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 6000ms steps(60) infinite;
+    }
+
+    /* formal · loading 2 · Engraved round */
+
+    [data-theme='formal'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 3200ms ease-in-out infinite;
+    }
+
+    /* formal · loading 3 · The guilloché border */
+
+    [data-theme='formal'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 8 24 8;
+        --gr-skel-cap: butt;
+        --gr-skel-anim: gr-march 5000ms linear infinite;
+    }
+
+    /* light · loading 1 · A soft dashed ring */
+
+    [data-theme='light'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel-w: 3;
+        --gr-skel-dash: 8 6;
+        --gr-skel-anim: gr-march 4000ms linear infinite;
+    }
+
+    /* light · loading 2 · A band of daylight */
+
+    [data-theme='light'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel-w: 6;
+        --gr-skel-dash: 60 400;
+        --gr-skel-cap: round;
+        --gr-skel: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    /* light · loading 3 · Pearls on a string */
+
+    [data-theme='light'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--primary) 75%, var(--foreground));
+        --gr-skel-w: 9;
+        --gr-skel-dash: 0.1 18;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 2600ms linear infinite;
+    }
+
+    /* dark · loading 1 · The ticking ring */
+
+    [data-theme='dark'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel-w: 2;
+        --gr-skel-dash: 4 6;
+        --gr-skel-anim: gr-march 2400ms steps(12) infinite;
+    }
+
+    /* dark · loading 2 · The scanning light */
+
+    [data-theme='dark'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel-w: 4;
+        --gr-skel: var(--primary);
+        --gr-skel-dash: 60 340;
+        --gr-skel-anim: gr-march 1800ms linear infinite;
+    }
+
+    /* dark · loading 3 · The busy dots */
+
+    [data-theme='dark'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 0.1 14 0.1 14 0.1 400;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1400ms linear infinite;
+    }
+
+    /* cyberpunk · loading 1 · The packet run */
+
+    [data-theme='cyberpunk'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 30 300;
+        --gr-skel-cap: square;
+        --gr-skel-anim: gr-march 1400ms linear infinite;
+    }
+
+    /* cyberpunk · loading 2 · The ICE spins */
+
+    [data-theme='cyberpunk'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 26 10;
+        --gr-skel-anim: gr-march 900ms linear infinite;
+    }
+
+    /* cyberpunk · loading 3 · The glitch */
+
+    [data-theme='cyberpunk'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 5;
+        --gr-skel-dash: 4 9 18 5 2 12;
+        --gr-skel-cap: butt;
+        --gr-skel-anim: gr-glitch 600ms steps(3) infinite, gr-march 2400ms steps(8) infinite;
+    }
+
+    /* synthwave · loading 1 · The horizon breathes */
+
+    [data-theme='synthwave'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-anim: gr-breathe 1600ms ease-in-out infinite;
+    }
+
+    /* synthwave · loading 2 · The vector ring */
+
+    [data-theme='synthwave'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--accent);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 80 40;
+        --gr-skel-anim: gr-march 2000ms linear infinite;
+    }
+
+    /* synthwave · loading 3 · The VHS roll */
+
+    [data-theme='synthwave'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--accent);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 20 10;
+        --gr-skel-anim: gr-march 2600ms linear infinite;
+        --gr-load-over: linear-gradient(
+            to bottom,
+            transparent 0 45%,
+            color-mix(in oklch, var(--foreground) 14%, transparent) 45% 52%,
+            transparent 52%
+        );
+        --gr-load-over-size: 100% 200%;
+        --gr-load-over-anim: gr-roll 2000ms linear infinite;
+    }
+
+    /* pastel · loading 1 · The beads hop */
+
+    [data-theme='pastel'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 12;
+        --gr-skel-dash: 0.5 26;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1800ms steps(9) infinite;
+    }
+
+    /* pastel · loading 2 · The doodle drifts */
+
+    [data-theme='pastel'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--accent);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 10 8;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 3000ms linear infinite;
+    }
+
+    /* pastel · loading 3 · The bouncing gumdrop */
+
+    [data-theme='pastel'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 14;
+        --gr-skel-dash: 0.1 600;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 2000ms cubic-bezier(0.5, 0, 0.5, 1) infinite, gr-hop 500ms ease-in-out infinite;
+    }
+
+    /* terminal · loading 1 · The text spinner */
+
+    [data-theme='terminal'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 12 12;
+        --gr-skel-anim: gr-march 1000ms steps(4) infinite;
+    }
+
+    /* terminal · loading 2 · Hops marching */
+
+    [data-theme='terminal'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 10;
+        --gr-skel-anim: gr-march 800ms linear infinite;
+    }
+
+    /* terminal · loading 3 · The blinking cursor */
+
+    [data-theme='terminal'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 10;
+        --gr-skel-dash: 8 600;
+        --gr-skel-cap: butt;
+        --gr-skel-anim: gr-blink 1000ms steps(1) infinite, gr-march 8000ms steps(32) infinite;
+    }
+
+    /* forest · loading 1 · The trail walks */
+
+    [data-theme='forest'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 8 7;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    /* forest · loading 2 · The canopy sways */
+
+    [data-theme='forest'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-anim: gr-sway 2400ms ease-in-out infinite;
+    }
+
+    /* forest · loading 3 · Fireflies */
+
+    [data-theme='forest'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--warning) 70%, var(--foreground));
+        --gr-skel-w: 6;
+        --gr-skel-dash: 0.1 40 0.1 90 0.1 160;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 5000ms linear infinite, gr-blink 1300ms steps(1) infinite;
+    }
+
+    /* high-contrast · loading 1 · The heavy dash */
+
+    [data-theme='high-contrast'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 10 4;
+        --gr-skel-anim: gr-march 3000ms steps(15) infinite;
+    }
+
+    /* high-contrast · loading 2 · The running bar */
+
+    [data-theme='high-contrast'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 60 40;
+        --gr-skel-anim: gr-march 1600ms linear infinite;
+    }
+
+    /* high-contrast · loading 3 · The countdown */
+
+    [data-theme='high-contrast'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 2400ms steps(4) infinite;
+    }
+
+    /* sepia · loading 1 · The nib draws */
+
+    [data-theme='sepia'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 3000ms ease-in-out infinite;
+    }
+
+    /* sepia · loading 2 · The platen presses */
+
+    [data-theme='sepia'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 6;
+        --gr-skel-anim: gr-stamp 1800ms ease-in-out infinite;
+    }
+
+    /* sepia · loading 3 · The pendulum */
+
+    [data-theme='sepia'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 40 1400;
+        --gr-skel-anim: gr-swing-dash 2400ms ease-in-out infinite alternate;
+    }
+
+    /* blueprint · loading 1 · The plotter dashes */
+
+    [data-theme='blueprint'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--accent);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 14 4 2 4;
+        --gr-skel-anim: gr-march 2000ms linear infinite;
+    }
+
+    /* blueprint · loading 2 · The dash marches */
+
+    [data-theme='blueprint'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 10 6;
+        --gr-skel-anim: gr-march 1200ms linear infinite;
+    }
+
+    /* blueprint · loading 3 · The compass draws */
+
+    [data-theme='blueprint'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 2600ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    }
+
+    /* solstice · loading 1 · A dawn rises */
+
+    [data-theme='solstice'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 4;
+        --gr-skel-anim: gr-breathe 2400ms ease-in-out infinite;
+    }
+
+    /* solstice · loading 2 · The embers glow */
+
+    [data-theme='solstice'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--destructive) 60%, var(--warning));
+        --gr-skel-w: 6;
+        --gr-skel-dash: 18 6 6 6;
+        --gr-skel-anim: gr-march 3600ms linear infinite, gr-flicker 1200ms steps(1) infinite;
+    }
+
+    /* solstice · loading 3 · The shadow turns */
+
+    [data-theme='solstice'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 6;
+        --gr-skel-anim: gr-march 6000ms linear infinite;
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 40deg);
+        --gr-load-over-anim: gr-sweep 4000ms linear infinite;
+    }
+
+    /* brutalism · loading 1 · The slab stamps */
+
+    [data-theme='brutalism'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 14;
+        --gr-skel-dash: 40 20;
+        --gr-skel-anim: gr-march 900ms steps(3) infinite;
+    }
+
+    /* brutalism · loading 2 · The stickers drop */
+
+    [data-theme='brutalism'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 8;
+        --gr-skel-anim: gr-drop 1200ms ease-in infinite;
+    }
+
+    /* brutalism · loading 3 · The jackhammer */
+
+    [data-theme='brutalism'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 10;
+        --gr-skel-dash: 30 10;
+        --gr-skel-anim: gr-glitch 300ms steps(2) infinite, gr-march 2000ms steps(10) infinite;
+    }
+
+    /* deco · loading 1 · A glint runs the gold */
+
+    [data-theme='deco'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 40 160;
+        --gr-skel-anim: gr-march 2200ms linear infinite;
+    }
+
+    /* deco · loading 2 · The bulbs chase */
+
+    [data-theme='deco'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 0.1 18;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 700ms steps(2) infinite;
+    }
+
+    /* deco · loading 3 · The spotlight */
+
+    [data-theme='deco'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 6 4;
+        --gr-skel-anim: gr-march 3200ms steps(16) infinite;
+        --gr-load-over: conic-gradient(
+            from 0deg at 50% 100%,
+            transparent 0 330deg,
+            color-mix(in oklch, var(--primary) 26%, transparent) 345deg,
+            transparent 360deg
+        );
+        --gr-load-over-anim: gr-searchlight 2800ms ease-in-out infinite alternate;
+    }
+
+    /* phantom · loading 1 · The stamp beats */
+
+    [data-theme='phantom'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-anim: gr-blink 1400ms steps(1) infinite;
+    }
+
+    /* phantom · loading 2 · The halftone shuffles */
+
+    [data-theme='phantom'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 8;
+        --gr-skel-dash: 20 8;
+        --gr-skel-anim: gr-march 1000ms steps(5) infinite;
+    }
+
+    /* phantom · loading 3 · The calling-card spin */
+
+    [data-theme='phantom'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 10;
+        --gr-skel-dash: 50 30 10 30;
+        --gr-skel-anim: gr-march 1200ms steps(6) infinite;
+        --gr-load-over: radial-gradient(color-mix(in oklch, var(--foreground) 10%, transparent) 1px, transparent 1.6px);
+        --gr-load-over-size: 7px 7px;
+        --gr-load-over-anim: gr-pan 1200ms steps(6) infinite;
+    }
+
+    /* shade-light · loading 1 · The sketch hatches */
+
+    [data-theme='shade-light'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--foreground) 40%, var(--card));
+        --gr-skel-w: 3;
+        --gr-skel-dash: 2 3;
+        --gr-skel-anim: gr-march 3000ms steps(20) infinite;
+    }
+
+    /* shade-light · loading 2 · A cloud’s shade passes */
+
+    [data-theme='shade-light'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel-w: 10;
+        --gr-skel: color-mix(in oklch, var(--foreground) 20%, var(--card));
+        --gr-skel-anim: gr-sway 3000ms ease-in-out infinite;
+        --gr-load-over: linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--foreground) 7%, transparent) 45% 55%, transparent 70%);
+        --gr-load-over-size: 300% 100%;
+        --gr-load-over-anim: gr-cloud 4000ms linear infinite;
+    }
+
+    /* shade-light · loading 3 · The pencil circles */
+
+    [data-theme='shade-light'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--foreground) 55%, var(--card));
+        --gr-skel-w: 2;
+        --gr-skel-dash: 120 1400;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1600ms linear infinite;
+    }
+
+    /* shade-dark · loading 1 · The silver hatches */
+
+    [data-theme='shade-dark'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--foreground) 50%, var(--background));
+        --gr-skel-w: 1;
+        --gr-skel-dash: 2 2;
+        --gr-skel-anim: gr-march 4000ms steps(25) infinite;
+    }
+
+    /* shade-dark · loading 2 · The pool breathes */
+
+    [data-theme='shade-dark'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--warning) 40%, var(--background));
+        --gr-skel-w: 10;
+        --gr-skel-anim: gr-breathe 3000ms ease-in-out infinite;
+    }
+
+    /* shade-dark · loading 3 · The moth */
+
+    [data-theme='shade-dark'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--foreground) 70%, var(--background));
+        --gr-skel-w: 4;
+        --gr-skel-dash: 8 1400;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1800ms cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite, gr-sway 500ms ease-in-out infinite;
+    }
+
+    /* retro · loading 1 · The hourglass dither */
+
+    [data-theme='retro'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--muted-foreground);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 1 1;
+        --gr-skel-anim: gr-march 2000ms steps(8) infinite;
+    }
+
+    /* retro · loading 2 · Marching ants */
+
+    [data-theme='retro'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 2;
+        --gr-skel-dash: 4 4;
+        --gr-skel-anim: gr-march 4000ms steps(100) infinite;
+    }
+
+    /* retro · loading 3 · The progress blocks */
+
+    [data-theme='retro'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 12;
+        --gr-skel-dash: 14 4;
+        --gr-skel-anim: gr-write 3000ms steps(18) infinite;
+    }
+
+    /* grotesk · loading 1 · A line runs */
+
+    [data-theme='grotesk'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 60 30;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1600ms linear infinite;
+    }
+
+    /* grotesk · loading 2 · Three blocks cut in */
+
+    [data-theme='grotesk'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 16;
+        --gr-skel-dash: 16 40;
+        --gr-skel-anim: gr-march 1200ms steps(3) infinite;
+    }
+
+    /* grotesk · loading 3 · The rotating square */
+
+    [data-theme='grotesk'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--destructive);
+        --gr-skel-w: 12;
+        --gr-skel-dash: 200 1000;
+        --gr-skel-anim: gr-march 2000ms steps(4) infinite;
+    }
+
+    /* lapis · loading 1 · A glint runs the frame */
+
+    [data-theme='lapis'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 30 200;
+        --gr-skel-anim: gr-march 2400ms linear infinite;
+    }
+
+    /* lapis · loading 2 · The burnisher */
+
+    [data-theme='lapis'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 30 200;
+        --gr-skel-anim: gr-march 2400ms ease-in-out infinite;
+    }
+
+    /* lapis · loading 3 · The tile is laid */
+
+    [data-theme='lapis'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 6;
+        --gr-skel-dash: 1400;
+        --gr-skel-anim: gr-write 3200ms steps(16) infinite;
+    }
+
+    /* nostromo · loading 1 · The radar sweep */
+
+    [data-theme='nostromo'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--gr-label) 50%, var(--gr-paper));
+        --gr-skel-w: 1.5;
+        --gr-skel-dash: 3 5;
+        --gr-skel-anim: gr-march 6000ms steps(30) infinite;
+    }
+
+    [data-theme='nostromo'] [data-cg-loading='1'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+        inset: -40%;
+        background: conic-gradient(from 0deg, color-mix(in oklch, var(--success) 40%, transparent), transparent 70deg);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    /* nostromo · loading 2 · The lamps scan */
+
+    [data-theme='nostromo'] [data-cg-loading='2'] .kp-graph {
+        --gr-skel: var(--foreground);
+        --gr-skel-w: 10;
+        --gr-skel-dash: 0.1 30;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 1200ms steps(6) infinite;
+    }
+
+    /* nostromo · loading 3 · MOTHER computes */
+
+    [data-theme='nostromo'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
+        --gr-skel-w: 8;
+        --gr-skel-dash: 6 3;
+        --gr-skel-anim: gr-write 2400ms steps(24) infinite;
+        --gr-load-over: repeating-linear-gradient(
+            to bottom,
+            color-mix(in oklch, oklch(from var(--background) 0 0 h) 25%, transparent) 0 1px,
+            transparent 1px 3px
+        );
+        --gr-load-over-size: 100% 6px;
+        --gr-load-over-anim: gr-roll 600ms linear infinite;
+    }
+
+    /* titanium · loading 1 · The cutter runs */
+
+    [data-theme='titanium'] [data-cg-loading='1'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 3;
+        --gr-skel-dash: 20 180;
+        --gr-skel-anim: gr-march 1800ms linear infinite;
+    }
+
+    /* titanium · loading 2 · The knurl rolls */
+
+    [data-theme='titanium'] [data-cg-loading='2'] .kp-graph {
         --gr-skel: var(--foreground);
         --gr-skel-w: 6;
         --gr-skel-dash: 1.5 1.5;
         --gr-skel-anim: gr-march 3000ms linear infinite;
     }
 
-    [data-theme='titanium'] [data-gr='b'] .kp-graph__core {
-        r: 5px;
+    /* titanium · loading 3 · The lathe */
+
+    [data-theme='titanium'] [data-cg-loading='3'] .kp-graph {
+        --gr-skel: var(--primary);
+        --gr-skel-w: 4;
+        --gr-skel-dash: 2 3 2 3 2 300;
+        --gr-skel-cap: round;
+        --gr-skel-anim: gr-march 700ms linear infinite;
+    }
+
+    /* ══ How the network arrives (data-cg-arrival): played when the drawn network comes in (data-cg-moment="arrive"); 1 is "at once" and writes nothing. ══ */
+
+    /* formal · arrival 2 · Inked in */
+
+    [data-theme='formal'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 800ms ease-out both;
+        --gr-arr-node: gr-grow 260ms ease-out both;
+        --gr-stagger: 40ms;
+        --gr-node-at: 500ms;
+    }
+
+    /* formal · arrival 3 · Typeset */
+
+    [data-theme='formal'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-appear 1ms both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 70ms;
+        --gr-edge-at: 900ms;
+    }
+
+    /* light · arrival 2 · Lifted onto the canvas */
+
+    [data-theme='light'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 900ms ease-out both;
+        --gr-arr-node: gr-rise-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-arr-chip: gr-rise-in 400ms ease-out both;
+        --gr-stagger: 45ms;
+    }
+
+    /* light · arrival 3 · Unfolding */
+
+    [data-theme='light'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 700ms ease-out both;
+        --gr-arr-node: gr-pop 520ms ease-out both;
+        --gr-stagger: 30ms;
+        --gr-edge-at: 300ms;
+    }
+
+    /* dark · arrival 2 · Powered up */
+
+    [data-theme='dark'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-ignite 500ms linear both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 55ms;
+        --gr-edge-at: 700ms;
+    }
+
+    /* dark · arrival 3 · Slid in */
+
+    [data-theme='dark'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 700ms ease-out both;
+        --gr-arr-node: gr-rise-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 30ms;
+        --gr-edge-at: 250ms;
+    }
+
+    /* cyberpunk · arrival 2 · Jacked in */
+
+    [data-theme='cyberpunk'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-ignite 700ms linear both;
+        --gr-arr-node: gr-ignite 500ms linear both;
+        --gr-stagger: 25ms;
+        --gr-estagger: 15ms;
+        --gr-node-at: 500ms;
+    }
+
+    /* cyberpunk · arrival 3 · The data burst */
+
+    [data-theme='cyberpunk'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms linear both;
+        --gr-arr-node: gr-burst 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 15ms;
+        --gr-edge-at: 300ms;
+        --gr-arr-box: view-box;
+    }
+
+    /* synthwave · arrival 2 · Stars come out */
+
+    [data-theme='synthwave'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 900ms ease-out both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 80ms;
+        --gr-edge-at: 900ms;
+    }
+
+    /* synthwave · arrival 3 · Vector draw */
+
+    [data-theme='synthwave'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms linear both;
+        --gr-arr-node: gr-grow 200ms linear both;
+        --gr-estagger: 25ms;
+        --gr-node-at: 500ms;
+    }
+
+    /* pastel · arrival 2 · Beads dropped in */
+
+    [data-theme='pastel'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms ease-out both;
+        --gr-arr-node: gr-drop-in 480ms cubic-bezier(0.3, 1.5, 0.6, 1) both;
+        --gr-arr-chip: gr-drop-in 400ms ease-out both;
+        --gr-stagger: 50ms;
+    }
+
+    /* pastel · arrival 3 · Popped */
+
+    [data-theme='pastel'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 700ms ease-out both;
+        --gr-arr-node: gr-pop 420ms ease-out both;
+        --gr-stagger: 35ms;
+        --gr-edge-at: 200ms;
+    }
+
+    /* terminal · arrival 2 · Printed line by line */
+
+    [data-theme='terminal'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-appear 1ms both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 60ms;
+        --gr-estagger: 20ms;
+        --gr-edge-at: 800ms;
+    }
+
+    /* terminal · arrival 3 · Scrolled up */
+
+    [data-theme='terminal'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-rise-in 400ms steps(4) both;
+        --gr-arr-node: gr-rise-in 400ms steps(4) both;
+    }
+
+    /* forest · arrival 2 · The trail is walked */
+
+    [data-theme='forest'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 1000ms ease-in-out both;
+        --gr-arr-node: gr-grow 300ms ease-out both;
+        --gr-stagger: 60ms;
+        --gr-estagger: 40ms;
+        --gr-node-at: 400ms;
+    }
+
+    /* forest · arrival 3 · Sprouting */
+
+    [data-theme='forest'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 900ms ease-out both;
+        --gr-arr-node: gr-sprout 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 40ms;
+        --gr-edge-at: 200ms;
+    }
+
+    /* high-contrast · arrival 2 · Placed */
+
+    [data-theme='high-contrast'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms steps(5) both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 60ms;
+        --gr-edge-at: 700ms;
+    }
+
+    /* high-contrast · arrival 3 · Stamped */
+
+    [data-theme='high-contrast'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-appear 1ms both;
+        --gr-arr-node: gr-stamp-in 240ms steps(2) both;
+        --gr-edge-at: 300ms;
+    }
+
+    /* sepia · arrival 2 · Written by hand */
+
+    [data-theme='sepia'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 1200ms ease-in-out both;
+        --gr-arr-node: gr-grow 300ms ease-out both;
+        --gr-stagger: 50ms;
+        --gr-estagger: 50ms;
+        --gr-node-at: 700ms;
+    }
+
+    /* sepia · arrival 3 · Printed */
+
+    [data-theme='sepia'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-thick-in 380ms ease-out both;
+        --gr-arr-node: gr-press-in 380ms ease-out both;
+        --gr-arr-chip: gr-press-in 380ms ease-out both;
+    }
+
+    /* blueprint · arrival 2 · Plotted */
+
+    [data-theme='blueprint'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms linear both;
+        --gr-arr-node: gr-grow 160ms linear both;
+        --gr-stagger: 35ms;
+        --gr-estagger: 60ms;
+        --gr-node-at: 900ms;
+    }
+
+    /* blueprint · arrival 3 · Measured out */
+
+    [data-theme='blueprint'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms ease-in-out both;
+        --gr-arr-node: gr-burst 600ms ease-in-out both;
+        --gr-arr-box: view-box;
+    }
+
+    /* solstice · arrival 2 · Sunrise */
+
+    [data-theme='solstice'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 1000ms ease-out both;
+        --gr-arr-node: gr-rise-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 30ms;
+        --gr-edge-at: 300ms;
+    }
+
+    /* solstice · arrival 3 · Kindled */
+
+    [data-theme='solstice'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 700ms ease-in both;
+        --gr-arr-node: gr-ignite 600ms linear both;
+        --gr-stagger: 40ms;
+        --gr-edge-at: 500ms;
+    }
+
+    /* brutalism · arrival 2 · Slammed down */
+
+    [data-theme='brutalism'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-appear 1ms both;
+        --gr-arr-node: gr-drop-in 260ms cubic-bezier(0.7, 0, 1, 1) both;
+        --gr-arr-chip: gr-drop-in 260ms cubic-bezier(0.7, 0, 1, 1) both;
+        --gr-stagger: 45ms;
+        --gr-edge-at: 700ms;
+    }
+
+    /* brutalism · arrival 3 · Stamped */
+
+    [data-theme='brutalism'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-thick-in 300ms steps(3) both;
+        --gr-arr-node: gr-stamp-in 220ms steps(2) both;
+        --gr-stagger: 30ms;
+        --gr-edge-at: 350ms;
+    }
+
+    /* deco · arrival 2 · Curtain up */
+
+    [data-theme='deco'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 800ms ease-out both;
+        --gr-arr-node: gr-curtain 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-edge-at: 500ms;
+        --gr-arr-box: view-box;
+    }
+
+    /* deco · arrival 3 · The lights come up */
+
+    [data-theme='deco'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-ignite 600ms linear both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 70ms;
+        --gr-edge-at: 900ms;
+    }
+
+    /* phantom · arrival 2 · Pinned up */
+
+    [data-theme='phantom'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms ease-in both;
+        --gr-arr-node: gr-tilt-in 300ms steps(3) both;
+        --gr-stagger: 50ms;
+        --gr-edge-at: 700ms;
+    }
+
+    /* phantom · arrival 3 · All-out attack */
+
+    [data-theme='phantom'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 300ms linear both;
+        --gr-arr-node: gr-slash-in 300ms cubic-bezier(0.7, 0, 0.2, 1) both;
+        --gr-stagger: 20ms;
+        --gr-edge-at: 250ms;
+    }
+
+    /* shade-light · arrival 2 · Sketched */
+
+    [data-theme='shade-light'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 1000ms ease-in-out both;
+        --gr-arr-node: gr-rise-in 400ms ease-out both;
+        --gr-stagger: 40ms;
+        --gr-estagger: 40ms;
+        --gr-node-at: 600ms;
+    }
+
+    /* shade-light · arrival 3 · Out of the shade */
+
+    [data-theme='shade-light'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 800ms ease-out both;
+        --gr-arr-node: gr-grow 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 50ms;
+        --gr-edge-at: 300ms;
+    }
+
+    /* shade-dark · arrival 2 · Drawn in silver */
+
+    [data-theme='shade-dark'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 1100ms ease-in-out both;
+        --gr-arr-node: gr-grow 350ms ease-out both;
+        --gr-stagger: 40ms;
+        --gr-node-at: 700ms;
+    }
+
+    /* shade-dark · arrival 3 · The lamp comes on */
+
+    [data-theme='shade-dark'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms ease-out both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 60ms;
+        --gr-edge-at: 700ms;
+    }
+
+    /* retro · arrival 2 · Painted in */
+
+    [data-theme='retro'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms steps(5) both;
+        --gr-arr-node: gr-appear 1ms both;
+        --gr-stagger: 60ms;
+        --gr-edge-at: 800ms;
+    }
+
+    /* retro · arrival 3 · The window opens */
+
+    [data-theme='retro'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-zoom-in 300ms steps(4) both;
+        --gr-arr-node: gr-zoom-in 300ms steps(4) both;
+        --gr-arr-chip: gr-appear 1ms both;
+        --gr-arr-box: view-box;
+    }
+
+    /* grotesk · arrival 2 · Lines laid */
+
+    [data-theme='grotesk'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms cubic-bezier(0.6, 0, 0.2, 1) both;
+        --gr-arr-node: gr-grow 220ms ease-out both;
+        --gr-stagger: 25ms;
+        --gr-estagger: 50ms;
+        --gr-node-at: 800ms;
+    }
+
+    /* grotesk · arrival 3 · The grid snaps */
+
+    [data-theme='grotesk'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-stretch-in 420ms cubic-bezier(0.6, 0, 0.2, 1) both;
+        --gr-arr-node: gr-slash-in 420ms cubic-bezier(0.6, 0, 0.2, 1) both;
+        --gr-stagger: 15ms;
+    }
+
+    /* lapis · arrival 2 · Inlaid */
+
+    [data-theme='lapis'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 900ms ease-out both;
+        --gr-arr-node: gr-spin-in 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 35ms;
+        --gr-node-at: 600ms;
+    }
+
+    /* lapis · arrival 3 · The pattern turns */
+
+    [data-theme='lapis'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 900ms ease-out both;
+        --gr-arr-node: gr-spin-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-arr-box: view-box;
+    }
+
+    /* nostromo · arrival 2 · Blips acquired */
+
+    [data-theme='nostromo'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms linear both;
+        --gr-arr-node: gr-ignite 400ms linear both;
+        --gr-stagger: 90ms;
+        --gr-edge-at: 1100ms;
+    }
+
+    /* nostromo · arrival 3 · Switched on */
+
+    [data-theme='nostromo'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-appear 1ms both;
+        --gr-arr-node: gr-blink3 600ms steps(1) both;
+        --gr-edge-at: 600ms;
+    }
+
+    /* titanium · arrival 2 · Machined in */
+
+    [data-theme='titanium'] [data-cg-arrival='2'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 700ms cubic-bezier(0.4, 0, 0.2, 1) both;
+        --gr-arr-node: gr-press-in 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 35ms;
+        --gr-node-at: 500ms;
+    }
+
+    /* titanium · arrival 3 · Dialled in */
+
+    [data-theme='titanium'] [data-cg-arrival='3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms linear both;
+        --gr-arr-node: gr-spin-in 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        --gr-stagger: 20ms;
+        --gr-edge-at: 400ms;
+    }
+
+    /* ══ The picked node and the hidden kind (data-cg-focus): how a pick, the dimmed rest and an off kind read. ══ */
+
+    /* formal · focus 1 · Pencil tint */
+
+    [data-theme='formal'] [data-cg-focus='1'] .kp-graph {
+        --gr-dim-filter: grayscale(1);
+    }
+
+    /* formal · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* formal · focus 3 · Red-ink tick */
+
+    [data-theme='formal'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 3.5;
+        --gr-node-dim: 0.5;
+        --gr-dim: 0.2;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-deco: line-through;
+    }
+
+    /* light · focus 1 · Misted */
+
+    [data-theme='light'] [data-cg-focus='1'] .kp-graph {
+        --gr-node-dim: 0.22;
+        --gr-dim: 0.12;
+    }
+
+    /* light · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* light · focus 3 · The highlighter */
+
+    [data-theme='light'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--warning) 55%, var(--foreground));
+        --gr-pick-w: 8;
+        --gr-node-dim: 0.5;
+        --gr-dim: 0.25;
+        --gr-off-deco: line-through;
+    }
+
+    /* dark · focus 1 · Dull outline */
+
+    [data-theme='dark'] [data-cg-focus='1'] .kp-graph {
+        --gr-dim-filter: grayscale(1);
+        --gr-node-dim: 0.35;
+    }
+
+    /* dark · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* dark · focus 3 · Spotlit */
+
+    [data-theme='dark'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 4;
+        --gr-pick-glow: drop-shadow(0 0 5px var(--primary));
+        --gr-node-dim: 0.25;
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* cyberpunk · focus 1 · Glow killed */
+
+    [data-theme='cyberpunk'] [data-cg-focus='1'] .kp-graph {
+        --gr-dim-filter: grayscale(1);
+    }
+
+    /* cyberpunk · focus 2 · Cold outline */
+
+    [data-theme='cyberpunk'] [data-cg-focus='2'] .kp-graph {
+        --gr-dim-filter: grayscale(1) brightness(0.8);
+    }
+
+    /* cyberpunk · focus 3 · Target lock */
+
+    [data-theme='cyberpunk'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 4;
+        --gr-pick-dash: 4 3;
+        --gr-pick-glow: drop-shadow(0 0 6px var(--primary));
+        --gr-node-dim: 0.2;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-deco: line-through;
+    }
+
+    /* synthwave · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* synthwave · focus 2 · Neon spotlight */
+
+    [data-theme='synthwave'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--accent);
+        --gr-pick-w: 4;
+        --gr-pick-glow: drop-shadow(0 0 6px var(--accent));
+        --gr-node-dim: 0.25;
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* synthwave · focus 3 · Night falls */
+
+    [data-theme='synthwave'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: grayscale(1) brightness(0.7);
+        --gr-dim: 0.12;
+        --gr-off-deco: line-through;
+    }
+
+    /* pastel · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* pastel · focus 2 · The sticker */
+
+    [data-theme='pastel'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 4;
+        --gr-node-dim: 0.35;
+        --gr-dim: 0.15;
+        --gr-off-deco: line-through;
+    }
+
+    /* pastel · focus 3 · The heart */
+
+    [data-theme='pastel'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--accent) 70%, var(--foreground));
+        --gr-pick-w: 6;
+        --gr-pick-glow: drop-shadow(0 3px 0 var(--accent));
+        --gr-node-dim: 0.5;
+        --gr-off-outline: 2px dashed currentColor;
+    }
+
+    /* terminal · focus 1 · Half bright */
+
+    [data-theme='terminal'] [data-cg-focus='1'] .kp-graph {
+        --gr-node-dim: 0.45;
+    }
+
+    /* terminal · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* terminal · focus 3 · Reverse video */
+
+    [data-theme='terminal'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 6;
+        --gr-node-dim: 0.25;
+        --gr-off-deco: line-through;
+    }
+
+    /* forest · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* forest · focus 2 · In the clearing */
+
+    [data-theme='forest'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: saturate(0.4);
+        --gr-off-deco: line-through;
+    }
+
+    /* forest · focus 3 · Blazed */
+
+    [data-theme='forest'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 6;
+        --gr-pick-dash: 7 2;
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: sepia(0.6);
+        --gr-off-outline: 2px dashed currentColor;
+    }
+
+    /* high-contrast · focus 1 · The yellow ring */
+
+    [data-theme='high-contrast'] [data-cg-focus='1'] .kp-graph {
+        --gr-pick: var(--ring);
+        --gr-pick-w: 6;
+        --gr-node-dim: 0.4;
+        --gr-dim: 0.15;
+    }
+
+    /* high-contrast · focus 2 · The yellow ring, heavier */
+
+    [data-theme='high-contrast'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--ring);
+        --gr-pick-w: 6;
+    }
+
+    /* high-contrast · focus 3 · Boxed */
+
+    [data-theme='high-contrast'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--ring);
+        --gr-pick-w: 7;
+        --gr-pick-glow: drop-shadow(0 0 0 var(--foreground)) drop-shadow(0 0 1px var(--foreground));
+        --gr-node-dim: 0.55;
+        --gr-dim-filter: grayscale(1);
+        --gr-dim: 0.3;
+        --gr-off-deco: line-through;
+    }
+
+    /* sepia · focus 1 · Faded ink */
+
+    [data-theme='sepia'] [data-cg-focus='1'] .kp-graph {
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: sepia(1);
+    }
+
+    /* sepia · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* sepia · focus 3 · Circled in red */
+
+    [data-theme='sepia'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 3;
+        --gr-node-dim: 0.5;
+        --gr-dim-filter: sepia(1);
+        --gr-off-deco: line-through;
+    }
+
+    /* blueprint · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* blueprint · focus 2 · Redlined */
+
+    [data-theme='blueprint'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--destructive) 60%, var(--foreground));
+        --gr-pick-w: 3;
+        --gr-pick-dash: 6 2;
+        --gr-node-dim: 0.3;
+        --gr-off-deco: line-through;
+    }
+
+    /* blueprint · focus 3 · Callout */
+
+    [data-theme='blueprint'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--accent);
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.5;
+        --gr-dim: 0.2;
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* solstice · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* solstice · focus 2 · In the sun */
+
+    [data-theme='solstice'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 5;
+        --gr-pick-glow: drop-shadow(0 0 6px var(--primary));
+        --gr-node-dim: 0.3;
+        --gr-dim-filter: saturate(0.3);
+        --gr-off-deco: line-through;
+    }
+
+    /* solstice · focus 3 · The hot coal */
+
+    [data-theme='solstice'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 5;
+        --gr-pick-glow: drop-shadow(0 0 4px var(--destructive));
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* brutalism · focus 1 · The yellow pick */
+
+    [data-theme='brutalism'] [data-cg-focus='1'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 6;
+    }
+
+    [data-theme='brutalism'] [data-cg-focus='1'] .kp-graph__node.is-picked .kp-graph__ring {
+        fill: var(--warning);
+    }
+
+    /* brutalism · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* brutalism · focus 3 · Crossed out */
+
+    [data-theme='brutalism'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 8;
+        --gr-node-dim: 0.4;
+        --gr-dim-filter: grayscale(1) contrast(1.4);
+        --gr-off-deco: line-through 3px;
+    }
+
+    /* deco · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* deco · focus 2 · In the spotlight */
+
+    [data-theme='deco'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 5;
+        --gr-pick-glow: drop-shadow(0 0 6px var(--primary));
+        --gr-node-dim: 0.3;
+        --gr-dim-filter: brightness(0.7);
+        --gr-off-deco: line-through;
+    }
+
+    /* deco · focus 3 · Gold-framed */
+
+    [data-theme='deco'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 3;
+        --gr-pick-glow: drop-shadow(0 0 0 var(--primary)) drop-shadow(0 0 2px var(--primary));
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* phantom · focus 1 · The board goes grey */
+
+    [data-theme='phantom'] [data-cg-focus='1'] .kp-graph {
+        --gr-dim-filter: grayscale(1);
+    }
+
+    /* phantom · focus 2 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* phantom · focus 3 · The target */
+
+    [data-theme='phantom'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 6;
+        --gr-pick-dash: 10 3;
+        --gr-node-dim: 0.3;
+        --gr-dim-filter: grayscale(1) brightness(0.6);
+        --gr-off-deco: line-through 2px;
+    }
+
+    /* shade-light · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* shade-light · focus 2 · Lifted into the light */
+
+    [data-theme='shade-light'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 3;
+        --gr-pick-glow: drop-shadow(0 4px 4px color-mix(in oklch, var(--foreground) 35%, transparent));
+        --gr-node-dim: 0.4;
+        --gr-off-deco: line-through;
+    }
+
+    /* shade-light · focus 3 · The sunny spot */
+
+    [data-theme='shade-light'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--warning) 55%, var(--foreground));
+        --gr-pick-w: 6;
+        --gr-node-dim: 0.5;
+        --gr-dim-filter: grayscale(0.8);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* shade-dark · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* shade-dark · focus 2 · Under the lamp */
+
+    [data-theme='shade-dark'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--warning) 70%, var(--foreground));
+        --gr-pick-w: 5;
+        --gr-pick-glow: drop-shadow(0 0 5px color-mix(in oklch, var(--warning) 50%, transparent));
+        --gr-node-dim: 0.3;
+        --gr-off-deco: line-through;
+    }
+
+    /* shade-dark · focus 3 · The silver ring */
+
+    [data-theme='shade-dark'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 3;
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* retro · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* retro · focus 2 · Selected */
+
+    [data-theme='retro'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 4;
+        --gr-pick-dash: 2 2;
+        --gr-node-dim: 0.5;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-deco: line-through;
+    }
+
+    /* retro · focus 3 · Inverted */
+
+    [data-theme='retro'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 6;
+        --gr-node-dim: 0.4;
+        --gr-off-outline: 1px dotted currentColor;
+    }
+
+    /* grotesk · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* grotesk · focus 2 · Red pick */
+
+    [data-theme='grotesk'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.25;
+        --gr-off-deco: line-through;
+    }
+
+    /* grotesk · focus 3 · Black frame */
+
+    [data-theme='grotesk'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 4;
+        --gr-pick-glow: drop-shadow(0 0 0 var(--foreground));
+        --gr-node-dim: 0.5;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 2px dashed currentColor;
+    }
+
+    /* lapis · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* lapis · focus 2 · Gilded */
+
+    [data-theme='lapis'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 5;
+        --gr-pick-glow: drop-shadow(0 0 5px var(--primary));
+        --gr-node-dim: 0.3;
+        --gr-off-deco: line-through;
+    }
+
+    /* lapis · focus 3 · Framed in gold */
+
+    [data-theme='lapis'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 3;
+        --gr-pick-glow: drop-shadow(0 0 0 var(--primary)) drop-shadow(0 0 2px var(--primary));
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* nostromo · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* nostromo · focus 2 · Target locked */
+
+    [data-theme='nostromo'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
+        --gr-pick-w: 4;
+        --gr-pick-dash: 4 2;
+        --gr-pick-glow: drop-shadow(0 0 4px var(--success));
+        --gr-node-dim: 0.3;
+        --gr-off-deco: line-through;
+    }
+
+    /* nostromo · focus 3 · The warning lamp */
+
+    [data-theme='nostromo'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--warning);
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.45;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* titanium · focus 1 · The package’s dimming */
+
+    /* the package’s own dimming: nothing to write */
+
+    /* titanium · focus 2 · Heat-tinted */
+
+    [data-theme='titanium'] [data-cg-focus='2'] .kp-graph {
+        --gr-pick: var(--primary);
+        --gr-pick-w: 5;
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-deco: line-through;
+    }
+
+    /* titanium · focus 3 · Engraved mark */
+
+    [data-theme='titanium'] [data-cg-focus='3'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 2;
+        --gr-pick-glow: drop-shadow(0 0 0 var(--foreground)) drop-shadow(0 0 1.5px var(--foreground));
+        --gr-node-dim: 0.5;
+        --gr-off-outline: 1px dashed currentColor;
+    }
+
+    /* ══ Live update (data-cg-live): played on the site and link a live update changed (data-cg-moment="live", data-cg-changed); 1 is "in place" and writes nothing. ══ */
+
+    /* formal · live 2 · Re-inked */
+
+    [data-theme='formal'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1400ms ease-out;
+        --gr-live-edge: gr-surge 1400ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* formal · live 3 · Amended in the margin */
+
+    [data-theme='formal'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms linear;
+        --gr-live-edge: gr-draw-in 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* light · live 2 · A soft ripple */
+
+    [data-theme='light'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1200ms ease-out;
+        --gr-live-edge: gr-surge 1200ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* light · live 3 · Sunlit */
+
+    [data-theme='light'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-bump 600ms ease-out;
+        --gr-live-edge: gr-surge 1400ms ease-out;
+        --gr-live-c: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+    }
+
+    /* dark · live 2 · The lit pulse */
+
+    [data-theme='dark'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms ease-out;
+        --gr-live-edge: gr-packet 1000ms linear;
+        --gr-live-c: var(--foreground);
+    }
+
+    /* dark · live 3 · The status blink */
+
+    [data-theme='dark'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms linear;
+        --gr-live-edge: gr-surge 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* cyberpunk · live 2 · The glitch */
+
+    [data-theme='cyberpunk'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-glitch 500ms steps(4);
+        --gr-live-edge: gr-packet 800ms linear;
+        --gr-live-c: var(--primary);
+    }
+
+    /* cyberpunk · live 3 · The neon surge */
+
+    [data-theme='cyberpunk'] [data-cg-live='3'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 900ms ease-out;
+        --gr-live-edge: gr-surge 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* synthwave · live 2 · The laser flash */
+
+    [data-theme='synthwave'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 900ms ease-out;
+        --gr-live-edge: gr-packet 900ms linear;
+        --gr-live-c: var(--accent);
+    }
+
+    /* synthwave · live 3 · The arcade pop */
+
+    [data-theme='synthwave'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-bump 500ms steps(4);
+        --gr-live-edge: gr-surge 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* pastel · live 2 · A happy hop */
+
+    [data-theme='pastel'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-hop 700ms ease-out;
+        --gr-live-edge: gr-surge 900ms ease-out;
+        --gr-live-c: var(--accent);
+    }
+
+    /* pastel · live 3 · The wobble */
+
+    [data-theme='pastel'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-swing 800ms ease-out;
+        --gr-live-edge: gr-draw-in 700ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* terminal · live 2 · The cursor blink */
+
+    [data-theme='terminal'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-packet 800ms steps(8);
+        --gr-live-c: var(--foreground);
+    }
+
+    /* terminal · live 3 · Bold for a beat */
+
+    [data-theme='terminal'] [data-cg-live='3'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 700ms steps(2);
+        --gr-live-edge: gr-surge 700ms steps(2);
+        --gr-live-c: var(--foreground);
+    }
+
+    /* forest · live 2 · The rustle */
+
+    [data-theme='forest'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-swing 900ms ease-out;
+        --gr-live-edge: gr-draw-in 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* forest · live 3 · The firefly */
+
+    [data-theme='forest'] [data-cg-live='3'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1300ms ease-out;
+        --gr-live-edge: gr-surge 1300ms ease-out;
+        --gr-live-c: color-mix(in oklch, var(--warning) 60%, var(--foreground));
+    }
+
+    /* high-contrast · live 2 · The thick flash */
+
+    [data-theme='high-contrast'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms steps(2);
+        --gr-live-edge: gr-surge 1000ms steps(2);
+        --gr-live-c: var(--ring);
+    }
+
+    /* high-contrast · live 3 · The blink */
+
+    [data-theme='high-contrast'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-draw-in 600ms steps(6);
+        --gr-live-c: var(--foreground);
+    }
+
+    /* sepia · live 2 · Re-inked */
+
+    [data-theme='sepia'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1300ms ease-out;
+        --gr-live-edge: gr-draw-in 1000ms ease-out;
+        --gr-live-c: var(--foreground);
+    }
+
+    /* sepia · live 3 · The seal */
+
+    [data-theme='sepia'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-press-in 500ms ease-out;
+        --gr-live-edge: gr-surge 1000ms ease-out;
+        --gr-live-c: var(--destructive);
+    }
+
+    /* blueprint · live 2 · Revised */
+
+    [data-theme='blueprint'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1200ms ease-out;
+        --gr-live-edge: gr-draw-in 800ms linear;
+        --gr-live-c: var(--accent);
+    }
+
+    /* blueprint · live 3 · The signal */
+
+    [data-theme='blueprint'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-packet 900ms linear;
+        --gr-live-c: var(--foreground);
+    }
+
+    /* solstice · live 2 · A flare */
+
+    [data-theme='solstice'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1400ms ease-out;
+        --gr-live-edge: gr-surge 1400ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* solstice · live 3 · A spark */
+
+    [data-theme='solstice'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-bump 500ms ease-out;
+        --gr-live-edge: gr-flicker 600ms steps(1);
+        --gr-live-c: var(--destructive);
+    }
+
+    /* brutalism · live 2 · The shake */
+
+    [data-theme='brutalism'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-shake 400ms steps(4);
+        --gr-live-edge: gr-surge 600ms steps(2);
+        --gr-live-c: var(--foreground);
+    }
+
+    /* brutalism · live 3 · The stamp */
+
+    [data-theme='brutalism'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-stamp-in 300ms steps(2);
+        --gr-live-edge: gr-surge 800ms steps(2);
+        --gr-live-c: color-mix(in oklch, var(--warning) 50%, var(--foreground));
+    }
+
+    /* deco · live 2 · The glint */
+
+    [data-theme='deco'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms ease-out;
+        --gr-live-edge: gr-packet 900ms linear;
+        --gr-live-c: var(--primary);
+    }
+
+    /* deco · live 3 · The bulb flash */
+
+    [data-theme='deco'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-surge 900ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* phantom · live 2 · The slash */
+
+    [data-theme='phantom'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-glitch 400ms steps(3);
+        --gr-live-edge: gr-surge 700ms steps(2);
+        --gr-live-c: var(--primary);
+    }
+
+    /* phantom · live 3 · The calling card */
+
+    [data-theme='phantom'] [data-cg-live='3'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 900ms steps(3);
+        --gr-live-edge: gr-draw-in 500ms ease-in;
+        --gr-live-c: var(--primary);
+    }
+
+    /* shade-light · live 2 · A sunbeam */
+
+    [data-theme='shade-light'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1500ms ease-out;
+        --gr-live-edge: gr-surge 1500ms ease-out;
+        --gr-live-c: color-mix(in oklch, var(--warning) 55%, var(--foreground));
+    }
+
+    /* shade-light · live 3 · Retraced */
+
+    [data-theme='shade-light'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-hop 700ms ease-out;
+        --gr-live-edge: gr-draw-in 900ms ease-in-out;
+        --gr-live-c: var(--foreground);
+    }
+
+    /* shade-dark · live 2 · The warm flicker */
+
+    [data-theme='shade-dark'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1400ms ease-out;
+        --gr-live-edge: gr-surge 1400ms ease-out;
+        --gr-live-c: color-mix(in oklch, var(--warning) 70%, var(--foreground));
+    }
+
+    /* shade-dark · live 3 · Silver retraced */
+
+    [data-theme='shade-dark'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 600ms steps(1);
+        --gr-live-edge: gr-draw-in 900ms ease-in-out;
+        --gr-live-c: var(--foreground);
+    }
+
+    /* retro · live 2 · Repainted */
+
+    [data-theme='retro'] [data-cg-live='2'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-surge 900ms steps(2);
+        --gr-live-c: var(--primary);
+    }
+
+    /* retro · live 3 · The marching ants */
+
+    [data-theme='retro'] [data-cg-live='3'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1200ms steps(3);
+        --gr-live-edge: gr-packet 1200ms steps(12);
+        --gr-live-c: var(--primary);
+    }
+
+    /* grotesk · live 2 · The train passes */
+
+    [data-theme='grotesk'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms ease-out;
+        --gr-live-edge: gr-packet 1000ms linear;
+        --gr-live-c: var(--destructive);
+    }
+
+    /* grotesk · live 3 · Re-set */
+
+    [data-theme='grotesk'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-bump 400ms cubic-bezier(0.6, 0, 0.2, 1);
+        --gr-live-edge: gr-draw-in 500ms cubic-bezier(0.6, 0, 0.2, 1);
+        --gr-live-c: var(--foreground);
+    }
+
+    /* lapis · live 2 · The gold glint */
+
+    [data-theme='lapis'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1100ms ease-out;
+        --gr-live-edge: gr-packet 900ms ease-in-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* lapis · live 3 · The medallion turns */
+
+    [data-theme='lapis'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-turn-once 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        --gr-live-edge: gr-surge 1000ms ease-out;
+        --gr-live-c: var(--primary);
+    }
+
+    /* nostromo · live 2 · The ping */
+
+    [data-theme='nostromo'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms ease-out;
+        --gr-live-edge: gr-packet 900ms linear;
+        --gr-live-c: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
+    }
+
+    /* nostromo · live 3 · The lamp blinks */
+
+    [data-theme='nostromo'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-blink3 900ms steps(1);
+        --gr-live-edge: gr-surge 900ms steps(2);
+        --gr-live-c: var(--warning);
+    }
+
+    /* titanium · live 2 · The glint */
+
+    [data-theme='titanium'] [data-cg-live='2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 1000ms ease-out;
+        --gr-live-edge: gr-packet 800ms cubic-bezier(0.4, 0, 0.2, 1);
+        --gr-live-c: var(--primary);
+    }
+
+    /* titanium · live 3 · The click */
+
+    [data-theme='titanium'] [data-cg-live='3'] .kp-graph {
+        --gr-live-node: gr-turn-once 400ms steps(4);
+        --gr-live-edge: gr-draw-in 500ms linear;
+        --gr-live-c: var(--primary);
     }
 }
 
-/* ── Motion: only here, only while loading ───────────────────────────── */
+/* ── Motion: only here ───────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
     @layer kp.signature {
-        :is([data-gr='a'], [data-gr='b']) .kp-graph__skeleton {
+        [data-cg] .kp-graph__skeleton {
             animation: var(--gr-skel-anim, none);
         }
 
-        [data-theme='nostromo'] [data-gr='a'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+        [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+            animation: var(--gr-load-over-anim, none);
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='1'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
             animation: gr-sweep 3000ms linear infinite;
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='arrive'] .kp-graph__edge {
+            animation: var(--gr-arr-edge, none);
+            animation-delay: calc(var(--gr-edge-at, 0ms) + var(--gr-i, 0) * var(--gr-estagger, 0ms));
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='arrive'] .kp-graph__node {
+            animation: var(--gr-arr-node, none);
+            animation-delay: calc(var(--gr-node-at, 0ms) + var(--gr-i, 0) * var(--gr-stagger, 0ms));
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='arrive'] .kp-graph__kind {
+            animation: var(--gr-arr-chip, none);
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='live'] .kp-graph__node[data-cg-changed] {
+            animation: var(--gr-live-node, none);
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='live'] .kp-graph__node[data-cg-changed] .kp-graph__ring {
+            animation: var(--gr-live-ring, none);
+        }
+
+        [data-cg] .kp-graph[data-cg-moment='live'] .kp-graph__edge[data-cg-changed] {
+            animation: var(--gr-live-edge, none);
         }
     }
 }
 
+/* Loading pictures. */
 @keyframes gr-march {
     to {
         stroke-dashoffset: -400;
-    }
-}
-
-@keyframes gr-pulse {
-    50% {
-        opacity: 0.4;
     }
 }
 
@@ -1469,20 +4068,368 @@
     }
 }
 
+@keyframes gr-breathe {
+    50% {
+        transform: scale(1.06);
+    }
+}
+
+@keyframes gr-stamp {
+    0%,
+    30%,
+    to {
+        transform: none;
+    }
+    12% {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes gr-sway {
+    50% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes gr-blink {
+    50% {
+        visibility: hidden;
+    }
+}
+
+@keyframes gr-flicker {
+    0%,
+    100% {
+        visibility: visible;
+    }
+    23%,
+    61% {
+        visibility: hidden;
+    }
+    30%,
+    68% {
+        visibility: visible;
+    }
+}
+
+@keyframes gr-glitch {
+    0% {
+        transform: translate(3px, -2px);
+    }
+    33% {
+        transform: translate(-3px, 1px);
+    }
+    66% {
+        transform: translate(2px, 2px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes gr-hop {
+    0%,
+    100% {
+        transform: none;
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+    55% {
+        transform: none;
+    }
+    70% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes gr-swing-dash {
+    to {
+        stroke-dashoffset: -320;
+    }
+}
+
 @keyframes gr-drop {
     from {
         transform: translateY(-12px);
-        opacity: 0.3;
     }
     40%,
     to {
         transform: none;
-        opacity: 1;
     }
 }
 
 @keyframes gr-sweep {
     to {
         rotate: 360deg;
+    }
+}
+
+@keyframes gr-searchlight {
+    from {
+        rotate: -30deg;
+    }
+    to {
+        rotate: 30deg;
+    }
+}
+
+@keyframes gr-roll {
+    to {
+        background-position: 0 var(--gr-roll-to, 100%);
+    }
+}
+
+@keyframes gr-pan {
+    to {
+        background-position: var(--gr-pan-to, 7px 7px);
+    }
+}
+
+@keyframes gr-cloud {
+    from {
+        background-position: 100% 0;
+    }
+    to {
+        background-position: 0 0;
+    }
+}
+
+/* Arrivals. */
+@keyframes gr-draw-in {
+    from {
+        stroke-dasharray: 0 1600;
+    }
+    to {
+        stroke-dasharray: 1600 0;
+    }
+}
+
+@keyframes gr-grow {
+    from {
+        transform: scale(0);
+    }
+}
+
+@keyframes gr-pop {
+    0% {
+        transform: scale(0);
+    }
+    70% {
+        transform: scale(1.18);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes gr-rise-in {
+    from {
+        transform: translateY(16px);
+    }
+}
+
+@keyframes gr-drop-in {
+    0% {
+        transform: translateY(-28px);
+    }
+    70% {
+        transform: translateY(3px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes gr-appear {
+    0%,
+    99.9% {
+        visibility: hidden;
+    }
+    100% {
+        visibility: visible;
+    }
+}
+
+@keyframes gr-ignite {
+    0% {
+        visibility: hidden;
+    }
+    30% {
+        visibility: visible;
+    }
+    40% {
+        visibility: hidden;
+    }
+    60% {
+        visibility: visible;
+    }
+    68% {
+        visibility: hidden;
+    }
+    80%,
+    100% {
+        visibility: visible;
+    }
+}
+
+@keyframes gr-burst {
+    from {
+        transform: scale(0.05);
+    }
+}
+
+@keyframes gr-zoom-in {
+    from {
+        transform: scale(0.2);
+    }
+}
+
+@keyframes gr-curtain {
+    from {
+        transform: translateY(60%);
+    }
+}
+
+@keyframes gr-sprout {
+    0% {
+        transform: scale(0.2, 0) rotate(-8deg);
+    }
+    70% {
+        transform: scale(1.05) rotate(3deg);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes gr-stamp-in {
+    from {
+        transform: scale(1.8);
+    }
+}
+
+@keyframes gr-press-in {
+    from {
+        transform: scale(1.25);
+    }
+}
+
+@keyframes gr-thick-in {
+    from {
+        stroke-width: 9;
+    }
+}
+
+@keyframes gr-tilt-in {
+    from {
+        transform: rotate(-25deg) translateY(-14px);
+    }
+}
+
+@keyframes gr-slash-in {
+    from {
+        transform: translateX(-40px) skewX(-20deg);
+    }
+}
+
+@keyframes gr-spin-in {
+    from {
+        transform: rotate(-120deg) scale(0.3);
+    }
+}
+
+@keyframes gr-stretch-in {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+/* Live updates. */
+@keyframes gr-flash-ring {
+    0%,
+    35% {
+        stroke: var(--gr-live-c, currentColor);
+        stroke-width: 7;
+    }
+}
+
+@keyframes gr-surge {
+    0%,
+    35% {
+        stroke: var(--gr-live-c, currentColor);
+        stroke-width: 5;
+    }
+}
+
+@keyframes gr-packet {
+    from {
+        stroke-dasharray: 6 6;
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dasharray: 6 6;
+        stroke-dashoffset: -96;
+    }
+}
+
+@keyframes gr-bump {
+    30% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes gr-shake {
+    20% {
+        transform: translateX(-4px);
+    }
+    40% {
+        transform: translateX(4px);
+    }
+    60% {
+        transform: translateX(-3px);
+    }
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+@keyframes gr-swing {
+    25% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-7deg);
+    }
+    75% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes gr-turn-once {
+    from {
+        transform: rotate(-90deg);
+    }
+}
+
+@keyframes gr-blink3 {
+    0% {
+        visibility: hidden;
+    }
+    17% {
+        visibility: visible;
+    }
+    33% {
+        visibility: hidden;
+    }
+    50% {
+        visibility: visible;
+    }
+    67% {
+        visibility: hidden;
+    }
+    83%,
+    100% {
+        visibility: visible;
     }
 }

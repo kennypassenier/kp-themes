@@ -1,7 +1,7 @@
-/* The page: a centred column, and one section with its controls in one row
-   of groups and three columns side by side (character 1, character 2, the
-   plain graph of today), each holding the same network. The graphs' own
-   drawing is in graphs.css. */
+/* The page: a centred column, and one section with its controls in rows of
+   groups, the combination of the picks, one row of three graphs per aspect
+   (each holding the same network), and the plain graph of today for
+   reference. The graphs' own drawing is in graphs.css. */
 .gr-page {
     display: grid;
     gap: var(--kp-space-lg, 1.5rem);
@@ -129,8 +129,88 @@
 
 /* Each graph keeps its own height: the column's row is as tall as the
    tallest graph. */
-.gr-col > .kp-graph {
+.gr-col > .gr-graph {
     align-self: start;
+    min-inline-size: 0;
+}
+
+/* The combination: its picks in words beside its graph. */
+.gr-preview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+@media (max-width: 60rem) {
+    .gr-preview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.gr-preview__head,
+.gr-aspect__head,
+.gr-plain__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-content: start;
+}
+
+.gr-preview__head h3,
+.gr-preview__head p,
+.gr-aspect__head h3,
+.gr-aspect__head p,
+.gr-plain__head h3,
+.gr-plain__head p {
+    margin: 0;
+}
+
+.gr-preview__head p,
+.gr-aspect__head p,
+.gr-plain__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* One row per aspect, a rule between them. */
+.gr-aspects {
+    display: grid;
+}
+
+.gr-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+/* The plain graph, for reference only: one column wide, as the options
+   are, its words beside it. */
+.gr-plain {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.gr-plain > .kp-graph {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+@media (max-width: 60rem) {
+    .gr-plain {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gr-plain > .kp-graph {
+        grid-row: 2;
+    }
 }
 
 .gr-picked {
