@@ -23,6 +23,11 @@
 import { attachCharts, chartSelect, chartZoom, setChartData } from '../../js/chart.js';
 import { THEMES } from '../../js/theme-registry.js';
 import { NOW, sampleData } from '../../catalogue/chart-sample.js';
+import R3A from './round3-a.js';
+import R3B from './round3-b.js';
+import R3C from './round3-c.js';
+import R3D from './round3-d.js';
+import R3E from './round3-e.js';
 
 /**
  * Round 1's two characters per theme: a name and what each part becomes.
@@ -884,6 +889,43 @@ const NEW = {
     },
 };
 
+/**
+ * Round 2's verdicts (Kenny, 2026-10-06 00:08), in the order of ASPECTS:
+ * shape, loading, arrival, update, events, tip. A number is settled: it is
+ * the answer, not shown as a choice again ("De dingen die ik niet specifiek
+ * benoem om aan te passen staan vast en moeten niet terug een keuze zijn").
+ * '' is open in round 3, with three new options from round3-<g>.js.
+ * @type {Record<string, string[]>}
+ */
+const PICKED = {
+    formal: ['1', '3', '3', '1', '1', '1'],
+    light: ['1', '2', '2', '1', '3', '1'],
+    dark: ['2', '2', '2', '1', '3', '2'],
+    synthwave: ['1', '1', '2', '1', '3', '1'],
+    'high-contrast': ['1', '3', '3', '3', '3', '1'],
+    solstice: ['3', '1', '1', '1', '2', '2'],
+    'shade-dark': ['2', '1', '3', '1', '2', '1'],
+    cyberpunk: ['', '', '', '1', '2', '1'],
+    pastel: ['', '2', '2', '1', '', '1'],
+    terminal: ['2', '', '', '1', '2', '1'],
+    forest: ['1', '', '3', '1', '', '1'],
+    sepia: ['2', '', '3', '1', '3', '2'],
+    blueprint: ['1', '', '3', '1', '', '1'],
+    brutalism: ['1', '', '1', '3', '2', ''],
+    deco: ['1', '1', '3', '1', '', '1'],
+    phantom: ['1', '', '', '1', '', '1'],
+    'shade-light': ['', '2', '3', '1', '3', '1'],
+    retro: ['', '', '', '', '', ''],
+    grotesk: ['1', '', '3', '1', '1', ''],
+    lapis: ['1', '', '3', '1', '3', '1'],
+    nostromo: ['1', '', '', '1', '2', '1'],
+    titanium: ['1', '1', '3', '1', '', '1'],
+};
+/** The settled pick of one aspect, or '' when it is open in round 3. */
+const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
+/** Round 3's new options, per theme and open aspect (one file per theme group). @type {Record<string, Partial<Record<Aspect, Option[]>>>} */
+const R3 = { ...R3A, ...R3B, ...R3C, ...R3D, ...R3E };
+
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const lower = (/** @type {string} */ name) => name.replace(/^(The|A) /, (m) => m.toLowerCase());
 
@@ -927,9 +969,14 @@ const OPTIONS = Object.fromEntries(
                 text: KIND.events[key],
             })),
         };
+        // Round 3: an open aspect takes its three new options (while they
+        // are not written yet, round 2's stay in their place).
+        for (const { id } of ASPECTS) if (!keptOf(theme, id) && R3[theme]?.[id]?.length === 3) o[id] = /** @type {Option[]} */ (R3[theme][id]);
         return [theme, o];
     }),
 );
+/** The aspects open in round 3, per theme. */
+const openOf = (/** @type {string} */ theme) => ASPECTS.filter(({ id }) => !keptOf(theme, id));
 
 const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="chart"]'));
 
@@ -937,10 +984,8 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 
 // Read by ../_review/review.js when it loads, which is after this module:
 // six choices per theme, each option's name and what it does as its hint.
-// What round 1 approved (the shape, the arrival, the update and the tooltip
-// of the picked character) is ticked for him; loading and the event dots are
-// open everywhere, and every aspect in the three open themes.
-const APPROVED = Object.keys(PICK);
+// Round 3 asks only what Kenny sent back in round 2; every other aspect is
+// settled with his pick and not shown in the dialog.
 section.setAttribute(
     'data-review-choices',
     JSON.stringify(
@@ -952,7 +997,17 @@ section.setAttribute(
                 label: String(at + 1),
                 hints: Object.fromEntries(Object.entries(OPTIONS).map(([theme, o]) => [theme, `${o[id][at].name}. ${o[id][at].text}`])),
             })),
-            ...(['shape', 'arrival', 'update', 'tip'].includes(id) ? { default: Object.fromEntries(APPROVED.map((theme) => [theme, '1'])) } : {}),
+            // What Kenny picked in round 2 is the answer and is not asked again.
+            default: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, keptOf(t, id)]),
+            ),
+            fixed: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, true]),
+            ),
         })),
     ),
 );
@@ -960,11 +1015,12 @@ const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-loo
 for (const theme of Object.keys(OPTIONS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
-    p.textContent = PICK[theme]
-        ? `Shape, arrival, update and tooltip are ticked with what you approved in round 1 (${lower(IDEAS[theme][PICK[theme]].name)}); the loading picture and the event dots are yours to pick. ` +
-          'Each row changes one thing only; the preview at the top shows what you ticked so far. Press Loading at full speed and at ¼, Drawn, and Live update.'
-        : 'Every aspect is open in this theme. Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
-          'Press Loading at full speed and at ¼, Drawn, Live update, and look at the pinned tooltip.';
+    const open = openOf(theme).map(({ label }) => label.toLowerCase());
+    p.textContent = open.length
+        ? `Round 3: new options for ${open.length > 1 ? `${open.slice(0, -1).join(', ')} and ${open.at(-1)}` : open[0]}, three each; ` +
+          'everything else is settled as you picked it in round 2 and is no longer a choice. Only the open rows are on the page; the preview at the top shows your picks. ' +
+          'Press Loading at full speed and at ¼, Drawn, and Live update.'
+        : 'Approved in round 2: every aspect is settled as you picked it.';
     look.append(p);
 }
 
@@ -1016,7 +1072,8 @@ for (const { id, label, about } of ASPECTS) {
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const ticked = {};
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+const picks = () =>
+    /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? (keptOf(theme(), id) || '1')])));
 
 /** Writes one wrapper's six attributes (and the loading option's inks and words) from option numbers. */
 function dress(/** @type {Element} */ el, /** @type {Record<Aspect, string>} */ at) {
@@ -1206,6 +1263,9 @@ function showTheme() {
     // On the page, only this theme's look-at line; the dialog reads them all.
     for (const p of look.querySelectorAll('[data-for]')) p.hidden = p.getAttribute('data-for') !== now;
     const o = OPTIONS[now];
+    // A settled aspect has no row: only what is open in round 3 is shown.
+    for (const box of section.querySelectorAll('[data-cc-aspect]'))
+        /** @type {HTMLElement} */ (box).hidden = Boolean(keptOf(now, /** @type {Aspect} */ (box.getAttribute('data-cc-aspect'))));
     for (const cell of section.querySelectorAll('[data-cc-vary]')) {
         const option = o?.[/** @type {Aspect} */ (cell.getAttribute('data-cc-vary'))]?.[Number(cell.getAttribute('data-cc-option')) - 1];
         const name = cell.querySelector('[data-cc-name]');

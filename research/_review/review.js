@@ -24,7 +24,11 @@
 // whole demo (shown in every theme, the same answer everywhere). A group may
 // carry `"default"`: one value, or { "<theme>": value }, ticked for the
 // reviewer and counted as answered until he picks otherwise (an approved
-// shape is not asked again; Kenny, 2026-10-05). Approving
+// shape is not asked again; Kenny, 2026-10-05). A group may also carry
+// `"fixed"`: true, or { "<theme>": true }; there its `default` is the answer
+// and the choice is not shown at all, nor repeated in the answer (Kenny,
+// 2026-10-06: what he did not name to change is settled and must not be a
+// choice again). Approving
 // needs every choice answered; ticking one fires `review:choice` on the
 // section ({ id, value }), so the demo can show what was picked.
 //
@@ -209,6 +213,8 @@ const onceKey = (item, choice) => `once|${item.id}|${choice.id}`;
 const defaultOf = (pair, choice) => (typeof choice.default === 'object' && choice.default ? choice.default[pair.theme] : choice.default) || '';
 const choiceOf = (pair, choice) =>
     (choice.once ? state[onceKey(pair.item, choice)]?.value : state[pair.key]?.choices?.[choice.id]) || defaultOf(pair, choice);
+/** A settled choice: answered by its `default`, not shown, not repeated in the answer. */
+const fixedFor = (pair, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[pair.theme]) : Boolean(choice.fixed));
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
 const stepOpen = (step) => step.pairs.some(isOpen);
@@ -292,7 +298,9 @@ function answer() {
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
     const picked = pairs.flatMap((p) =>
-        (p.item?.choices || []).filter((c) => !c.once && choiceOf(p, c)).map((c) => `- ${p.label}: ${c.label} = ${optionLabel(c, choiceOf(p, c))}`),
+        (p.item?.choices || [])
+            .filter((c) => !c.once && !fixedFor(p, c) && choiceOf(p, c))
+            .map((c) => `- ${p.label}: ${c.label} = ${optionLabel(c, choiceOf(p, c))}`),
     );
     if (picked.length) lines.push('', 'Picked per theme:', ...picked);
     const once = items.flatMap((item) =>
@@ -566,6 +574,7 @@ function rowFor(pair) {
     else lookBox.remove();
     const choiceBox = li.querySelector('[data-rv-choices]');
     for (const choice of pair.item?.choices || []) {
+        if (fixedFor(pair, choice)) continue;
         const set = document.createElement('fieldset');
         set.className = 'rv-choice';
         set.dataset.rvChoice = choice.id;
