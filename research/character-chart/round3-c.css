@@ -431,8 +431,7 @@
     /* ── r3c-shl-sh-1 · the sundial: the grid is its own cast shadow ──── */
 
     [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart {
-        --cc-paper:
-            repeating-linear-gradient(72deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 46px), var(--card);
+        --cc-paper: repeating-linear-gradient(72deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 46px), var(--card);
         --cc-radius: 3px;
         --cc-paper-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
         --cc-on-paper: var(--card);
@@ -466,8 +465,7 @@
     /* ── r3c-shl-sh-2 · the windowpane: two slanted bands of light ────── */
 
     [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] .kp-chart {
-        --cc-paper:
-            linear-gradient(118deg, transparent 0 38%, hsl(from var(--foreground) h s l / 0.07) 38% 58%, transparent 58% 100%), var(--card);
+        --cc-paper: linear-gradient(118deg, transparent 0 38%, hsl(from var(--foreground) h s l / 0.07) 38% 58%, transparent 58% 100%), var(--card);
         --cc-radius: 2px;
         --cc-frame: 1px solid var(--border);
         --cc-on-paper: var(--card);

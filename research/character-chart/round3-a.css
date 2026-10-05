@@ -77,7 +77,9 @@
     [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__source[aria-pressed='true'] {
         border-color: var(--accent);
         background: var(--card);
-        box-shadow: inset 0 0 0 1px var(--accent), 0 0 8px hsl(from var(--accent) h s l / 0.4);
+        box-shadow:
+            inset 0 0 0 1px var(--accent),
+            0 0 8px hsl(from var(--accent) h s l / 0.4);
     }
 
     [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__source[aria-pressed='true'] > b {
@@ -141,7 +143,9 @@
         font-family: var(--theme-font-mono);
         font-size: 0.8125rem;
         text-transform: uppercase;
-        text-shadow: 1px 0 0 hsl(from var(--accent) h s l / 0.6), -1px 0 0 hsl(from var(--primary) h s l / 0.6);
+        text-shadow:
+            1px 0 0 hsl(from var(--accent) h s l / 0.6),
+            -1px 0 0 hsl(from var(--primary) h s l / 0.6);
     }
 
     [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__source[aria-pressed='true'] {
@@ -239,8 +243,8 @@
         --cc-line-w: 4px;
         --cc-line-cap: round;
         --cc-line-join: round;
-        --cc-line-filter: drop-shadow(1.5px 0 0 var(--foreground)) drop-shadow(-1.5px 0 0 var(--foreground))
-            drop-shadow(0 1.5px 0 var(--foreground)) drop-shadow(0 -1.5px 0 var(--foreground));
+        --cc-line-filter: drop-shadow(1.5px 0 0 var(--foreground)) drop-shadow(-1.5px 0 0 var(--foreground)) drop-shadow(0 1.5px 0 var(--foreground))
+            drop-shadow(0 -1.5px 0 var(--foreground));
         --cc-area-k: 2.6;
         --cc-cross: var(--foreground);
         --cc-cross-w: 2px;
@@ -382,12 +386,7 @@
 
     /* r3-cy-ar-chrome: a brushed-chrome wipe sweeps in at an angle, polishing as it lands */
     [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-chrome'][data-cc-arriving] .kp-chart__series {
-        clip-path: polygon(
-            0 0,
-            calc(var(--cca-k) * 100% + 16%) 0,
-            calc(var(--cca-k) * 100% - 16%) 100%,
-            0 100%
-        );
+        clip-path: polygon(0 0, calc(var(--cca-k) * 100% + 16%) 0, calc(var(--cca-k) * 100% - 16%) 100%, 0 100%);
         filter: brightness(calc(1 + (1 - var(--cca-k)) * 0.8)) drop-shadow(0 0 calc((1 - var(--cca-k)) * 8px) var(--primary));
     }
 
@@ -403,9 +402,8 @@
         fill: var(--kp-chart-tone);
         stroke: var(--card);
         stroke-width: 1.5;
-        filter:
-            drop-shadow(-5px -2px 0 var(--chart-2)) drop-shadow(5px -3px 0 var(--chart-4))
-            drop-shadow(-4px 4px 0 var(--chart-3)) drop-shadow(4px 4px 0 var(--chart-5));
+        filter: drop-shadow(-5px -2px 0 var(--chart-2)) drop-shadow(5px -3px 0 var(--chart-4)) drop-shadow(-4px 4px 0 var(--chart-3))
+            drop-shadow(4px 4px 0 var(--chart-5));
     }
 
     [data-theme='pastel'] [data-cc-events='r3-pa-ev-sprinkle'] .kp-chart__event-line {

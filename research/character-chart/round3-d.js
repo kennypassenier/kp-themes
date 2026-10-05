@@ -24,7 +24,11 @@ export default {
             },
         ],
         tip: [
-            { key: 'r3-rt-tip-1', name: 'The 1995 tooltip', text: 'The classic yellow tooltip: a pale yellow box with a plain 1px black line, the time in the pixel face.' },
+            {
+                key: 'r3-rt-tip-1',
+                name: 'The 1995 tooltip',
+                text: 'The classic yellow tooltip: a pale yellow box with a plain 1px black line, the time in the pixel face.',
+            },
             {
                 key: 'r3-rt-tip-2',
                 name: 'The little window',
@@ -60,19 +64,55 @@ export default {
             },
         ],
         arrival: [
-            { key: 'r3-rt-arr-1', name: 'Painted in hard blocks', text: 'The plot is revealed from the left in eight hard-edged blocks, the way a slow video card redrew a maximised window.' },
-            { key: 'r3-rt-arr-2', name: 'The window slides open', text: 'The plot is revealed from the left at one even, linear pace with no easing at all, the way a dragged window snapped to its outline.' },
-            { key: 'r3-rt-arr-3', name: 'Dealt like Solitaire', text: 'The lines drop from above and land with a hard, un-eased stop in three steps, the way a dealt card hit the felt.' },
+            {
+                key: 'r3-rt-arr-1',
+                name: 'Painted in hard blocks',
+                text: 'The plot is revealed from the left in eight hard-edged blocks, the way a slow video card redrew a maximised window.',
+            },
+            {
+                key: 'r3-rt-arr-2',
+                name: 'The window slides open',
+                text: 'The plot is revealed from the left at one even, linear pace with no easing at all, the way a dragged window snapped to its outline.',
+            },
+            {
+                key: 'r3-rt-arr-3',
+                name: 'Dealt like Solitaire',
+                text: 'The lines drop from above and land with a hard, un-eased stop in three steps, the way a dealt card hit the felt.',
+            },
         ],
         update: [
-            { key: 'r3-rt-upd-1', name: 'The tractor feed', text: 'The whole plot nudges down and snaps back in three hard steps, the way continuous paper jogged through a dot-matrix feed.' },
-            { key: 'r3-rt-upd-2', name: 'The odometer rolls', text: 'The newest stretch at the right is unmasked in two hard steps, the way a mechanical counter rolled its last wheel over.' },
-            { key: 'r3-rt-upd-3', name: 'The bevel pops', text: 'The lines swell out to a thicker, raised-bevel weight for a beat and settle back, like a button that was just clicked.' },
+            {
+                key: 'r3-rt-upd-1',
+                name: 'The tractor feed',
+                text: 'The whole plot nudges down and snaps back in three hard steps, the way continuous paper jogged through a dot-matrix feed.',
+            },
+            {
+                key: 'r3-rt-upd-2',
+                name: 'The odometer rolls',
+                text: 'The newest stretch at the right is unmasked in two hard steps, the way a mechanical counter rolled its last wheel over.',
+            },
+            {
+                key: 'r3-rt-upd-3',
+                name: 'The bevel pops',
+                text: 'The lines swell out to a thicker, raised-bevel weight for a beat and settle back, like a button that was just clicked.',
+            },
         ],
         events: [
-            { key: 'r3-rt-events-1', name: 'The warning triangle', text: "Each event is the dialog's own warning triangle (a yellow wedge with a black mark), its line a plain black rule down into the plot." },
-            { key: 'r3-rt-events-2', name: 'The rivet', text: 'Each event is a small raised bevelled stud, like a rivet on the chrome; its line a sunken groove down into the plot.' },
-            { key: 'r3-rt-events-3', name: 'The push-pin flag', text: 'Each event is a little flag on a stem, planted at the top of its line, the way a reminder was pinned to the desktop.' },
+            {
+                key: 'r3-rt-events-1',
+                name: 'The warning triangle',
+                text: "Each event is the dialog's own warning triangle (a yellow wedge with a black mark), its line a plain black rule down into the plot.",
+            },
+            {
+                key: 'r3-rt-events-2',
+                name: 'The rivet',
+                text: 'Each event is a small raised bevelled stud, like a rivet on the chrome; its line a sunken groove down into the plot.',
+            },
+            {
+                key: 'r3-rt-events-3',
+                name: 'The push-pin flag',
+                text: 'Each event is a little flag on a stem, planted at the top of its line, the way a reminder was pinned to the desktop.',
+            },
         ],
     },
 };

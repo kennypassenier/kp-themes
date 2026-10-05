@@ -123,7 +123,7 @@ export default {
             {
                 key: 'r3-ti-ev-2',
                 name: 'The anodised rivet',
-                text: "Each event is a rivet head in the blue oxide anodised accent, with a faint glow at its edge; its line the same blue, finely dashed.",
+                text: 'Each event is a rivet head in the blue oxide anodised accent, with a faint glow at its edge; its line the same blue, finely dashed.',
             },
             {
                 key: 'r3-ti-ev-3',

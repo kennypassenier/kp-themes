@@ -13,7 +13,7 @@ export default {
             {
                 key: 'b',
                 name: 'The hazard terminal',
-                text: "A plot framed in signal yellow with hazard stripes along its top, the grid in cyan dots, the tick labels in the condensed display face. The lines are drawn hard, with sharp corners and no glow, over areas hatched at forty-five degrees. The tooltip is a yellow plate with black text and a cut corner; the legend black plates with a yellow bar under the pressed one. Loading crawls the hazard stripes across the plot.",
+                text: 'A plot framed in signal yellow with hazard stripes along its top, the grid in cyan dots, the tick labels in the condensed display face. The lines are drawn hard, with sharp corners and no glow, over areas hatched at forty-five degrees. The tooltip is a yellow plate with black text and a cut corner; the legend black plates with a yellow bar under the pressed one. Loading crawls the hazard stripes across the plot.',
             },
             {
                 key: 'r3-cy-circuit',
@@ -23,7 +23,7 @@ export default {
             {
                 key: 'r3-cy-ice',
                 name: 'The black ice',
-                text: "A void plot behind a thin cyan rule, the grid in long yellow dashes like a tripwire. Every line throws a split glow, cyan to one side and yellow to the other, like a screen with its colours pulled apart. The legend is glitched labels with a cyan-and-yellow shadow, lit solid cyan when pressed; the crosshair a fine yellow dash.",
+                text: 'A void plot behind a thin cyan rule, the grid in long yellow dashes like a tripwire. Every line throws a split glow, cyan to one side and yellow to the other, like a screen with its colours pulled apart. The legend is glitched labels with a cyan-and-yellow shadow, lit solid cyan when pressed; the crosshair a fine yellow dash.',
             },
         ],
         loading: [

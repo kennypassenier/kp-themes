@@ -144,7 +144,13 @@
         inset: calc(50% - 9px) auto auto -30%;
         inline-size: 30%;
         block-size: 18px;
-        background: linear-gradient(90deg, transparent, hsl(from var(--ccl-i) h s l / 0.85) 45%, hsl(from var(--ccl-i) h s l / 0.85) 55%, transparent);
+        background: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--ccl-i) h s l / 0.85) 45%,
+            hsl(from var(--ccl-i) h s l / 0.85) 55%,
+            transparent
+        );
     }
 
     [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::after {

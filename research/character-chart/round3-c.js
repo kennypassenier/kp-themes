@@ -51,7 +51,7 @@ export default {
             {
                 key: 'r3c-deco-ev-1',
                 name: 'Gilt cabochons',
-                text: "Each event is a faceted jewel in its own tone with a gold edge catching the light; its line a fine gold chain, dash by dash.",
+                text: 'Each event is a faceted jewel in its own tone with a gold edge catching the light; its line a fine gold chain, dash by dash.',
             },
             {
                 key: 'r3c-deco-ev-2',
@@ -110,7 +110,7 @@ export default {
             {
                 key: 'r3c-pha-ev-1',
                 name: 'Bullet holes',
-                text: "Each event is a small red mark with a cracked halo around it; its line solid and thin, like a hole through the print.",
+                text: 'Each event is a small red mark with a cracked halo around it; its line solid and thin, like a hole through the print.',
             },
             {
                 key: 'r3c-pha-ev-2',
