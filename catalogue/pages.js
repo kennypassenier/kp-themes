@@ -81,6 +81,8 @@ export const PAGES = [
             { href: 'research/character-calendar/demo.html', label: 'A month heatmap of its own, per theme' },
             // The character round, fourth demo (2026-10-05): the network graph in 22 themes, two characters each.
             { href: 'research/character-graph/demo.html', label: 'A network graph of its own, per theme' },
+            // The character round, fifth demo (2026-10-05): the key figure's trend tile in 22 themes, two characters each.
+            { href: 'research/character-trend/demo.html', label: 'A trend tile of its own, per theme' },
         ],
     },
     {

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="character-trend">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a trend tile of its own, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="trends.css" />
+    </head>
+    <body>
+        <main class="tr-page">
+            <header class="tr-intro">
+                <h1>A trend tile of its own, per theme</h1>
+                <p>
+                    Kenny, form v18 (2026-10-05): the character round, one component at a time, all 22 themes in one demo. After the meter, the time
+                    chart, the month heatmap and the network graph comes the key figure with its 24-hour trend. Today <code>.kp-kpi--trend</code> has
+                    the same shape in every theme (a card with the label in small capitals, ↗ in the corner, the number, a line of words, the 24-hour
+                    line over a soft area and the axis under it), drawn in the theme's colours only. Here every theme gets two tiles of its own, drawn
+                    in the theme's own material, beside the plain tile as it is today. Pick one of the three per theme.
+                </p>
+                <p class="tr-motion" data-tr-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: the loading picture is a still frame. Turn it off in
+                    the system settings to judge the motion.
+                </p>
+                <p class="tr-meta">
+                    Each column is one key figure of pump house 1, with 24 hours of readings every ten minutes up to a fixed now (20/10/2026 14:40 in
+                    Brussels). Every tile is the package's own (<code>js/chart.js</code> draws the trend, so the pointer, the arrow keys, the chip
+                    with the moment and the value, and the link all work); a character only restyles it from the theme's tokens, in the theme's
+                    <code>kp.signature</code> layer (<code>trends.css</code>), and keeps the tile's height in every state. This theme:
+                    <b data-tr-theme-name>…</b>
+                </p>
+            </header>
+
+            <!-- Under review is one variant of the key figure, the trend tile;
+                 the toggle tile is a component of its own in the character round. -->
+            <section
+                class="tr-sec"
+                data-review-item="trend"
+                data-review-components="kpi--trend"
+                data-review-title="The trend tile"
+                aria-labelledby="h-trend"
+            >
+                <div class="tr-sec__head">
+                    <h2 id="h-trend">The trend tile in <span data-tr-theme-name>this theme</span></h2>
+                    <p>
+                        Two characters drawn in this theme's world, and the plain tile as it is today. Use the buttons below for every state and every
+                        kind of figure; move the pointer over a trend, or tab to it and walk it with the arrow keys: the tile behaves the same in all
+                        three columns.
+                    </p>
+                </div>
+                <div class="tr-controls">
+                    <div class="tr-actions" role="group" aria-label="State of every tile">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-state="ready" aria-pressed="true">Drawn</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-state="empty" aria-pressed="false">Nothing to draw</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-live>Live update (ten minutes later)</button>
+                    </div>
+                    <div class="tr-actions" role="group" aria-label="The figure in every tile">
+                        <b>Figure:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="pressure" aria-pressed="true">Pressure</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="long" aria-pressed="false">A long label</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="wide" aria-pressed="false">A wide value</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="stopped" aria-pressed="false">Stopped 40 min ago</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="today" aria-pressed="false">Began this morning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="one" aria-pressed="false">One reading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-data="warning" aria-pressed="false">Warning tone</button>
+                    </div>
+                    <div class="tr-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                    <p class="tr-log" data-tr-log aria-live="polite">The tiles' links go nowhere here; a click says where it would go.</p>
+                </div>
+                <div data-review-look></div>
+                <div class="tr-trio">
+                    <div class="tr-col" data-tr="a" data-tr-pick="a">
+                        <p class="tr-label"><span class="tr-label__no">Character 1</span> <span data-tr-name="a">…</span></p>
+                        <p class="tr-desc" data-tr-desc="a"></p>
+                        <div class="kp-kpis tr-strip">
+                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
+                                <span class="kp-kpi__label"
+                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
+                                >
+                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"></span>
+                                <span class="kp-kpi__trend"></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Pressure, last 24 hours"
+                                ></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tr-col" data-tr="b" data-tr-pick="b">
+                        <p class="tr-label"><span class="tr-label__no">Character 2</span> <span data-tr-name="b">…</span></p>
+                        <p class="tr-desc" data-tr-desc="b"></p>
+                        <div class="kp-kpis tr-strip">
+                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
+                                <span class="kp-kpi__label"
+                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
+                                >
+                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"></span>
+                                <span class="kp-kpi__trend"></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Pressure, last 24 hours"
+                                ></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tr-col" data-tr="plain" data-tr-pick="plain">
+                        <p class="tr-label"><span class="tr-label__no">Today</span> The plain tile</p>
+                        <p class="tr-desc">
+                            The package's trend tile as it ships: a card with the label in small capitals and ↗ in the corner, the number, a line of
+                            words, the 24-hour line over a soft area in the series colour and the axis under it, grey skeletons while it loads; the
+                            same shape in every theme.
+                        </p>
+                        <div class="kp-kpis tr-strip">
+                            <div class="kp-kpi kp-kpi--trend" data-tr-tile>
+                                <span class="kp-kpi__label"
+                                    ><span data-tr-name-of-figure>Pressure</span> <span class="kp-kpi__label-note">avg 15 min</span></span
+                                >
+                                <a class="kp-kpi__link" href="#h-trend" title="Open the figure on Charts"
+                                    ><span class="kp-kpi__link-word">Charts</span> ↗</a
+                                >
+                                <span class="kp-kpi__value"></span>
+                                <span class="kp-kpi__trend"></span>
+                                <figure
+                                    class="kp-kpi__chart"
+                                    data-kp-chart="spark"
+                                    data-kp-spark-head="none"
+                                    data-kp-spark-axis="relative"
+                                    aria-label="Pressure, last 24 hours"
+                                ></figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

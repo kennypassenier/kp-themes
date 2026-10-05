@@ -1,0 +1,149 @@
+/* The page: a centred column, and one section with its controls in one row
+   of groups and three columns side by side (character 1, character 2, the
+   plain tile of today), each holding the same key figure. The tiles' own
+   drawing is in trends.css. */
+.tr-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.tr-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tr-intro h1,
+.tr-intro p {
+    margin: 0;
+}
+
+.tr-meta,
+.tr-motion,
+.tr-log {
+    color: var(--muted-foreground);
+}
+
+.tr-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tr-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-tr-state][aria-pressed='true'],
+[data-tr-data][aria-pressed='true'],
+[data-tr-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.tr-log {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.tr-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.tr-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.tr-sec__head h2,
+.tr-sec__head p {
+    margin: 0;
+}
+
+.tr-sec__head p {
+    color: var(--muted-foreground);
+}
+
+/* Three columns, one under the other below 60rem. The columns share the
+   trio's rows (a subgrid), so the three tiles start on one line however
+   long each description is. */
+.tr-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 60rem) {
+    .tr-trio {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .tr-col {
+        grid-row: auto;
+        grid-template-rows: auto auto 1fr;
+    }
+}
+
+.tr-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.tr-label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.tr-label__no {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.tr-desc {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+/* Each tile keeps its own height (a strip of one, as a page would hold
+   it); the series colour is the first chart colour, as the catalogue's
+   pressure tile. */
+.tr-col > .tr-strip {
+    align-self: start;
+}
+
+.tr-strip .kp-kpi__chart {
+    --kp-chart-series: var(--chart-1);
+}
+
+.tr-picked {
+    outline: 3px solid var(--primary);
+    outline-offset: 6px;
+    border-radius: var(--radius, 0.5rem);
+}
+
+[data-review-look] p {
+    margin: 0;
+}

@@ -1,0 +1,1166 @@
+/* research/character-trend: two characters of the key figure with its
+   24-hour trend `.kp-kpi--trend` per theme, in the theme's kp.signature
+   layer, so each can move into its register as it stands. `[data-tr='a']`
+   and `[data-tr='b']` are the demo's two columns; in a register the same
+   rules read `[data-theme='<name>'] .kp-kpi--trend`.
+
+   The contract every character keeps:
+   - The markup is the package's: the page writes the tile
+     (`.kp-kpi--trend` with `.kp-kpi__label`, `.kp-kpi__label-note`,
+     `.kp-kpi__link`, `.kp-kpi__value`, `.kp-kpi__trend` and in it
+     `.kp-kpi__delta`), js/chart.js writes the trend inside
+     `figure.kp-kpi__chart`: `.kp-kpi__chart-plot` holding
+     `svg.kp-kpi__spark` (`.kp-kpi__spark-area`, `.kp-kpi__spark-line`),
+     `.kp-kpi__chart-cross` and `.kp-kpi__chart-chip`, and the axis
+     `.kp-kpi__chart-axis` (`-from`, `-to`, `-read`); the tile is
+     `aria-busy` while it loads. Nothing here needs more than that.
+   - Surfaces to draw on: the tile's background (the plate and its pattern,
+     `--tr-plate`, `--tr-pat`) and its ::after (over it: scanlines, a
+     halftone, `--tr-over`); the plot's background (`--tr-plot-bg`,
+     `--tr-plot-pat`), its inner frame (`--tr-plot-frame`), its ::before (the
+     loading picture, `--tr-load`, shown only while the tile is busy) and
+     its ::after (over the line, `--tr-plot-over`); the line's stroke and
+     the area's fill; the change (`.kp-kpi__delta`) as a plate.
+   - Colour: tokens only (DI9), alpha and mixes of tokens. The label, the
+     axis and the words take `--tr-mute`, the number `--tr-ink`, both on
+     `--tr-plate`; the line is the series colour mixed toward the ink
+     (`--tr-line-mix`) unless a character names its own
+     (`--tr-line-override`). The change carries a status pair, its plate
+     and its own ink (fix-70), never half of one.
+   - Height: one height per tile in every state and figure: the label, the
+     number and the words keep fixed line boxes (one line, one line, two
+     lines), the label never wraps and is never cut, and nothing a state
+     adds takes room (a frame is an inset shadow or a border every state
+     has).
+   - Motion: every animation sits in one `prefers-reduced-motion:
+     no-preference` block at the end, and only the loading picture moves;
+     nothing loops at rest. */
+
+@layer kp.signature {
+    /* ── The shared part of every character ───────────────────────────── */
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-ink: var(--card-foreground);
+        --tr-mute: color-mix(in oklch, var(--muted-foreground) 70%, var(--tr-ink));
+        isolation: isolate;
+        border: var(--tr-frame, 1px solid var(--border));
+        border-radius: var(--tr-radius, var(--radius, 0.5rem));
+        background: var(--tr-pat, none);
+        background-color: var(--tr-plate);
+        box-shadow: var(--tr-shadow, none);
+        color: var(--tr-ink);
+        font-family: var(--tr-font, inherit);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        pointer-events: none;
+        background: var(--tr-over, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__label {
+        block-size: 1lh;
+        border-block-end: var(--tr-label-rule, 0);
+        background: var(--tr-label-bg, none);
+        box-shadow: var(--tr-label-shadow, none);
+        color: var(--tr-mute);
+        font-family: var(--tr-label-font, inherit);
+        font-size: var(--tr-label-size, var(--kp-text-xs, 0.75rem));
+        font-style: var(--tr-label-style, normal);
+        font-variant-caps: var(--tr-label-caps, normal);
+        font-weight: var(--tr-label-weight, 500);
+        letter-spacing: var(--tr-label-track, 0.06em);
+        line-height: 1.5;
+        text-transform: var(--tr-label-case, uppercase);
+        white-space: nowrap;
+        transform: var(--tr-label-skew, none);
+        transform-origin: 0 100%;
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__link {
+        font-family: var(--tr-label-font, inherit);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value,
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
+        flex-wrap: nowrap;
+        align-items: center;
+        block-size: 1lh;
+        color: var(--tr-ink);
+        font-family: var(--tr-num-font, inherit);
+        font-size: var(--tr-num-size, 1.75rem);
+        font-weight: var(--tr-num-weight, 600);
+        letter-spacing: var(--tr-num-track, normal);
+        text-shadow: var(--tr-num-shadow, none);
+        text-transform: var(--tr-num-case, none);
+        white-space: nowrap;
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value small {
+        color: var(--tr-mute);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__value > .kp-skeleton {
+        block-size: 0.7lh;
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-skeleton {
+        background: color-mix(in oklch, var(--tr-ink) 14%, var(--tr-plate));
+    }
+
+    /* The words under the number: two lines in every state. */
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend > .kp-kpi__trend {
+        block-size: 2lh;
+        min-block-size: 0;
+        color: var(--tr-mute);
+    }
+
+    /* The change carries its status pair: the plate and its own ink. */
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__delta {
+        display: inline-block;
+        padding: 0 0.35em;
+        border: var(--tr-delta-border, 0);
+        border-radius: var(--tr-delta-radius, 999px);
+        background: var(--tr-delta-bg, var(--success));
+        box-shadow: var(--tr-delta-shadow, none);
+        color: var(--tr-delta-fg, var(--success-foreground));
+        font-style: var(--tr-delta-style, normal);
+        line-height: 1.35;
+        text-decoration: var(--tr-delta-deco, none);
+        transform: var(--tr-delta-turn, none);
+        clip-path: var(--tr-delta-clip, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--tr-delta-bg, var(--destructive));
+        color: var(--tr-delta-fg, var(--destructive-foreground));
+    }
+
+    /* A tile in the warning tone keeps its number in the ink; the note in
+       the label goes on the warning plate in its own ink. */
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] {
+        box-shadow: var(--tr-shadow, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] .kp-kpi__label-note {
+        margin-inline-start: 0.25em;
+        padding: 0 0.35em;
+        border-radius: var(--tr-delta-radius, 999px);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[data-kp-tone='warning'] .kp-kpi__label-note::before {
+        content: '! ';
+    }
+
+    /* The plot: its paper, its frame, and the loading picture under the
+       line (only while the tile is busy) and an overlay above it. */
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot {
+        isolation: isolate;
+        border-radius: var(--tr-plot-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--tr-plot-pat, none);
+        background-color: var(--tr-plot-bg, transparent);
+        box-shadow: var(--tr-plot-frame, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::before,
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-plot::after {
+        z-index: 2;
+        background: var(--tr-plot-over, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        background: var(--tr-load, linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark {
+        position: relative;
+        z-index: 1;
+        filter: var(--tr-glow, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark-line {
+        stroke: var(--tr-line-override, color-mix(in oklch, var(--kp-chart-series, var(--chart-1)) var(--tr-line-mix, 75%), var(--tr-ink)));
+        stroke-width: var(--tr-line-w, 1.6);
+        stroke-dasharray: var(--tr-line-dash, none);
+        stroke-linecap: var(--tr-line-cap, butt);
+        stroke-linejoin: var(--tr-line-join, round);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__spark-area {
+        fill: var(
+            --tr-area,
+            var(--tr-line-override, color-mix(in oklch, var(--kp-chart-series, var(--chart-1)) var(--tr-line-mix, 75%), var(--tr-ink)))
+        );
+        opacity: var(--tr-area-op, 0.12);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-cross {
+        z-index: 3;
+        background: color-mix(in oklch, var(--tr-ink) 60%, transparent);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-chip {
+        z-index: 4;
+        font-family: var(--tr-num-font, inherit);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-axis {
+        padding-block-start: 1px;
+        border-block-start: var(--tr-axis-rule, 1px solid transparent);
+        background: var(--tr-axis-pat, none);
+        color: var(--tr-mute);
+        font-family: var(--tr-axis-font, inherit);
+        font-variant-caps: var(--tr-axis-caps, normal);
+        text-transform: var(--tr-axis-case, none);
+    }
+
+    :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend .kp-kpi__chart-read {
+        color: var(--tr-ink);
+    }
+
+    /* The still characters: their skeletons (and the register's own
+       skeleton signature on them) do not move either, so nothing on the
+       tile moves while it loads. */
+    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
+        :is([data-tr='a'], [data-tr='b'])
+        .kp-kpi--trend
+        .kp-skeleton,
+    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
+        :is([data-tr='a'], [data-tr='b'])
+        .kp-kpi--trend
+        .kp-skeleton::before,
+    :is([data-theme='formal'], [data-theme='dark'], [data-theme='high-contrast'], [data-theme='retro'])
+        :is([data-tr='a'], [data-tr='b'])
+        .kp-kpi--trend
+        .kp-skeleton::after,
+    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton,
+    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton::before,
+    [data-theme='light'] [data-tr='a'] .kp-kpi--trend .kp-skeleton::after {
+        animation: none;
+    }
+
+    /* ══ formal ════════════════════════════════════════════════════════════ */
+    [data-theme='formal'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-frame: 1px solid var(--foreground);
+        --tr-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--border-strong, var(--border));
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-caps: all-small-caps;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.06em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-weight: 500;
+        --tr-line-w: 1.1;
+        --tr-line-mix: 55%;
+        --tr-area-op: 0;
+        --tr-delta-radius: 0;
+        --tr-axis-font: var(--theme-font-display);
+        --tr-axis-caps: all-small-caps;
+        --tr-load: radial-gradient(circle, var(--tr-mute) 1px, transparent 1.5px) 0 50% / 6px 4px repeat-x;
+    }
+
+    [data-theme='formal'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-frame: 1px solid var(--border);
+        --tr-shadow: inset 0 3px 0 var(--foreground);
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-caps: all-small-caps;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.05em;
+        --tr-label-weight: 600;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-size: 2rem;
+        --tr-num-weight: 600;
+        --tr-line-w: 1.25;
+        --tr-line-mix: 60%;
+        --tr-area-op: 0.06;
+        --tr-plot-pat: repeating-linear-gradient(
+            to bottom,
+            transparent 0 calc(25% - 1px),
+            color-mix(in oklch, var(--foreground) 14%, transparent) calc(25% - 1px) 25%
+        );
+        --tr-plot-frame: inset 0 -1px 0 var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-delta-radius: 0;
+        --tr-delta-style: italic;
+        --tr-axis-caps: all-small-caps;
+        --tr-axis-font: var(--theme-font-display);
+        --tr-load: none;
+    }
+
+    /* ══ light ═════════════════════════════════════════════════════════════ */
+    [data-theme='light'] [data-tr='a'] .kp-kpi--trend {
+        --tr-frame: 1px solid color-mix(in oklch, var(--border) 60%, transparent);
+        --tr-radius: calc(var(--radius, 0.5rem) * 2);
+        --tr-shadow:
+            0 10px 24px -12px color-mix(in oklch, var(--foreground) 35%, transparent),
+            0 1px 3px color-mix(in oklch, var(--foreground) 12%, transparent);
+        --tr-line-w: 2.4;
+        --tr-line-cap: round;
+        --tr-area-op: 0.22;
+        --tr-delta-radius: 999px;
+        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+    }
+
+    [data-theme='light'] [data-tr='b'] .kp-kpi--trend {
+        --tr-radius: calc(var(--radius, 0.5rem) * 1.5);
+        --tr-line-w: 2;
+        --tr-line-cap: round;
+        --tr-area-op: 0.16;
+        --tr-delta-radius: 999px;
+        --tr-plot-pat:
+            radial-gradient(circle at 100% 0, color-mix(in oklch, var(--warning) 55%, transparent), transparent 32%),
+            linear-gradient(to bottom, color-mix(in oklch, var(--primary) 14%, var(--card)), var(--card));
+        --tr-plot-radius: calc(var(--radius, 0.5rem) * 0.75);
+        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--card) 85%, transparent), transparent) -50% 0 / 35% 100% no-repeat;
+        --tr-load-anim: tr-slide 2600ms ease-in-out infinite;
+    }
+
+    /* ══ dark ══════════════════════════════════════════════════════════════ */
+    [data-theme='dark'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-num-shadow: 0 0 14px color-mix(in oklch, var(--foreground) 30%, transparent);
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 5%, var(--background));
+        --tr-plot-pat:
+            linear-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px) 0 0 / 100% 25%,
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px) 0 0 / 12.5% 100%;
+        --tr-plot-radius: 2px;
+        --tr-glow: drop-shadow(0 0 3px currentColor);
+        --tr-line-mix: 80%;
+        --tr-delta-radius: 2px;
+        --tr-load: linear-gradient(90deg, color-mix(in oklch, var(--foreground) 40%, transparent) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px
+            repeat-x;
+        --tr-label-size: 0.6875rem;
+    }
+
+    [data-theme='dark'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-shadow:
+            inset 0 1px 0 color-mix(in oklch, var(--foreground) 14%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, var(--background) 70%, transparent);
+        --tr-label-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-plot-bg: var(--background);
+        --tr-plot-frame:
+            inset 0 3px 5px color-mix(in oklch, var(--background) 85%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, var(--foreground) 30%, transparent);
+        --tr-plot-radius: 3px;
+        --tr-line-mix: 75%;
+        --tr-delta-radius: 2px;
+        --tr-load: none;
+        --tr-label-size: 0.6875rem;
+    }
+
+    /* ══ cyberpunk ═════════════════════════════════════════════════════════ */
+    [data-theme='cyberpunk'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-num-shadow: 0 0 10px color-mix(in oklch, var(--accent) 45%, transparent);
+        --tr-pat: linear-gradient(135deg, var(--primary) 0 9px, transparent 9px), linear-gradient(-45deg, var(--accent) 0 9px, transparent 9px);
+        --tr-plot-pat:
+            linear-gradient(color-mix(in oklch, var(--accent) 10%, transparent) 1px, transparent 1px) 0 0 / 100% 20%,
+            linear-gradient(90deg, color-mix(in oklch, var(--accent) 10%, transparent) 1px, transparent 1px) 0 0 / 10% 100%;
+        --tr-glow: drop-shadow(0 0 2px currentColor) drop-shadow(0 0 6px currentColor);
+        --tr-line-mix: 90%;
+        --tr-delta-radius: 0;
+        --tr-delta-clip: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+        --tr-load: linear-gradient(90deg, transparent, var(--accent), transparent) -50% calc(100% - 1px) / 18% 2px no-repeat;
+        --tr-load-anim: tr-slide 1400ms linear infinite;
+    }
+
+    [data-theme='cyberpunk'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.1em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-shadow:
+            -2px 0 0 color-mix(in oklch, var(--accent) 75%, transparent), 2px 0 0 color-mix(in oklch, var(--destructive) 75%, transparent);
+        --tr-pat: repeating-linear-gradient(-45deg, var(--primary) 0 6px, transparent 6px 12px) 0 0 / 100% 5px no-repeat;
+        --tr-plot-pat:
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 10px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 2px 10px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 10px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 10px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 10px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 2px 10px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 100% / 10px 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 100% / 2px 10px no-repeat;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-line-dash: 7 2;
+        --tr-line-w: 2;
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 0;
+        --tr-load: linear-gradient(var(--accent), var(--accent)) 0 0 / 22% 30% no-repeat;
+        --tr-load-anim: tr-glitch 900ms steps(1) infinite;
+    }
+
+    /* ══ synthwave ═════════════════════════════════════════════════════════ */
+    [data-theme='synthwave'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-size: 2.25rem;
+        --tr-label-font: inherit;
+        --tr-label-size: 0.75rem;
+        --tr-label-track: 0.02em;
+        --tr-plot-pat:
+            linear-gradient(to bottom, color-mix(in oklch, var(--accent) 35%, transparent), transparent 45%),
+            repeating-linear-gradient(to bottom, transparent 0 6px, color-mix(in oklch, var(--primary) 32%, transparent) 6px 7px) 0 100% / 100% 55%
+                no-repeat,
+            repeating-conic-gradient(from 150deg at 50% -60%, transparent 0 3deg, color-mix(in oklch, var(--primary) 28%, transparent) 3deg 3.4deg) 0
+                100% / 100% 55% no-repeat;
+        --tr-glow: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 8px currentColor);
+        --tr-line-mix: 88%;
+        --tr-delta-radius: 4px;
+        --tr-load: repeating-linear-gradient(to bottom, transparent 0 7px, color-mix(in oklch, var(--primary) 50%, transparent) 7px 8px) 0 0 / 100%
+            8px;
+        --tr-load-anim: tr-march-y 800ms linear infinite;
+    }
+
+    [data-theme='synthwave'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.1em;
+        --tr-over: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in oklch, var(--background) 35%, transparent) 2px 3px);
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-line-w: 2;
+        --tr-area-op: 0;
+        --tr-delta-radius: 0;
+        --tr-load: linear-gradient(to bottom, transparent, color-mix(in oklch, var(--foreground) 28%, transparent), transparent) 0 -50% / 100% 30%
+            no-repeat;
+        --tr-load-anim: tr-roll 1800ms linear infinite;
+    }
+
+    /* ══ pastel ════════════════════════════════════════════════════════════ */
+    [data-theme='pastel'] [data-tr='a'] .kp-kpi--trend {
+        --tr-frame: 2px solid color-mix(in oklch, var(--primary) 45%, var(--foreground));
+        --tr-radius: 1rem;
+        --tr-shadow: 5px 5px 0 color-mix(in oklch, var(--primary) 35%, var(--background));
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-w: 3.5;
+        --tr-line-cap: round;
+        --tr-area-op: 0.25;
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 2px 2px 0 color-mix(in oklch, var(--foreground) 45%, transparent);
+        --tr-load: radial-gradient(circle, var(--accent) 0 5px, transparent 6px) -50% 50% / 14% 100% no-repeat;
+        --tr-load-anim: tr-slide 1600ms steps(8) infinite;
+    }
+
+    [data-theme='pastel'] [data-tr='b'] .kp-kpi--trend {
+        --tr-radius: 0.75rem;
+        --tr-pat: repeating-linear-gradient(
+                90deg,
+                color-mix(in oklch, var(--accent) 60%, transparent) 0 5px,
+                color-mix(in oklch, var(--accent) 40%, transparent) 5px 10px
+            )
+            50% 0 / 34% 12px no-repeat;
+        --tr-plot-pat: radial-gradient(circle, color-mix(in oklch, var(--foreground) 20%, transparent) 1px, transparent 1.5px) 0 0 / 10px 10px;
+        --tr-line-dash: 6 3;
+        --tr-line-cap: round;
+        --tr-line-w: 2.4;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 2px;
+        --tr-load: repeating-linear-gradient(
+                90deg,
+                color-mix(in oklch, var(--accent) 60%, transparent) 0 5px,
+                color-mix(in oklch, var(--accent) 40%, transparent) 5px 10px
+            ) -50%
+            50% / 34% 12px no-repeat;
+        --tr-load-anim: tr-slide 3000ms ease-in-out infinite alternate;
+    }
+
+    /* ══ terminal ══════════════════════════════════════════════════════════ */
+    [data-theme='terminal'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 3px double var(--foreground);
+        --tr-radius: 0;
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-line-join: miter;
+        --tr-line-cap: square;
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 0;
+        --tr-delta-bg: var(--tr-ink);
+        --tr-delta-fg: var(--tr-plate);
+        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) 4px 50% / 0.6em 1.1em no-repeat;
+        --tr-load-anim: tr-blink 1000ms steps(1) infinite;
+    }
+
+    [data-theme='terminal'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-plot-pat: radial-gradient(circle, color-mix(in oklch, var(--foreground) 24%, transparent) 0.8px, transparent 1.3px) 0 0 / 8px 14px;
+        --tr-line-dash: 0.1 5;
+        --tr-line-cap: round;
+        --tr-line-w: 3;
+        --tr-area-op: 0;
+        --tr-axis-rule: 1px dashed color-mix(in oklch, var(--foreground) 50%, transparent);
+        --tr-delta-radius: 0;
+        --tr-delta-deco: underline;
+        --tr-load: radial-gradient(circle, var(--tr-ink) 1.5px, transparent 2px) 0 50% / 12px 100% repeat-x;
+        --tr-load-anim: tr-march 600ms steps(4) infinite;
+    }
+
+    /* ══ forest ════════════════════════════════════════════════════════════ */
+    [data-theme='forest'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: color-mix(in oklch, var(--accent) 8%, var(--card));
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-style: italic;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.01em;
+        --tr-plot-pat: repeating-radial-gradient(
+            circle at 70% 130%,
+            transparent 0 9px,
+            color-mix(in oklch, var(--foreground) 10%, transparent) 9px 10px
+        );
+        --tr-line-w: 2.4;
+        --tr-line-cap: round;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 3px;
+        --tr-load: linear-gradient(90deg, var(--tr-mute) 50%, transparent 0) 0 calc(100% - 2px) / 12px 2px repeat-x;
+        --tr-load-anim: tr-march 1500ms linear infinite;
+    }
+
+    [data-theme='forest'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: color-mix(in oklch, var(--primary) 8%, var(--card));
+        --tr-line-override: color-mix(in oklch, var(--foreground) 80%, var(--accent));
+        --tr-line-w: 2;
+        --tr-line-cap: round;
+        --tr-area: var(--primary);
+        --tr-area-op: 0.32;
+        --tr-delta-radius: 0 0.8em;
+        --tr-load: radial-gradient(ellipse at 30% 100%, color-mix(in oklch, var(--primary) 30%, transparent), transparent 60%) 0 0 / 200% 100%;
+        --tr-load-anim: tr-sway 2400ms ease-in-out infinite alternate;
+    }
+
+    /* ══ high-contrast ═════════════════════════════════════════════════════ */
+    [data-theme='high-contrast'] [data-tr='a'] .kp-kpi--trend {
+        --tr-frame: 2px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-label-weight: 700;
+        --tr-num-weight: 800;
+        --tr-line-w: 3;
+        --tr-area-op: 0;
+        --tr-plot-frame: inset 0 -2px 0 var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid currentColor;
+        --tr-load: linear-gradient(90deg, var(--foreground) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+    }
+
+    [data-theme='high-contrast'] [data-tr='b'] .kp-kpi--trend {
+        --tr-frame: 2px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-label-weight: 700;
+        --tr-num-weight: 800;
+        --tr-plot-bg: var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--background);
+        --tr-line-w: 2.5;
+        --tr-area-op: 0.3;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid currentColor;
+        --tr-load: none;
+    }
+
+    /* ══ sepia ═════════════════════════════════════════════════════════════ */
+    [data-theme='sepia'] [data-tr='a'] .kp-kpi--trend {
+        --tr-pat: radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in oklch, var(--foreground) 10%, transparent));
+        --tr-plot-pat:
+            repeating-linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 13%, transparent) 0 1px, transparent 1px 20%),
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 9%, transparent) 0 1px, transparent 1px 8.333%);
+        --tr-line-w: 1.2;
+        --tr-line-mix: 50%;
+        --tr-area-op: 0.05;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-style: italic;
+        --tr-label-size: 0.875rem;
+        --tr-label-track: 0.01em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-delta-radius: 2px;
+        --tr-load: linear-gradient(90deg, transparent calc(100% - 2px), var(--tr-ink) 0) -50% 0 / 40% 100% no-repeat;
+        --tr-load-anim: tr-slide 2400ms linear infinite;
+    }
+
+    [data-theme='sepia'] [data-tr='b'] .kp-kpi--trend {
+        --tr-pat:
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 12%, transparent) 0.6px, transparent 1px) 0 0 / 7px 9px,
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 8%, transparent) 0.6px, transparent 1px) 3px 4px / 11px 13px;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-shadow:
+            0 1px 0 color-mix(in oklch, var(--background) 80%, transparent), 0 -1px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-caps: all-small-caps;
+        --tr-label-size: 0.875rem;
+        --tr-line-w: 2.2;
+        --tr-line-mix: 55%;
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+        --tr-load: linear-gradient(color-mix(in oklch, var(--foreground) 12%, transparent), color-mix(in oklch, var(--foreground) 12%, transparent));
+        --tr-load-anim: tr-pulse 1400ms ease-in-out infinite;
+    }
+
+    /* ══ blueprint ═════════════════════════════════════════════════════════ */
+    [data-theme='blueprint'] [data-tr='a'] .kp-kpi--trend {
+        --tr-label-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-axis-font: var(--theme-font-mono);
+        --tr-axis-case: uppercase;
+        --tr-plot-pat:
+            linear-gradient(color-mix(in oklch, var(--foreground) 22%, transparent) 1px, transparent 1px) 0 0 / 25px 25px,
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 22%, transparent) 1px, transparent 1px) 0 0 / 25px 25px,
+            linear-gradient(color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px) 0 0 / 5px 5px,
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1px) 0 0 / 5px 5px;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 1.4;
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 0;
+        --tr-radius: 0;
+        --tr-load: linear-gradient(var(--tr-ink), var(--tr-ink)) -50% 0 / 2px 100% no-repeat;
+        --tr-load-anim: tr-slide 2000ms linear infinite;
+        --tr-label-size: 0.6875rem;
+    }
+
+    [data-theme='blueprint'] [data-tr='b'] .kp-kpi--trend {
+        --tr-frame: 1px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-label-rule: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-axis-font: var(--theme-font-mono);
+        --tr-axis-case: uppercase;
+        --tr-axis-rule: 1px solid color-mix(in oklch, var(--foreground) 70%, transparent);
+        --tr-axis-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 70%, transparent) 0 1px, transparent 1px 10%) 0 0 / 100%
+            4px no-repeat;
+        --tr-line-dash: 10 3 2 3;
+        --tr-line-w: 1.6;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid currentColor;
+        --tr-load: linear-gradient(90deg, var(--tr-ink) 50%, transparent 0) 0 calc(100% - 2px) / 8px 1px repeat-x;
+        --tr-load-anim: tr-march 900ms linear infinite;
+        --tr-label-size: 0.6875rem;
+    }
+
+    /* ══ solstice ══════════════════════════════════════════════════════════ */
+    [data-theme='solstice'] [data-tr='a'] .kp-kpi--trend {
+        --tr-pat: radial-gradient(ellipse 80% 60% at 50% 125%, color-mix(in oklch, var(--primary) 32%, transparent), transparent 70%);
+        --tr-line-mix: 85%;
+        --tr-glow: drop-shadow(0 0 3px color-mix(in oklch, var(--primary) 55%, transparent));
+        --tr-num-font: var(--theme-font-display);
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 8px color-mix(in oklch, var(--primary) 45%, transparent);
+        --tr-load: radial-gradient(ellipse 60% 90% at 50% 120%, color-mix(in oklch, var(--primary) 45%, transparent), transparent 70%);
+        --tr-load-anim: tr-pulse 2400ms ease-in-out infinite;
+    }
+
+    [data-theme='solstice'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-override: color-mix(in oklch, var(--accent) 65%, var(--foreground));
+        --tr-glow: drop-shadow(0 0 4px color-mix(in oklch, var(--accent) 70%, transparent));
+        --tr-area: var(--accent);
+        --tr-area-op: 0.2;
+        --tr-delta-radius: 3px;
+        --tr-load: radial-gradient(ellipse at 50% 100%, color-mix(in oklch, var(--accent) 50%, transparent), transparent 65%);
+        --tr-load-anim: tr-pulse 1800ms ease-in-out infinite;
+    }
+
+    /* ══ brutalism ═════════════════════════════════════════════════════════ */
+    [data-theme='brutalism'] [data-tr='a'] .kp-kpi--trend {
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-shadow: 6px 6px 0 var(--foreground);
+        --tr-label-weight: 800;
+        --tr-label-track: 0.08em;
+        --tr-num-weight: 900;
+        --tr-line-w: 3;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-area-op: 0.15;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid var(--foreground);
+        --tr-delta-shadow: 2px 2px 0 var(--foreground);
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
+        --tr-load-anim: tr-stamp 900ms steps(1) infinite;
+    }
+
+    [data-theme='brutalism'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: color-mix(in oklch, var(--accent) 45%, var(--card));
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-num-size: 2.25rem;
+        --tr-num-weight: 900;
+        --tr-label-weight: 800;
+        --tr-plot-bg: var(--card);
+        --tr-plot-frame: inset 0 0 0 2px var(--foreground);
+        --tr-plot-radius: 0;
+        --tr-line-w: 2.5;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 2px solid var(--foreground);
+        --tr-delta-turn: rotate(-4deg);
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 30% 40% no-repeat;
+        --tr-load-anim: tr-drop 1200ms ease-out infinite;
+    }
+
+    /* ══ deco ══════════════════════════════════════════════════════════════ */
+    [data-theme='deco'] [data-tr='a'] .kp-kpi--trend {
+        --tr-frame: 1px solid var(--primary);
+        --tr-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--primary);
+        --tr-radius: 0;
+        --tr-pat: repeating-conic-gradient(
+            from 270deg at 50% 100%,
+            color-mix(in oklch, var(--primary) 10%, transparent) 0 3deg,
+            transparent 3deg 9deg
+        );
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.16em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-case: uppercase;
+        --tr-num-track: 0.04em;
+        --tr-line-mix: 80%;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 1px solid var(--primary);
+        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 60%, transparent) 50%, transparent 60%) -50% 0 / 40%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    [data-theme='deco'] [data-tr='b'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.16em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-plot-pat:
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px) 0 0 / 12px 6px repeat-x,
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px) 0 100% / 12px 6px repeat-x;
+        --tr-line-mix: 80%;
+        --tr-delta-radius: 0;
+        --tr-delta-border: 3px double var(--primary);
+        --tr-load:
+            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 0 / 48px 6px repeat-x,
+            radial-gradient(circle, var(--foreground) 0 2.5px, transparent 3px) 0 100% / 48px 6px repeat-x;
+        --tr-load-anim: tr-march 1200ms steps(4) infinite;
+    }
+
+    /* ══ phantom ═══════════════════════════════════════════════════════════ */
+    [data-theme='phantom'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: color-mix(in oklch, var(--foreground) 93%, var(--background));
+        --tr-ink: var(--background);
+        --tr-mute: color-mix(in oklch, var(--background) 78%, var(--foreground));
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-skew: skewX(-8deg);
+        --tr-num-font: var(--theme-font-display);
+        --tr-line-override: color-mix(in oklch, var(--primary) 80%, var(--background));
+        --tr-line-w: 2;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 999px;
+        --tr-delta-border: 2px solid currentColor;
+        --tr-delta-turn: rotate(-6deg);
+        --tr-load: radial-gradient(circle, transparent 0 40%, color-mix(in oklch, var(--primary) 70%, transparent) 42% 48%, transparent 50%) 50% 50% /
+            40px 40px no-repeat;
+        --tr-load-anim: tr-pulse 900ms steps(2) infinite;
+    }
+
+    [data-theme='phantom'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-radius: 0;
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-skew: skewX(-12deg);
+        --tr-label-track: 0.08em;
+        --tr-num-font: var(--theme-font-display);
+        --tr-pat: linear-gradient(135deg, transparent 0 86%, var(--primary) 86% 89%, transparent 89%);
+        --tr-over: radial-gradient(circle, color-mix(in oklch, var(--foreground) 9%, transparent) 1px, transparent 1.6px) 0 0 / 6px 6px;
+        --tr-line-mix: 85%;
+        --tr-delta-radius: 0;
+        --tr-delta-turn: skewX(-12deg);
+        --tr-load: radial-gradient(circle, color-mix(in oklch, var(--foreground) 30%, transparent) 1.5px, transparent 2px) 0 0 / 8px 8px;
+        --tr-load-anim: tr-march 700ms steps(3) infinite;
+    }
+
+    /* ══ shade-light ═══════════════════════════════════════════════════════ */
+    [data-theme='shade-light'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plot-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0 1px, transparent 1px 6px);
+        --tr-line-mix: 50%;
+        --tr-line-w: 1.8;
+        --tr-line-cap: round;
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 3px;
+        --tr-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 22%, transparent);
+        --tr-load: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    [data-theme='shade-light'] [data-tr='b'] .kp-kpi--trend {
+        --tr-pat:
+            radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 7%, transparent), transparent 22%),
+            radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--foreground) 6%, transparent), transparent 26%),
+            radial-gradient(circle at 55% 15%, color-mix(in oklch, var(--foreground) 5%, transparent), transparent 18%);
+        --tr-line-w: 1.8;
+        --tr-line-cap: round;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 999px;
+        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 16%, transparent), transparent 70%) -50% 50% / 50% 140% no-repeat;
+        --tr-load-anim: tr-slide 3200ms ease-in-out infinite;
+    }
+
+    /* ══ shade-dark ════════════════════════════════════════════════════════ */
+    [data-theme='shade-dark'] [data-tr='a'] .kp-kpi--trend {
+        --tr-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
+        --tr-line-override: color-mix(in oklch, var(--foreground) 85%, var(--background));
+        --tr-line-w: 1;
+        --tr-area: var(--foreground);
+        --tr-area-op: 0.08;
+        --tr-delta-radius: 2px;
+        --tr-load: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2400ms ease-in-out infinite;
+    }
+
+    [data-theme='shade-dark'] [data-tr='b'] .kp-kpi--trend {
+        --tr-pat: radial-gradient(ellipse 60% 70% at 25% 40%, color-mix(in oklch, var(--warning) 22%, transparent), transparent 70%);
+        --tr-line-override: color-mix(in oklch, var(--warning) 45%, var(--foreground));
+        --tr-line-w: 1.8;
+        --tr-area-op: 0.12;
+        --tr-delta-radius: 999px;
+        --tr-load: radial-gradient(ellipse at 30% 50%, color-mix(in oklch, var(--warning) 40%, transparent), transparent 70%);
+        --tr-load-anim: tr-pulse 2400ms ease-in-out infinite;
+    }
+
+    /* ══ retro ═════════════════════════════════════════════════════════════ */
+    [data-theme='retro'] [data-tr='a'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 0;
+        --tr-radius: 0;
+        --tr-shadow: inset 2px 2px 0 var(--card), inset -2px -2px 0 color-mix(in oklch, var(--foreground) 60%, var(--background));
+        --tr-plot-bg: var(--card);
+        --tr-plot-frame: inset 2px 2px 0 color-mix(in oklch, var(--foreground) 60%, var(--card)), inset -2px -2px 0 var(--card);
+        --tr-plot-radius: 0;
+        --tr-line-w: 1;
+        --tr-area-op: 0;
+        --tr-line-join: miter;
+        --tr-delta-radius: 0;
+        --tr-delta-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent),
+            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent);
+        --tr-load: none;
+        --tr-label-case: none;
+        --tr-label-track: 0.01em;
+        --tr-label-size: 0.75rem;
+    }
+
+    [data-theme='retro'] [data-tr='b'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 92%, var(--background));
+        --tr-plot-pat:
+            linear-gradient(color-mix(in oklch, var(--success) 55%, var(--background)) 1px, transparent 1px) 0 0 / 100% 25%,
+            linear-gradient(90deg, color-mix(in oklch, var(--success) 55%, var(--background)) 1px, transparent 1px) 0 0 / 10% 100%;
+        --tr-plot-radius: 0;
+        --tr-line-override: oklch(from var(--success) 0.82 0.2 h);
+        --tr-line-w: 1.5;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-delta-radius: 0;
+        --tr-load: none;
+        --tr-label-case: none;
+        --tr-label-track: 0.01em;
+        --tr-label-size: 0.75rem;
+    }
+
+    /* ══ grotesk ═══════════════════════════════════════════════════════════ */
+    [data-theme='grotesk'] [data-tr='a'] .kp-kpi--trend {
+        --tr-pat: linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 6px no-repeat;
+        --tr-radius: 0;
+        --tr-label-weight: 700;
+        --tr-num-weight: 800;
+        --tr-num-track: -0.02em;
+        --tr-line-w: 3;
+        --tr-line-cap: round;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 0;
+        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% 50% / 30% 3px no-repeat;
+        --tr-load-anim: tr-slide 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    }
+
+    [data-theme='grotesk'] [data-tr='b'] .kp-kpi--trend {
+        --tr-radius: 0;
+        --tr-num-size: 2.5rem;
+        --tr-num-weight: 800;
+        --tr-num-track: -0.03em;
+        --tr-label-weight: 700;
+        --tr-line-w: 1;
+        --tr-area-op: 0;
+        --tr-delta-radius: 0;
+        --tr-load:
+            linear-gradient(var(--foreground), var(--foreground)) 0 50% / 14% 45% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 14% 45% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 50% / 14% 45% no-repeat;
+        --tr-load-anim: tr-cut 1200ms steps(1) infinite;
+    }
+
+    /* ══ lapis ═════════════════════════════════════════════════════════════ */
+    [data-theme='lapis'] [data-tr='a'] .kp-kpi--trend {
+        --tr-pat: repeating-conic-gradient(from 22.5deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 45deg, transparent 45deg 90deg) 0 0 /
+            28px 28px;
+        --tr-shadow: inset 0 0 0 1px var(--primary), inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--primary);
+        --tr-frame: 0;
+        --tr-radius: 0;
+        --tr-num-font: var(--theme-font-display);
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-track: 0.1em;
+        --tr-line-override: color-mix(in oklch, var(--primary) 85%, var(--tr-ink));
+        --tr-line-w: 1.8;
+        --tr-area-op: 0.12;
+        --tr-delta-radius: 0;
+        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 65%, transparent) 50%, transparent 60%) -50% 0 / 40%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
+    }
+
+    [data-theme='lapis'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: color-mix(in oklch, var(--foreground) 92%, var(--background));
+        --tr-ink: var(--background);
+        --tr-mute: color-mix(in oklch, var(--background) 80%, var(--foreground));
+        --tr-label-font: var(--theme-font-display);
+        --tr-label-case: none;
+        --tr-label-style: italic;
+        --tr-label-size: 0.875rem;
+        --tr-plot-frame: inset 0 0 0 1px var(--primary);
+        --tr-plot-radius: 2px;
+        --tr-line-override: color-mix(in oklch, var(--background) 80%, var(--chart-1));
+        --tr-line-w: 1.8;
+        --tr-area-op: 0.1;
+        --tr-delta-radius: 2px;
+        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 60%, transparent) 50%, transparent 60%) -50% 0 / 40%
+            100% no-repeat;
+        --tr-load-anim: tr-slide 2800ms ease-in-out infinite;
+    }
+
+    /* ══ nostromo ══════════════════════════════════════════════════════════ */
+    [data-theme='nostromo'] [data-tr='a'] .kp-kpi--trend {
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.02em;
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 94%, var(--background));
+        --tr-plot-radius: 6px;
+        --tr-plot-frame:
+            inset 0 0 0 3px color-mix(in oklch, var(--foreground) 55%, var(--background)),
+            inset 0 0 12px color-mix(in oklch, var(--background) 15%, transparent);
+        --tr-plot-over: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in oklch, var(--foreground) 40%, transparent) 2px 3px);
+        --tr-line-override: oklch(from var(--success) 0.82 0.16 h);
+        --tr-glow: drop-shadow(0 0 3px oklch(from var(--success) 0.7 0.16 h));
+        --tr-line-w: 1.6;
+        --tr-area-op: 0.12;
+        --tr-delta-radius: 2px;
+        --tr-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--success) 40%, var(--background))) -50% 0 / 30% 100% no-repeat;
+        --tr-load-anim: tr-slide 2000ms linear infinite;
+        --tr-label-size: 0.6875rem;
+    }
+
+    [data-theme='nostromo'] [data-tr='b'] .kp-kpi--trend {
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-bg: var(--muted);
+        --tr-label-shadow:
+            inset 0 -1px 0 color-mix(in oklch, var(--foreground) 35%, transparent),
+            inset 0 1px 0 color-mix(in oklch, var(--background) 40%, var(--card));
+        --tr-plot-frame:
+            inset 0 2px 0 color-mix(in oklch, var(--foreground) 25%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, var(--background) 60%, var(--card));
+        --tr-plot-bg: var(--muted);
+        --tr-plot-radius: 3px;
+        --tr-line-w: 2;
+        --tr-delta-radius: 999px;
+        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--success) 60%, transparent);
+        --tr-load: radial-gradient(circle, var(--accent) 0 4px, transparent 5px) -50% 50% / 12% 100% no-repeat;
+        --tr-load-anim: tr-slide 1400ms steps(6) infinite;
+        --tr-label-track: 0.02em;
+        --tr-label-size: 0.6875rem;
+    }
+
+    /* ══ titanium ══════════════════════════════════════════════════════════ */
+    [data-theme='titanium'] [data-tr='a'] .kp-kpi--trend {
+        --tr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 3px);
+        --tr-shadow:
+            inset 0 1px 0 color-mix(in oklch, var(--background) 60%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, var(--foreground) 15%, transparent);
+        --tr-label-font: inherit;
+        --tr-label-track: 0.06em;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-plot-frame: inset 0 0 0 1px var(--primary);
+        --tr-plot-radius: 3px;
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 4%, var(--card));
+        --tr-line-mix: 70%;
+        --tr-delta-radius: 3px;
+        --tr-load: linear-gradient(var(--primary), var(--primary)) -50% calc(100% - 1px) / 20% 2px no-repeat;
+        --tr-load-anim: tr-slide 1800ms linear infinite;
+        --tr-label-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    [data-theme='titanium'] [data-tr='b'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 3px) 0 0 / 100% 6px
+            no-repeat;
+        --tr-label-font: inherit;
+        --tr-label-track: 0.06em;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 6%, var(--background));
+        --tr-plot-radius: 6px;
+        --tr-plot-frame:
+            inset 0 3px 6px color-mix(in oklch, var(--foreground) 22%, transparent),
+            inset 0 -1px 0 color-mix(in oklch, var(--background) 70%, transparent);
+        --tr-line-mix: 70%;
+        --tr-delta-radius: 2px;
+        --tr-load: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 30%, transparent) 0 1px, transparent 1px 3px) 0 0 / 100% 6px;
+        --tr-load-anim: tr-march 1500ms linear infinite;
+        --tr-label-size: var(--kp-text-xs, 0.75rem);
+    }
+}
+
+/* ── Motion: only here, only while loading ───────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        :is([data-tr='a'], [data-tr='b']) .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+            animation: var(--tr-load-anim, none);
+        }
+    }
+}
+
+@keyframes tr-slide {
+    from {
+        background-position-x: -50%;
+    }
+    to {
+        background-position-x: 150%;
+    }
+}
+
+@keyframes tr-march {
+    to {
+        background-position-x: 48px;
+    }
+}
+
+@keyframes tr-march-y {
+    to {
+        background-position-y: 8px;
+    }
+}
+
+@keyframes tr-roll {
+    from {
+        background-position-y: -50%;
+    }
+    to {
+        background-position-y: 150%;
+    }
+}
+
+@keyframes tr-pulse {
+    50% {
+        opacity: 0.35;
+    }
+}
+
+@keyframes tr-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes tr-stamp {
+    50% {
+        opacity: 0.25;
+    }
+}
+
+@keyframes tr-glitch {
+    0% {
+        background-position: 10% 20%;
+    }
+    20% {
+        background-position: 70% 80%;
+    }
+    40% {
+        background-position: 35% 10%;
+    }
+    60% {
+        background-position: 90% 60%;
+    }
+    80% {
+        background-position: 0 100%;
+    }
+}
+
+@keyframes tr-sway {
+    to {
+        background-position-x: 100%;
+    }
+}
+
+@keyframes tr-drop {
+    from {
+        transform: translateY(-10px);
+        opacity: 0.3;
+    }
+    40%,
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@keyframes tr-cut {
+    0% {
+        clip-path: inset(0 66% 0 0);
+    }
+    33% {
+        clip-path: inset(0 33% 0 0);
+    }
+    66% {
+        clip-path: inset(0);
+    }
+}
