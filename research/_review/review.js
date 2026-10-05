@@ -405,6 +405,23 @@ let shownPairs = [];
 let moved = [];
 /** True while a theme loads: a key pressed then would judge a step not yet on screen. */
 let busy = false;
+/**
+ * Resolves once the page's own scripts have run. The catalogue shell
+ * (catalogue/catalogue.js, a module after this one) moves every child of the
+ * body into its column; a dialog moved while open leaves the top layer and
+ * stays open as a plain, non-modal box placed after the answer at the foot,
+ * so every approval that lengthened the answer pushed it a little further
+ * down, and only closing and reopening made it modal again (Kenny,
+ * 2026-10-05, fix-102). Every module script has run by DOMContentLoaded, so
+ * the dialog opens after it, once the shell has placed it for good.
+ */
+const booted = new Promise((resolve) => {
+    if (document.readyState === 'complete') resolve();
+    else {
+        document.addEventListener('DOMContentLoaded', resolve, { once: true });
+        window.addEventListener('load', resolve, { once: true });
+    }
+});
 
 function putBack() {
     unmirror();
@@ -625,6 +642,7 @@ async function show(at) {
     if (busy) return;
     busy = true;
     try {
+        await booted;
         const step = steps[(at + steps.length) % steps.length];
         if (step.theme) await switchTheme(step.theme);
         index = steps.indexOf(step);

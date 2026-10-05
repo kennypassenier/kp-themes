@@ -6042,3 +6042,82 @@ still the hairline); and when dark's and titanium's `--border-strong`
 reach DI1's floor, which would make their mix redundant.
 
 **Approved by Kenny, 2026-10-05** (form v23: Klopt).
+
+## fix-102 · The demo review dialog sank a little on every approval (2026-10-05)
+
+**1 · What went wrong.** Kenny, 2026-10-05 20:03: "elke keer ik iets
+approve en de dialog opende in het volgende thema, zakte de dialog iets.
+Als ik er terug uitging en de dialog weer opende was het opgelost."
+Opened from the hub (`?next=…&review=open`), research/_review/review.js
+called `showModal()` while its own module ran; catalogue/catalogue.js, the
+next module on the page, then mounted its shell and moved every child of
+the body into `.cat-column`, the open dialog among them. A dialog moved
+while open leaves the top layer and stays open as a plain box
+(`:modal` false, `position: absolute` at its place after the answer at the
+foot), and the focus fell to the body. Each approval lengthened the
+answer, so the dialog stood further down: in Firefox at 1440 × 900 on
+research/character-graph its page offset went 840, 938, 958, 953, 963,
+978, 1103, 1057, 1078, 1076, 1096 px over ten approvals (the answer 296
+to 549 px tall), on character-meter 1098 to 1166 px. The "Review in a
+dialog" button opened it after the shell had mounted, modal, which is why
+closing and reopening cured it. Nobody had opened the kit from the hub
+in a browser and asked whether the dialog was modal.
+
+**2 · Which gate let it through.** No test drove the research review kit
+at all: tests/catalogue-review-dialog.spec.mjs drives the catalogue's own
+dialog (catalogue/review-dialog.js), on pages whose `.cat-main` the shell
+moves whole, and nothing opened a demo with `review=open`.
+
+**3 · Where else the same fault sits.** A dialog opened modal before a
+later script moves it. Searched with
+`grep -rn "showModal()" research/*/*.js catalogue/*.js` (four hits:
+research/size-motion/demo.js:269 and research/open-reverse/demo.js:140
+open on a click, research/dashboard-ports-2/demo.js:900 on a click,
+catalogue/review-dialog.js:222 on pages with `.cat-main`, which the shell
+moves as one and leaves the body's other children alone),
+`grep -rln "catalogue/catalogue.js" research/*/demo.html` (37 demos) and
+`grep -rL "cat-main" $(grep -rln "catalogue/catalogue.js" research/*/demo.html)`
+(24 of them without `.cat-main`, whose body children the shell moves), and
+`grep -rln "_review/review.js" research/*/demo.html` (14 demos carrying
+the kit, all served by the one fix). The property checked was
+`dialog.matches(':modal')` right after the open; only the kit's auto-open
+opens during boot.
+
+**4 · How we prevent recurrence.** One mechanism in the kit: `show()`
+awaits `booted`, a promise that resolves on DOMContentLoaded (or at once
+when the document is complete), by which time every module script on the
+page has run and the shell has placed the dialog for good
+(research/_review/review.js:408-424 and 645). Measured in Firefox on
+character-meter and character-graph from the hub over ten approvals
+(formal to blueprint): `:modal` true on every step, the dialog's top 36.0
+px at rest in all eleven themes of both demos, page scroll 0, focus on the
+approve button, 0 console errors. Plus tests/review-kit-dialog.spec.mjs:
+in both demos, opened from the hub, the dialog is modal with the approve
+button focused, ten approvals by Up walk eleven themes, and every step is
+modal with its top within 1 px of the first, with no console error; red
+on the old order (`await booted` taken out: focus not in the dialog),
+green on the new.
+
+**5 · What the remedy costs.** One promise and one `await` in review.js
+(17 lines with the comment), a 67-line spec of two tests (about 22 s in
+Firefox). The auto-open waits for the page's scripts, which is no visible
+delay: the dialog used to open before the shell anyway.
+
+**6 · Who enforces it.** Code: tests/review-kit-dialog.spec.mjs
+(`@component:catalogue`, which tests/tags.json selects for any change
+under research/**), at the 9.3.0 release suite.
+
+**7 · How and when we measure that it works.** At the 9.3.0 release suite
+(the spec), and at Kenny's next review from the hub: the dialog stays at
+the same place through every approval, without closing and reopening it.
+Queued as fix-102-M1 in docs/MINI_ROUNDS.md.
+
+**8 · The fallback if the measurement fails.** `show()` checks
+`dialog.matches(':modal')` and, when the dialog is open but not modal,
+puts it back into the top layer itself (a close without the putBack, then
+`showModal()`), whoever moved it.
+
+**9 · When we review the measure.** When the catalogue shell stops moving
+the body's children (a research demo with its own `.cat-main`), or when
+review.js is loaded other than as a module script in the page, since
+`booted` then rests on the load event instead.
