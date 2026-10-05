@@ -33,8 +33,7 @@
         block-size: 52%;
         background:
             radial-gradient(circle at 50% calc(100% - 18px), var(--ccl-j) 0 17px, transparent 17.5px),
-            linear-gradient(var(--ccl-i), var(--ccl-i)) no-repeat 50% 0 / 3px calc(100% - 34px);
-        box-shadow: 0 0 0 2px var(--ccl-i);
+            linear-gradient(var(--ccl-i), var(--ccl-i)) no-repeat 50% 0 / 5px calc(100% - 34px);
         transform-origin: 50% 0%;
     }
 
@@ -46,23 +45,24 @@
         box-shadow: 4px 4px 0 var(--ccl-j);
     }
 
-    /* r3c-bru-load-3: four rivets, a strike mark jumps from one to the next */
+    /* r3c-bru-load-3: four square rivets, a strike mark jumps from one to the next */
     [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::before {
-        inset: calc(50% - 11px) calc(50% - 68px);
-        background:
-            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 0 0 / 46px 22px,
-            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 46px 0 / 46px 22px,
-            radial-gradient(circle, var(--ccl-i) 9px, transparent 9.5px) 92px 0 / 46px 22px;
-        background-repeat: no-repeat;
+        inset: calc(50% - 9px) auto auto calc(50% - 84px);
+        inline-size: 18px;
+        block-size: 18px;
+        background: var(--ccl-i);
+        box-shadow:
+            50px 0 0 0 var(--ccl-i),
+            100px 0 0 0 var(--ccl-i),
+            150px 0 0 0 var(--ccl-i);
     }
 
     [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::after {
-        inset: calc(50% - 15px) auto auto calc(50% - 68px);
-        inline-size: 30px;
-        block-size: 30px;
+        inset: calc(50% - 9px) auto auto calc(50% - 84px);
+        inline-size: 18px;
+        block-size: 18px;
         background: var(--ccl-j);
         box-shadow: 0 0 0 3px var(--ccl-i);
-        border-radius: 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -79,7 +79,7 @@
         }
 
         [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::after {
-            animation: r3c-bru-rivet 1.6s steps(3, end) infinite;
+            animation: r3c-bru-rivet 2s steps(4, end) infinite;
         }
     }
 
@@ -127,17 +127,24 @@
     }
 
     @keyframes r3c-bru-rivet {
-        0% {
-            left: calc(50% - 68px);
+        0%,
+        20% {
+            left: calc(50% - 84px);
         }
 
-        33% {
-            left: calc(50% - 22px);
+        25%,
+        45% {
+            left: calc(50% - 34px);
         }
 
-        66%,
+        50%,
+        70% {
+            left: calc(50% + 16px);
+        }
+
+        75%,
         100% {
-            left: calc(50% + 24px);
+            left: calc(50% + 66px);
         }
     }
 

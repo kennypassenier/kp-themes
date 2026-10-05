@@ -86,7 +86,7 @@
         --cc-line-cap: square;
         --cc-line-join: miter;
         --cc-area-k: 2.4;
-        --cc-area-mask: var(--kp-brush);
+        --cc-area-mask: repeating-conic-gradient(var(--foreground) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
         --cc-cross: var(--foreground);
         --cc-cross-w: 1px;
         --cc-cross-dash: 4 3;

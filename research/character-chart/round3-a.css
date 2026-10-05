@@ -1,4 +1,552 @@
-/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of group a. */
+/* research/character-chart, round 3 (Kenny, 2026-10-06): the new options of
+   group a. cyberpunk's shape 1 ('b', the hazard terminal) is round 2's own
+   and its CSS already lives in charts.css — nothing is written for it here.
+   The two other cyberpunk shapes follow the same contract as charts.css:
+   `[data-theme='cyberpunk'] [data-cc-shape='<key>']`.
+
+   cyberpunk's loading and arrival, and pastel's events, are redone from
+   scratch (Kenny sent the first pass back for reusing aspects.css's own
+   hazard/radar/dither and bead/pin/target words under new names). They are
+   keyed exactly as aspects.css: `data-cc-loading`/`data-cc-arrival` on the
+   state box and its two pseudo-elements (inked through `--ccl-i`/`--ccl-j`,
+   set from `ink`/`ink2` by demo.js) and while the wrapper carries
+   `data-cc-arriving` through the registered `--cca-k` (0 → 1); `data-cc-events`
+   on the dots and their lines. Every loading ::before is the still frame,
+   the ::after (or a second layer) is where the motion runs; all motion is
+   inside the `prefers-reduced-motion: no-preference` block at the end.
+   New keyframes are prefixed `r3cy-` so they cannot collide with the other
+   groups' files. */
 
 @layer kp.signature {
+    /* ══ cyberpunk ══════════════════════════════════════════════════════ */
+
+    /* ── cyberpunk · the circuit board · a dark board, lit solder pads ── */
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper:
+            repeating-linear-gradient(90deg, hsl(from var(--accent) h s l / 0.08) 0 1px, transparent 1px 24px),
+            repeating-linear-gradient(0deg, hsl(from var(--accent) h s l / 0.08) 0 1px, transparent 1px 24px), var(--background);
+        --cc-frame: 1px solid var(--border-strong);
+        --cc-radius: 2px;
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--accent) h s l / 0.35);
+        --cc-grid-dash: 1 5;
+        --cc-tick: var(--accent);
+        --cc-tick-font: var(--theme-font-mono);
+        --cc-tick-track: 0.05em;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2px;
+        --cc-line-cap: square;
+        --cc-line-join: miter;
+        --cc-line-filter: drop-shadow(0 0 3px var(--kp-chart-series));
+        --cc-area-k: 1.5;
+        --cc-cross: var(--accent);
+        --cc-cross-w: 1px;
+        --cc-cross-dash: 2 2;
+        --cc-cross-op: 0.55;
+    }
+
+    /* The solder pads, under the lines. */
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        background: radial-gradient(circle, hsl(from var(--accent) h s l / 0.4) 1.4px, transparent 2px) 0 0 / 24px 24px;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__title {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__tick {
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--accent);
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--accent), 0 0 8px hsl(from var(--accent) h s l / 0.4);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart__swatch {
+        border-radius: 0;
+        box-shadow: 0 0 3px var(--kp-chart-series);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-circuit'] .kp-chart-zoom {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        border-radius: 2px;
+    }
+
+    /* ── cyberpunk · the black ice · a void split cyan and yellow ─────── */
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart {
+        --cc-delta-w: 6rem;
+        --cc-tip-max: 20rem;
+        --cc-paper: var(--background);
+        --cc-frame: 1px solid var(--accent);
+        --cc-radius: 0;
+        --cc-paper-shadow: 0 0 0 3px var(--background), 0 0 0 4px hsl(from var(--accent) h s l / 0.4);
+        --cc-on-paper: var(--background);
+        --cc-grid: hsl(from var(--primary) h s l / 0.28);
+        --cc-grid-dash: 6 10;
+        --cc-tick: var(--primary);
+        --cc-tick-font: var(--theme-font-mono);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 11px;
+        --cc-line-w: 2px;
+        --cc-line-cap: round;
+        --cc-line-filter: drop-shadow(1px 0 0 var(--accent)) drop-shadow(-1px 0 0 var(--primary))
+            drop-shadow(0 0 6px hsl(from var(--kp-chart-series) h s l / 0.7));
+        --cc-area-k: 2;
+        --cc-area-mask: repeating-linear-gradient(115deg, var(--foreground) 0 2px, transparent 2px 10px);
+        --cc-cross: var(--primary);
+        --cc-cross-w: 1px;
+        --cc-cross-dash: 1 3;
+        --cc-cross-op: 0.65;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__title {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__tick {
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid var(--border);
+        border-radius: 0;
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        text-transform: uppercase;
+        text-shadow: 1px 0 0 hsl(from var(--accent) h s l / 0.6), -1px 0 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--accent);
+        background: var(--background);
+        color: var(--accent);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.5);
+        text-shadow: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__swatch {
+        border-radius: 0;
+        box-shadow: 0 0 5px var(--kp-chart-series);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart-zoom {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        border: 1px solid var(--accent);
+    }
+
+    /* ══ pastel ═════════════════════════════════════════════════════════ */
+
+    /* ── pastel · the marshmallow pillow · puffed, deeply rounded ─────── */
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart {
+        --cc-paper: radial-gradient(140% 100% at 50% 0%, hsl(from var(--accent) h s l / 0.3), transparent 70%), var(--card);
+        --cc-radius: 28px;
+        --cc-paper-shadow: 0 10px 24px hsl(from var(--foreground) h s l / 0.12), inset 0 1px 0 hsl(from var(--background) h s 98% / 0.8);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border) h s l / 0.7);
+        --cc-grid-dash: 1 6;
+        --cc-tick: var(--muted-foreground);
+        --cc-tick-weight: 600;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 4px;
+        --cc-line-cap: round;
+        --cc-line-join: round;
+        --cc-line-filter: drop-shadow(0 3px 0 hsl(from var(--foreground) h s l / 0.12));
+        --cc-area-k: 2.2;
+        --cc-cross: var(--primary);
+        --cc-cross-w: 2px;
+        --cc-cross-op: 0.4;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart__title {
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        border-radius: 999px;
+        background: hsl(from var(--muted) h s l / 0.6);
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s 98% / 0.7);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 3px 0 hsl(from var(--foreground) h s l / 0.15);
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart__swatch {
+        border-radius: 999px;
+        inline-size: 10px;
+        block-size: 10px;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-mallow'] .kp-chart-zoom {
+        border-radius: 999px;
+        font-weight: 600;
+    }
+
+    /* ── pastel · the bubblegum pop · a bold cartoon outline ───────────── */
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart {
+        --cc-paper: radial-gradient(circle, hsl(from var(--border) h s l / 0.6) 2px, transparent 2.5px) 0 0 / 16px 16px, var(--card);
+        --cc-frame: 3px solid var(--foreground);
+        --cc-radius: 16px;
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--foreground) h s l / 0.18);
+        --cc-grid-dash: 4 4;
+        --cc-tick: var(--foreground);
+        --cc-tick-weight: 700;
+        --kp-chart-tick-size: 12px;
+        --cc-line-w: 4px;
+        --cc-line-cap: round;
+        --cc-line-join: round;
+        --cc-line-filter: drop-shadow(1.5px 0 0 var(--foreground)) drop-shadow(-1.5px 0 0 var(--foreground))
+            drop-shadow(0 1.5px 0 var(--foreground)) drop-shadow(0 -1.5px 0 var(--foreground));
+        --cc-area-k: 2.6;
+        --cc-cross: var(--foreground);
+        --cc-cross-w: 2px;
+        --cc-cross-dash: 3 3;
+        --cc-cross-op: 0.6;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart__title {
+        font-weight: 700;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 999px;
+        background: var(--card);
+        font-weight: 700;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart__source[aria-pressed='true'] > b {
+        color: inherit;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart__swatch {
+        border-radius: 999px;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-bubblegum'] .kp-chart-zoom {
+        border-radius: 999px;
+        border: 2px solid var(--foreground);
+        font-weight: 700;
+    }
+
+    /* ── pastel · the macaron stack · a shell shading into its filling ── */
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-macaron'] .kp-chart {
+        --cc-paper: linear-gradient(180deg, hsl(from var(--accent) h s l / 0.4), transparent 55%), var(--card);
+        --cc-radius: 20px;
+        --cc-paper-shadow: inset 0 0 0 1px hsl(from var(--border) h s l / 0.6);
+        --cc-on-paper: var(--card);
+        --cc-grid: hsl(from var(--border) h s l / 0.5);
+        --cc-grid-dash: 0.1 5;
+        --cc-tick: var(--muted-foreground);
+        --cc-tick-track: 0.03em;
+        --kp-chart-tick-size: 11.5px;
+        --cc-line-w: 2.5px;
+        --cc-line-cap: round;
+        --cc-area-k: 1.4;
+        --cc-cross: var(--accent);
+        --cc-cross-w: 1px;
+        --cc-cross-dash: 2 3;
+        --cc-cross-op: 0.5;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-macaron'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 1px solid hsl(from var(--border) h s l / 0.8);
+        border-radius: 999px;
+        background: linear-gradient(180deg, hsl(from var(--accent) h s l / 0.35), transparent 60%), var(--card);
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-macaron'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-macaron'] .kp-chart__swatch {
+        border-radius: 999px;
+    }
+
+    [data-theme='pastel'] [data-cc-shape='r3-pa-macaron'] .kp-chart-zoom {
+        border-radius: 999px;
+    }
+
+    /* ══ cyberpunk: while loading ══════════════════════════════════════ */
+
+    /* r3-cy-ld-rain: data rain — dim columns behind, bright glyph rows fall through them */
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.16) 0 2px, transparent 2px 11px);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 0;
+        background: radial-gradient(circle, var(--ccl-j) 1.6px, transparent 2px) 0 0 / 11px 18px;
+    }
+
+    /* r3-cy-ld-ice: ICE wall — a wireframe diamond panel, a filled one pulses behind it */
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-ice'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 22px) calc(50% - 22px);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        border: 1.5px solid var(--ccl-i);
+        background: transparent;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-ice'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: calc(50% - 15px) calc(50% - 15px);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        background: hsl(from var(--ccl-j) h s l / 0.5);
+        transform: scale(0.6);
+    }
+
+    /* r3-cy-ld-hud: netrunner lock — a reticle frame, a crosshair snaps through a lock cycle */
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-hud'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: calc(50% - 24px) calc(50% - 24px);
+        background:
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 0 / 11px 2px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 0 / 2px 11px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 100% 0 / 11px 2px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 100% 0 / 2px 11px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 100% / 11px 2px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 0 100% / 2px 11px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 100% 100% / 11px 2px no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 100% 100% / 2px 11px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-hud'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 0;
+        background:
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 50% 50% / 16px 2px no-repeat,
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 50% 50% / 2px 16px no-repeat;
+    }
+
+    /* ══ cyberpunk: how the series arrives ═══════════════════════════════ */
+
+    /* r3-cy-ar-uplink: a hologram syncs upward out of the floor, a skew settling flat */
+    [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-uplink'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(0 -10px calc((1 - var(--cca-k)) * 100%) -10px);
+        transform: skewX(calc((1 - var(--cca-k)) * 6deg));
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        filter: drop-shadow(0 0 calc((1 - var(--cca-k)) * 7px) var(--accent));
+    }
+
+    /* r3-cy-ar-chrome: a brushed-chrome wipe sweeps in at an angle, polishing as it lands */
+    [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-chrome'][data-cc-arriving] .kp-chart__series {
+        clip-path: polygon(
+            0 0,
+            calc(var(--cca-k) * 100% + 16%) 0,
+            calc(var(--cca-k) * 100% - 16%) 100%,
+            0 100%
+        );
+        filter: brightness(calc(1 + (1 - var(--cca-k)) * 0.8)) drop-shadow(0 0 calc((1 - var(--cca-k)) * 8px) var(--primary));
+    }
+
+    /* r3-cy-ar-lock: the signal locks on — a left-to-right reveal with a settling glitch jitter */
+    [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-lock'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+    }
+
+    /* ══ pastel: the event dots ═══════════════════════════════════════════ */
+
+    /* r3-pa-ev-sprinkle: a candy dot with a burst of tiny sprinkles scattered round it */
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-sprinkle'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--card);
+        stroke-width: 1.5;
+        filter:
+            drop-shadow(-5px -2px 0 var(--chart-2)) drop-shadow(5px -3px 0 var(--chart-4))
+            drop-shadow(-4px 4px 0 var(--chart-3)) drop-shadow(4px 4px 0 var(--chart-5));
+    }
+
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-sprinkle'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 1 4;
+        stroke-linecap: round;
+        opacity: 0.7;
+    }
+
+    /* r3-pa-ev-balloon: each event is a little balloon on a curling string */
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-balloon'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1;
+        clip-path: polygon(50% 0%, 85% 18%, 88% 52%, 68% 86%, 50% 100%, 32% 86%, 12% 52%, 15% 18%);
+        transform: scale(1.15);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-balloon'] .kp-chart__event-line {
+        stroke: var(--muted-foreground);
+        stroke-width: 1.2;
+        stroke-dasharray: 1 5;
+        stroke-linecap: round;
+        opacity: 0.65;
+    }
+
+    /* r3-pa-ev-riso: a soft riso sticker — a misregistered colour ghost under each dot */
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-riso'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--card);
+        stroke-width: 2;
+        filter: drop-shadow(1.6px 1.6px 0 hsl(from var(--chart-2) h s l / 0.75));
+    }
+
+    [data-theme='pastel'] [data-cc-events='r3-pa-ev-riso'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-dasharray: 3 3;
+        stroke-linecap: round;
+        opacity: 0.55;
+    }
+
+    /* ══ motion: all of it, only when the reader allows it ═══════════════ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3cy-rain 1.8s linear infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-ice'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3cy-ice-pulse 2.2s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-hud'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r3cy-hud-lock 1.6s steps(4, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-uplink'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 950ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-chrome'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 850ms linear both;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-lock'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms steps(9, end) both;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-lock'][data-cc-arriving] .kp-chart__series {
+            animation: r3cy-lock-jitter 900ms steps(6, end) both;
+        }
+    }
+}
+
+@keyframes r3cy-rain {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 0 36px;
+    }
+}
+
+@keyframes r3cy-ice-pulse {
+    0%,
+    100% {
+        transform: scale(0.6);
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 16px 2px hsl(from var(--ccl-j) h s l / 0.5);
+    }
+}
+
+@keyframes r3cy-hud-lock {
+    0%,
+    100% {
+        transform: scale(1.5);
+    }
+
+    40% {
+        transform: scale(0.85);
+    }
+
+    60% {
+        transform: scale(1.1);
+    }
+
+    80% {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes r3cy-lock-jitter {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    15% {
+        transform: translateX(-7px);
+    }
+
+    30% {
+        transform: translateX(4px);
+    }
+
+    45% {
+        transform: translateX(-2px);
+    }
+
+    65% {
+        transform: translateX(1px);
+    }
+
+    85% {
+        transform: translateX(0);
+    }
 }

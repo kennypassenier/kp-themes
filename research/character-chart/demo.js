@@ -976,7 +976,7 @@ const OPTIONS = Object.fromEntries(
     }),
 );
 /** Themes whose round-3 options are still being built (shown, but not ready to judge). */
-const PENDING = ['cyberpunk', 'pastel'];
+const PENDING = [];
 /** The aspects open in round 3, per theme. */
 const openOf = (/** @type {string} */ theme) => ASPECTS.filter(({ id }) => !keptOf(theme, id));
 
