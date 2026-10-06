@@ -6369,3 +6369,43 @@ and again with a control focused. Queued as fix-108-M1.
 back after every flip.
 
 **9 · When we review the measure.** When the dialog's keys change.
+
+## fix-109 · The page header was cut off in the review dialog (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 19:26: "the page header on it's
+own demo, the component itself isn't even drawn fully vertically? I don't get
+how that happens, you have so much space on the page". In the flip, the shown
+card kept spanning the trio's two shared rows as a subgrid
+(research/character-header/demo.css `.ph-col`), sized for the page's
+three-column layout: `.ph-resize` (overflow hidden) got 100px of its 240.
+And the kit capped the shown card at 48rem, so the header's title and
+description were squeezed into a narrow column beside the actions.
+
+**2 · Which gate let it through.** My flip check measured that the shown card
+fits the stage (zoom), never that nothing inside it is clipped.
+
+**3 · Where else the same fault sits.** Every demo whose card is a subgrid of
+the trio's rows: header, kpi, graph, busy, tiles, meter, calendar. Searched
+with `grep -rn "subgrid" research/character-*/demo.css`. The fix is in the kit,
+so it covers all of them; measured in Firefox on header, state and drawer
+(nothing clipped), busy's own busy overlay excepted (122/128, its spinner box).
+
+**4 · How we prevent a repeat.** In the flip the trio drops its rows and the
+shown card sizes every row to its content; a full-width component sets
+`--rv-flip-max: 100%` on its section (the header does).
+
+**5 · What the remedy costs.** Nothing on the page itself; only the flip
+changes.
+
+**6 · Who enforces it.** Code (research/_review/review.css).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs opens each character demo's flip and finds
+no element inside the shown card with `overflow: hidden` and more content
+than height. Measured on the fix: the header is 240px tall, one line of title
+and two of description. Queued as fix-109-M1.
+
+**8 · Fallback.** If a demo still clips, the flip shows the card without the
+demo's own overflow rules.
+
+**9 · When we review the measure.** When the flip's layout changes.

@@ -510,8 +510,24 @@
 }
 
 [data-rv-flip-trio] > :not([hidden]) {
-    inline-size: min(100%, 48rem) !important;
+    /* A demo of a full-width component (the page header) sets
+       --rv-flip-max: 100% on its section, so its title is not squeezed. */
+    inline-size: min(100%, var(--rv-flip-max, 48rem)) !important;
     margin-inline: auto !important;
+}
+
+/* The shown card leaves the trio's shared rows: a card that spans the
+   trio's two rows as a subgrid kept their sizes, measured on the page's
+   three-column layout, and clipped the page header to 100px of its 240
+   (Kenny, 2026-10-06 19:26: "the component itself isn't even drawn fully
+   vertically"). On its own, every row sizes to its content. */
+[data-rv-flip-trio] {
+    grid-template-rows: none !important;
+}
+
+[data-rv-flip-trio] > :not([hidden]) {
+    grid-row: auto !important;
+    grid-template-rows: none !important;
 }
 
 /* The option's own number/name/one-line note repeats what rv-flip__label

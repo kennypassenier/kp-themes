@@ -79,6 +79,12 @@
 
 /* The preview's and each row's header can be narrowed to try the
    below-40rem stacking without resizing the browser window. */
+/* The page header spans a page: in the review dialog's flip it takes the
+   stage's whole width, so its title and description are not squeezed. */
+[data-review-item] {
+    --rv-flip-max: 100%;
+}
+
 .ph-resize {
     inline-size: 100%;
     max-inline-size: 100%;
