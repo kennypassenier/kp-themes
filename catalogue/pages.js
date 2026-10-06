@@ -87,7 +87,6 @@ export const PAGES = [
             // The character round, seventh component: the dashboard tiles.
             { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
-            { href: 'research/character-attention/demo.html', label: 'An attention band of its own, per theme' },
             // The character round, ninth and tenth components: the action columns and the menu button.
             { href: 'research/character-actions/demo.html', label: 'Action columns of their own, per theme' },
             { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
