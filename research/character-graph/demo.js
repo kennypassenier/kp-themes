@@ -39,6 +39,9 @@ import R2C from './round2-c.js';
 import R2D from './round2-d.js';
 import R2E from './round2-e.js';
 import R2F from './round2-f.js';
+import R3A from './round3-a.js';
+import R3B from './round3-b.js';
+import R3C from './round3-c.js';
 
 /** @typedef {[name: string, text: string, key?: string]} Option */
 /** @typedef {'shape' | 'loading' | 'arrival' | 'focus' | 'live'} Aspect */
@@ -839,39 +842,40 @@ const IDEAS = {
  * @type {Record<string, string[]>}
  */
 const PICKED = {
-    formal: ['3', '', '3', '3', '2'],
-    light: ['1', '', '3', '3', '2'],
-    dark: ['1', '', '2', '3', '3'],
-    cyberpunk: ['3', '', '2', '3', '3'],
-    synthwave: ['1', '', '2', '2', '3'],
-    pastel: ['1', '', '2', '1', '3'],
-    terminal: ['1', '', '2', '2', '2'],
-    forest: ['3', '', '2', '3', '2'],
+    formal: ['3', '3', '3', '3', '2'],
+    light: ['1', '3', '3', '3', '2'],
+    dark: ['1', '3', '2', '3', '3'],
+    cyberpunk: ['3', '4', '2', '3', '3'],
+    synthwave: ['1', '4', '2', '2', '3'],
+    pastel: ['1', '4', '2', '1', '3'],
+    terminal: ['1', '4', '2', '2', '2'],
+    forest: ['3', '3', '2', '3', '2'],
     'high-contrast': ['3', '', '2', '2', '2'],
-    sepia: ['2', '', '2', '3', '3'],
-    blueprint: ['2', '', '2', '2', '2'],
-    solstice: ['1', '', '3', '2', '2'],
+    sepia: ['2', '1', '2', '3', '3'],
+    blueprint: ['2', '3', '2', '2', '2'],
+    solstice: ['1', '2', '3', '2', '2'],
     brutalism: ['2', '', '', '', ''],
     deco: ['2', '', '2', '3', '2'],
-    phantom: ['1', '', '2', '3', '2'],
-    'shade-light': ['3', '', '2', '3', '2'],
-    'shade-dark': ['1', '', '2', '2', '2'],
-    retro: ['1', '', '3', '2', '2'],
+    phantom: ['1', '4', '2', '3', '2'],
+    'shade-light': ['3', '6', '2', '3', '2'],
+    'shade-dark': ['1', '4', '2', '2', '2'],
+    retro: ['1', '1', '3', '2', '2'],
     grotesk: ['1', '', '2', '2', '2'],
     lapis: ['2', '', '3', '2', '2'],
-    nostromo: ['1', '', '3', '3', '3'],
-    titanium: ['2', '', '1', '2', '2'],
+    nostromo: ['1', '2', '3', '3', '3'],
+    titanium: ['2', '3', '1', '2', '2'],
 };
-/** The settled pick of one aspect, or '' when it is open in round 3. */
+/** The settled pick of one aspect, or '' when it is open in round 4 (Kenny, 2026-10-06 12:31: loading again in high-contrast, brutalism, deco, grotesk and lapis, "don't like any of these"; brutalism's other open aspects too). */
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
 // Round 3's new options replace an open aspect's (each carries its own key
 // as its third element, the attribute value its CSS answers to; round 2's
 // are keyed 1, 2, 3).
 // Merged per aspect, so two files may each bring one theme's aspects.
-for (const file of [R2A, R2B, R2C, R2D, R2E, R2F])
+// An aspect takes the newest round's options it has (round 4's, else round
+// 3's), whether open or settled: a settled number counts in that list.
+for (const file of [R2A, R2B, R2C, R2D, R2E, R2F, R3A, R3B, R3C])
     for (const [t, aspects] of Object.entries(file))
-        for (const [id, options] of Object.entries(aspects))
-            if (!keptOf(t, /** @type {Aspect} */ (id)) && options.length >= 3) IDEAS[t][id] = options;
+        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 /** The attribute value of option n of an aspect in a theme. */
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.[2] ?? n;
 /** The most options any row shows. */
@@ -924,7 +928,7 @@ for (const [theme, idea] of Object.entries(IDEAS)) {
     p.setAttribute('data-for', theme);
     const open = ASPECTS.filter(({ id }) => !keptOf(theme, id));
     p.textContent = open.length
-        ? `Round 3: new options for ${open.map(({ id, label }) => `${label.toLowerCase()} (${idea[id].length} options)`).join(', ')}; everything else is settled as you picked it and is no longer a choice. ` +
+        ? `Round 4: new options for ${open.map(({ id, label }) => `${label.toLowerCase()} (${idea[id].length} options)`).join(', ')}; everything else is settled as you picked it and is no longer a choice. ` +
           'Only the open rows are on the page; the combination at the top shows your picks. Press Loading at full speed and at ¼, Drawn and Live update.'
         : 'Approved: every aspect is settled as you picked it.';
     look.append(p);
