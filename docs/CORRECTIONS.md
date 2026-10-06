@@ -6695,6 +6695,8 @@ outlined target is visible and says so.
 
 ## fix-117 · Busy's three shapes were near-identical in 18 of 19 themes (2026-10-06)
 
+Kenny, form v43 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 22:15 and 22:30, on character-busy:
 "ik zie enkel dezelfde vorm en dezelfde loading screen?" and 22:31 "ja gast,
 als ge het zelf nog moet nameten? gij hebt de demo toch opgezet?". Measured:
