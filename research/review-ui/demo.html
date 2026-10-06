@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Review UI — three prototypes</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="css/app.css" />
+        <style>
+            body {
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="rv2-hub">
+            <h1>A faster way to judge: three prototypes</h1>
+            <p>
+                Today's dialog (research/_review/) walks one theme × aspect per page, with the demo's own state buttons mirrored above that you click
+                to see each option's motion. These three try to get the motion playing by itself and cut the clicking. Nothing here touches the real
+                dialog or the character demos; every pick is written to the same storage key they use, so it stays a real answer.
+            </p>
+            <div class="rv2-hub__grid">
+                <div class="rv2-hub__card">
+                    <h2>1 · Autoplay cards</h2>
+                    <p>One aspect per screen, every option as a big card already looping its own motion.</p>
+                    <ol>
+                        <li>Click a card, or press 1–6, to pick</li>
+                        <li>N for "None of these" + a note</li>
+                        <li>Next screen comes by itself</li>
+                        <li>← previous · P pause · S speed</li>
+                    </ol>
+                    <a class="kp-button kp-button--primary" href="autoplay.html">Open</a>
+                </div>
+                <div class="rv2-hub__card">
+                    <h2>2 · Flip compare</h2>
+                    <p>One huge stage, one option at a time; flip instantly, motion restarts every flip (an eye test).</p>
+                    <ol>
+                        <li>←/→ flips between options</li>
+                        <li>Space/Enter picks the shown one</li>
+                        <li>N for "None of these" + a note</li>
+                        <li>Backspace previous · P pause · S speed</li>
+                    </ol>
+                    <a class="kp-button kp-button--primary" href="flip.html">Open</a>
+                </div>
+                <div class="rv2-hub__card">
+                    <h2>3 · Contact sheet</h2>
+                    <p>One aspect across every open theme at once, a row per theme, options small and autoplaying — good for consistency.</p>
+                    <ol>
+                        <li>↑/↓ moves the active theme row</li>
+                        <li>1–6 picks in the active row</li>
+                        <li>N for "None of these" + a note</li>
+                        <li>Backspace previous aspect · P pause · S speed</li>
+                    </ol>
+                    <a class="kp-button kp-button--primary" href="sheet.html">Open</a>
+                </div>
+            </div>
+            <p class="rv2-top__meta" style="margin-top: 1.5rem">
+                Content judged: research/character-trend (brutalism, deco, retro, nostromo) and research/character-graph (high-contrast, deco,
+                grotesk, lapis, brutalism) — exactly the open aspects, read live from each demo's own data-review-choices.
+            </p>
+        </div>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

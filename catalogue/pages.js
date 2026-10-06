@@ -73,6 +73,8 @@ export const PAGES = [
         // once he has decided on it [scope-81].
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-06 14:56: a faster way to judge, "doe een paar pogingen": three prototypes of the review surface on the open trend and graph rounds.
+            { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
             { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
             // The character round's second component (form v18, 2026-10-05): two time charts of its own per theme, all 22 in one demo.

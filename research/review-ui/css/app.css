@@ -1,0 +1,383 @@
+/* Shared chrome for the three review-UI prototypes. Colours come from the
+   theme under review (css/<theme>-register.css, switched per screen), the
+   same as the real review dialog. */
+
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    height: 100%;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--theme-font-body, system-ui, sans-serif);
+    overflow: hidden;
+}
+.rv2-app {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto auto;
+    height: 100vh;
+    inline-size: 100vw;
+}
+.rv2-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-block-end: 1px solid var(--border);
+}
+.rv2-top__title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.rv2-top__meta {
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+}
+.rv2-top__spacer {
+    flex: 1;
+}
+.rv2-progress {
+    height: 4px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+}
+.rv2-progress__bar {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    background: var(--primary, #4a6cf7);
+    transition: width 0.25s ease;
+}
+.rv2-stage {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.rv2-frame-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+.rv2-frame-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+.rv2-heading {
+    padding: 0.5rem 1.25rem 0;
+}
+.rv2-heading h1 {
+    margin: 0 0 0.15rem;
+    font-size: 1.15rem;
+}
+.rv2-heading p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--muted-foreground);
+}
+.rv2-bottom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-block-start: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+.rv2-keys {
+    font-size: 0.78rem;
+    color: var(--muted-foreground);
+}
+.rv2-note {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.35rem 1rem;
+    border-block-start: 1px dashed var(--border);
+}
+.rv2-note input {
+    flex: 1;
+    font: inherit;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+.rv2-note[hidden] {
+    display: none;
+}
+
+/* Answer screen */
+.rv2-answer {
+    padding: 1.25rem;
+    overflow: auto;
+    height: 100%;
+}
+.rv2-answer pre {
+    white-space: pre-wrap;
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.8rem;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.75rem;
+    max-height: 60vh;
+    overflow: auto;
+}
+
+/* Hub (demo.html) */
+.rv2-hub {
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.25rem 3rem;
+}
+.rv2-hub__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.rv2-hub__card {
+    border: 1px solid var(--border);
+    padding: 1rem;
+    background: var(--card, var(--background));
+}
+.rv2-hub__card h2 {
+    margin-top: 0;
+    font-size: 1.05rem;
+}
+.rv2-hub__card ol {
+    padding-inline-start: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+}
+.rv2-still {
+    position: absolute;
+    inset-inline-end: 1rem;
+    inset-block-start: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--muted);
+    border: 1px solid var(--border);
+    z-index: 5;
+}
+
+/* AUTOPLAY CARDS */
+.rv2-cards {
+    flex: 1;
+    display: grid;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem 1.25rem;
+    min-height: 0;
+}
+.rv2-card {
+    position: relative;
+    border: 2px solid var(--border);
+    background: var(--card, var(--background));
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    cursor: pointer;
+}
+.rv2-card:focus-visible,
+.rv2-card.rv2-card--active {
+    outline: none;
+    border-color: var(--primary, #4a6cf7);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #4a6cf7) 35%, transparent);
+}
+.rv2-card__num {
+    position: absolute;
+    inset-inline-start: 0.5rem;
+    inset-block-start: 0.4rem;
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    z-index: 4;
+}
+.rv2-card__frame {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+.rv2-card__frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+.rv2-card__foot {
+    padding: 0.4rem 0.6rem;
+    border-block-start: 1px solid var(--border);
+}
+.rv2-card__foot b {
+    display: block;
+    font-size: 0.85rem;
+}
+.rv2-card__foot span {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+.rv2-cell--picked {
+    outline: 3px solid #2e7d32 !important;
+    outline-offset: 4px;
+}
+.rv2-none {
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+}
+.rv2-none:hover,
+.rv2-none:focus-visible {
+    border-color: var(--destructive, #c0392b);
+    color: var(--destructive, #c0392b);
+}
+
+/* FLIP COMPARE */
+.rv2-flip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    position: relative;
+    padding: 0.5rem 3.5rem;
+}
+.rv2-flip__stage {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.rv2-flip__frame {
+    position: absolute;
+    inset: 0;
+    display: flex;
+}
+.rv2-flip__frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+.rv2-flip__arrow {
+    position: absolute;
+    inset-block: 0;
+    width: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: none;
+    border: 0;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+.rv2-flip__arrow:hover {
+    color: var(--foreground);
+}
+.rv2-flip__arrow--left {
+    inset-inline-start: 0;
+}
+.rv2-flip__arrow--right {
+    inset-inline-end: 0;
+}
+.rv2-flip__dots {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: center;
+    padding: 0.35rem 0;
+}
+.rv2-flip__dots span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--muted);
+    border: 1px solid var(--border);
+}
+.rv2-flip__dots span.rv2-dot--active {
+    background: var(--primary, #4a6cf7);
+}
+.rv2-flip__label {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+.rv2-flip__pick {
+    position: absolute;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--success, #2e7d32);
+    color: #fff;
+}
+
+/* CONTACT SHEET */
+.rv2-sheet {
+    flex: 1;
+    overflow: auto;
+    padding: 0.5rem 1rem 1rem;
+    min-height: 0;
+}
+.rv2-sheet__row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-block-end: 1px solid var(--border);
+}
+.rv2-sheet__row.rv2-sheet__row--active {
+    background: color-mix(in srgb, var(--primary, #4a6cf7) 8%, transparent);
+}
+.rv2-sheet__label {
+    width: 9rem;
+    flex: 0 0 9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.rv2-sheet__label small {
+    font-weight: 400;
+    color: var(--muted-foreground);
+}
+.rv2-sheet__options {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+    overflow-x: auto;
+}
+.rv2-sheet__opt {
+    position: relative;
+    flex: 1 0 11rem;
+    max-width: 14rem;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+.rv2-sheet__opt.rv2-sheet__opt--sel {
+    border-color: var(--primary, #4a6cf7);
+}
+.rv2-sheet__opt iframe {
+    width: 100%;
+    height: 7rem;
+    border: 0;
+    pointer-events: none;
+}
+.rv2-sheet__opt span {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.4rem;
+    color: var(--muted-foreground);
+}

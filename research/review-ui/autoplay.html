@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Review UI — Autoplay cards</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="css/app.css" />
+    </head>
+    <body>
+        <div class="rv2-app">
+            <div id="top" class="rv2-top">
+                <a class="kp-button kp-button--ghost" href="demo.html">← Prototypes</a>
+                <span class="rv2-top__title" data-title>Autoplay cards</span>
+                <span class="rv2-top__spacer"></span>
+                <span class="rv2-top__meta" data-meta></span>
+            </div>
+            <div class="rv2-progress"><div id="progress-bar" class="rv2-progress__bar" style="width: 0%"></div></div>
+            <div id="stage" class="rv2-stage"></div>
+            <div id="bottom" class="rv2-bottom">
+                <span class="rv2-keys" data-keys>Loading…</span>
+            </div>
+            <form id="note-form" class="rv2-note" hidden>
+                <label for="note-input">What should change (None of these):</label>
+                <input id="note-input" type="text" placeholder="What should change" />
+                <button type="submit" class="kp-button kp-button--sm">Confirm (Enter)</button>
+            </form>
+        </div>
+        <iframe id="probe" hidden></iframe>
+        <script type="module" src="js/autoplay.js"></script>
+    </body>
+</html>
