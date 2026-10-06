@@ -1,4 +1,231 @@
-/* research/character-chart, round 4 (Kenny, 2026-10-06 09:31): the six new options of group e. */
+/* research/character-chart, round 4 (Kenny, 2026-10-06 09:31): the six new
+   options of group e — blueprint's loading picture only (round4-e.js). Each
+   rule fills the whole plot (the base `inset: 0` of aspects.css is kept
+   unless a rule needs a smaller part), moves only in
+   `prefers-reduced-motion: no-preference`, and stands as a readable still
+   frame without it. */
 
 @layer kp.signature {
+    /* ══ blueprint: while loading (round 4) ══════════════════════════════ */
+
+    /* r4-bp-ld-1: a pen plots a whole drawing corner to corner */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-1'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--ccl-i) h s l / 0.5) 0 2px, transparent 2px 10px),
+            repeating-linear-gradient(-45deg, hsl(from var(--ccl-i) h s l / 0.22) 0 1px, transparent 1px 14px);
+        clip-path: inset(0 45% 45% 0);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-1'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: auto auto auto auto;
+        left: 55%;
+        top: 55%;
+        inline-size: 10px;
+        block-size: 10px;
+        background: var(--ccl-j);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ccl-i) h s l / 0.6);
+    }
+
+    /* r4-bp-ld-2: a cyanotype sheet exposes from the centre outward */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-2'] .kp-chart__state[data-kp-state='loading']::before {
+        background: hsl(from var(--ccl-j) h s l / 0.14);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-2'] .kp-chart__state[data-kp-state='loading']::after {
+        border-radius: 50%;
+        background: hsl(from var(--ccl-i) h s l / 0.6);
+        transform: scale(0.5);
+    }
+
+    /* r4-bp-ld-3: three parts fly in from the corners and assemble */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-3'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: auto 8% auto 8%;
+        block-size: 1px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--ccl-j) h s l / 0.5) 0 4px, transparent 4px 9px);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-3'] .kp-chart__state[data-kp-state='loading']::after {
+        background:
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 2% 6% / 22% 26% no-repeat,
+            linear-gradient(var(--ccl-j), var(--ccl-j)) 82% 64% / 22% 26% no-repeat,
+            linear-gradient(var(--ccl-i), var(--ccl-i)) 42% 8% / 22% 26% no-repeat;
+    }
+
+    /* r4-bp-ld-4: a wireframe diamond turns like a CAD model */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-4'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 6%;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        background: repeating-conic-gradient(from var(--ccl-a) at 50% 50%, hsl(from var(--ccl-i) h s l / 0.55) 0 2deg, transparent 2deg 22.5deg);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-4'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: 6%;
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ccl-j) h s l / 0.5);
+    }
+
+    /* r4-bp-ld-5: the millimetre grid is ruled across the whole sheet */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-5'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.6) 0 2px, transparent 2px 100%),
+            repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.4) 0 2px, transparent 2px 100%);
+        background-size:
+            70px 70px,
+            70px 70px;
+    }
+
+    /* r4-bp-ld-6: a stamp marks off the revision table, cell by cell */
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-6'] .kp-chart__state[data-kp-state='loading']::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--ccl-j) h s l / 0.4) 0 1px, transparent 1px 16.6%),
+            repeating-linear-gradient(0deg, hsl(from var(--ccl-j) h s l / 0.4) 0 1px, transparent 1px 25%);
+    }
+
+    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-6'] .kp-chart__state[data-kp-state='loading']::after {
+        inset: auto auto auto auto;
+        left: 6%;
+        top: 8%;
+        inline-size: 16%;
+        block-size: 18%;
+        background: var(--ccl-i);
+        box-shadow: inset 0 0 0 1px hsl(from var(--ccl-j) h s l / 0.6);
+    }
+
+    /* ══ motion: all of it, only when the reader allows it ═══════════════ */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-1'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r4bp1-reveal 2.6s cubic-bezier(0.4, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-1'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r4bp1-head 2.6s cubic-bezier(0.4, 0, 0.3, 1) infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r4bp2-grow 2.8s cubic-bezier(0.3, 0, 0.4, 1) infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-3'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r4bp3-assemble 2.4s cubic-bezier(0.3, 0.6, 0.3, 1) infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-4'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r4bp4-spin 3.2s linear infinite;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-5'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: r4bp5-size 3s ease-in-out infinite alternate;
+        }
+
+        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-6'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: r4bp6-stamp 3s steps(6, end) infinite;
+        }
+    }
+}
+
+@keyframes r4bp1-reveal {
+    from {
+        clip-path: inset(0 100% 100% 0);
+    }
+
+    70%,
+    to {
+        clip-path: inset(0 0% 0% 0);
+    }
+}
+
+@keyframes r4bp1-head {
+    from {
+        left: 0%;
+        top: 0%;
+    }
+
+    70%,
+    to {
+        left: calc(100% - 10px);
+        top: calc(100% - 10px);
+    }
+}
+
+@keyframes r4bp2-grow {
+    from {
+        transform: scale(0.04);
+    }
+
+    70%,
+    to {
+        transform: scale(1.8);
+    }
+}
+
+@keyframes r4bp3-assemble {
+    0%,
+    8% {
+        background-position:
+            2% 6%,
+            82% 64%,
+            42% 8%;
+    }
+
+    60%,
+    100% {
+        background-position:
+            18% 38%,
+            60% 38%,
+            39% 38%;
+    }
+}
+
+@keyframes r4bp4-spin {
+    to {
+        --ccl-a: 360deg;
+    }
+}
+
+@keyframes r4bp5-size {
+    from {
+        background-size:
+            70px 70px,
+            70px 70px;
+    }
+
+    to {
+        background-size:
+            14px 14px,
+            14px 14px;
+    }
+}
+
+@keyframes r4bp6-stamp {
+    0% {
+        left: 6%;
+        top: 8%;
+    }
+
+    16.6% {
+        left: 42%;
+        top: 8%;
+    }
+
+    33.3% {
+        left: 78%;
+        top: 8%;
+    }
+
+    50% {
+        left: 6%;
+        top: 40%;
+    }
+
+    66.6% {
+        left: 42%;
+        top: 40%;
+    }
+
+    83.3%,
+    100% {
+        left: 78%;
+        top: 40%;
+    }
 }

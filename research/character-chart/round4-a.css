@@ -1,4 +1,156 @@
-/* research/character-chart, round 4 (Kenny, 2026-10-06 09:31): the six new options of group a. */
+/* research/character-chart, round 4 (Kenny, 2026-10-06 09:31): the six new
+   options of group a — pastel's event dots only. Keyed exactly as
+   aspects.css: `data-cc-events` on the wrapper, read by `.kp-chart__mark-dot`
+   (the SVG circle, r5) and `.kp-chart__event-line` (the SVG line down into
+   the plot). Still (no motion; events never animate). Every shape sits next
+   to the settled bubblegum-pop paper (round3-a's `r3-pa-bubblegum`: a thick
+   black cartoon outline), so each candy keeps that same thick ink outline —
+   only the silhouette and the line pattern change, six clearly different
+   candy shapes rather than six dot treatments. Keys prefixed `r4-pa-ev-`. */
 
 @layer kp.signature {
+    /* ── the gumdrop · a domed drop, flat along its foot ──────────────── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-gumdrop'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.75;
+        clip-path: polygon(50% 0%, 90% 55%, 85% 100%, 15% 100%, 10% 55%);
+        transform: scale(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-gumdrop'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-width: 2.5;
+        stroke-dasharray: none;
+        stroke-linecap: round;
+        opacity: 0.75;
+    }
+
+    /* ── the sugar button · a scalloped, eight-bump candy button ──────── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-scallop'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(
+            50% 2%,
+            63% 12%,
+            78% 6%,
+            82% 22%,
+            97% 26%,
+            92% 42%,
+            100% 50%,
+            92% 58%,
+            97% 74%,
+            82% 78%,
+            78% 94%,
+            63% 88%,
+            50% 98%,
+            37% 88%,
+            22% 94%,
+            18% 78%,
+            3% 74%,
+            8% 58%,
+            0% 50%,
+            8% 42%,
+            3% 26%,
+            18% 22%,
+            22% 6%,
+            37% 12%
+        );
+        transform: scale(1.25);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-scallop'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-width: 2;
+        stroke-dasharray: 1 4;
+        stroke-linecap: round;
+        opacity: 0.6;
+    }
+
+    /* ── the conversation heart · a little candy heart ─────────────────── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-heart'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.75;
+        clip-path: polygon(50% 85%, 15% 50%, 15% 25%, 35% 10%, 50% 25%, 65% 10%, 85% 25%, 85% 50%);
+        transform: scale(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-heart'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        stroke-dasharray: 2 2;
+        stroke-linecap: round;
+        opacity: 0.65;
+    }
+
+    /* ── the star sprinkle · a five-point star ─────────────────────────── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-star'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        transform: scale(1.35);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-star'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-width: 1.5;
+        stroke-dasharray: 1 2 4 2;
+        stroke-linecap: round;
+        opacity: 0.7;
+    }
+
+    /* ── the wrapped boiled sweet · a diamond, twisted at each tip ─────── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-sweet'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        clip-path: polygon(10% 50%, 35% 30%, 35% 10%, 65% 10%, 65% 30%, 90% 50%, 65% 70%, 65% 90%, 35% 90%, 35% 70%);
+        transform: scale(1.3);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-sweet'] .kp-chart__event-line {
+        stroke: var(--foreground);
+        stroke-width: 2.5;
+        stroke-dasharray: 5 1 2 1;
+        stroke-linecap: butt;
+        opacity: 0.7;
+    }
+
+    /* ── the jelly bean · a plump, tilted bean with a gloss highlight ──── */
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-jellybean'] .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--foreground);
+        stroke-width: 1.5;
+        filter: drop-shadow(-1.1px -1.1px 0 hsl(from var(--card) h s l / 0.55));
+        transform: scale(1.5, 0.95) rotate(22deg);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='pastel'] [data-cc-events='r4-pa-ev-jellybean'] .kp-chart__event-line {
+        stroke: var(--kp-chart-tone, var(--muted-foreground));
+        stroke-width: 1.2;
+        stroke-dasharray: 0.5 3;
+        stroke-linecap: round;
+        opacity: 0.5;
+    }
 }
