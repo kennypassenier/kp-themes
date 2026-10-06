@@ -6324,6 +6324,8 @@ after a page change.
 
 ## fix-108 · A flipped pick did not carry into later steps, and a click in the demo stopped the arrows (2026-10-06)
 
+Kenny, form v34 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 18:50, on character-kpi: "Ik heb
 bij cyberpunk de shape gekozen, maar als ik verderga naar de volgende rondes
 is het een andere shape? En alle shortcuts moeten altijd blijven werken, ook
