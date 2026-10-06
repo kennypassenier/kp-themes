@@ -156,3 +156,11 @@
 .fm-card[data-fm-wrong] [data-fm-told] {
     color: var(--destructive);
 }
+
+.fm-how {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0 0 var(--kp-space-md, 1rem);
+    padding-inline-start: 1.25rem;
+    max-inline-size: 70ch;
+}
