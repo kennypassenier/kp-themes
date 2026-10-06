@@ -1,0 +1,116 @@
+{
+    "decided": "2026-10-06 21:41 Brussels, Kenny: 22 of 22 approved (character-state round 2)",
+    "attributes": "data-sw-<aspect>=\"<key>\" on the chip wrapper [data-sw], research/character-state/ (state.css, state-a..d.css, round2-a)",
+    "picks": {
+        "formal": {
+            "shape": "1",
+            "tone": "2",
+            "change": "1"
+        },
+        "light": {
+            "shape": "1",
+            "tone": "1",
+            "change": "1"
+        },
+        "dark": {
+            "shape": "1",
+            "tone": "3",
+            "change": "1"
+        },
+        "cyberpunk": {
+            "shape": "3",
+            "tone": "2",
+            "change": "1"
+        },
+        "synthwave": {
+            "shape": "3",
+            "tone": "3",
+            "change": "1"
+        },
+        "pastel": {
+            "shape": "3",
+            "tone": "3",
+            "change": "2"
+        },
+        "terminal": {
+            "shape": "2",
+            "tone": "3",
+            "change": "3"
+        },
+        "forest": {
+            "shape": "1",
+            "tone": "1",
+            "change": "3"
+        },
+        "high-contrast": {
+            "shape": "3",
+            "tone": "2",
+            "change": "1"
+        },
+        "sepia": {
+            "shape": "2",
+            "tone": "3",
+            "change": "3"
+        },
+        "blueprint": {
+            "shape": "2",
+            "tone": "2",
+            "change": "1"
+        },
+        "solstice": {
+            "shape": "3",
+            "tone": "3",
+            "change": "1"
+        },
+        "brutalism": {
+            "shape": "1",
+            "tone": "3",
+            "change": "2"
+        },
+        "deco": {
+            "shape": "3",
+            "tone": "3",
+            "change": "1"
+        },
+        "phantom": {
+            "shape": "r2-ph-shape-3",
+            "tone": "2",
+            "change": "1"
+        },
+        "shade-light": {
+            "shape": "3",
+            "tone": "3",
+            "change": "3"
+        },
+        "shade-dark": {
+            "shape": "2",
+            "tone": "3",
+            "change": "3"
+        },
+        "retro": {
+            "shape": "1",
+            "tone": "3",
+            "change": "2"
+        },
+        "grotesk": {
+            "shape": "3",
+            "tone": "3",
+            "change": "1"
+        },
+        "lapis": {
+            "shape": "3",
+            "tone": "3",
+            "change": "3"
+        },
+        "nostromo": {
+            "shape": "3",
+            "tone": "3",
+            "change": "1"
+        },
+        "titanium": {
+            "shape": "3",
+            "tone": "2",
+            "change": "3"
+        }
+    }
+}

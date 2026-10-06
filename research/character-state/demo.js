@@ -441,7 +441,7 @@ const PICKED = {
     solstice: ['3', '3', '1'],
     brutalism: ['1', '3', '2'],
     deco: ['3', '3', '1'],
-    phantom: ['', '', ''],
+    phantom: ['3', '2', '1'],
     'shade-light': ['3', '3', '3'],
     'shade-dark': ['2', '3', '3'],
     retro: ['1', '3', '2'],

@@ -1871,11 +1871,17 @@ for (const b of section.querySelectorAll('[data-bo-state]'))
 
 // Draw replays the panel's arrival everywhere: every table turns busy anew
 // (Kenny, 2026-10-06: "geef een draw knop om te zien hoe het element arrives").
+// It never changes the state the reviewer set (Kenny, 2026-10-06 21:53: "te
+// pas en te onpas staat die weer op loading als ik het niet wil … state moet
+// onthouden worden"): the panel arrives, and when the state is not Loading
+// the tables go back to it once the arrival has played.
+let drawBack = 0;
 section.querySelector('[data-bo-draw]')?.addEventListener('click', () => {
-    previewState = 'loading';
-    pressed('data-bo-state', previewState);
-    driveAll();
+    clearTimeout(drawBack);
+    drive(previewTable(), 'loading');
+    for (const { id } of ASPECTS) for (const el of rowCell(id)) drive(el, 'loading');
     drive(referenceTable(), 'loading');
+    if (previewState !== 'loading') drawBack = window.setTimeout(driveAll, 1600);
 });
 
 for (const b of section.querySelectorAll('[data-bo-words]'))

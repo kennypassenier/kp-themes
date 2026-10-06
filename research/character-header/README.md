@@ -1,5 +1,7 @@
 # A page header of its own, per theme
 
+**Decided (2026-10-06 21:50).** Kenny approved all 22 themes, one pick per aspect; the picks are in [decided.json](decided.json) (shape / menu / interactive). They move into the registers exactly as the demo draws them at the port.
+
 Kenny, phase 1 brief (2026-10-05): the character round, one dashboard
 component at a time, all 22 themes in one demo, as `research/character-kpi`,
 `research/character-trend` and the others before it. This demo is the page

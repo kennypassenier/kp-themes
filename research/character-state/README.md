@@ -1,5 +1,7 @@
 # A state word of its own, per theme
 
+**Decided (2026-10-06 21:41).** Kenny approved all 22 themes, one pick per aspect; the picks are in [decided.json](decided.json) (shape / tone / change). They move into the registers exactly as the demo draws them at the port.
+
 Kenny (form v18, 2026-10-05; and 2026-10-05 20:03: every demo gets separate
 options per aspect, as the meter and the trend tile, "and it should be like
 this in the future"). The character round's next component: the state word.

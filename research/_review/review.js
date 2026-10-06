@@ -495,12 +495,17 @@ function playAspect(section, aspectId) {
     const mine = kept[DEMO] || {};
     for (const b of section.querySelectorAll('[data-review-plays]')) {
         if (b.closest('.rv-controls') || !b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) continue;
-        // A state the reviewer set in this group stands; the autoplay leaves it.
+        // A state the reviewer set in this group stands; the autoplay leaves
+        // it, unless the aspect is that state itself (data-review-forces):
+        // the failed state is judged failed, the loading picture loading.
         const group = b.closest('[role="group"]');
-        if (b.hasAttribute('aria-pressed') && group && groupName(group) in mine) continue;
+        if (b.hasAttribute('aria-pressed') && group && groupName(group) in mine && !forces(b, aspectId)) continue;
         /** @type {HTMLElement} */ (b).click();
     }
 }
+/** Whether a button shows the state an aspect is about (data-review-forces="failure"). */
+const forces = (/** @type {Element} */ b, /** @type {string} */ aspectId) =>
+    (b.getAttribute('data-review-forces') || '').split(/\s+/).includes(aspectId);
 
 /**
  * The state buttons the reviewer pressed, per demo: the group's name and
@@ -539,6 +544,8 @@ function restoreKept(section, aspectId) {
     if (!mine || !aspectId) return;
     for (const group of section.querySelectorAll('[data-review-controls] [role="group"]')) {
         if (group.closest('.rv-controls') || !(groupName(group) in mine)) continue;
+        // The aspect's own state wins on its own page (see playAspect).
+        if ([...group.querySelectorAll('button')].some((b) => forces(b, aspectId))) continue;
         const button = /** @type {HTMLElement | undefined} */ ([...group.querySelectorAll('button')][mine[groupName(group)]]);
         // A radio-like group (several pressable buttons) is pressed again even
         // when it still reads as pressed: a redraw (a theme change) can reset
