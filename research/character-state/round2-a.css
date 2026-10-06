@@ -1,4 +1,95 @@
-/* research/character-state, round 2 (Kenny, 2026-10-06 19:38): phantom's new shapes. */
+/* research/character-state, round 2 (Kenny, 2026-10-06 19:38): phantom's
+   new shapes only (round2-a.js). Round 1's tone and change rules for
+   phantom (state-c.css) key off `[data-sw-tone]`/`[data-sw-change]` and
+   `[data-sw-kind]` alone, never off a shape value, so they already
+   compose with any of the three keys below without change — the only
+   thing that ever broke that composition was round 1's shape 1 setting
+   `display: inline-block` on `.kp-state-word` (it switches off the
+   package's own `::after` width-trick, so the hidden word list stops
+   collapsing to zero height and wraps the dot and the Stop button onto
+   the next line) and a shape putting a static `transform` on
+   `.kp-state-word` or the dot (round 1's "restamped"/"re-slashed"/
+   "pinned" changes hold a `transform` animation on exactly those two
+   parts, which fully replaces any static `transform` value for as long
+   as it plays and leaves the shape's own skew/rotate stripped off once
+   it lands). None of the three shapes below touch `display` or
+   `transform` on either part — the dot's ring and the plate's cut are
+   drawn with `box-shadow` and `clip-path` instead — so round 1's tone
+   and change keep working, visibly, on all three without any
+   shape-scoped override needed. */
 
 @layer kp.signature {
+    /* ╔══════════════════════════════════════════════════════╗
+       ║ phantom — black, white, one violent red, no glow      ║
+       ║ round 2: three new shapes (tone/change stay round 1's) ║
+       ╚══════════════════════════════════════════════════════╝ */
+
+    /* ── r2-ph-shape-1 · the ransom note: a torn kraft scrap, corner cut
+       away, a dashed cut edge — echoes the trend tile's "The ransom
+       note" and the brief's torn-paper, ransom-note cut-outs. The dot's
+       ring tracks `--sw-dot` itself, so tone recolours it for free. ── */
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-1'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring: 0 0 0 1px var(--card), 0 0 0 2px var(--sw-dot);
+    }
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-1'] .kp-state-word {
+        --sw-frame: 1px dashed var(--border-strong);
+        --sw-radius: 2px;
+        --sw-pad: 0.16em 0.55em 0.12em;
+        --sw-plate:
+            repeating-linear-gradient(100deg, color-mix(in oklch, var(--border-strong) 10%, transparent) 0 1px, transparent 1px 7px), var(--card);
+        --sw-ink: var(--foreground);
+        --sw-font: italic 600 0.88em var(--theme-font-display, inherit);
+        --sw-track: 0.02em;
+        /* The cut stays inside the padding (never under the word itself): a
+           diagonal nick 0.4em wide, 0.1em tall at the top-left corner only. */
+        clip-path: polygon(0.4em 0, 100% 0, 100% 100%, 0 100%, 0 0.1em);
+    }
+
+    /* ── r2-ph-shape-2 · the dossier tab: a case-file tab cut into the
+       top-left corner, a steep kraft hatch, tracked capitals — echoes
+       the action columns' "The redacted dossier" and the key figures'
+       "The dossier folder." No ring on the dot: the tab is the mark. ── */
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-2'] {
+        --sw-dot-size: 0.4em;
+        --sw-dot: var(--muted-foreground);
+    }
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-2'] .kp-state-word {
+        --sw-frame: 1px solid var(--border-strong);
+        --sw-radius: 1px;
+        --sw-pad: 0.16em 0.55em 0.1em;
+        --sw-plate:
+            repeating-linear-gradient(115deg, color-mix(in oklch, var(--border-strong) 12%, transparent) 0 1px, transparent 1px 6px), var(--card);
+        --sw-plate-shadow: inset 0 0 0 1px color-mix(in oklch, var(--border-strong) 35%, transparent);
+        --sw-ink: var(--foreground);
+        --sw-font: 500 0.82em var(--theme-font-display, inherit);
+        --sw-case: uppercase;
+        --sw-track: 0.07em;
+        /* A folder tab standing at the left of the top edge: the right part
+           of the top edge sets back 0.1em (inside the padding), the left
+           0.9em keeps full height, so the tab reads without ever touching
+           the word's own glyphs. */
+        clip-path: polygon(0 0, 0.9em 0, 1em 0.1em, 100% 0.1em, 100% 100%, 0 100%);
+    }
+
+    /* ── r2-ph-shape-3 · the target mark: a bullseye of concentric
+       rings round the dot, a primary ring round the whole word —
+       echoes the network graph's "The target" and the key figures'
+       "The target file." Hard-edged rings only: no blur, no glow. ── */
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-3'] {
+        --sw-dot-size: 0.28em;
+        --sw-dot: var(--muted-foreground);
+        --sw-dot-ring:
+            0 0 0 0.11em var(--card), 0 0 0 0.2em color-mix(in oklch, var(--sw-dot) 55%, var(--card)), 0 0 0 0.28em var(--card),
+            0 0 0 0.36em var(--sw-dot);
+    }
+    [data-theme='phantom'] [data-sw-shape='r2-ph-shape-3'] .kp-state-word {
+        --sw-frame: 2px solid var(--primary);
+        --sw-radius: 999px;
+        --sw-pad: 0.14em 0.65em;
+        --sw-plate: var(--card);
+        --sw-ink: var(--foreground);
+        --sw-font: 700 0.84em var(--theme-font-mono, ui-monospace, monospace);
+    }
 }
