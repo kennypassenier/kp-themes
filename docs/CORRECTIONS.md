@@ -6287,6 +6287,8 @@ toggle altogether.
 
 ## fix-107 · Space sometimes picked and moved on instead of pausing (2026-10-06)
 
+Kenny, form v33 (2026-10-06): "Als ik zeg dat ik op spatie duw en het gaat naar de volgende, dan is dat zo, dat jij het niet kan repliceren boeit mij niet." Rule taken from it: a fault Kenny reports is a fact; a record never sets it against a failed reproduction, it finds the cause (as fix-103's "not reproduced" did wrongly too).
+
 **1 · What went wrong.** Kenny, 2026-10-06 17:27: "soms als ik op spatie druk,
 gaat die toch naar de volgende". Since 8b01f824 Space pauses, but the key
 handler let a focused button keep its own Space; the approve button holds
