@@ -1,0 +1,2 @@
+/* research/character-state, round 2 (Kenny, 2026-10-06 19:38): phantom's new shapes; filled by its helper. */
+export default {};

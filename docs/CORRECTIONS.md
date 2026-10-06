@@ -6411,3 +6411,36 @@ and two of description. Queued as fix-109-M1.
 demo's own overflow rules.
 
 **9 · When we review the measure.** When the flip's layout changes.
+
+## fix-110 · The page header's More menu was cut off (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 19:39: "pressing "More" makes the
+menu that pops up cut out, still need vertical space!" The header's pane
+`.ph-resize` (research/character-header/demo.css) clipped with `overflow:
+hidden` for its narrow 22.5rem mode, so the menu hanging below the header was
+cut at the header's foot, on the page and in the review dialog.
+
+**2 · Which gate let it through.** fix-109's check looked for clipped
+content inside the shown card, not for a popup that hangs outside it.
+
+**3 · Where else the same fault sits.** Every demo pane that clips and holds
+a popup. Searched with `grep -rn "overflow: hidden" research/character-*/demo.css`:
+the header's pane is the only clipping pane around a popup (the menu demo
+opens its menus inside an unclipped stage).
+
+**4 · How we prevent a repeat.** The pane clips sideways only
+(`overflow-x: clip`) and, while a menu is open, makes room for it below.
+
+**5 · What the remedy costs.** The pane grows by 11rem while a menu is open.
+
+**6 · Who enforces it.** Code (the demo's CSS).
+
+**7 · How and when we measure.** At the 9.3.0 release suite, the fix-109-M1
+test also opens every popup a demo offers and finds its bottom inside the
+shown card. Measured on the fix: the menu's foot at 474px, the card's at
+566px. Queued as fix-110-M1.
+
+**8 · Fallback.** If a popup still clips, the dialog's flip drops the demo's
+overflow rules altogether.
+
+**9 · When we review the measure.** With fix-109.

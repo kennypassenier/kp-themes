@@ -20,6 +20,7 @@
 
 import { setStateWord } from '../../js/components.js';
 import { THEMES } from '../../js/theme-registry.js';
+import R2A from './round2-a.js';
 
 /** @typedef {{ name: string, text: string }} Option */
 /** @typedef {'shape' | 'tone' | 'change'} Aspect */
@@ -418,6 +419,43 @@ const IDEAS = {
     },
 };
 
+/**
+ * Round 1's verdicts (Kenny, 2026-10-06 19:38), in the order of ASPECTS:
+ * shape, tone, change. A number is settled and not asked again; '' is open
+ * in round 2: phantom's shape is new ("none, first one seems broken"), its
+ * tone and change are judged again in the picked shape.
+ * @type {Record<string, string[]>}
+ */
+const PICKED = {
+    formal: ['1', '2', '1'],
+    light: ['1', '1', '1'],
+    dark: ['1', '3', '1'],
+    cyberpunk: ['3', '2', '1'],
+    synthwave: ['3', '3', '1'],
+    pastel: ['3', '3', '2'],
+    terminal: ['2', '3', '3'],
+    forest: ['1', '1', '3'],
+    'high-contrast': ['3', '2', '1'],
+    sepia: ['2', '3', '3'],
+    blueprint: ['2', '2', '1'],
+    solstice: ['3', '3', '1'],
+    brutalism: ['1', '3', '2'],
+    deco: ['3', '3', '1'],
+    phantom: ['', '', ''],
+    'shade-light': ['3', '3', '3'],
+    'shade-dark': ['2', '3', '3'],
+    retro: ['1', '3', '2'],
+    grotesk: ['3', '3', '1'],
+    lapis: ['3', '3', '3'],
+    nostromo: ['3', '3', '1'],
+    titanium: ['3', '2', '3'],
+};
+const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
+// Round 2's new options replace an aspect's (each carries its own key, the
+// attribute value its CSS answers to; round 1's are 1, 2, 3).
+for (const [t, aspects] of Object.entries(R2A)) for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
+const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
+
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="state"]'));
 
@@ -425,7 +463,7 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 
 // Read by ../_review/review.js when it loads, which is after this module:
 // three choices per theme, each option's name and what it does as its hint.
-// Nothing is ticked for the reviewer.
+// Round 2 asks only what Kenny sent back; the rest is settled and hidden.
 const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
     Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at].name}. ${idea[aspect][at].text}`]));
 section.setAttribute(
@@ -435,17 +473,26 @@ section.setAttribute(
             id,
             label,
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+            default: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, keptOf(t, id)]),
+            ),
+            fixed: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, true]),
+            ),
         })),
     ),
 );
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
-for (const [theme, idea] of Object.entries(IDEAS)) {
+for (const theme of Object.keys(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
-    p.textContent =
-        `Three picks, each on its own. Shape is ${idea.shape[0].name.replace(/^The /, 'the ')} (1), ${idea.shape[1].name.replace(/^The /, 'the ')} ` +
-        `(2) or ${idea.shape[2].name.replace(/^The /, 'the ')} (3). Each row changes one thing only; the preview at the top shows what you ticked ` +
-        'so far. Press every state once, then Failed, and try the speed at ¼; the chip keeps its width.';
+    p.textContent = ASPECTS.some(({ id }) => !keptOf(theme, id))
+        ? 'Round 2: three new shapes; the tone and the change are judged again in the shape you pick first. Press every state once, then Failed.'
+        : 'Approved: every aspect is settled as you picked it.';
     look.append(p);
 }
 
@@ -488,7 +535,8 @@ for (const { id, label, about } of ASPECTS) {
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const ticked = {};
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+const picks = () =>
+    /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? (keptOf(theme(), id) || '1')])));
 
 /** The word's kind, by what it means: good, muted, pending or bad. @param {string} word */
 const kindOf = (word) =>
@@ -500,7 +548,10 @@ function compose() {
     const kind = kindOf(state.word);
     const preview = section.querySelector('[data-sw-preview] [data-sw]');
     if (preview) {
-        for (const { id } of ASPECTS) if (preview.getAttribute(`data-sw-${id}`) !== now[id]) preview.setAttribute(`data-sw-${id}`, now[id]);
+        for (const { id } of ASPECTS) {
+            const key = keyOf(theme(), id, now[id]);
+            if (preview.getAttribute(`data-sw-${id}`) !== key) preview.setAttribute(`data-sw-${id}`, key);
+        }
         if (preview.getAttribute('data-sw-kind') !== kind) preview.setAttribute('data-sw-kind', kind);
     }
     for (const cell of section.querySelectorAll('[data-sw-vary]')) {
@@ -508,7 +559,7 @@ function compose() {
         const option = cell.getAttribute('data-sw-option') ?? '1';
         const chip = cell.querySelector('[data-sw]');
         for (const { id } of ASPECTS) {
-            const value = id === vary ? option : now[id];
+            const value = keyOf(theme(), id, id === vary ? option : now[id]);
             if (chip?.getAttribute(`data-sw-${id}`) !== value) chip?.setAttribute(`data-sw-${id}`, value);
         }
         if (chip?.getAttribute('data-sw-kind') !== kind) chip?.setAttribute('data-sw-kind', kind);
@@ -516,7 +567,8 @@ function compose() {
     }
     const words = section.querySelector('[data-sw-picks]');
     const idea = IDEAS[theme()];
-    if (words && idea) words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1].name}`).join(' · ');
+    if (words && idea)
+        words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1]?.name ?? ''}`).join(' · ');
 }
 
 // What is ticked in the review dialog is what the preview shows.
@@ -574,6 +626,9 @@ function showTheme() {
     // On the page, only this theme's look-at line; the dialog reads them all.
     for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== now;
     const idea = IDEAS[now];
+    // A settled aspect has no row.
+    for (const box of section.querySelectorAll('[data-sw-aspect]'))
+        /** @type {HTMLElement} */ (box).hidden = Boolean(keptOf(now, /** @type {Aspect} */ (box.getAttribute('data-sw-aspect'))));
     for (const cell of section.querySelectorAll('[data-sw-vary]')) {
         const option = idea?.[/** @type {Aspect} */ (cell.getAttribute('data-sw-vary'))]?.[Number(cell.getAttribute('data-sw-option')) - 1];
         const name = cell.querySelector('[data-sw-name]');

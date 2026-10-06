@@ -88,7 +88,17 @@
 .ph-resize {
     inline-size: 100%;
     max-inline-size: 100%;
-    overflow: hidden;
+    /* Clipped sideways only (the narrow pane), never downwards: the More
+       menu hangs below the header (Kenny, 2026-10-06 19:39: "the menu that
+       pops up cut out, still need vertical space"). */
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+/* While a More menu is open, the pane makes room for it below the header,
+   so the card (and the review dialog's flip) holds the whole menu. */
+.ph-resize:has([data-ph-panel]:not([hidden])) {
+    padding-block-end: 11rem;
 }
 
 .ph-resize[data-ph-narrow] {
