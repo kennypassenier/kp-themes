@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 11:50 Brussels, Kenny: 22 of 22 approved in full (character-columns round 2)",
+    "attributes": "data-cs-<aspect>=\"<n>\" on the strip wrapper [data-cs], research/character-columns/columns.css",
+    "picks": {
+        "formal": {
+            "shape": "3",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "3",
+            "live": "3"
+        },
+        "light": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "3",
+            "live": "2"
+        },
+        "dark": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "1",
+            "live": "3"
+        },
+        "cyberpunk": {
+            "shape": "2",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "1",
+            "live": "3"
+        },
+        "synthwave": {
+            "shape": "1",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "3",
+            "live": "2"
+        },
+        "pastel": {
+            "shape": "1",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "2",
+            "live": "1"
+        },
+        "terminal": {
+            "shape": "3",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "3",
+            "live": "3"
+        },
+        "forest": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "2",
+            "live": "1"
+        },
+        "high-contrast": {
+            "shape": "2",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "1",
+            "live": "1"
+        },
+        "sepia": {
+            "shape": "3",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "3",
+            "live": "2"
+        },
+        "blueprint": {
+            "shape": "1",
+            "loading": "2",
+            "arrival": "3",
+            "tone": "2",
+            "live": "3"
+        },
+        "solstice": {
+            "shape": "2",
+            "loading": "2",
+            "arrival": "1",
+            "tone": "3",
+            "live": "1"
+        },
+        "brutalism": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "2",
+            "tone": "2",
+            "live": "2"
+        },
+        "deco": {
+            "shape": "2",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "2",
+            "live": "1"
+        },
+        "phantom": {
+            "shape": "3",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "1",
+            "live": "2"
+        },
+        "shade-light": {
+            "shape": "3",
+            "loading": "3",
+            "arrival": "1",
+            "tone": "2",
+            "live": "2"
+        },
+        "shade-dark": {
+            "shape": "2",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "2",
+            "live": "3"
+        },
+        "retro": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "3",
+            "live": "2"
+        },
+        "grotesk": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "3",
+            "live": "1"
+        },
+        "lapis": {
+            "shape": "2",
+            "loading": "2",
+            "arrival": "1",
+            "tone": "3",
+            "live": "3"
+        },
+        "nostromo": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "3",
+            "live": "2"
+        },
+        "titanium": {
+            "shape": "2",
+            "loading": "3",
+            "arrival": "3",
+            "tone": "1",
+            "live": "3"
+        }
+    }
+}

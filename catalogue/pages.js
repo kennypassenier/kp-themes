@@ -84,7 +84,6 @@ export const PAGES = [
             // The character round, fifth demo (2026-10-05): the key figure's trend tile in 22 themes, two characters each.
             { href: 'research/character-trend/demo.html', label: 'A trend tile of its own, per theme' },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
-            { href: 'research/character-columns/demo.html', label: 'A key-figure strip of its own, per theme' },
             // The character round, seventh component: the dashboard tiles.
             { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
@@ -110,6 +109,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 11:50: Kenny approved the strip columns in all 22 themes, one pick per aspect (research/character-columns/decided.json); they move into the registers at the character round's port.
+            { href: 'research/character-columns/demo.html', label: 'A key-figure strip of its own, per theme' },
             // Decided 2026-10-05 12:30: Kenny picked formal's checked stamp, cyberpunk's glitch and settle and titanium's heat tint; moved into the package (js/update.js, `--kp-update` in the three registers, catalogue/motion.html#update).
             { href: 'research/update-motion/demo.html', label: 'Information that updates in place' },
             // Decided 2026-10-05: Kenny approved the reverse of close in full; in formal, cyberpunk and titanium a dialog and an arriving element open as their close turned around (js/motion.js, `--kp-open: reverse-close`).

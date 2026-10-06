@@ -1,5 +1,7 @@
 # A key-figure strip of its own, per theme
 
+**Decided (2026-10-06 11:50).** Kenny approved all 22 themes in full, one pick per aspect; the picks are in [decided.json](decided.json) (shape / loading / arrival / tone / live). They move into the registers exactly as the demo draws them at the port, after every component's verdict. The port needs the package to say the strip's moments (arrival after loading, a live update) that the demo sets as `data-cs-moment`; js/kpi.js has only `aria-busy` today (PACKAGE_FINDINGS).
+
 Kenny, form v18 (2026-10-05): the character round, one component at a time,
 all 22 themes in one demo. The meter, the time chart, the month heatmap, the
 network graph and the trend tile (`research/character-*`) came first; this is
