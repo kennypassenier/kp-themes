@@ -1269,7 +1269,13 @@ controls.addEventListener('click', (event) => {
     if (action === 'open') openAll();
     else if (action === 'close') closeAll();
     else if (action === 'loading' || action === 'filled') {
+        // The package waits with a new fill while a menu is open, so the menus
+        // shut at once, take the fill, and open again: Loading and Filled
+        // always show the menu as it now reads (and the review dialog, which
+        // presses them for the loading and other aspects, shows it at once).
+        for (const wrapper of allWrappers()) closeMenu(wrapper);
         setLoadingAll(action === 'loading');
+        requestAnimationFrame(() => openAll());
         for (const b of controls.querySelectorAll('[data-mb-action="loading"], [data-mb-action="filled"]'))
             b.setAttribute('aria-pressed', String(b === button));
     } else if (action === 'focus') {

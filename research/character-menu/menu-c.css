@@ -466,10 +466,18 @@
 
     /* Shape 2, the calling card: a black plate under a halftone, headings
        skewed in display capitals, a red slash marks the corner. */
+    /* fix: `position: relative` here used to override the base
+       `.kp-menu-button > .kp-menu` rule's `position: absolute` (same
+       specificity, later in the cascade), turning the menu into an
+       in-flow flex child of `.kp-menu-button` (`display: inline-flex`):
+       the menu's own height then stretched the More tile itself, and the
+       menu no longer sat pinned under the button. The `::after` corner
+       triangle below needs no `position: relative` of its own — the menu
+       is already positioned (`absolute`, from the base rule), which is
+       enough to anchor an absolutely positioned descendant. */
     [data-theme='phantom'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
         background-image: radial-gradient(circle at 1px 1px, hsl(from var(--foreground) h s l / 0.06) 1px, transparent 1px);
         background-size: 5px 5px;
-        position: relative;
     }
 
     [data-theme='phantom'] [data-mb-shape='2'] .kp-menu-button > .kp-menu::after {

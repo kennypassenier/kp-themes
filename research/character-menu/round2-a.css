@@ -1,4 +1,516 @@
-/* research/character-menu, round 2 (Kenny, 2026-10-06 12:59): the new options of group a. */
-
+/* research/character-menu, round 2 (Kenny, 2026-10-06 12:59): the new
+   options of group a. Kenny rejected round 1's three loading options in
+   dark, terminal and forest and asked for six new ones per theme, in line
+   with what he already picked for that theme's other components
+   (research/THEME_PROFILES.md: menu.css and menu-a..b.css's own comments
+   name which picks each option echoes). Tokens only, @layer kp.signature,
+   no opacity keyframes; every picture is built from the loading entry's
+   own box, label and hint (`[data-kp-loading]`) and uses the whole space
+   that row takes; every animation plays only under
+   `prefers-reduced-motion: no-preference`, so it always moves at full
+   motion and stands still under reduced motion. */
 @layer kp.signature {
+    /* ------------------------------------------------------- dark ------ */
+
+    /* Loading r2-dk-load-1, the mill pass: a lit groove milled across the
+       row's full width, as the meter's milling pass and the chart's mill
+       pass. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(90deg, var(--primary) 0 60%, transparent 60%);
+        background-size: 2.5rem 2px;
+        background-repeat: repeat-x;
+        background-position: 0 50%;
+    }
+
+    /* Loading r2-dk-load-2, the bus relay: a packet of light runs the
+       row's full length over a dashed bus trace, as the graph's packet
+       running the bus. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image:
+            repeating-linear-gradient(90deg, var(--mb-edge, var(--border-strong)) 0 4px, transparent 4px 10px),
+            radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px);
+        background-size:
+            100% 1px,
+            8px 8px;
+        background-repeat: repeat-x, no-repeat;
+        background-position:
+            0 100%,
+            0% 50%;
+    }
+
+    /* Loading r2-dk-load-3, the die stamps: the whole row presses in like
+       metal under a die and springs back, as the meter's and calendar's
+       die press. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        box-shadow: inset 0 0 0 1px var(--mb-edge, var(--border-strong));
+    }
+
+    /* Loading r2-dk-load-4, the panel warms: the row brightens from dim to
+       lit as a panel powering up, as the menu's own Powered up and the
+       trend's Switched on. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        filter: brightness(0.55);
+    }
+
+    /* Loading r2-dk-load-5, the scope trace: a phosphor trace sweeps the
+       row's full width with a fading tail, as the oscilloscope shape and
+       the chart's spectrometer. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(90deg, transparent, var(--primary) 50%, transparent);
+        background-size: 45% 2px;
+        background-repeat: no-repeat;
+        background-position: -45% 50%;
+    }
+
+    /* Loading r2-dk-load-6, the gauge needle sweeps: a needle pivots over
+       the row's full width, as the meter's machined-channel gauge carried
+       into metal. */
+    [data-theme='dark'] [data-mb-loading='r2-dk-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-start: 50%;
+        inline-size: 70%;
+        block-size: 2px;
+        margin-block-start: -1px;
+        background: var(--primary);
+        transform-origin: left center;
+    }
+
+    /* --------------------------------------------------- terminal ------ */
+
+    /* Loading r2-tm-load-1, the log scrolls: phosphor text lines scroll
+       up through the row's full height, as the chart's and calendar's
+       boot log. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-linear-gradient(0deg, var(--mb-edge, var(--border-strong)) 0 1px, transparent 1px 6px);
+        background-size: 100% 100%;
+    }
+
+    /* Loading r2-tm-load-2, the cursor walks: a block cursor jumps in
+       hard mono steps across the row's full width, as the graph's cursor
+       blink carried into motion. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 1rem;
+        margin-block-start: -0.5rem;
+        background: var(--primary);
+    }
+
+    /* Loading r2-tm-load-3, the brackets close: a [ and a ] slide in from
+       the row's two ends to meet at the middle, as the columns' bracket
+       tone. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+        content: '[';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        font-family: var(--theme-font-mono);
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: ']';
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        font-family: var(--theme-font-mono);
+        color: var(--primary);
+    }
+
+    /* Loading r2-tm-load-4, the redraw flickers: the whole row flashes
+       brighter in two hard steps like a terminal redrawing its screen, as
+       the meter's and trend's redraw tone. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        filter: brightness(1);
+    }
+
+    /* Loading r2-tm-load-5, the ping sweeps: a bright block bounces the
+       row's full width end to end, as a ping travelling the wire. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: radial-gradient(circle, var(--primary) 0 2.5px, transparent 3px);
+        background-size: 6px 6px;
+        background-repeat: no-repeat;
+        background-position: 0% 50%;
+    }
+
+    /* Loading r2-tm-load-6, the trace writes: a line prints in across the
+       row's full width in hard steps, as the menu's own Printed and the
+       columns' line by line. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-end: 0.25rem;
+        inline-size: 100%;
+        block-size: 2px;
+        background: var(--primary);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    /* ------------------------------------------------------ forest ----- */
+
+    /* Loading r2-ft-load-1, growth rings: concentric rings widen outward
+       to fill the row's full width, as the calendar's tree rings and the
+       trend's growth ring. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: repeating-radial-gradient(
+            circle,
+            transparent 0 5px,
+            color-mix(in oklab, var(--primary) 30%, transparent) 5px 6px,
+            transparent 6px 11px
+        );
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+    }
+
+    /* Loading r2-ft-load-2, footsteps: a line of footprints walks the
+       row's full width, as the meter's footsteps. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image:
+            radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px), radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px);
+        background-size:
+            28px 100%,
+            28px 100%;
+        background-repeat: repeat-x, repeat-x;
+        background-position:
+            0 30%,
+            14px 70%;
+    }
+
+    /* Loading r2-ft-load-3, the mushroom ring: a ring of light pulses
+       outward from the row's middle to its full edges, as the graph's
+       mushroom ring and its fireflies tracing the clearing. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: radial-gradient(circle, transparent 38%, color-mix(in oklab, var(--primary) 35%, transparent) 40%, transparent 44%);
+        background-size: 10% 10%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+    }
+
+    /* Loading r2-ft-load-4, undergrowth creeps: a green wash grows in from
+       the row's left edge to fill its full width, as the chart's grows
+       from the ground. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: linear-gradient(
+            90deg,
+            color-mix(in oklab, var(--primary) 20%, transparent),
+            color-mix(in oklab, var(--primary) 6%, transparent) 60%,
+            transparent
+        );
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    /* Loading r2-ft-load-5, the post sways: the whole row rocks like a
+       trail marker post in the wind, as the columns' post sways. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        transform-origin: bottom center;
+    }
+
+    /* Loading r2-ft-load-6, falling leaves: two leaves drift down the
+       row's full height in turn, as the calendar's falling leaves. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before,
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -10%;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 0 0.3125rem 0 0.3125rem;
+        background: var(--primary);
+    }
+
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+        inset-inline-start: 22%;
+    }
+
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        inset-inline-start: 68%;
+    }
+
+    /* ---------------------------------------------------- the motion --- */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* dark */
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-dk-millpass calc(0.7s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-dk-busrelay calc(1.2s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-dk-diestamp calc(1.3s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-dk-panelwarm calc(1.6s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-dk-scopetrace calc(1.1s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='dark'] [data-mb-loading='r2-dk-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-r2-dk-needle calc(1.4s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        /* terminal */
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-tm-logscroll calc(0.6s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-r2-tm-cursorwalk calc(1.2s / var(--mb-speed, 1)) steps(6, jump-end) infinite;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+            animation: mb-r2-tm-bracketopen calc(1.1s / var(--mb-speed, 1)) ease-in-out infinite alternate;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-r2-tm-bracketclose calc(1.1s / var(--mb-speed, 1)) ease-in-out infinite alternate;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-tm-redraw calc(0.8s / var(--mb-speed, 1)) steps(2, jump-end) infinite;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-tm-ping calc(1s / var(--mb-speed, 1)) ease-in-out infinite alternate;
+        }
+
+        [data-theme='terminal'] [data-mb-loading='r2-tm-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-r2-tm-tracewrite calc(1.4s / var(--mb-speed, 1)) steps(6, jump-end) infinite;
+        }
+
+        /* forest */
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-ft-rings calc(1.8s / var(--mb-speed, 1)) ease-out infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-ft-footsteps calc(1s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-ft-mushroom calc(1.7s / var(--mb-speed, 1)) ease-out infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-ft-creep calc(2.2s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: mb-r2-ft-postsway calc(1.6s / var(--mb-speed, 1)) ease-in-out infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+            animation: mb-r2-ft-leaf calc(2.4s / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-6'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation: mb-r2-ft-leaf calc(2.4s / var(--mb-speed, 1)) linear infinite;
+            animation-delay: calc(-1.2s / var(--mb-speed, 1));
+        }
+    }
+
+    @keyframes mb-r2-dk-millpass {
+        from {
+            background-position-x: 0;
+        }
+        to {
+            background-position-x: 2.5rem;
+        }
+    }
+
+    @keyframes mb-r2-dk-busrelay {
+        from {
+            background-position:
+                0 100%,
+                0% 50%;
+        }
+        to {
+            background-position:
+                0 100%,
+                100% 50%;
+        }
+    }
+
+    @keyframes mb-r2-dk-diestamp {
+        0%,
+        100% {
+            transform: scaleY(1);
+            box-shadow: inset 0 0 0 1px var(--mb-edge, var(--border-strong));
+        }
+        50% {
+            transform: scaleY(0.94);
+            box-shadow: inset 0 3px 6px hsl(0 0% 0% / 0.5);
+        }
+    }
+
+    @keyframes mb-r2-dk-panelwarm {
+        0%,
+        100% {
+            filter: brightness(0.55);
+        }
+        50% {
+            filter: brightness(1.2);
+        }
+    }
+
+    @keyframes mb-r2-dk-scopetrace {
+        from {
+            background-position-x: -45%;
+        }
+        to {
+            background-position-x: 145%;
+        }
+    }
+
+    @keyframes mb-r2-dk-needle {
+        0%,
+        100% {
+            transform: rotate(-10deg);
+        }
+        50% {
+            transform: rotate(10deg);
+        }
+    }
+
+    @keyframes mb-r2-tm-logscroll {
+        from {
+            background-position-y: 0;
+        }
+        to {
+            background-position-y: 6px;
+        }
+    }
+
+    @keyframes mb-r2-tm-cursorwalk {
+        from {
+            inset-inline-start: 0;
+        }
+        to {
+            inset-inline-start: calc(100% - 0.5rem);
+        }
+    }
+
+    @keyframes mb-r2-tm-bracketopen {
+        from {
+            inset-inline-start: 0;
+        }
+        to {
+            inset-inline-start: 42%;
+        }
+    }
+
+    @keyframes mb-r2-tm-bracketclose {
+        from {
+            inset-inline-end: 0;
+        }
+        to {
+            inset-inline-end: 42%;
+        }
+    }
+
+    @keyframes mb-r2-tm-redraw {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+        50% {
+            filter: brightness(1.6);
+        }
+    }
+
+    @keyframes mb-r2-tm-ping {
+        from {
+            background-position-x: 0%;
+        }
+        to {
+            background-position-x: 100%;
+        }
+    }
+
+    @keyframes mb-r2-tm-tracewrite {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+        60%,
+        100% {
+            clip-path: inset(0 0% 0 0);
+        }
+    }
+
+    @keyframes mb-r2-ft-rings {
+        from {
+            background-size: 20% 20%;
+        }
+        to {
+            background-size: 150% 150%;
+        }
+    }
+
+    @keyframes mb-r2-ft-footsteps {
+        from {
+            background-position:
+                0 30%,
+                14px 70%;
+        }
+        to {
+            background-position:
+                28px 30%,
+                42px 70%;
+        }
+    }
+
+    @keyframes mb-r2-ft-mushroom {
+        from {
+            background-size: 10% 10%;
+        }
+        to {
+            background-size: 170% 170%;
+        }
+    }
+
+    @keyframes mb-r2-ft-creep {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+        50% {
+            clip-path: inset(0 0% 0 0);
+        }
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes mb-r2-ft-postsway {
+        0%,
+        100% {
+            transform: rotate(-2deg);
+        }
+        50% {
+            transform: rotate(2deg);
+        }
+    }
+
+    @keyframes mb-r2-ft-leaf {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(220%);
+        }
+    }
 }
