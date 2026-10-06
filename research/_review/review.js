@@ -693,6 +693,16 @@ function toggleTour() {
 }
 tourButton?.addEventListener('click', () => toggleTour());
 
+/** Z (AZERTY): presses the demo's own live-update control, whatever the demo calls it. */
+function liveUpdate() {
+    const section = flipPair?.item?.section;
+    if (!section) return;
+    const live = [...section.querySelectorAll('[data-review-controls] button')].find(
+        (b) => !b.closest('.rv-controls') && (Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || '')),
+    );
+    live?.click();
+}
+
 function replay(step) {
     if (!step?.aspect || !flipPair) return;
     const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
@@ -1013,10 +1023,10 @@ async function show(at) {
         // beoordelen ook in de dialog ... fix het"), never folded away.
         controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.aspect
-            ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, R replays, E speed, A tours the states by itself, Space pauses.'
+            ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
             : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
         $('#rv-keys').textContent = step.aspect
-            ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
+            ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
             : 'Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
@@ -1220,6 +1230,7 @@ dialog.addEventListener('keydown', (event) => {
             KeyR: () => replay(step), // R: replay
             KeyE: () => cycleSpeed(), // E: speed
             KeyQ: () => toggleTour(), // AZERTY A: tour the states by itself
+            KeyW: () => liveUpdate(), // AZERTY Z: a live update (Kenny, 2026-10-06 17:21)
             Space: () => togglePause(), // the thumb: pause
             KeyP: () => togglePause(),
         }[event.code];
