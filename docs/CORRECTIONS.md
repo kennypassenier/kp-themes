@@ -6487,6 +6487,8 @@ the More button.
 
 ## fix-112 · A state the reviewer set did not stay on every screen (2026-10-06)
 
+Kenny, form v38 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 20:48, on the page header: "de
 state van de knoppen, in dit geval "open" blijft nog altijd niet staan, of
 toch niet altijd, bij sommige schermen wel, bij anderen niet". 95f89728 kept

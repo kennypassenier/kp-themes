@@ -21,6 +21,8 @@ import R2A from './round2-a.js';
 import R2B from './round2-b.js';
 import R2C from './round2-c.js';
 import R2D from './round2-d.js';
+import R3A from './round3-a.js';
+import R3B from './round3-b.js';
 
 /** @typedef {{ name: string, text: string, key?: string }} Option */
 /** @typedef {'shape' | 'loading' | 'open' | 'tone' | 'interact'} Aspect */
@@ -1015,36 +1017,40 @@ const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
  * line with what we already have for other elements of a certain theme"),
  * retro's hover, focus and press, and phantom's (its menu did not sit at
  * its More tile; the picks stand, the aspect is asked again once fixed).
+ * Round 2's verdicts (Kenny, 2026-10-06 20:54) settle the loading pictures
+ * and phantom's and cyberpunk's hover; round 3 asks again cyberpunk's shape,
+ * loading (six), open/close and tone ("none of these is cyberpunk") and
+ * retro's hover, focus and press ("none is readable … I want the wow").
  * @type {Record<string, string[]>}
  */
 const PICKED = {
     formal: ['1', '1', '1', '1', '1'],
     light: ['1', '2', '3', '1', '1'],
-    dark: ['2', '', '3', '3', '1'],
+    dark: ['2', '3', '3', '3', '1'],
     synthwave: ['2', '1', '3', '1', '1'],
     pastel: ['1', '2', '3', '2', '2'],
-    terminal: ['1', '', '1', '1', '1'],
-    forest: ['2', '', '3', '1', '1'],
+    terminal: ['1', '4', '1', '1', '1'],
+    forest: ['2', '5', '3', '1', '1'],
     'high-contrast': ['1', '1', '1', '1', '1'],
     sepia: ['2', '3', '2', '1', '2'],
     blueprint: ['1', '1', '1', '3', '2'],
     solstice: ['2', '2', '2', '1', '1'],
-    brutalism: ['2', '', '1', '1', '1'],
+    brutalism: ['2', '5', '1', '1', '1'],
     deco: ['1', '1', '3', '1', '1'],
-    phantom: ['2', '3', '2', '1', ''],
+    phantom: ['2', '3', '2', '1', '3'],
     'shade-light': ['1', '3', '1', '1', '1'],
     'shade-dark': ['3', '3', '3', '1', '1'],
     retro: ['1', '1', '1', '1', ''],
-    grotesk: ['1', '', '1', '1', '2'],
+    grotesk: ['1', '2', '1', '1', '2'],
     lapis: ['2', '2', '3', '2', '3'],
-    nostromo: ['1', '', '3', '1', '2'],
-    titanium: ['3', '', '2', '1', '3'],
-    cyberpunk: ['', '', '', '', ''],
+    nostromo: ['1', '2', '3', '1', '2'],
+    titanium: ['3', '1', '2', '1', '3'],
+    cyberpunk: ['', '', '', '', '3'],
 };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an open aspect's; each carries its own key,
 // the attribute value its CSS answers to (round 1's are keyed 1, 2, 3).
-for (const file of [R2A, R2B, R2C, R2D])
+for (const file of [R2A, R2B, R2C, R2D, R3A, R3B])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

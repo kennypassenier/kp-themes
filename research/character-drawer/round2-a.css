@@ -1,4 +1,239 @@
-/* research/character-drawer, round 2 (Kenny, 2026-10-06 20:45): the new options of group a. */
+/* research/character-drawer, round 2 (Kenny, 2026-10-06 20:45): the new
+   options of group a (light's openclose, terminal's shape). Same contract
+   as drawer.css: tokens only, one rule names one aspect, no opacity
+   keyframes, every animation inside `prefers-reduced-motion: no-preference`,
+   a close is the open's own `@keyframes` played with
+   `animation-direction: reverse`. Settled aspects (light: shape 1,
+   highlight 1, card 1, next 1; terminal: openclose 3, highlight 3, card 3,
+   next 1) key off their own attribute, not shape/openclose, so they keep
+   working unchanged on these new options. */
 
 @layer kp.signature {
+    /* ═══════════════ light: openclose — round 1's three read as one ═══════ */
+    /* Measured cause: all three of round 1's options were a 260–320ms
+       ease-*, 100%→0% translate on the inline axis, differing only in a
+       brightness flicker too faint to see on a white panel, a 2% overshoot,
+       or a 3% scale — one trajectory with imperceptible trim. These three
+       change the axis or the mechanism itself, not just the trim. */
+
+    /* r2-light-oc-1: Sunrise — a vertical rise, not a slide */
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-1'] .dt-drawer {
+        translate: 0 0;
+        filter: brightness(1);
+    }
+
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-1'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 100%;
+        filter: brightness(0.92);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-1 340ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-1 300ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-r2-light-oc-1 {
+        0% {
+            translate: 0 100%;
+            filter: brightness(0.92);
+        }
+
+        65% {
+            filter: brightness(1.12);
+        }
+
+        100% {
+            translate: 0 0;
+            filter: brightness(1);
+        }
+    }
+
+    /* r2-light-oc-2: The shadow swings — an arc on a corner pivot */
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-2'] .dt-drawer {
+        transform-origin: 100% 100%;
+        translate: 0 0;
+        rotate: 0deg;
+    }
+
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        rotate: -9deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-2 360ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-2 320ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-r2-light-oc-2 {
+        0% {
+            translate: 100% 0;
+            rotate: -9deg;
+        }
+
+        70% {
+            translate: -3% 0;
+            rotate: 2deg;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    /* r2-light-oc-3: Grows into the light — a width reveal pinned to the edge, no travel */
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-3'] .dt-drawer {
+        transform-origin: 100% 50%;
+        translate: 0 0;
+        scale: 1 1;
+        filter: brightness(1);
+    }
+
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='closed'] .dt-drawer {
+        scale: 0.06 1;
+        filter: brightness(0.94);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-3 320ms ease-out both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-drawer-r2-light-oc-3 280ms ease-in both reverse;
+        }
+    }
+
+    @keyframes kp-sig-drawer-r2-light-oc-3 {
+        0% {
+            scale: 0.06 1;
+            filter: brightness(0.94);
+        }
+
+        60% {
+            scale: 1.03 1;
+        }
+
+        100% {
+            scale: 1 1;
+            filter: brightness(1);
+        }
+    }
+
+    /* ══════════════ terminal: shape — round 1 was "too dark or unreadable" ═ */
+    /* Measured cause: `.kp-drawer__desc` carries its own hardcoded
+       `color: var(--muted-foreground)` (css/components.css). Round 1's
+       shapes 1 and 3 swapped the head's background to a bright fill
+       (`--primary` / `--foreground`) but never overrode that description
+       colour, so the description kept rendering in terminal's desaturated
+       green on top of a brighter green fill: green on green. Shape 2 never
+       swapped a fill at all, so it wasn't the one Kenny meant, but it also
+       added no readability of its own. The fix below is explicit in r2-1
+       (same reverse-video idea, description recoloured); r2-2 and r2-3 sidestep
+       the whole class of bug by never inverting a fill under text. */
+
+    /* r2-term-shape-1: The top(1) row — reverse-video head, fixed */
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-1'] .dt-drawer {
+        border: 1px solid var(--primary);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* The fix: the description no longer keeps its own muted-green ink
+       once the head behind it is bright green. */
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-1'] .dt-drawer .kp-drawer__head .kp-drawer__desc {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-1'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(to bottom, var(--background) 0 1px, hsl(from var(--primary) h s l / 0.08) 1px 2px);
+        background-repeat: repeat;
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dashed var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* r2-term-shape-2: The box-drawing map — never inverts, double rules only */
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-2'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-2'] .dt-drawer .kp-drawer__body {
+        border-inline-start: 3px double var(--border-strong);
+        border-inline-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 3px double var(--border-strong);
+    }
+
+    /* r2-term-shape-3: The hex dump — an address-column rule, never a fill swap */
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-3'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono, monospace);
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 2px solid var(--primary);
+        background-image: repeating-linear-gradient(to bottom, transparent 0 0.5rem, hsl(from var(--primary) h s l / 0.5) 0.5rem calc(0.5rem + 1px));
+        background-repeat: no-repeat;
+        background-position: left;
+        background-size: 2px 100%;
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-3'] .dt-drawer .kp-drawer__body {
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0 0.5rem,
+            hsl(from var(--border-strong) h s l / 0.6) 0.5rem calc(0.5rem + 1px)
+        );
+        background-repeat: no-repeat;
+        background-position: left;
+        background-size: 2px 100%;
+    }
+
+    [data-theme='terminal'] [data-dt-shape='r2-term-shape-3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px dotted var(--border-strong);
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0 0.5rem,
+            hsl(from var(--border-strong) h s l / 0.6) 0.5rem calc(0.5rem + 1px)
+        );
+        background-repeat: no-repeat;
+        background-position: left;
+        background-size: 2px 100%;
+    }
 }
