@@ -605,7 +605,13 @@ function setupFlip(step, pair) {
     const section = pair.item.section;
     const rowsAttr = section.dataset.reviewRows;
     const row = rowsAttr ? section.querySelector(`[${rowsAttr}="${CSS.escape(step.aspect)}"]`) : null;
-    flipChoice = pair.item.choices.find((c) => c.id === step.aspect) || null;
+    // Only the options this theme has: a choice lists as many options as the
+    // theme with the most, and a theme with three must not flip on to cells
+    // 4–6, which draw no option of its own (Kenny picked "6" for retro's and
+    // grotesk's key-figure loading, 2026-10-06 20:59, on such an empty cell).
+    // A theme's own options carry a hint under its name.
+    const base = pair.item.choices.find((c) => c.id === step.aspect) || null;
+    flipChoice = base ? { ...base, options: base.options.filter((o) => !o.hints || !Object.keys(o.hints).length || o.hints[pair.theme]) } : null;
     flipPair = pair;
     flipRow = row;
     flipCells = row ? cellsOf(row).slice(0, flipChoice?.options.length || 0) : [];

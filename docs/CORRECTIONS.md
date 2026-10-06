@@ -6527,3 +6527,41 @@ aspect, before and after a flip). Queued as fix-112-M1.
 as a line under the controls with a button to clear them.
 
 **9 · When we review the measure.** With fix-111.
+
+## fix-113 · The dialog flipped to options a theme does not have (2026-10-06)
+
+**1 · What went wrong.** Kenny picked "6" for the key figures' loading in
+retro and grotesk (2026-10-06 20:59), themes with three loading options. A
+choice lists as many options as the theme with the most (titanium's six),
+and the flip in research/_review/review.js walked all six: cells 4–6 drew
+no option of their own, so "6" was the plain package skeleton in the
+theme's shape.
+
+**2 · Which gate let it through.** My checks counted the visible cells on
+the page (where the extra cells hide), never the flip's count per theme.
+
+**3 · Where else the same fault sits.** Every round where one theme has more
+options than another in the same aspect. Searched with
+`grep -rln "MOST = 6\|countOf" research/character-*/demo.js`: kpi, tiles,
+chart, graph, calendar, trend and menu use per-theme counts; tiles round 2
+(cyberpunk loading six) had the same exposure, its other themes' loading was
+settled.
+
+**4 · How we prevent a repeat.** The flip keeps only the options that carry
+a hint for the theme on show.
+
+**5 · What the remedy costs.** Nothing.
+
+**6 · Who enforces it.** Code (research/_review/review.js, setupFlip).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs opens an aspect where themes differ in
+option count and reads "n/3" for a three-option theme and "n/6" for a six.
+Measured on the fix: titanium's loading reads 1/6. Queued as fix-113-M1.
+Kenny's "6" for retro and grotesk is kept as what he saw: the package's
+plain skeleton in the picked shape.
+
+**8 · Fallback.** If a theme still flips past its options, a demo passes
+its per-theme count to the kit explicitly.
+
+**9 · When we review the measure.** When the kit's choice format changes.

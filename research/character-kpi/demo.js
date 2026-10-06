@@ -1507,6 +1507,10 @@ const IDEAS = {
  * (phantom's tone and hover; every aspect of retro and grotesk; nostromo's
  * hover; titanium's loading, six options, and hover). A settled aspect is
  * drawn in the new shape too.
+ * Round 2's verdicts (Kenny, 2026-10-06 20:59) settle all but titanium's
+ * loading, which he approved so much he wants a loading demo of its own.
+ * Retro's and grotesk's loading '6' is the plain package loading, the empty
+ * cell the dialog flipped to (fixed in the kit since).
  * @type {Record<string, string[]>}
  */
 const PICKED = {
@@ -1524,14 +1528,14 @@ const PICKED = {
     solstice: ['2', '3', '1', '1', '2'],
     brutalism: ['2', '3', '2', '3', '1'],
     deco: ['1', '3', '1', '1', '3'],
-    phantom: ['', '2', '', '', '3'],
+    phantom: ['2', '2', '1', '1', '3'],
     'shade-light': ['3', '3', '1', '2', '3'],
     'shade-dark': ['2', '3', '1', '2', '2'],
-    retro: ['', '', '', '', ''],
-    grotesk: ['', '', '', '', ''],
+    retro: ['1', '6', '1', '1', '2'],
+    grotesk: ['1', '6', '1', '2', '2'],
     lapis: ['3', '1', '1', '2', '2'],
-    nostromo: ['', '2', '1', '', '2'],
-    titanium: ['', '', '1', '', '3'],
+    nostromo: ['2', '2', '1', '2', '2'],
+    titanium: ['1', '', '1', '2', '3'],
 };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an aspect's, per aspect (each carries its
