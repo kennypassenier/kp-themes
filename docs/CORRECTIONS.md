@@ -6655,6 +6655,8 @@ under the controls with a button to clear them.
 
 ## fix-116 · Busy's three shapes looked the same (2026-10-06)
 
+Kenny, form v42 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 22:15: "bij cyberpunk krijg ik een
 beoordeling voor shape, maar de drie opties zien er exact hetzelfde uit".
 fix-115 let the Shape and phone pages follow the reviewer's own state; with
