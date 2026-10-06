@@ -1,4 +1,408 @@
-/* research/character-trend, round 3 (Kenny, 2026-10-06 11:21): the new options of group a. */
+/* research/character-trend, round 3 (Kenny, 2026-10-06 11:21): the new
+   options of group a (round3-a.js). The rule-application block in
+   trends.css (`@media (prefers-reduced-motion: no-preference) { @layer
+   kp.signature { … } }`) already assigns `--tr-load-anim`, `--tr-arr-line`,
+   `--tr-arr-num` etc. generically to every tile; these rules only set the
+   custom properties for the new keys, so nothing here needs to repeat that
+   wiring. Every loading picture's static (`--tr-load` alone, read under
+   reduced motion) already reads as mid-load on its own; the keyframes below
+   only add the motion, and sit outside the layer, unlayered, exactly as
+   trends.css's own keyframes do. */
 
 @layer kp.signature {
+    /* ══ brutalism · shape (data-ct-shape) ══ */
+
+    /* brutalism · shape r3-br-shape-1: The hazard band */
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend {
+        --tr-frame: 4px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-pat: repeating-linear-gradient(45deg, var(--foreground) 0 10px, var(--accent) 10px 20px) 0 100% / 100% 10px no-repeat;
+        --tr-label-weight: 800;
+        --tr-label-track: 0.1em;
+        --tr-num-weight: 900;
+        --tr-num-size: 2.25rem;
+        --tr-line-w: 4;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-plot-bg: var(--card);
+        --tr-plot-frame: inset 0 0 0 3px var(--foreground);
+        --tr-plot-radius: 0;
+    }
+
+    /* brutalism · shape r3-br-shape-2: The bolted plate */
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-2'] .kp-kpi--trend {
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-pat:
+            radial-gradient(circle, var(--foreground) 0 3px, transparent 3.5px) 6% 14% / 1px 1px no-repeat,
+            radial-gradient(circle, var(--foreground) 0 3px, transparent 3.5px) 94% 14% / 1px 1px no-repeat,
+            radial-gradient(circle, var(--foreground) 0 3px, transparent 3.5px) 94% 86% / 1px 1px no-repeat,
+            radial-gradient(circle, var(--foreground) 0 3px, transparent 3.5px) 6% 86% / 1px 1px no-repeat;
+        --tr-shadow: 5px 5px 0 var(--destructive);
+        --tr-num-weight: 900;
+        --tr-num-size: 2.25rem;
+        --tr-line-w: 3;
+        --tr-line-cap: square;
+        --tr-line-join: miter;
+        --tr-area-op: 0.1;
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 6%, var(--card));
+        --tr-plot-frame: inset 0 0 0 2px var(--foreground);
+        --tr-plot-radius: 0;
+    }
+
+    /* brutalism · shape r3-br-shape-3: The stencil */
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-3'] .kp-kpi--trend {
+        --tr-frame: 3px solid var(--foreground);
+        --tr-radius: 0;
+        --tr-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 6px var(--foreground);
+        --tr-label-weight: 900;
+        --tr-label-track: 0.12em;
+        --tr-num-weight: 900;
+        --tr-num-case: uppercase;
+        --tr-num-track: 0.02em;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 4;
+        --tr-line-cap: butt;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-plot-bg: var(--accent);
+        --tr-plot-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 18%, transparent) 0 2px, transparent 2px 10px);
+        --tr-plot-radius: 0;
+    }
+
+    /* ══ brutalism · while loading (data-ct-loading) ══ */
+
+    /* brutalism · loading r3-br-load-1: The pour */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 55% no-repeat;
+        --tr-load-anim: r3-br-load-pour 1400ms ease-in-out infinite alternate;
+    }
+
+    /* brutalism · loading r3-br-load-2: The hazard fill */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(45deg, var(--foreground) 0 14px, var(--accent) 14px 28px) 0 0 / 56px 56px repeat;
+        --tr-load-anim: r3-br-load-hazard 1100ms linear infinite;
+    }
+
+    /* brutalism · loading r3-br-load-3: The fault line */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-3'] .kp-kpi--trend {
+        --tr-load: linear-gradient(105deg, transparent 46%, var(--foreground) 49% 51%, transparent 54%) 0 0 / 150% 100% no-repeat;
+        --tr-load-anim: r3-br-load-fault 1300ms ease-in-out infinite alternate;
+    }
+
+    /* brutalism · loading r3-br-load-4: The gate */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-4'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--foreground), var(--foreground)) 33% 0 / 34% 100% no-repeat;
+        --tr-load-anim: r3-br-load-gate 1200ms steps(3) infinite alternate;
+    }
+
+    /* brutalism · loading r3-br-load-5: The bolt ring */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-5'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 45%, transparent) 0 5px, transparent 5.5px) 8% 15% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 45%, transparent) 0 5px, transparent 5.5px) 92% 15% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 45%, transparent) 0 5px, transparent 5.5px) 92% 85% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--foreground) 45%, transparent) 0 5px, transparent 5.5px) 8% 85% / 14px 14px no-repeat,
+            radial-gradient(circle, var(--accent) 0 6px, transparent 6.5px) 8% 15% / 18px 18px no-repeat;
+        --tr-load-anim: r3-br-load-bolt 1600ms steps(4) infinite;
+    }
+
+    /* brutalism · loading r3-br-load-6: The siren sweep */
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-6'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, color-mix(in oklch, var(--accent) 16%, transparent) 0 70%, transparent 85%),
+            conic-gradient(from 0deg, color-mix(in oklch, var(--accent) 55%, transparent) 0deg 70deg, transparent 70deg 360deg);
+        --tr-load-origin: 50% 50%;
+        --tr-load-anim: r3-br-load-siren 1500ms linear infinite;
+    }
+
+    /* ══ brutalism · how the figure and the line arrive (data-ct-arrival) ══ */
+
+    /* brutalism · arrival r3-br-arr-1: Cast */
+    [data-theme='brutalism'] [data-ct-arrival='r3-br-arr-1'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    /* brutalism · arrival r3-br-arr-2: Jackhammered in */
+    [data-theme='brutalism'] [data-ct-arrival='r3-br-arr-2'] .kp-kpi--trend {
+        --tr-arr-line: r3-br-arr-chisel 480ms steps(4, jump-end) both;
+        --tr-arr-num: r3-br-arr-punch 320ms steps(3, jump-end) both;
+    }
+
+    /* brutalism · arrival r3-br-arr-3: Torn open */
+    [data-theme='brutalism'] [data-ct-arrival='r3-br-arr-3'] .kp-kpi--trend {
+        --tr-arr-line: r3-br-arr-tear 450ms cubic-bezier(0.6, 0, 0.2, 1) both;
+        --tr-arr-num: r3-br-arr-crook 450ms cubic-bezier(0.6, 0, 0.2, 1) both;
+    }
+
+    /* ══ deco · while loading (data-ct-loading) ══ */
+
+    /* deco · loading r3-dc-load-1: The setback climbs */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-1'] .kp-kpi--trend {
+        /* A plain colour, not color-mix(…, transparent): Firefox drops a
+           color-mix(…, transparent) colour-stop in a repeating-linear-gradient
+           with the two-position hard-stop syntax (found building this row;
+           a radial-gradient with the same color-mix is unaffected). */
+        --tr-load: repeating-linear-gradient(to top, var(--primary) 0 2px, transparent 2px 14px);
+        --tr-load-anim: r3-dc-load-setback 1600ms steps(7) infinite;
+    }
+
+    /* deco · loading r3-dc-load-2: The flutes turn */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-2'] .kp-kpi--trend {
+        --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 3px, transparent 3px 14px);
+        --tr-load-anim: r3-dc-load-flute 1300ms linear infinite;
+    }
+
+    /* deco · loading r3-dc-load-3: The rule is drawn */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-3'] .kp-kpi--trend {
+        --tr-load: linear-gradient(var(--primary), var(--primary)) 0 0 / 3px 100% no-repeat;
+        --tr-load-anim: r3-dc-load-rule 1400ms ease-in-out infinite alternate;
+    }
+
+    /* deco · loading r3-dc-load-4: The corners step */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-4'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, color-mix(in oklch, var(--primary) 40%, transparent) 0 5px, transparent 5.5px) 8% 15% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--primary) 40%, transparent) 0 5px, transparent 5.5px) 92% 15% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--primary) 40%, transparent) 0 5px, transparent 5.5px) 92% 85% / 14px 14px no-repeat,
+            radial-gradient(circle, color-mix(in oklch, var(--primary) 40%, transparent) 0 5px, transparent 5.5px) 8% 85% / 14px 14px no-repeat,
+            radial-gradient(circle, var(--primary) 0 6px, transparent 6.5px) 8% 15% / 18px 18px no-repeat;
+        --tr-load-anim: r3-dc-load-corners 1600ms steps(4) infinite;
+    }
+
+    /* deco · loading r3-dc-load-5: The lacquer breathes */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-5'] .kp-kpi--trend {
+        --tr-load: radial-gradient(circle, color-mix(in oklch, var(--primary) 30%, transparent) 0 30%, transparent 70%) 50% 50% / 60% 60% no-repeat;
+        --tr-load-anim: r3-dc-load-lacquer 1500ms ease-in-out infinite alternate;
+    }
+
+    /* deco · loading r3-dc-load-6: The crown turns */
+    [data-theme='deco'] [data-ct-loading='r3-dc-load-6'] .kp-kpi--trend {
+        --tr-load:
+            radial-gradient(circle, color-mix(in oklch, var(--primary) 14%, transparent) 0 70%, transparent 85%),
+            conic-gradient(from 0deg, color-mix(in oklch, var(--primary) 55%, transparent) 0deg 60deg, transparent 60deg 360deg);
+        --tr-load-origin: 50% 50%;
+        --tr-load-anim: r3-dc-load-crown 1800ms linear infinite;
+    }
+}
+
+/* Loading pictures. */
+@keyframes r3-br-load-pour {
+    from {
+        background-size: 100% 20%;
+    }
+    to {
+        background-size: 100% 85%;
+    }
+}
+
+@keyframes r3-br-load-hazard {
+    to {
+        background-position: 56px 0;
+    }
+}
+
+@keyframes r3-br-load-fault {
+    from {
+        background-position-x: 0%;
+    }
+    to {
+        background-position-x: 100%;
+    }
+}
+
+@keyframes r3-br-load-gate {
+    from {
+        background-position-x: 0%;
+    }
+    to {
+        background-position-x: 66%;
+    }
+}
+
+@keyframes r3-br-load-bolt {
+    0% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 15%;
+    }
+    25% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            92% 15%;
+    }
+    50% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            92% 85%;
+    }
+    75% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 85%;
+    }
+    100% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 15%;
+    }
+}
+
+@keyframes r3-br-load-siren {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+@keyframes r3-dc-load-setback {
+    to {
+        background-position-y: -112px;
+    }
+}
+
+@keyframes r3-dc-load-flute {
+    to {
+        background-position-x: 68px;
+    }
+}
+
+@keyframes r3-dc-load-rule {
+    from {
+        background-position-x: 0%;
+    }
+    to {
+        background-position-x: 100%;
+    }
+}
+
+@keyframes r3-dc-load-corners {
+    0% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 15%;
+    }
+    25% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            92% 15%;
+    }
+    50% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            92% 85%;
+    }
+    75% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 85%;
+    }
+    100% {
+        background-position:
+            8% 15%,
+            92% 15%,
+            92% 85%,
+            8% 85%,
+            8% 15%;
+    }
+}
+
+@keyframes r3-dc-load-lacquer {
+    from {
+        background-size: 30% 30%;
+    }
+    to {
+        background-size: 95% 95%;
+    }
+}
+
+@keyframes r3-dc-load-crown {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* The line and the number arrive. */
+@keyframes r3-br-arr-chisel {
+    from {
+        clip-path: inset(-30% 100% -30% 0);
+    }
+    to {
+        clip-path: inset(-30% -5% -30% 0);
+    }
+}
+
+@keyframes r3-br-arr-punch {
+    0% {
+        transform: translateY(-16px);
+    }
+    40% {
+        transform: translateY(4px);
+    }
+    70% {
+        transform: translateY(-2px);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes r3-br-arr-tear {
+    from {
+        clip-path: inset(-30% 100% -30% 0);
+        transform: skewX(-14deg);
+    }
+    60% {
+        transform: skewX(4deg);
+    }
+    to {
+        clip-path: inset(-30% -5% -30% 0);
+        transform: none;
+    }
+}
+
+@keyframes r3-br-arr-crook {
+    from {
+        transform: translateY(-10px) rotate(-6deg);
+    }
+    60% {
+        transform: translateY(2px) rotate(2deg);
+    }
+    to {
+        transform: none;
+    }
 }

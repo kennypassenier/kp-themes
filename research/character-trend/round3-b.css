@@ -1,4 +1,148 @@
-/* research/character-trend, round 3 (Kenny, 2026-10-06 11:21): the new options of group b. */
+/* research/character-trend, round 3 (Kenny, 2026-10-06 11:21): the new
+   shapes of group b. Retro and nostromo sent back their whole shape
+   ("shapes need to be redone" / "redo the shapes"); loading, arrival,
+   tone and live are settled in both and are not touched here — each
+   rule below sets shape knobs only (`--tr-plate`, `--tr-frame`,
+   `--tr-shadow`, `--tr-radius`, `--tr-pat`, `--tr-label-*`, `--tr-num-*`,
+   `--tr-axis-*`, `--tr-plot-*`, `--tr-line-*`, `--tr-area-*`,
+   `--tr-glow`, `--tr-font`), never the tone's delta or note knobs. Tokens
+   only (DI9); no keyframe here (shape does not move). */
 
 @layer kp.signature {
+    /* ══ retro · shape (data-ct-shape): the 1995 desktop, redone ══ */
+
+    /* retro · shape r3-br-shape-1: The title bar — the navy ramp of a
+       window's title bar across the very top (background, not the
+       label, so no text sits on it), the tile raised in the grey
+       three-dimensional bevel, the plot a sunken well, everything in
+       the DOS pixel face. */
+    [data-theme='retro'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend {
+        --tr-plate: var(--card);
+        --tr-frame: 0;
+        --tr-radius: 0;
+        --tr-shadow: var(--kp-raised);
+        --tr-pat: var(--kp-ramp) 0 0 / 100% 7px no-repeat;
+        --tr-label-font: var(--kp-dos, var(--theme-font-mono));
+        --tr-label-case: none;
+        --tr-label-track: 0.02em;
+        --tr-label-size: 0.8125rem;
+        --tr-num-font: var(--kp-dos, var(--theme-font-mono));
+        --tr-num-size: 2rem;
+        --tr-num-weight: 400;
+        --tr-plot-bg: var(--popover);
+        --tr-plot-frame: var(--kp-sunken);
+        --tr-plot-radius: 0;
+        --tr-line-w: 1;
+        --tr-line-join: miter;
+        --tr-area-op: 0.12;
+        --tr-axis-font: var(--kp-dos, var(--theme-font-mono));
+    }
+
+    /* retro · shape r3-br-shape-2: The dither wash — a sunken square
+       frame, a raised well dithered in the 16-colour checkerboard
+       instead of a soft wash under the line, the number in the pixel
+       headline face. */
+    [data-theme='retro'] [data-ct-shape='r3-br-shape-2'] .kp-kpi--trend {
+        --tr-plate: var(--background);
+        --tr-frame: 0;
+        --tr-radius: 0;
+        --tr-shadow: var(--kp-sunken);
+        --tr-plot-bg: var(--card);
+        --tr-plot-pat: conic-gradient(var(--border) 0 90deg, transparent 0 180deg, var(--border) 0 270deg, transparent 0) 0 0 / 4px 4px;
+        --tr-plot-frame: var(--kp-raised);
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 1;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-weight: 400;
+        --tr-label-case: none;
+        --tr-label-track: 0.01em;
+        --tr-label-size: 0.75rem;
+    }
+
+    /* retro · shape r3-br-shape-3: The default button — the whole tile
+       raised in the navy bevel of a dialog's default button, a plain
+       sunken plot inside a hairline frame, a flat navy rule with square
+       ends for the line. */
+    [data-theme='retro'] [data-ct-shape='r3-br-shape-3'] .kp-kpi--trend {
+        --tr-plate: var(--popover);
+        --tr-frame: 0;
+        --tr-radius: 0;
+        --tr-shadow: var(--kp-raised-navy);
+        --tr-plot-bg: var(--background);
+        --tr-plot-frame: inset 0 0 0 1px var(--border-strong);
+        --tr-plot-radius: 0;
+        --tr-line-override: var(--primary);
+        --tr-line-w: 2;
+        --tr-line-cap: butt;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-label-case: none;
+        --tr-label-track: 0.01em;
+        --tr-label-size: 0.75rem;
+    }
+
+    /* ══ nostromo · shape (data-ct-shape): cassette futurism, redone ══ */
+
+    /* nostromo · shape r3-br-shape-1: The vent grille — a moulded dark
+       vent as the plot, horizontal ribs embossed across it, an amber
+       phosphor trace with its own glow, label and number in the ship's
+       mono. */
+    [data-theme='nostromo'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend {
+        --tr-font: var(--theme-font-mono);
+        --tr-num-font: var(--theme-font-mono);
+        --tr-label-track: 0.03em;
+        --tr-label-size: 0.6875rem;
+        --tr-plot-bg: var(--primary);
+        --tr-plot-pat: repeating-linear-gradient(to bottom, hsl(from var(--popover) h s l / 0.1) 0 1px, transparent 1px 6px);
+        --tr-plot-frame: inset 0 0 0 2px color-mix(in oklch, var(--foreground) 55%, var(--background));
+        --tr-plot-radius: 3px;
+        --tr-line-override: var(--accent);
+        --tr-glow: drop-shadow(0 0 3px var(--accent));
+        --tr-line-w: 1.6;
+        --tr-area-op: 0.14;
+    }
+
+    /* nostromo · shape r3-br-shape-2: The spec plate — a cream
+       ratio-dimensioned placard with a thin ruled frame and a sunken
+       aperture, a fine mono trace with square corners and no wash, the
+       label tracked wide as a part number. */
+    [data-theme='nostromo'] [data-ct-shape='r3-br-shape-2'] .kp-kpi--trend {
+        --tr-plate: var(--popover);
+        --tr-shadow: inset 0 0 0 1px var(--card);
+        --tr-plot-bg: var(--card);
+        --tr-plot-frame: inset 0 0 0 1px var(--border);
+        --tr-plot-radius: 1px;
+        --tr-line-override: var(--foreground);
+        --tr-line-w: 1;
+        --tr-line-join: miter;
+        --tr-area-op: 0;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-num-track: 0.02em;
+        --tr-label-track: 0.08em;
+        --tr-label-size: 0.6875rem;
+        --tr-axis-font: var(--theme-font-mono);
+    }
+
+    /* nostromo · shape r3-br-shape-3: The indicator cluster — a row of
+       ticks like indicator lamps along the top edge, the plot a dark
+       recessed aperture, the amber trace thick and round-capped like a
+       lit gauge, the number heavy in the ship's mono. */
+    [data-theme='nostromo'] [data-ct-shape='r3-br-shape-3'] .kp-kpi--trend {
+        --tr-pat: repeating-linear-gradient(90deg, var(--muted) 0 6px, transparent 6px 12px) 0 0 / 100% 4px no-repeat;
+        --tr-plot-bg: color-mix(in oklch, var(--foreground) 90%, var(--background));
+        --tr-plot-radius: 3px;
+        --tr-plot-frame: inset 0 0 0 2px var(--border-strong);
+        --tr-line-override: var(--accent);
+        --tr-glow: drop-shadow(0 0 4px var(--accent));
+        --tr-line-w: 2;
+        --tr-line-cap: round;
+        --tr-area-op: 0.12;
+        --tr-num-font: var(--theme-font-mono);
+        --tr-num-weight: 700;
+        --tr-label-track: 0.04em;
+        --tr-label-size: 0.6875rem;
+    }
 }
