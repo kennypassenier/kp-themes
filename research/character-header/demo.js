@@ -1009,6 +1009,22 @@ new MutationObserver(showTheme).observe(document.documentElement, { attributes: 
 
 const log = section.querySelector('[data-ph-log]');
 
+/**
+ * Hangs a panel right under its own More button, wherever the actions wrapped
+ * to (Kenny, 2026-10-06 20:12: in the narrow width the menu no longer stuck
+ * to the More button). The actions row is the offset parent.
+ */
+function placePanel(/** @type {HTMLElement} */ button, /** @type {HTMLElement} */ panel) {
+    const row = /** @type {HTMLElement} */ (button.offsetParent);
+    if (!row) return;
+    // Under the button's end when the panel fits leftwards, else under its
+    // start (a More that wrapped to the row's left edge).
+    const fitsLeft = button.offsetLeft + button.offsetWidth - panel.offsetWidth >= 0;
+    panel.style.insetInlineEnd = fitsLeft ? `${Math.max(0, row.clientWidth - (button.offsetLeft + button.offsetWidth))}px` : 'auto';
+    panel.style.insetInlineStart = fitsLeft ? 'auto' : `${button.offsetLeft}px`;
+    panel.style.insetBlockStart = `calc(${button.offsetTop + button.offsetHeight}px + 0.25rem)`;
+}
+
 /** Opens or closes every `[data-ph-more]` button's panel, playing the arrival or its mirrored leave. */
 function setMenu(/** @type {HTMLElement} */ button, /** @type {boolean} */ open) {
     const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
@@ -1016,6 +1032,7 @@ function setMenu(/** @type {HTMLElement} */ button, /** @type {boolean} */ open)
     button.setAttribute('aria-expanded', String(open));
     if (open) {
         panel.hidden = false;
+        placePanel(button, panel);
         panel.removeAttribute('data-ph-anim');
         requestAnimationFrame(() => panel.setAttribute('data-ph-anim', 'open'));
     } else if (!panel.hidden) {
@@ -1037,6 +1054,17 @@ function setMenu(/** @type {HTMLElement} */ button, /** @type {boolean} */ open)
             });
     }
 }
+
+// An open panel follows its button when the row reflows: a width change, a
+// shape with other button sizes, or a hidden option coming into view.
+const follow = new ResizeObserver((entries) => {
+    for (const { target } of entries) {
+        const more = /** @type {HTMLElement | null} */ (target.querySelector('[data-ph-more][aria-expanded="true"]'));
+        const panel = more && document.getElementById(more.getAttribute('aria-controls') ?? '');
+        if (more && panel) placePanel(more, panel);
+    }
+});
+for (const row of section.querySelectorAll('.kp-page-header__actions')) follow.observe(row);
 
 const closeEveryMenu = (/** @type {Element | null} */ except) => {
     for (const button of section.querySelectorAll('[data-ph-more]')) if (button !== except) setMenu(/** @type {HTMLElement} */ (button), false);
@@ -1088,6 +1116,10 @@ for (const b of section.querySelectorAll('[data-ph-width]'))
         for (const box of section.querySelectorAll('.ph-resize')) {
             if (narrow) box.setAttribute('data-ph-narrow', '');
             else box.removeAttribute('data-ph-narrow');
+        }
+        for (const more of section.querySelectorAll('[data-ph-more][aria-expanded="true"]')) {
+            const panel = document.getElementById(more.getAttribute('aria-controls') ?? '');
+            if (panel) placePanel(/** @type {HTMLElement} */ (more), panel);
         }
     });
 

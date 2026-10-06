@@ -492,8 +492,57 @@ const cellsOf = (row) =>
 
 /** Re-presses the demo's own data-review-plays controls for one aspect (outside the mirrored copy). */
 function playAspect(section, aspectId) {
-    for (const b of section.querySelectorAll('[data-review-plays]'))
-        if (!b.closest('.rv-controls') && b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) /** @type {HTMLElement} */ (b).click();
+    const mine = kept[`${DEMO}|${aspectId}`] || {};
+    for (const b of section.querySelectorAll('[data-review-plays]')) {
+        if (b.closest('.rv-controls') || !b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) continue;
+        // A state the reviewer set in this group stands; the autoplay leaves it.
+        const group = b.closest('[role="group"]');
+        if (b.hasAttribute('aria-pressed') && group && groupName(group) in mine) continue;
+        /** @type {HTMLElement} */ (b).click();
+    }
+}
+
+/**
+ * The state buttons the reviewer pressed, per demo and aspect: the group's
+ * name and the button's place in it, kept across options, themes and
+ * visits (Kenny, 2026-10-06 20:12: "als ik bv open als state had gekozen via
+ * de knop, dan wil ik dat die state blijft staan bij de volgende optie …
+ * onthoudt de state hiervan"). Only toggles (aria-pressed) count; actions
+ * like Live update or Draw, and the speed, do not.
+ */
+const KEPT_STORE = `${STORE}:kept`;
+/** @type {Record<string, Record<string, number>>} */
+let kept = {};
+try {
+    kept = JSON.parse(localStorage.getItem(KEPT_STORE) || '{}') || {};
+} catch {
+    kept = {};
+}
+const groupName = (/** @type {Element} */ group) => group.getAttribute('aria-label') || '';
+function keepPress(/** @type {Element | null | undefined} */ button) {
+    const step = steps[index];
+    const group = button?.closest('[role="group"]');
+    if (!step?.aspect || !group || !button?.hasAttribute('aria-pressed') || group.closest('.rv-controls')) return;
+    if (!group.closest('[data-review-controls]') || /speed/i.test(groupName(group))) return;
+    if (Object.keys(/** @type {HTMLElement} */ (button).dataset).some((k) => /speed$/i.test(k))) return;
+    (kept[`${DEMO}|${step.aspect}`] ??= {})[groupName(group)] = [...group.querySelectorAll('button')].indexOf(
+        /** @type {HTMLButtonElement} */ (button),
+    );
+    try {
+        localStorage.setItem(KEPT_STORE, JSON.stringify(kept));
+    } catch {
+        // No storage: kept for this visit only.
+    }
+}
+/** Presses the reviewer's own states again, after the demo redrew (a flip, a theme change). */
+function restoreKept(section, aspectId) {
+    const mine = kept[`${DEMO}|${aspectId}`];
+    if (!mine) return;
+    for (const group of section.querySelectorAll('[data-review-controls] [role="group"]')) {
+        if (group.closest('.rv-controls') || !(groupName(group) in mine)) continue;
+        const button = /** @type {HTMLElement | undefined} */ ([...group.querySelectorAll('button')][mine[groupName(group)]]);
+        if (button && button.getAttribute('aria-pressed') !== 'true') button.click();
+    }
 }
 
 /** Forces every CSS animation under `root` to restart from its first frame. */
@@ -608,6 +657,7 @@ function paintFlip(step) {
     } else {
         playAspect(flipPair.item.section, step.aspect);
     }
+    restoreKept(flipPair.item.section, step.aspect);
     markTarget(shown);
     if (shown)
         requestAnimationFrame(() => {
@@ -701,6 +751,7 @@ function stepGroup(n, dir = 1) {
     const at = ((pressed >= 0 ? pressed : last) + dir + buttons.length) % buttons.length;
     buttons[0].closest('[role="group"]')?.setAttribute('data-rv-last', String(at));
     buttons[at].click();
+    keepPress(buttons[at]);
     const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
     if (shown) requestAnimationFrame(() => fitShown(shown));
 }
@@ -869,6 +920,7 @@ function mirror(source, heading) {
                 mine.addEventListener('click', (event) => {
                     event.preventDefault();
                     own.click();
+                    keepPress(own);
                 });
             } else {
                 const forward = (event) => {
@@ -1315,6 +1367,14 @@ document.addEventListener(
 );
 
 dialog.addEventListener('close', putBack);
+// A state button pressed on the demo itself counts as the reviewer's own too.
+document.addEventListener(
+    'click',
+    (event) => {
+        if (dialog.open && event.isTrusted) keepPress(/** @type {Element} */ (event.target).closest?.('button'));
+    },
+    true,
+);
 
 bar.querySelector('[data-rv-open]').addEventListener('click', () => {
     const first = nextOpenStep(-1);

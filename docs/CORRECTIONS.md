@@ -6446,3 +6446,39 @@ shown card. Measured on the fix: the menu's foot at 474px, the card's at
 overflow rules altogether.
 
 **9 · When we review the measure.** With fix-109.
+
+## fix-111 · In the narrow width the header's menu left its More button (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 20:12: "bij de eerste optie als ik
+narrow pak, dan staat het menu al niet meer aan de "more" knop geplakt". The
+panel hung under the right end of the actions row
+(research/character-header/demo.css `[data-ph-panel]`, inset-inline-end 0);
+in the narrow width the actions wrap and More lands at the row's left edge,
+so the menu opened 108px away from it.
+
+**2 · Which gate let it through.** fix-110's check measured the menu in the
+desktop width only.
+
+**3 · Where else the same fault sits.** Every demo popup placed against its
+row instead of its own button. Searched with
+`grep -rn "inset-inline-end: 0" research/character-*/demo.css`: only the
+header's panel; the menu demo's panels hang from their own button.
+
+**4 · How we prevent a repeat.** The panel is placed under its own More
+button from the button's offsets, under its end when it fits leftwards,
+else under its start, and follows a reflow (ResizeObserver on the row).
+
+**5 · What the remedy costs.** A few lines of demo script.
+
+**6 · Who enforces it.** Code (research/character-header/demo.js).
+
+**7 · How and when we measure.** At the 9.3.0 release suite, the fix-110-M1
+test opens the menu in both widths and on every option and finds the panel's
+top 8px under More and one edge aligned with it. Measured on the fix: gap 8,
+end aligned in the desktop width, start aligned in the narrow width, on all
+three options. Queued as fix-111-M1.
+
+**8 · Fallback.** If it drifts again, the panel moves inside a wrapper with
+the More button.
+
+**9 · When we review the measure.** With fix-110.
