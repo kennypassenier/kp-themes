@@ -1,4 +1,566 @@
-/* research/character-busy, round 3 (Kenny, 2026-10-06 23:09): the new options of group a. */
+/* research/character-busy, round 3 (Kenny, 2026-10-06 23:09): the new options of group a.
+   See round3-a.js for the names and the approved picks each one echoes.
+
+   forest  failure  r3-fo-failure-1..3  trail closed, the ranger's notice, fire danger: extreme
+   grotesk shape    r3-gk-shape-1..3    the interchange, the ruled grid, the flap board
+   lapis   shape    r3-la-shape-1..3    the mosaic, the girih octagon, the unrolled scroll
+   lapis   phone    r3-la-phone-1..3    the rubricated initial, the gold rings, the gilt chip
+
+   Every rule names one aspect only, over busy.css's shared part and its `--bo-*` knobs,
+   so the settled picks compose: forest's tree-rings shape, trail loading, grown arrival
+   and flat phone 3; grotesk's shifting words, set-in-type arrival, failure 1 and flat
+   phone 1 (its `::after` block size is overridden here by each shape's own); lapis's
+   turning star loading (the panel's `::before`, left free by every shape here), its
+   arrival at once and its failure 3. The overlay is positioned by the package and is
+   never given a position; only its pseudo-elements are placed inside it. Colours are
+   tokens; motion sits in the one reduced-motion block at the end. */
 
 @layer kp.signature {
+    /* ── forest · the failed state ─────────────────────────────────────── */
+
+    /* Shared by the three: the plate holds its own pictures, and "Try again"
+       never breaks inside its words (round 1 cut it to "Try / ag / ain"). */
+    [data-theme='forest'] [data-bo-failure^='r3-fo-failure-'] [data-kp-datatable-failed] {
+        position: relative;
+        isolation: isolate;
+        align-items: center;
+        --bo-fail-from: none;
+        --bo-fail-transition: none;
+    }
+
+    [data-theme='forest'] [data-bo-failure^='r3-fo-failure-'] [data-kp-datatable-failed] > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    [data-theme='forest'] [data-bo-failure^='r3-fo-failure-'] [data-kp-datatable-failed] > p {
+        flex: 1 1 auto;
+        margin: 0;
+    }
+
+    [data-theme='forest'] [data-bo-failure^='r3-fo-failure-'] [data-kp-datatable-retry] {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    /* 1 · Trail closed: red flagging tape strung across the logbook card. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--card-foreground);
+        --bo-fail-border: 1px solid var(--border-strong);
+        --bo-fail-radius: var(--radius, 0.625rem);
+        --bo-fail-shadow: none;
+        padding-block-start: 1.85rem;
+    }
+
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-1'] [data-kp-datatable-failed]::before {
+        content: '';
+        position: absolute;
+        inset-inline: -0.45rem;
+        inset-block-start: 0.35rem;
+        z-index: 2;
+        block-size: 0.95rem;
+        rotate: -1.6deg;
+        background-color: var(--destructive);
+        background-image: radial-gradient(circle, var(--destructive-foreground) 0 1.4px, transparent 1.9px);
+        background-size: 0.7rem 100%;
+        background-repeat: repeat-x;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 0.5rem) 50%, 100% 100%, 0 100%, 0.5rem 50%);
+    }
+
+    /* The tail where the tape is tied off. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-1'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 1.1rem;
+        inset-block-start: 0.55rem;
+        z-index: 2;
+        inline-size: 0.7rem;
+        block-size: 1.9rem;
+        rotate: 16deg;
+        transform-origin: 50% 0;
+        background-color: var(--destructive);
+        background-image: radial-gradient(circle, var(--destructive-foreground) 0 1.4px, transparent 1.9px);
+        background-size: 100% 0.7rem;
+        background-repeat: repeat-y;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.4rem), 0 100%);
+    }
+
+    /* 2 · The ranger's notice: a red board hung from a nail on a cord. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-radius: 0.3rem;
+        --bo-fail-shadow:
+            inset 0 0 0 2px color-mix(in oklab, var(--destructive-foreground) 22%, transparent),
+            0 3px 0 0 color-mix(in oklab, var(--foreground) 30%, transparent);
+        margin-block-start: 1.5rem;
+        transform-origin: 50% -1.35rem;
+        background-image:
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 0.62rem,
+                color-mix(in oklab, var(--destructive-foreground) 9%, transparent) 0.62rem calc(0.62rem + 1px)
+            ),
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 1.05rem,
+                color-mix(in oklab, var(--destructive-foreground) 7%, transparent) 1.05rem calc(1.05rem + 1px)
+            );
+        font-weight: 600;
+    }
+
+    /* The cord: an inverted V from the nail to the board's top edge. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-2'] [data-kp-datatable-failed]::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 6rem;
+        block-size: 1.35rem;
+        translate: -50% 0;
+        background-color: var(--accent-foreground);
+        clip-path: polygon(0 100%, 50% 0, 100% 100%, calc(100% - 3px) 100%, 50% 3.5px, 3px 100%);
+    }
+
+    /* The nail. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-2'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1.35rem - 0.3rem);
+        inset-inline-start: 50%;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        translate: -50% 0;
+        border-radius: 50%;
+        background-color: var(--foreground);
+    }
+
+    /* 3 · Fire danger: extreme: a wooden board with a four-band half dial. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--accent);
+        --bo-fail-ink: var(--accent-foreground);
+        --bo-fail-border: 1px solid color-mix(in oklab, var(--accent-foreground) 40%, transparent);
+        --bo-fail-radius: 0.35rem;
+        --bo-fail-shadow: inset 0 -3px 0 0 color-mix(in oklab, var(--accent-foreground) 18%, transparent);
+        min-block-size: 4.4rem;
+        padding-inline-start: 6.6rem;
+        background-image:
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 0.7rem,
+                color-mix(in oklab, var(--accent-foreground) 8%, transparent) 0.7rem calc(0.7rem + 1px)
+            ),
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0 1.15rem,
+                color-mix(in oklab, var(--accent-foreground) 6%, transparent) 1.15rem calc(1.15rem + 1px)
+            );
+    }
+
+    /* The dial: low, moderate, high, extreme, as the station board paints them. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-3'] [data-kp-datatable-failed]::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 1rem;
+        inset-block-start: calc(50% - 1.45rem);
+        inline-size: 4.6rem;
+        block-size: 2.3rem;
+        border-radius: 2.3rem 2.3rem 0 0;
+        background-image: conic-gradient(
+            from -90deg at 50% 100%,
+            var(--success-foreground) 0 45deg,
+            var(--info-foreground) 45deg 90deg,
+            var(--warning-foreground) 90deg 135deg,
+            var(--destructive) 135deg 180deg,
+            transparent 180deg
+        );
+        mask-image: radial-gradient(circle at 50% 100%, transparent 0 1.05rem, var(--foreground) 1.1rem);
+        box-shadow: 0 2px 0 0 var(--accent-foreground);
+    }
+
+    /* The needle, resting in the extreme band. */
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-3'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: calc(1rem + 2.3rem - 2px);
+        inset-block-start: calc(50% + 0.85rem - 2.15rem);
+        inline-size: 4px;
+        block-size: 2.15rem;
+        border-radius: 2px 2px 0 0;
+        background-color: var(--accent-foreground);
+        transform-origin: 50% 100%;
+        rotate: 68deg;
+    }
+
+    /* ── grotesk · the shape ───────────────────────────────────────────── */
+
+    /* 1 · The interchange: a red line across the veil, a black one down it,
+       the panel the station where they meet. */
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 84%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-overlay::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 50%;
+        block-size: 0.7rem;
+        translate: 0 -50%;
+        background-color: var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-overlay::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 50%;
+        inline-size: 0.7rem;
+        translate: -50% 0;
+        background-color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-panel {
+        z-index: 1;
+        --bo-panel-border: 0.3rem solid var(--foreground);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 0.3rem var(--card);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: none;
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-panel::after {
+        content: none;
+        block-size: 0;
+    }
+
+    /* 2 · The ruled grid: twelve hairline columns on the veil, the panel
+       flush left on them under one heavy black rule. */
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to right, color-mix(in oklab, var(--foreground) 22%, transparent) 0 1px, transparent 1px 8.3333%),
+            color-mix(in oklab, var(--background) 86%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-display);
+        --bo-clock-ink: var(--primary);
+        --bo-ring: none;
+        justify-self: start;
+        align-items: flex-start;
+        inline-size: 50%;
+        margin-inline-start: 8.3333%;
+        padding-inline: 0.75rem;
+        border-block-start: 0.45rem solid var(--foreground);
+        text-align: start;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel::after {
+        content: none;
+        block-size: 0;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        line-height: 1.15;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        font-weight: 700;
+    }
+
+    /* 3 · The flap board: every letter on its own split flap. One tile is
+       one monospace cell (1ch) plus the letter-spacing; the words start
+       flush so the letters sit on the tiles. */
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-bg: var(--accent);
+        --bo-panel-ink: var(--accent-foreground);
+        --bo-clock-ink: color-mix(in oklab, var(--primary) 62%, var(--accent-foreground));
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-mono);
+        --bo-ring: none;
+        padding: 0.9rem 1rem 0.75rem;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-3'] .kp-datatable__busy-panel::after {
+        content: none;
+        block-size: 0;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-3'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        --flap: calc(1ch + 0.42em);
+        padding-inline-start: 0.21em;
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.75;
+        letter-spacing: 0.42em;
+        text-align: start;
+        text-transform: uppercase;
+        background-image:
+            linear-gradient(to bottom, transparent calc(100% - 3px), var(--accent) 0),
+            linear-gradient(to bottom, transparent calc(50% - 2.5px), var(--accent) 0 calc(50% - 1px), transparent 0),
+            linear-gradient(to right, color-mix(in oklab, var(--accent-foreground) 24%, var(--accent)) calc(100% - 3px), transparent 0);
+        background-size:
+            100% 1.75em,
+            100% 1.75em,
+            var(--flap) 100%;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-3'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* ── lapis · the shape ─────────────────────────────────────────────── */
+
+    /* 1 · The mosaic: tesserae and gold grout over the rows, the panel one
+       large tessera in a band of gold and lapis squares. */
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            linear-gradient(to right, color-mix(in oklab, var(--primary) 50%, transparent) 0 1px, transparent 1px),
+            linear-gradient(to bottom, color-mix(in oklab, var(--primary) 50%, transparent) 0 1px, transparent 1px),
+            color-mix(in oklab, var(--background) 80%, transparent);
+        background-size: 0.9rem 0.9rem;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--primary), inset 0 0 0 calc(0.5rem + 1px) var(--primary);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: none;
+        padding: 1.5rem 1.85rem;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-1'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        padding: 0.5rem;
+        background-image: repeating-conic-gradient(var(--primary) 0 25%, var(--secondary) 0 50%);
+        background-size: 1rem 1rem;
+        background-origin: border-box;
+        mask-image: linear-gradient(var(--foreground) 0 0), linear-gradient(var(--foreground) 0 0);
+        mask-clip: content-box, border-box;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-1'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        font-size: 1.15rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    /* 2 · The girih octagon: the panel cut to eight edges, a gold frame
+       around the deep blue field (the fill is the `::after`, under the
+       loading picture and the words). */
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 84%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-panel-bg: var(--primary);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: none;
+        --oct: 1.15rem;
+        padding: 1.25rem 2.25rem;
+        clip-path: polygon(
+            var(--oct) 0,
+            calc(100% - var(--oct)) 0,
+            100% var(--oct),
+            100% calc(100% - var(--oct)),
+            calc(100% - var(--oct)) 100%,
+            var(--oct) 100%,
+            0 calc(100% - var(--oct)),
+            0 var(--oct)
+        );
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-2'] .kp-datatable__busy-panel::after {
+        --in: calc(var(--oct) - 1.25px);
+        content: '';
+        position: absolute;
+        inset: 3px;
+        z-index: -1;
+        background-color: var(--card);
+        clip-path: polygon(
+            var(--in) 0,
+            calc(100% - var(--in)) 0,
+            100% var(--in),
+            100% calc(100% - var(--in)),
+            calc(100% - var(--in)) 100%,
+            var(--in) 100%,
+            0 calc(100% - var(--in)),
+            0 var(--in)
+        );
+        pointer-events: none;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        font-size: 1.2rem;
+    }
+
+    /* 3 · The unrolled scroll: ivory vellum, lapis ink, two gold rollers. */
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0.4rem 0.7rem -0.35rem color-mix(in oklab, var(--background) 85%, transparent);
+        --bo-panel-bg: var(--foreground);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: color-mix(in oklab, var(--background) 74%, var(--foreground));
+        --bo-font: var(--theme-font-display);
+        --bo-ring: 0 0 0 0.3rem var(--background), 0 0 0 calc(0.3rem + 1.5px) var(--primary);
+        padding: 1.1rem 2.4rem;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block: -0.55rem;
+        inset-inline: -0.4rem;
+        z-index: 0;
+        border-inline: 0.65rem solid var(--primary);
+        border-radius: 0.35rem;
+        pointer-events: none;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-panel > .kp-spinner {
+        border-radius: 50%;
+        background-color: var(--background);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        font-size: 1.25rem;
+        font-style: italic;
+    }
+
+    /* Flat (below 30rem) the shapes keep their own drawing; only the
+       grid's off-centre placement gives way to the package's flat strip. */
+    @container kp-table (max-width: 30rem) {
+        [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel {
+            inline-size: auto;
+            margin-inline-start: 8.3333%;
+            align-items: center;
+        }
+
+        [data-theme='lapis'] [data-bo-shape='r3-la-shape-1'] .kp-datatable__busy-panel {
+            padding: 0.95rem 1.4rem;
+        }
+
+        [data-theme='lapis'] [data-bo-shape='r3-la-shape-2'] .kp-datatable__busy-panel {
+            --oct: 0.85rem;
+            padding: 0.7rem 1.6rem;
+        }
+
+        [data-theme='lapis'] [data-bo-shape='r3-la-shape-3'] .kp-datatable__busy-panel {
+            padding: 0.6rem 1.6rem;
+        }
+
+        /* ── lapis · the phone ─────────────────────────────────────────── */
+
+        /* 1 · The rubricated initial. */
+        [data-theme='lapis'] [data-bo-phone='r3-la-phone-1'] .kp-datatable__busy-panel > .kp-datatable__busy-words::first-letter {
+            float: inline-start;
+            margin-block-start: 0.04em;
+            margin-inline-end: 0.1em;
+            color: var(--accent);
+            font-family: var(--theme-font-display);
+            font-size: 2.45em;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 0.82;
+        }
+
+        /* 2 · The gold rings round the star spinner. */
+        [data-theme='lapis'] [data-bo-phone='r3-la-phone-2'] .kp-datatable__busy-panel > .kp-spinner {
+            margin: 0.55rem 0.3rem 0.55rem 0.5rem;
+            border-radius: 50%;
+            outline: 5px double var(--primary);
+            outline-offset: 4px;
+        }
+
+        /* 3 · The gilt chip under the words. */
+        [data-theme='lapis'] [data-bo-phone='r3-la-phone-3'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+            justify-self: start;
+            margin-block-start: 0.2rem;
+            padding: 0.05rem 0.5rem;
+            border-radius: 0.2rem;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            font-weight: 700;
+            box-shadow:
+                0 0 0 1px var(--primary-foreground),
+                0 0 0 2px var(--primary);
+        }
+    }
+
+    /* ── motion: one block ─────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-bo-failure='r3-fo-failure-1'] [data-kp-datatable-failed] {
+            --bo-fail-from: translateY(-0.35rem);
+            --bo-fail-transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* The board swings on its cord and settles in smaller swings. */
+        [data-theme='forest'] [data-bo-failure='r3-fo-failure-2'] [data-kp-datatable-failed] {
+            --bo-fail-from: rotate(8deg);
+            --bo-fail-transition: transform 1.2s
+                linear(0, 0.55 6%, 1.2 15%, 1.36 21%, 1.2 28%, 0.86 40%, 0.8 45%, 0.9 52%, 1.08 62%, 1.1 66%, 1.03 74%, 0.97 82%, 1.01 92%, 1);
+        }
+
+        [data-theme='forest'] [data-bo-failure='r3-fo-failure-3'] [data-kp-datatable-failed] {
+            --bo-fail-from: translateY(-0.3rem);
+            --bo-fail-transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* The needle sweeps from low into the red each time the alert shows. */
+        [data-theme='forest'] [data-bo-failure='r3-fo-failure-3'] [data-kp-datatable-failed]::after {
+            animation: bo-r3-fo-needle 1.1s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+        }
+
+        @keyframes bo-r3-fo-needle {
+            0% {
+                rotate: -76deg;
+            }
+            70% {
+                rotate: 78deg;
+            }
+            85% {
+                rotate: 64deg;
+            }
+            100% {
+                rotate: 68deg;
+            }
+        }
+    }
+
+    /* The words stay on one line (they wrapped in the six-column span). */
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel,
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-2'] .kp-datatable__busy-panel > * {
+        white-space: nowrap;
+    }
 }

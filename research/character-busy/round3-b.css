@@ -1,4 +1,423 @@
-/* research/character-busy, round 3 (Kenny, 2026-10-06 23:09): the new options of group b. */
+/* research/character-busy, round 3 (Kenny, 2026-10-06 23:09): the new options of group b —
+   nostromo and titanium, shape and phone (round3-b.js says what each one is).
+
+   The panel's own background images are composed from two layers, so a
+   phone option can lay its accent over any of the three shapes without
+   wiping the shape's texture: a shape sets --r3s-*, a phone option sets
+   --r3p-* (inside the 30rem container query only). Each shape keeps its
+   ::after; the phone options touch the layout, the words, the clock and
+   the spinner's own box, never ::after. Tokens only; the only motion here
+   (MU/TH/UR's cursor) sits in the guarded block at the end. */
 
 @layer kp.signature {
+    /* ── The two-layer background of the panel, for both themes ─────────── */
+
+    :is([data-theme='nostromo'], [data-theme='titanium']) [data-bo-shape^='r3-b-'] .kp-datatable__busy-panel {
+        background-image: var(--r3p-img, none), var(--r3s-img, none);
+        background-size: var(--r3p-size, auto), var(--r3s-size, auto);
+        background-position: var(--r3p-pos, 0 0), var(--r3s-pos, 0 0);
+        background-repeat: var(--r3p-rep, no-repeat), var(--r3s-rep, repeat);
+    }
+
+    /* The words keep to one line in a 334px pane: a size a step down for
+       the mono capitals and the instrument mono every shape here uses. */
+    :is([data-theme='nostromo'], [data-theme='titanium']) [data-bo-shape^='r3-b-'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        font-size: 0.875rem;
+    }
+
+    /* Standing upright over three rows, the panel keeps its whole frame in
+       sight: a little less room above and below the spinner and the count. */
+    :is([data-theme='nostromo'], [data-theme='titanium']) [data-bo-shape^='r3-b-'] .kp-datatable__busy-panel {
+        padding-block: 0.55rem;
+    }
+
+    /* ── nostromo · 1 · MU/TH/UR's screen ─────────────────────────────── */
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.875rem;
+        --bo-panel-bg: var(--sidebar-background);
+        --bo-panel-ink: var(--sidebar-primary);
+        --bo-clock-ink: hsl(from var(--sidebar-primary) h s calc(l - 8));
+        --bo-font: var(--theme-font-mono);
+        /* The tube, then the beige moulded bezel round it: its lit top
+           edge, its dark seam, the shadow it throws on the case. */
+        --bo-panel-shadow:
+            inset 0 0 18px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95), 0 0 0 5px var(--secondary),
+            0 -1px 0 5px hsl(from var(--card) h s calc(l + 8)), 0 0 0 6px var(--border-strong), 0 4px 8px 5px hsl(from var(--foreground) h s l / 0.3);
+        --bo-ring: 0 0 0 2px var(--sidebar-primary), 0 0 8px 1px hsl(from var(--sidebar-primary) h s l / 0.55);
+        --r3s-img: radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.14), transparent 72%);
+        --r3s-rep: no-repeat;
+        margin: 5px;
+        /* Room for the bezel inside a 334px pane. */
+        max-inline-size: calc(100% - 1.75rem);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.65);
+    }
+
+    /* The scanlines lie over the glass, the words under them. */
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-1'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.32) 0 1px, transparent 1px 3px);
+    }
+
+    /* The block cursor waits after the words. */
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-1'] .kp-datatable__busy-panel > .kp-datatable__busy-words::after {
+        content: '\2588';
+        margin-inline-start: 0.3em;
+        font-size: 0.85em;
+    }
+
+    /* ── nostromo · 2 · the label-tape module ─────────────────────────── */
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.5rem;
+        --bo-panel-bg: var(--card);
+        --bo-panel-shadow: var(--kp-sig-no-raised), 0 0 0 1px var(--border-strong);
+        --bo-clock-ink: var(--muted-foreground);
+        --bo-font: var(--theme-font-mono);
+        /* Moulded: a soft fall of light from the top edge. */
+        --r3s-img: linear-gradient(to bottom, hsl(from var(--card) h s calc(l + 6)), transparent 55%);
+        --r3s-rep: no-repeat;
+        padding-inline-end: 1.6rem;
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.45rem;
+        inset-inline-end: 0.45rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+
+    /* Black embossed label tape, cut at a slant and stuck on by hand. */
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        justify-self: start;
+        padding: 0.2rem 0.7rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow: 0 -1px 0 hsl(from var(--primary) h s calc(l - 12));
+        box-shadow: inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.18);
+        clip-path: polygon(0.25rem 0, 100% 0, calc(100% - 0.25rem) 100%, 0 100%);
+        rotate: -0.8deg;
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-2'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* ── nostromo · 3 · the backlit vent bank ─────────────────────────── */
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.13) 0 2px, transparent 2px 6px),
+            color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.3rem;
+        --bo-panel-bg: var(--secondary);
+        --bo-panel-ink: var(--foreground);
+        --bo-clock-ink: var(--foreground);
+        --bo-panel-shadow: var(--kp-sig-no-raised), 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-mono);
+        padding-inline: 2.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Two banks of slots, lit from inside, one at each end. */
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset: 0.4rem;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+            repeating-linear-gradient(to bottom, var(--sidebar-primary) 0 2px, var(--sidebar-background) 2px 5px),
+            repeating-linear-gradient(to bottom, var(--sidebar-primary) 0 2px, var(--sidebar-background) 2px 5px);
+        background-size: 1.15rem 100%;
+        background-position:
+            left top,
+            right top;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 0 4px hsl(from var(--sidebar-primary) h s l / 0.9));
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-3'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        font-family: var(--theme-font-display);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+    }
+
+    /* ── titanium · 1 · the heat-tinted chamfer ───────────────────────── */
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.06) 0 2px, transparent 2px 6px),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.06) 0 2px, transparent 2px 6px),
+            color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-1'] .kp-datatable__busy-panel {
+        --r3-c: 0.85rem;
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-bg: var(--card);
+        --bo-panel-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.28);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        --r3s-img: linear-gradient(170deg, hsl(from var(--foreground) h s l / 0.07), transparent 50%);
+        --r3s-rep: no-repeat;
+        clip-path: polygon(0 0, calc(100% - var(--r3-c)) 0, 100% var(--r3-c), 100% 100%, var(--r3-c) 100%, 0 calc(100% - var(--r3-c)));
+    }
+
+    /* The heat-tint runs the whole edge, the chamfers included: one band
+       cut out of the gradient between the outer and the inner outline. */
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-1'] .kp-datatable__busy-panel::after {
+        --w: 2px;
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(100deg, var(--warning-foreground), var(--chart-4) 28%, var(--chart-2) 52%, var(--chart-1) 76%, var(--chart-3));
+        clip-path: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--r3-c)) 0,
+            100% var(--r3-c),
+            100% 100%,
+            var(--r3-c) 100%,
+            0 calc(100% - var(--r3-c)),
+            0 0,
+            var(--w) var(--w),
+            var(--w) calc(100% - var(--r3-c) - var(--w) * 0.41),
+            calc(var(--r3-c) + var(--w) * 0.41) calc(100% - var(--w)),
+            calc(100% - var(--w)) calc(100% - var(--w)),
+            calc(100% - var(--w)) calc(var(--r3-c) + var(--w) * 0.41),
+            calc(100% - var(--r3-c) - var(--w) * 0.41) var(--w),
+            var(--w) var(--w)
+        );
+    }
+
+    /* ── titanium · 2 · the anodised tag ──────────────────────────────── */
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.2rem;
+        --bo-panel-bg: var(--chart-1);
+        --bo-panel-ink: var(--primary-foreground);
+        --bo-clock-ink: hsl(from var(--primary-foreground) h s l / 0.85);
+        --bo-panel-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.55), inset 0 -1px 0 hsl(from var(--background) h s l / 0.4);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        /* The oxide film: blue into violet into cyan. */
+        --r3s-img: linear-gradient(115deg, var(--chart-1), var(--chart-2) 52%, var(--chart-3));
+        --r3s-rep: no-repeat;
+        --r3s-size: 100% 100%;
+        padding-inline-start: 1.9rem;
+        font-weight: 600;
+        text-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.35);
+        /* The punched hole at the start, as on a tag. */
+        mask: radial-gradient(circle at 0.8rem 50%, transparent 0 0.26rem, var(--foreground) 0.28rem);
+    }
+
+    /* The hole's own machined edge. */
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(0.8rem - 0.36rem);
+        inline-size: 0.72rem;
+        block-size: 0.72rem;
+        margin-block-start: -0.36rem;
+        border-radius: 50%;
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--background) h s l / 0.55),
+            inset 0 -1px 0 hsl(from var(--foreground) h s l / 0.6);
+    }
+
+    /* ── titanium · 3 · the bare-milled billet ────────────────────────── */
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-3'] .kp-datatable__busy-panel {
+        --r3-c: 0.5rem;
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-bg: var(--primary);
+        --bo-panel-ink: var(--primary-foreground);
+        --bo-clock-ink: hsl(from var(--primary-foreground) h s calc(l + 22));
+        --bo-panel-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.9), inset 0 -2px 0 hsl(from var(--background) h s l / 0.3);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        /* Two counterbored rivets, a sheen, the brushed grain. */
+        --r3s-img:
+            radial-gradient(
+                circle at 0.75rem 50%,
+                hsl(from var(--background) h s l / 0.7) 0 0.1rem,
+                hsl(from var(--background) h s l / 0.25) 0.11rem 0.2rem,
+                hsl(from var(--foreground) h s l / 0.8) 0.21rem 0.27rem,
+                transparent 0.28rem
+            ),
+            radial-gradient(
+                circle at calc(100% - 0.75rem) 50%,
+                hsl(from var(--background) h s l / 0.7) 0 0.1rem,
+                hsl(from var(--background) h s l / 0.25) 0.11rem 0.2rem,
+                hsl(from var(--foreground) h s l / 0.8) 0.21rem 0.27rem,
+                transparent 0.28rem
+            ),
+            linear-gradient(160deg, hsl(from var(--foreground) h s l / 0.5), transparent 45%),
+            repeating-linear-gradient(to bottom, hsl(from var(--background) h s l / 0.07) 0 1px, transparent 1px 3px);
+        --r3s-rep: no-repeat;
+        --r3s-size: 100% 100%;
+        padding-inline: 1.75rem;
+        font-weight: 600;
+        text-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.6);
+        clip-path: polygon(
+            var(--r3-c) 0,
+            calc(100% - var(--r3-c)) 0,
+            100% var(--r3-c),
+            100% calc(100% - var(--r3-c)),
+            calc(100% - var(--r3-c)) 100%,
+            var(--r3-c) 100%,
+            0 calc(100% - var(--r3-c)),
+            0 var(--r3-c)
+        );
+    }
+
+    /* ── On a phone: the panel stays where the package puts it; each
+       option adds one part of the theme's hardware to the flat strip ── */
+
+    @container kp-table (max-width: 30rem) {
+        /* nostromo · 1 · the reel window: the tape reel turns behind a
+           round dark window in a beige moulded rim, lit amber from inside. */
+        [data-theme='nostromo'] [data-bo-phone='r3-b-no-phone-1'] .kp-datatable__busy-panel {
+            column-gap: 1.3rem;
+            padding-inline-start: 1.05rem;
+        }
+
+        [data-theme='nostromo'] [data-bo-phone='r3-b-no-phone-1'] .kp-datatable__busy-panel > .kp-spinner {
+            margin-block: 0.3rem;
+            box-shadow:
+                0 0 0 1.5px var(--sidebar-primary),
+                0 0 0 0.42rem var(--sidebar-background),
+                0 0 9px 0.42rem hsl(from var(--sidebar-primary) h s l / 0.35),
+                0 0 0 calc(0.42rem + 3px) var(--secondary),
+                0 0 0 calc(0.42rem + 4px) var(--border-strong);
+        }
+
+        /* nostromo · 2 · the vent slats: a row of slots lit from inside
+           along the panel's whole bottom edge. */
+        [data-theme='nostromo'] [data-bo-phone='r3-b-no-phone-2'] .kp-datatable__busy-panel {
+            --r3p-img: repeating-linear-gradient(to right, var(--sidebar-primary) 0 3px, var(--sidebar-background) 3px 7px);
+            --r3p-size: calc(100% - 1.2rem) 0.42rem;
+            --r3p-pos: 50% calc(100% - 0.4rem);
+            padding-block-end: 1.2rem;
+        }
+
+        /* nostromo · 3 · the count on tape: the count punched on its own
+           piece of orange label tape under the words, the LED orange as a
+           plate, never as text. */
+        [data-theme='nostromo'] [data-bo-phone='r3-b-no-phone-3'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+            justify-self: start;
+            margin-block-start: 0.2rem;
+            padding: 0.12rem 0.55rem 0.12rem 0.7rem;
+            background: var(--accent);
+            color: var(--accent-foreground);
+            font-family: var(--theme-font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-shadow: 0 -1px 0 hsl(from var(--accent) h s calc(l - 14));
+            clip-path: polygon(0.25rem 0, 100% 0, 100% 100%, 0 100%);
+            rotate: -1deg;
+        }
+
+        /* titanium · 1 · the scale: an engraved scale of fine ticks, a
+           longer one every fifth, along the panel's bottom edge. */
+        [data-theme='titanium'] [data-bo-phone='r3-b-ti-phone-1'] .kp-datatable__busy-panel {
+            --r3p-img:
+                repeating-linear-gradient(to right, currentcolor 0 1px, transparent 1px 2.5rem),
+                repeating-linear-gradient(to right, currentcolor 0 1px, transparent 1px 0.5rem);
+            --r3p-size: calc(100% - 1.6rem) 0.6rem, calc(100% - 1.6rem) 0.3rem;
+            --r3p-pos: 50% calc(100% - 5px), 50% calc(100% - 5px);
+            padding-block-end: 1.25rem;
+        }
+
+        /* titanium · 2 · the count on a tag: an anodised tag with a cut
+           corner under the words. */
+        [data-theme='titanium'] [data-bo-phone='r3-b-ti-phone-2'] .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+            justify-self: start;
+            margin-block-start: 0.2rem;
+            padding: 0.15rem 0.8rem 0.15rem 0.5rem;
+            background: linear-gradient(115deg, var(--chart-1), var(--chart-2));
+            color: var(--primary-foreground);
+            font-family: var(--theme-font-mono, monospace);
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-shadow: none;
+            clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0 100%);
+        }
+
+        /* titanium · 3 · the tool holder: the drill bit laid in a dark
+           milled pocket at the panel's start, from top to bottom. */
+        [data-theme='titanium'] [data-bo-phone='r3-b-ti-phone-3'] .kp-datatable__busy-panel {
+            --r3p-img: linear-gradient(
+                to right,
+                var(--background) 0 4.35rem,
+                hsl(from var(--foreground) h s l / 0.4) 4.35rem calc(4.35rem + 1px),
+                transparent calc(4.35rem + 1px)
+            );
+            --r3p-size: 100% 100%;
+            column-gap: 1.6rem;
+        }
+    }
+
+    /* ── Motion: MU/TH/UR's cursor blinks on a hard beat, never fades ──── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-bo-shape='r3-b-no-shape-1'] .kp-datatable__busy-panel > .kp-datatable__busy-words::after {
+            animation: r3-b-no-cursor 1.06s steps(1, end) infinite;
+        }
+
+        @keyframes r3-b-no-cursor {
+            50% {
+                color: transparent;
+                text-shadow: none;
+            }
+        }
+    }
 }

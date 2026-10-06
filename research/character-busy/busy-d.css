@@ -861,9 +861,14 @@
             }
         }
 
+        /* The trace rolls down the whole panel: a translate in % moved the
+           2px line by its own height, 2px, so it stood still. */
         @keyframes bo-nostromo-trace {
+            from {
+                top: 0;
+            }
             to {
-                transform: translateY(calc(100% - 2px));
+                top: calc(100% - 2px);
             }
         }
 
