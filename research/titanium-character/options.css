@@ -1,0 +1,1871 @@
+/* research/titanium-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.tc-scene[data-tc-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --tc-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the ones measured in
+   themes/titanium/CHARACTER.md §2. */
+
+@property --tc-mill {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 100%;
+}
+
+@property --tc-cut {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 100%;
+}
+
+@property --tc-open {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 100%;
+}
+
+@property --tc-gone {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+@layer kp.signature {
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .tc-page {
+        --tc-ramp: linear-gradient(
+            110deg,
+            transparent 15%,
+            var(--warning-foreground),
+            var(--chart-4),
+            var(--chart-2),
+            var(--chart-1),
+            var(--chart-3),
+            transparent 85%
+        );
+        --tc-oxide: linear-gradient(
+            100deg,
+            var(--warning-foreground),
+            var(--chart-4) 25%,
+            var(--chart-2) 50%,
+            var(--chart-1) 72%,
+            var(--chart-3) 90%,
+            var(--warning-foreground)
+        );
+        --tc-grain: repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.035) 0 1px, transparent 1px 3px);
+        --tc-engrave: 0 -1px 0 hsl(from var(--background) h s l / 0.8), 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* The three corner cuts, declared on the parts themselves so each
+       resolves against its own --tc-c. */
+    .tc-scene :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        --tc-p-tlbr: polygon(var(--tc-c) 0, 100% 0, 100% calc(100% - var(--tc-c)), calc(100% - var(--tc-c)) 100%, 0 100%, 0 var(--tc-c));
+        --tc-p-trbl: polygon(0 0, calc(100% - var(--tc-c)) 0, 100% var(--tc-c), 100% 100%, var(--tc-c) 100%, 0 calc(100% - var(--tc-c)));
+        --tc-p-all: polygon(
+            var(--tc-c) 0,
+            calc(100% - var(--tc-c)) 0,
+            100% var(--tc-c),
+            100% calc(100% - var(--tc-c)),
+            calc(100% - var(--tc-c)) 100%,
+            var(--tc-c) 100%,
+            0 calc(100% - var(--tc-c)),
+            0 var(--tc-c)
+        );
+    }
+
+    .tc-scene .tc-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    .tc-scene .kp-card {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .tc-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .tc-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .tc-scene .kp-dialog::after {
+        animation: none;
+    }
+
+    .tc-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .tc-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .tc-cutter {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        z-index: 3;
+        block-size: 2px;
+        background: var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tc-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .tc-scene .tc-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+        overflow: hidden;
+    }
+
+    .tc-scene .tc-pop--static {
+        position: relative;
+        inset: auto;
+    }
+
+    .tc-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .tc-scene .kp-menu__item {
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .tc-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tc-carrier {
+        position: relative;
+    }
+
+    .tc-scene .kp-kpi__value.tc-carrier,
+    .tc-bezel__num {
+        justify-self: start;
+    }
+
+    .tc-rail {
+        display: grid;
+        gap: 0.6rem;
+        padding-block: 0.25rem;
+    }
+
+    .tc-rail__track {
+        position: relative;
+        display: block;
+        block-size: 6px;
+        border: 1px solid var(--border);
+        background: var(--muted);
+    }
+
+    .tc-rail__carriage {
+        position: absolute;
+        inset-block-start: -5px;
+        inset-inline-start: calc(100% - 14px);
+        inline-size: 14px;
+        block-size: 14px;
+        background: var(--primary);
+        box-shadow: var(--kp-tool-edge);
+    }
+
+    .tc-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .tc-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+    }
+
+    .tc-bar {
+        position: relative;
+        display: block;
+        block-size: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--muted);
+    }
+
+    .tc-bar__fill {
+        display: none;
+    }
+
+    .tc-bar::after,
+    .tc-load::after,
+    .tc-pass::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .tc-table {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        padding: 0.5rem 0.75rem 0;
+        border: 1px solid var(--border);
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+        text-transform: uppercase;
+    }
+
+    .tc-table .tc-bar {
+        grid-column: 1 / -1;
+        block-size: 3px;
+        margin-inline: -0.75rem;
+        border: 0;
+    }
+
+    .tc-groove {
+        position: relative;
+        block-size: 3.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    .tc-skel {
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    .tc-scene .kp-menu__item.tc-load {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tc-scene .kp-kpi.tc-load {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tc-pass {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tc-chip {
+        font-family: var(--theme-font-mono);
+    }
+
+    .tc-spark,
+    .tc-node {
+        display: block;
+        color: var(--primary);
+    }
+
+    .tc-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+    }
+
+    .tc-node {
+        inline-size: fit-content;
+    }
+
+    .tc-node svg {
+        display: block;
+        inline-size: 4rem;
+        block-size: 2.5rem;
+    }
+
+    .tc-bezel {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.4rem 0.9rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .tc-bezel__num {
+        font-family: var(--theme-font-mono);
+        font-size: 1.5rem;
+    }
+
+    .tc-heat {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background: var(--tc-ramp) 100% 0 / 300% 100% no-repeat;
+        mix-blend-mode: color;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tc-leaver {
+        position: relative;
+    }
+
+    /* The carrier of a value that updates in place: the theme's heat tint
+       (or an option's own picture) is drawn on its ::before. */
+    .tc-carrier::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: var(--tc-ramp) 100% 0 / 300% 100% no-repeat;
+        mix-blend-mode: color;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tc-spark.tc-carrier::before {
+        inset-inline-start: 62%;
+    }
+
+    /* ── 5 Colour (G5, G6) ─────────────────────────────────────────── */
+
+    .tc-scene[data-tc-colour] .tc-bar::after {
+        inset-inline-end: auto;
+        inline-size: 35%;
+    }
+
+    .tc-scene[data-tc-colour='cause'] .tc-bar::after {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--chart-2) h s l / 0.5),
+            hsl(from var(--chart-1) h s l / 0.7) 90%,
+            var(--primary) 0
+        );
+    }
+
+    .tc-scene[data-tc-colour='cause'] .tc-today {
+        box-shadow: inset 0 0 0 2px var(--chart-1);
+    }
+
+    .tc-scene[data-tc-colour='cause'] .tc-running::before,
+    .tc-scene[data-tc-colour='mono'] .tc-running::before {
+        content: '';
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        border-radius: 50%;
+        background: var(--chart-1);
+    }
+
+    .tc-scene[data-tc-colour='decor'] :is(.kp-card, .kp-kpi) {
+        border: 2px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    .tc-scene[data-tc-colour='decor'] :is(.tc-title, .kp-kpi__value) {
+        background: var(--kp-iris);
+        background-clip: text;
+        color: transparent;
+    }
+
+    .tc-scene[data-tc-colour='decor'] .kp-button:not(.kp-button--primary) {
+        background: color-mix(in oklch, var(--chart-2) 38%, var(--secondary));
+    }
+
+    .tc-scene[data-tc-colour='decor'] .kp-button--primary {
+        background: var(--kp-iris);
+        color: var(--primary-foreground);
+    }
+
+    .tc-scene[data-tc-colour='decor'] .kp-badge {
+        background: var(--kp-iris);
+        color: var(--primary-foreground);
+    }
+
+    .tc-scene[data-tc-colour='decor'] .tc-bar {
+        background: var(--kp-iris);
+    }
+
+    .tc-scene[data-tc-colour='decor'] .tc-bar::after {
+        background: linear-gradient(90deg, transparent, var(--primary));
+    }
+
+    .tc-scene[data-tc-colour='decor'] .tc-day {
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        border-color: transparent;
+    }
+
+    .tc-scene[data-tc-colour='decor'] .tc-today {
+        background: var(--kp-iris);
+        color: var(--primary-foreground);
+    }
+
+    .tc-scene[data-tc-colour='mono'] .tc-bar::after {
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.35) 90%, var(--primary) 0);
+    }
+
+    .tc-scene[data-tc-colour='mono'] .tc-today {
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    .tc-scene[data-tc-colour='mono'] .tc-running::before {
+        background: var(--primary);
+    }
+
+    .tc-scene[data-tc-colour='mono'] .tc-carrier::before {
+        inset: auto 0 -3px;
+        block-size: 2px;
+        background: var(--primary);
+        mix-blend-mode: normal;
+        transform-origin: left center;
+    }
+
+    /* ── 6 Corners and 7 the chamfer diagonal (G7) ───────────────────── */
+
+    .tc-scene:is([data-tc-corners], [data-tc-chamfer]) :is(.kp-button, .kp-badge) {
+        --tc-c: 0.55rem;
+    }
+
+    .tc-scene:is([data-tc-corners], [data-tc-chamfer]) :is(.kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        --tc-c: 0.9rem;
+    }
+
+    .tc-scene:is([data-tc-corners='chamfer'], [data-tc-chamfer='tlbr']) :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        border-radius: 0;
+        clip-path: var(--tc-p-tlbr);
+    }
+
+    .tc-scene[data-tc-corners='square'] :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        border-radius: 0;
+        clip-path: none;
+    }
+
+    .tc-scene[data-tc-corners='radius'] :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        border-radius: 0.375rem;
+        clip-path: none;
+    }
+
+    .tc-scene[data-tc-corners='radius'] .tc-chip {
+        border-radius: 999px;
+    }
+
+    .tc-scene[data-tc-corners='radius'] .kp-popover {
+        border-radius: 0.75rem;
+    }
+
+    .tc-scene[data-tc-chamfer='trbl'] :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        border-radius: 0;
+        clip-path: var(--tc-p-trbl);
+    }
+
+    .tc-scene[data-tc-chamfer='all'] :is(.kp-button, .kp-badge, .kp-card, .kp-alert, .kp-kpi, .kp-popover) {
+        border-radius: 0;
+        clip-path: var(--tc-p-all);
+    }
+
+    /* ── 8 Surface (G8) ──────────────────────────────────────────────── */
+
+    /* The card keeps the register's own face (its grain and oxide rim). */
+    .tc-scene[data-tc-surface='machined'] :is(.kp-kpi, .kp-button, .kp-field__input) {
+        background-image: var(--tc-grain);
+        box-shadow: var(--kp-tool-edge);
+    }
+
+    .tc-scene[data-tc-surface='machined'] :is(.tc-title, .kp-kpi__value) {
+        text-shadow: var(--tc-engrave);
+    }
+
+    .tc-scene[data-tc-surface='matte'] :is(.kp-card, .kp-kpi, .kp-button, .kp-field__input) {
+        background-image: none;
+        box-shadow: none;
+    }
+
+    .tc-scene[data-tc-surface='matte'] :is(.tc-title, .kp-kpi__value) {
+        text-shadow: none;
+    }
+
+    .tc-scene[data-tc-surface='heavy'] :is(.kp-card, .kp-kpi, .kp-button, .kp-field__input) {
+        background-image:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.09) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.06) 0 1px, transparent 1px 5px),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.06) 0 1px, transparent 1px 5px);
+        box-shadow:
+            inset 0 2px 0 hsl(from var(--foreground) h s l / 0.3),
+            inset 0 -3px 0 hsl(from var(--background) h s l / 0.7),
+            inset 2px 0 0 hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    .tc-scene[data-tc-surface='heavy'] :is(.tc-title, .kp-kpi__value) {
+        text-shadow:
+            0 -1px 0 var(--background),
+            0 2px 0 hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    /* ── 12 Composites (G13) and the State buttons ──────────────────── */
+
+    /* The forced states draw what the register draws on a real hover,
+       focus or press, so the State buttons show every button at once. */
+    [data-tc-show='hover'] .tc-scene[data-tc-composites] .kp-button:not(.kp-button--primary) {
+        background: var(--accent);
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites] .kp-button--primary {
+        background: hsl(from var(--primary) h s calc(l - 14));
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites] .kp-button__edge {
+        opacity: 0.26;
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites] .kp-menu__item {
+        background: var(--accent);
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites] :is(.kp-button, .kp-menu__item) {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites] .kp-menu__item {
+        background: var(--accent);
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites] .tc-in-kpi {
+        outline: 2px solid var(--foreground);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--background);
+    }
+
+    [data-tc-show='press'] .tc-scene[data-tc-composites] .kp-button {
+        translate: 0 1px;
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
+    }
+
+    /* Today: each composite its own (CHARACTER.md §4b, C1-C5). */
+    .tc-scene[data-tc-composites='today'] .tc-in-header {
+        box-shadow: inset 0 0 0 1px var(--primary);
+        clip-path: var(--tc-p-tlbr);
+        --tc-c: var(--kp-chamfer, 0.6rem);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-header:is(:hover, :focus-visible) {
+        background: var(--secondary);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-header.kp-button--primary:is(:hover, :focus-visible) {
+        background: var(--primary);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-header:focus-visible {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-header:active {
+        translate: none;
+        transform: scale(0.98);
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-in-header:not(.kp-button--primary) {
+        background: var(--secondary);
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-in-header.kp-button--primary {
+        background: var(--primary);
+    }
+
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-in-header .kp-button__edge {
+        opacity: 0;
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='today'] .tc-in-header {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    [data-tc-show='press'] .tc-scene[data-tc-composites='today'] .tc-in-header {
+        translate: none;
+        transform: scale(0.98);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-menu {
+        border-radius: 0.75rem;
+        clip-path: none;
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-menu .kp-menu__item:is(:hover, :focus-visible) {
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='today'] .tc-in-menu .kp-menu__item,
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-in-menu .kp-menu__item {
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-tc-show='press'] .tc-scene[data-tc-composites='today'] .tc-in-menu .kp-menu__item,
+    .tc-scene[data-tc-composites='today'] .tc-in-menu .kp-menu__item:active {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-tile-link:is(:hover, :focus-visible),
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-tile-link,
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='today'] .tc-tile-link {
+        background: color-mix(in oklch, var(--muted-foreground) 25%, var(--card));
+        border-radius: 0.1rem;
+        clip-path: none;
+        box-shadow: none;
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-tile-link:is(:hover, :focus-visible) .kp-button__edge,
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-tile-link .kp-button__edge {
+        opacity: 0;
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-tile-link:focus-visible,
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='today'] .tc-tile-link {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-kpi {
+        border-radius: 0.375rem;
+    }
+
+    .tc-scene[data-tc-composites='today'] .tc-in-kpi:focus-visible,
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='today'] .tc-in-kpi {
+        outline: 3px solid var(--chart-3);
+        outline-offset: 4px;
+        box-shadow: none;
+    }
+
+    /* The middle way: the base, plus one mark the composite adds. */
+    .tc-scene[data-tc-composites='accent'] .tc-in-header:hover,
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='accent'] .tc-in-header {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            var(--kp-tool-edge);
+    }
+
+    .tc-scene[data-tc-composites='accent'] .tc-in-menu .kp-menu__item:is(:hover, :focus-visible),
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='accent'] .tc-in-menu .kp-menu__item {
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-size: 2px 100%;
+        background-repeat: no-repeat;
+    }
+
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='accent'] .tc-in-menu .kp-menu__item {
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-size: 2px 100%;
+        background-repeat: no-repeat;
+    }
+
+    .tc-scene[data-tc-composites='accent'] .tc-in-tile:has(.tc-tile-link:is(:hover, :focus-visible)),
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='accent'] .tc-in-tile,
+    [data-tc-show='focus'] .tc-scene[data-tc-composites='accent'] .tc-in-tile {
+        box-shadow: inset 0 4px 0 var(--primary);
+    }
+
+    .tc-scene[data-tc-composites='accent'] .tc-in-kpi:hover,
+    [data-tc-show='hover'] .tc-scene[data-tc-composites='accent'] .tc-in-kpi {
+        box-shadow: inset 0 -2px 0 var(--chart-1);
+    }
+
+    .tc-in-tile {
+        justify-items: start;
+    }
+
+    /* ── 13 The focus ring: every part shown focused ─────────────────── */
+
+    .tc-scene[data-tc-focus] .tc-focusable,
+    .tc-scene[data-tc-focus] .tc-tile-link,
+    .tc-scene[data-tc-focus] .tc-in-kpi {
+        --tc-c: 0.55rem;
+    }
+
+    .tc-scene[data-tc-focus='inset'] :is(.kp-button, .kp-menu__item, .tc-focusable, .tc-in-kpi) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .tc-scene[data-tc-focus='outline'] :is(.kp-button, .kp-menu__item) {
+        outline: none;
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    .tc-scene[data-tc-focus='outline'] :is(.tc-focusable, .tc-in-kpi) {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .tc-scene[data-tc-focus='mix'] .kp-button:not(.tc-in-header, .tc-tile-link) {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .tc-scene[data-tc-focus='mix'] .tc-in-header {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+    }
+
+    .tc-scene[data-tc-focus='mix'] .tc-in-kpi {
+        border-radius: 0.375rem;
+        outline: 3px solid var(--chart-3);
+        outline-offset: 4px;
+    }
+
+    .tc-scene[data-tc-focus='mix'] .kp-menu__item {
+        outline: none;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    .tc-scene[data-tc-focus='mix'] :is(.tc-focusable, .tc-tile-link) {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .tc-header-mini,
+    .tc-scene[data-tc-focus] .tc-days--one,
+    .tc-scene[data-tc-focus] .kp-kpis {
+        padding: 6px;
+    }
+
+    /* ── 15 Typography (G8) ──────────────────────────────────────────── */
+
+    .tc-type {
+        gap: 0.4rem;
+    }
+
+    .tc-type p {
+        margin: 0;
+    }
+
+    .tc-type__label {
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    .tc-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .tc-type__figure {
+        font-size: 1.75rem;
+    }
+
+    .tc-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .tc-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+        font-weight: 400;
+    }
+
+    .tc-scene[data-tc-type='figures'] :is(.tc-type__label, .tc-type__figure, .tc-type__table td, .kp-badge) {
+        font-family: var(--theme-font-mono);
+    }
+
+    .tc-scene[data-tc-type='figures'] .tc-type__table th {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    .tc-scene[data-tc-type='allmono'] .tc-type,
+    .tc-scene[data-tc-type='allmono'] .tc-type :is(p, th, td, .kp-button, .kp-badge, .tc-type__head) {
+        font-family: var(--theme-font-mono);
+    }
+
+    .tc-scene[data-tc-type='figuresonly'] :is(.tc-type__figure, .tc-type__table td) {
+        font-family: var(--theme-font-mono);
+    }
+
+    .tc-scene[data-tc-type='figuresonly'] .tc-type__label {
+        letter-spacing: 0.04em;
+    }
+
+    /* ── 16 Screws and knurling ──────────────────────────────────────── */
+
+    .tc-tip,
+    .tc-motif-card,
+    .tc-dial {
+        position: relative;
+    }
+
+    .tc-tip {
+        display: inline-block;
+        padding: 0.6rem 1.1rem;
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        font-family: var(--theme-font-mono);
+        font-size: 0.85rem;
+    }
+
+    .tc-dial {
+        gap: 0.2rem;
+        padding-block-start: 1.1rem;
+    }
+
+    .tc-dial__num {
+        font-family: var(--theme-font-mono);
+        font-size: 1.5rem;
+    }
+
+    .tc-screws,
+    .tc-knurl {
+        display: none;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .tc-screws {
+        inset: 0;
+        background:
+            radial-gradient(circle at 6px 6px, var(--border-strong) 0 2.5px, hsl(from var(--background) h s l / 0.8) 2.5px 3.5px, transparent 3.5px),
+            radial-gradient(
+                circle at calc(100% - 6px) 6px,
+                var(--border-strong) 0 2.5px,
+                hsl(from var(--background) h s l / 0.8) 2.5px 3.5px,
+                transparent 3.5px
+            ),
+            radial-gradient(
+                circle at 6px calc(100% - 6px),
+                var(--border-strong) 0 2.5px,
+                hsl(from var(--background) h s l / 0.8) 2.5px 3.5px,
+                transparent 3.5px
+            ),
+            radial-gradient(
+                circle at calc(100% - 6px) calc(100% - 6px),
+                var(--border-strong) 0 2.5px,
+                hsl(from var(--background) h s l / 0.8) 2.5px 3.5px,
+                transparent 3.5px
+            );
+    }
+
+    .tc-knurl {
+        inset: 0 0 auto;
+        block-size: 6px;
+        background:
+            repeating-linear-gradient(60deg, hsl(from var(--foreground) h s l / 0.35) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(-60deg, hsl(from var(--foreground) h s l / 0.35) 0 1px, transparent 1px 4px), var(--muted);
+    }
+
+    .tc-scene[data-tc-motifs='turned'] :is(.tc-motif-plate .tc-screws, .tc-motif-dial .tc-knurl),
+    .tc-scene[data-tc-motifs='all'] :is(.tc-screws, .tc-knurl) {
+        display: block;
+    }
+
+    .tc-scene[data-tc-motifs='all'] .tc-motif-card {
+        padding-block-start: 1.1rem;
+    }
+
+    .tc-motif-button {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tc-scene[data-tc-motifs='all'] .tc-motif-button::after {
+        content: '';
+        position: absolute;
+        inset: auto 0.6rem -6px;
+        block-size: 4px;
+        background: repeating-linear-gradient(60deg, hsl(from var(--foreground) h s l / 0.35) 0 1px, transparent 1px 4px), var(--muted);
+    }
+
+    /* ── 17 Bronze and the error colour (G5) ─────────────────────────── */
+
+    .tc-ramp {
+        block-size: 1.5rem;
+        border: 1px solid var(--border);
+    }
+
+    .tc-series {
+        display: flex;
+        align-items: end;
+        gap: 6px;
+        block-size: 4.5rem;
+        padding: 0.4rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    .tc-series span {
+        flex: 1;
+        block-size: var(--h);
+    }
+
+    .tc-series [data-s='1'] {
+        background: var(--chart-1);
+    }
+
+    .tc-series [data-s='2'] {
+        background: var(--chart-2);
+    }
+
+    .tc-series [data-s='3'] {
+        background: var(--chart-3);
+    }
+
+    .tc-scene[data-tc-tones='ramp'] .tc-ramp {
+        background: linear-gradient(90deg, var(--warning-foreground), var(--chart-4), var(--chart-2), var(--chart-1), var(--chart-3));
+    }
+
+    .tc-scene[data-tc-tones='ramp'] .tc-series [data-s='4'],
+    .tc-scene[data-tc-tones='nobronze'] .tc-series [data-s='4'] {
+        background: var(--chart-5);
+    }
+
+    .tc-scene:is([data-tc-tones='ramp'], [data-tc-tones='nobronze']) .tc-tier {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .tc-scene[data-tc-tones='free'] .tc-ramp {
+        background: linear-gradient(90deg, var(--warning-foreground), var(--chart-4), var(--chart-2), var(--chart-1), var(--chart-3));
+    }
+
+    .tc-scene[data-tc-tones='free'] .tc-series [data-s='4'] {
+        background: var(--chart-4);
+    }
+
+    .tc-scene[data-tc-tones='free'] .tc-tier {
+        background: var(--chart-4);
+        color: var(--destructive-foreground);
+    }
+
+    .tc-scene[data-tc-tones='nobronze'] .tc-ramp {
+        background: linear-gradient(90deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+    }
+
+    /* ── 10 Loading: the reduced pose (the still picture) ────────────── */
+
+    .tc-scene[data-tc-loading='cutter'] .tc-load::after,
+    .tc-scene[data-tc-loading='cutter'] .tc-bar::after {
+        background: linear-gradient(
+            90deg,
+            transparent 0,
+            hsl(from var(--warning-foreground) h s l / 0.25) 35%,
+            hsl(from var(--chart-2) h s l / 0.38) 60%,
+            hsl(from var(--chart-1) h s l / 0.45) 85%,
+            hsl(from var(--chart-3) h s l / 0.5) calc(100% - 3px),
+            var(--primary) calc(100% - 3px)
+        );
+    }
+
+    .tc-scene[data-tc-loading='bath'] .tc-load::after,
+    .tc-scene[data-tc-loading='bath'] .tc-bar::after,
+    .tc-scene[data-tc-loading='today'] .kp-kpi.tc-load::after {
+        background: var(--tc-oxide) 0 0 / 260% 100%;
+        opacity: 0.32;
+    }
+
+    .tc-scene[data-tc-loading='bath'] .tc-bar::after {
+        opacity: 0.9;
+    }
+
+    .tc-scene[data-tc-loading]:not([data-tc-loading='today']) .kp-skeleton::after {
+        inset: 0;
+        inline-size: auto;
+        transform: none;
+    }
+
+    .tc-scene[data-tc-loading='today'] .tc-table .tc-bar::after {
+        background: var(--primary);
+    }
+
+    .tc-scene[data-tc-loading='today'] .kp-menu__item.tc-load::after {
+        inset: auto 0 0;
+        block-size: 2px;
+        background: linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 100% no-repeat;
+    }
+
+    .tc-scene[data-tc-loading='today'] .tc-day.tc-load::after {
+        inset-inline: 0 auto;
+        inline-size: 2px;
+        background: var(--chart-1);
+        box-shadow: 0 0 6px var(--chart-1);
+    }
+
+    .tc-scene[data-tc-loading='today'] .tc-groove::before {
+        content: '';
+        position: absolute;
+        inset: 40% auto 40% 0;
+        inline-size: 100%;
+        background: hsl(from var(--muted-foreground) h s l / 0.35);
+    }
+
+    .tc-scene[data-tc-loading='today'] .tc-groove::after {
+        inset: 0 auto 0 0;
+        inline-size: 8px;
+        background: var(--primary);
+    }
+
+    .tc-scene[data-tc-loading='today'] .tc-part > .tc-bar::after {
+        inset-inline-end: auto;
+        inline-size: 28%;
+        background: var(--primary);
+    }
+
+    /* ── The motion ──────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .tc-scene:is([data-tc-curve], [data-tc-direction], [data-tc-opening], [data-tc-durations], [data-tc-leave])[data-tc-phase='gap'] .tc-arrives,
+        .tc-scene[data-tc-leave][data-tc-phase='gap'] .tc-leaver {
+            visibility: hidden;
+        }
+
+        /* 1 The curve (G1). One easing per option, the same pictures. */
+        .tc-scene[data-tc-curve='linear'] {
+            --tc-ease: linear;
+        }
+
+        .tc-scene[data-tc-curve='eased'] {
+            --tc-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .tc-scene[data-tc-curve] .tc-rail__carriage {
+            inset-inline-start: calc(100% - 14px);
+        }
+
+        .tc-scene:is([data-tc-curve='linear'], [data-tc-curve='eased']):not([data-tc-phase='gap']) .tc-rail__carriage {
+            animation: tc-feed calc(900ms * var(--tc-slow, 1)) var(--tc-ease) both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:not([data-tc-phase='gap']) .tc-rail__carriage[data-tc-r='1'] {
+            animation: tc-feed calc(900ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:not([data-tc-phase='gap']) .tc-rail__carriage[data-tc-r='2'] {
+            animation: tc-feed calc(900ms * var(--tc-slow, 1)) ease-in-out both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:not([data-tc-phase='gap']) .tc-rail__carriage[data-tc-r='3'] {
+            animation: tc-feed calc(900ms * var(--tc-slow, 1)) cubic-bezier(0.3, 1.4, 0.4, 1) both;
+        }
+
+        .tc-scene[data-tc-curve]:is([data-tc-phase='in'], [data-tc-phase='hold']) :is(.tc-dialog, .tc-pop) {
+            animation: tc-cut calc(240ms * var(--tc-slow, 1)) var(--tc-ease, linear) both;
+        }
+
+        .tc-scene[data-tc-curve]:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-cutter {
+            animation: tc-cutter calc(240ms * var(--tc-slow, 1)) var(--tc-ease, linear) both;
+        }
+
+        .tc-scene[data-tc-curve]:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile {
+            animation: tc-mill calc(400ms * var(--tc-slow, 1)) var(--tc-ease) both;
+        }
+
+        .tc-scene[data-tc-curve]:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: tc-heat calc(240ms * var(--tc-slow, 1)) var(--tc-ease) both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-pop {
+            transform-origin: top;
+            animation: tc-seat calc(320ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-pop .tc-cutter {
+            animation: none;
+        }
+
+        .tc-scene[data-tc-curve='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile {
+            animation: tc-mill calc(450ms * var(--tc-slow, 1)) ease-in-out both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier {
+            transform-origin: left center;
+            animation: tc-swell calc(500ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-curve='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: none;
+        }
+
+        /* 2 The direction (G2). */
+        .tc-scene[data-tc-direction='feed']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-day {
+            animation: tc-mill calc(160ms * var(--tc-slow, 1)) linear calc(var(--i) * 45ms * var(--tc-slow, 1)) both;
+        }
+
+        .tc-scene[data-tc-direction='feed']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile {
+            animation: tc-mill calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-direction='feed'] :is(.tc-bar, .tc-pass)::after {
+            background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.3) 90%, var(--primary) 0);
+            animation: tc-pass calc(1800ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-direction='centre']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-day {
+            animation: tc-open calc(160ms * var(--tc-slow, 1)) linear calc(var(--c) * 45ms * var(--tc-slow, 1)) both;
+        }
+
+        .tc-scene[data-tc-direction='centre']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile {
+            animation: tc-open calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-direction='centre'] :is(.tc-bar, .tc-pass)::after {
+            background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.45) 50%, transparent);
+            animation: tc-bloom calc(1800ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-direction='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-day {
+            animation: tc-wound calc(420ms * var(--tc-slow, 1)) cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 40ms * var(--tc-slow, 1)) both;
+        }
+
+        .tc-scene[data-tc-direction='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile {
+            animation: tc-seated calc(400ms * var(--tc-slow, 1)) cubic-bezier(0.3, 1.4, 0.4, 1) both;
+        }
+
+        .tc-scene[data-tc-direction='mix'] .tc-bar::after {
+            background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.3) 90%, var(--primary) 0);
+            animation: tc-pass calc(1800ms * var(--tc-slow, 1)) linear infinite reverse;
+        }
+
+        .tc-scene[data-tc-direction='mix'] .tc-pass::after {
+            background: linear-gradient(115deg, transparent 40%, hsl(from var(--foreground) h s l / 0.3) 50%, transparent 60%) 0 0 / 240% 100%;
+            animation: tc-sheen calc(1800ms * var(--tc-slow, 1)) cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
+        }
+
+        /* 3 Opening (G3). */
+        .tc-scene[data-tc-opening='cut']:is([data-tc-phase='in'], [data-tc-phase='hold']) :is(.tc-dialog, .tc-pop) {
+            animation: tc-cut calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-opening='cut']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-cutter {
+            animation: tc-cutter calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-opening='seated']:is([data-tc-phase='in'], [data-tc-phase='hold']) :is(.tc-dialog, .tc-pop) {
+            transform-origin: top;
+            animation: tc-seat calc(320ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-opening='scale']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-pop {
+            transform-origin: top left;
+            animation: tc-grow calc(200ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-opening='scale']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-dialog {
+            transform-origin: top center;
+            animation: tc-grow calc(200ms * var(--tc-slow, 1)) linear both;
+        }
+
+        /* 4 Durations (G4). */
+        .tc-scene[data-tc-durations='bands'] {
+            --tc-contact: 60ms;
+            --tc-cutd: 240ms;
+            --tc-loop: 1800ms;
+        }
+
+        .tc-scene[data-tc-durations='fast'] {
+            --tc-contact: 40ms;
+            --tc-cutd: 160ms;
+            --tc-loop: 1200ms;
+        }
+
+        .tc-scene[data-tc-durations='slow'] {
+            --tc-contact: 120ms;
+            --tc-cutd: 400ms;
+            --tc-loop: 2600ms;
+        }
+
+        .tc-scene[data-tc-durations] .tc-tap {
+            transition:
+                translate calc(var(--tc-contact) * var(--tc-slow, 1)) linear,
+                background-color calc(var(--tc-contact) * var(--tc-slow, 1)) linear,
+                box-shadow calc(var(--tc-contact) * var(--tc-slow, 1)) linear;
+        }
+
+        .tc-scene[data-tc-durations][data-tc-phase='in'] .tc-tap {
+            translate: 0 1px;
+            background-color: var(--accent);
+            box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
+        }
+
+        .tc-scene[data-tc-durations]:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-dialog {
+            animation: tc-cut calc(var(--tc-cutd) * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-durations]:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-cutter {
+            animation: tc-cutter calc(var(--tc-cutd) * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-durations] .tc-bar::after {
+            background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.3) 90%, var(--primary) 0);
+            animation: tc-pass calc(var(--tc-loop) * var(--tc-slow, 1)) linear infinite;
+        }
+
+        /* 5 Colour: the loading bar and the live update. */
+        .tc-scene[data-tc-colour] .tc-bar::after {
+            animation: tc-slide calc(1800ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene:is([data-tc-colour='cause'], [data-tc-colour='decor']):is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: tc-heat calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-colour='mono']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: tc-underline calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        /* 9 A live update (G9). */
+        .tc-scene[data-tc-live='heat']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: tc-heat calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-live='glint'] .tc-carrier::before {
+            background: linear-gradient(110deg, transparent 38%, hsl(from var(--foreground) h s l / 0.5) 50%, transparent 62%) 100% 0 / 300% 100%
+                no-repeat;
+            mix-blend-mode: normal;
+        }
+
+        .tc-scene[data-tc-live='glint']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-carrier::before {
+            animation: tc-heat calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .kp-kpi__value.tc-carrier {
+            transform-origin: left center;
+            animation: tc-swell calc(500ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-chip {
+            animation: tc-flare calc(600ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-spark {
+            animation: tc-glow calc(800ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-bezel__num {
+            animation: tc-ring calc(600ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        .tc-scene[data-tc-live='mix'] .tc-tile.tc-carrier::before {
+            background: linear-gradient(115deg, transparent 40%, hsl(from var(--foreground) h s l / 0.35) 50%, transparent 60%) 0 0 / 240% 100%;
+            mix-blend-mode: normal;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-tile.tc-carrier::before {
+            animation: tc-sheen-once calc(600ms * var(--tc-slow, 1)) cubic-bezier(0.2, 0.8, 0.3, 1) both;
+        }
+
+        .tc-scene[data-tc-live='mix']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-node {
+            animation: tc-flash-ring calc(1000ms * var(--tc-slow, 1)) ease-out both;
+        }
+
+        /* 10 Loading (G10). */
+        .tc-scene[data-tc-loading='cutter'] :is(.tc-load, .tc-bar)::after {
+            animation: tc-cutpass calc(1800ms * var(--tc-slow, 1)) linear infinite;
+            animation-delay: 0s;
+        }
+
+        .tc-scene[data-tc-loading='bath'] :is(.tc-load, .tc-bar)::after {
+            animation: tc-bath calc(1800ms * var(--tc-slow, 1)) linear infinite;
+            animation-delay: 0s;
+        }
+
+        .tc-scene[data-tc-loading='today'] .kp-kpi.tc-load::after {
+            animation: tc-bath calc(2200ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .tc-table .tc-bar::after {
+            animation: tc-warm calc(1800ms * var(--tc-slow, 1)) ease-in-out infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .kp-menu__item.tc-load::after {
+            animation: tc-steps calc(1000ms * var(--tc-slow, 1)) steps(5, jump-end) infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .tc-day.tc-load::after {
+            animation: tc-run calc(1600ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .tc-groove::before {
+            animation: tc-grow-x calc(2400ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .tc-groove::after {
+            animation: tc-head calc(2400ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        .tc-scene[data-tc-loading='today'] .tc-part > .tc-bar::after {
+            animation: tc-slug calc(1100ms * var(--tc-slow, 1)) linear infinite;
+        }
+
+        /* 11 Leaving and arriving (G11). */
+        .tc-scene[data-tc-leave='cool']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-leaver {
+            animation: tc-cool calc(400ms * var(--tc-slow, 1)) linear reverse both;
+        }
+
+        .tc-scene[data-tc-leave='cool']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-heat {
+            animation: tc-heat-run calc(400ms * var(--tc-slow, 1)) linear reverse both;
+        }
+
+        .tc-scene[data-tc-leave='cool'][data-tc-phase='out'] .tc-leaver {
+            animation: tc-cool calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-leave='cool'][data-tc-phase='out'] .tc-heat {
+            animation: tc-heat-run calc(400ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-leave='today']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-leaver {
+            animation: tc-cool calc(650ms * var(--tc-slow, 1)) ease-in reverse both;
+        }
+
+        .tc-scene[data-tc-leave='today']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-heat {
+            animation: tc-heat-back calc(650ms * var(--tc-slow, 1)) ease-in reverse both;
+        }
+
+        .tc-scene[data-tc-leave='today'][data-tc-phase='out'] .tc-leaver {
+            animation: tc-cool calc(650ms * var(--tc-slow, 1)) ease-in both;
+        }
+
+        .tc-scene[data-tc-leave='today'][data-tc-phase='out'] .tc-heat {
+            animation: tc-heat-back calc(650ms * var(--tc-slow, 1)) ease-in both;
+        }
+
+        .tc-scene[data-tc-leave='cut']:is([data-tc-phase='in'], [data-tc-phase='hold']) .tc-leaver {
+            animation: tc-mill calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        .tc-scene[data-tc-leave='cut'][data-tc-phase='out'] .tc-leaver {
+            animation: tc-away calc(240ms * var(--tc-slow, 1)) linear both;
+        }
+
+        /* 14 The press. */
+        .tc-scene[data-tc-press] .tc-press {
+            transition:
+                translate 60ms linear,
+                transform 60ms linear,
+                box-shadow 60ms linear;
+        }
+
+        .tc-scene[data-tc-press][data-tc-phase='in'] .tc-press {
+            transition-duration: 0s;
+        }
+
+        /* Composites: the base drops 1 px over the theme's contact time. */
+        .tc-scene[data-tc-composites] .kp-button {
+            transition:
+                background-color 60ms linear,
+                translate 60ms linear,
+                transform 60ms linear;
+        }
+    }
+
+    /* 14 The press: the pressed pose, also when the motion is reduced (a
+       press is a state, not an animation; the clock sets it). */
+    .tc-scene[data-tc-press='drop1'][data-tc-phase='in'] .tc-press {
+        translate: 0 1px;
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.7);
+    }
+
+    .tc-scene[data-tc-press='drop2'][data-tc-phase='in'] .tc-press {
+        translate: 0 2px;
+        box-shadow:
+            inset 0 2px 4px hsl(from var(--background) h s l / 0.85),
+            inset 0 1px 0 hsl(from var(--background) h s l / 0.9);
+    }
+
+    .tc-scene[data-tc-press='scale'][data-tc-phase='in'] .tc-press {
+        transform: scale(0.98);
+    }
+
+    .tc-scene[data-tc-press] .tc-press:is(.kp-menu__item, .tc-day) {
+        background-color: var(--accent);
+    }
+
+    /* ── The keyframes ───────────────────────────────────────────────── */
+
+    @keyframes tc-feed {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 14px);
+        }
+    }
+
+    @keyframes tc-cut {
+        from {
+            --tc-cut: 0%;
+        }
+
+        to {
+            --tc-cut: 100%;
+        }
+    }
+
+    @keyframes tc-cutter {
+        0% {
+            inset-block-start: 0;
+            opacity: 1;
+        }
+
+        95% {
+            opacity: 1;
+        }
+
+        100% {
+            inset-block-start: calc(100% - 2px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-mill {
+        from {
+            --tc-mill: 0%;
+        }
+
+        to {
+            --tc-mill: 100%;
+        }
+    }
+
+    @keyframes tc-open {
+        from {
+            --tc-open: 0%;
+        }
+
+        to {
+            --tc-open: 100%;
+        }
+    }
+
+    @keyframes tc-away {
+        from {
+            --tc-gone: 0%;
+        }
+
+        to {
+            --tc-gone: 100%;
+        }
+    }
+
+    @keyframes tc-heat {
+        from {
+            background-position-x: 100%;
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        75% {
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 0%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-underline {
+        from {
+            transform: scaleX(0);
+            opacity: 1;
+        }
+
+        60% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleX(1);
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-seat {
+        from {
+            transform: translateY(-10px) scale(1.04);
+            opacity: 0;
+        }
+
+        60% {
+            transform: translateY(2px) scale(0.99);
+            opacity: 1;
+        }
+
+        to {
+            transform: none;
+            opacity: 1;
+        }
+    }
+
+    @keyframes tc-grow {
+        from {
+            transform: scale(0.85);
+            opacity: 0;
+        }
+
+        to {
+            transform: none;
+            opacity: 1;
+        }
+    }
+
+    @keyframes tc-swell {
+        from,
+        to {
+            transform: none;
+        }
+
+        40% {
+            transform: scale(1.12);
+        }
+    }
+
+    @keyframes tc-wound {
+        from {
+            rotate: -120deg;
+            scale: 0.4;
+            opacity: 0;
+        }
+
+        to {
+            rotate: 0deg;
+            scale: 1;
+            opacity: 1;
+        }
+    }
+
+    @keyframes tc-seated {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
+        60% {
+            transform: scale(1.03);
+            opacity: 1;
+        }
+
+        to {
+            transform: none;
+        }
+    }
+
+    @keyframes tc-pass {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(100%);
+        }
+    }
+
+    /* The cutter: the head reaches the end, the heat it left fades, the
+       next pass starts. */
+    @keyframes tc-cutpass {
+        0% {
+            transform: translateX(-100%);
+            opacity: 1;
+        }
+
+        80% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateX(0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-slide {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(290%);
+        }
+    }
+
+    @keyframes tc-bloom {
+        from {
+            transform: scaleX(0);
+            opacity: 1;
+        }
+
+        80% {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleX(1);
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-sheen {
+        from {
+            background-position-x: -140%;
+        }
+
+        35%,
+        to {
+            background-position-x: 140%;
+        }
+    }
+
+    @keyframes tc-sheen-once {
+        from {
+            background-position-x: -140%;
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 140%;
+            opacity: 1;
+        }
+    }
+
+    @keyframes tc-flare {
+        from,
+        to {
+            filter: none;
+        }
+
+        45% {
+            filter: brightness(1.35);
+        }
+    }
+
+    @keyframes tc-glow {
+        from,
+        to {
+            filter: none;
+        }
+
+        30% {
+            filter: drop-shadow(0 0 3px currentcolor) drop-shadow(0 0 7px currentcolor);
+        }
+    }
+
+    @keyframes tc-ring {
+        from {
+            outline: 2px solid var(--primary);
+            outline-offset: 0;
+        }
+
+        to {
+            outline: 2px solid transparent;
+            outline-offset: 0.6rem;
+        }
+    }
+
+    @keyframes tc-flash-ring {
+        from {
+            filter: drop-shadow(0 0 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(0 0 6px var(--primary)) brightness(1.4);
+        }
+
+        to {
+            filter: none;
+        }
+    }
+
+    @keyframes tc-bath {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: -160% 0;
+        }
+    }
+
+    @keyframes tc-warm {
+        from,
+        to {
+            filter: brightness(1);
+        }
+
+        50% {
+            filter: brightness(1.6);
+        }
+    }
+
+    @keyframes tc-steps {
+        from {
+            background-size: 0% 100%;
+        }
+
+        80% {
+            background-size: 100% 100%;
+        }
+
+        to {
+            background-size: 0% 100%;
+        }
+    }
+
+    @keyframes tc-run {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 2px);
+        }
+    }
+
+    @keyframes tc-grow-x {
+        from {
+            inline-size: 0;
+        }
+
+        to {
+            inline-size: 100%;
+        }
+    }
+
+    @keyframes tc-head {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 8px);
+        }
+    }
+
+    @keyframes tc-slug {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(360%);
+        }
+    }
+
+    @keyframes tc-cool {
+        from {
+            opacity: 1;
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes tc-heat-run {
+        from {
+            background-position-x: 100%;
+            opacity: 0;
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 0%;
+            opacity: 1;
+        }
+    }
+
+    @keyframes tc-heat-back {
+        from {
+            background-position-x: 0%;
+            opacity: 0;
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        to {
+            background-position-x: 100%;
+            opacity: 1;
+        }
+    }
+
+    /* The masks the registered properties above drive: a top-down cut, a
+       start-to-end mill, a centre-out opening and a start-to-end cut away.
+       At rest each property stands at its finished value, so the part is
+       whole. */
+    .tc-scene:is([data-tc-curve], [data-tc-opening], [data-tc-durations]) :is(.tc-dialog, .tc-pop) {
+        mask-image: linear-gradient(to bottom, var(--foreground) var(--tc-cut), transparent var(--tc-cut));
+    }
+
+    .tc-scene:is([data-tc-curve], [data-tc-direction], [data-tc-leave]) :is(.tc-tile, .tc-day, .tc-leaver) {
+        mask-image:
+            linear-gradient(to right, var(--foreground) var(--tc-mill), transparent var(--tc-mill)),
+            linear-gradient(
+                to right,
+                transparent calc(50% - var(--tc-open) / 2),
+                var(--foreground) calc(50% - var(--tc-open) / 2) calc(50% + var(--tc-open) / 2),
+                transparent calc(50% + var(--tc-open) / 2)
+            ),
+            linear-gradient(to right, transparent var(--tc-gone), var(--foreground) var(--tc-gone));
+        mask-composite: intersect;
+    }
+}

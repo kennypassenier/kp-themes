@@ -1,0 +1,374 @@
+/* research/titanium-loading: the anodising bath on every loading element of
+   titanium (Kenny, 2026-10-06 20:59, form v39: "de aangepaste die dit exact
+   ook implementeert"). The picture is research/character-kpi/round2-d.css's
+   r2-ti-load-1, unchanged in its tokens, stops and timing: a 100deg band
+   warning-foreground → chart-4 25% → chart-2 50% → chart-1 72% → chart-3 90%
+   → warning-foreground, 260% wide, moved -160% in 2200ms, linear, for ever.
+
+   Two strengths of the same band, nothing else:
+   - --tl-bath, each stop mixed 32% into the element's own plate
+     (--tl-plate), for a surface: a tile, a panel, a row, a skeleton;
+   - --tl-oxide, the stops at full strength, for a solid metal part: the
+     drill bit, the progress fill, the meter's groove (the band's source).
+
+   Everything is scoped to [data-tl-version='anodised'], so the left side of
+   every pair stays exactly as the package draws it. Keyframes only inside
+   prefers-reduced-motion: no-preference; the still frame is the base. */
+
+@layer kp.signature {
+    [data-theme='titanium'] [data-tl-version='anodised'] {
+        --tl-plate: var(--card);
+    }
+
+    /* Declared on every element, so each one mixes the band into the plate
+       it inherits (a menu's popover, a tile's card). */
+    [data-theme='titanium'] [data-tl-version='anodised'] * {
+        --tl-bath: linear-gradient(
+                100deg,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--tl-plate)),
+                color-mix(in oklab, var(--chart-4) 32%, var(--tl-plate)) 25%,
+                color-mix(in oklab, var(--chart-2) 32%, var(--tl-plate)) 50%,
+                color-mix(in oklab, var(--chart-1) 32%, var(--tl-plate)) 72%,
+                color-mix(in oklab, var(--chart-3) 32%, var(--tl-plate)) 90%,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--tl-plate))
+            )
+            0 0 / 260% 100%;
+        --tl-oxide: linear-gradient(
+                100deg,
+                var(--warning-foreground),
+                var(--chart-4) 25%,
+                var(--chart-2) 50%,
+                var(--chart-1) 72%,
+                var(--chart-3) 90%,
+                var(--warning-foreground)
+            )
+            0 0 / 260% 100%;
+    }
+
+    /* ── Skeleton lines: the line's plate is the bath, the register's weave
+       lies still over it (on ::after, the pass's slot). ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        inset-inline-start: 0;
+        inline-size: 100%;
+        background: var(--kp-sig-ti-weave);
+        transform: none;
+        animation: none;
+    }
+
+    /* ── Skeleton circle and block (and the chart's state and legend stubs,
+       which are blocks): the whole shape is the bath. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] :is(.kp-skeleton--circle, .kp-skeleton--block) {
+        background: var(--tl-bath);
+        opacity: 1;
+    }
+
+    /* ── The spinner, titanium's drill bit: the body is anodised metal, the
+       flutes are cuts in it (dark and light, no colour of their own) and
+       keep turning; the shank shows the bare oxide. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-spinner {
+        background: var(--tl-oxide);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-spinner::before {
+        background: repeating-linear-gradient(
+            53.13deg,
+            transparent 0 3px,
+            color-mix(in oklab, var(--foreground) 45%, transparent) 3px 4px,
+            color-mix(in oklab, var(--background) 30%, transparent) 4px 7px,
+            color-mix(in oklab, var(--foreground) 55%, transparent) 7px 8px
+        );
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-spinner::after {
+        background: var(--kp-sig-ti-shade);
+    }
+
+    /* ── The progress bar, busy: no slug; the fill spans the milled track
+       and carries the band. Standing still it keeps the register's stripes
+       (the mask), now in oxide, so it never reads as full. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        background: var(--tl-oxide);
+        box-shadow:
+            inset 0 1px 0 color-mix(in oklab, var(--background) 45%, transparent),
+            inset 0 -1px 0 color-mix(in oklab, var(--foreground) 35%, transparent);
+    }
+
+    /* ── The progress bar with a share: the fill up to its share carries the
+       band instead of the fixed iris. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        background: var(--tl-oxide);
+        box-shadow:
+            inset 0 1px 0 color-mix(in oklab, var(--foreground) 45%, transparent),
+            inset 0 -1px 0 color-mix(in oklab, var(--background) 35%, transparent);
+    }
+
+    /* ── The meter, measuring: the heat-tinted groove is the band's source;
+       the whole groove carries it, where the cutter ran. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        inset-inline: 0;
+        background: var(--tl-oxide);
+    }
+
+    /* ── The key figure tile: r2-ti-load-1 itself, re-applied. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] [data-kf-loading='anodised'] .kp-kpi[data-kp-loading]::before,
+    [data-theme='titanium'] [data-tl-version='anodised'][data-kf-loading='anodised'] .kp-kpi[data-kp-loading]::before {
+        --tl-plate: var(--kf-plate, var(--card));
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--tl-bath);
+    }
+
+    /* ── The trend tile: the same picture as the key figure tile, over the
+       whole tile; the plot, which stands over it, carries the bath through
+       its own loading part instead of the lathe. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpi--trend[aria-busy='true'] {
+        --tr-load: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpi--trend[aria-busy='true']::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--tl-bath);
+        pointer-events: none;
+    }
+
+    /* ── The strip with columns: every column's own loading part
+       (--cl-load on ::after) is the bath. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] {
+        --cl-load: var(--tl-bath);
+    }
+
+    /* ── Dashboard tiles: the card's own face is the bath; the shared
+       ::after slot of the tiles character draws nothing. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] [data-kp-busy] {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] [data-kp-busy]::after {
+        content: none;
+    }
+
+    /* ── The time chart: the plot's state is the bath (the skeleton block
+       rule above); the cutter's two parts draw nothing. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-chart__state[data-kp-state='loading'] {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-chart__state[data-kp-state='loading']::before,
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-chart__state[data-kp-state='loading']::after {
+        content: none;
+    }
+
+    /* ── The network graph: the plot's box is the bath; the ghost harness's
+       wires and the package's skeleton ring take the band's colours in
+       time (an SVG stroke cannot carry a CSS gradient). ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-graph[data-kp-state='loading'] .kp-graph__box {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium']
+        [data-tl-version='anodised']
+        .kp-graph[data-kp-state='loading']
+        :is(.kp-graph__ghost .kp-graph__edge, .kp-graph__skeleton) {
+        stroke: var(--chart-2);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-graph[data-kp-state='loading'] {
+        --cg-edge-anim: tl-oxide-stroke 2200ms linear infinite;
+        --cg-edge-stagger: -110ms;
+    }
+
+    /* ── The month heatmap: every loading day is a plate in the bath; the
+       card over the grid (one spinner for the month) too. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        background: var(--tl-bath);
+    }
+
+    /* ── The data table's busy overlay: the panel's whole face is the bath;
+       its picture slot (::before) draws nothing. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable__busy-panel {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable__busy-panel::before {
+        content: none;
+    }
+
+    /* ── Refreshing: the kept rows stay dimmed, each a plate in the bath. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]) {
+        background: var(--tl-bath);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]) > td {
+        background: transparent;
+    }
+
+    /* ── The menu's loading entry: its whole row is the bath, on the
+       popover's plate. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-menu[aria-busy='true'] {
+        --tl-plate: var(--popover);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        background: var(--tl-bath);
+    }
+
+    /* ── A busy button and any busy region: the face is the bath. ── */
+    [data-theme='titanium'] [data-tl-version='anodised'] .kp-button[aria-busy='true'] {
+        background: var(--tl-bath);
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] [data-tl-version='anodised'] .tl-region[aria-busy='true'] {
+        background: var(--tl-bath);
+    }
+
+    /* ══ Motion: one block. Every surface above runs tl-bath at the
+       source's 2200ms, linear; rows of parts run a beat apart. ══ */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-tl-version='anodised'] :is(.kp-skeleton, .kp-spinner),
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-progressbar .kp-progressbar__fill,
+        [data-theme='titanium'] [data-tl-version='anodised'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after,
+        [data-theme='titanium'] [data-tl-version='anodised'] [data-kf-loading='anodised'] .kp-kpi[data-kp-loading]::before,
+        [data-theme='titanium'] [data-tl-version='anodised'][data-kf-loading='anodised'] .kp-kpi[data-kp-loading]::before,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpi--trend[aria-busy='true']::before,
+        [data-theme='titanium'] [data-tl-version='anodised'] [data-kp-busy],
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-chart__state[data-kp-state='loading'],
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-graph[data-kp-state='loading'] .kp-graph__box,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-calendar__day[data-kp-tone='loading'],
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-calendar--busy-whole > .kp-calendar__busy,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable__busy-panel,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]),
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-button[aria-busy='true'],
+        [data-theme='titanium'] [data-tl-version='anodised'] .tl-region[aria-busy='true'] {
+            animation: tl-bath 2200ms linear infinite;
+        }
+
+        /* The spinner's flutes keep the register's own turn. */
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-spinner::before {
+            animation: kp-sig-titanium-ti-flutes var(--kp-sig-dur) linear infinite;
+        }
+
+        /* The busy bar: the fill spans the track, the slug's travel goes. */
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset: 1px;
+            inline-size: auto;
+            clip-path: none;
+            -webkit-mask: none;
+            mask: none;
+            transform: none;
+        }
+
+        /* The strip's columns, through their own --cl-load-anim. */
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] {
+            --cl-load-anim: tl-bath 2200ms linear infinite;
+        }
+
+        /* The trend tile's plot, which stands over the tile, through its own
+           loading part (--tr-load-anim on the plot's ::before). */
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpi--trend[aria-busy='true'] {
+            --tr-load-anim: tl-bath 2200ms linear infinite;
+        }
+
+        /* A beat apart: skeleton lines as the register staggers its pass
+           (300ms), columns, rows, tiles and the days of a week. */
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-skeleton:nth-child(2) {
+            animation-delay: -300ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-skeleton:nth-child(3) {
+            animation-delay: -600ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(2)::after,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(2),
+        [data-theme='titanium'] [data-tl-version='anodised'] [data-kp-busy]:nth-child(2) {
+            animation-delay: -440ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(3)::after,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(3) {
+            animation-delay: -880ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(4)::after,
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(4) {
+            animation-delay: -1320ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(2) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -150ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(3) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -300ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(4) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -450ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(5) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -600ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(6) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -750ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] td:nth-child(7) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -900ms;
+        }
+
+        [data-theme='titanium'] [data-tl-version='anodised'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(5)::after {
+            animation-delay: -1760ms;
+        }
+
+        @keyframes tl-bath {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -160% 0;
+            }
+        }
+
+        @keyframes tl-oxide-stroke {
+            0%,
+            100% {
+                stroke: var(--warning-foreground);
+            }
+            25% {
+                stroke: var(--chart-4);
+            }
+            50% {
+                stroke: var(--chart-2);
+            }
+            72% {
+                stroke: var(--chart-1);
+            }
+            90% {
+                stroke: var(--chart-3);
+            }
+        }
+    }
+}

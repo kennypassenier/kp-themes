@@ -1,0 +1,134 @@
+/* research/titanium-loading: the page only, a centred column of pairs, the
+   two sides of a pair side by side on a desk and stacked on a phone. Every
+   loading picture is drawn by the package, the characters and anodised.css;
+   nothing here touches a component. */
+.tl-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 78rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.tl-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tl-intro h1 {
+    margin: 0;
+}
+
+.tl-intro p {
+    max-inline-size: 75ch;
+    margin: 0;
+}
+
+.tl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tl-inventory ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: var(--kp-space-sm, 0.5rem) 0 0;
+    padding-inline-start: 1.25rem;
+}
+
+.tl-pair {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.tl-pair__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem var(--kp-space-md, 1rem);
+}
+
+.tl-pair__head h2 {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.tl-pair__how {
+    max-inline-size: 75ch;
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.tl-sides {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+@media (max-width: 52rem) {
+    .tl-sides {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.tl-side {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border);
+}
+
+.tl-side > figcaption {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tl-side[data-tl-version='anodised'] > figcaption {
+    color: var(--foreground);
+}
+
+.tl-stage {
+    min-inline-size: 0;
+}
+
+.tl-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.tl-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* The demos' own grid for the tiles and room under the menu button for its
+   open menu. */
+.tl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tl-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-tl-pair='menu'] .tl-stage {
+    position: relative;
+    min-block-size: 7rem;
+}
