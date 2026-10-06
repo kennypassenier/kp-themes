@@ -6570,6 +6570,8 @@ its per-theme count to the kit explicitly.
 
 ## fix-114 · The menu demo's close never played (2026-10-06)
 
+Kenny, form v40 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 21:40, on cyberpunk's menu: the
 close must be the open played backwards. Measured: pressing Close hid the
 menu within 20 ms with no animation in all 22 themes. js/menu-button.js

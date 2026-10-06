@@ -82,8 +82,6 @@ export const PAGES = [
             // The character round, ninth and tenth components: the action columns and the menu button.
             // The character round, fourteenth component: the data table's busy overlay, shape/loading/arrival/failure/phone, one pick per aspect (formal and titanium built first).
             { href: 'research/character-busy/demo.html', label: "A data table's busy overlay, of its own, per theme" },
-            // The character round, fifteenth component: the help drawer and its guided tour, shape/open-close/highlight/card/next-step, one pick per aspect (formal and titanium built first).
-            { href: 'research/character-drawer/demo.html', label: 'A drawer and its guided tour, each of its own, per theme' },
         ],
     },
     {
@@ -92,6 +90,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 21:54: Kenny approved the drawer and its tour in all 22 themes (research/character-drawer/decided.json); they move into the registers at the port.
+            { href: 'research/character-drawer/demo.html', label: 'A drawer and its guided tour, each of its own, per theme' },
             // Decided 2026-10-06 21:50: Kenny approved the header in all 22 themes (research/character-header/decided.json); it moves into the registers at the port.
             { href: 'research/character-header/demo.html', label: 'A page header of its own, per theme' },
             // Decided 2026-10-06 21:41: Kenny approved the state in all 22 themes (research/character-state/decided.json); it moves into the registers at the port.

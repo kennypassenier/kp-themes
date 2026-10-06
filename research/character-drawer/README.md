@@ -1,5 +1,7 @@
 # A drawer and its guided tour, each of its own, per theme
 
+**Decided (2026-10-06 21:54).** Kenny approved all 22 themes, one pick per aspect; the picks are in [decided.json](decided.json) (shape / openclose / highlight / card / next). The tour's dimming and the drawer description's fixed ink are package findings for the port (PACKAGE_FINDINGS).
+
 Kenny, form v18 (2026-10-05): the character round, one component at a time,
 all 22 themes in one demo. This is the component that pairs `dialog.kp-drawer`
 (a help drawer that slides in at the end edge, full height, with a head that

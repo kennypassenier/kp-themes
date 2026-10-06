@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 21:54 Brussels, Kenny: 22 of 22 approved (character-drawer round 2)",
+    "attributes": "data-dt-<aspect>=\"<key>\" on the stage wrapper [data-dt], research/character-drawer/ (drawer.css, drawer-a..d.css, round2-a/b)",
+    "picks": {
+        "formal": {
+            "shape": "1",
+            "openclose": "3",
+            "highlight": "1",
+            "card": "1",
+            "next": "2"
+        },
+        "light": {
+            "shape": "1",
+            "openclose": "r2-light-oc-3",
+            "highlight": "1",
+            "card": "1",
+            "next": "1"
+        },
+        "dark": {
+            "shape": "1",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "2",
+            "next": "2"
+        },
+        "cyberpunk": {
+            "shape": "2",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "3"
+        },
+        "synthwave": {
+            "shape": "2",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "2"
+        },
+        "pastel": {
+            "shape": "3",
+            "openclose": "2",
+            "highlight": "3",
+            "card": "3",
+            "next": "2"
+        },
+        "terminal": {
+            "shape": "r2-term-shape-2",
+            "openclose": "3",
+            "highlight": "3",
+            "card": "3",
+            "next": "1"
+        },
+        "forest": {
+            "shape": "2",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "2",
+            "next": "1"
+        },
+        "high-contrast": {
+            "shape": "r2-hc-shape-2",
+            "openclose": "r2-hc-openclose-1",
+            "highlight": "r2-hc-highlight-3",
+            "card": "1",
+            "next": "2"
+        },
+        "sepia": {
+            "shape": "3",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "2",
+            "next": "3"
+        },
+        "blueprint": {
+            "shape": "1",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "3"
+        },
+        "solstice": {
+            "shape": "1",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "3"
+        },
+        "brutalism": {
+            "shape": "r2-br-shape-2",
+            "openclose": "r2-br-openclose-2",
+            "highlight": "r2-br-highlight-1",
+            "card": "1",
+            "next": "3"
+        },
+        "deco": {
+            "shape": "3",
+            "openclose": "2",
+            "highlight": "3",
+            "card": "1",
+            "next": "2"
+        },
+        "phantom": {
+            "shape": "1",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "3",
+            "next": "2"
+        },
+        "shade-light": {
+            "shape": "1",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "1",
+            "next": "1"
+        },
+        "shade-dark": {
+            "shape": "1",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "3",
+            "next": "3"
+        },
+        "retro": {
+            "shape": "2",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "1",
+            "next": "3"
+        },
+        "grotesk": {
+            "shape": "2",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "1"
+        },
+        "lapis": {
+            "shape": "3",
+            "openclose": "2",
+            "highlight": "1",
+            "card": "1",
+            "next": "1"
+        },
+        "nostromo": {
+            "shape": "2",
+            "openclose": "2",
+            "highlight": "2",
+            "card": "1",
+            "next": "3"
+        },
+        "titanium": {
+            "shape": "3",
+            "openclose": "1",
+            "highlight": "1",
+            "card": "1",
+            "next": "2"
+        }
+    }
+}
