@@ -48,6 +48,10 @@
 
 import { attachDataTables, dataTable } from '../../js/datatable.js';
 import { THEMES } from '../../js/theme-registry.js';
+import R2A from './round2-a.js';
+import R2B from './round2-b.js';
+import R2C from './round2-c.js';
+import R2D from './round2-d.js';
 
 /** @typedef {{ name: string, text: string }} Option */
 /** @typedef {'shape' | 'loading' | 'arrival' | 'failure' | 'phone'} Aspect */
@@ -1674,6 +1678,13 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const KEPT = { formal: { shape: '1', loading: '3', failure: '3' } };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => KEPT[t]?.[id] ?? '';
+// Round 2 (Kenny, 2026-10-06 22:30: "wat evalueren we bij shape? ik zie enkel
+// dezelfde vorm"): new shape options per theme replace round 1's, which
+// differed by 0-4 % of their pixels; each carries its own key.
+for (const file of [R2A, R2B, R2C, R2D])
+    for (const [t, aspects] of Object.entries(file))
+        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
+const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
 const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
     Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at].name}. ${idea[aspect][at].text}`]));
 section.setAttribute(
@@ -1771,13 +1782,16 @@ const picks = () =>
 function compose() {
     const now = picks();
     const preview = section.querySelector('[data-bo-preview]');
-    for (const { id } of ASPECTS) if (preview?.getAttribute(`data-bo-${id}`) !== now[id]) preview?.setAttribute(`data-bo-${id}`, now[id]);
+    for (const { id } of ASPECTS) {
+        const key = keyOf(theme(), id, now[id]);
+        if (preview?.getAttribute(`data-bo-${id}`) !== key) preview?.setAttribute(`data-bo-${id}`, key);
+    }
     for (const cell of section.querySelectorAll('[data-bo-vary]')) {
         const vary = cell.getAttribute('data-bo-vary');
         const option = cell.getAttribute('data-bo-option') ?? '1';
         const table = cell.querySelector('[data-bo]');
         for (const { id } of ASPECTS) {
-            const value = id === vary ? option : now[id];
+            const value = keyOf(theme(), id, id === vary ? option : now[id]);
             if (table?.getAttribute(`data-bo-${id}`) !== value) table?.setAttribute(`data-bo-${id}`, value);
         }
         cell.classList.toggle('bo-picked', ticked[theme()]?.[/** @type {Aspect} */ (vary)] === option);
