@@ -492,7 +492,7 @@ const cellsOf = (row) =>
 
 /** Re-presses the demo's own data-review-plays controls for one aspect (outside the mirrored copy). */
 function playAspect(section, aspectId) {
-    const mine = kept[`${DEMO}|${aspectId}`] || {};
+    const mine = kept[DEMO] || {};
     for (const b of section.querySelectorAll('[data-review-plays]')) {
         if (b.closest('.rv-controls') || !b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) continue;
         // A state the reviewer set in this group stands; the autoplay leaves it.
@@ -503,9 +503,10 @@ function playAspect(section, aspectId) {
 }
 
 /**
- * The state buttons the reviewer pressed, per demo and aspect: the group's
- * name and the button's place in it, kept across options, themes and
- * visits (Kenny, 2026-10-06 20:12: "als ik bv open als state had gekozen via
+ * The state buttons the reviewer pressed, per demo: the group's name and
+ * the button's place in it, kept across options, aspects, themes and visits
+ * until the reviewer presses another (Kenny, 2026-10-06 20:48: "Open" still
+ * did not stay on every screen, when it was kept per aspect) (Kenny, 2026-10-06 20:12: "als ik bv open als state had gekozen via
  * de knop, dan wil ik dat die state blijft staan bij de volgende optie …
  * onthoudt de state hiervan"). Only toggles (aria-pressed) count; actions
  * like Live update or Draw, and the speed, do not.
@@ -525,9 +526,7 @@ function keepPress(/** @type {Element | null | undefined} */ button) {
     if (!step?.aspect || !group || !button?.hasAttribute('aria-pressed') || group.closest('.rv-controls')) return;
     if (!group.closest('[data-review-controls]') || /speed/i.test(groupName(group))) return;
     if (Object.keys(/** @type {HTMLElement} */ (button).dataset).some((k) => /speed$/i.test(k))) return;
-    (kept[`${DEMO}|${step.aspect}`] ??= {})[groupName(group)] = [...group.querySelectorAll('button')].indexOf(
-        /** @type {HTMLButtonElement} */ (button),
-    );
+    (kept[DEMO] ??= {})[groupName(group)] = [...group.querySelectorAll('button')].indexOf(/** @type {HTMLButtonElement} */ (button));
     try {
         localStorage.setItem(KEPT_STORE, JSON.stringify(kept));
     } catch {
@@ -536,12 +535,17 @@ function keepPress(/** @type {Element | null | undefined} */ button) {
 }
 /** Presses the reviewer's own states again, after the demo redrew (a flip, a theme change). */
 function restoreKept(section, aspectId) {
-    const mine = kept[`${DEMO}|${aspectId}`];
-    if (!mine) return;
+    const mine = kept[DEMO];
+    if (!mine || !aspectId) return;
     for (const group of section.querySelectorAll('[data-review-controls] [role="group"]')) {
         if (group.closest('.rv-controls') || !(groupName(group) in mine)) continue;
         const button = /** @type {HTMLElement | undefined} */ ([...group.querySelectorAll('button')][mine[groupName(group)]]);
-        if (button && button.getAttribute('aria-pressed') !== 'true') button.click();
+        // A radio-like group (several pressable buttons) is pressed again even
+        // when it still reads as pressed: a redraw (a theme change) can reset
+        // what the button set, such as an open menu, without telling it. A
+        // lone toggle is only pressed when it reads as off, or it would flip.
+        const radio = group.querySelectorAll('button[aria-pressed]').length > 1;
+        if (button && (radio || button.getAttribute('aria-pressed') !== 'true')) button.click();
     }
 }
 

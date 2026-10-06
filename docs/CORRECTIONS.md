@@ -6484,3 +6484,41 @@ three options. Queued as fix-111-M1.
 the More button.
 
 **9 · When we review the measure.** With fix-110.
+
+## fix-112 · A state the reviewer set did not stay on every screen (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 20:48, on the page header: "de
+state van de knoppen, in dit geval "open" blijft nog altijd niet staan, of
+toch niet altijd, bij sommige schermen wel, bij anderen niet". 95f89728 kept
+a pressed state per aspect, so on the next aspect (Hover, focus, press) the
+autoplay pressed Closed again; and a state still reading as pressed was not
+pressed again after a theme change, so a redraw could close the menu behind
+an Open button.
+
+**2 · Which gate let it through.** My check flipped options and reloaded on
+one aspect; it never walked on to the next aspect or the next theme.
+
+**3 · Where else the same fault sits.** Every demo, since the keeping lives in
+the kit. Searched with `grep -n "kept\[" research/_review/review.js`: the two
+lookups were both per aspect.
+
+**4 · How we prevent a repeat.** A pressed state is kept per demo, across
+options, aspects, themes and visits, until the reviewer presses another; a
+radio-like group is pressed again after every redraw.
+
+**5 · What the remedy costs.** An aspect's own autoplay (Loading on the
+loading page) no longer overrides a state the reviewer set; the reviewer
+presses it himself there.
+
+**6 · Who enforces it.** Code (research/_review/review.js).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs presses Open on the header's first page and
+walks eight pages with a flip on each, and the menu is open on every one.
+Measured on the fix: open on all 16 screens (formal, light and dark, every
+aspect, before and after a flip). Queued as fix-112-M1.
+
+**8 · Fallback.** If a state still drops, the dialog shows the kept states
+as a line under the controls with a button to clear them.
+
+**9 · When we review the measure.** With fix-111.
