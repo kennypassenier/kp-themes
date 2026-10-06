@@ -20,7 +20,18 @@
 // `data-review-controls` container, which the review kit mirrors into its
 // dialog. js/graph.js is not changed.
 
-import { attachGraphs, GRAPH_CHANGE_EVENT, graphHideKind, graphSelect, setGraphData, setGraphState } from '../../js/graph.js';
+import {
+    attachGraphs,
+    GRAPH_CHANGE_EVENT,
+    graphBends,
+    graphHideKind,
+    graphLayout,
+    graphSelect,
+    hubOf,
+    ringOf,
+    setGraphData,
+    setGraphState,
+} from '../../js/graph.js';
 import { THEMES } from '../../js/theme-registry.js';
 import R2A from './round2-a.js';
 import R2B from './round2-b.js';
@@ -856,8 +867,11 @@ const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PI
 // Round 3's new options replace an open aspect's (each carries its own key
 // as its third element, the attribute value its CSS answers to; round 2's
 // are keyed 1, 2, 3).
-for (const [t, aspects] of Object.entries({ ...R2A, ...R2B, ...R2C, ...R2D, ...R2E, ...R2F }))
-    for (const [id, options] of Object.entries(aspects)) if (!keptOf(t, /** @type {Aspect} */ (id)) && options.length >= 3) IDEAS[t][id] = options;
+// Merged per aspect, so two files may each bring one theme's aspects.
+for (const file of [R2A, R2B, R2C, R2D, R2E, R2F])
+    for (const [t, aspects] of Object.entries(file))
+        for (const [id, options] of Object.entries(aspects))
+            if (!keptOf(t, /** @type {Aspect} */ (id)) && options.length >= 3) IDEAS[t][id] = options;
 /** The attribute value of option n of an aspect in a theme. */
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.[2] ?? n;
 /** The most options any row shows. */
@@ -1131,12 +1145,94 @@ function markChanged(el) {
     el.querySelector(`.kp-graph__edge[data-kp-from="${changed.node}"][data-kp-to="${changed.hub}"]`)?.setAttribute('data-cg-changed', '');
 }
 
+/* ------------------------------------------------- the ghost network */
+
+// Round 3 (Kenny, 2026-10-06 10:58): the loading picture is "based on the
+// shape of the graph (nodes and lines)", not detached from the end result.
+// While loading, js/graph.js draws only one ellipse; the demo lays the
+// network that is coming out as a ghost under it, in the package's own
+// classes (kp-graph__edge, kp-graph__node, kp-graph__ring, kp-graph__core),
+// so each theme's settled shape draws it in its own nodes and lines, and the
+// loading options move it. Every part carries --i (its order: the hub 0, then
+// round the ring) and --n (how many), for staggered motion. A finding for the
+// port: js/graph.js should draw this skeleton itself (PACKAGE_FINDINGS).
+const SVG_NS = 'http://www.w3.org/2000/svg';
+/** @param {string} tag @param {Record<string, string | number>} attrs */
+const svgPart = (tag, attrs) => {
+    const node = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+    return node;
+};
+/** Lays the ghost of the coming network into a loading graph's picture. @param {HTMLElement} el */
+function ghost(el) {
+    const svg = el.querySelector('.kp-graph__svg');
+    if (!svg || el.dataset.kpState !== 'loading' || svg.querySelector('.kp-graph__ghost')) return;
+    const [, , W, H] = (svg.getAttribute('viewBox') ?? '0 0 800 480').split(' ').map(Number);
+    const data = state.long ? longNetwork(state) : network(state);
+    const at = graphLayout(data, W, H);
+    const hub = hubOf(data);
+    const order = [...(hub ? [hub] : []), ...ringOf(data, hub).map((n) => n.id)];
+    const bends = graphBends(data.edges);
+    const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+    const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
+    const root = svgPart('g', { class: 'kp-graph__ghost', 'aria-hidden': 'true', style: `--n: ${order.length}` });
+    const edges = svgPart('g', { class: 'kp-graph__edges' });
+    data.edges.forEach((e, i) => {
+        const a = at.get(e.from);
+        const b = at.get(e.to);
+        if (!a || !b) return;
+        const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const mx = (a.x + b.x) / 2 - ((b.y - a.y) / len) * bends[i];
+        const my = (a.y + b.y) / 2 + ((b.x - a.x) / len) * bends[i];
+        const far = order.indexOf(e.from === hub ? e.to : e.from);
+        const path = svgPart('path', {
+            class: 'kp-graph__edge',
+            d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+            pathLength: 100,
+            'data-kp-kind': e.kind,
+            'data-kp-style': kinds.get(e.kind)?.style ?? 'solid',
+            style: `--i: ${Math.max(0, far)}` + (kinds.get(e.kind)?.colour ? `; --kp-graph-edge-colour: ${kinds.get(e.kind)?.colour}` : ''),
+        });
+        edges.append(path);
+    });
+    root.append(edges);
+    order.forEach((id, i) => {
+        const n = data.nodes.find((x) => x.id === id);
+        const p = at.get(id);
+        if (!n || !p) return;
+        const r = n.external ? 9 : n.weight != null ? 10 + 14 * Math.sqrt(Math.max(0, Math.min(1, n.weight))) : 14;
+        const node = svgPart('g', {
+            class: `kp-graph__node${n.external ? ' kp-graph__node--external' : ''}${id === hub ? ' kp-graph__node--hub' : ''}`,
+            style:
+                `--i: ${i}` + (n.external ? '' : `; --kp-graph-hue: ${n.hue ?? Math.round((sorted.indexOf(n) / Math.max(1, sorted.length)) * 360)}`),
+        });
+        node.append(svgPart('circle', { class: 'kp-graph__ring', cx: p.x, cy: p.y, r }));
+        if (!n.external) node.append(svgPart('circle', { class: 'kp-graph__core', cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
+        root.append(node);
+    });
+    svg.prepend(root);
+}
+// js/graph.js redraws its picture on a resize or when fonts load: lay the
+// ghost again whenever a loading picture is drawn anew.
+const ghostWatch = new MutationObserver((records) => {
+    for (const r of records) {
+        const el = /** @type {HTMLElement | null} */ (/** @type {Element} */ (r.target).closest('[data-kp-graph]'));
+        if (el) ghost(el);
+    }
+});
+
 /** @param {'arrive' | 'live'} moment */
 function draw(moment = 'arrive') {
     for (const el of graphs()) {
         el.setAttribute('data-cg-moment', moment);
         if (state.shown !== 'ready') {
             setGraphState(el, state.shown, WORDS[state.shown]);
+            ghost(el);
+            const svg = el.querySelector('.kp-graph__svg');
+            if (svg && !svg.hasAttribute('data-cg-watched')) {
+                svg.setAttribute('data-cg-watched', '');
+                ghostWatch.observe(svg, { childList: true });
+            }
             continue;
         }
         setGraphData(el, state.long ? longNetwork(state) : network(state));

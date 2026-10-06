@@ -1,0 +1,22 @@
+/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the ghost of
+   the coming network that demo.js lays into a loading graph (`.kp-graph__ghost`,
+   the package's own node and link classes, each part carrying --i, its order
+   from the hub round the ring, and the ghost --n, how many). The theme's
+   settled shape draws its nodes and lines; this file only quiets it, hides
+   the package's lone ellipse, and moves the loading sentence to the foot so
+   the hub stays clear. The loading options (round2-<g>.css) move the ghost. */
+
+@layer kp.signature {
+    [data-theme] [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__skeleton {
+        display: none;
+    }
+
+    [data-theme] [data-cg] .kp-graph__ghost {
+        opacity: var(--cg-ghost, 0.45);
+        pointer-events: none;
+    }
+
+    [data-theme] [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        inset: auto var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem);
+    }
+}
