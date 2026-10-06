@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **Changed: titanium moves on one curve.** `--fx-ease` for titanium is
+  `cubic-bezier(0.2, 0.8, 0.2, 1)` (was `cubic-bezier(0.3, 0.9, 0.3, 1)`),
+  and the register's one-shot motions use it: button contact (60 ms, was
+  linear), the headline `kp-mill`, the switch thumb, the toast rail and
+  scribe, the dialog cut and its cutter, the tooltip, the progress fill and
+  head, the meter's grow, jolt and mark; `--kp-settle` resolves to the same
+  curve. Because `themeMotion()` reads the dialog's curve, a dialog's close,
+  a box's size glide (`--kp-size-ease`, was linear) and `update()`'s heat
+  tint follow it. Loops keep a constant feed [themes/titanium/CHARACTER.md
+  G1, Kenny 2026-10-07].
+- **Changed: titanium's loading is the anodising bath** [Kenny on
+  research/titanium-loading, 2026-10-07 00:54]. The skeleton (line, circle,
+  block), the progress bar (busy: the slug is gone, the fill spans the track;
+  with a share: the fill is the oxide film), the meter while measuring (was
+  the 1400 ms cutter), the data table's busy panel and refreshing rows, a
+  menu's loading entry, a busy button, a busy card, the month's busy card and
+  a time chart's loading state carry the oxide ramp washed 32% into their
+  plate, drifting start → end, `kp-sig-titanium-bath`, one period
+  (`--kp-sig-ti-loop`, 2200 ms). Standing still the wash stays, still. The
+  spinner is unchanged.
+- **Changed: titanium's leave** runs 400 ms on the theme curve (was 650 ms
+  ease-in) and its heat band runs start → end, as the update's; the arrival,
+  its reverse, follows.
+- **Changed: titanium's size arrival** (`[data-kp-arriving]`) is fed in from
+  inline-start (was from inline-end), and it and the toast mirror under
+  `dir="rtl"`.
+- **Changed: titanium's one chamfer diagonal**, top-left and bottom-right, on
+  the switch thumb, the wizard step and the tooltip (were top-right and
+  bottom-left, the tooltip top-right only). The skeleton line and the empty
+  state, which named a custom property the dialog's registered
+  `--kp-sig-ti-cut` had made invalid and so were never cut, now carry it.
+
 - **Removed: three themes, `lapis`, `shade-light` and `shade-dark`**
   [breaking, next major release; Kenny, 2026-10-06 23:49: "Ik heb ook
   beslist van drie themas te laten vallen, Lapis, Shade (light) en Shade

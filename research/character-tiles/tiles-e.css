@@ -109,10 +109,11 @@
 
     /* ── titanium · how the tiles arrive ────────────────────────────── */
 
-    /* Milled: the body is drawn in from the left, easing in and out. */
+    /* Milled: the body is cut in start → end on the theme's curve, at the
+       cuts' 400ms (themes/titanium/CHARACTER.md G1, G4, proposal-8). */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
-            animation: tl-titanium-mill 0.45s ease-in-out both;
+            animation: tl-titanium-mill 400ms var(--kp-sig-ti-ease) both;
         }
         /* Seated: tile after tile drops into place from above, overshooting once. */
         [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
@@ -362,26 +363,22 @@
     /* ── titanium · while loading (options 2–3; option 1 is tiles.css's
        own tl-cutter) ─────────────────────────────────────────────────── */
 
-    /* The instrument dial: the knurl rolls. */
-    [data-theme='titanium'] [data-ti-loading='2'] [data-kp-busy]::after {
-        inset-inline-start: 1rem;
-        inset-block-end: 0.6rem;
-        inline-size: calc(100% - 2rem);
-        block-size: 0.5rem;
-        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 2px, transparent 2px 6px);
-        background-size: 24px 100%;
+    /* "The knurl rolls", as the anodising bath (CHARACTER.md G10; Kenny
+       2026-10-07 00:54): the busy tile's whole face is the oxide ramp over
+       its plate, drifting start → end at the theme's one period; the knurl
+       strip draws nothing. */
+    [data-theme='titanium'] [data-ti-loading='2'] .kp-card[data-kp-busy] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+    [data-theme='titanium'] [data-ti-loading='2'] .kp-card[data-kp-busy]::after {
+        content: none;
     }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='titanium'] [data-ti-loading='2'] [data-kp-busy]::after {
-            animation: tl-titanium-knurl-roll 1s linear infinite;
+        [data-theme='titanium'] [data-ti-loading='2'] .kp-card[data-kp-busy] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
-    }
-    @keyframes tl-titanium-knurl-roll {
-        from {
-            background-position: 0 0;
-        }
-        to {
-            background-position: 24px 0;
+        [data-theme='titanium'] [data-ti-loading='2'] .kp-card[data-kp-busy]:nth-child(2) {
+            animation-delay: -440ms;
         }
     }
 
@@ -436,14 +433,19 @@
     [data-theme='titanium'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
         border-block-start: 4px solid color-mix(in oklch, var(--border-strong) 40%, var(--primary));
     }
+    /* The Open link is titanium's own ghost button (G13, proposal-23): the
+       shared hover-2 plate, radius and outline are rolled back to the
+       register's, so its hover (accent + oxide edge), its inset focus ring
+       inside the chamfer and its 1px press apply. */
     [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:hover,
     [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        background: color-mix(in oklch, var(--muted-foreground) 25%, var(--card));
-        border-radius: 0.1rem;
+        background: revert-layer;
+        color: revert-layer;
+        border-radius: revert-layer;
     }
     [data-theme='titanium'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
+        outline: revert-layer;
+        outline-offset: revert-layer;
     }
 
     /* The badge tilts: the diagonal sheen sweeps once; Open underlines;
@@ -480,26 +482,19 @@
         }
     }
 
-    /* A glint: the tile flares with light once, slowing as it lands. */
-    [data-theme='titanium'] [data-ti-live='3'] [data-tl-flash]::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 1;
-        background-image: linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--card) 70%, white) 50%, transparent 70%);
-        background-position: -140% 0;
-        background-size: 240% 100%;
-        background-repeat: no-repeat;
-    }
+    /* A glint: what glints is heat (CHARACTER.md G9, proposal-7). The
+       package's heat tint runs start → end over the tile through
+       mix-blend-mode: color and cools away, on the theme's curve. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-ti-live='3'] [data-tl-flash]::after {
-            animation: tl-titanium-glint 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
-        }
-    }
-    @keyframes tl-titanium-glint {
-        to {
-            background-position: 140% 0;
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: var(--kp-sig-ti-heat);
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise 240ms var(--kp-sig-ti-ease) both;
         }
     }
 

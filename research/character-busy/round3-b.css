@@ -236,7 +236,9 @@
 
     [data-theme='titanium'] [data-bo-shape='r3-b-ti-shape-2'] .kp-datatable__busy-panel {
         --bo-panel-border: 0;
-        --bo-panel-radius: 0.2rem;
+        /* Square, as every titanium plate; the punched hole stays round, a
+           drilled part (CHARACTER.md G7, proposal-11). */
+        --bo-panel-radius: 0;
         --bo-panel-bg: var(--chart-1);
         --bo-panel-ink: var(--primary-foreground);
         --bo-clock-ink: hsl(from var(--primary-foreground) h s l / 0.85);

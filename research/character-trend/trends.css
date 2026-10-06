@@ -1602,11 +1602,22 @@
         --tr-load-anim: tr-march 1500ms linear infinite;
     }
 
-    /* titanium · loading 3: The lathe */
+    /* titanium · loading 3: The lathe, as the anodising bath
+       (themes/titanium/CHARACTER.md G10; Kenny 2026-10-07 00:54): the tile
+       and its plot are washed in the oxide ramp, drifting start → end at the
+       theme's one period. */
     [data-theme='titanium'] [data-ct-loading='3'] .kp-kpi--trend {
-        --tr-load: repeating-linear-gradient(60deg, color-mix(in oklch, var(--foreground) 24%, transparent) 0 1px, transparent 1px 6px) 0 0 / 48px
-            100%;
-        --tr-load-anim: tr-march 900ms linear infinite;
+        --tr-load: var(--kp-sig-ti-bath), var(--tr-plate, var(--card));
+        --tr-load-anim: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+    }
+    [data-theme='titanium'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true']::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--kp-sig-ti-bath), var(--tr-plate, var(--card));
+        pointer-events: none;
     }
 
     /* ══ How the figure and the line arrive (data-ct-arrival): after loading, and on Drawn ══ */
@@ -1942,9 +1953,11 @@
     }
 
     /* titanium · arrival 2: Milled */
+    /* Cut start → end on the theme's curve: the line at a chart's feed
+       (900ms), the number at the cuts' 400ms (G1, G4, proposal-8). */
     [data-theme='titanium'] [data-ct-arrival='2'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-wipe 900ms cubic-bezier(0.4, 0, 0.2, 1) both;
-        --tr-arr-num: tr-n-wipe 900ms cubic-bezier(0.4, 0, 0.2, 1) both;
+        --tr-arr-line: tr-a-wipe 900ms var(--kp-sig-ti-ease) both;
+        --tr-arr-num: tr-n-wipe 400ms var(--kp-sig-ti-ease) both;
     }
 
     /* titanium · arrival 3: Seated */
@@ -2348,7 +2361,7 @@
 
     /* titanium · tone 3: The anodised tag */
     [data-theme='titanium'] [data-ct-tone='3'] .kp-kpi--trend {
-        --tr-delta-radius: 3px;
+        --tr-delta-radius: 0;
         --tr-delta-border: 1px solid color-mix(in oklch, var(--foreground) 25%, transparent);
         --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
     }
@@ -2692,8 +2705,11 @@
     }
 
     /* titanium · live 3: A glint */
+    /* What glints is heat (G9, proposal-7): the new line runs through the
+       oxide colours, gold → violet → blue → cyan, and cools to its own ink;
+       no glow, no thicker stroke. */
     [data-theme='titanium'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-flare 800ms ease-out;
+        --tr-live-line: tr-ti-heat 400ms var(--kp-sig-ti-ease);
         --tr-live-area: none;
     }
 }
@@ -2705,6 +2721,11 @@
         /* While loading: the picture loops. */
         [data-ct] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
             animation: var(--tr-load-anim, none);
+        }
+
+        /* titanium, loading 3: the tile's own bath drifts with its plot's. */
+        [data-theme='titanium'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true']::before {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
 
         /* The arrival plays once when the tile stops being busy. */
@@ -2724,6 +2745,22 @@
         [data-ct] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__spark-area {
             animation: var(--tr-live-area, none);
         }
+    }
+}
+
+/* titanium's heat tint on a line (live 3). */
+@keyframes tr-ti-heat {
+    0% {
+        stroke: var(--warning-foreground);
+    }
+    35% {
+        stroke: var(--chart-2);
+    }
+    65% {
+        stroke: var(--chart-1);
+    }
+    85% {
+        stroke: var(--chart-3);
     }
 }
 

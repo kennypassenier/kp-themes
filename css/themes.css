@@ -2444,7 +2444,7 @@
     --fx-signal-foreground: hsl(216, 22%, 11%);
     --fx-notch: 0.6rem;
     --fx-duration: 60ms;
-    --fx-ease: cubic-bezier(0.3, 0.9, 0.3, 1);
+    --fx-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
     --theme-font-display: 'Sora', 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(214, 10%, 24%);

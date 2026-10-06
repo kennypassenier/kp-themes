@@ -153,11 +153,11 @@
 
     /* --------------------------------------------------------- titanium - */
 
+    /* "The mill pass cuts", as the anodising bath (CHARACTER.md G10; Kenny
+       2026-10-07 00:54): the loading entry's whole row is the oxide ramp over
+       the popover's plate, drifting start → end at the theme's one period. */
     [data-theme='titanium'] [data-mb-loading='r2-tin-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
-        background-image: linear-gradient(90deg, var(--mb-edge, var(--border-strong)) 0 100%, transparent 100%);
-        background-repeat: no-repeat;
-        background-size: 0% 2px;
-        background-position: left bottom;
+        background: var(--kp-sig-ti-bath), var(--popover);
     }
 
     [data-theme='titanium'] [data-mb-loading='r2-tin-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
@@ -279,7 +279,7 @@
         /* -------------------------------------------------- titanium --- */
 
         [data-theme='titanium'] [data-mb-loading='r2-tin-load-1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
-            animation: r2-tin-load-1 calc(1s / var(--mb-speed, 1)) steps(5, jump-end) infinite;
+            animation: kp-sig-titanium-bath calc(var(--kp-sig-ti-loop) / var(--mb-speed, 1)) linear infinite;
         }
 
         [data-theme='titanium'] [data-mb-loading='r2-tin-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {

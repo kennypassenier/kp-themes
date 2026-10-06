@@ -222,10 +222,16 @@
         --sw-dot-size: 0.5em;
         --sw-dot: var(--muted-foreground);
         --sw-frame: 1px solid var(--border-strong, var(--border));
-        --sw-radius: 999px;
+        /* The chip is a titanium badge: square, the register's chamfer pair
+           (CHARACTER.md G7, proposal-11, proposal-25), below. */
+        --sw-radius: 0;
         --sw-pad: 0.1em 0.55em;
         --sw-plate: linear-gradient(135deg, var(--muted) 0%, var(--card) 60%, var(--muted) 100%);
         --sw-font: 500 0.85em var(--font-mono, ui-monospace, monospace);
+    }
+
+    [data-theme='titanium'] [data-sw-shape='3'] .kp-state-word {
+        clip-path: polygon(0.35em 0, 100% 0, 100% calc(100% - 0.35em), calc(100% - 0.35em) 100%, 0 100%, 0 0.35em);
     }
 
     /* ── Titanium: tone (1 anodised rim only, 2 machined, 3 badge warning) ── */
@@ -291,8 +297,22 @@
     [data-theme='titanium'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
         animation: sw-titanium-knurl 0.6s ease-out;
     }
-    [data-theme='titanium'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
-        animation: sw-titanium-glint 0.6s ease-out;
+    /* "A glint": what glints is heat (CHARACTER.md G9, proposal-7): the
+       package's heat tint runs start → end over the word and cools away. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+            position: relative;
+        }
+        [data-theme='titanium'] [data-sw-change='3'][data-sw-playing] .kp-state-word::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: var(--kp-sig-ti-heat);
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise 240ms var(--kp-sig-ti-ease) both;
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -314,18 +334,6 @@
             }
             100% {
                 background-position: 100% 0;
-            }
-        }
-
-        @keyframes sw-titanium-glint {
-            0% {
-                filter: brightness(1);
-            }
-            45% {
-                filter: brightness(1.35);
-            }
-            100% {
-                filter: brightness(1);
             }
         }
     }

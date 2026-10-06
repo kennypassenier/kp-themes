@@ -1051,3 +1051,33 @@
         --ccu-y: 0px;
     }
 }
+
+/* ══ titanium, brought in line with its grammar (themes/titanium/CHARACTER.md,
+   Kenny 2026-10-07): the picks stay, only what broke the grammar changes. ══ */
+@layer kp.signature {
+    /* While loading ("The mill pass", key cutter): the plot's state is the
+       anodising bath (the register draws it on the state box); the cutter's
+       groove and head draw nothing (G10; Kenny 2026-10-07 00:54: the bath for
+       every loading element but the graph). */
+    [data-theme='titanium'] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::before,
+    [data-theme='titanium'] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading']::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-cc-loading='cutter'] .kp-chart__state[data-kp-state='loading'] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        /* How the series arrives ("Etched in", key draw): the same stroke and
+           clip, at the feed of a line across a whole chart (900ms) on the
+           theme's curve (G1, G4; proposal-8). */
+        [data-theme='titanium'] [data-cc-arrival='draw'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 900ms var(--kp-sig-ti-ease) both;
+        }
+    }
+}

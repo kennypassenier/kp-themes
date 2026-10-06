@@ -3559,9 +3559,13 @@
 
     /* titanium · live 2 · The glint */
 
+    /* What glints is heat (themes/titanium/CHARACTER.md G9, proposal-7): the
+       changed node's ring runs through the oxide colours and cools to its own
+       ink, no thicker stroke; the packet still runs hub → site along the
+       link, on the theme's curve (G1). */
     [data-theme='titanium'] [data-cg-live='2'] .kp-graph {
-        --gr-live-ring: gr-flash-ring 1000ms ease-out;
-        --gr-live-edge: gr-packet 800ms cubic-bezier(0.4, 0, 0.2, 1);
+        --gr-live-ring: gr-ti-heat 400ms var(--kp-sig-ti-ease);
+        --gr-live-edge: gr-packet 800ms var(--kp-sig-ti-ease);
         --gr-live-c: var(--primary);
     }
 
@@ -3913,6 +3917,22 @@
 }
 
 /* Live updates. */
+/* titanium's heat tint on a stroke (live 2). */
+@keyframes gr-ti-heat {
+    0% {
+        stroke: var(--warning-foreground);
+    }
+    35% {
+        stroke: var(--chart-2);
+    }
+    65% {
+        stroke: var(--chart-1);
+    }
+    85% {
+        stroke: var(--chart-3);
+    }
+}
+
 @keyframes gr-flash-ring {
     0%,
     35% {

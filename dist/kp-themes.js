@@ -2548,7 +2548,8 @@ var init_effects = __esm({
       "kp-sig-nostromo-meter-jolt-o": { durationMs: 200, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-nostromo-meter-jolt-w": { durationMs: 200, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-nostromo-meter-wipe-o": { durationMs: 1600, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-titanium-meter-cut": { durationMs: 1400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      // titanium's loading is the anodising bath on every carrier (themes/titanium/CHARACTER.md G10).
+      "kp-sig-titanium-bath": { durationMs: 2200, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-titanium-meter-grow-o": { durationMs: 300, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-titanium-meter-jolt-d": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-titanium-meter-jolt-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },

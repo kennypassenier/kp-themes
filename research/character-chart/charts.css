@@ -3475,7 +3475,31 @@
         border-radius: 0;
     }
 
-    /* Loading: the groove the cutter runs in, and the cutter at its start. */
+    /* The legend keys take the titanium button's manners (G13, proposal-26):
+       the register's chamfer pair at a key's scale, an oxide edge along the
+       bottom on hover, the inset two-channel focus ring inside the cut. */
+    [data-theme='titanium'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        clip-path: polygon(0.35rem 0, 100% 0, 100% calc(100% - 0.35rem), calc(100% - 0.35rem) 100%, 0 100%, 0 0.35rem);
+    }
+
+    [data-theme='titanium'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all):hover {
+        border-color: var(--border-strong);
+        background:
+            var(--kp-iris) bottom / 100% 2px no-repeat,
+            linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.08), transparent),
+            var(--accent);
+    }
+
+    [data-theme='titanium'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all):focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    [data-theme='titanium'] [data-cc-shape='a'] .kp-chart__source:active:not(:disabled) {
+        translate: 0 1px;
+    }
 
     /* ── titanium · 2 · the vernier ───────────────────────────────────── */
 

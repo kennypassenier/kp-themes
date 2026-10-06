@@ -315,11 +315,26 @@
         animation: bo-titanium-needle var(--kp-busy-loading-dur, 1.3s) linear infinite;
     }
 
+    /* "The gauge warms", as the anodising bath (themes/titanium/CHARACTER.md
+       G10; Kenny 2026-10-07 00:54): the panel's whole face is the oxide ramp
+       over the card, drifting start → end at the theme's one period, in place
+       of the warming line. The words take the foreground ink, so they read on
+       the bath (the reference kept the tag's dark ink). */
+    [data-theme='titanium'] [data-bo-loading='2'] .kp-datatable__busy-overlay .kp-datatable__busy-panel {
+        --bo-clock-ink: var(--muted-foreground);
+        background: var(--kp-sig-ti-bath), var(--card);
+        color: var(--foreground);
+        text-shadow: none;
+    }
+
     [data-theme='titanium'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
-        --bo-pic: linear-gradient(var(--primary), var(--primary));
-        --bo-pic-inset: auto 0 0 0;
-        block-size: 2px;
-        animation: bo-titanium-warm var(--kp-busy-loading-dur, 1.8s) ease-in-out infinite;
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-bo-loading='2'] .kp-datatable__busy-overlay .kp-datatable__busy-panel {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
     }
 
     [data-theme='titanium'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
@@ -334,9 +349,12 @@
     }
 
     [data-theme='titanium'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        /* Seated without the bounce (CHARACTER.md G1, proposal-3): the panel
+           drops 4px into its seat and lands, in the cuts' 160ms on the
+           theme's curve. */
         --bo-arrival: bo-titanium-seated;
-        --bo-arrival-dur: 0.4s;
-        --bo-arrival-ease: cubic-bezier(0.3, 1.4, 0.4, 1);
+        --bo-arrival-dur: 160ms;
+        --bo-arrival-ease: var(--kp-sig-ti-ease);
     }
 
     [data-theme='titanium'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
@@ -349,8 +367,12 @@
         --bo-fail-bg: var(--destructive);
         --bo-fail-ink: var(--destructive-foreground);
         --bo-fail-border: 0;
-        --bo-fail-shadow: 0 0 0 1px var(--border-strong, var(--border)), inset 0 0 0 2px var(--destructive-foreground);
-        --bo-fail-from: scale(0.96);
+        /* The alarm lamp lights at once, no scale (CHARACTER.md G1, G12,
+           proposal-14); the panel keeps its tool edge and the ring goes
+           inside, where the chamfer cannot clip it (G13, proposal-27). */
+        --bo-fail-shadow: var(--kp-tool-edge), inset 0 0 0 2px var(--destructive-foreground);
+        --bo-fail-from: none;
+        --bo-fail-transition: none;
     }
 
     [data-theme='titanium'] [data-bo-failure='2'] [data-kp-datatable-failed] {
@@ -454,13 +476,10 @@
 
         @keyframes bo-titanium-seated {
             from {
-                transform: scale(0.9);
-            }
-            60% {
-                transform: scale(1.03);
+                transform: translateY(-4px);
             }
             to {
-                transform: scale(1);
+                transform: none;
             }
         }
 

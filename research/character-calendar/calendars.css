@@ -3227,14 +3227,14 @@
     [data-theme='titanium'] [data-cl-shape='1'] .kp-calendar__pad {
         font-size: 0.95rem;
     }
-    /* Loading: the cutter's line at the tile's start edge (it runs across, linearly). */
+    /* Loading: every loading day is a plate in the anodising bath
+       (themes/titanium/CHARACTER.md G10; Kenny, 2026-10-07 00:54: the bath
+       for every loading element but the graph); the cutter's line is gone. */
+    [data-theme='titanium'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
     [data-theme='titanium'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        inset: 2px auto 2px 0;
-        inline-size: 2px;
-        border-radius: 0;
-        background: var(--chart-1);
-        box-shadow: 0 0 6px var(--chart-1);
+        content: none;
     }
     /* ── titanium · 2 · the date wheel ────────────────────────────────── */
     [data-theme='titanium'] [data-cl-shape='2'] .kp-calendar {
@@ -3718,13 +3718,27 @@
                 box-shadow: none;
             }
         }
-        [data-theme='titanium'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-ti-cut 1.6s linear infinite;
+        /* The bath at the theme's one loop period, the days of a week a beat apart. */
+        [data-theme='titanium'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading'] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
-        @keyframes cl-ti-cut {
-            to {
-                inset-inline-start: calc(100% - 2px);
-            }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(2) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -150ms;
+        }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(3) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -300ms;
+        }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(4) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -450ms;
+        }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(5) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -600ms;
+        }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(6) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -750ms;
+        }
+        [data-theme='titanium'] [data-cl-loading='1'] td:nth-child(7) > .kp-calendar__day[data-kp-tone='loading'] {
+            animation-delay: -900ms;
         }
         [data-theme='titanium'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: cl-ti-knurl 600ms linear infinite;
@@ -5787,8 +5801,9 @@
         --cl-pick: 3px dashed var(--cl-phosphor, var(--primary));
         --cl-pick-offset: 2px;
     }
+    /* The register's press, one pixel into its seat, on hover as picked (G13). */
     [data-theme='titanium'] [data-cl-select='1'] .kp-calendar__day:hover {
-        translate: 1px 2px;
+        translate: 0 1px;
     }
     [data-theme='titanium'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
         outline: 1px solid currentColor;
@@ -6568,9 +6583,12 @@
             --cl-step: 14ms;
             animation: cla-wipe-right 260ms linear calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
         }
+        /* "Wound" without the crown: each day is indexed in on its own, cut
+           start → end, one after the other in reading order (CHARACTER.md
+           proposal-2: no rotation, no scale, the theme's curve). */
         [data-theme='titanium'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 20ms;
-            animation: cla-spin 420ms cubic-bezier(0.2, 0.8, 0.2, 1) calc((var(--cl-row, 0) + var(--cl-col, 0)) * var(--cl-step) * 2) backwards;
+            animation: cla-wipe-right 160ms var(--kp-sig-ti-ease) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
         }
         [data-theme='titanium'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 20ms;

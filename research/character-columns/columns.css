@@ -1407,11 +1407,11 @@
         --cl-plate: var(--background);
         --cl-frame: 1px solid var(--cl-rule);
         --cl-radius: 0;
-        --cl-clip: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+        /* The register's one chamfer pair, top-left and bottom-right (G7,
+           proposal-13): the octagon's other two corners stay square. */
+        --cl-clip: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
         --cl-deco:
             linear-gradient(135deg, var(--cl-rule) 0 6px, transparent 6px) 0 0 / 9px 9px no-repeat,
-            linear-gradient(225deg, var(--cl-rule) 0 6px, transparent 6px) 100% 0 / 9px 9px no-repeat,
-            linear-gradient(45deg, var(--cl-rule) 0 6px, transparent 6px) 0 100% / 9px 9px no-repeat,
             linear-gradient(315deg, var(--cl-rule) 0 6px, transparent 6px) 100% 100% / 9px 9px no-repeat;
         --cl-label-caps: all-small-caps;
         --cl-label-case: none;
@@ -1421,16 +1421,7 @@
         --cl-num-pad: 0 0.35em;
         --cl-num-bg: color-mix(in oklch, var(--foreground) 6%, var(--background));
         --cl-num-frame: inset 0 2px 4px color-mix(in oklch, var(--foreground) 20%, transparent), inset 0 0 0 1px var(--cl-rule);
-        --cl-num-clip: polygon(
-            5px 0,
-            calc(100% - 5px) 0,
-            100% 5px,
-            100% calc(100% - 5px),
-            calc(100% - 5px) 100%,
-            5px 100%,
-            0 calc(100% - 5px),
-            0 5px
-        );
+        --cl-num-clip: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
     }
 
     /* The milled bar. */
@@ -1842,11 +1833,13 @@
         --cl-load-anim: cl-march-30 1200ms linear infinite;
     }
 
-    /* The cutting pass. */
+    /* The cutting pass, as the anodising bath (themes/titanium/CHARACTER.md
+       G10; Kenny 2026-10-07 00:54): every column's loading part is the oxide
+       ramp over its plate, drifting start → end at the theme's one period,
+       the columns a beat apart. */
     [data-theme='titanium'] [data-cs-loading='3'] .kp-kpis {
-        --cl-load: linear-gradient(115deg, transparent 40%, color-mix(in oklch, var(--foreground) 14%, transparent) 50%, transparent 60%) -150% 0 /
-            250% 100% no-repeat;
-        --cl-load-anim: cl-glint 1600ms linear infinite;
+        --cl-load: var(--kp-sig-ti-bath), var(--cl-plate, var(--card));
+        --cl-load-anim: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
     }
 
     /* ══ How the figures arrive (data-cs-arrival): after loading, and again on Drawn ══ */
@@ -2264,7 +2257,7 @@
 
     /* Etched. */
     [data-theme='titanium'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 500ms linear;
+        --cl-arrive-num: cl-a-wipe 400ms var(--kp-sig-ti-ease);
         --cl-arrive-tile: none;
         --cl-arrive-stagger: 0ms;
     }
@@ -2654,7 +2647,7 @@
     /* ── titanium ── */
     /* The small tag. */
     [data-theme='titanium'] [data-cs-tone='1'] .kp-kpis {
-        --cl-delta-radius: 2px;
+        --cl-delta-radius: 0;
     }
 
     /* The square tag. */
@@ -3037,8 +3030,10 @@
     }
 
     /* A ring. */
+    /* "A ring" becomes the heat tint (G9, proposal-7): the package's oxide
+       band runs over the changed number (below, in the motion block). */
     [data-theme='titanium'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-l-ring 600ms ease-out;
+        --cl-live-num: none;
         --cl-live-tile: none;
     }
 }
@@ -3069,6 +3064,39 @@
 
         [data-cs] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value {
             animation: var(--cl-live-num, none);
+        }
+
+        /* titanium, live 3: the heat tint over the changed number (G9). */
+        [data-theme='titanium'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value {
+            position: relative;
+        }
+
+        [data-theme='titanium'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: var(--kp-sig-ti-heat);
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise 240ms var(--kp-sig-ti-ease) both;
+        }
+
+        /* titanium, loading 3: the columns a beat apart in the bath. */
+        [data-theme='titanium'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(2)::after {
+            animation-delay: -440ms;
+        }
+
+        [data-theme='titanium'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(3)::after {
+            animation-delay: -880ms;
+        }
+
+        [data-theme='titanium'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(4)::after {
+            animation-delay: -1320ms;
+        }
+
+        [data-theme='titanium'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] > .kp-kpi:nth-child(5)::after {
+            animation-delay: -1760ms;
         }
     }
 }

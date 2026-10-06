@@ -2449,7 +2449,7 @@
     --fx-signal-foreground: hsl(216, 22%, 11%);
     --fx-notch: 0.6rem;
     --fx-duration: 60ms;
-    --fx-ease: cubic-bezier(0.3, 0.9, 0.3, 1);
+    --fx-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
     --theme-font-display: 'Sora', 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(214, 10%, 24%);
@@ -30274,8 +30274,10 @@
        along the top where the tool left the surface;
      · the ground is a carbon twill, two diagonals crossing, rather than
        an instrument's square grid;
-     · metal does not ease. Sixty milliseconds, linear, and the film
-       catches rather than sweeps.
+     · motion slows as it lands and never passes its rest pose: one
+       curve, cubic-bezier(0.2, 0.8, 0.2, 1), sixty milliseconds for a
+       contact; loops keep a constant feed (themes/titanium/CHARACTER.md,
+       the grammar G1-G13, Kenny 2026-10-07).
 
    Colour discipline (DI9): nothing here names a colour. Every stop is
    `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
@@ -30302,8 +30304,11 @@
         --kp-reveal-headline: resolve;
         --kp-reveal-emphasis: ignite;
         --kp-reveal-rule: sweep;
-        /* Dead North's shout-in ease, reused for the word resolve [S49]. */
-        --kp-settle: cubic-bezier(0.22, 1, 0.36, 1);
+        /* The theme's one curve (CHARACTER.md G1, Kenny 2026-10-07): it
+           slows as it lands, never past the rest pose. Dead North's
+           shout-in ease is retired here; a shared rule that reads
+           --kp-settle gets titanium's own curve. */
+        --kp-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
 
         /* No starfield. The approved demo had one — 102 points on the
            shared texture layer with ten shimmer stars above it — and
@@ -30411,7 +30416,7 @@
        tool edge along its top goes out and a hairline of shadow takes its
        place, the ground drops a full step (below, with the fix-12 rules),
        and all of it arrives at once, because a click is shorter than a
-       transition. The release runs back over the same 60ms, linear. A
+       transition. The release runs back over the same 60ms, eased. A
        keyboard press keeps the focus ring, which owns the shadow while
        it shows. */
     [data-theme='titanium'] .kp-button:active:not(:disabled) {
@@ -30476,21 +30481,20 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        /* Metal does not ease. Sixty milliseconds -- the theme's own
-           --fx-duration -- and LINEAR, because an eased curve is the
-           signature of something with give in it. The film takes half as
-           long again, which is the one place a little softness belongs:
-           an interference colour arrives as the angle changes, not as a
-           switch closes. */
+        /* Contact. Sixty milliseconds -- the theme's own --fx-duration --
+           on the theme's one curve, which slows as it lands and never
+           passes the rest pose (CHARACTER.md G1, Kenny 2026-10-07). The
+           film takes half as long again: an interference colour arrives as
+           the angle changes, not as a switch closes. */
         [data-theme='titanium'] .kp-button,
         [data-theme='titanium'] .kp-button__edge,
         [data-theme='titanium'] .kp-button__readout {
             transition:
-                background var(--fx-duration) linear,
-                border-color var(--fx-duration) linear,
-                color var(--fx-duration) linear,
-                translate var(--fx-duration) linear,
-                opacity calc(var(--fx-duration) * 1.5) linear;
+                background var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease),
+                opacity calc(var(--fx-duration) * 1.5) var(--fx-ease);
         }
     }
 
@@ -31551,7 +31555,7 @@
        never receives one: the rest states above are what they get. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-kp-reveal='headline'].is-words [data-word] {
-            animation: kp-mill 340ms linear both;
+            animation: kp-mill 340ms var(--fx-ease) both;
             animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
         }
 
@@ -31914,8 +31918,7 @@
                 top / 100% 1px no-repeat,
             linear-gradient(color-mix(in oklab, var(--background) 35%, transparent), color-mix(in oklab, var(--background) 35%, transparent)) left
                 bottom / 100% 1px no-repeat,
-            var(--ti-iris);
-        transition: clip-path var(--fx-duration, 60ms) linear;
+            var(--kp-sig-ti-oxide);
     }
 
     [data-theme='titanium'] .kp-progressbar__head {
@@ -31923,7 +31926,6 @@
         margin-inline-start: -2px;
         background: var(--primary);
         box-shadow: 1px 0 0 var(--background);
-        transition: transform var(--fx-duration, 60ms) linear;
     }
 
     [data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
@@ -31936,29 +31938,76 @@
         mask: repeating-linear-gradient(110deg, var(--foreground) 0 var(--ti-mask-bar), transparent var(--ti-mask-bar) var(--ti-mask-pitch));
     }
 
+    /* Loading is the anodising bath (CHARACTER.md G10, Kenny 2026-10-07):
+       the fill is the oxide film, standing still it keeps the machined
+       stripes (the mask above) so busy never reads as full; moving, the fill
+       spans the milled track and the film drifts start → end. */
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-progressbar__fill {
+            transition: clip-path var(--fx-duration, 60ms) var(--kp-sig-ti-ease);
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        [data-theme='titanium'] .kp-progressbar__head {
+            transition: transform var(--fx-duration, 60ms) var(--kp-sig-ti-ease);
+        }
+
         [data-theme='titanium'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-            inset-inline-end: auto;
-            inline-size: 28%;
             opacity: 1;
             -webkit-mask: none;
             mask: none;
-            clip-path: polygon(var(--ti-slug) 0, 100% 0, calc(100% - var(--ti-slug)) 100%, 0 100%);
-            animation: kp-progressbar-titanium-slug 1100ms linear infinite;
         }
     }
 
     [data-theme='titanium'] {
         --kp-sig-ti-fast: var(--fx-duration, 60ms);
+        /* The theme's one curve for every one-shot motion (G1) and the one
+           period every loading picture runs at (G4, the anodising bath's own
+           2200ms: Kenny picked the bath as research/titanium-loading draws
+           it, 2026-10-07 00:54). */
+        --kp-sig-ti-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        --kp-sig-ti-loop: 2200ms;
+        /* The anodising bath (research/character-kpi r2-ti-load-1): the
+           oxide ramp gold → bronze → violet → blue → cyan → gold at 100deg,
+           260% wide. --kp-sig-ti-bath lies 32% over the plate under it, for
+           a surface; --kp-sig-ti-oxide is the film at full strength, for a
+           solid metal part. Both drift start → end on kp-sig-titanium-bath. */
+        --kp-sig-ti-bath: linear-gradient(
+                100deg,
+                color-mix(in oklab, var(--warning-foreground) 32%, transparent),
+                color-mix(in oklab, var(--chart-4) 32%, transparent) 25%,
+                color-mix(in oklab, var(--chart-2) 32%, transparent) 50%,
+                color-mix(in oklab, var(--chart-1) 32%, transparent) 72%,
+                color-mix(in oklab, var(--chart-3) 32%, transparent) 90%,
+                color-mix(in oklab, var(--warning-foreground) 32%, transparent)
+            )
+            0 0 / 260% 100%;
+        --kp-sig-ti-oxide: linear-gradient(
+                100deg,
+                var(--warning-foreground),
+                var(--chart-4) 25%,
+                var(--chart-2) 50%,
+                var(--chart-1) 72%,
+                var(--chart-3) 90%,
+                var(--warning-foreground)
+            )
+            0 0 / 260% 100%;
+        /* The heat tint (G9): the oxide band that runs over a value updated
+           in place through mix-blend-mode: color, on kp-sig-titanium-update-anodise.
+           Every titanium "live" carrier draws this one. */
+        --kp-sig-ti-heat: linear-gradient(
+                110deg,
+                transparent 15%,
+                var(--warning-foreground),
+                var(--chart-2),
+                var(--chart-1),
+                var(--chart-3),
+                transparent 85%
+            )
+            0 0 / 300% 100% no-repeat;
+        /* Which way inline-start lies, for a translate along the feed (G2). */
+        --kp-sig-ti-dir: 1;
         --kp-sig-ti-c: 0.35rem;
-        --kp-sig-ti-cut: polygon(
-            0 0,
-            calc(100% - var(--kp-sig-ti-c)) 0,
-            100% var(--kp-sig-ti-c),
-            100% 100%,
-            var(--kp-sig-ti-c) 100%,
-            0 calc(100% - var(--kp-sig-ti-c))
-        );
         --kp-sig-ti-weave:
             repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px),
             repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 6px);
@@ -32024,9 +32073,16 @@
         overflow: hidden;
         block-size: 0.95rem;
         border-radius: 0;
-        background: var(--kp-sig-ti-weave), var(--card);
+        background: var(--kp-sig-ti-bath), var(--card);
         box-shadow: var(--kp-sig-ti-edge);
-        clip-path: var(--kp-sig-ti-cut);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
         animation: none;
     }
 
@@ -32042,8 +32098,13 @@
         inset-block: 0;
         inset-inline-start: 0;
         inline-size: 100%;
-        background: var(--kp-iris) right / 2px 100% no-repeat;
-        transform: translateX(-100%);
+        background: var(--kp-sig-ti-weave);
+    }
+
+    /* A circle or a block is the bath through and through. */
+    [data-theme='titanium'] :is(.kp-skeleton--circle, .kp-skeleton--block) {
+        background: var(--kp-sig-ti-bath), var(--card);
+        opacity: 1;
     }
 
     [data-theme='titanium'] .kp-switch {
@@ -32064,7 +32125,7 @@
         background:
             repeating-linear-gradient(90deg, hsl(from var(--background) h s l / 0.45) 0 1px, transparent 1px 3px) center / 60% 60% no-repeat,
             var(--muted-foreground);
-        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+        clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
     }
 
     [data-theme='titanium'] .kp-switch__input:checked {
@@ -32191,7 +32252,14 @@
         font-size: 0.72rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        clip-path: polygon(0 0, calc(100% - var(--kp-sig-ti-c)) 0, 100% var(--kp-sig-ti-c), 100% 100%, 0 100%);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
     }
 
     [data-theme='titanium'] .kp-wizard__steps {
@@ -32222,7 +32290,7 @@
         box-shadow:
             var(--kp-sig-ti-edge),
             inset 0 0 0 1px var(--border-strong);
-        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+        clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
         color: var(--muted-foreground);
         font-family: var(--theme-font-mono);
         font-size: 0.72rem;
@@ -32257,7 +32325,14 @@
             linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
             var(--kp-iris);
         box-shadow: var(--kp-sig-ti-edge);
-        clip-path: var(--kp-sig-ti-cut);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
         text-align: start;
     }
 
@@ -32299,44 +32374,53 @@
             animation: kp-sig-titanium-ti-flutes var(--kp-sig-dur) linear infinite;
         }
 
-        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-titanium-ti-pass var(--kp-sig-dur) linear infinite;
+        /* The skeleton is the anodising bath; lines run a beat apart. */
+        [data-theme='titanium'] .kp-skeleton {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
 
-        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 300ms;
+        [data-theme='titanium'] .kp-skeleton:nth-child(2) {
+            animation-delay: -300ms;
         }
 
-        [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 600ms;
+        [data-theme='titanium'] .kp-skeleton:nth-child(3) {
+            animation-delay: -600ms;
         }
 
         [data-theme='titanium'] .kp-switch__input::before {
-            transition: transform var(--kp-sig-ti-fast) linear;
+            transition: transform var(--kp-sig-ti-fast) var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] .kp-field__check:checked::before {
             animation: kp-sig-titanium-ti-stamp var(--kp-sig-dur) steps(2, jump-end) both;
         }
 
+        /* The toast lives at the inline-end edge and slides in from it (G3),
+           mirrored under a right-to-left direction (G2). */
         [data-theme='titanium'] .kp-toast {
-            animation: kp-sig-titanium-ti-rail var(--kp-sig-dur) linear both;
+            animation: kp-sig-titanium-ti-rail var(--kp-sig-dur) var(--kp-sig-ti-ease) both;
+        }
+
+        [data-theme='titanium'] .kp-toast:dir(rtl) {
+            --kp-sig-ti-dir: -1;
         }
 
         [data-theme='titanium'] .kp-toast::after {
-            animation: kp-sig-titanium-ti-scribe calc(var(--kp-sig-dur) * 1.5) linear both;
+            animation: kp-sig-titanium-ti-scribe calc(var(--kp-sig-dur) * 1.5) var(--kp-sig-ti-ease) both;
         }
 
+        /* The cut from the top edge, on the theme's curve: themeMotion()
+           reads this curve, so the close, a box's glide and an update follow. */
         [data-theme='titanium'] .kp-dialog {
-            animation: kp-sig-titanium-ti-cut var(--kp-sig-dur) linear backwards;
+            animation: kp-sig-titanium-ti-cut var(--kp-sig-dur) var(--kp-sig-ti-ease) backwards;
         }
 
         [data-theme='titanium'] .kp-dialog::after {
-            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) linear;
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] .kp-tooltip {
-            animation: kp-sig-titanium-ti-appear var(--kp-sig-dur) linear both;
+            animation: kp-sig-titanium-ti-appear var(--kp-sig-dur) var(--kp-sig-ti-ease) both;
         }
     }
 
@@ -32350,14 +32434,15 @@
         }
     }
 
-    @keyframes kp-sig-titanium-ti-pass {
-        0% {
-            transform: translateX(-100%);
+    /* The anodising bath's drift: 260% of film moved start → end at a
+       constant feed (research/character-kpi r2-ti-load-1). */
+    @keyframes kp-sig-titanium-bath {
+        from {
+            background-position: 0 0;
         }
 
-        60%,
-        100% {
-            transform: translateX(4px);
+        to {
+            background-position: -160% 0;
         }
     }
 
@@ -32374,7 +32459,7 @@
     @keyframes kp-sig-titanium-ti-rail {
         from {
             opacity: 0;
-            transform: translateX(16px);
+            transform: translateX(calc(16px * var(--kp-sig-ti-dir)));
         }
 
         to {
@@ -32422,15 +32507,6 @@
         }
     }
 
-    @keyframes kp-progressbar-titanium-slug {
-        from {
-            transform: translateX(-100%);
-        }
-        to {
-            transform: translateX(360%);
-        }
-    }
-
     /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
        on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
        `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
@@ -32439,7 +32515,7 @@
            inside a fine machined edge, and new content slides in like a
            drawer. ───────────────────────────────────────────────────────── */
         [data-theme='titanium'] {
-            --kp-size-ease: linear;
+            --kp-size-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         [data-theme='titanium'] [data-kp-resizing] {
@@ -32448,14 +32524,19 @@
             filter: brightness(1.05);
         }
 
+        /* New content is fed in from inline-start (G2), on the theme's curve. */
         [data-theme='titanium'] [data-kp-arriving] {
-            animation: kp-sig-titanium-size-drawer 260ms linear backwards;
+            animation: kp-sig-titanium-size-drawer 260ms var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] [data-kp-arriving]:dir(rtl) {
+            --kp-sig-ti-dir: -1;
         }
 
         @keyframes kp-sig-titanium-size-drawer {
             from {
                 opacity: 0;
-                transform: translateX(14px);
+                transform: translateX(calc(-14px * var(--kp-sig-ti-dir)));
             }
         }
     }
@@ -32475,7 +32556,7 @@
         [data-theme='titanium'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
-            animation: kp-sig-titanium-leave 650ms ease-in forwards;
+            animation: kp-sig-titanium-leave 400ms var(--kp-sig-ti-ease) forwards;
         }
 
         [data-theme='titanium'] [data-kp-leaving]::after {
@@ -32487,7 +32568,7 @@
             background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
             background-size: 300% 100%;
             mix-blend-mode: color;
-            animation: kp-sig-titanium-leave-2 650ms ease-in forwards;
+            animation: kp-sig-titanium-leave-2 400ms var(--kp-sig-ti-ease) forwards;
         }
 
         @keyframes kp-sig-titanium-leave {
@@ -32501,10 +32582,11 @@
             }
         }
 
+        /* The heat runs start → end, as the update's tint does (G2, G11). */
         @keyframes kp-sig-titanium-leave-2 {
             from {
                 opacity: 0;
-                background-position: 0 0;
+                background-position: 100% 0;
             }
 
             20% {
@@ -32513,7 +32595,7 @@
 
             to {
                 opacity: 1;
-                background-position: 100% 0;
+                background-position: 0% 0;
             }
         }
     }
@@ -32540,16 +32622,7 @@
             inset: 0;
             z-index: 1;
             pointer-events: none;
-            background: linear-gradient(
-                    110deg,
-                    transparent 15%,
-                    var(--warning-foreground),
-                    var(--chart-2),
-                    var(--chart-1),
-                    var(--chart-3),
-                    transparent 85%
-                )
-                0 0 / 300% 100% no-repeat;
+            background: var(--kp-sig-ti-heat);
             mix-blend-mode: color;
             animation: kp-sig-titanium-update-anodise var(--kp-update-duration) var(--kp-update-ease) both;
         }
@@ -32682,7 +32755,7 @@
        motion the arrival's own transition below replaces it, as it did there. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)::before {
-            transition: inline-size var(--fx-duration, 60ms) linear;
+            transition: inline-size var(--fx-duration, 60ms) var(--kp-sig-ti-ease);
         }
     }
 
@@ -32721,16 +32794,17 @@
 
     /* ── while loading: option 1 ── */
 
-    /* The cutter runs along the groove at an even, linear pace. */
+    /* Measuring is the anodising bath (G10): the whole groove carries the
+       oxide film, the heat-tinted groove's own source, drifting start → end. */
     [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         inset-block: 1px;
-        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.4) calc(100% - 2px), var(--primary) calc(100% - 2px)) 50%
-            0 / 3rem 100% no-repeat;
+        inset-inline: 0;
+        background: var(--kp-sig-ti-oxide);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-titanium-meter-cut 1400ms linear infinite;
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
     }
 
@@ -32738,8 +32812,8 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-titanium-meter-grow-o 300ms linear backwards;
-            transition: inline-size 300ms linear;
+            animation: kp-sig-titanium-meter-grow-o 300ms var(--kp-sig-ti-ease) backwards;
+            transition: inline-size 300ms var(--kp-sig-ti-ease);
             transform-origin: 0 50%;
         }
     }
@@ -32748,15 +32822,15 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-titanium-meter-jolt-o 160ms linear;
+            animation: kp-sig-titanium-meter-jolt-o 160ms var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-titanium-meter-jolt-w 160ms linear;
+            animation: kp-sig-titanium-meter-jolt-w 160ms var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-titanium-meter-jolt-d 160ms linear;
+            animation: kp-sig-titanium-meter-jolt-d 160ms var(--kp-sig-ti-ease);
         }
     }
 
@@ -32780,18 +32854,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] .kp-meter__mark {
             transition:
-                inset-inline-start 300ms linear,
-                rotate 300ms linear;
-        }
-    }
-
-    @keyframes kp-sig-titanium-meter-cut {
-        0% {
-            background-position: 0% 0;
-        }
-
-        100% {
-            background-position: 100% 0;
+                inset-inline-start 300ms var(--kp-sig-ti-ease),
+                rotate 300ms var(--kp-sig-ti-ease);
         }
     }
 
@@ -32880,6 +32944,72 @@
 
         100% {
             translate: 0 0;
+        }
+    }
+
+    /* ── Loading is the anodising bath [themes/titanium/CHARACTER.md G10;
+       Kenny on research/titanium-loading, 2026-10-07 00:54: the bath for
+       every loading element but the network graph]. The oxide ramp washed
+       32% into the part's own plate, drifting start → end at a constant
+       feed, one period (--kp-sig-ti-loop) for every carrier, rows of parts
+       a beat apart. The skeleton, the progress bar and the meter carry it
+       above; the spinner (the drill) is kept as it is until its new design.
+       Standing still (reduced motion) the wash stays, still. ── */
+    [data-theme='titanium'] .kp-datatable__busy-panel {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]) {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]) > td {
+        background: transparent;
+    }
+
+    [data-theme='titanium'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        background: var(--kp-sig-ti-bath), var(--popover);
+    }
+
+    [data-theme='titanium'] .kp-button[aria-busy='true'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] .kp-chart__state[data-kp-state='loading'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    /* A busy card (a region the package dims while it waits): its face too. */
+    [data-theme='titanium'] .kp-card[aria-busy='true'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-datatable__busy-panel,
+        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:not([data-kp-skeleton-row]),
+        [data-theme='titanium'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+        [data-theme='titanium'] .kp-button[aria-busy='true'],
+        [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy,
+        [data-theme='titanium'] .kp-chart__state[data-kp-state='loading'],
+        [data-theme='titanium'] .kp-card[aria-busy='true'] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(2) {
+            animation-delay: -440ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(3) {
+            animation-delay: -880ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(4) {
+            animation-delay: -1320ms;
         }
     }
 }

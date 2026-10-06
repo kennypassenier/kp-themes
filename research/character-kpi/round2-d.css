@@ -17,7 +17,8 @@
        tile under the label. */
     [data-theme='titanium'] [data-kf-shape='r2-ti-shape-1'] .kp-kpi {
         --kf-frame: 1px solid var(--border-strong);
-        --kf-radius: 0.375rem;
+        /* Square, as every titanium plate (CHARACTER.md G7, proposal-11). */
+        --kf-radius: 0;
         --kf-num-font: var(--font-mono, monospace);
         --kf-label-rule: 1px solid var(--border-strong);
     }
@@ -205,8 +206,18 @@
     [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi,
     [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle {
         --kf-hover-border: var(--chart-1);
-        --kf-focus-outline: 3px solid var(--chart-3);
-        --kf-focus-offset: 4px;
+        --kf-focus-outline: none;
+        --kf-focus-offset: 0;
+    }
+
+    /* Focus is the register's ring, inside the plate (CHARACTER.md §0,
+       G13, proposal-24): the two channels sit just inside the heat-tint
+       rim, which keeps the plate's outer 2px. */
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi:focus-visible,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle:focus-visible {
+        box-shadow:
+            inset 0 0 0 4px var(--focus-ring),
+            inset 0 0 0 6px var(--focus-ring-contrast);
     }
 
     [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi:hover,
@@ -221,6 +232,8 @@
 
     [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi:active,
     [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle:active {
+        /* The press drops the plate 1px into its seat, as the button's. */
+        translate: 0 1px;
         background-image: linear-gradient(
             100deg,
             color-mix(in oklab, var(--warning-foreground) 36%, transparent),
@@ -281,6 +294,25 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-kf-loading='r2-ti-load-1'] .kp-kpi[data-kp-loading]::before {
             animation: r2-ti-bath calc(2200ms / var(--kf-speed, 1)) linear infinite;
+        }
+
+        /* Live 3, "A glint": what glints is heat (CHARACTER.md G9,
+           proposal-7). The number keeps its size; the package's heat tint
+           runs start → end over it and cools away, on the theme's curve. */
+        [data-theme='titanium'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            position: relative;
+            animation: none;
+        }
+
+        [data-theme='titanium'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: var(--kp-sig-ti-heat);
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise calc(240ms / var(--kf-speed, 1)) var(--kp-sig-ti-ease) both;
         }
 
         @keyframes r2-ti-bath {

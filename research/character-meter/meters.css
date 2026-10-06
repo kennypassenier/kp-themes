@@ -4328,16 +4328,19 @@
 
     /* ── titanium · loading 1 ── */
 
-    /* The cutter runs along the groove at an even, linear pace. */
+    /* "Cut", as the anodising bath (themes/titanium/CHARACTER.md G10; Kenny
+       2026-10-07 00:54): the whole groove carries the oxide film, the
+       heat-tinted groove's own source, drifting start → end at the theme's
+       one period, as the register draws it. */
     [data-theme='titanium'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
         inset-block: 1px;
-        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.4) calc(100% - 2px), var(--primary) calc(100% - 2px)) 50%
-            0 / 3rem 100% no-repeat;
+        inset-inline: 0;
+        background: var(--kp-sig-ti-oxide);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-ti-cut 1400ms linear infinite;
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
     }
 
@@ -5292,8 +5295,8 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 300ms linear backwards;
-            transition: inline-size 300ms linear;
+            animation: var(--cm-arr-o) 300ms var(--kp-sig-ti-ease) backwards;
+            transition: inline-size 300ms var(--kp-sig-ti-ease);
             transform-origin: 0 50%;
         }
     }
@@ -6159,15 +6162,15 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-jolt-o 160ms linear;
+            animation: cm-x-jolt-o 160ms var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-jolt-w 160ms linear;
+            animation: cm-x-jolt-w 160ms var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-jolt-d 160ms linear;
+            animation: cm-x-jolt-d 160ms var(--kp-sig-ti-ease);
         }
     }
 
@@ -7343,8 +7346,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-cm-mark='3'] .kp-meter__mark {
             transition:
-                inset-inline-start 300ms linear,
-                rotate 300ms linear;
+                inset-inline-start 300ms var(--kp-sig-ti-ease),
+                rotate 300ms var(--kp-sig-ti-ease);
         }
     }
 }

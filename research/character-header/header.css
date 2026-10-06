@@ -293,6 +293,20 @@
         --ph-btn-radius: calc(var(--radius, 0.5rem) * 1.4);
     }
 
+    /* Every action button in a titanium header is titanium's own button
+       (CHARACTER.md G13, proposal-21): the shared frame, ground, ink, shadow
+       and transition above roll back to the register's, so its chamfer,
+       tool edge, hover, inset focus ring and 1px press apply unchanged. */
+    [data-theme='titanium'] [data-ph] .kp-page-header__actions > .kp-button {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        background-color: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+    }
+
     /* --- The overflow menu's open and its mirrored close ---------------- */
 
     @media (prefers-reduced-motion: no-preference) {
@@ -339,10 +353,10 @@
         }
 
         [data-theme='titanium'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-titanium-menu-1 220ms ease-out;
+            animation: ph-titanium-menu-1 240ms var(--kp-sig-ti-ease);
         }
         [data-theme='titanium'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-titanium-menu-1 220ms ease-out reverse;
+            animation: ph-titanium-menu-1 240ms var(--kp-sig-ti-ease) reverse;
         }
         [data-theme='titanium'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
             animation: ph-titanium-menu-2 320ms cubic-bezier(0.2, 0.8, 0.2, 1.3);
@@ -371,15 +385,14 @@
         box-shadow: inset 0 1px 2px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
     }
 
-    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: inset 0 0 0 1px var(--primary);
-    }
-    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px dotted var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        transform: scale(0.98);
+    /* "A click of the dial" as an addition to titanium's own button (G13,
+       proposal-21): the 1px primary line on hover lies over the base hover
+       (accent ground, oxide edge, tool edge); focus is the base's inset ring
+       and the press its 1px drop, both from the register. */
+    [data-theme='titanium'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled, :focus-visible) {
+        box-shadow:
+            var(--kp-tool-edge),
+            inset 0 0 0 1px var(--primary);
     }
 
     [data-theme='titanium'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {

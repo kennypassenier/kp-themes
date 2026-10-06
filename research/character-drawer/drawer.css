@@ -393,11 +393,12 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
-            animation: kp-sig-drawer-titanium-1 220ms linear both;
+            /* The rail at the cut's 240ms on the theme's curve (G1, G4). */
+            animation: kp-sig-drawer-titanium-1 240ms var(--kp-sig-ti-ease) both;
         }
 
         [data-theme='titanium'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
-            animation: kp-sig-drawer-titanium-1 220ms linear both reverse;
+            animation: kp-sig-drawer-titanium-1 240ms var(--kp-sig-ti-ease) both reverse;
         }
     }
 
@@ -537,8 +538,10 @@
             animation: kp-sig-drawer-next-titanium-1 300ms ease-out;
         }
 
+        /* A hard index (CHARACTER.md G1, proposal-4): the card drops 1px
+           into its seat and comes back, a contact's 60ms each way. */
         [data-theme='titanium'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
-            animation: kp-sig-drawer-next-titanium-2 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: kp-sig-drawer-next-titanium-2 120ms var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
@@ -559,11 +562,11 @@
     @keyframes kp-sig-drawer-next-titanium-2 {
         0%,
         100% {
-            scale: 1;
+            translate: 0 0;
         }
 
         50% {
-            scale: 0.97;
+            translate: 0 1px;
         }
     }
 

@@ -11,7 +11,7 @@
 // What this suite holds is the handful of things that would make it a
 // different theme if they moved: the corner cut on the leading diagonal
 // with the tool's bright line along the top, the film catching rather
-// than sweeping, sixty milliseconds and linear, and the carbon twill. The
+// than sweeping, sixty milliseconds on the theme curve, and the carbon twill. The
 // milled groove between sections is judged by eye on the catalogue since
 // scope-73 (page-effects#dividers).
 //
@@ -78,7 +78,9 @@ for (const [channel, url] of CHANNELS) {
             await measured(edge, (el) => getComputedStyle(el).backgroundImage, undefined, 'the angle moves with the pointer').not.toBe(before);
         });
 
-        test('metal does not ease: sixty milliseconds, linear [scope-17]', async ({ page }) => {
+        test('contact: sixty milliseconds on the theme curve, slowing as it lands [scope-17; CHARACTER.md G1, Kenny 2026-10-07]', async ({
+            page,
+        }) => {
             // Drilled: the whole transition block removed -> red on both.
             await open(page, url);
             const button = page.locator('[class="kp-button"]').first();
@@ -87,7 +89,7 @@ for (const [channel, url] of CHANNELS) {
                 return { duration: s.transitionDuration, ease: s.transitionTimingFunction };
             });
             expect(timing.duration, 'sixty milliseconds').toMatch(/\b0\.06s\b/);
-            expect(timing.ease, 'and no curve: a curve is the signature of something with give').toMatch(/^linear/);
+            expect(timing.ease, 'the one curve: decelerating, never past the rest pose').toMatch(/^cubic-bezier\(0\.2, 0\.8, 0\.2, 1\)/);
         });
 
         test('the ground is carbon twill under a moving light [scope-17]', async ({ page }) => {

@@ -224,11 +224,12 @@
         background-image: repeating-linear-gradient(90deg, var(--mb-edge, var(--border-strong)) 0 2px, transparent 2px 4px);
     }
 
-    /* Shape 3, the anodised badge: a rounded plate with a primary rim and
-       a diagonal sheen. */
+    /* Shape 3, the anodised badge: a plate with a primary rim and a
+       diagonal sheen, square as the register's own menu (CHARACTER.md G7,
+       proposal-11, proposal-22). */
     [data-theme='titanium'] [data-mb-shape='3'] .kp-menu-button > .kp-menu {
         border: 1px solid var(--primary);
-        border-radius: 0.75rem;
+        border-radius: 0;
         background-image: linear-gradient(135deg, hsl(from var(--primary) h s l / 0.1), transparent 50%);
     }
 
@@ -324,8 +325,19 @@
 
     /* Interact 3, the knurl catches: an edge highlight on hover or focus,
        deepened on a press. */
-    [data-theme='titanium'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+    /* The knurl catches on hover; focus is the register's own two-channel
+       ring inside the entry (G13, proposal-22); the press keeps the 1px
+       primary line. */
+    [data-theme='titanium'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:hover {
         box-shadow: inset 0 0 0 1px var(--mb-edge, var(--border-strong));
+    }
+
+    [data-theme='titanium'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:is(:focus-visible, [data-mb-force-focus]) {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
     }
 
     [data-theme='titanium'] [data-mb-interact='3'] .kp-menu-button > .kp-menu .kp-menu__item:active {
@@ -378,13 +390,15 @@
             animation-direction: reverse;
         }
 
+        /* "Seated" is the dialog's cut (CHARACTER.md G3, proposal-3,
+           proposal-5): the panel is cut open from the top edge in the cut's
+           240ms on the theme's curve, and closes as that cut reversed. */
         [data-theme='titanium'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
-            transform-origin: top center;
-            animation: mb-titanium-seat calc(0.32s / var(--mb-speed, 1)) ease-out;
+            animation: mb-titanium-cut calc(240ms / var(--mb-speed, 1)) var(--kp-sig-ti-ease);
         }
 
         [data-theme='titanium'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
-            animation-name: mb-titanium-seat;
+            animation-name: mb-titanium-cut;
             animation-direction: reverse;
         }
 
@@ -488,15 +502,12 @@
         }
     }
 
-    @keyframes mb-titanium-seat {
+    @keyframes mb-titanium-cut {
         from {
-            transform: translateY(-10px) scale(1.04);
-        }
-        60% {
-            transform: translateY(2px) scale(0.99);
+            clip-path: inset(0 0 100% 0);
         }
         to {
-            transform: translateY(0) scale(1);
+            clip-path: inset(0 0 0 0);
         }
     }
 
