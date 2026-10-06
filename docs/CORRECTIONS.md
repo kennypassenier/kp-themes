@@ -6613,6 +6613,8 @@ leave itself.
 
 ## fix-115 · On busy the state still jumped back to Loading (2026-10-06)
 
+Kenny, form v41 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 21:53, on character-busy: "te pas
 en te onpas staat die weer op loading als ik het niet wil, of in een andere
 state, state moet onthouden worden". The third report of fix-112's fault.
