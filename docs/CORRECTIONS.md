@@ -6206,6 +6206,8 @@ steps move.
 
 ## fix-105 · Phantom's menu did not sit at its More tile and stretched it (2026-10-06)
 
+Approved by Kenny in form v30 (2026-10-06, "fix-105: Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 12:59, judging the menu demo in
 phantom: "als ik more klik, dan verschijnt het menu niet mooi aan de more
 tegel, waardoor de more tegel zelf ook soms super lang is". Shape option 2
