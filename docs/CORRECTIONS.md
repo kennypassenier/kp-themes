@@ -6500,7 +6500,10 @@ one aspect; it never walked on to the next aspect or the next theme.
 
 **3 · Where else the same fault sits.** Every demo, since the keeping lives in
 the kit. Searched with `grep -n "kept\[" research/_review/review.js`: the two
-lookups were both per aspect.
+lookups were both per aspect. Kenny named a third instance the same minute
+(20:49, busy: "als ik op r druk, dan gaat die altijd terug naar loading"):
+Replay (R) ran the autoplay without restoring the kept states; it restores
+them now (measured on busy: Ready stayed through R, a flip, R, PageDown, R).
 
 **4 · How we prevent a repeat.** A pressed state is kept per demo, across
 options, aspects, themes and visits, until the reviewer presses another; a

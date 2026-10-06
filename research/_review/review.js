@@ -807,6 +807,10 @@ function replay(step) {
     if (!step?.aspect || !flipPair) return;
     const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
     if (!prefersReducedMotion()) playAspect(flipPair.item.section, step.aspect);
+    // Replay plays the option again in the reviewer's own states, never back
+    // to the page's default (Kenny, 2026-10-06 20:49: "als ik op r druk, dan
+    // gaat die altijd terug naar loading").
+    restoreKept(flipPair.item.section, step.aspect);
     if (shown) requestAnimationFrame(() => restartMotion(shown));
 }
 
