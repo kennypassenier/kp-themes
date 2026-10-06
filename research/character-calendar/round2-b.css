@@ -1,4 +1,92 @@
-/* research/character-calendar, round 2 (Kenny, 2026-10-06 10:30): the new options of group b. */
-
+/* research/character-calendar, round 2 (Kenny, 2026-10-06 10:30): the new
+   options of group b. Phantom's picked day (aspect `select`) only: Kenny
+   judged round 1 and asked for new prototypes ("picked day needs new
+   prototypes"), so none of round 1's three (the stamped VOID pick, the
+   calling card pick, the cut line) are repeated. Built on the settled
+   shape (3, the torn ticket: a notched index card in the heavy display
+   face) and the settled tone (2, the calling card month: black-on-card
+   halftone figures, a red slash on today). No motion: the picked day's
+   frame, hover and count change state instantly, like the rest of this
+   aspect across the file. */
 @layer kp.signature {
+    /* ── phantom · r2-ph-sel-1 · the staple tag ───────────────────────── */
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] .kp-calendar {
+        --cl-pick: none;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] td[aria-selected='true'] {
+        position: relative;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] td[aria-selected='true']::before {
+        content: '';
+        position: absolute;
+        inset: -3px -3px auto auto;
+        inline-size: 16px;
+        block-size: 16px;
+        background-color: var(--primary);
+        clip-path: polygon(100% 0, 100% 100%, 0 0);
+        z-index: 2;
+        pointer-events: none;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] .kp-calendar__day:hover {
+        rotate: -3deg;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        display: inline-block;
+        padding-inline: 0.3em;
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* ── phantom · r2-ph-sel-2 · the ransom patch ──────────────────────── */
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-2'] .kp-calendar {
+        --cl-pick: 2px dashed var(--card);
+        --cl-pick-offset: 3px;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-2'] td[aria-selected='true'] > .kp-calendar__day {
+        rotate: -3deg;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-2'] .kp-calendar__day:hover {
+        rotate: 3deg;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        display: inline-block;
+        padding-inline: 0.2em;
+        border-block-end: 1px dashed var(--card);
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+    }
+
+    /* ── phantom · r2-ph-sel-3 · the ink seal ──────────────────────────── */
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-3'] .kp-calendar {
+        --cl-pick: none;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-3'] td[aria-selected='true'] {
+        position: relative;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-3'] td[aria-selected='true']::before {
+        content: '';
+        position: absolute;
+        inset: -7px -7px auto auto;
+        inline-size: 24px;
+        block-size: 24px;
+        border: 2px dashed var(--primary);
+        border-radius: 50%;
+        rotate: -12deg;
+        z-index: 2;
+        pointer-events: none;
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-3'] .kp-calendar__day:hover::after {
+        content: '';
+        background-image: radial-gradient(circle, hsl(from var(--primary) h s l / 0.3) 0 60%, transparent 60%);
+    }
+    [data-theme='phantom'] [data-cl-select='r2-ph-sel-3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        display: inline-block;
+        padding-inline: 0.25em;
+        border: 1px dashed var(--primary);
+        border-radius: 50%;
+        white-space: nowrap;
+    }
 }

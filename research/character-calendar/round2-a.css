@@ -1,4 +1,216 @@
-/* research/character-calendar, round 2 (Kenny, 2026-10-06 10:30): the new options of group a. */
+/* research/character-calendar, round 2 (Kenny, 2026-10-06 10:30): the new
+   options of group a — high-contrast's "while loading" (`data-cl-loading`),
+   the one aspect he sent back open ("don't like the loading, a spinner in
+   each day is barely visible"; the spinner-in-each-day look often took long
+   to load, since forty-two animated day cells are heavy).
 
+   NEW (Kenny, 2026-10-06): "I like loading animations that take advantage
+   of all the space that the element takes" — every option below is one
+   picture across the whole grid, edge to edge, not a small glyph per day.
+   The grid is seven columns by six rows; `js/calendar.js` already sets
+   `--cl-row` (0-5) and `--cl-col` (0-6) on every cell (calendars.css), so
+   each day's `::after` reads one background sized to the whole grid
+   (700% × 600%) and offsets itself by `calc(var(--cl-col) * -100%)` /
+   `calc(var(--cl-row) * -100%)`: every cell shows its own slice of one
+   continuous picture. Every loop shifts the picture by exactly one full
+   tile (-700% and/or -600%), which `background-repeat: repeat` always
+   closes seamlessly, whatever the pattern's own period — so every cell
+   keeps its own cheap CSS animation (one per cell, for the review's own
+   count) while the moving picture reads as a single sweep across the whole
+   month, not forty-two separate heavy loops. Tokens only for colour. */
 @layer kp.signature {
+    /* ── high-contrast · while loading, round 2 ───────────────────────── */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-1'] .kp-calendar {
+        --cl-loading-bg: var(--card);
+        --cl-loading-edge: var(--border);
+        --cl-busy-r: 0;
+        --cl-busy-frame: 3px solid var(--foreground);
+        --cl-busy-shadow: none;
+    }
+    /* The hazard tape: diagonal ink-and-yellow stripes across the whole grid. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-1'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--card);
+        background-image: repeating-linear-gradient(45deg, var(--foreground) 0 18px, var(--warning) 18px 36px);
+        background-repeat: repeat;
+        background-size: 700% 600%;
+        background-position: calc(var(--cl-col, 0) * -100%) calc(var(--cl-row, 0) * -100%);
+    }
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-2'] .kp-calendar {
+        --cl-loading-bg: var(--card);
+        --cl-loading-edge: var(--border);
+        --cl-busy-r: 0;
+        --cl-busy-frame: 3px solid var(--foreground);
+        --cl-busy-shadow: none;
+    }
+    /* The shutter bars: thick ink-and-blue bars spanning the whole grid. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-2'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--card);
+        background-image: repeating-linear-gradient(to bottom, var(--foreground) 0 20px, var(--primary) 20px 40px);
+        background-repeat: repeat;
+        background-size: 100% 600%;
+        background-position: 0 calc(var(--cl-row, 0) * -100%);
+    }
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-3'] .kp-calendar {
+        --cl-loading-bg: var(--foreground);
+        --cl-loading-fg: var(--background);
+        --cl-loading-edge: var(--foreground);
+        --cl-busy-r: 0;
+        --cl-busy-bg: var(--foreground);
+        --cl-busy-frame: 3px solid var(--primary);
+        --cl-busy-shadow: none;
+    }
+    /* The scanner beam: one wide blue beam across a field of ink, the whole grid's width. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-3'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--foreground);
+        background-image: linear-gradient(90deg, transparent 0 46%, var(--primary) 46% 54%, transparent 54% 100%);
+        background-repeat: repeat;
+        background-size: 700% 100%;
+        background-position: calc(var(--cl-col, 0) * -100%) 0;
+    }
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-4'] .kp-calendar {
+        --cl-loading-bg: var(--card);
+        --cl-loading-edge: var(--border);
+        --cl-busy-r: 0;
+        --cl-busy-frame: 3px solid var(--foreground);
+        --cl-busy-shadow: none;
+    }
+    /* The barcode scan: a dense ink-and-card barcode across the whole grid's width. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-4'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--card);
+        background-image: repeating-linear-gradient(
+            90deg,
+            var(--foreground) 0 6px,
+            var(--card) 6px 14px,
+            var(--foreground) 14px 16px,
+            var(--card) 16px 30px
+        );
+        background-repeat: repeat;
+        background-size: 700% 100%;
+        background-position: calc(var(--cl-col, 0) * -100%) 0;
+    }
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-5'] .kp-calendar {
+        --cl-loading-bg: var(--card);
+        --cl-loading-edge: var(--border);
+        --cl-busy-r: 0;
+        --cl-busy-frame: 3px solid var(--foreground);
+        --cl-busy-shadow: none;
+    }
+    /* The marching ruling: the grid's own bold ink ruling across the whole month. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-5'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--card);
+        background-image:
+            repeating-linear-gradient(0deg, var(--foreground) 0 3px, transparent 3px 60px),
+            repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 60px);
+        background-repeat: repeat, repeat;
+        background-size:
+            700% 600%,
+            700% 600%;
+        background-position:
+            calc(var(--cl-col, 0) * -100%) calc(var(--cl-row, 0) * -100%),
+            calc(var(--cl-col, 0) * -100%) calc(var(--cl-row, 0) * -100%);
+    }
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-6'] .kp-calendar {
+        --cl-loading-bg: var(--card);
+        --cl-loading-edge: var(--border);
+        --cl-busy-r: 0;
+        --cl-busy-frame: 3px solid var(--foreground);
+        --cl-busy-shadow: none;
+    }
+    /* The hazard checker: large ink-and-yellow checked squares across the whole grid. */
+    [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-6'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        background-color: var(--card);
+        background-image:
+            linear-gradient(45deg, var(--foreground) 25%, transparent 25%, transparent 75%, var(--foreground) 75%),
+            linear-gradient(45deg, var(--warning) 25%, transparent 25%, transparent 75%, var(--warning) 75%);
+        background-repeat: repeat, repeat;
+        background-size:
+            700% 600%,
+            700% 600%;
+        background-position:
+            calc(var(--cl-col, 0) * -100%) calc(var(--cl-row, 0) * -100%),
+            calc(var(--cl-col, 0) * -100% + 350%) calc(var(--cl-row, 0) * -100% + 300%);
+    }
+}
+/* Motion: every keyframe here, and nowhere else; without it every picture
+   above is the still frame — readable as loading, nothing moving. */
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-1'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-1 2.4s linear infinite;
+        }
+        @keyframes r2-hc-load-1 {
+            to {
+                background-position: calc(var(--cl-col, 0) * -100% - 700%) calc(var(--cl-row, 0) * -100% - 600%);
+            }
+        }
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-2'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-2 1.8s steps(6, end) infinite;
+        }
+        @keyframes r2-hc-load-2 {
+            to {
+                background-position: 0 calc(var(--cl-row, 0) * -100% - 600%);
+            }
+        }
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-3'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-3 2s linear infinite;
+        }
+        @keyframes r2-hc-load-3 {
+            to {
+                background-position: calc(var(--cl-col, 0) * -100% - 700%) 0;
+            }
+        }
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-4'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-4 1.6s steps(10, end) infinite;
+        }
+        @keyframes r2-hc-load-4 {
+            to {
+                background-position: calc(var(--cl-col, 0) * -100% - 700%) 0;
+            }
+        }
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-5'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-5 1.2s steps(6, end) infinite;
+        }
+        @keyframes r2-hc-load-5 {
+            to {
+                background-position:
+                    calc(var(--cl-col, 0) * -100% - 700%) calc(var(--cl-row, 0) * -100% - 600%),
+                    calc(var(--cl-col, 0) * -100% - 700%) calc(var(--cl-row, 0) * -100% - 600%);
+            }
+        }
+        [data-theme='high-contrast'] [data-cl-loading='r2-hc-load-6'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: r2-hc-load-6 1.6s steps(8, end) infinite;
+        }
+        @keyframes r2-hc-load-6 {
+            to {
+                background-position:
+                    calc(var(--cl-col, 0) * -100% - 700%) calc(var(--cl-row, 0) * -100% - 600%),
+                    calc(var(--cl-col, 0) * -100% + 350% - 700%) calc(var(--cl-row, 0) * -100% + 300% - 600%);
+            }
+        }
+    }
+}
+/* Under `--busy-days` and `--busy-whole` the theme's spinner is the one
+   sign that moves (calendars.css does this for round one; a new key needs
+   its own rule here, higher specificity than the animations above so it
+   wins regardless of source order between this file and calendars.css). */
+@layer kp.signature {
+    [data-theme='high-contrast']
+        :is(
+            [data-cl-loading='r2-hc-load-1'],
+            [data-cl-loading='r2-hc-load-2'],
+            [data-cl-loading='r2-hc-load-3'],
+            [data-cl-loading='r2-hc-load-4'],
+            [data-cl-loading='r2-hc-load-5'],
+            [data-cl-loading='r2-hc-load-6']
+        )
+        :is(.kp-calendar--busy-days, .kp-calendar--busy-whole)
+        .kp-calendar__day[data-kp-tone='loading']::after {
+        animation: none;
+    }
 }
