@@ -56,6 +56,8 @@
             <section
                 class="dt-sec"
                 data-review-item="drawer-tour"
+                data-review-mode="aspects"
+                data-review-rows="data-dt-aspect"
                 data-review-components="drawer tour"
                 data-review-title="The drawer and its guided tour"
                 aria-labelledby="h-drawer-tour"
@@ -72,14 +74,24 @@
                 <div class="dt-controls" data-review-controls>
                     <div class="dt-actions" role="group" aria-label="The drawer">
                         <b>Drawer:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-dt-drawer="open" aria-pressed="true">Open</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-dt-drawer="open"
+                            aria-pressed="true"
+                            data-review-plays="openclose shape highlight card"
+                        >
+                            Open
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-dt-drawer="closed" aria-pressed="false">Closed</button>
                     </div>
                     <div class="dt-actions" role="group" aria-label="The tour">
                         <b>Tour:</b>
                         <button type="button" class="kp-button kp-button--sm" data-dt-tour="back">Back</button>
                         <button type="button" class="kp-button kp-button--sm" data-dt-tour="skip">Skip</button>
-                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-dt-tour="next">Next</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-dt-tour="next" data-review-plays="next">
+                            Next
+                        </button>
                     </div>
                     <div class="dt-actions" role="group" aria-label="Animation speed">
                         <b>Speed of every animation:</b>

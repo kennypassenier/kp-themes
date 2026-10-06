@@ -56,6 +56,8 @@
             <section
                 class="cl-sec"
                 data-review-item="calendar"
+                data-review-mode="aspects"
+                data-review-rows="data-cl-aspect"
                 data-review-components="calendar"
                 data-review-title="The month heatmap"
                 aria-labelledby="h-calendar"
@@ -72,11 +74,29 @@
                 <div class="cl-controls" data-review-controls>
                     <div class="cl-actions" role="group" aria-label="State of every calendar">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-state="ready" aria-pressed="true">Read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cl-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape select"
+                        >
+                            Read
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cl-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-cl-state="empty" aria-pressed="false">Nothing to check</button>
                         <button type="button" class="kp-button kp-button--sm" data-cl-state="error" aria-pressed="false">Could not read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-live>Live update: today's late copies arrive</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-live data-review-plays="tone">
+                            Live update: today's late copies arrive
+                        </button>
                     </div>
                     <div class="cl-actions" role="group" aria-label="How loading shows in every calendar">
                         <b>Loading look:</b>

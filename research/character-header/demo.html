@@ -59,6 +59,8 @@
             <section
                 class="ph-sec"
                 data-review-item="header"
+                data-review-mode="aspects"
+                data-review-rows="data-ph-vary"
                 data-review-components="page-header"
                 data-review-title="The page header"
                 aria-labelledby="h-header"
@@ -75,8 +77,18 @@
                 <div class="ph-controls" data-review-controls>
                     <div class="ph-actions" role="group" aria-label="The overflow menu">
                         <b>Menu:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ph-menu-state="closed" aria-pressed="true">Closed</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ph-menu-state="open" aria-pressed="false">Open</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ph-menu-state="closed"
+                            aria-pressed="true"
+                            data-review-plays="shape interactive"
+                        >
+                            Closed
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ph-menu-state="open" aria-pressed="false" data-review-plays="menu">
+                            Open
+                        </button>
                     </div>
                     <div class="ph-actions" role="group" aria-label="Page width">
                         <b>Width:</b>

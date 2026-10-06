@@ -57,6 +57,8 @@
             <section
                 class="tr-sec"
                 data-review-item="trend"
+                data-review-mode="aspects"
+                data-review-rows="data-ct-aspect"
                 data-review-components="kpi--trend"
                 data-review-title="The trend tile"
                 aria-labelledby="h-trend"
@@ -73,16 +75,36 @@
                 <div class="tr-controls" data-review-controls>
                     <div class="tr-actions" role="group" aria-label="State of every tile">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-tr-state="ready" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tr-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-tr-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-tr-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-state="empty" aria-pressed="false">Nothing to draw</button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-state="error" aria-pressed="false">Could not read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tr-live>Live update (ten minutes later)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-live data-review-plays="live">
+                            Live update (ten minutes later)
+                        </button>
                     </div>
                     <div class="tr-actions" role="group" aria-label="Tone of every tile">
                         <b>Tone:</b>
                         <button type="button" class="kp-button kp-button--sm" data-tr-tone="" aria-pressed="true">None</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tr-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tr-tone="warning" aria-pressed="false" data-review-plays="tone">
+                            Warning
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-tr-tone="destructive" aria-pressed="false">Destructive</button>
                     </div>
                     <div class="tr-actions" role="group" aria-label="The figure in every tile">

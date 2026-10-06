@@ -67,6 +67,8 @@
             <section
                 class="cc-sec"
                 data-review-item="chart"
+                data-review-mode="aspects"
+                data-review-rows="data-cc-aspect"
                 data-review-components="chart"
                 data-review-title="The time chart"
                 aria-labelledby="h-chart"
@@ -83,11 +85,27 @@
                 <div class="cc-controls" data-review-controls>
                     <div class="cc-actions" role="group" aria-label="State of every chart">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cc-state="filled" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cc-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cc-state="filled"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape events tip"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cc-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-cc-state="empty" aria-pressed="false">No readings</button>
                         <button type="button" class="kp-button kp-button--sm" data-cc-state="error" aria-pressed="false">Error</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cc-live>Live update</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cc-live data-review-plays="update">Live update</button>
                     </div>
                     <div class="cc-actions" role="group" aria-label="Sources in every chart">
                         <b>Sources:</b>

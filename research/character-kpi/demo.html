@@ -61,6 +61,8 @@
             <section
                 class="kf-sec"
                 data-review-item="kpi"
+                data-review-mode="aspects"
+                data-review-rows="data-kf-aspect"
                 data-review-components="kpi--interactive"
                 data-review-title="The key figure tile"
                 aria-labelledby="h-kpi"
@@ -77,14 +79,32 @@
                 <div class="kf-controls" data-review-controls>
                     <div class="kf-actions" role="group" aria-label="State of every tile">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kf-state="ready" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kf-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kf-live>Live update</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-kf-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="shape interactive"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-kf-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-live data-review-plays="live">Live update</button>
                     </div>
                     <div class="kf-actions" role="group" aria-label="Tone of every tile">
                         <b>Tone:</b>
                         <button type="button" class="kp-button kp-button--sm" data-kf-tone="" aria-pressed="true">None</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kf-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kf-tone="warning" aria-pressed="false" data-review-plays="tone">
+                            Warning
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-kf-tone="destructive" aria-pressed="false">Destructive</button>
                     </div>
                     <div class="kf-actions" role="group" aria-label="Animation speed">

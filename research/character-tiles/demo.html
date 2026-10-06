@@ -62,6 +62,8 @@
             <section
                 class="tl-sec"
                 data-review-item="tiles"
+                data-review-mode="aspects"
+                data-review-rows="data-ti-aspect"
                 data-review-components="tiles"
                 data-review-title="Dashboard tiles"
                 aria-labelledby="h-tiles"
@@ -78,23 +80,45 @@
                 <div class="tl-controls" data-review-controls>
                     <div class="tl-actions" role="group" aria-label="State of every tile">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-tl-state="ready" aria-pressed="true">Shown</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tl-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-tl-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape"
+                        >
+                            Shown
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-tl-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-tl-state="empty" aria-pressed="false">No reading yet</button>
                         <button type="button" class="kp-button kp-button--sm" data-tl-state="error" aria-pressed="false">Could not read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tl-live>Live update (a new reading)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-live data-review-plays="live">
+                            Live update (a new reading)
+                        </button>
                     </div>
                     <div class="tl-actions" role="group" aria-label="Tone of pump house 1">
                         <b>Tone of pump house 1:</b>
                         <button type="button" class="kp-button kp-button--sm" data-tl-tone="" aria-pressed="true">None</button>
                         <button type="button" class="kp-button kp-button--sm" data-tl-tone="ok" aria-pressed="false">Ok</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-tone="warning" aria-pressed="false" data-review-plays="tone">
+                            Warning
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-tl-tone="destructive" aria-pressed="false">Destructive</button>
                     </div>
                     <div class="tl-actions" role="group" aria-label="Pointer on pump house 1">
                         <b>Pointer:</b>
                         <button type="button" class="kp-button kp-button--sm" data-tl-point="" aria-pressed="true">Away</button>
-                        <button type="button" class="kp-button kp-button--sm" data-tl-point="on" aria-pressed="false">Pointed at</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tl-point="on" aria-pressed="false" data-review-plays="hover">
+                            Pointed at
+                        </button>
                     </div>
                     <div class="tl-actions" role="group" aria-label="Animation speed">
                         <b>Speed of every animation:</b>

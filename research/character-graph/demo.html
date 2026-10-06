@@ -60,6 +60,8 @@
             <section
                 class="gr-sec"
                 data-review-item="graph"
+                data-review-mode="aspects"
+                data-review-rows="data-gr-aspect"
                 data-review-components="graph"
                 data-review-title="The network graph"
                 aria-labelledby="h-graph"
@@ -76,11 +78,27 @@
                 <div class="gr-controls" data-review-controls>
                     <div class="gr-actions" role="group" aria-label="State of every graph">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-gr-state="ready" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-gr-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-gr-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape focus"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-gr-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-gr-state="empty" aria-pressed="false">Nothing to draw</button>
                         <button type="button" class="kp-button kp-button--sm" data-gr-state="error" aria-pressed="false">Could not read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-gr-live>Live update</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gr-live data-review-plays="live">Live update</button>
                     </div>
                     <div class="gr-actions" role="group" aria-label="The network in every graph">
                         <b>Network:</b>

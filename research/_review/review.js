@@ -134,19 +134,39 @@ try {
 
 const lookFor = (section, theme) => section.querySelector(`[data-review-look] [data-for="${theme}"]`)?.innerHTML || '';
 
+// One aspect per page (Kenny, 2026-10-06 12:09): "Ik wil nu het element
+// centraal, net zoals het bij 'your combination' al is, en per pagina één
+// aspect van de demo ... als het bv over loading gaat, dan moet de loading
+// animatie al afspelen. Zo gaan we door elk aspect." A section opts in with
+// `data-review-mode="aspects"` and names the attribute its option rows carry
+// (`data-review-rows="data-cc-aspect"`, the value the choice's id). Each
+// theme then becomes one step per open choice: the dialog shows only that
+// row, its options side by side, and clicks the demo's own controls marked
+// `data-review-plays="<choice id> …"` (Loading for a loading aspect, Drawn
+// for an arrival), so the motion is already playing. Per aspect the reviewer
+// picks one option or "None of these" with a note; the theme's verdict
+// follows from all its aspects (approved, or not approved with the notes).
+const ASPECT_MODE = items.length > 0 && items.every((item) => item.section.dataset.reviewMode === 'aspects');
+const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[theme]) : Boolean(choice.fixed));
+
 /** @type {Step[]} */
-const steps = ORDER.map((theme) => ({
-    title: LABEL[theme] || theme,
-    theme,
-    pairs: items.map((item) => ({
+const steps = ORDER.flatMap((theme) => {
+    const themePairs = items.map((item) => ({
         key: `${theme}|${item.id}`,
         label: `${item.id} · ${theme}`,
         title: item.title,
         look: '',
         theme,
         item,
-    })),
-}));
+    }));
+    if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
+    const aspectSteps = themePairs.flatMap((pair) =>
+        pair.item.choices
+            .filter((choice) => !choice.once && !plainFixed(theme, choice))
+            .map((choice) => ({ title: `${LABEL[theme] || theme} · ${choice.label}`, theme, aspect: choice.id, pairs: [pair] })),
+    );
+    return aspectSteps.length ? aspectSteps : [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
+});
 if (extras.length) {
     steps.push({
         title: 'Catalogue blocks',
@@ -166,7 +186,7 @@ if (extras.length) {
         }),
     });
 }
-const pairs = steps.flatMap((step) => step.pairs);
+const pairs = [...new Set(steps.flatMap((step) => step.pairs))];
 
 /* ------------------------------------------------------------- storage */
 
@@ -217,7 +237,11 @@ const choiceOf = (pair, choice) =>
 const fixedFor = (pair, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[pair.theme]) : Boolean(choice.fixed));
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
-const stepOpen = (step) => step.pairs.some(isOpen);
+/** An aspect step is answered once its option is picked, or "None of these" is noted. */
+const aspectDone = (pair, aspect) => Boolean(state[pair.key]?.choices?.[aspect] || state[pair.key]?.redo?.[aspect]);
+const stepOpen = (step) => (step.aspect ? step.pairs.some((p) => isOpen(p) && !aspectDone(p, step.aspect)) : step.pairs.some(isOpen));
+/** Every theme that has a step, once. */
+const themesOf = (list) => [...new Set(list.map((s) => s.theme).filter(Boolean))];
 
 /* --------------------------------------------------------------- theme */
 
@@ -290,8 +314,8 @@ function answer() {
     const lines = [
         `Demo review · ${DEMO} · ${judged.length} of ${pairs.length} judged, ${judged.length - rejected.length} approved, ${rejected.length} not approved, ${pairs.length - judged.length} open`,
     ];
-    const themesDone = steps.filter((s) => s.theme && s.pairs.every((p) => verdictOf(p) === 'approved'));
-    if (themesDone.length) lines.push('', `Approved in full: ${themesDone.map((s) => s.theme).join(', ')}`);
+    const themesDone = themesOf(steps).filter((t) => pairs.filter((p) => p.theme === t && !p.extra).every((p) => verdictOf(p) === 'approved'));
+    if (themesDone.length) lines.push('', `Approved in full: ${themesDone.join(', ')}`);
     const extraDone = pairs.filter((p) => p.extra && verdictOf(p) === 'approved');
     if (extraDone.length) lines.push('', 'Catalogue pairs approved:', ...extraDone.map((p) => `- ${p.label}`));
     if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
@@ -310,7 +334,7 @@ function answer() {
     );
     if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
     const openSteps = steps.filter(stepOpen);
-    if (openSteps.length) lines.push('', `Still open: ${openSteps.map((s) => s.theme || s.title).join(', ')}`);
+    if (openSteps.length) lines.push('', `Still open: ${[...new Set(openSteps.map((s) => s.theme || s.title))].join(', ')}`);
     return { text: lines.join('\n'), judged: judged.length, rejected: rejected.length };
 }
 
@@ -388,7 +412,7 @@ dialog.innerHTML = `
             <div class="rv-dialog__stage" data-rv-stage></div>
         </div>
         <div class="rv-dialog__side">
-            <p class="rv-meta">Everything on the left is approved together. Tick only what is wrong, and say why.</p>
+            <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
             <ol class="rv-dialog__list" data-rv-list></ol>
             <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
             <div class="rv-dialog__actions">
@@ -431,7 +455,34 @@ const booted = new Promise((resolve) => {
     }
 });
 
+/**
+ * Shows only one aspect's row of a section: every sibling on the way from
+ * that row up to the section is set aside, except what holds the demo's
+ * controls or its look-at line. `null` shows the whole section again.
+ * @param {HTMLElement} section @param {string | null} aspect
+ */
+function focusAspect(section, aspect) {
+    for (const el of section.querySelectorAll('[data-review-off]')) el.removeAttribute('data-review-off');
+    section.removeAttribute('data-review-focus');
+    const attr = section.dataset.reviewRows;
+    if (!aspect || !attr) return;
+    const row = section.querySelector(`[${attr}="${CSS.escape(aspect)}"]`);
+    if (!row) return;
+    section.setAttribute('data-review-focus', aspect);
+    for (let el = row; el && el !== section; el = el.parentElement)
+        for (const sib of el.parentElement?.children || [])
+            if (
+                sib !== el &&
+                !sib.matches('script, style') &&
+                !sib.querySelector('[data-review-controls]') &&
+                !sib.matches('[data-review-controls]') &&
+                !sib.matches('[data-review-look]')
+            )
+                sib.setAttribute('data-review-off', '');
+}
+
 function putBack() {
+    for (const [, section] of moved) focusAspect(section, null);
     unmirror();
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
     moved = [];
@@ -552,7 +603,7 @@ function frameFor(pair) {
     return box;
 }
 
-function rowFor(pair) {
+function rowFor(pair, only = null) {
     const li = document.createElement('li');
     li.className = 'rv-row';
     const id = `rv-${pair.key.replace(/[^a-z0-9-]/gi, '-')}`;
@@ -561,7 +612,7 @@ function rowFor(pair) {
             <button type="button" class="rv-row__jump" data-rv-jump></button>
             <span class="kp-field kp-field--check rv-row__check">
                 <input class="kp-field__check" type="checkbox" id="${id}" data-rv-reject />
-                <label class="kp-field__label" for="${id}">Not approved</label>
+                <label class="kp-field__label" for="${id}">${only ? 'None of these' : 'Not approved'}</label>
             </span>
         </div>
         <p class="rv-row__look" data-rv-row-look></p>
@@ -570,11 +621,12 @@ function rowFor(pair) {
     li.querySelector('[data-rv-jump]').textContent = pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
     const lookBox = li.querySelector('[data-rv-row-look]');
-    if (look) lookBox.innerHTML = look;
+    if (look && !only) lookBox.innerHTML = look;
     else lookBox.remove();
     const choiceBox = li.querySelector('[data-rv-choices]');
     for (const choice of pair.item?.choices || []) {
         if (fixedFor(pair, choice)) continue;
+        if (only && choice.id !== only) continue;
         const set = document.createElement('fieldset');
         set.className = 'rv-choice';
         set.dataset.rvChoice = choice.id;
@@ -616,8 +668,9 @@ function rowFor(pair) {
     const box = /** @type {HTMLInputElement} */ (li.querySelector('[data-rv-reject]'));
     const note = /** @type {HTMLTextAreaElement} */ (li.querySelector('[data-rv-row-note]'));
     note.setAttribute('aria-label', `What should change in ${pair.title}`);
-    box.checked = verdictOf(pair) === 'rejected';
-    note.value = noteOf(pair);
+    box.checked = only ? Boolean(state[pair.key]?.redo?.[only]) : verdictOf(pair) === 'rejected';
+    note.value = only ? state[pair.key]?.redo?.[only] || '' : noteOf(pair);
+    if (only) note.placeholder = 'What should change in this aspect';
     note.hidden = !box.checked && !note.value;
     li.classList.toggle('rv-row--rejected', box.checked);
     box.addEventListener('change', () => {
@@ -627,6 +680,7 @@ function rowFor(pair) {
         updateApprove();
     });
     note.addEventListener('input', () => {
+        if (only) return; // kept when the step is answered, with the aspect's name
         state[pair.key] = { ...state[pair.key], note: note.value.trim() };
         save();
         render();
@@ -640,6 +694,10 @@ function rowFor(pair) {
 function updateApprove() {
     const step = steps[index];
     const rejecting = list.querySelectorAll('[data-rv-reject]:checked').length;
+    if (step?.aspect) {
+        approveButton.textContent = rejecting ? '↑ None of these, on to the next' : '↑ Pick this one, on to the next';
+        return;
+    }
     approveButton.textContent = rejecting
         ? `↑ Approve the rest, ${rejecting} not approved`
         : step.theme
@@ -670,7 +728,14 @@ async function show(at) {
         }
         stage.scrollTop = 0;
         mirrorControls(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section));
-        list.replaceChildren(...shownPairs.map(rowFor));
+        list.replaceChildren(...shownPairs.map((pair) => rowFor(pair, step.aspect ?? null)));
+        // One aspect per page: its motion plays by itself, so the controls fold
+        // away (still one click to open) and the intro says what to do here.
+        if (step.aspect) controlsBox.open = false;
+        $('[data-rv-intro]').textContent = step.aspect
+            ? 'One aspect per page, its motion already playing. Pick the option you want, or tick None of these and say what should change.'
+            : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
+        for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         const judgedHere = step.pairs.length - shownPairs.length;
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
@@ -687,6 +752,14 @@ async function show(at) {
         // A demo can act when its section comes on screen (signature-dialog
         // opens its dialog, so the entrance plays without a click).
         for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
+        // The aspect's own motion plays at once: its controls are pressed for the reviewer.
+        if (step.aspect)
+            for (const pair of shownPairs)
+                requestAnimationFrame(() => {
+                    for (const b of pair.item?.section.querySelectorAll('[data-review-plays]') || [])
+                        if (!b.closest('.rv-controls') && b.getAttribute('data-review-plays').split(/\s+/).includes(step.aspect))
+                            /** @type {HTMLElement} */ (b).click();
+                });
     } finally {
         busy = false;
     }
@@ -702,6 +775,8 @@ function nextOpenStep(from) {
 
 function approveStep() {
     if (busy) return;
+    const current = steps[index];
+    if (current?.aspect) return answerAspect(current);
     const rows = [...list.querySelectorAll('.rv-row')];
     const missing = rows.filter((row) => row.querySelector('[data-rv-reject]').checked && !row.querySelector('[data-rv-row-note]').value.trim());
     if (missing.length) {
@@ -724,6 +799,62 @@ function approveStep() {
         const rejected = rows[i].querySelector('[data-rv-reject]').checked;
         const note = rows[i].querySelector('[data-rv-row-note]').value.trim();
         state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
+    }
+    save();
+    render();
+    const next = nextOpenStep(index);
+    if (next < 0) {
+        dialog.close();
+        foot.scrollIntoView({ block: 'start' });
+        say(
+            NEXT
+                ? 'Everything is judged. Copy the answer on to the next item, then paste it into the conversation.'
+                : 'Everything is judged. Copy the answer and paste it into the conversation.',
+        );
+        if (NEXT) nextButton.focus();
+    } else show(next);
+}
+
+/** Records one aspect step: its pick, or "None of these" with a note; the theme's verdict once every aspect is answered. */
+function answerAspect(step) {
+    const row = list.querySelector('.rv-row');
+    const pair = step.pairs[0];
+    if (!row || !pair) return;
+    const none = /** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked;
+    const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
+    const choice = pair.item.choices.find((c) => c.id === step.aspect);
+    if (none && !note) {
+        refused.textContent = 'None of these needs a note: what should change?';
+        refused.hidden = false;
+        row.querySelector('[data-rv-row-note]').focus();
+        return;
+    }
+    if (!none && !choiceOf(pair, choice)) {
+        refused.textContent = `Pick one of the options, or tick None of these.`;
+        refused.hidden = false;
+        return;
+    }
+    const entry = { ...state[pair.key] };
+    entry.choices = { ...entry.choices };
+    entry.redo = { ...entry.redo };
+    if (none) {
+        entry.redo[step.aspect] = note;
+        delete entry.choices[step.aspect];
+    } else {
+        entry.choices[step.aspect] = choiceOf(pair, choice);
+        delete entry.redo[step.aspect];
+    }
+    state[pair.key] = entry;
+    const themeSteps = steps.filter((s) => s.aspect && s.pairs[0] === pair);
+    if (themeSteps.every((s) => aspectDone(pair, s.aspect))) {
+        const redo = themeSteps.filter((s) => entry.redo[s.aspect]);
+        const label = (id) => pair.item.choices.find((c) => c.id === id)?.label || id;
+        state[pair.key] = {
+            ...entry,
+            verdict: redo.length ? 'rejected' : 'approved',
+            note: redo.map((s) => `${label(s.aspect)}: ${entry.redo[s.aspect]}`).join(' · '),
+            at: new Date().toISOString(),
+        };
     }
     save();
     render();

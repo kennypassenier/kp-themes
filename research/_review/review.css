@@ -387,3 +387,8 @@
     font-size: 0.875em;
     color: var(--muted-foreground);
 }
+
+/* One aspect per page (aspect mode): what is set aside stays out of view. */
+[data-review-off] {
+    display: none !important;
+}

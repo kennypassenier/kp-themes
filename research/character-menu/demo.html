@@ -54,6 +54,8 @@
             <section
                 class="mb-sec"
                 data-review-item="menu"
+                data-review-mode="aspects"
+                data-review-rows="data-mb-aspect"
                 data-review-components="menu-button"
                 data-review-title="The menu button"
                 aria-labelledby="h-menu"
@@ -70,10 +72,26 @@
                 <div class="mb-controls" data-review-controls>
                     <div class="mb-actions" role="group" aria-label="Open or close every menu">
                         <b>Menu:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-mb-action="open">Open</button>
+                        <button type="button" class="kp-button kp-button--sm" data-mb-action="open" data-review-plays="open">Open</button>
                         <button type="button" class="kp-button kp-button--sm" data-mb-action="close">Close</button>
-                        <button type="button" class="kp-button kp-button--sm" data-mb-action="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-mb-action="filled" aria-pressed="true">Filled</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-mb-action="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-mb-action="filled"
+                            aria-pressed="true"
+                            data-review-plays="shape tone interact"
+                        >
+                            Filled
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-mb-action="focus">Focus the second entry</button>
                     </div>
                     <div class="mb-actions" role="group" aria-label="Animation speed">

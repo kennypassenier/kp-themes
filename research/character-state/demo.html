@@ -56,6 +56,8 @@
             <section
                 class="sw-sec"
                 data-review-item="state"
+                data-review-mode="aspects"
+                data-review-rows="data-sw-aspect"
                 data-review-components="state-word"
                 data-review-title="The state word"
                 aria-labelledby="h-state"
@@ -72,13 +74,25 @@
                 <div class="sw-controls" data-review-controls>
                     <div class="sw-actions" role="group" aria-label="The state of every chip">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Running" aria-pressed="true">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Running" aria-pressed="true" data-review-plays="shape">
+                            Running
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-sw-state="Stopped" aria-pressed="false">Stopped</button>
-                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Restarting" aria-pressed="false">Restarting</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-sw-state="Restarting"
+                            aria-pressed="false"
+                            data-review-plays="change"
+                        >
+                            Restarting
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-sw-state="Starting in 3 min" aria-pressed="false">
                             Starting in 3 min
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Failed" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sw-state="Failed" aria-pressed="false" data-review-plays="tone">
+                            Failed
+                        </button>
                     </div>
                     <div class="sw-actions" role="group" aria-label="Animation speed">
                         <b>Speed of every animation:</b>

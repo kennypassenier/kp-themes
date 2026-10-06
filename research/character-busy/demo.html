@@ -60,6 +60,8 @@
             <section
                 class="bo-sec"
                 data-review-item="busy"
+                data-review-mode="aspects"
+                data-review-rows="data-bo-aspect"
                 data-review-components="datatable"
                 data-review-title="The data table's busy overlay"
                 aria-labelledby="h-busy"
@@ -77,9 +79,21 @@
                     <div class="bo-actions" role="group" aria-label="State of the table">
                         <b>State:</b>
                         <button type="button" class="kp-button kp-button--sm" data-bo-state="ready" aria-pressed="false">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-bo-state="loading" aria-pressed="true">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-bo-state="failed" aria-pressed="false">Failed</button>
-                        <button type="button" class="kp-button kp-button--sm" data-bo-draw>Draw (replay the arrival)</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-bo-state="loading"
+                            aria-pressed="true"
+                            data-review-plays="loading phone shape"
+                        >
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-state="failed" aria-pressed="false" data-review-plays="failure">
+                            Failed
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-draw data-review-plays="arrival">
+                            Draw (replay the arrival)
+                        </button>
                     </div>
                     <div class="bo-actions" role="group" aria-label="The app's words">
                         <b>Words:</b>
