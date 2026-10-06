@@ -10,7 +10,7 @@
 // 4) — the end of one line and the start of the next give a narrow box two
 // lines tall, left of where the words are. Kenny's answer (scope-93): each
 // of those registers paints the bar as the phrase's own background, cloned
-// onto every line (`box-decoration-break: clone`), as lapis, nostromo and
+// onto every line (`box-decoration-break: clone`), as Lapis, nostromo and
 // forest already did. High-contrast (inline-block) and the registers whose
 // marks never wrap (`white-space: nowrap`) kept theirs.
 //
@@ -31,15 +31,15 @@
 //
 // Two ways to lay the phrase out. As the page does at 1920×1000 and
 // 1400×900 — the widths Kenny reviews at, where in this firefox only
-// nostromo's and shade-light's third phrase happens to break. And at its
+// nostromo's and Shade (light)'s third phrase happens to break. And at its
 // break: the paragraph narrowed, phrase by phrase, until the phrase — allowed
 // to wrap for that one measurement — would break over two lines, then
 // measured as the theme lays it out at that width. That is the case Kenny's
 // window met, whatever his font sizes, and it reaches every theme.
 //
 // Drill [KT3], firefox, 2026-09-15: on be9c034a, "at the break" lists
-// formal, pastel, sepia, blueprint, solstice, shade-light and grotesk, and
-// both review sizes list shade-light (a bar 5×44px at the end of the first
+// formal, pastel, sepia, blueprint, solstice, Shade (light) and grotesk, and
+// both review sizes list Shade (light) (a bar 5×44px at the end of the first
 // line); after the seven registers' change all three are green. Taking only
 // `box-decoration-break: clone` out of formal stays green, and that is the
 // finding rather than a gap: a background on an inline already paints each
@@ -274,7 +274,7 @@ test.beforeEach(async ({ context, page, browserName }) => {
     // be9c034a's own stylesheets, 15 s per theme, without this spec's probes),
     // and the screenshots this spec compares then differ by more than the
     // redaction: a bar read 42 to 71px tall in light, forest, sepia,
-    // shade-dark and nostromo, a different set on each run. That is a fault
+    // Shade (dark) and nostromo, a different set on each run. That is a fault
     // of the page, open for Kenny; a comparison that answers differently per
     // run is not a test [RULES, 2026-09-09].
     test.skip(browserName === 'chromium', 'the catalogue reading never settles in chromium from dark on');

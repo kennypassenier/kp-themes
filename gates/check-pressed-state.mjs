@@ -7,7 +7,7 @@
  * kp.components, and the button stops reacting to being pressed — while the
  * pointer is on it, which is the only time anyone presses it.
  *
- * Kenny found it on shade-dark, 2026-09-11: "als ik gewoon blijf klikken op
+ * Kenny found it on Shade (dark), 2026-09-11: "als ik gewoon blijf klikken op
  * de knop zelf, dan gebeurt er precies niks... bij shade light werkt het wel
  * precies". Measured the next day: fifteen of the twenty-five registers wrote
  * a hover background for a button the base layer gives a pressed state, and

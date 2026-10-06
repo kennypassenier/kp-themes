@@ -125,8 +125,8 @@ Three things about that table are not style, they are code:
     Examples of what a healthy step says:
 
     ```
-    2 generated files match their source (22 themes).
-    Hooks: 22 themes answer 6 hooks (118 answers checked, quiet or scoped).
+    2 generated files match their source (19 themes).
+    Hooks: 19 themes answer 6 hooks (104 answers checked, quiet or scoped).
     ```
 
 2. Run the browser tests the change reaches, with the sweeps:
@@ -228,7 +228,7 @@ What that covers, by output:
     npm run check:generated
     ```
 
-    Correct: `2 generated files match their source (22 themes).`
+    Correct: `2 generated files match their source (19 themes).`
 
 **Abort at any point:** `git checkout -- .` restores the tree; no
 generator writes outside the repository.
@@ -285,7 +285,7 @@ Every theme answers every question, even when the answer is "none".
     node gates/check-tokens.mjs
     ```
 
-    Correct: `All 22 themes declare the same 96 token names (…)`, with
+    Correct: `All 19 themes declare the same 96 token names (…)`, with
     the count raised by one.
 
 5. Regenerate and commit (procedure 2.1). `css/themes.css` and

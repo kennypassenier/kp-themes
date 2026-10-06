@@ -22,7 +22,7 @@ export const DEMOS = [
         id: 'character-graph',
         path: '../character-graph/demo.html',
         title: 'Network graph',
-        themes: ['high-contrast', 'deco', 'grotesk', 'lapis', 'brutalism'],
+        themes: ['high-contrast', 'deco', 'grotesk', 'brutalism'],
     },
 ];
 

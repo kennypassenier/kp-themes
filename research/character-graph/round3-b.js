@@ -48,38 +48,4 @@ export default {
             ],
         ],
     },
-    lapis: {
-        loading: [
-            [
-                'The rubricator marks each site',
-                'Each site swells once in a brief vermilion flare and settles, one after another round the ring, the way a rubricator strikes a small red mark beside a line before the gold is laid.',
-                'r4-lp-load-1',
-            ],
-            [
-                'Gold ground is burnished across the page',
-                'A soft gold sheen travels once in a steady diagonal across the whole box, over the hub and every site alike, the way a burnisher’s stroke is drawn clean across a leaf of gold ground.',
-                'r4-lp-load-2',
-            ],
-            [
-                'Each girih facet turns under the glass',
-                'Every site tilts gently back and forth in its place, one after another round the ring, unhurried, the way a girih star tile is turned slightly under glass to catch each facet in turn.',
-                'r4-lp-load-3',
-            ],
-            [
-                'The illuminator’s lamp sweeps the folio',
-                'A warm gold wedge of light turns steadily about the hub, round and round without hurry, the way a scribe’s lamp is swept slowly across an open folio while the page is read.',
-                'r4-lp-load-4',
-            ],
-            [
-                'Every link catches the light in turn',
-                'Each link catches a brief gold glow and lets it go, one after another round the ring, the glow caught rather than travelling, the way gold leaf answers the light as a hand passes near it.',
-                'r4-lp-load-5',
-            ],
-            [
-                'The rosary of nodes glows round the ring',
-                'Each site breathes into a soft gold glow and back, one after another round the ring, while the hub holds its own glow steady beneath them, like a rosary of gilded beads catching candlelight in turn.',
-                'r4-lp-load-6',
-            ],
-        ],
-    },
 };

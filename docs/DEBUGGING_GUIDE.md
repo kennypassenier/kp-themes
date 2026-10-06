@@ -140,16 +140,10 @@ never passed has no cache entry and always runs.
 Two things to know before you read its output.
 
 **A `FAIL` line in the gates output is not necessarily a gate.** Measured
-on 2026-09-12, `npm run gates` printed this and still exited 0:
-
-```
-npm notice run @kp-soft/themes@5.1.0 check:compliance
-npm notice run node gates/compliance.mjs --check
-FAIL shade-light: muted-foreground on muted = 3.61 (need >= 4.5)
-FAIL shade-light: muted-foreground on background = 3.99 (need >= 4.5)
-FAIL shade-light: muted-foreground on card = 4.13 (need >= 4.5)
-3 pair(s) short of the floor. This is advice: it is measured and printed, never refused [Kenny, 2026-09-09].
-```
+on 2026-09-12, `npm run gates` printed
+three `FAIL` lines, one theme's muted text measured at 3.61, 3.99 and
+4.13 against a 4.5 floor, followed by "3 pair(s) short of the floor. This
+is advice: it is measured and printed, never refused", and still exited 0.
 
 Since scope-76 `check:compliance` runs in `npm run advice`, so that
 reading no longer appears in the gates at all; the shape is still worth
@@ -363,7 +357,7 @@ None of these blocks anything. They are readings.
 | `<file>:NN: <declaration> sits outside a prefers-reduced-motion guard (DI7).` | `gates/check-motion.mjs` | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `<file>: kp-<name> animates something this gate cannot measure and is not listed as out of scope. Add it to OUT_OF_SCOPE with the reason, or teach the gate to read it.` | `gates/check-motion.mjs` | a new keyframe on a property with no opacity stops |
 | `css/<theme>-register.css:NN <selector>: texture paints at 0.14 (layer 0.14 × alpha 1), over DI9's ceiling of 0.06` | `gates/check-texture.mjs` | the effective opacity is the layer opacity times the strongest alpha |
-| `N invariant violation(s) across 22 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
+| `N invariant violation(s) across 19 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
 
 Under S49 a value an approved demo showed is not changed because a
 reading disagrees with it. The reading becomes a **finding** put to

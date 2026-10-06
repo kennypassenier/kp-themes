@@ -107,20 +107,6 @@
             "card": "3",
             "next": "2"
         },
-        "shade-light": {
-            "shape": "1",
-            "openclose": "1",
-            "highlight": "1",
-            "card": "1",
-            "next": "1"
-        },
-        "shade-dark": {
-            "shape": "1",
-            "openclose": "1",
-            "highlight": "1",
-            "card": "3",
-            "next": "3"
-        },
         "retro": {
             "shape": "2",
             "openclose": "1",
@@ -130,13 +116,6 @@
         },
         "grotesk": {
             "shape": "2",
-            "openclose": "2",
-            "highlight": "1",
-            "card": "1",
-            "next": "1"
-        },
-        "lapis": {
-            "shape": "3",
             "openclose": "2",
             "highlight": "1",
             "card": "1",

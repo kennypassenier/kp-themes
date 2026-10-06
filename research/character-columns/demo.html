@@ -68,11 +68,30 @@
                 <div class="cl-controls" data-review-controls>
                     <div class="cl-actions" role="group" aria-label="State of every strip">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-state="ready" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-state="loading" aria-pressed="false">Loading</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cl-state="ready"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape"
+                            data-review-embed-plays="tone"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cl-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-cl-state="empty" aria-pressed="false">Nothing to show</button>
                         <button type="button" class="kp-button kp-button--sm" data-cl-state="error" aria-pressed="false">Could not read</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cl-live>Live update (ten minutes later)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-live data-review-plays="live">
+                            Live update (ten minutes later)
+                        </button>
                     </div>
                     <div class="cl-actions" role="group" aria-label="The figures in every strip">
                         <b>Figures:</b>
@@ -99,6 +118,7 @@
                         class="cl-col"
                         data-cs
                         data-cs-preview
+                        data-review-preview
                         data-cs-shape="1"
                         data-cs-loading="1"
                         data-cs-arrival="1"
@@ -164,11 +184,8 @@
                     "brutalism|columns",
                     "deco|columns",
                     "phantom|columns",
-                    "shade-light|columns",
-                    "shade-dark|columns",
                     "retro|columns",
                     "grotesk|columns",
-                    "lapis|columns",
                     "nostromo|columns",
                     "titanium|columns"
                 ]

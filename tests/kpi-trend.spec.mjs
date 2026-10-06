@@ -196,12 +196,12 @@ test(
 );
 
 test(
-    'in 22 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
+    'in 19 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
     { tag: ['@component:data'] },
     async ({ page }) => {
         await ready(page);
         // fix-99: the warning tone's figure sat on --warning-foreground alone
-        // (1.00:1 in high-contrast, 1.04:1 in shade-light), the destructive
+        // (1.00:1 in high-contrast, 1.04:1 in Shade (light)), the destructive
         // tone's on --destructive alone (4.11:1 in solstice to 4.47:1 in
         // synthwave), the change on --success-foreground or --destructive
         // alone (1.00:1 in three themes, 4.11:1 in solstice); and the label

@@ -33,11 +33,11 @@ first section.
 Check `document.documentElement.dataset.theme` in the console. If it is
 empty, nothing is applying the theme: either the snippet is absent or the
 picker module never loaded. If it says `formal` while `localStorage` says
-something else, the stored value is not one of the twenty-two names — the
+something else, the stored value is not one of the nineteen names — the
 picker corrects an unknown value rather than putting it on the document.
 
 ```js
-localStorage.getItem('theme'); // must be one of the twenty-two
+localStorage.getItem('theme'); // must be one of the nineteen
 ```
 
 ### One picker updates, another does not
@@ -164,21 +164,6 @@ The effects read `prefers-reduced-motion` through a subscribing hook and
 stop within the same session. If yours does not, you are on a copy from
 before that fix — the components used to read the setting once at mount.
 
-### In shade-light or shade-dark the shadows do not follow the pointer
-
-They are not meant to everywhere. The light is the pointer [scope-101,
-from scope-25], and it goes out on purpose in five cases: a touch screen,
-the moment a reader presses Tab, the pointer leaving the window,
-`prefers-reduced-motion: reduce`, and a page that never attached
-`js/effects.js`. In each of those the register falls back to the fixed
-light at the top left — `var(--kp-light-x, 1)` — which is what these two
-themes painted before scope-101, so a shadow that stands still is a
-correct picture, not a broken one.
-
-If it does not follow with a mouse on an effects-enabled page, check that
-the root still carries `--kp-pointer: track`: that one declaration arms the
-bus, and `--kp-light: pointer` only says which surfaces it lights.
-
 ### In sepia the ink of a press always starts in the middle of the button
 
 That is the theme's own declared default, and it is what you get without
@@ -224,7 +209,7 @@ either.
 | `<file> does not match its source` | someone edited the generated file | edit `themes/<name>/tokens.json`, then `npm run generate` |
 | `The compliance table no longer matches what the gates measure` | the table and the gates disagree | `npm run generate:all` (or `node gates/compliance.mjs` alone) |
 | `<anything> does not match its source` | a generator ran and its neighbours did not | `npm run generate:all` — one command settles every generated file |
-| `theme discovery broke: expected 22 themes, found 21 [names]` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
+| `theme discovery broke: expected 19 themes, found 18 [names]` | a theme is in `order.json` but not in the stylesheet, or the reverse | regenerate, then look at the name |
 
 ## Working on the package itself
 

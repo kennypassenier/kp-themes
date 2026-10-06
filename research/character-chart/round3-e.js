@@ -46,31 +46,6 @@ export default {
             },
         ],
     },
-    lapis: {
-        loading: [
-            {
-                key: 'r3-la-load-1',
-                name: 'The gilt brushstroke',
-                text: "A soft bar of gold, fading at both ends, sweeps across the vellum and back, as a burnisher's hand lays gold leaf.",
-                ink: '--primary',
-                ink2: '--foreground',
-            },
-            {
-                key: 'r3-la-load-2',
-                name: 'The girih weave',
-                text: 'Two sets of fine gold lines, one laid each way, drift past each other in a slow diagonal weave, as the lattice is traced.',
-                ink: '--primary',
-                ink2: '--accent',
-            },
-            {
-                key: 'r3-la-load-3',
-                name: 'The gold dust',
-                text: 'Fine flecks of gold and ivory drift slowly down the page, as ground pigment settles after the brush has passed.',
-                ink: '--primary',
-                ink2: '--foreground',
-            },
-        ],
-    },
     nostromo: {
         loading: [
             {

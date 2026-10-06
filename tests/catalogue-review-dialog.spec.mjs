@@ -368,7 +368,7 @@ const SHORT_NOTE = { rejected: 'The last row is cut off.', change: 'The scroll r
 
 /** Review notes for two blocks of the tables page: a short one (in four themes) and one long enough to fill the side. */
 const NOTES = {
-    'table--long': { formal: SHORT_NOTE, dark: SHORT_NOTE, nostromo: SHORT_NOTE, 'shade-light': SHORT_NOTE },
+    'table--long': { formal: SHORT_NOTE, dark: SHORT_NOTE, nostromo: SHORT_NOTE, sepia: SHORT_NOTE },
     'table--datatable-sticky': {
         formal: {
             rejected: 'Slivers of row text show above the header row while scrolling. '.repeat(12),
@@ -508,7 +508,7 @@ test(
         expect(short.color, 'a colour of its own').not.toBe(short.lookColor);
 
         // The ink on its ground reads in light and dark themes alike.
-        for (const theme of ['formal', 'dark', 'nostromo', 'shade-light']) {
+        for (const theme of ['formal', 'dark', 'nostromo', 'sepia']) {
             await page.keyboard.press('Escape');
             await page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
             await waitForJudging(page);

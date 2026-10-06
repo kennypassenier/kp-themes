@@ -63,14 +63,34 @@
                 <div class="cm-controls" data-review-controls>
                     <div class="cm-actions" role="group" aria-label="State of every meter">
                         <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-state="drawn" aria-pressed="true">Drawn</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-state="markover" aria-pressed="false">Mark past the end</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cm-state="drawn"
+                            aria-pressed="true"
+                            data-review-plays="arrival shape"
+                        >
+                            Drawn
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cm-state="loading"
+                            aria-pressed="false"
+                            data-review-plays="loading"
+                        >
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-state="markover" aria-pressed="false" data-review-plays="mark">
+                            Mark past the end
+                        </button>
                     </div>
                     <div class="cm-actions" role="group" aria-label="Tone of every meter">
                         <b>Tone:</b>
                         <button type="button" class="kp-button kp-button--sm" data-cm-tone="" aria-pressed="true">None</button>
-                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cm-tone="warning" aria-pressed="false" data-review-plays="tone">
+                            Warning
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-cm-tone="destructive" aria-pressed="false">Destructive</button>
                     </div>
                     <div class="cm-actions" role="group" aria-label="Speed of every animation">
@@ -90,6 +110,7 @@
                         class="cm-meters"
                         data-cm
                         data-cm-preview
+                        data-review-preview
                         data-cm-shape="1"
                         data-cm-loading="1"
                         data-cm-arrival="1"
@@ -128,15 +149,7 @@
         <script type="application/json" data-review-round>
             {
                 "round": "2026-10-05-r4",
-                "reopen": [
-                    "dark|meter",
-                    "cyberpunk|meter",
-                    "high-contrast|meter",
-                    "shade-light|meter",
-                    "shade-dark|meter",
-                    "retro|meter",
-                    "grotesk|meter"
-                ]
+                "reopen": ["dark|meter", "cyberpunk|meter", "high-contrast|meter", "retro|meter", "grotesk|meter"]
             }
         </script>
         <script type="module" src="demo.js"></script>

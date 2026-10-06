@@ -43,40 +43,4 @@ export default {
             },
         ],
     },
-    lapis: {
-        shape: [
-            {
-                key: 'r3-la-shape-1',
-                name: 'The mosaic',
-                text: 'The veil is laid in small tesserae with gold grout across the whole table, and the panel is one large tessera framed in a band of gold and lapis squares, the words in display-serif capitals. Echoes the calendar’s mosaic and the drawer’s gilt-inlay slab. Unlike the other two, the pattern covers the veil as well: the rows lie under a mosaic floor.',
-            },
-            {
-                key: 'r3-la-shape-2',
-                name: 'The girih octagon',
-                text: 'The panel is cut to an octagon, the centre of a girih star, its eight edges in a gold frame around the deep blue field, with the ten-pointed star spinner at its heart. Echoes the girih tiles’ gold star (the calendar’s today) and the header’s girih tile. Unlike the other two, the outline itself changes: no rectangle is left, every corner is cut at 45°.',
-            },
-            {
-                key: 'r3-la-shape-3',
-                name: 'The unrolled scroll',
-                text: 'The panel is a strip of ivory vellum held between two gold rollers that stand past its top and foot, ruled faintly, the words in lapis ink in the serif italic, the star spinner on a lapis disc. Echoes the menu’s unrolled and the trend’s lapis on vellum. Unlike the other two, the plate is light, not blue: lapis ink on vellum between gilt rods.',
-            },
-        ],
-        phone: [
-            {
-                key: 'r3-la-phone-1',
-                name: 'The rubricated initial',
-                text: 'Flat, the first letter of the words is set as a large initial in rubric red in the display serif, as a manuscript line opens. Echoes the trend’s rubric and the graph’s rubricator. Unlike the other two, the accent is on the words: their first letter.',
-            },
-            {
-                key: 'r3-la-phone-2',
-                name: 'The gold rings',
-                text: 'Flat, the star spinner is set in a round gold double ring at the strip’s leading end, a roundel. Echoes the chart’s gold rings on its events. Unlike the other two, the accent is on the spinner, at the start of the strip.',
-            },
-            {
-                key: 'r3-la-phone-3',
-                name: 'The gilt chip',
-                text: 'Flat, the count under the words sits on a small gold chip with lapis ink, as a figure is gilded. Echoes the state badge’s vellum chip and the trend’s and the tiles’ gilded. Unlike the other two, the accent is on the count, under the words.',
-            },
-        ],
-    },
 };

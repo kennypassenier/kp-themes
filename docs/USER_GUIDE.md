@@ -79,7 +79,7 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 
 ---
 
-## The twenty-two themes
+## The nineteen themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -98,11 +98,8 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 | `brutalism` | Brutalism | no |
 | `deco` | Art Deco | yes |
 | `phantom` | Phantom | yes |
-| `shade-light` | Shade (light) | no |
-| `shade-dark` | Shade (dark) | yes |
 | `retro` | Retro | no |
 | `grotesk` | Grotesk | no |
-| `lapis` | Lapis | yes |
 | `nostromo` | Nostromo | no |
 | `titanium` | Titanium | yes |
 
@@ -115,7 +112,9 @@ is the third, its 3.1.0 bevel register grown into the whole desktop from
 "Bevel 95" (row 3); `terminal` is the fourth, from "Green Phosphor"
 (row 4); `brutalism` is the fifth, from "Hard Copy" (row 5); and the
 remaining nineteen were lifted the same way over 2026-09-08, each from
-its own approved demo, so all twenty-two now carry a register.
+its own approved demo, so every theme carries a register. Three were
+removed again on 2026-10-06 (Lapis, Shade (light) and Shade (dark);
+see MIGRATION.md), which leaves the nineteen above.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -128,7 +127,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those twenty-two names since 1.1.0,
+The `Theme` type is the union of exactly those nineteen names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -173,7 +172,7 @@ matches descendants, and an inner theme has the same specificity, so file
 order decides rather than depth.
 
 So: theme a page, and theme a pane inside it. Do not nest a third. The
-fix is `@scope ([data-theme='x']) to ([data-theme])` in all twenty-two
+fix is `@scope ([data-theme='x']) to ([data-theme])` in all nineteen
 registers, which is a round of its own rather than a patch.
 
 ### As an icon with a dropdown
@@ -1140,9 +1139,8 @@ actions go under the words.
 The item's plate is `--kp-attention-tint` of its severity's colour mixed
 into `--card`, 8 % by default. Lower it on an item when the page's text
 reads too faint on the tint, for example
-`.kp-attention__item[data-kp-severity='info'] { --kp-attention-tint: 6%; }`;
-shade-dark does exactly that, which takes its info item from 4.49:1 to
-4.71:1.
+`.kp-attention__item[data-kp-severity='info'] { --kp-attention-tint: 6%; }`,
+which took one theme's info item from 4.49:1 to 4.71:1.
 
 A live page builds its band later and refreshes it on every poll.
 `attachAttention(root)` also orders a band added under `root` after it ran,
@@ -2400,7 +2398,7 @@ The padding glides over `--kp-nav-sticky-duration` (the theme's
 otherwise it changes at once. Every register reads `--kp-nav-pad-block`
 and multiplies it by `--kp-nav-pad-scale` (1 at rest, the shrink factor
 when compact — the stylesheet sets it; set `--kp-nav-sticky-shrink`
-instead), so the bar shrinks in all 22 themes. Keep the skip link before the
+instead), so the bar shrinks in all 19 themes. Keep the skip link before the
 wrapper: it stays the first thing Tab reaches.
 
 A sticky box sticks inside its parent, so the wrapper's parent has to be
@@ -2675,11 +2673,11 @@ its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 
 Every theme has a register — the opt-in stylesheet carrying its
 expression — and a page with a picker can end up on any of the
-twenty-two. There are two ways to handle that, and the package supports
+nineteen. There are two ways to handle that, and the package supports
 both.
 
-The simple one is `dist/kp-themes.css`: twenty-nine stylesheets in one
-file, including all twenty-two registers, each scoped to
+The simple one is `dist/kp-themes.css`: twenty-three stylesheets in one
+file, including all nineteen registers, each scoped to
 `[data-theme='name']`. Load it once and a theme change fetches nothing —
 `applyTheme()` sets the attribute and the right register is already
 there. It costs 693 kB minified.
@@ -3129,8 +3127,9 @@ nothing. The bus writes once per animation frame, does not run under
 reduced motion, and removes what it wrote when the module is detached.
 
 The same bus also writes a per-ELEMENT light, for a theme that declares
-`--kp-light: pointer` as well [scope-101, from scope-25 — shade-light and
-shade-dark]. Two root numbers cannot say which way a shadow falls, because
+`--kp-light: pointer` as well [scope-101, from scope-25]. No shipped
+theme declares it since the two Shade themes were removed (2026-10-06);
+the mechanism stays for a theme that wants it. Two root numbers cannot say which way a shadow falls, because
 "away from the pointer" is a different direction for every box on the
 screen, so each card, plain button and hero surface gets six properties of
 its own:
@@ -3144,10 +3143,9 @@ its own:
 
 Write every rule with the fallback it had before — `var(--kp-light-x, 1)`
 — because there is no pointer on a touch screen, none while a reader is
-tabbing, none under reduced motion and none without the module. shade-light
-multiplies its shadow offsets by `x` and `y`; shade-dark multiplies them by
-`x * lift` and paints a radial patch of the foreground at `at-x`/`at-y`,
-faded by `near`. The light goes out on a touch, on Tab, when the pointer
+tabbing, none under reduced motion and none without the module. A theme can
+multiply its shadow offsets by `x` and `y`, or by `x * lift` and paint a
+radial patch of the foreground at `at-x`/`at-y`, faded by `near`. The light goes out on a touch, on Tab, when the pointer
 leaves the window and when the module is detached.
 
 ## The press point, for a theme that wants it [scope-101]
@@ -3178,7 +3176,7 @@ the flash threshold, so they are literals rather than knobs:
 | --- | --- |
 | `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in sepia, 240 ms in solstice |
 | `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Fourteen of the twenty-two answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
+| `--fx-lift` | how far a control rises under the cursor. Twelve of the nineteen answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |

@@ -152,26 +152,6 @@ Generated 2026-10-06 from the settled picks of the character round (meter, chart
 - **columns**: Shape: 3, The redacted dossier · While loading: 2, The folders shuffle · How the figures arrive: 2, Typed into the report · The tone and the change: 1, The evidence tag · Live update: 2, A shiver
 - **menu**: Shape: The calling card · While loading: The string is pulled · Open and close: Slashed in · A destructive entry and a disabled reason: The calling card · Hover, focus and a press: Snatched
 
-## shade-light
-
-- **meter**: Shape: 1, The pencil gauge · While loading: 1, Cross-hatching drifts · How the share arrives: 1, Hatched in · When the tone changes: 1, Hatched in · The mark past the end: 2, Pressed paper
-- **chart**: Shape: 3, The parasol · While loading: 2, The pencil line · How the series arrives: 3, The shade moves off · How a new reading shows: 1, As approved: it appears · The event dots: 3, Pins · The pinned tooltip: 1, The tooltip of Pencil in the shade
-- **calendar**: Shape: 1, Pencil in the shade · While loading: 1, Pencil in the shade: its loading · How the month arrives: 1, The shade passes · Tones and today: 1, Pencil in the shade: its tones and today · The picked day: 2, The leaf shade: its pick
-- **graph**: Shape: 3, The paper lantern · While loading: 6, Dappled light crosses the ring · How the network arrives: 2, Sketched · The picked node and the hidden kind: 3, The sunny spot · Live update: 2, A sunbeam
-- **trend**: Shape: 1, Pencil in the shade · While loading: 1, Pencil in the shade · How the figure and the line arrive: 1, At once · The tone and the change: 3, The pinned note · Live update: 1, Redrawn
-- **columns**: Shape: 3, Embossed paper · While loading: 3, A cloud passes · How the figures arrive: 1, Laid down · The tone and the change: 2, The small tag · Live update: 2, The sheet stirs
-- **menu**: Shape: Pencil in the shade · While loading: Leaves sway · Open and close: Drawn in pencil · A destructive entry and a disabled reason: The pinned note · Hover, focus and a press: A breeze
-
-## shade-dark
-
-- **meter**: Shape: 1, Silverpoint · While loading: 1, Silver cross-hatching drifts · How the share arrives: 1, Silver drawn · When the tone changes: 1, Silver drawn · The mark past the end: 2, Lifted
-- **chart**: Shape: 2, The reading lamp · While loading: 1, Silverpoint hatching · How the series arrives: 3, Lit from the left · How a new reading shows: 1, As approved: it appears · The event dots: 2, Silver rings · The pinned tooltip: 1, The tooltip of Silverpoint
-- **calendar**: Shape: 1, Silverpoint · While loading: 1, Silverpoint: its loading · How the month arrives: 1, Lamps on · Tones and today: 1, Silverpoint: its tones and today · The picked day: 2, The reading lamp: its pick
-- **graph**: Shape: 1, Silverpoint · While loading: 4, Struck onto the page · How the network arrives: 2, Drawn in silver · The picked node and the hidden kind: 2, Under the lamp · Live update: 2, The warm flicker
-- **trend**: Shape: 1, Silverpoint · While loading: 1, Silverpoint · How the figure and the line arrive: 2, Silverpoint · The tone and the change: 3, The red lamp · Live update: 2, A glint
-- **columns**: Shape: 2, The velvet tray · While loading: 3, The light swings · How the figures arrive: 2, Unveiled · The tone and the change: 2, The cushion · Live update: 3, Risen
-- **menu**: Shape: The night window · While loading: The candle flickers · Open and close: Moonrise · A destructive entry and a disabled reason: The red lamp · Hover, focus and a press: A glint
-
 ## retro
 
 - **meter**: Shape: 1, The system monitor · While loading: 1, The marquee · How the share arrives: 1, Task Manager · When the tone changes: 2, Winamp · The mark past the end: 2, Winamp
@@ -191,16 +171,6 @@ Generated 2026-10-06 from the settled picks of the character round (meter, chart
 - **trend**: Shape: 1, The transit board · While loading: 1, The transit board · How the figure and the line arrive: 2, Set in type · The tone and the change: 3, The index colour · Live update: 1, Redrawn
 - **columns**: Shape: 3, The big numerals · While loading: 1, A line runs across · How the figures arrive: 1, Slid in · The tone and the change: 3, The arrow · Live update: 1, Inverted
 - **menu**: Shape: The transit board · While loading: The line runs · Open and close: Set in type · A destructive entry and a disabled reason: The index colour · Hover, focus and a press: The bar runs
-
-## lapis
-
-- **meter**: Shape: 1, The gilt band · While loading: 2, Reed stroke · How the share arrives: 2, Reed stroke · When the tone changes: 2, Reed stroke · The mark past the end: 2, Reed stroke
-- **chart**: Shape: 1, The gilt lattice · While loading: 3, The gold dust · How the series arrives: 3, Unrolled from the middle · How a new reading shows: 1, As approved: it appears · The event dots: 3, Gold rings · The pinned tooltip: 1, The tooltip of the gilt lattice
-- **calendar**: Shape: 3, The mosaic · While loading: 2, The girih tiles: its loading · How the month arrives: 1, Laid in · Tones and today: 2, The girih tiles: its tones and today · The picked day: 2, The girih tiles: its pick
-- **graph**: Shape: 2, Lapis on vellum · While loading: 1, The rubricator marks each site · How the network arrives: 3, The pattern turns · The picked node and the hidden kind: 2, Gilded · Live update: 2, The gold glint
-- **trend**: Shape: 2, Lapis on vellum · While loading: 1, The girih tile · How the figure and the line arrive: 3, Inked · The tone and the change: 3, The rubric · Live update: 2, Gilded
-- **columns**: Shape: 2, The illuminated band · While loading: 2, The lattice is drawn · How the figures arrive: 1, Gilded in · The tone and the change: 3, The fleuron · Live update: 3, Turned
-- **menu**: Shape: Lapis on vellum · While loading: The gold leaf is laid · Open and close: Unrolled · A destructive entry and a disabled reason: The gold-ruled warning · Hover, focus and a press: The star glints
 
 ## nostromo
 

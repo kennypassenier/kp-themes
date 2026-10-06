@@ -145,22 +145,6 @@ test.describe('two surfaces in one theme [TH116]', { tag: ['@sweep', '@component
      * @type {Record<string, { measured: number, what: string, why: string }[]>}
      */
     const REPORTED = {
-        // shade-light's two muted entries (3.61 on the page, 4.13 on the
-        // card, both `rgb(101, 126, 134)`) were REMOVED at `scope-101`,
-        // 2026-09-16: Kenny answered shade-light-contrast "Donkerder
-        // maken", --muted-foreground went from 46% to 39% lightness, and
-        // the three pairs now measure 4.71, 5.21 and 5.39. This list holds
-        // only pairs the package still paints below the floor, and the
-        // check above refuses an entry for a pair that has been fixed —
-        // which is how it was found.
-        'shade-light': [],
-        'shade-dark': [
-            {
-                measured: 4.21,
-                what: 'app p "FILE 06 · STATUS: PREVIEW · CL"',
-                why: "the demo's own `.microlabel { color: var(--accent) }` is one rule for every surface, and on the card the accent measures 4.21 against the 4.5 floor. The demo's contrast table lists twelve pairs and never this one — it only ever measured the accent as a background. Reported at the shade-dark lift, 2026-09-08, awaiting Kenny.",
-            },
-        ],
         blueprint: [
             {
                 measured: 1.54,

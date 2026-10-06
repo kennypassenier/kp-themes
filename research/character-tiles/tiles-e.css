@@ -880,22 +880,9 @@
         background: var(--destructive);
     }
 
-    /* ── shade-light · how the tiles arrive ─────────────────────────── */
-
     /* Drawn in pencil: the body is drawn in from the left, easing in and
        out. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
-            animation: tl-shadelight-pencil 0.45s ease-in-out both;
-        }
-        /* Out of the shade: tile after tile rises from the baseline,
-           slowing as it lands. */
-        [data-theme='shade-light'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
-            animation: tl-shadelight-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        }
-        [data-theme='shade-light'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
-            animation-delay: 0.1s;
-        }
     }
     @keyframes tl-shadelight-pencil {
         from {
@@ -912,51 +899,5 @@
         to {
             transform: translateY(0);
         }
-    }
-
-    /* ── shade-light · tone ──────────────────────────────────────────── */
-
-    /* The paper chip: the note on a lifted paper chip. */
-    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
-        box-shadow: 0 0.1rem 0.25rem color-mix(in oklch, var(--foreground) 25%, transparent);
-        background: var(--primary);
-    }
-    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
-        background: var(--success);
-    }
-    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
-        background: var(--warning);
-    }
-    [data-theme='shade-light'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
-        background: var(--destructive);
-    }
-
-    /* The status plate: the note on its own status plate. */
-    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
-        border: 2px solid var(--primary);
-    }
-    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
-        border-color: var(--success);
-    }
-    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
-        border-color: var(--warning);
-    }
-    [data-theme='shade-light'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
-        border-color: var(--destructive);
-    }
-
-    /* The pinned note: marked along the left edge, as a note pinned to
-       the card. */
-    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
-        border-inline-start: 4px solid var(--primary);
-    }
-    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
-        border-inline-start-color: var(--success);
-    }
-    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
-        border-inline-start-color: var(--warning);
-    }
-    [data-theme='shade-light'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
-        border-inline-start-color: var(--destructive);
     }
 }

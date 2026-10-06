@@ -107,20 +107,6 @@
             "failure": "1",
             "phone": "1"
         },
-        "shade-light": {
-            "shape": "r2-sl-shape-1",
-            "loading": "3",
-            "arrival": "1",
-            "failure": "1",
-            "phone": "1"
-        },
-        "shade-dark": {
-            "shape": "r2-sd-shape-1",
-            "loading": "3",
-            "arrival": "1",
-            "failure": "2",
-            "phone": "1"
-        },
         "retro": {
             "shape": "r2-rt-shape-1",
             "loading": "1",
@@ -134,13 +120,6 @@
             "arrival": "2",
             "failure": "1",
             "phone": "1"
-        },
-        "lapis": {
-            "shape": "r3-la-shape-1",
-            "loading": "1",
-            "arrival": "1",
-            "failure": "3",
-            "phone": "r3-la-phone-1"
         },
         "nostromo": {
             "shape": "r3-b-no-shape-1",

@@ -1292,7 +1292,7 @@
        `kp.register` sits after `kp.components`, and a layer beats a state:
        a register writing `.kp-button:hover { background: ... }` outranks
        the base layer's `.kp-button:active`, so pressing the button changed
-       nothing. Kenny found it on shade-dark, 2026-09-11 — "als ik gewoon
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
        blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
        fifteen of the twenty-five registers had it.
 
@@ -1373,7 +1373,7 @@
     /* The press is instant: the rule is already out, and only its weight
        and colour change. Nothing here is in the transition list, so a
        click shorter than 220ms still shows — the reading that fixed
-       shade-light and shade-dark. */
+       Shade (light) and Shade (dark). */
     [data-theme='grotesk'] .kp-button:active:not(:disabled) .kp-button__label,
     [data-theme='grotesk'] .kp-nav__link:active,
     [data-theme='grotesk'] .kp-sidenav__link:active {

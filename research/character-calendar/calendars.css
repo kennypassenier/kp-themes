@@ -2609,253 +2609,7 @@
         content: '';
         background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.3) 0 1.6px, transparent 2.2px) 0 0 / 7px 7px;
     }
-    /* ══ shade-light ════════════════════════════════════════════════════ */
-    /* ── shade-light · 1 · pencil in the shade ────────────────────────── */
-    [data-theme='shade-light'] [data-cl-shape='1'] .kp-calendar {
-        --cl-r: 2px;
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-gap: 7px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        --cl-num-size: 1.15em;
-        --cl-shadow: 0 2px 5px -1px hsl(from var(--foreground) h s l / 0.28);
-    }
-    [data-theme='shade-light'] [data-cl-tone='1'] .kp-calendar {
-        --cl-ok-edge: hsl(from var(--success) h s l / 0.6);
-        --cl-warn-edge: hsl(from var(--warning) h s l / 0.6);
-        --cl-muted-edge: var(--border);
-        --cl-none-bg: var(--card);
-        --cl-none-edge: var(--border-strong);
-        --cl-none-style: dashed;
-        --cl-none-mark: '?';
-        --cl-none-ink: var(--foreground);
-        --cl-future-bg: var(--card);
-        --cl-future-edge: var(--border-strong);
-        --cl-future-style: dotted;
-        --cl-before-edge: transparent;
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.16) 0 1px, transparent 1px 5px);
-        --cl-today: 0 0 transparent;
-    }
-    [data-theme='shade-light'] [data-cl-loading='1'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-busy-r: 2px;
-        --cl-busy-shadow: 0 4px 14px -2px hsl(from var(--foreground) h s l / 0.35), 0 0 0 1px var(--border);
-    }
-    [data-theme='shade-light'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
-        --cl-pick-offset: 2px;
-    }
-    /* Every night shaded in pencil hatching, in its own ink. */
-    [data-theme='shade-light']
-        [data-cl-tone='1']
-        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='muted']) {
-        --cl-pat: repeating-linear-gradient(-45deg, hsl(from var(--cl-fg) h s l / 0.14) 0 1px, transparent 1px 4px);
-    }
-    [data-theme='shade-light'] [data-cl-tone='1'] .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none']) {
-        --cl-shadow: 0 0 transparent;
-    }
-    [data-theme='shade-light'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day {
-        --cl-shadow: 0 6px 14px -2px hsl(from var(--foreground) h s l / 0.4);
-        translate: 0 -2px;
-    }
-    [data-theme='shade-light'] [data-cl-shape='1'] .kp-calendar__num {
-        font-style: italic;
-    }
-    /* Today: circled in pencil. */
-    [data-theme='shade-light'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset: -0.2em -0.4em;
-        border: 2px solid currentColor;
-        border-radius: 50% 46% 52% 48%;
-        rotate: -6deg;
-    }
-    [data-theme='shade-light'] [data-cl-shape='1'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-style: italic;
-        font-weight: 600;
-    }
-    [data-theme='shade-light'] [data-cl-shape='1'] .kp-calendar__grid th {
-        font-family: var(--theme-font-display);
-        font-style: italic;
-        font-weight: 500;
-    }
-    /* Loading: the square hatched in (at rest, hatched). */
-    [data-theme='shade-light'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 4px);
-    }
-    /* ── shade-light · 2 · the leaf shade ─────────────────────────────── */
-    [data-theme='shade-light'] [data-cl-shape='2'] .kp-calendar {
-        --cl-r: var(--radius);
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        padding: 0.5rem;
-        border-radius: var(--radius);
-    }
-    [data-theme='shade-light'] [data-cl-tone='2'] .kp-calendar {
-        --cl-ok-edge: hsl(from var(--success) h s l / 0.6);
-        --cl-warn-edge: hsl(from var(--warning) h s l / 0.6);
-        --cl-muted-edge: var(--border);
-        --cl-none-bg: var(--card);
-        --cl-none-edge: var(--border-strong);
-        --cl-none-style: dashed;
-        --cl-none-mark: '?';
-        --cl-none-ink: var(--foreground);
-        --cl-future-bg: var(--card);
-        --cl-future-edge: var(--border-strong);
-        --cl-future-style: dotted;
-        --cl-before-edge: transparent;
-        --cl-before-bg: hsl(from var(--muted) h s l / 0.6);
-        --cl-today: 0 0 0 2px var(--chart-2), 0 0 10px 3px hsl(from var(--chart-2) h s l / 0.35);
-    }
-    [data-theme='shade-light'] [data-cl-loading='2'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-busy-shadow: 0 6px 18px -4px hsl(from var(--foreground) h s l / 0.35), 0 0 0 1px var(--border);
-    }
-    [data-theme='shade-light'] [data-cl-select='2'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
-        --cl-pick-offset: 3px;
-    }
-    /* The dappled shade of leaves, over the whole sheet. */
-    [data-theme='shade-light'] [data-cl-shape='2'] .kp-calendar::after {
-        content: '';
-        background:
-            radial-gradient(ellipse 22% 14% at 18% 22%, hsl(from var(--foreground) h s l / 0.09), transparent 70%),
-            radial-gradient(ellipse 18% 20% at 62% 30%, hsl(from var(--foreground) h s l / 0.08), transparent 70%),
-            radial-gradient(ellipse 26% 12% at 40% 58%, hsl(from var(--foreground) h s l / 0.08), transparent 70%),
-            radial-gradient(ellipse 16% 18% at 85% 70%, hsl(from var(--foreground) h s l / 0.09), transparent 70%),
-            radial-gradient(ellipse 20% 14% at 22% 84%, hsl(from var(--foreground) h s l / 0.07), transparent 70%);
-    }
-    [data-theme='shade-light'] [data-cl-shape='2'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-weight: 600;
-    }
-    [data-theme='shade-light'] [data-cl-shape='2'] .kp-calendar__grid th {
-        font-family: var(--theme-font-display);
-        font-weight: 500;
-    }
-    /* Loading: a cloud's shade on every square (it passes). */
-    [data-theme='shade-light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: radial-gradient(ellipse 45% 70% at 50% 50%, hsl(from var(--foreground) h s l / 0.18), transparent 75%) -100% 0 / 100% 100%
-            no-repeat;
-    }
-    /* ══ shade-dark ═════════════════════════════════════════════════════ */
-    /* ── shade-dark · 1 · silverpoint ─────────────────────────────────── */
-    [data-theme='shade-dark'] [data-cl-shape='1'] .kp-calendar {
-        --cl-r: 2px;
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-gap: 7px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        --cl-num-size: 1.15em;
-    }
-    [data-theme='shade-dark'] [data-cl-tone='1'] .kp-calendar {
-        --cl-ok-edge: hsl(from var(--foreground) h s l / 0.55);
-        --cl-warn-edge: hsl(from var(--foreground) h s l / 0.55);
-        --cl-bad-edge: hsl(from var(--foreground) h s l / 0.55);
-        --cl-muted-edge: hsl(from var(--foreground) h s l / 0.3);
-        --cl-none-bg: var(--background);
-        --cl-none-edge: hsl(from var(--foreground) h s l / 0.55);
-        --cl-none-style: dashed;
-        --cl-future-edge: hsl(from var(--foreground) h s l / 0.45);
-        --cl-future-style: dotted;
-        --cl-before-edge: transparent;
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.14) 0 1px, transparent 1px 5px);
-        --cl-today: 0 0 transparent;
-    }
-    [data-theme='shade-dark'] [data-cl-loading='1'] .kp-calendar {
-        --cl-loading-bg: var(--background);
-        --cl-loading-edge: hsl(from var(--foreground) h s l / 0.3);
-        --cl-busy-r: 2px;
-        --cl-busy-shadow: 0 0 0 1px hsl(from var(--foreground) h s l / 0.55);
-    }
-    [data-theme='shade-dark'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
-        --cl-pick-offset: 2px;
-    }
-    /* Silver hatching over every night. */
-    [data-theme='shade-dark']
-        [data-cl-tone='1']
-        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='muted']) {
-        --cl-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 4px);
-    }
-    [data-theme='shade-dark'] [data-cl-shape='1'] .kp-calendar__num {
-        font-style: italic;
-    }
-    /* Today: ringed in silver. */
-    [data-theme='shade-dark'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset: -0.2em -0.4em;
-        border: 2px solid currentColor;
-        border-radius: 50%;
-    }
-    [data-theme='shade-dark'] [data-cl-shape='1'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-style: italic;
-        font-weight: 600;
-    }
-    [data-theme='shade-dark'] [data-cl-shape='1'] .kp-calendar__grid th {
-        font-family: var(--theme-font-display);
-        font-style: italic;
-        font-weight: 500;
-    }
-    /* Loading: the square hatched in silver (at rest, hatched). */
-    [data-theme='shade-dark'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 4px);
-    }
-    /* ── shade-dark · 2 · the reading lamp ────────────────────────────── */
-    [data-theme='shade-dark'] [data-cl-shape='2'] .kp-calendar {
-        --cl-r: var(--radius);
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        padding: 0.5rem;
-        border-radius: var(--radius);
-        background: radial-gradient(ellipse 70% 55% at 45% 35%, hsl(from var(--chart-2) h s l / 0.16), transparent 75%);
-    }
-    [data-theme='shade-dark'] [data-cl-tone='2'] .kp-calendar {
-        --cl-muted-edge: var(--border);
-        --cl-none-bg: var(--background);
-        --cl-none-edge: var(--border-strong);
-        --cl-none-style: dashed;
-        --cl-future-edge: var(--border-strong);
-        --cl-future-style: dotted;
-        --cl-before-fg: var(--foreground);
-        --cl-before-bg: var(--background);
-        --cl-before-edge: var(--border);
-        --cl-today: 0 0 0 2px var(--chart-2), 0 0 12px 3px hsl(from var(--chart-2) h s l / 0.4);
-    }
-    [data-theme='shade-dark'] [data-cl-loading='2'] .kp-calendar {
-        --cl-loading-bg: var(--background);
-        --cl-loading-edge: var(--border);
-        --cl-busy-shadow: 0 0 0 1px var(--border-strong), 0 0 30px hsl(from var(--chart-2) h s l / 0.2);
-    }
-    [data-theme='shade-dark'] [data-cl-select='2'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
-        --cl-pick-offset: 3px;
-    }
-    [data-theme='shade-dark'] [data-cl-shape='2'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-weight: 600;
-    }
-    [data-theme='shade-dark'] [data-cl-shape='2'] .kp-calendar__grid th {
-        font-family: var(--theme-font-display);
-        font-weight: 500;
-    }
-    /* Loading: a pool of light on every square (it slides across). */
-    [data-theme='shade-dark'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: radial-gradient(ellipse 45% 70% at 50% 50%, hsl(from var(--chart-2) h s l / 0.3), transparent 75%) 0 0 / 100% 100% no-repeat;
-    }
+
     /* ══ retro ══════════════════════════════════════════════════════════ */
     /* ── retro · 1 · the tear-off pad ─────────────────────────────────── */
     [data-theme='retro'] [data-cl-shape='1'] .kp-calendar {
@@ -3184,187 +2938,7 @@
         border-radius: 0;
         background: repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 6px);
     }
-    /* ══ lapis ══════════════════════════════════════════════════════════ */
-    /* ── lapis · 1 · lapis on vellum ──────────────────────────────────── */
-    [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar {
-        --cl-r: 0.25rem;
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        --cl-num-size: 1.35em;
-        --cl-pad-fg: var(--card);
-        --cl-pad-op: 0.7;
-        --cl-ground-ink: var(--background);
-        --cl-ground-soft: var(--card);
-        --cl-ground-accent: hsl(from var(--primary) h s 32%);
-        padding: 0.75rem;
-        border: 3px double var(--primary);
-        border-radius: var(--radius);
-        background: var(--foreground);
-        color: var(--background);
-    }
-    [data-theme='lapis'] [data-cl-tone='1'] .kp-calendar {
-        --cl-ok-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
-        --cl-warn-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
-        --cl-bad-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.35);
-        --cl-muted-bg: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.1);
-        --cl-muted-fg: var(--cl-ground-ink, var(--foreground));
-        --cl-muted-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.25);
-        --cl-none-fg: var(--cl-ground-ink, var(--foreground));
-        --cl-none-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.5);
-        --cl-none-style: dashed;
-        --cl-future-fg: var(--cl-ground-soft, var(--muted-foreground));
-        --cl-future-edge: hsl(from var(--cl-ground-soft, var(--muted-foreground)) h s l / 0.5);
-        --cl-future-style: dotted;
-        --cl-before-fg: var(--cl-ground-soft, var(--muted-foreground));
-        --cl-before-edge: transparent;
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.14) 0 1px, transparent 1px 5px);
-        --cl-none-mark: '?';
-        --cl-today: 0 0 transparent;
-    }
-    [data-theme='lapis'] [data-cl-loading='1'] .kp-calendar {
-        --cl-loading-bg: hsl(from var(--primary) h s l / 0.2);
-        --cl-loading-fg: var(--cl-ground-ink, var(--foreground));
-        --cl-loading-edge: hsl(from var(--cl-ground-ink, var(--foreground)) h s l / 0.25);
-        --cl-busy-bg: var(--foreground);
-        --cl-busy-frame: 3px double var(--primary);
-        --cl-busy-shadow: none;
-    }
-    [data-theme='lapis'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 3px double var(--cl-ground-ink, var(--foreground));
-        --cl-pick-offset: 2px;
-    }
-    [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar :is(.kp-calendar__grid th, .kp-calendar__state, .kp-calendar__legend) {
-        color: var(--background);
-    }
-    /* The lapis head band above the vellum leaf, where the month buttons sit. */
-    [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar__nav {
-        margin: -0.75rem -0.75rem 0;
-        padding: 0.5rem 0.75rem;
-        border-block-end: 2px solid var(--primary);
-        border-start-start-radius: calc(var(--radius) - 3px);
-        border-start-end-radius: calc(var(--radius) - 3px);
-        background: var(--background);
-        color: var(--foreground);
-    }
-    [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar__title {
-        color: var(--foreground);
-        font-family: var(--theme-font-display);
-        font-size: 1.375rem;
-    }
-    [data-theme='lapis'] [data-cl-shape='1'] .kp-calendar__pad {
-        font-family: var(--theme-font-display);
-        font-size: 1.25rem;
-    }
-    /* Today: a gold cartouche around its figure, with an ivory hairline. */
-    [data-theme='lapis'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset: -0.05em -0.5em;
-        border: 2px solid hsl(from var(--primary) h s 72%);
-        border-radius: 50%;
-        box-shadow: 0 0 0 1.5px var(--foreground);
-    }
-    /* Loading: a burnisher's glint across the panel (at rest, at its start). */
-    [data-theme='lapis'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: linear-gradient(105deg, transparent 40%, hsl(from var(--primary) h s l / 0.4) 50%, transparent 60%) 100% 0 / 300% 100% no-repeat;
-    }
-    /* ── lapis · 2 · the girih tiles ──────────────────────────────────── */
-    [data-theme='lapis'] [data-cl-shape='2'] .kp-calendar {
-        --cl-r: 0;
-        --cl-swatch-r: 0;
-        --cl-edge-w: 3px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        --cl-num-size: 1.35em;
-        --cl-pad-op: 0.8;
-    }
-    [data-theme='lapis'] [data-cl-tone='2'] .kp-calendar {
-        --cl-ok-edge: var(--border-strong);
-        --cl-ok-style: double;
-        --cl-warn-edge: var(--border-strong);
-        --cl-warn-style: double;
-        --cl-bad-edge: var(--primary);
-        --cl-bad-style: double;
-        --cl-muted-edge: var(--border-strong);
-        --cl-muted-style: double;
-        --cl-none-bg: var(--background);
-        --cl-none-edge: var(--border-strong);
-        --cl-none-fg: var(--foreground);
-        --cl-none-style: dashed;
-        --cl-future-edge: var(--border-strong);
-        --cl-future-style: dotted;
-        --cl-before-edge: transparent;
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.16) 0 1px, transparent 1px 5px);
-        --cl-today: inset 0 0 0 1px hsl(from var(--primary) h s 72%);
-    }
-    [data-theme='lapis'] [data-cl-loading='2'] .kp-calendar {
-        --cl-loading-bg: var(--background);
-        --cl-loading-edge: var(--border);
-        --cl-busy-r: 0;
-        --cl-busy-frame: 3px double var(--primary);
-        --cl-busy-shadow: none;
-    }
-    [data-theme='lapis'] [data-cl-select='2'] .kp-calendar {
-        --cl-pick: 2px solid var(--cl-ground-accent, var(--primary));
-        --cl-pick-offset: 2px;
-    }
-    /* The faint gold girih lattice tooled into every tile. */
-    [data-theme='lapis'] [data-cl-tone='2'] .kp-calendar__day:not([data-kp-tone='future'], [data-kp-tone='before']) {
-        background:
-            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.12) 0 1px, transparent 1px 9px),
-            repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.12) 0 1px, transparent 1px 9px), var(--cl-pat), var(--cl-bg);
-    }
-    /* Today: a gold eight-pointed star behind its figure. */
-    [data-theme='lapis'] [data-cl-tone='2'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset-block-start: 50%;
-        inset-inline-start: 50%;
-        inline-size: 2em;
-        aspect-ratio: 1;
-        translate: -50% -50%;
-        background: var(--primary);
-        clip-path: polygon(
-            50% 0,
-            62% 21%,
-            85% 15%,
-            79% 38%,
-            100% 50%,
-            79% 62%,
-            85% 85%,
-            62% 79%,
-            50% 100%,
-            38% 79%,
-            15% 85%,
-            21% 62%,
-            0 50%,
-            21% 38%,
-            15% 15%,
-            38% 21%
-        );
-    }
-    [data-theme='lapis'] [data-cl-tone='2'] .kp-calendar__day[data-kp-today] .kp-calendar__num {
-        color: var(--primary-foreground);
-    }
-    [data-theme='lapis'] [data-cl-shape='2'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-size: 1.375rem;
-    }
-    [data-theme='lapis'] [data-cl-shape='2'] .kp-calendar__pad {
-        font-family: var(--theme-font-display);
-        font-size: 1.25rem;
-    }
-    /* Loading: a glint along the frame (at rest, at its start). */
-    [data-theme='lapis'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        inset: -3px;
-        border: 3px solid transparent;
-        background: linear-gradient(105deg, transparent 40%, var(--primary) 50%, transparent 60%) 100% 0 / 300% 100% no-repeat border-box;
-        mask:
-            linear-gradient(var(--foreground) 0 0) padding-box exclude,
-            linear-gradient(var(--foreground) 0 0) border-box;
-    }
+
     /* ══ nostromo ═══════════════════════════════════════════════════════ */
     /* ── nostromo · 1 · the CRT duty roster ───────────────────────────── */
     [data-theme='nostromo'] [data-cl-shape='1'] .kp-calendar {
@@ -4031,10 +3605,7 @@
                 background-position: 5px 3px;
             }
         }
-        [data-theme='shade-light'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after,
-        [data-theme='shade-dark'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-sh-hatch 1.4s ease-out 1 both;
-        }
+
         @keyframes cl-sh-hatch {
             from {
                 clip-path: inset(0 100% 0 0);
@@ -4044,9 +3615,7 @@
                 clip-path: inset(0 0 0 0);
             }
         }
-        [data-theme='shade-light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-sh-cloud 3.6s ease-in-out infinite;
-        }
+
         @keyframes cl-sh-cloud {
             from {
                 background-position-x: -100%;
@@ -4056,9 +3625,7 @@
                 background-position-x: 200%;
             }
         }
-        [data-theme='shade-dark'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-sh-lamp 4s ease-in-out infinite alternate;
-        }
+
         @keyframes cl-sh-lamp {
             from {
                 background-position-x: -60%;
@@ -4092,10 +3659,7 @@
                 translate: 6px 0;
             }
         }
-        [data-theme='lapis'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after,
-        [data-theme='lapis'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-la-glint 2.4s ease-in-out infinite;
-        }
+
         @keyframes cl-la-glint {
             from {
                 background-position-x: 100%;
@@ -4575,51 +4139,7 @@
     [data-theme='phantom'] [data-cl-shape='3'] .kp-calendar__day {
         clip-path: polygon(0 0, 100% 0, 100% 38%, calc(100% - 5px) 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 5px 50%, 0 38%);
     }
-    [data-theme='shade-light'] [data-cl-shape='3'] .kp-calendar {
-        --cl-cell-h: 3.25rem;
-        --cl-gap: 8px;
-        --cl-r: 3px;
-        --cl-swatch-r: 3px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 300;
-        --cl-num-size: 1.1em;
-        --cl-shadow: 2px 4px 10px -4px hsl(from var(--foreground) h s l / 0.35);
-    }
-    [data-theme='shade-light'] [data-cl-shape='3'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-weight: 300;
-    }
-    [data-theme='shade-light'] [data-cl-shape='3'] .kp-calendar__grid th {
-        font-weight: 400;
-        letter-spacing: 0.06em;
-    }
-    [data-theme='shade-light'] [data-cl-shape='3'] .kp-calendar__day {
-        background:
-            linear-gradient(225deg, var(--background) 0 9px, var(--border-strong) 9px 10px, transparent 10px) top right / 16px 16px no-repeat,
-            var(--cl-pat),
-            var(--cl-bg);
-    }
-    [data-theme='shade-dark'] [data-cl-shape='3'] .kp-calendar {
-        --cl-cell-h: 3.25rem;
-        --cl-gap: 7px;
-        --cl-r: 2px;
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 300;
-        --cl-num-size: 1.1em;
-        --cl-shadow: inset 0 -3px 0 hsl(from var(--foreground) h s l / 0.3);
-    }
-    [data-theme='shade-dark'] [data-cl-shape='3'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        font-weight: 300;
-        letter-spacing: 0.04em;
-    }
-    [data-theme='shade-dark'] [data-cl-shape='3'] .kp-calendar__grid th {
-        font-weight: 400;
-        letter-spacing: 0.08em;
-    }
+
     [data-theme='retro'] [data-cl-shape='3'] .kp-calendar {
         --cl-cell-h: 3.25rem;
         --cl-gap: 5px;
@@ -4665,27 +4185,7 @@
         font-weight: 800;
         text-align: start;
     }
-    [data-theme='lapis'] [data-cl-shape='3'] .kp-calendar {
-        --cl-cell-h: 3.25rem;
-        --cl-gap: 3px;
-        --cl-r: 2px;
-        --cl-swatch-r: 2px;
-        --cl-edge-w: 1px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 600;
-        --cl-num-size: 1.05em;
-        --cl-shadow: 0 0 0 2px hsl(from var(--accent) h s l / 0.5);
-    }
-    [data-theme='lapis'] [data-cl-shape='3'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
-    [data-theme='lapis'] [data-cl-shape='3'] .kp-calendar__grid th {
-        color: var(--accent);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
+
     [data-theme='nostromo'] [data-cl-shape='3'] .kp-calendar {
         --cl-cell-h: 3.25rem;
         --cl-gap: 6px;
@@ -5507,108 +5007,7 @@
     [data-theme='phantom'] [data-cl-tone='3'] .kp-calendar__day::before {
         color: var(--foreground);
     }
-    [data-theme='shade-light'] [data-cl-tone='3'] .kp-calendar {
-        --cl-ok-bg: var(--card);
-        --cl-ok-fg: var(--foreground);
-        --cl-ok-ink: var(--success);
-        --cl-ok-edge: var(--border);
-        --cl-ok-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-warn-bg: var(--card);
-        --cl-warn-fg: var(--foreground);
-        --cl-warn-ink: var(--warning);
-        --cl-warn-edge: var(--border);
-        --cl-warn-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-bad-bg: var(--card);
-        --cl-bad-fg: var(--foreground);
-        --cl-bad-ink: var(--destructive);
-        --cl-bad-edge: var(--border);
-        --cl-bad-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-muted-bg: var(--card);
-        --cl-muted-fg: var(--foreground);
-        --cl-muted-ink: var(--muted-foreground);
-        --cl-muted-edge: var(--border);
-        --cl-muted-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-none-bg: var(--card);
-        --cl-none-fg: var(--foreground);
-        --cl-none-ink: var(--border-strong);
-        --cl-none-edge: var(--border);
-        --cl-none-pat: none;
-        --cl-future-bg: var(--card);
-        --cl-future-fg: var(--foreground);
-        --cl-future-ink: var(--border-strong);
-        --cl-future-edge: var(--border);
-        --cl-future-pat: none;
-        --cl-before-bg: var(--card);
-        --cl-before-fg: var(--foreground);
-        --cl-before-ink: var(--border);
-        --cl-before-edge: var(--border);
-        --cl-before-pat: none;
-        --cl-loading-bg: var(--card);
-        --cl-loading-fg: var(--foreground);
-        --cl-loading-ink: var(--border-strong);
-        --cl-loading-edge: var(--border);
-        --cl-future-style: dashed;
-        --cl-before-style: dotted;
-        --cl-none-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px var(--primary);
-        --cl-warn-mark: '·';
-        --cl-bad-mark: '×';
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 5px);
-    }
-    [data-theme='shade-light'] [data-cl-tone='3'] .kp-calendar__day::before {
-        color: var(--foreground);
-    }
-    [data-theme='shade-dark'] [data-cl-tone='3'] .kp-calendar {
-        --cl-ok-bg: var(--card);
-        --cl-ok-fg: var(--foreground);
-        --cl-ok-ink: var(--success);
-        --cl-ok-edge: var(--border);
-        --cl-ok-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-warn-bg: var(--card);
-        --cl-warn-fg: var(--foreground);
-        --cl-warn-ink: var(--warning);
-        --cl-warn-edge: var(--border);
-        --cl-warn-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-bad-bg: var(--card);
-        --cl-bad-fg: var(--foreground);
-        --cl-bad-ink: var(--destructive);
-        --cl-bad-edge: var(--border);
-        --cl-bad-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-muted-bg: var(--card);
-        --cl-muted-fg: var(--foreground);
-        --cl-muted-ink: var(--muted-foreground);
-        --cl-muted-edge: var(--border);
-        --cl-muted-pat: linear-gradient(to top, hsl(from var(--cl-ink) h s l / 0.45), transparent 45%);
-        --cl-none-bg: var(--card);
-        --cl-none-fg: var(--foreground);
-        --cl-none-ink: var(--border-strong);
-        --cl-none-edge: var(--border);
-        --cl-none-pat: none;
-        --cl-future-bg: var(--card);
-        --cl-future-fg: var(--foreground);
-        --cl-future-ink: var(--border-strong);
-        --cl-future-edge: var(--border);
-        --cl-future-pat: none;
-        --cl-before-bg: var(--card);
-        --cl-before-fg: var(--foreground);
-        --cl-before-ink: var(--border);
-        --cl-before-edge: var(--border);
-        --cl-before-pat: none;
-        --cl-loading-bg: var(--card);
-        --cl-loading-fg: var(--foreground);
-        --cl-loading-ink: var(--border-strong);
-        --cl-loading-edge: var(--border);
-        --cl-future-style: dashed;
-        --cl-before-style: dotted;
-        --cl-none-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px var(--foreground);
-        --cl-warn-mark: '·';
-        --cl-bad-mark: '×';
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 5px);
-    }
-    [data-theme='shade-dark'] [data-cl-tone='3'] .kp-calendar__day::before {
-        color: var(--foreground);
-    }
+
     [data-theme='retro'] [data-cl-tone='3'] .kp-calendar {
         --cl-ok-bg: var(--card);
         --cl-ok-fg: var(--foreground);
@@ -5711,57 +5110,7 @@
     [data-theme='grotesk'] [data-cl-tone='3'] .kp-calendar__day::before {
         color: var(--foreground);
     }
-    [data-theme='lapis'] [data-cl-tone='3'] .kp-calendar {
-        --cl-ok-bg: var(--card);
-        --cl-ok-fg: var(--foreground);
-        --cl-ok-ink: var(--success);
-        --cl-ok-edge: var(--border);
-        --cl-ok-pat: linear-gradient(var(--cl-ink) 0 0) bottom / 100% 4px no-repeat;
-        --cl-warn-bg: var(--card);
-        --cl-warn-fg: var(--foreground);
-        --cl-warn-ink: var(--warning);
-        --cl-warn-edge: var(--border);
-        --cl-warn-pat: linear-gradient(var(--cl-ink) 0 0) bottom / 100% 4px no-repeat;
-        --cl-bad-bg: var(--card);
-        --cl-bad-fg: var(--foreground);
-        --cl-bad-ink: var(--destructive);
-        --cl-bad-edge: var(--border);
-        --cl-bad-pat: linear-gradient(var(--cl-ink) 0 0) bottom / 100% 4px no-repeat;
-        --cl-muted-bg: var(--card);
-        --cl-muted-fg: var(--foreground);
-        --cl-muted-ink: var(--muted-foreground);
-        --cl-muted-edge: var(--border);
-        --cl-muted-pat: linear-gradient(var(--cl-ink) 0 0) bottom / 100% 4px no-repeat;
-        --cl-none-bg: var(--card);
-        --cl-none-fg: var(--foreground);
-        --cl-none-ink: var(--border-strong);
-        --cl-none-edge: var(--border);
-        --cl-none-pat: none;
-        --cl-future-bg: var(--card);
-        --cl-future-fg: var(--foreground);
-        --cl-future-ink: var(--border-strong);
-        --cl-future-edge: var(--border);
-        --cl-future-pat: none;
-        --cl-before-bg: var(--card);
-        --cl-before-fg: var(--foreground);
-        --cl-before-ink: var(--border);
-        --cl-before-edge: var(--border);
-        --cl-before-pat: none;
-        --cl-loading-bg: var(--card);
-        --cl-loading-fg: var(--foreground);
-        --cl-loading-ink: var(--border-strong);
-        --cl-loading-edge: var(--border);
-        --cl-future-style: dashed;
-        --cl-before-style: dotted;
-        --cl-none-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px hsl(from var(--accent) h s 66%);
-        --cl-warn-mark: '✦';
-        --cl-bad-mark: '✕';
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 5px);
-    }
-    [data-theme='lapis'] [data-cl-tone='3'] .kp-calendar__day::before {
-        color: var(--foreground);
-    }
+
     [data-theme='nostromo'] [data-cl-tone='3'] .kp-calendar {
         --cl-ok-bg: var(--card);
         --cl-ok-fg: var(--foreground);
@@ -6342,68 +5691,7 @@
         --cl-pick: 3px dashed var(--primary);
         --cl-pick-offset: 3px;
     }
-    [data-theme='shade-light'] [data-cl-select='1'] .kp-calendar__day:hover {
-        translate: 0 -2px;
-    }
-    [data-theme='shade-light'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        letter-spacing: 0.12em;
-        font-weight: 700;
-    }
-    [data-theme='shade-light'] [data-cl-select='2'] .kp-calendar__day:hover {
-        outline: 2px solid var(--ring);
-        outline-offset: 1px;
-    }
-    [data-theme='shade-light'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        outline: 1px solid currentColor;
-        outline-offset: 0;
-        padding-inline: 0.2em;
-    }
-    [data-theme='shade-light'] [data-cl-select='3'] .kp-calendar__day:hover .kp-calendar__num {
-        text-decoration: underline 2px;
-        text-underline-offset: 2px;
-    }
-    [data-theme='shade-light'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        padding-inline: 0.25em;
-        border-radius: 2px;
-        background: var(--foreground);
-        color: var(--background);
-        font-weight: 700;
-    }
-    [data-theme='shade-light'] [data-cl-select='3'] .kp-calendar {
-        --cl-pick: 2px dotted var(--primary);
-        --cl-pick-offset: 4px;
-    }
-    [data-theme='shade-dark'] [data-cl-select='1'] .kp-calendar__day:hover {
-        outline: 2px solid var(--ring);
-        outline-offset: 1px;
-    }
-    [data-theme='shade-dark'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        letter-spacing: 0.12em;
-        font-weight: 700;
-    }
-    [data-theme='shade-dark'] [data-cl-select='2'] .kp-calendar__day:hover {
-        translate: 0 -2px;
-    }
-    [data-theme='shade-dark'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        outline: 1px solid currentColor;
-        outline-offset: 0;
-        padding-inline: 0.2em;
-    }
-    [data-theme='shade-dark'] [data-cl-select='3'] .kp-calendar__day:hover .kp-calendar__num {
-        text-decoration: underline 2px;
-        text-underline-offset: 2px;
-    }
-    [data-theme='shade-dark'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        padding-inline: 0.25em;
-        border-radius: 2px;
-        background: var(--foreground);
-        color: var(--background);
-        font-weight: 700;
-    }
-    [data-theme='shade-dark'] [data-cl-select='3'] .kp-calendar {
-        --cl-pick: 2px dotted var(--primary);
-        --cl-pick-offset: 4px;
-    }
+
     [data-theme='retro'] [data-cl-select='1'] .kp-calendar__day:hover {
         translate: 1px 2px;
     }
@@ -6467,38 +5755,7 @@
         --cl-pick: 4px solid var(--primary);
         --cl-pick-offset: 0px;
     }
-    [data-theme='lapis'] [data-cl-select='1'] .kp-calendar__day:hover {
-        outline: 2px solid var(--ring);
-        outline-offset: 1px;
-    }
-    [data-theme='lapis'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        letter-spacing: 0.12em;
-        font-weight: 700;
-    }
-    [data-theme='lapis'] [data-cl-select='2'] .kp-calendar__day:hover {
-        translate: 0 -2px;
-    }
-    [data-theme='lapis'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        padding-inline: 0.25em;
-        border-radius: 2px;
-        background: var(--foreground);
-        color: var(--background);
-        font-weight: 700;
-    }
-    [data-theme='lapis'] [data-cl-select='3'] .kp-calendar__day:hover {
-        outline: 2px dashed var(--ring);
-        outline-offset: -5px;
-    }
-    [data-theme='lapis'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::before {
-        content: '[';
-    }
-    [data-theme='lapis'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::after {
-        content: ']';
-    }
-    [data-theme='lapis'] [data-cl-select='3'] .kp-calendar {
-        --cl-pick: 3px solid var(--accent);
-        --cl-pick-offset: 3px;
-    }
+
     [data-theme='nostromo'] [data-cl-select='1'] .kp-calendar__day:hover {
         translate: 1px 2px;
     }
@@ -6740,26 +5997,7 @@
         content: '';
         background: linear-gradient(135deg, transparent 45%, var(--primary) 45% 55%, transparent 55%) no-repeat;
     }
-    [data-theme='shade-light'] [data-cl-loading='3'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-loading-fg: var(--foreground);
-    }
-    [data-theme='shade-light'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: linear-gradient(100deg, transparent 40%, hsl(from var(--foreground) h s l / 0.35) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
-        background-position: 100% 0;
-    }
-    [data-theme='shade-dark'] [data-cl-loading='3'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-loading-fg: var(--foreground);
-    }
-    [data-theme='shade-dark'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: linear-gradient(100deg, transparent 40%, hsl(from var(--primary) h s l / 0.35) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
-        background-position: 100% 0;
-    }
+
     [data-theme='retro'] [data-cl-loading='3'] .kp-calendar {
         --cl-loading-bg: var(--card);
         --cl-loading-edge: var(--border);
@@ -6785,15 +6023,7 @@
         background: var(--primary);
         transform-origin: 0 50%;
     }
-    [data-theme='lapis'] [data-cl-loading='3'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-loading-fg: var(--foreground);
-    }
-    [data-theme='lapis'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        background: linear-gradient(hsl(from var(--accent) h s l / 0.4) 0 0) 0 0 / 100% 100% no-repeat;
-    }
+
     [data-theme='nostromo'] [data-cl-loading='3'] .kp-calendar {
         --cl-loading-bg: var(--card);
         --cl-loading-edge: var(--border);
@@ -6993,28 +6223,7 @@
                 clip-path: inset(0 0 0 0);
             }
         }
-        [data-theme='shade-light'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl3-shade-light 1.6s linear infinite;
-        }
-        @keyframes cl3-shade-light {
-            from {
-                background-position: 100% 0;
-            }
-            to {
-                background-position: 0% 0;
-            }
-        }
-        [data-theme='shade-dark'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl3-shade-dark 1.6s linear infinite;
-        }
-        @keyframes cl3-shade-dark {
-            from {
-                background-position: 100% 0;
-            }
-            to {
-                background-position: 0% 0;
-            }
-        }
+
         [data-theme='retro'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: cl3-retro 1.4s steps(2, end) infinite;
         }
@@ -7040,17 +6249,7 @@
                 scale: 1 1;
             }
         }
-        [data-theme='lapis'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl3-lapis 1.6s steps(6, end) infinite;
-        }
-        @keyframes cl3-lapis {
-            from {
-                clip-path: inset(0 100% 0 0);
-            }
-            to {
-                clip-path: inset(0 0 0 0);
-            }
-        }
+
         [data-theme='nostromo'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: cl3-nostromo 1.5s linear infinite;
         }
@@ -7095,12 +6294,7 @@
         [data-theme='light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: clx-sweep 2.4s ease-in-out infinite;
         }
-        [data-theme='shade-light'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-sh-hatch 1.4s ease-out infinite;
-        }
-        [data-theme='shade-dark'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-sh-hatch 1.4s ease-out infinite;
-        }
+
         [data-theme='light'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
             content: '';
             inset: auto 0 0;
@@ -7332,30 +6526,7 @@
             --cl-step: 14ms;
             animation: cla-stamp 240ms steps(3, end) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
         }
-        [data-theme='shade-light'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-right 520ms ease-in-out calc((var(--cl-row, 0) + var(--cl-col, 0)) * var(--cl-step) * 2) backwards;
-        }
-        [data-theme='shade-light'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-flip 460ms ease-out calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
-        }
-        [data-theme='shade-light'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 14ms;
-            animation: cla-drop 380ms ease-out calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
-        }
-        [data-theme='shade-dark'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 14ms;
-            animation: cla-iris 380ms ease-out calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
-        }
-        [data-theme='shade-dark'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-up 420ms ease-in-out calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
-        }
-        [data-theme='shade-dark'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-right 400ms ease-in-out calc(var(--cl-col, 0) * var(--cl-step) * 4) backwards;
-        }
+
         [data-theme='retro'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 20ms;
             animation: cla-wipe-down 120ms steps(1, end) calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
@@ -7380,18 +6551,7 @@
             --cl-step: 20ms;
             animation: cla-wipe-right 100ms steps(1, end) calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
         }
-        [data-theme='lapis'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 14ms;
-            animation: cla-stamp 260ms cubic-bezier(0.2, 0.8, 0.3, 1) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
-        }
-        [data-theme='lapis'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-right 420ms ease-out calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
-        }
-        [data-theme='lapis'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-iris 440ms ease-out calc((var(--cl-row, 0) + var(--cl-col, 0)) * var(--cl-step) * 2) backwards;
-        }
+
         [data-theme='nostromo'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 14ms;
             animation: cla-type 140ms steps(2, end) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;

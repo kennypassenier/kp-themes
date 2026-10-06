@@ -575,106 +575,11 @@
         }
     }
 
-    /* ╔══════════════════════════════════════════════════════╗
-       ║ shade-light — paper in the shade, pencil and leaf-light ║
-       ╚══════════════════════════════════════════════════════╝ */
-
     /* ── Shape (1 the pencil dot, 2 the leaf-shade tag, 3 the paper chip) ── */
-
-    [data-theme='shade-light'] [data-sw-shape='1'] {
-        --sw-dot-size: 0.5em;
-        --sw-dot: var(--muted-foreground);
-        --sw-dot-ring: 0.05em 0.05em 0 0 var(--sw-dot), -0.05em -0.05em 0 0 var(--sw-dot);
-        --sw-ink: var(--foreground);
-        --sw-font: 400 1em var(--theme-font-display, inherit);
-    }
-
-    [data-theme='shade-light'] [data-sw-shape='2'] {
-        --sw-dot-size: 0.4em;
-        --sw-dot: var(--muted-foreground);
-        --sw-radius: var(--radius, 0.25rem);
-        --sw-pad: 0.1em 0.5em;
-        --sw-plate:
-            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--foreground) 12%, transparent) 0% 15%, transparent 16%),
-            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--foreground) 9%, transparent) 0% 12%, transparent 13%), var(--card);
-        --sw-ink: var(--foreground);
-    }
-
-    [data-theme='shade-light'] [data-sw-shape='3'] {
-        --sw-dot-size: 0.4em;
-        --sw-dot: var(--muted-foreground);
-        --sw-radius: var(--radius, 0.25rem);
-        --sw-pad: 0.12em 0.5em;
-        --sw-plate: var(--card);
-        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
-    }
 
     /* ── Tone (1 pencil colour only, 2 the shaded colour, 3 the paper warning) ── */
 
-    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='good'] {
-        --sw-dot: var(--success);
-    }
-    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='pending'] {
-        --sw-dot: var(--warning);
-    }
-    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='bad'] {
-        --sw-dot: var(--destructive);
-    }
-    [data-theme='shade-light'] [data-sw-tone='1'][data-sw-kind='muted'] {
-        --sw-dot: var(--muted-foreground);
-    }
-
-    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='good'] {
-        --sw-dot: var(--success);
-        --sw-plate:
-            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--success) 20%, transparent) 0% 15%, transparent 16%),
-            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--success) 16%, transparent) 0% 12%, transparent 13%), var(--card);
-    }
-    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='pending'] {
-        --sw-dot: var(--warning);
-        --sw-plate:
-            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--warning) 20%, transparent) 0% 15%, transparent 16%),
-            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--warning) 16%, transparent) 0% 12%, transparent 13%), var(--card);
-    }
-    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='bad'] {
-        --sw-dot: var(--destructive);
-        --sw-plate:
-            radial-gradient(circle at 22% 30%, color-mix(in oklch, var(--destructive) 20%, transparent) 0% 15%, transparent 16%),
-            radial-gradient(circle at 72% 68%, color-mix(in oklch, var(--destructive) 16%, transparent) 0% 12%, transparent 13%), var(--card);
-    }
-    [data-theme='shade-light'] [data-sw-tone='2'][data-sw-kind='muted'] {
-        --sw-dot: var(--muted-foreground);
-        --sw-plate: var(--card);
-    }
-
-    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='good'] {
-        --sw-dot: var(--success);
-        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
-    }
-    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='pending'] {
-        --sw-dot: var(--warning);
-        --sw-plate-shadow: 0 3px 6px color-mix(in oklch, var(--warning) 45%, transparent);
-    }
-    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='bad'] {
-        --sw-dot: var(--destructive);
-        --sw-plate-shadow: 0 3px 6px color-mix(in oklch, var(--destructive) 45%, transparent);
-    }
-    [data-theme='shade-light'] [data-sw-tone='3'][data-sw-kind='muted'] {
-        --sw-dot: var(--muted-foreground);
-        --sw-plate-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 20%, transparent);
-    }
-
     /* ── Change (1 a soft stroke, 2 the leaves shift, 3 lifted) ───────── */
-
-    [data-theme='shade-light'] [data-sw-change='1'][data-sw-playing]::before {
-        animation: sw-shl-stroke 0.5s ease-in-out;
-    }
-    [data-theme='shade-light'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
-        animation: sw-shl-leaves 0.55s ease-out;
-    }
-    [data-theme='shade-light'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
-        animation: sw-shl-lift 0.5s ease-out;
-    }
 
     @media (prefers-reduced-motion: no-preference) {
         @keyframes sw-shl-stroke {

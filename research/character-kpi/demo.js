@@ -1071,135 +1071,6 @@ const IDEAS = {
             },
         ],
     },
-    'shade-light': {
-        shape: [
-            {
-                name: 'Pencil in the shade',
-                text: 'A pencil sketch on paper in soft shade, the number in a soft graphite stroke, the change as its own status plate.',
-            },
-            { name: 'The leaf shade', text: 'Dappled leaf shade over the card, the number on the paper, the change as its own status plate.' },
-            { name: 'The pinned note', text: 'A shaft of window light falls across the card from the left, the change as its own status plate.' },
-        ],
-        loading: [
-            {
-                name: 'Pencil in the shade',
-                text: 'While the figure loads, a dashed graphite baseline under the number drifts a touch left then right, as a hand sketching unsteadily; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The leaf shade',
-                text: 'While the figure loads, dappled leaf shade over the whole card sways side to side and tilts a degree, as leaves shifting overhead; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'Leaves sway',
-                text: "While the figure loads, a shaft of window light along the card's edge sweeps slowly back and forth, as if clouds crossed outside; it keeps moving until the reading is drawn.",
-            },
-        ],
-        tone: [
-            {
-                name: 'Pencil in the shade',
-                text: 'The change on a lifted paper chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The leaf shade',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The pinned note',
-                text: 'The change on a paper chip; a warning or destructive figure is marked along the left edge in its colour, as a note pinned to the card.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The pencil lifts',
-                text: 'As a link or a filter: the card tints a touch warmer and its border darkens on hover, a focus ring forms on focus, and the tint deepens further the instant it is pressed.',
-            },
-            {
-                name: 'Leaves part',
-                text: 'As a link or a filter: the card tints and shades deepen on hover, a focus ring forms with an offset on focus, and the tint settles darker still the instant it is pressed.',
-            },
-            {
-                name: 'The light shifts',
-                text: "As a link or a filter: a shaft of light along the card's edge brightens on hover, a focus ring forms on focus, and the shaft becomes the pressed state's own mark the instant it is pressed.",
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            {
-                name: 'A breeze',
-                text: 'A new reading: the number wobbles left then right once, gentle and easing, as if a breeze passed over the sketch.',
-            },
-            {
-                name: 'Pencilled again',
-                text: 'A new reading: the number swells and lifts slightly as it lands, as if retraced in a fresh pencil stroke.',
-            },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            {
-                name: 'Silverpoint',
-                text: 'Silverpoint on dark paper, the number in a silver hairline over a faint silver wash, the change as its own status plate.',
-            },
-            {
-                name: 'The reading lamp',
-                text: 'A warm reading lamp over the card, a pool of light behind the number, the change as its own status plate.',
-            },
-            {
-                name: 'The red lamp',
-                text: 'A shaft of moonlight falls across the card, the number in a cool silver ink, the change as its own status plate.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Silverpoint',
-                text: 'While the figure loads, a silver hairline climbs in under the label stroke by stroke, like a nib working in near dark; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The reading lamp',
-                text: 'While the figure loads, the pool of warm lamplight breathes wider and narrower under the number, as a lamp left burning; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The candle',
-                text: 'While the figure loads, a small candle flame in the corner leans and steadies, never quite still; it keeps moving until the reading is drawn.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Silverpoint',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The reading lamp',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The red lamp',
-                text: 'The change on a soft chip; a warning or destructive figure is marked by a band of its colour along the top, a lamp lit over the card.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The silver catches',
-                text: 'As a link or a filter: the silver wash catches more light on hover, a hairline ring forms on focus, and it dims to flat grey the instant it is pressed.',
-            },
-            {
-                name: 'The lamp brightens',
-                text: 'As a link or a filter: the pool of lamplight swells wider on hover, warms into a focus ring on focus, and narrows back the instant it is pressed.',
-            },
-            {
-                name: 'The moon shifts',
-                text: 'As a link or a filter: the moonlit band widens on hover, cools into a silver ring on focus, and narrows again the instant it is pressed.',
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            { name: 'A glint', text: 'A new reading: a glint of silver light runs once across the number and settles back to a flat hairline.' },
-            {
-                name: 'The page moves',
-                text: 'A new reading: the old figure steps left into the dark as the new one steps into the lamplight, easing to a stop.',
-            },
-        ],
-    },
     retro: {
         shape: [
             {
@@ -1318,60 +1189,6 @@ const IDEAS = {
                 name: 'Shifted',
                 text: 'A new reading: the old figure slides out to the left and the new one slides in from the right, easing to a stop.',
             },
-        ],
-    },
-    lapis: {
-        shape: [
-            {
-                name: 'The girih tile',
-                text: 'A girih lattice on lapis, a faint star lattice on the tile, a double gold frame, the change as its own status plate.',
-            },
-            { name: 'Lapis on vellum', text: 'Lapis ink on ivory vellum, a gold rim around the card, the change as its own status plate.' },
-            { name: 'The rubric', text: 'A page of a manuscript, a double gold rule down the left margin, the change as its own status plate.' },
-        ],
-        loading: [
-            { name: 'The girih tile', text: 'While the figure loads, a glint runs the frame; it keeps moving until the reading is drawn.' },
-            {
-                name: 'The gold leaf is laid',
-                text: 'While the figure loads, a band of gold leaf is laid along the foot of the card, left to right, and laid again; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The star turns',
-                text: 'While the figure loads, an eight-point star of gold rays turns slowly behind the card; it keeps moving until the reading is drawn.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The girih tile',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'Lapis on vellum',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The rubric',
-                text: 'The change on a gold-ruled plate; a warning or destructive figure is marked down the margin in its colour, as a rubric in red.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The lattice glints',
-                text: 'As a link or a filter: the girih star lattice catches a brighter glint on hover, a gold-frame ring doubles for focus, and the glint settles the instant it is pressed.',
-            },
-            {
-                name: 'The gold catches light',
-                text: 'As a link or a filter: the gold rim widens and brightens on hover, a lapis-ink ring marks focus, and the rim narrows back the instant it is pressed.',
-            },
-            {
-                name: 'The margin reddens',
-                text: 'As a link or a filter: the gold rule down the margin doubles on hover, a rubric-red outline marks focus, and the rule settles to single the instant it is pressed.',
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            { name: 'Gilded', text: 'A new reading: the number flares once in gold leaf and settles back to lapis ink.' },
-            { name: 'Inked again', text: 'A new reading: the old figure is retraced in fresh lapis ink, easing in and out.' },
         ],
     },
     nostromo: {
@@ -1530,11 +1347,8 @@ const PICKED = {
     brutalism: ['2', '3', '2', '3', '1'],
     deco: ['1', '3', '1', '1', '3'],
     phantom: ['2', '2', '1', '1', '3'],
-    'shade-light': ['3', '3', '1', '2', '3'],
-    'shade-dark': ['2', '3', '1', '2', '2'],
     retro: ['1', '6', '1', '1', '2'],
     grotesk: ['1', '6', '1', '2', '2'],
-    lapis: ['3', '1', '1', '2', '2'],
     nostromo: ['2', '2', '1', '2', '2'],
     titanium: ['1', '1', '1', '2', '3'],
 };

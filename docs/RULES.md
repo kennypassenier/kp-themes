@@ -248,11 +248,11 @@ refuses unless an environment variable only Kenny sets is present.
 2026-09-14): `tests/tags.json`, `npm run test:tags`, and the three
 gradations in `docs/CYCLE.md`. **A theme sweep became a level too**
 (`scope-103`, 2026-09-16): a test declared once per theme runs on formal,
-dark and cyberpunk while building and at the commit, and on all 22 at the
+dark and cyberpunk while building and at the commit, and on all 19 at the
 release level. A spec asks `sweepThemes()` from
 `tests/helpers/sweep-themes.mjs` for the list rather than reading
 `themes/order.json` itself; `gates/run-tags.mjs` sets `KP_SWEEP_THEMES`
-per level, and an unset variable still means all 22. Narrow a loop only
+per level, and an unset variable still means all 19. Narrow a loop only
 when its faults have never been one theme's — four are named in that
 helper's head and stay whole.
 

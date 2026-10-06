@@ -298,40 +298,6 @@ const IDEAS = {
             { name: 'Re-slashed', text: 'The corner slash is drawn once more, slowing as it lands.' },
         ],
     },
-    'shade-light': {
-        shape: [
-            { name: 'The pencil dot', text: 'A small hatched pencil dot sits before the word, the word in soft graphite on no plate.' },
-            { name: 'The leaf-shade tag', text: 'A dappled leaf-shade patch holds the word, the dot a darker fleck in it.' },
-            { name: 'The paper chip', text: 'The dot and the word sit on one lifted paper chip with a soft edge.' },
-        ],
-        tone: [
-            { name: 'The pencil colour only', text: 'Only the pencil dot takes the state’s colour; the word stays graphite.' },
-            { name: 'The shaded colour', text: 'The leaf-shade patch darkens toward the state’s colour, the word kept readable on it.' },
-            { name: 'The paper warning', text: 'A warning or failed state lifts the paper chip’s edge further and tints it.' },
-        ],
-        change: [
-            { name: 'A soft stroke', text: 'The pencil dot is redrawn once, easing in and out.' },
-            { name: 'The leaves shift', text: 'The dappled shade drifts a little and settles, slowing as it lands.' },
-            { name: 'Lifted', text: 'The paper chip lifts a touch and settles, overshooting once.' },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            { name: 'The silverpoint dot', text: 'A small silver hairline dot sits before the word, the word over a faint silver wash on no plate.' },
-            { name: 'The lamp tag', text: 'A small pool of warm light holds the word, the dot the lamp itself.' },
-            { name: 'The ink chip', text: 'The dot and the word sit on one dark plate with a silver rim.' },
-        ],
-        tone: [
-            { name: 'The silver colour only', text: 'Only the silver dot takes the state’s colour; the word stays silver ink.' },
-            { name: 'The lamp colour', text: 'The lamp’s glow takes the state’s colour, the word kept warm ink in its pool.' },
-            { name: 'The rim warning', text: 'A warning or failed state tints the ink chip’s silver rim toward that colour.' },
-        ],
-        change: [
-            { name: 'A glint', text: 'The silver dot flares with light once, slowing as it lands.' },
-            { name: 'The lamp dims and lifts', text: 'The lamp’s pool dims and brightens once, easing in and out.' },
-            { name: 'Reinked', text: 'The dark plate deepens once and settles, slowing as it lands.' },
-        ],
-    },
     retro: {
         shape: [
             { name: 'The LED dot', text: 'A small square LED sits before the word, the word in the system face on no plate.' },
@@ -364,23 +330,6 @@ const IDEAS = {
             { name: 'A flat swap', text: 'The flat-colour square swaps once, in a single hard jump.' },
             { name: 'The bar redraws', text: 'The transit bar redraws left to right once under the new word.' },
             { name: 'Ticked', text: 'The index tick snaps to a new mark once, in a hard jump.' },
-        ],
-    },
-    lapis: {
-        shape: [
-            { name: 'The gold dot', text: 'A small gold-leaf dot sits before the word, the word in the display face on no plate.' },
-            { name: 'The girih tag', text: 'A faint star-lattice tile holds the word, the dot a gold point in the lattice.' },
-            { name: 'The vellum chip', text: 'The dot and the word sit on one plate rimmed in gold on vellum.' },
-        ],
-        tone: [
-            { name: 'The gold colour only', text: 'Only the gold dot takes the state’s colour; the word stays lapis ink.' },
-            { name: 'The lattice colour', text: 'The girih lattice’s lines take the state’s colour, the word kept lapis ink.' },
-            { name: 'The rim warning', text: 'A warning or failed state tints the vellum chip’s gold rim toward that colour.' },
-        ],
-        change: [
-            { name: 'A gleam', text: 'The gold dot gleams once, easing in and out.' },
-            { name: 'The lattice shifts', text: 'The star lattice’s lines redraw once, point by point.' },
-            { name: 'Reinked', text: 'The lapis ink is retraced once, slowing as it lands.' },
         ],
     },
     nostromo: {
@@ -442,11 +391,8 @@ const PICKED = {
     brutalism: ['1', '3', '2'],
     deco: ['3', '3', '1'],
     phantom: ['3', '2', '1'],
-    'shade-light': ['3', '3', '3'],
-    'shade-dark': ['2', '3', '3'],
     retro: ['1', '3', '2'],
     grotesk: ['3', '3', '1'],
-    lapis: ['3', '3', '3'],
     nostromo: ['3', '3', '1'],
     titanium: ['3', '2', '3'],
 };

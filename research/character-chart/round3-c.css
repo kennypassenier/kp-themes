@@ -426,97 +426,9 @@
         stroke-dasharray: 2 2;
     }
 
-    /* ══════════════════════════════════════════ shade-light · shape ═══ */
-
     /* ── r3c-shl-sh-1 · the sundial: the grid is its own cast shadow ──── */
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart {
-        --cc-paper: repeating-linear-gradient(72deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px 46px), var(--card);
-        --cc-radius: 3px;
-        --cc-paper-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
-        --cc-on-paper: var(--card);
-        --cc-grid: hsl(from var(--border-strong) h s l / 0.45);
-        --cc-grid-w: 1px;
-        --cc-grid-dash: 10 4;
-        --cc-tick-font: var(--theme-font-display);
-        --kp-chart-tick-size: 11.5px;
-        --cc-line-filter: drop-shadow(0 3px 2.5px hsl(from var(--foreground) h s l / 0.22));
-        --cc-area-k: 2.6;
-        --cc-cross: hsl(from var(--foreground) h s l / 0.4);
-        --cc-cross-dash: 10 4;
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] :is(.kp-chart__source, .kp-chart__show-all) {
-        border-radius: 999px;
-        border-color: var(--border);
-        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart__source[aria-pressed='true'] {
-        border-color: var(--primary);
-        background: hsl(from var(--primary) h s l / 0.08);
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-1'] .kp-chart-zoom {
-        font-family: var(--theme-font-display);
-        font-variant-caps: small-caps;
-    }
 
     /* ── r3c-shl-sh-2 · the windowpane: two slanted bands of light ────── */
 
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] .kp-chart {
-        --cc-paper: linear-gradient(118deg, transparent 0 38%, hsl(from var(--foreground) h s l / 0.07) 38% 58%, transparent 58% 100%), var(--card);
-        --cc-radius: 2px;
-        --cc-frame: 1px solid var(--border);
-        --cc-on-paper: var(--card);
-        --cc-grid: hsl(from var(--border-strong) h s l / 0.3);
-        --cc-grid-w: 0.75px;
-        --cc-tick-font: var(--theme-font-body);
-        --cc-tick-weight: 500;
-        --kp-chart-tick-size: 11px;
-        --cc-line-w: 2.25px;
-        --cc-area-k: 1.6;
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] :is(.kp-chart__source, .kp-chart__show-all) {
-        border-radius: 3px;
-        border-color: var(--border);
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-2'] .kp-chart__source[aria-pressed='true'] {
-        border-color: var(--primary);
-        background: hsl(from var(--primary) h s l / 0.1);
-        box-shadow: 0 2px 4px hsl(from var(--foreground) h s l / 0.1);
-    }
-
     /* ── r3c-shl-sh-3 · the parasol: shade pools from one corner ──────── */
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart {
-        --cc-paper: radial-gradient(ellipse 90% 80% at 14% 10%, hsl(from var(--foreground) h s l / 0.1), transparent 68%), var(--card);
-        --cc-radius: 8px;
-        --cc-on-paper: var(--card);
-        --cc-grid: hsl(from var(--border-strong) h s l / 0.35);
-        --cc-grid-w: 0.75px;
-        --cc-tick-font: var(--theme-font-display);
-        --cc-tick-weight: 400;
-        --kp-chart-tick-size: 11.5px;
-        --cc-line-w: 2px;
-        --cc-area-k: 1.8;
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart__tick {
-        font-style: italic;
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] :is(.kp-chart__source, .kp-chart__show-all) {
-        border-radius: 999px;
-        border-color: transparent;
-        background: hsl(from var(--foreground) h s l / 0.05);
-        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.1);
-    }
-
-    [data-theme='shade-light'] [data-cc-shape='r3c-shl-sh-3'] .kp-chart__source[aria-pressed='true'] {
-        background: hsl(from var(--primary) h s l / 0.14);
-        box-shadow: 0 2px 5px hsl(from var(--foreground) h s l / 0.14);
-    }
 }

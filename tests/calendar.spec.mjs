@@ -38,7 +38,7 @@ const rows = (cal) =>
     });
 
 test(
-    "October back to February: six rows every month, all one height (I.1.7 1) [scope-143]; today's ring and a title on one line in 22 themes [fix-98]",
+    "October back to February: six rows every month, all one height (I.1.7 1) [scope-143]; today's ring and a title on one line in 19 themes [fix-98]",
     { tag: ['@component:data', '@component:catalogue'] },
     async ({ page }) => {
         await open(page);
@@ -67,7 +67,7 @@ test(
             expect(new Set(seen.map((m) => m.grid)).size).toBe(1);
         }
         // fix-98, in all 22 themes, wide and in the phone pane: today's ring
-        // reads 3:1 or more against its plate (1.29:1 in shade-light), and in
+        // reads 3:1 or more against its plate (1.29:1 in Shade (light)), and in
         // August, September and October the title and every nav button sit on
         // one line and the calendar keeps one height (the title took up to six
         // lines in nostromo's phone pane).
@@ -115,7 +115,9 @@ test(
                         };
                         return {
                             title: nav.querySelector('.kp-calendar__title')?.textContent ?? '',
-                            wrapped: [...nav.children].filter((n) => lines(n) > 1 || n.getBoundingClientRect().right > el.getBoundingClientRect().right + 1).length,
+                            wrapped: [...nav.children].filter(
+                                (n) => lines(n) > 1 || n.getBoundingClientRect().right > el.getBoundingClientRect().right + 1,
+                            ).length,
                             ring,
                             height: Math.round(el.getBoundingClientRect().height),
                         };

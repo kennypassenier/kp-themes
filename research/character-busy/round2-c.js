@@ -54,44 +54,6 @@ export default {
             },
         ]),
     },
-    'shade-light': {
-        shape: /** @type {Option[]} */ ([
-            {
-                key: 'r2-sl-shape-1',
-                name: 'The parasol',
-                text: 'Echoes the chart character’s shape pick, the parasol: the panel’s top corners round out into a dome, a soft wash of light pooling under it. The other two keep a flat top edge; this is the only one with a domed silhouette.',
-            },
-            {
-                key: 'r2-sl-shape-2',
-                name: 'Embossed paper',
-                text: 'Echoes the columns character’s shape pick of the same name: a plain rectangular plate with no visible border, its edge pressed in as a soft emboss rather than drawn with a line. The other two carry a dome or a cut corner; this one is the flattest, plainest outline of the three.',
-            },
-            {
-                key: 'r2-sl-shape-3',
-                name: 'The paper lantern',
-                text: 'Echoes the graph character’s shape pick of the same name: the panel’s whole outline is cut to a hexagon, a warm glow sitting at its centre. The other two keep four-sided plates; this is the only one with a faceted silhouette.',
-            },
-        ]),
-    },
-    'shade-dark': {
-        shape: /** @type {Option[]} */ ([
-            {
-                key: 'r2-sd-shape-1',
-                name: 'The reading lamp',
-                text: 'Echoes the chart character’s shape pick of the same name: the panel’s top corners dome out, a warm pool of light gathering under the curve. The other two keep a flat top; this is the only domed silhouette here.',
-            },
-            {
-                key: 'r2-sd-shape-2',
-                name: 'The velvet tray',
-                text: 'Echoes the columns character’s shape pick of the same name: all four corners round out generously, a soft padded lip sitting inside the plate’s edge. The other two keep square or domed-top corners; this is the only one fully rounded.',
-            },
-            {
-                key: 'r2-sd-shape-3',
-                name: 'The night window',
-                text: 'Echoes the menu character’s shape pick, the night window: a square plain plate, a faint cross of mullion lines dividing its face into four panes. The other two change the plate’s outline; this one keeps a plain rectangle and only marks what is behind the words.',
-            },
-        ]),
-    },
     retro: {
         shape: /** @type {Option[]} */ ([
             {

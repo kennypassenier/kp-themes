@@ -459,11 +459,11 @@ const GLITCH = [
     'kp-alarm-march',
     'kp-alarm-sweep',
 ];
-test('the glitch and the flicker run only in cyberpunk, in all 22 themes [scope-98]', { tag: ['@component:alarm', '@sweep'] }, async ({ page }) => {
+test('the glitch and the flicker run only in cyberpunk, in all 19 themes [scope-98]', { tag: ['@component:alarm', '@sweep'] }, async ({ page }) => {
     test.setTimeout(120_000);
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     const errors = await open(page);
-    expect(THEMES.length).toBe(22);
+    expect(THEMES.length).toBe(19);
     /** @type {Record<string, string[]>} */
     const seen = {};
     for (const theme of THEMES) {

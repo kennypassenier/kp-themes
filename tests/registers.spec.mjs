@@ -63,7 +63,7 @@ for (const control of ['.kp-button', '.kp-field__input']) {
 // state: a register's `.kp-button:hover { background: … }` outranks the
 // components layer's `.kp-button:active`, and the button then stops
 // reacting to being held down — while the pointer is on it, which is the
-// only time anyone presses it. Kenny found it on shade-dark, 2026-09-11:
+// only time anyone presses it. Kenny found it on Shade (dark), 2026-09-11:
 // "als ik gewoon blijf klikken op de knop zelf, dan gebeurt er precies
 // niks... bij shade light werkt het wel precies".
 //

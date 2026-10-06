@@ -7,53 +7,7 @@
    one rule names one aspect. */
 
 @layer kp.signature {
-    /* ══════════════════════════════════════════════════ shade-dark ═══ */
-
     /* --- Shape ----------------------------------------------------------- */
-
-    /* 1, Silverpoint: a silver hairline under the title, a faint silver
-       wash, the actions plain in silver. */
-    [data-theme='shade-dark'] [data-ph-shape='1'] .kp-page-header {
-        --ph-frame: 1px solid var(--border-strong);
-        --ph-pat: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 5%, transparent), transparent 65%);
-    }
-    [data-theme='shade-dark'] [data-ph-shape='1'] .kp-page-header__title {
-        border-block-end: 1px solid var(--border-strong);
-        padding-block-end: var(--kp-space-xs, 0.25rem);
-        letter-spacing: 0.02em;
-    }
-    [data-theme='shade-dark'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
-
-    /* 2, The reading lamp: a warm pool of light behind the title, the
-       actions in warm ink. */
-    [data-theme='shade-dark'] [data-ph-shape='2'] .kp-page-header {
-        --ph-pat: radial-gradient(ellipse 60% 70% at 15% 25%, color-mix(in oklch, var(--warning) 22%, transparent), transparent 72%);
-        --ph-frame: 1px solid color-mix(in oklch, var(--warning) 35%, var(--border-strong));
-    }
-    [data-theme='shade-dark'] [data-ph-shape='2'] .kp-page-header__title {
-        font-weight: 600;
-    }
-    [data-theme='shade-dark'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid color-mix(in oklch, var(--warning) 18%, var(--border-strong));
-    }
-
-    /* 3, The night window: a shaft of moonlight falls across the header,
-       the title in a cool silver ink with a faint glow. */
-    [data-theme='shade-dark'] [data-ph-shape='3'] .kp-page-header {
-        --ph-pat: linear-gradient(115deg, transparent 0% 42%, color-mix(in oklch, var(--primary) 14%, transparent) 50%, transparent 58% 100%);
-        --ph-frame: 1px solid var(--border-strong);
-    }
-    [data-theme='shade-dark'] [data-ph-shape='3'] .kp-page-header__title {
-        text-shadow: 0 0 10px color-mix(in oklch, var(--primary) 30%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
-    [data-theme='shade-dark'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button--primary {
-        --ph-btn-primary-frame: 1px solid color-mix(in oklch, var(--primary) 50%, transparent);
-    }
 
     /* --- The overflow menu opens and its mirrored close ------------------ */
 
@@ -91,65 +45,9 @@
                 filter: brightness(1);
             }
         }
-
-        [data-theme='shade-dark'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-shadedark-silverpoint 260ms ease-in-out;
-        }
-        [data-theme='shade-dark'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-shadedark-silverpoint 260ms ease-in-out reverse;
-        }
-        [data-theme='shade-dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
-            --ph-menu-origin: center;
-            animation: ph-shadedark-lamp 300ms ease-out;
-        }
-        [data-theme='shade-dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
-            --ph-menu-origin: center;
-            animation: ph-shadedark-lamp 300ms ease-out reverse;
-        }
-        [data-theme='shade-dark'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-shadedark-glint 420ms ease-out;
-        }
-        [data-theme='shade-dark'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-shadedark-glint 420ms ease-out reverse;
-        }
     }
 
     /* --- Hover, focus, press ---------------------------------------------- */
-
-    [data-theme='shade-dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: inset 0 0 0 1px var(--border-strong);
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: inset 0 1px 0 0 color-mix(in oklch, var(--foreground) 25%, transparent);
-        transform: translateY(1px);
-    }
-
-    [data-theme='shade-dark'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: 0 0 0 4px color-mix(in oklch, var(--warning) 20%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid color-mix(in oklch, var(--warning) 55%, var(--ring));
-        outline-offset: 2px;
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: 0 0 0 2px color-mix(in oklch, var(--warning) 25%, transparent);
-    }
-
-    [data-theme='shade-dark'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: inset 2px 0 0 0 color-mix(in oklch, var(--warning) 55%, var(--border-strong));
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 1px dashed var(--ring);
-        outline-offset: 3px;
-    }
-    [data-theme='shade-dark'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: inset 2px 0 0 0 var(--border-strong);
-        transform: translateY(1px);
-    }
 
     /* ══════════════════════════════════════════════════════ retro ════ */
 
@@ -431,139 +329,14 @@
         box-shadow: inset 4px 0 0 0 var(--border-strong);
     }
 
-    /* ═══════════════════════════════════════════════════════ lapis ═══ */
-
     /* --- Shape ----------------------------------------------------------- */
-
-    /* 1, The girih tile: a faint star lattice behind the title, a double
-       gold frame, the actions in gold. */
-    [data-theme='lapis'] [data-ph-shape='1'] .kp-page-header {
-        --ph-frame: 1px solid var(--primary);
-        --ph-pat: repeating-conic-gradient(from 45deg, color-mix(in oklch, var(--primary) 7%, transparent) 0deg 15deg, transparent 15deg 90deg);
-        --ph-shadow: inset 0 0 0 3px transparent, inset 0 0 0 4px color-mix(in oklch, var(--primary) 45%, transparent);
-    }
-    [data-theme='lapis'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
-        --ph-btn-ink: color-mix(in oklch, var(--primary) 70%, var(--secondary-foreground));
-        --ph-btn-frame: 1px solid color-mix(in oklch, var(--primary) 55%, var(--border-strong));
-    }
-
-    /* 2, Lapis on vellum: lapis ink on ivory vellum behind the title, a
-       gold rim round the header, the actions in gold. */
-    [data-theme='lapis'] [data-ph-shape='2'] .kp-page-header {
-        --ph-pat: linear-gradient(170deg, color-mix(in oklch, var(--accent) 10%, transparent), transparent 70%);
-        --ph-frame: 1px solid var(--primary);
-    }
-    [data-theme='lapis'] [data-ph-shape='2'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, serif);
-    }
-    [data-theme='lapis'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
-        --ph-btn-ink: color-mix(in oklch, var(--primary) 65%, var(--secondary-foreground));
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
-
-    /* 3, The manuscript margin: a double gold rule down the left margin,
-       the title in serif italic, the actions in lapis ink. */
-    [data-theme='lapis'] [data-ph-shape='3'] .kp-page-header {
-        --ph-frame: 0;
-        --ph-shadow: inset 5px 0 0 0 var(--primary), inset 8px 0 0 0 color-mix(in oklch, var(--primary) 45%, transparent);
-    }
-    [data-theme='lapis'] [data-ph-shape='3'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, serif);
-    }
-    [data-theme='lapis'] [data-ph-shape='3'] .kp-page-header__description {
-        --ph-desc-style: italic;
-    }
-    [data-theme='lapis'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
-        --ph-btn-ink: color-mix(in oklch, var(--accent) 35%, var(--secondary-foreground));
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
 
     /* --- The overflow menu opens and its mirrored close ------------------ */
 
     @media (prefers-reduced-motion: no-preference) {
-        @keyframes ph-lapis-illuminated {
-            from {
-                clip-path: inset(40% 0 40% 0);
-            }
-            to {
-                clip-path: inset(0% 0 0% 0);
-            }
-        }
-        @keyframes ph-lapis-inked {
-            from {
-                clip-path: inset(0 0 100% 0);
-            }
-            to {
-                clip-path: inset(0 0 0% 0);
-            }
-        }
-        @keyframes ph-lapis-goldleaf {
-            from {
-                clip-path: inset(0 100% 0 0);
-            }
-            to {
-                clip-path: inset(0 0% 0 0);
-            }
-        }
-
-        [data-theme='lapis'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
-            --ph-menu-origin: center;
-            animation: ph-lapis-illuminated 320ms ease-out;
-        }
-        [data-theme='lapis'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
-            --ph-menu-origin: center;
-            animation: ph-lapis-illuminated 320ms ease-out reverse;
-        }
-        [data-theme='lapis'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-lapis-inked 300ms ease-in-out;
-        }
-        [data-theme='lapis'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-lapis-inked 300ms ease-in-out reverse;
-        }
-        [data-theme='lapis'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-lapis-goldleaf 320ms ease-out;
-        }
-        [data-theme='lapis'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-lapis-goldleaf 320ms ease-out reverse;
-        }
     }
 
     /* --- Hover, focus, press ---------------------------------------------- */
-
-    [data-theme='lapis'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: 0 1px 0 0 var(--primary);
-    }
-    [data-theme='lapis'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-    }
-    [data-theme='lapis'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: 0 1px 0 0 color-mix(in oklch, var(--primary) 50%, transparent);
-    }
-
-    [data-theme='lapis'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: inset 0 0 0 1px var(--primary);
-    }
-    [data-theme='lapis'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-    }
-    [data-theme='lapis'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--primary) 55%, transparent);
-    }
-
-    [data-theme='lapis'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow:
-            inset 0 0 0 1px var(--primary),
-            inset 0 0 0 2px color-mix(in oklch, var(--primary) 30%, transparent);
-    }
-    [data-theme='lapis'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-    }
-    [data-theme='lapis'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: inset 0 0 0 1px var(--primary);
-    }
 
     /* ═════════════════════════════════════════════════════ nostromo ══ */
 

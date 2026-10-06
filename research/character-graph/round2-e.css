@@ -48,30 +48,6 @@
    stagger`, not a division. */
 
 @layer kp.signature {
-    /* ═══════════════════════════ shade-dark ═══════════════════════════ */
-
-    /* shade-dark · loading r3-sh-load-1 · The silverpoint trace */
-
-    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-1'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 100;
-    }
-
-    /* shade-dark · loading r3-sh-load-2 · The ring is hatched */
-
-    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-2'] .kp-graph__ghost .kp-graph__ring {
-        stroke-dasharray: 4 5;
-    }
-
-    /* shade-dark · loading r3-sh-load-3 · The pencil travels the line */
-
-    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-3'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 22 78;
-    }
-
-    /* shade-dark · loading r3-sh-load-4 · Struck onto the page (no static knobs) */
-    /* shade-dark · loading r3-sh-load-5 · The hub pings out (no static knobs) */
-    /* shade-dark · loading r3-sh-load-6 · The hand still sketching (no static knobs) */
-
     /* ═════════════════════════════ retro ═══════════════════════════════ */
 
     /* retro · loading r3-rt-load-1 · Marching ants select the network */
@@ -134,37 +110,6 @@
     /* grotesk · loading r3-gk-load-5 · The signal pulses down every line (no static knobs) */
 
     /* grotesk · loading r3-gk-load-6 · The timetable flips through every stop (no static knobs) */
-
-    /* ════════════════════════════ lapis ════════════════════════════════ */
-
-    /* lapis · loading r3-lp-load-1 · A glint runs the gilt lines */
-
-    [data-theme='lapis'] [data-cg-loading='r3-lp-load-1'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 100;
-    }
-
-    /* lapis · loading r3-lp-load-2 · The burnisher turns on every ring */
-
-    [data-theme='lapis'] [data-cg-loading='r3-lp-load-2'] .kp-graph__ghost .kp-graph__ring {
-        stroke-dasharray: 4 40;
-    }
-
-    /* lapis · loading r3-lp-load-3 · The lattice is laid, link by link */
-
-    [data-theme='lapis'] [data-cg-loading='r3-lp-load-3'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 100;
-    }
-
-    /* lapis · loading r3-lp-load-4 · Gold leaf is tapped into place (no static knobs) */
-
-    /* lapis · loading r3-lp-load-5 · Illumination spreads from the hub (no static knobs) */
-
-    /* lapis · loading r3-lp-load-6 · The star tile slowly turns */
-
-    [data-theme='lapis'] [data-cg-loading='r3-lp-load-6'] .kp-graph__ghost {
-        transform-box: view-box;
-        transform-origin: 50% 46%;
-    }
 
     /* ═══════════════════════════ nostromo ══════════════════════════════ */
 
@@ -242,51 +187,6 @@
 
 @media (prefers-reduced-motion: no-preference) {
     @layer kp.signature {
-        /* ── shade-dark ── */
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-1'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-sh-load-1-trace 2200ms ease-in-out infinite;
-            --cg-edge-stagger: 160ms;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-2'] .kp-graph__ghost .kp-graph__ring {
-            animation: gr-march 1800ms linear infinite;
-            animation-delay: calc(var(--i) * 150ms);
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-3'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: gr-march 1400ms linear infinite;
-            --cg-edge-stagger: 120ms;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-4'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r3-sh-load-4-struck 1900ms ease-out infinite;
-            --cg-node-stagger: 160ms;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-4'] .kp-graph__ghost .kp-graph__node--hub {
-            --cg-node-anim: gr-breathe 2600ms ease-in-out infinite;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-5'] .kp-graph__ghost .kp-graph__node--hub {
-            --cg-node-anim: gr-breathe 2000ms ease-in-out infinite;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-5'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-sh-load-5-ping 2000ms ease-out infinite;
-            --cg-edge-stagger: 140ms;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-6'] .kp-graph__ghost {
-            transform-box: view-box;
-            transform-origin: 50% 46%;
-            animation: gr-sway 4200ms ease-in-out infinite;
-        }
-
-        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-6'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: gr-breathe 2600ms ease-in-out infinite;
-        }
-
         /* ── retro ── */
 
         [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__edge {
@@ -360,41 +260,6 @@
         [data-theme='grotesk'] [data-cg-loading='r3-gk-load-6'] .kp-graph__ghost .kp-graph__node {
             --cg-node-anim: r3-gk-load-6-flip 1000ms steps(4) infinite;
             --cg-node-stagger: 140ms;
-        }
-
-        /* ── lapis ── */
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-1'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-lp-load-1-glint 2000ms ease-in-out infinite;
-            --cg-edge-stagger: 170ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-2'] .kp-graph__ghost .kp-graph__ring {
-            animation: gr-march 1600ms linear infinite;
-            animation-delay: calc(var(--i) * 150ms);
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-3'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-lp-load-3-lay 2200ms ease-out infinite;
-            --cg-edge-stagger: 220ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-4'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: gr-pop 1600ms ease-out infinite;
-            --cg-node-stagger: 160ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-5'] .kp-graph__ghost .kp-graph__node--hub {
-            --cg-node-anim: gr-breathe 2000ms ease-in-out infinite;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-5'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-lp-load-5-glow 2000ms linear infinite;
-            --cg-edge-stagger: 167ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r3-lp-load-6'] .kp-graph__ghost {
-            animation: gr-sweep 16000ms linear infinite;
         }
 
         /* ── nostromo ── */

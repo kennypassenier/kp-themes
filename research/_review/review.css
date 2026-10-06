@@ -75,7 +75,7 @@
 }
 
 /* A theme may draw its dialog's ornament as an in-flow ::before or ::after
-   (deco, sepia and lapis since 9.0.0). Each gets a row of its own, so the
+   (deco and sepia since 9.0.0; Lapis too until its removal). Each gets a row of its own, so the
    ornament never takes the head's row and pushes the body into a row the
    dialog clips (Kenny, 2026-10-04, review-ornament-M1). An empty row is
    zero tall; an absolutely positioned ornament takes no row at all. */

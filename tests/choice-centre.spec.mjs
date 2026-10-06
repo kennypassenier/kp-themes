@@ -200,7 +200,7 @@ for (const ratio of RATIOS) {
         { tag: ['@component:datatable', '@sweep'] },
         async ({ playwright, browserName, baseURL }) => {
             // Before (firefox, both ratios): the filter and column choices'
-            // words 3.7 to 6.2px below the box's centre in every theme (lapis
+            // words 3.7 to 6.2px below the box's centre in every theme (Lapis
             // the worst), and ticking moved them 6.0px in brutalism, 5.2px in
             // dark and titanium, 3.1px in cyberpunk and 2.0px in retro.
             test.setTimeout(180_000);

@@ -107,20 +107,6 @@
             "interactive": "1",
             "live": "3"
         },
-        "shade-light": {
-            "shape": "3",
-            "loading": "3",
-            "tone": "1",
-            "interactive": "2",
-            "live": "3"
-        },
-        "shade-dark": {
-            "shape": "2",
-            "loading": "3",
-            "tone": "1",
-            "interactive": "2",
-            "live": "2"
-        },
         "retro": {
             "shape": "r2-rt-shape-1",
             "loading": "6",
@@ -131,13 +117,6 @@
         "grotesk": {
             "shape": "r2-gr-shape-1",
             "loading": "6",
-            "tone": "1",
-            "interactive": "2",
-            "live": "2"
-        },
-        "lapis": {
-            "shape": "3",
-            "loading": "1",
             "tone": "1",
             "interactive": "2",
             "live": "2"

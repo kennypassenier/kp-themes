@@ -107,20 +107,6 @@
             "tone": "1",
             "interact": "3"
         },
-        "shade-light": {
-            "shape": "1",
-            "loading": "3",
-            "open": "1",
-            "tone": "1",
-            "interact": "1"
-        },
-        "shade-dark": {
-            "shape": "3",
-            "loading": "3",
-            "open": "3",
-            "tone": "1",
-            "interact": "1"
-        },
         "retro": {
             "shape": "1",
             "loading": "1",
@@ -134,13 +120,6 @@
             "open": "1",
             "tone": "1",
             "interact": "2"
-        },
-        "lapis": {
-            "shape": "2",
-            "loading": "2",
-            "open": "3",
-            "tone": "2",
-            "interact": "3"
         },
         "nostromo": {
             "shape": "1",

@@ -28,7 +28,7 @@ const THEMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.me
  * glows once -- and a texture that drifts for 40 seconds, so a snapshot
  * taken mid-gesture reads a transient box shadow. Without this the
  * comparison failed on a different theme each run: forest and grotesk in
- * Firefox, lapis in Chromium. Awaiting them instead of settling them
+ * Firefox, Lapis in Chromium. Awaiting them instead of settling them
  * made the test time out at 30 seconds on the 40-second drift.
  */
 const snapshot = async (page) => {

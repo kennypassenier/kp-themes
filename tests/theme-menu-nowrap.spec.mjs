@@ -2,7 +2,7 @@
 // (bold) row included.
 //
 // JobTracker, 2026-10-03: in the React switcher the selected row broke onto
-// two lines in high-contrast, shade-light and shade-dark. The list is placed
+// two lines in high-contrast, Shade (light) and Shade (dark). The list is placed
 // against its button and took the button's width as its room; it is now as
 // wide as its longest row, and a row does not wrap.
 

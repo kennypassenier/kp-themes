@@ -48,8 +48,6 @@ function motionScope() {
         '../css/retro-register.css',
         '../css/terminal-register.css',
         '../css/brutalism-register.css',
-        '../css/shade-dark-register.css',
-        '../css/lapis-register.css',
         '../css/high-contrast-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
@@ -60,7 +58,6 @@ function motionScope() {
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/shade-light-register.css',
         '../css/pastel-register.css',
         '../css/titanium-register.css',
     ]) {
@@ -82,8 +79,6 @@ function motionVerdicts() {
         '../css/retro-register.css',
         '../css/terminal-register.css',
         '../css/brutalism-register.css',
-        '../css/shade-dark-register.css',
-        '../css/lapis-register.css',
         '../css/high-contrast-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
@@ -94,7 +89,6 @@ function motionVerdicts() {
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/shade-light-register.css',
         '../css/pastel-register.css',
         '../css/titanium-register.css',
         '../css/_rules.css',
@@ -126,8 +120,6 @@ function layersClean() {
         '../css/retro-register.css',
         '../css/terminal-register.css',
         '../css/brutalism-register.css',
-        '../css/shade-dark-register.css',
-        '../css/lapis-register.css',
         '../css/high-contrast-register.css',
         '../css/solstice-register.css',
         '../css/sepia-register.css',
@@ -138,7 +130,6 @@ function layersClean() {
         '../css/light-register.css',
         '../css/deco-register.css',
         '../css/forest-register.css',
-        '../css/shade-light-register.css',
         '../css/pastel-register.css',
         '../css/titanium-register.css',
         '../css/tailwind-bridge.css',
@@ -183,7 +174,7 @@ export function table() {
     // floors are ADVICE in this package and never refuse (Kenny,
     // 2026-09-09) — but check-contrast.mjs still exits 1 when a pair is
     // short, and a throw here turned that advice into a hard gate through
-    // the back door: shade-light's muted colour, chosen deliberately at
+    // the back door: Shade (light)'s muted colour, chosen deliberately at
     // 3.99 with the reading recorded, failed `npm run gates`. The point of
     // this call is to QUOTE what the advisory printed, so the exit code is
     // not this function's business. fix-13's shape a second time: an

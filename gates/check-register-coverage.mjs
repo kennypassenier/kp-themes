@@ -44,7 +44,6 @@ export const REGISTERS = [
     'css/brutalism-register.css',
     'css/titanium-register.css',
     'css/pastel-register.css',
-    'css/shade-light-register.css',
     'css/forest-register.css',
     'css/deco-register.css',
     'css/light-register.css',
@@ -56,8 +55,6 @@ export const REGISTERS = [
     'css/sepia-register.css',
     'css/solstice-register.css',
     'css/high-contrast-register.css',
-    'css/lapis-register.css',
-    'css/shade-dark-register.css',
 ];
 /** The first register, kept for the callers that measure one. */
 export const REGISTER = REGISTERS[0];

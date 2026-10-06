@@ -190,26 +190,6 @@ const IDEAS = {
             text: 'Black under a halftone screen, the lines in the violent red with a white second plate off register, the tick labels in condensed capitals. The tooltip is a cut-paper ransom note, white, set at a slant with a red shadow; the legend cut-paper scraps. Loading shuffles the halftone in hard steps.',
         },
     },
-    'shade-light': {
-        a: {
-            name: 'Pencil in the shade',
-            text: 'Paper read in the shade: the grid in pencil, the tick labels in the serif italic, each line throwing a soft shade below it over an area hatched in pencil. The tooltip is a card lifted off the page by its shade; the legend pencil-underlined words. Loading hatches the plot in once and leaves it, as every reveal here runs once.',
-        },
-        b: {
-            name: 'The leaf shade',
-            text: 'The plot under a tree: soft dappled shade of leaves on the paper, the lines and their shades crisp in it. The tooltip is a card with a soft shade; the legend pills with a shade. Loading lets the shade of a passing cloud cross the paper.',
-        },
-    },
-    'shade-dark': {
-        a: {
-            name: 'Silverpoint',
-            text: 'The dark half of the pencil: fine silver hatching across the dark ground, the lines lit along their upper edge, the areas hatched in silver. The tooltip is a dark card with a silver hairline; the legend silver-underlined words. Loading hatches the plot in once.',
-        },
-        b: {
-            name: 'The reading lamp',
-            text: 'A pool of lamplight on the dark page, falling off into shade at its edges; the lines are lit where the lamp is. The tooltip is a card under the lamp; the legend lamp-lit pills. Loading slides the pool of light slowly across the page.',
-        },
-    },
     retro: {
         a: {
             name: 'The plotter on fanfold paper',
@@ -228,16 +208,6 @@ const IDEAS = {
         b: {
             name: 'The zebra scale',
             text: 'A zebra time scale of twelve columns along the foot of the plot and a column grid above it; the lines black and red. The tooltip is a red plate with white text; the legend numbered 01, 02, 03 in the grotesque. Loading hops the zebra one column and back.',
-        },
-    },
-    lapis: {
-        a: {
-            name: 'Lapis on vellum',
-            text: "An ivory vellum plot ruled in gold inside the lapis page; the lines are drawn in lapis and vermilion ink, the tick labels in the Markazi serif. The tooltip is a lapis plate in a gold rule; the legend gilt-edged pills. Loading lets a burnisher's glint run across the vellum.",
-        },
-        b: {
-            name: 'The gilt lattice',
-            text: 'The lapis page under a faint girih lattice in a double gold frame; the lines are gold leaf with a soft glint, the areas tooled with a gold lattice. The tooltip is a toranj, the pointed cartouche; the legend gilt pills. Loading lets a glint run along the frame.',
         },
     },
     nostromo: {
@@ -291,7 +261,6 @@ const PICK = {
     terminal: 'b',
     phantom: 'b',
     retro: 'b',
-    lapis: 'b',
     cyberpunk: 'a',
     synthwave: 'a',
     pastel: 'a',
@@ -299,8 +268,6 @@ const PICK = {
     sepia: 'a',
     blueprint: 'a',
     deco: 'a',
-    'shade-light': 'a',
-    'shade-dark': 'a',
     grotesk: 'a',
     nostromo: 'a',
     titanium: 'a',
@@ -667,44 +634,6 @@ const R2 = {
             ['pin', 'Pinned notes'],
         ],
     },
-    'shade-light': {
-        loading: [
-            ['hatch', 'The pencil hatches, over and over', '--foreground'],
-            ['pen', 'The pencil line', '--foreground', '--primary'],
-            ['glint', 'Sun through the leaves', '--primary', '--primary'],
-        ],
-        arrival: [
-            ['draw', 'Drawn in pencil'],
-            ['wipe', 'The shade moves off'],
-        ],
-        update: [
-            ['tail', 'A new pencil stroke'],
-            ['shift', 'Slides on'],
-        ],
-        events: [
-            ['ring', 'Pencil rings'],
-            ['pin', 'Pins'],
-        ],
-    },
-    'shade-dark': {
-        loading: [
-            ['hatch', 'Silverpoint hatching', '--foreground'],
-            ['rise', 'The lamp warms up', '--primary', '--primary'],
-            ['sweep', 'The torch beam', '--primary'],
-        ],
-        arrival: [
-            ['draw', 'Drawn in silver'],
-            ['wipe', 'Lit from the left'],
-        ],
-        update: [
-            ['tail', 'A new silver stroke'],
-            ['shift', 'Slides on'],
-        ],
-        events: [
-            ['ring', 'Silver rings'],
-            ['halo', 'Lamp-lit dots'],
-        ],
-    },
     retro: {
         loading: [
             ['dither', 'The dither bar', '--foreground', '--primary'],
@@ -741,25 +670,6 @@ const R2 = {
         events: [
             ['pin', 'Black pins'],
             ['target', 'Red marks'],
-        ],
-    },
-    lapis: {
-        loading: [
-            ['radar', 'The astrolabe', '--accent'],
-            ['pen', 'The reed pen', '--accent', '--primary'],
-            ['march', 'The gilt border', '--accent'],
-        ],
-        arrival: [
-            ['draw', 'Written with the reed'],
-            ['centre', 'Unrolled from the middle'],
-        ],
-        update: [
-            ['tail', 'A new stroke of ink'],
-            ['swell', 'A gilt swell'],
-        ],
-        events: [
-            ['bead', 'Gilt studs'],
-            ['ring', 'Gold rings'],
         ],
     },
     nostromo: {
@@ -914,7 +824,6 @@ const PICKED = {
     synthwave: ['1', '1', '2', '1', '3', '1'],
     'high-contrast': ['1', '3', '3', '3', '3', '1'],
     solstice: ['3', '1', '1', '1', '2', '2'],
-    'shade-dark': ['2', '1', '3', '1', '2', '1'],
     cyberpunk: ['3', '1', '2', '1', '2', '1'],
     pastel: ['2', '2', '2', '1', '2', '1'],
     terminal: ['2', '6', '1', '1', '2', '1'],
@@ -924,10 +833,8 @@ const PICKED = {
     brutalism: ['1', '3', '1', '3', '2', '1'],
     deco: ['1', '1', '3', '1', '1', '1'],
     phantom: ['1', '2', '1', '1', '1', '1'],
-    'shade-light': ['3', '2', '3', '1', '3', '1'],
     retro: ['1', '3', '2', '3', '2', '3'],
     grotesk: ['1', '2', '3', '1', '1', '3'],
-    lapis: ['1', '3', '3', '1', '3', '1'],
     nostromo: ['1', '1', '3', '1', '2', '1'],
     titanium: ['1', '1', '3', '1', '2', '1'],
 };

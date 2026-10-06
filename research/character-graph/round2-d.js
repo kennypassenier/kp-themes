@@ -148,38 +148,4 @@ export default {
             ],
         ],
     },
-    'shade-light': {
-        loading: [
-            [
-                'The pencil sketches the lines',
-                'Each link is sketched in slowly, one after another, as a hand drawing with a soft pencil, and the disc at its far end settles gently into place the moment its line is drawn.',
-                'r3-d-shl-load-1',
-            ],
-            [
-                'A cloud’s shadow drifts',
-                'A soft shadow drifts slowly across the whole picture as a cloud passing overhead, and every disc it crosses lifts a little brighter for a moment as the light finds it again.',
-                'r3-d-shl-load-2',
-            ],
-            [
-                'Leaves sway over the network',
-                'The whole network sways gently from side to side, as light coming through moving leaves, a slow and soft motion that never settles while the network is still being read.',
-                'r3-d-shl-load-3',
-            ],
-            [
-                'The lantern glow breathes',
-                'Every paper disc breathes a soft warm glow in and out together, brightening and settling in a slow rhythm, as a row of paper lanterns stirring in the evening air.',
-                'r3-d-shl-load-4',
-            ],
-            [
-                'Hatched in, stroke by stroke',
-                'Each link is laid in with short, stepped pencil strokes rather than one smooth line, going round the ring one hatch mark at a time, as a hand cross-hatching a sketch.',
-                'r3-d-shl-load-5',
-            ],
-            [
-                'Dappled light crosses the ring',
-                'A small warm pool of light visits each disc in turn, all the way round the ring, brightening it softly before moving on to the next, as sunlight dappling through a moving canopy.',
-                'r3-d-shl-load-6',
-            ],
-        ],
-    },
 };

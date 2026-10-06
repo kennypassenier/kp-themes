@@ -7,56 +7,11 @@
    one rule names one aspect. */
 
 @layer kp.signature {
-    /* ════════════════════════════════════════════════════════════════
-       shade-dark — the dark half of Shade: silver ruling, a warm lamp,
-       a shaft of moonlight.
-       ════════════════════════════════════════════════════════════════ */
-
     /* ── shape ───────────────────────────────────────────────────────── */
-
-    /* shade-dark · shape 1: Silverpoint */
-    [data-theme='shade-dark'] [data-ti-shape='1'] .kp-card {
-        border: 1px solid color-mix(in oklch, var(--border-strong) 70%, var(--foreground));
-        background: linear-gradient(165deg, color-mix(in oklch, var(--foreground) 4%, var(--card)), var(--card) 65%);
-    }
-    [data-theme='shade-dark'] [data-ti-shape='1'] [data-tl-mark] {
-        --ti-mark: color-mix(in oklch, var(--border-strong) 80%, var(--foreground));
-    }
-
-    /* shade-dark · shape 2: The reading lamp */
-    [data-theme='shade-dark'] [data-ti-shape='2'] .kp-card {
-        background: radial-gradient(ellipse 65% 55% at 18% 18%, color-mix(in oklch, var(--warning) 22%, transparent), transparent 72%), var(--card);
-        border-color: color-mix(in oklch, var(--warning) 60%, var(--border-strong));
-    }
-    [data-theme='shade-dark'] [data-ti-shape='2'] [data-tl-mark] {
-        --ti-mark: var(--warning);
-        box-shadow: 0 0 5px color-mix(in oklch, var(--warning) 55%, transparent);
-    }
-
-    /* shade-dark · shape 3: The night window */
-    [data-theme='shade-dark'] [data-ti-shape='3'] .kp-card {
-        background: linear-gradient(115deg, var(--card) 0% 42%, color-mix(in oklch, var(--foreground) 9%, var(--card)) 48% 56%, var(--card) 62% 100%);
-        border-color: var(--border-strong);
-    }
-    [data-theme='shade-dark'] [data-ti-shape='3'] [data-tl-mark] {
-        --ti-mark: color-mix(in oklch, var(--foreground) 65%, var(--primary));
-        box-shadow: 0 0 4px color-mix(in oklch, var(--foreground) 35%, transparent);
-    }
 
     /* ── while loading ──────────────────────────────────────────────── */
 
-    /* shade-dark · loading 1: Silverpoint — the silver hatches in */
-    [data-theme='shade-dark'] [data-ti-loading='1'] [data-kp-busy]::after {
-        inset-inline: 1rem;
-        inset-block-end: 0.7rem;
-        block-size: 8px;
-        background-image: repeating-linear-gradient(115deg, var(--border-strong) 0 1px, transparent 1px 5px);
-        clip-path: inset(0 100% 0 0);
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-ti-loading='1'] [data-kp-busy]::after {
-            animation: sd-hatch 1.6s linear infinite;
-        }
     }
     @keyframes sd-hatch {
         0% {
@@ -70,19 +25,7 @@
         }
     }
 
-    /* shade-dark · loading 2: The lamp — the pool swells and settles */
-    [data-theme='shade-dark'] [data-ti-loading='2'] [data-kp-busy]::after {
-        inset-inline-start: 0.85rem;
-        inset-block-end: 0.55rem;
-        inline-size: 1rem;
-        block-size: 1rem;
-        border-radius: 50%;
-        background: radial-gradient(circle, var(--warning), transparent 72%);
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-ti-loading='2'] [data-kp-busy]::after {
-            animation: sd-lamp-swell 1.7s ease-in-out infinite;
-        }
     }
     @keyframes sd-lamp-swell {
         0%,
@@ -94,20 +37,7 @@
         }
     }
 
-    /* shade-dark · loading 3: The candle flickers */
-    [data-theme='shade-dark'] [data-ti-loading='3'] [data-kp-busy]::after {
-        inset-inline-end: 0.9rem;
-        inset-block-start: 0.85rem;
-        inline-size: 0.4rem;
-        block-size: 0.6rem;
-        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-        background: var(--warning);
-        transform-origin: 50% 100%;
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-ti-loading='3'] [data-kp-busy]::after {
-            animation: sd-candle 0.9s ease-in-out infinite;
-        }
     }
     @keyframes sd-candle {
         0%,
@@ -128,16 +58,6 @@
     /* ── how the tiles arrive ───────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
-            animation: sd-arrive-silver 0.46s ease-in-out both;
-        }
-        [data-theme='shade-dark'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
-            animation: sd-arrive-lamp 0.4s cubic-bezier(0.22, 0.9, 0.3, 1.2) both;
-            transform-origin: center;
-        }
-        [data-theme='shade-dark'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
-            animation-delay: 0.08s;
-        }
     }
     @keyframes sd-arrive-silver {
         from {
@@ -158,134 +78,11 @@
 
     /* ── tone of a tile ─────────────────────────────────────────────── */
 
-    /* shade-dark · tone 1: The status plate */
-    [data-theme='shade-dark'] [data-ti-tone='1'] .kp-card[data-kp-tone] {
-        box-shadow:
-            inset 0 0 0 1px var(--primary),
-            inset 0 3px 0 var(--primary);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] {
-        box-shadow:
-            inset 0 0 0 1px var(--success),
-            inset 0 3px 0 var(--success);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] {
-        box-shadow:
-            inset 0 0 0 1px var(--warning),
-            inset 0 3px 0 var(--warning);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] {
-        box-shadow:
-            inset 0 0 0 1px var(--destructive),
-            inset 0 3px 0 var(--destructive);
-    }
-
-    /* shade-dark · tone 2: The soft chip (the mark) */
-    [data-theme='shade-dark'] [data-ti-tone='2'] .kp-card[data-kp-tone] [data-tl-mark] {
-        --ti-mark: var(--primary);
-        box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 30%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
-        --ti-mark: var(--success);
-        box-shadow: 0 0 0 3px color-mix(in oklch, var(--success) 30%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
-        --ti-mark: var(--warning);
-        box-shadow: 0 0 0 3px color-mix(in oklch, var(--warning) 30%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
-        --ti-mark: var(--destructive);
-        box-shadow: 0 0 0 3px color-mix(in oklch, var(--destructive) 30%, transparent);
-    }
-
-    /* shade-dark · tone 3: The red lamp — a band lit over the card */
-    [data-theme='shade-dark'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
-        border-block-start: 3px solid var(--primary);
-        background-image: radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 75%);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
-        border-block-start-color: var(--success);
-        background-image: radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--success) 16%, transparent), transparent 75%);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
-        border-block-start-color: var(--warning);
-        background-image: radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--warning) 16%, transparent), transparent 75%);
-    }
-    [data-theme='shade-dark'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
-        border-block-start-color: var(--destructive);
-        background-image: radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--destructive) 16%, transparent), transparent 75%);
-    }
-
     /* ── hover, focus, the Open link ────────────────────────────────── */
-
-    /* shade-dark · hover 1: The silver glints */
-    [data-theme='shade-dark'] [data-ti-hover='1'] .kp-card:hover,
-    [data-theme='shade-dark'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
-    [data-theme='shade-dark'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
-        box-shadow:
-            0 0 0 1px var(--border-strong),
-            0 0.25rem 0.75rem color-mix(in oklch, var(--foreground) 16%, transparent);
-    }
-    [data-theme='shade-dark'] [data-ti-hover='1'] [data-tl-link]:hover,
-    [data-theme='shade-dark'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-        text-decoration-color: var(--border-strong);
-    }
-    [data-theme='shade-dark'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        outline: 1px solid var(--border-strong);
-        outline-offset: 2px;
-    }
-
-    /* shade-dark · hover 2: The lamp brightens */
-    [data-theme='shade-dark'] [data-ti-hover='2'] .kp-card:hover,
-    [data-theme='shade-dark'] [data-ti-hover='2'] .kp-card.tl-hover-sim,
-    [data-theme='shade-dark'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
-        background-image: radial-gradient(ellipse 80% 70% at 18% 18%, color-mix(in oklch, var(--warning) 32%, transparent), transparent 75%);
-        border-color: color-mix(in oklch, var(--warning) 45%, var(--border));
-    }
-    [data-theme='shade-dark'] [data-ti-hover='2'] [data-tl-link]:hover,
-    [data-theme='shade-dark'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        color: var(--warning);
-        text-decoration: underline;
-    }
-    [data-theme='shade-dark'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        outline: 2px dashed var(--warning);
-        outline-offset: 3px;
-    }
-
-    /* shade-dark · hover 3: The window clears */
-    [data-theme='shade-dark'] [data-ti-hover='3'] .kp-card:hover,
-    [data-theme='shade-dark'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
-    [data-theme='shade-dark'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
-        background: linear-gradient(
-            115deg,
-            var(--card) 0% 36%,
-            color-mix(in oklch, var(--foreground) 15%, var(--card)) 48% 58%,
-            var(--card) 64% 100%
-        );
-    }
-    [data-theme='shade-dark'] [data-ti-hover='3'] [data-tl-link]:hover,
-    [data-theme='shade-dark'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-        text-decoration-color: var(--foreground);
-    }
-    [data-theme='shade-dark'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        outline: 1px solid var(--foreground);
-        outline-offset: 4px;
-    }
 
     /* ── live update ────────────────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-ti-live='1'] [data-tl-flash] {
-            animation: sd-live-glint 0.5s ease-out;
-        }
-        [data-theme='shade-dark'] [data-ti-live='2'] [data-tl-flash] {
-            animation: sd-live-flare 0.5s ease-out;
-        }
-        [data-theme='shade-dark'] [data-ti-live='3'] [data-tl-flash] {
-            animation: sd-live-step 0.55s ease-in-out;
-        }
     }
     @keyframes sd-live-glint {
         0%,
@@ -930,66 +727,11 @@
         }
     }
 
-    /* ════════════════════════════════════════════════════════════════
-       lapis — Persian illumination: lapis ground, gold ruling, a girih
-       lattice, vermilion rubrics.
-       ════════════════════════════════════════════════════════════════ */
-
     /* ── shape ───────────────────────────────────────────────────────── */
-
-    /* lapis · shape 1: The girih tile — a faint lattice, a double gold frame */
-    [data-theme='lapis'] [data-ti-shape='1'] .kp-card {
-        background-image: repeating-conic-gradient(from 22.5deg, color-mix(in oklch, var(--primary) 8%, transparent) 0 45deg, transparent 45deg 90deg)
-            0 0 / 22px 22px;
-        box-shadow: inset 0 0 0 4px var(--card);
-        border: 3px double var(--primary);
-    }
-    [data-theme='lapis'] [data-ti-shape='1'] [data-tl-mark] {
-        border-radius: 0;
-        clip-path: polygon(50% 0, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0 50%, 35% 35%);
-        --ti-mark: var(--primary);
-    }
-
-    /* lapis · shape 2: Lapis on vellum */
-    [data-theme='lapis'] [data-ti-shape='2'] .kp-card {
-        border: 2px solid var(--primary);
-        border-radius: 0.2rem;
-    }
-    [data-theme='lapis'] [data-ti-shape='2'] .kp-card__title {
-        font-style: italic;
-    }
-    [data-theme='lapis'] [data-ti-shape='2'] [data-tl-mark] {
-        border-radius: 50%;
-        --ti-mark: var(--accent);
-    }
-
-    /* lapis · shape 3: The manuscript margin */
-    [data-theme='lapis'] [data-ti-shape='3'] .kp-card {
-        border-color: var(--primary);
-        background-image:
-            linear-gradient(var(--primary), var(--primary)) 0.4rem 0 / 1px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0.65rem 0 / 1px 100% no-repeat;
-        padding-inline-start: 1.5rem;
-    }
-    [data-theme='lapis'] [data-ti-shape='3'] [data-tl-mark] {
-        border-radius: 0;
-        clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-        --ti-mark: var(--primary);
-    }
 
     /* ── while loading ──────────────────────────────────────────────── */
 
-    /* lapis · loading 1: The girih tile — a glint runs the frame */
-    [data-theme='lapis'] [data-ti-loading='1'] [data-kp-busy]::after {
-        inset: 0;
-        border-radius: inherit;
-        border: 2px solid transparent;
-        border-start-color: var(--primary);
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-ti-loading='1'] [data-kp-busy]::after {
-            animation: lp-girih-glint 1.3s linear infinite;
-        }
     }
     @keyframes lp-girih-glint {
         to {
@@ -997,18 +739,7 @@
         }
     }
 
-    /* lapis · loading 2: The gold leaf is laid */
-    [data-theme='lapis'] [data-ti-loading='2'] [data-kp-busy]::after {
-        inset-inline-start: 0;
-        inset-block-end: 0.6rem;
-        inline-size: 35%;
-        block-size: 3px;
-        background: var(--primary);
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-ti-loading='2'] [data-kp-busy]::after {
-            animation: lp-gold-leaf 1.4s ease-in-out infinite;
-        }
     }
     @keyframes lp-gold-leaf {
         0% {
@@ -1022,19 +753,7 @@
         }
     }
 
-    /* lapis · loading 3: The star turns */
-    [data-theme='lapis'] [data-ti-loading='3'] [data-kp-busy]::after {
-        inset-inline-start: calc(50% - 0.45rem);
-        inset-block-end: 0.4rem;
-        inline-size: 0.9rem;
-        block-size: 0.9rem;
-        background: var(--primary);
-        clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
-    }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-ti-loading='3'] [data-kp-busy]::after {
-            animation: lp-star-turn 2s linear infinite;
-        }
     }
     @keyframes lp-star-turn {
         to {
@@ -1045,16 +764,6 @@
     /* ── how the tiles arrive ───────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
-            animation: lp-arrive-illum 0.42s cubic-bezier(0.2, 0.8, 0.3, 1.1) both;
-            transform-origin: center;
-        }
-        [data-theme='lapis'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
-            animation: lp-arrive-ink 0.4s ease-in-out both;
-        }
-        [data-theme='lapis'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
-            animation-delay: 0.08s;
-        }
     }
     @keyframes lp-arrive-illum {
         from {
@@ -1075,125 +784,11 @@
 
     /* ── tone of a tile ─────────────────────────────────────────────── */
 
-    /* lapis · tone 1: The status plate */
-    [data-theme='lapis'] [data-ti-tone='1'] .kp-card[data-kp-tone] {
-        box-shadow:
-            inset 0 0 0 1px var(--primary),
-            inset 0 3px 0 var(--primary);
-    }
-    [data-theme='lapis'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] {
-        box-shadow:
-            inset 0 0 0 1px var(--success),
-            inset 0 3px 0 var(--success);
-    }
-    [data-theme='lapis'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] {
-        box-shadow:
-            inset 0 0 0 1px var(--warning),
-            inset 0 3px 0 var(--warning);
-    }
-    [data-theme='lapis'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] {
-        box-shadow:
-            inset 0 0 0 1px var(--destructive),
-            inset 0 3px 0 var(--destructive);
-    }
-
-    /* lapis · tone 2: The gold-ruled plate */
-    [data-theme='lapis'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
-        border: 2px solid var(--primary);
-    }
-    [data-theme='lapis'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
-        border-color: var(--success);
-    }
-    [data-theme='lapis'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
-        border-color: var(--warning);
-    }
-    [data-theme='lapis'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
-        border-color: var(--destructive);
-    }
-
-    /* lapis · tone 3: The rubric */
-    [data-theme='lapis'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
-        border-inline-start: 4px solid var(--primary);
-    }
-    [data-theme='lapis'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
-        border-inline-start-color: var(--success);
-    }
-    [data-theme='lapis'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
-        border-inline-start-color: var(--warning);
-    }
-    [data-theme='lapis'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
-        border-inline-start-color: var(--destructive);
-    }
-
     /* ── hover, focus, the Open link ────────────────────────────────── */
-
-    /* lapis · hover 1: The lattice glints */
-    [data-theme='lapis'] [data-ti-hover='1'] .kp-card:hover,
-    [data-theme='lapis'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
-    [data-theme='lapis'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
-        box-shadow:
-            inset 0 0 0 1px var(--primary),
-            inset 0 0 0 4px var(--card),
-            inset 0 0 0 5px var(--primary),
-            0 0 8px color-mix(in oklch, var(--primary) 35%, transparent);
-    }
-    [data-theme='lapis'] [data-ti-hover='1'] [data-tl-link]:hover,
-    [data-theme='lapis'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-        color: var(--primary);
-    }
-    [data-theme='lapis'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        outline: 2px double var(--primary);
-        outline-offset: 3px;
-    }
-
-    /* lapis · hover 2: The vellum warms */
-    [data-theme='lapis'] [data-ti-hover='2'] .kp-card:hover,
-    [data-theme='lapis'] [data-ti-hover='2'] .kp-card.tl-hover-sim,
-    [data-theme='lapis'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
-        border-width: 3px;
-    }
-    [data-theme='lapis'] [data-ti-hover='2'] [data-tl-link]:hover,
-    [data-theme='lapis'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-        color: var(--accent);
-    }
-    [data-theme='lapis'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 3px;
-        box-shadow: 0 0 10px color-mix(in oklch, var(--primary) 35%, transparent);
-    }
-
-    /* lapis · hover 3: The margin brightens */
-    [data-theme='lapis'] [data-ti-hover='3'] .kp-card:hover,
-    [data-theme='lapis'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
-    [data-theme='lapis'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
-        background-image:
-            linear-gradient(var(--primary), var(--primary)) 0.3rem 0 / 2px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0.7rem 0 / 2px 100% no-repeat;
-    }
-    [data-theme='lapis'] [data-ti-hover='3'] [data-tl-link]:hover,
-    [data-theme='lapis'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-    }
-    [data-theme='lapis'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-    }
 
     /* ── live update ────────────────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-ti-live='1'] [data-tl-flash] {
-            animation: lp-live-redraw 0.5s ease-out;
-        }
-        [data-theme='lapis'] [data-ti-live='2'] [data-tl-flash] {
-            animation: lp-live-gild 0.5s ease-out;
-            transform-origin: center;
-        }
-        [data-theme='lapis'] [data-ti-live='3'] [data-tl-flash] {
-            animation: lp-live-ink 0.55s ease-in-out;
-        }
     }
     @keyframes lp-live-redraw {
         0%,

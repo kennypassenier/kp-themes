@@ -486,7 +486,7 @@
     }
 
     /* Quiet by size and weight, not by a lighter ink: --muted-foreground on
-       the card measured 4.13:1 in shade-light. */
+       the card measured 4.13:1 in Shade (light). */
     .cat-judge__label {
         color: var(--card-foreground);
         font-size: 0.8rem;
@@ -559,7 +559,7 @@
         grid-template-rows: auto auto minmax(0, 1fr) auto;
     }
 
-    /* A theme's in-flow dialog ornament (deco, sepia and lapis draw one as
+    /* A theme's in-flow dialog ornament (deco, sepia and Lapis draw one as
        ::before since 9.0.0) gets a row of its own, so it never takes the
        head's row (review-ornament-M1). An empty row is zero tall. */
     .cat-review-dialog::before {

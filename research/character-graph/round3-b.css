@@ -70,35 +70,6 @@
     }
 
     /* grotesk · loading r4-gk-load-6 · The specification reads out, cell by cell (no static knobs) */
-
-    /* ════════════════════════════ lapis ═════════════════════════════════ */
-
-    /* lapis · loading r4-lp-load-1 · The rubricator marks each site (no static knobs) */
-
-    /* lapis · loading r4-lp-load-2 · Gold ground is burnished across the page */
-
-    [data-theme='lapis'] [data-cg-loading='r4-lp-load-2'] .kp-graph {
-        --gr-load-over: linear-gradient(
-            115deg,
-            transparent 0 36%,
-            color-mix(in oklch, var(--primary) 55%, transparent) 36% 46%,
-            transparent 46% 100%
-        );
-        --gr-load-over-size: 260% 100%;
-    }
-
-    /* lapis · loading r4-lp-load-3 · Each girih facet turns under the glass (no static knobs) */
-
-    /* lapis · loading r4-lp-load-4 · The illuminator’s lamp sweeps the folio */
-
-    [data-theme='lapis'] [data-cg-loading='r4-lp-load-4'] .kp-graph {
-        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--primary) 38%, transparent) 0 12deg, transparent 12deg 360deg);
-        --gr-load-over-origin: 50% 46%;
-    }
-
-    /* lapis · loading r4-lp-load-5 · Every link catches the light in turn (no static knobs) */
-
-    /* lapis · loading r4-lp-load-6 · The rosary of nodes glows round the ring (no static knobs) */
 }
 
 /* ── Motion: every property that drives an animation sits here, gated, so
@@ -146,40 +117,6 @@
         [data-theme='grotesk'] [data-cg-loading='r4-gk-load-6'] .kp-graph__ghost .kp-graph__edge {
             --cg-edge-anim: gr-flicker 1400ms linear infinite;
             --cg-edge-stagger: 160ms;
-        }
-
-        /* ── lapis ── */
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-1'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r4-lp-load-1-mark 1900ms ease-out infinite;
-            --cg-node-stagger: 170ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-2'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
-            animation: r4-lp-load-2-burnish 2600ms ease-in-out infinite;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-3'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r4-lp-load-3-turn 2400ms ease-in-out infinite;
-            --cg-node-stagger: 180ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-4'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
-            animation: gr-sweep 7000ms linear infinite;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-5'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r4-lp-load-5-catch 1900ms ease-out infinite;
-            --cg-edge-stagger: 150ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-6'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r4-lp-load-6-glow 2200ms ease-in-out infinite;
-            --cg-node-stagger: 170ms;
-        }
-
-        [data-theme='lapis'] [data-cg-loading='r4-lp-load-6'] .kp-graph__ghost .kp-graph__node--hub {
-            --cg-node-anim: gr-breathe 2400ms ease-in-out infinite;
         }
     }
 }

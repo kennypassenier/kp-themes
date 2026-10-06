@@ -596,82 +596,6 @@ const IDEAS = {
             },
         ],
     },
-    'shade-light': {
-        shape: [
-            {
-                name: 'Pencil in the shade',
-                text: 'A pencil sketch on paper in soft shade: the title in a hand-drawn weight, the actions as lifted paper chips.',
-            },
-            { name: 'The leaf shade', text: 'Dappled leaf shade over the header, a soft line under the title, the actions plain on the paper.' },
-            {
-                name: 'The window light',
-                text: 'A shaft of window light falls across the header from the left, the title in soft graphite, the actions plain.',
-            },
-        ],
-        menu: [
-            {
-                name: 'Drawn in pencil',
-                text: 'The menu is drawn in from the top, easing in and out, as if sketched; it is erased the same way in reverse to close.',
-            },
-            {
-                name: 'Out of the shade',
-                text: 'The menu rises from the baseline into place, slowing as it lands, as if stepping out of shade; it steps back the same way to close.',
-            },
-            {
-                name: 'A breeze',
-                text: 'The menu dips once and settles as it opens, like a breeze passing; it dips once more and lifts away the same way to close.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The pencil lifts',
-                text: 'Hover lifts a button’s paper chip a hair, focus rings it softly, press presses the chip flat for a moment.',
-            },
-            {
-                name: 'A cloud’s shade',
-                text: 'Hover passes a soft shade over a button, focus rings it, press lets the shade settle for the moment held.',
-            },
-            { name: 'Leaves sway', text: 'Hover sways a button’s shade a touch, focus rings it softly, press settles the sway for a moment.' },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            {
-                name: 'Silverpoint',
-                text: 'Silverpoint on dark paper: a silver hairline under the title, a faint silver wash, the actions plain in silver.',
-            },
-            { name: 'The reading lamp', text: 'A warm reading lamp’s pool of light behind the title, the actions in warm ink.' },
-            { name: 'The night window', text: 'A shaft of moonlight falls across the header, the title in a cool silver ink with a faint glow.' },
-        ],
-        menu: [
-            {
-                name: 'Silverpoint',
-                text: 'The menu is drawn in from the top, easing in and out, as a silver line laid down; it is lifted the same way in reverse to close.',
-            },
-            {
-                name: 'The lamp is lit',
-                text: 'The menu rises from its middle into place, slowing as it lands, as a lamp warming up; it dims back the same way to close.',
-            },
-            {
-                name: 'A glint',
-                text: 'The menu flares with a glint of light once as it settles into place; it glints once more as it withdraws, the same way in reverse to close.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The silver hatch',
-                text: 'Hover hatches a thin silver line into a button, focus rings it, press presses the hatch flat for a moment.',
-            },
-            {
-                name: 'The lamp swells',
-                text: 'Hover swells a button’s pool of light, focus rings it warmly, press settles the glow for the moment held.',
-            },
-            {
-                name: 'The candle flickers',
-                text: 'Hover flickers a small light at a button’s corner, focus rings it, press steadies the flicker while pressed.',
-            },
-        ],
-    },
     retro: {
         shape: [
             { name: 'The 1995 dialog', text: 'A raised grey bevel round the header, the title in the system face, the actions as raised buttons.' },
@@ -731,35 +655,6 @@ const IDEAS = {
             },
             { name: 'The index colour', text: 'Hover brightens a button’s index colour, focus rings it, press settles the colour for a moment.' },
             { name: 'The flat bar', text: 'Hover extends a button’s colour bar, focus boxes it, press flattens the bar for the moment held.' },
-        ],
-    },
-    lapis: {
-        shape: [
-            { name: 'The girih tile', text: 'A faint star lattice behind the title, a double gold frame, the actions in gold.' },
-            { name: 'Lapis on vellum', text: 'Lapis ink on ivory vellum behind the title, a gold rim round the header, the actions in gold.' },
-            { name: 'The manuscript margin', text: 'A double gold rule down the left margin, the title in serif italic, the actions in lapis ink.' },
-        ],
-        menu: [
-            {
-                name: 'Illuminated',
-                text: 'The menu opens from its middle into place, slowing as it lands, as a page being illuminated; it closes back to its middle in reverse.',
-            },
-            {
-                name: 'Inked',
-                text: 'The menu is drawn in from the top, easing in and out, as ink laid on vellum; it is lifted the same way in reverse to close.',
-            },
-            {
-                name: 'The gold leaf is laid',
-                text: 'A band of gold leaf lays down to reveal the menu, left to right; it lifts away the same way to close.',
-            },
-        ],
-        interactive: [
-            { name: 'The glint runs', text: 'Hover runs a glint along a button’s gold rule, focus rings it, press settles the glint for a moment.' },
-            { name: 'Gilded', text: 'Hover gilds a button’s edge, focus rings it in gold, press holds the gilding still while pressed.' },
-            {
-                name: 'The star turns',
-                text: 'Hover turns a faint gold star behind a button, focus rings it, press stills the turn for the moment held.',
-            },
         ],
     },
     nostromo: {

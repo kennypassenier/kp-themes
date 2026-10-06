@@ -5,7 +5,7 @@
 // fades out. A register that writes its own `transition` for the menu
 // replaces that list; without `display … allow-discrete` in it the panel is
 // `display: none` from the first frame of closing while opening still fades
-// (through `@starting-style`). Sepia and shade-dark did exactly that.
+// (through `@starting-style`). Sepia and Shade (dark) did exactly that.
 
 import { expect } from '@playwright/test';
 

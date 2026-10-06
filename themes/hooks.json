@@ -367,46 +367,6 @@
                 "selector": "[data-theme='phantom'] .kp-boot"
             }
         },
-        "shade-light": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='shade-light'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/shade-light-register.css",
-                "selector": "[data-theme='shade-light'] mark"
-            },
-            "reveal": {
-                "css": "css/shade-light-register.css",
-                "selector": "[data-theme='shade-light'] [data-kp-reveal='rule']::after"
-            },
-            "divider": {
-                "css": "css/shade-light-register.css",
-                "selector": "[data-theme='shade-light'] [data-kp-divider]"
-            }
-        },
-        "shade-dark": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='shade-dark'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/shade-dark-register.css",
-                "selector": "[data-theme='shade-dark'] mark"
-            },
-            "reveal": {
-                "css": "css/shade-dark-register.css",
-                "selector": "[data-theme='shade-dark'] [data-kp-reveal='headline'] [data-word]"
-            },
-            "divider": {
-                "css": "css/shade-dark-register.css",
-                "selector": "[data-theme='shade-dark'] [data-kp-divider]"
-            },
-            "accent": {
-                "css": "css/shade-dark-register.css",
-                "selector": "[data-theme='shade-dark'] [data-kp-surface] h1"
-            }
-        },
         "retro": {
             "surface": {
                 "css": "css/themes.css",
@@ -449,28 +409,6 @@
             "divider": {
                 "css": "css/grotesk-register.css",
                 "selector": "[data-theme='grotesk'] [data-kp-divider]"
-            }
-        },
-        "lapis": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='lapis'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/lapis-register.css",
-                "selector": "[data-theme='lapis'] mark"
-            },
-            "reveal": {
-                "css": "css/lapis-register.css",
-                "selector": "[data-theme='lapis'] [data-kp-reveal='headline']"
-            },
-            "divider": {
-                "css": "css/lapis-register.css",
-                "selector": "[data-theme='lapis'] [data-kp-divider]"
-            },
-            "accent": {
-                "css": "css/lapis-register.css",
-                "selector": "[data-theme='lapis'] [data-kp-surface] h1"
             }
         },
         "nostromo": {

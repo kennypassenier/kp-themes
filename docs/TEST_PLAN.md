@@ -103,14 +103,14 @@ theme walk without `@sweep`, and a file no rule covers.
 | building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox | formal, dark, cyberpunk |
 | commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  | formal, dark, cyberpunk |
 | engines  | `npm run test:tags -- --level engines`    | the commit selection, both engines, at a layer's close and after a paint, focus or keyboard fix [fix-51] | formal, dark, cyberpunk |
-| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 22 |
+| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 19 |
 
 **A theme sweep is a level too** (`scope-103`, 2026-09-16). Fourteen
 declarations loop over the 22 themes, which turned 804 written tests into
 1,593. A spec now asks `sweepThemes()` from
 `tests/helpers/sweep-themes.mjs` for the list; `gates/run-tags.mjs` sets
 `KP_SWEEP_THEMES` for the first two levels and nothing for release, and an
-unset variable means all 22, so a bare `npx playwright test` is unchanged.
+unset variable means all 19, so a bare `npx playwright test` is unchanged.
 Measured 2026-09-16 in firefox over the four loops narrowed
 (`fixtures.spec.mjs`, `surfaces.spec.mjs`, `concept-confirm.spec.mjs`,
 `registers.spec.mjs`): the whole suite 1,593 → 1,423 per engine, a commit
@@ -267,47 +267,10 @@ supported. That test measured appearance only and went with scope-32 on
 firefox-only tests that remain are scoped to one engine by decision, not
 by a probe.
 
-**Two readings that stayed under the floor, by decision, and one of them
-is now closed.** Both were put to Kenny on 2026-09-12 and both were
-answered, so neither was an open finding — they were choices with their
-numbers written down.
-
-`shade-light`'s muted colour **was** `hsl(194, 14%, 46%)`, measured at
-3.99 on the page ground, 4.13 on a card and 3.61 on a muted panel,
-against a 4.5 floor. It was identical to `--foreground` before Phase 7,
-which meant nothing in the theme was muted at all: captions, hints,
-timestamps and the text of an empty field all read as body text. There
-was no LIGHTER colour that clears the floor, because shade-light's body
-text only reaches 5.01 itself, so the choice at the time was between a
-visible difference under the floor and no difference at all.
-
-**Closed at `scope-101`, 2026-09-16** (Kenny, shade-light-contrast
-"Donkerder maken"): the token went the other way, to `hsl(194, 14%, 39%)`,
-and the three pairs measure 4.71, 5.21 and 5.39. Its two entries in
-`tests/surfaces.spec.mjs` are gone — that list refuses an entry for a
-pair the package no longer paints under the floor, which is how the
-cleanup was found. That move cleared the floor and left one cost behind:
-the body ink was still at 40% and reached only 4.52 on `--muted`, so the
-quiet text read 0.19 to 0.22 STRONGER than the running text on all three
-grounds. It was reported rather than worked around, and Kenny answered
-it.
-
-**And the order put back at `scope-102`, the same day** (Kenny,
-shade-light-muted "Gewone tekst ook donkerder"): the answer was to darken
-the body ink rather than lift the muted one, because no colour lighter
-than the old 40% ink clears 4.5 on all three grounds (the best that
-existed was 0.02:1 quieter). `--foreground` went to `hsl(194, 14%, 36%)`
-— with `--card-foreground`, `--popover-foreground`, `--surface-hero-fg`
-and `--surface-hero-card-foreground`, which carry the same ink — and
-`--muted-foreground` stayed at 39%. The muted ink is now the quieter of
-the two on every ground: 4.71 against 5.30 on `--muted`, 5.21 against
-5.86 on `--background`, 5.39 against 6.07 on `--card`, 0.59 to 0.68 of
-separation with both over 4.5:1. `tests/register-shade-light.spec.mjs`
-holds all three grounds, the floor and the separation in one test ("the
-two inks"), drilled red on `223e1597` before the tokens moved. The
-theme's "no black" line now reads 36%; `--surface-hero-muted`, left at
-40%, became the hero's own quiet ink (4.99 against the hero body's 5.86),
-which it had never been. Nothing here is an open finding any more.
+**A reading that stayed under the floor, now closed.** The other one
+recorded here, a muted colour under the floor by decision, belonged to a
+theme removed on 2026-10-06 (Shade (light)); its history is in
+`docs/CORRECTIONS.md` and the git log.
 
 `blueprint`'s witness lines moved inside the control rather than outside
 it, so the six pixels of scrollable overflow on every one of its buttons

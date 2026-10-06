@@ -1152,7 +1152,7 @@
 
     /* A change with a tone carries its status pair, the plate and its own
  * ink, never one half on the card [fix-70, fix-99]: as an ink alone
- * `--success-foreground` read 1.00:1 in high-contrast, shade-light and
+ * `--success-foreground` read 1.00:1 in high-contrast, Shade (light) and
  * grotesk, `--destructive` 4.11:1 in solstice. Inline padding only, so the
  * line keeps its height. */
     .kp-kpi__delta[data-kp-tone] {
@@ -1208,7 +1208,7 @@
     /* The figure in a tone sits on that tone's status pair, the plate and
  * its own ink, one rule for every tone [fix-70, fix-99]: as an ink alone on
  * the card `--warning-foreground` read 1.00:1 in high-contrast and 1.04:1
- * in shade-light, `--destructive` 4.11:1 in solstice to 4.47:1 in
+ * in Shade (light), `--destructive` 4.11:1 in solstice to 4.47:1 in
  * synthwave. The plate hugs the figure (its unit and note take the plate's
  * ink too); inline padding only, so the line keeps its height. */
     .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
@@ -1238,7 +1238,7 @@
     .kp-kpi[data-kp-tone='destructive'] {
         --kp-kpi-meter-fill: var(--destructive);
         /* Mixed with the frame that holds 3:1, not the hairline [fix-101]:
-         * with `--border` it read 2.07:1 (lapis) to 2.94:1 on the page in
+         * with `--border` it read 2.07:1 (Lapis) to 2.94:1 on the page in
          * eleven themes. */
         border-color: color-mix(in oklab, var(--destructive) 55%, var(--border-strong));
         box-shadow: inset 3px 0 0 var(--destructive);
@@ -1513,7 +1513,7 @@
     /* A tile of a strip with columns is framed in `--border-strong`, the
  * boundary DI1 holds at 3:1 against the page, the card and the popover:
  * its frame is what parts it from the next tile and from the page, and
- * `--border` read 1.21:1 (synthwave, shade-dark) to 2.72:1 (retro) in 20
+ * `--border` read 1.21:1 (synthwave, Shade (dark)) to 2.72:1 (retro) in 20
  * of 22 themes [fix-101]. Knob `--kp-kpi-border`: dark and titanium, whose
  * `--border-strong` stays under 3:1 (an open DI1 finding), set a share of
  * `--foreground` in it. `:where()` keeps the
@@ -2042,7 +2042,7 @@
     }
 
     /* The tooltip's words are all in the popover's own ink: the muted ink
- * reads 4.44:1 on titanium's popover and 4.48:1 on lapis's [scope-143]. */
+ * reads 4.44:1 on titanium's popover and 4.48:1 on Lapis's [scope-143]. */
     .kp-chart__pin {
         white-space: nowrap;
     }
@@ -2127,7 +2127,7 @@
     }
 
     /* In the popover's ink and underlined: `--primary` read 4.26:1 on
- * lapis's popover [scope-143]. */
+ * Lapis's popover [scope-143]. */
     .kp-chart__tip-event > a {
         color: inherit;
         font-weight: 600;
@@ -2144,7 +2144,7 @@
     }
 
     /* In the tooltip, a ring in the popover's ink: a tone is a text ink, and
- * on the popover the warning one read 1.07:1 in shade-light, 1.00:1 in
+ * on the popover the warning one read 1.07:1 in Shade (light), 1.00:1 in
  * high-contrast and 1.04:1 in nostromo [fix-97]. */
     .kp-chart__tip .kp-chart__dot {
         box-shadow: 0 0 0 1.5px var(--popover-foreground);
@@ -2763,7 +2763,7 @@
  * text colour, and a solid round icon: calm, still unmistakable.
  * `--kp-attention-tint` is how much of the tone the plate takes, 8 % by
  * default; a register lowers it for a severity whose tint pulls the page's
- * text under 4.6:1 (shade-dark's info, 4.49 at 8 %) [alert-contrast-M1]. */
+ * text under 4.6:1 (Shade (dark)'s info, 4.49 at 8 %) [alert-contrast-M1]. */
     .kp-attention > .kp-attention__item {
         border-color: color-mix(in oklab, var(--kp-attention-tone) 45%, var(--border));
         border-inline-start-width: 3px;
@@ -2836,7 +2836,7 @@
      * kp.base, so a focused input kept only the outer half — the page's own
      * ground, on a field grounded in the same colour. Tabbing to a field
      * changed 0 pixels in formal, light, pastel, blueprint, solstice and
-     * shade-light. Restated as .kp-button:focus-visible does. */
+     * Shade (light). Restated as .kp-button:focus-visible does. */
     .kp-field__input:focus-visible {
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
@@ -3852,7 +3852,7 @@
          * [nav-dropdown-M1]. Absolutely placed in a small item, the panel's
          * width is otherwise shrink-to-fit against that item, so a link of
          * 38 characters broke onto two lines while the panel stayed 192px
-         * (formal, shade-dark, deco, retro; Kenny: a label never wraps or is
+         * (formal, deco, retro; Kenny: a label never wraps or is
          * cut). A wider panel is still kept inside the window by the shift
          * above, which measures the panel as it is laid out. The mega menu
          * and the phone drawer set `width: auto` again. */
@@ -5600,7 +5600,7 @@
         /* As wide as its longest row: placed against the button, the list
            otherwise takes the button's width as the room it has, and the
            selected row, set bold, broke onto two lines in high-contrast,
-           shade-light and shade-dark (JobTracker, 2026-10-03; fix-93). */
+           Shade (light) and Shade (dark) (JobTracker, 2026-10-03; fix-93). */
         inline-size: max-content;
         max-inline-size: calc(100vw - 2rem);
         z-index: var(--kp-z-popover, 20);
@@ -8523,8 +8523,8 @@
     }
 
     /* Today: an inner ring in the day's own ink, the text colour of its
- * plate [fix-98] (the page's text read 1.29:1 on shade-light's amber
- * plate, 1.45:1 in shade-dark, 2.50:1 in nostromo). Picked: an outer ring
+ * plate [fix-98] (the page's text read 1.29:1 on Shade (light)'s amber
+ * plate, 1.45:1 in Shade (dark), 2.50:1 in nostromo). Picked: an outer ring
  * in the primary colour. The focus: the house ring, further out. */
     .kp-calendar__day[data-kp-today] {
         box-shadow: inset 0 0 0 2px currentColor;
@@ -8640,7 +8640,7 @@
 
     /* A menu still loading is a whole plate with its one grey entry on it:
      * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
-     * open menu show through it (Kenny, shade-light, 2026-10-05). The entry
+     * open menu show through it (Kenny, Shade (light), 2026-10-05). The entry
      * already reads as waiting; the cursor still says busy. The knob is set
      * rather than the opacity, which a later layer owns. */
     .kp-menu-button > .kp-menu[aria-busy='true'] {

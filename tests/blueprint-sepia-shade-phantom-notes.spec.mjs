@@ -3,7 +3,7 @@
 //
 // scope-107 is the rule that nothing is released while an element is not
 // approved. Of the thirteen rejections his review recorded, these four are
-// blueprint's, sepia's, shade-light's and phantom's:
+// blueprint's, sepia's, Shade (light)'s and phantom's:
 //
 //   1. blueprint, `media--laurels`: "we hadden voor blueprint toch zo een
 //      cool meetkader? kan dat niet rond de items hier? Want nu is er enkel
@@ -13,7 +13,7 @@
 //   2. sepia, `table--datatable-states`: "De 'Try again' tekst in die knop
 //      moet hier in het wit zijn." The retry button is transparent over the
 //      destructive plate and took `--foreground`, dark brown on red.
-//   3. shade-light, `button--variants`: "de primary knop heeft geen
+//   3. Shade (light), `button--variants`: "de primary knop heeft geen
 //      klikanimatie, of toch niet zichtbaar." Its press was a colour step
 //      of 22/9/2 of a channel away from the hover it always starts from.
 //   4. phantom, `page--theme-menu-react` (and `page--theme-menu`, which he
@@ -34,7 +34,7 @@
 //   - `color` removed from `[data-theme='sepia'] [data-kp-datatable-failed]
 //     .kp-button[data-kp-datatable-retry]` → "Try again reads white" red at
 //     rgb(59, 40, 22), 1.92:1;
-//   - `translate` and `box-shadow` removed from `[data-theme='shade-light']
+//   - `translate` and `box-shadow` removed from `[data-theme='Shade (light)']
 //     .kp-button--primary:active:not(:disabled)` → "the press is visible"
 //     red, nothing but the ground moved;
 //   - `.kp-theme-menu` put back into phantom's clipped surface list →
@@ -271,41 +271,6 @@ test.describe('sepia: the failed data table’s Try again [scope-107]', { tag: [
         expect(now, `Try again measures ${now.toFixed(2)}:1 on the plate`).toBeGreaterThanOrEqual(4.5);
         // It reads exactly as loud as the alert's own label beside it.
         expect(measured.ink).toBe(measured.labelInk);
-    });
-});
-
-test.describe('shade-light: the primary button’s press [scope-107]', { tag: ['@theme:shade-light', '@component:button'] }, () => {
-    test('the press is visible: it moves with the light and its shade turns inward, from rest and from hover', async ({ page }) => {
-        await open(page, '/catalogue/button.html', 'shade-light');
-        const button = page.locator('#variants .kp-button--primary').first();
-        await expect(button).toBeVisible();
-        const read = () =>
-            button.evaluate((el) => {
-                const s = getComputedStyle(el);
-                return { translate: s.translate, boxShadow: s.boxShadow, background: s.backgroundColor };
-            });
-
-        const rest = await read();
-        await button.hover();
-        const hovered = await read();
-        await page.mouse.down();
-        // The press is instant by design (`transition-duration: 0s`), but a
-        // state is still read until it is the value [KT16].
-        await expect.poll(async () => (await read()).translate).not.toBe(hovered.translate);
-        const pressed = await read();
-        await page.mouse.up();
-
-        const offset = (/** @type {string} */ value) => (value === 'none' ? [0, 0] : (value.match(/-?[\d.]+/g) ?? []).slice(0, 2).map(Number));
-        const [dx, dy] = offset(pressed.translate);
-
-        expect(pressed.translate, `the pressed button stands at ${pressed.translate}, resting at ${rest.translate}`).not.toBe(rest.translate);
-        expect(Math.abs(dx) + Math.abs(dy), 'the press moves at least a whole CSS pixel').toBeGreaterThanOrEqual(1);
-        expect(pressed.boxShadow, 'the pressed shade is drawn inside the button').toContain('inset');
-        expect(pressed.boxShadow, 'the shade is not the one it rests under').not.toBe(rest.boxShadow);
-        // The fault Kenny reported: a press always starts from hover, and
-        // from there only the ground moved, by a step nobody sees.
-        expect(pressed.translate, 'the press differs from the hover it starts from').not.toBe(hovered.translate);
-        expect(pressed.boxShadow, 'the pressed shade differs from the hovered one').not.toBe(hovered.boxShadow);
     });
 });
 

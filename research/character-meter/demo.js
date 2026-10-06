@@ -1128,150 +1128,6 @@ const IDEAS = {
             },
         ],
     },
-    'shade-light': {
-        shape: [
-            {
-                name: 'The pencil gauge',
-                text: 'An outline drawn in pencil; the share is the blue plate hatched over in pencil; the mark is a graphite stroke with a soft shade; past the end a patch of scribble.',
-            },
-            {
-                name: 'The pin and its shade',
-                text: 'A groove in the paper; the share is a raised blue strip throwing a soft shade. The mark is a pin with a magenta head standing in the gauge, its shade falling to the side. Past the end the strip hangs over the edge, its shade falling beyond.',
-            },
-            {
-                name: 'The paper cut-out',
-                text: 'A slot cut into the paper with its inner shade; the share is a strip of coloured paper laid in it with its own soft shadow; the mark is a magenta paper flag on a pin; past the end the strip curls out.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Cross-hatching drifts',
-                text: 'Pencil hatching in two directions slides across the empty gauge, the two layers against each other, so the paper shimmers while it waits.',
-            },
-            {
-                name: 'The crease passes',
-                text: 'A fold in the paper, a pencil shade on one side and a lit edge on the other, crosses the gauge and comes round again.',
-            },
-            {
-                name: 'Pencil dashes run',
-                text: 'A dashed pencil line along the middle of the gauge runs on and on.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Hatched in',
-                text: 'The share is drawn in from the left slowing as it lands.',
-            },
-            {
-                name: 'Pressed paper',
-                text: 'The share opens from its middle line slowing as it lands.',
-            },
-            {
-                name: 'Passing shade',
-                text: 'The share stretches out from the start easing in and out.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Hatched in',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Pressed paper',
-                text: 'A new tone knocks the meter up and back once, slowing as it lands.',
-            },
-            {
-                name: 'Passing shade',
-                text: 'A new tone swells the meter once, slowing as it lands.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Hatched in',
-                text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
-            },
-            {
-                name: 'Pressed paper',
-                text: 'The mark moves slowing as it lands; a mark past the end leans over the end, › beside it.',
-            },
-            {
-                name: 'Passing shade',
-                text: 'The mark moves slowing as it lands; a mark past the end stands just outside the end, › after it.',
-            },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            {
-                name: 'Silverpoint',
-                text: 'Fine silver lines hatched across the dark ground; the share is the blue plate with a lit top edge; the mark is a pale metal stroke; past the end silver scribble.',
-            },
-            {
-                name: 'The reading lamp',
-                text: 'A deep well; the share is the blue plate lifted out of the shade. The mark carries the light: a pale pin with a pool of lamplight around it, so the target is where the light is. Past the end the light spills out beyond the well.',
-            },
-            {
-                name: 'The stitched leather',
-                text: 'A dark strap stitched along both edges; the share is the blue plate with a lit top edge; the mark is a pale silver rivet; past the end one more rivet.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Silver cross-hatching drifts',
-                text: 'Silver hatching in two directions slides over the dark ground, the two layers against each other, so the silver glints while it waits.',
-            },
-            {
-                name: 'The glint passes',
-                text: 'A pale metal glint with its shade crosses the well and comes round again.',
-            },
-            {
-                name: 'Silver stitches run',
-                text: 'A running stitch of silver along the middle of the well runs on and on.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Silver drawn',
-                text: 'The share is drawn in from the left slowing as it lands.',
-            },
-            {
-                name: 'Lifted',
-                text: 'The share opens from its middle line slowing as it lands.',
-            },
-            {
-                name: 'Lamp passes',
-                text: 'The share stretches out from the start easing in and out.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Silver drawn',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Lifted',
-                text: 'A new tone knocks the meter up and back once, slowing as it lands.',
-            },
-            {
-                name: 'Lamp passes',
-                text: 'A new tone swells the meter once, slowing as it lands.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Silver drawn',
-                text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
-            },
-            {
-                name: 'Lifted',
-                text: 'The mark moves slowing as it lands; a mark past the end leans over the end, › beside it.',
-            },
-            {
-                name: 'Lamp passes',
-                text: 'The mark moves slowing as it lands; a mark past the end stands just outside the end, › after it.',
-            },
-        ],
-    },
     retro: {
         shape: [
             {
@@ -1413,78 +1269,6 @@ const IDEAS = {
             {
                 name: 'Timetable',
                 text: 'The mark moves in 3 hard steps; a mark past the end leans over the end, + beside it.',
-            },
-        ],
-    },
-    lapis: {
-        shape: [
-            {
-                name: 'The gilt band',
-                text: 'Deep lapis ruled in gold; the share is gold leaf tooled with a fine lattice; the mark is a vermilion reed stroke with its nuqta; past the end a vermilion toranj.',
-            },
-            {
-                name: 'Lapis stone on vellum',
-                text: 'The track is ivory vellum ruled in gold; the share is the stone itself, deep lapis flecked with gold pyrite and a streak of calcite. The mark is a gold leaf stroke. Past the end a chipped shard of the stone.',
-            },
-            {
-                name: 'The tile frieze',
-                text: 'A row of tiles ruled in gold; the share is glazed tiles, each with its gold joint and a glint; the mark is a vermilion lozenge in gold; past the end a vermilion lozenge.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Gold laid',
-                text: "A burnisher's glint runs along the gold.",
-            },
-            {
-                name: 'Reed stroke',
-                text: 'The tooled gold dots are punched along the band.',
-            },
-            {
-                name: 'Tile by tile',
-                text: 'A vermilion tile moves along the band.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Gold laid',
-                text: 'The share is drawn in from the left slowing as it lands.',
-            },
-            {
-                name: 'Reed stroke',
-                text: 'The share is cut in from the left with a slanted edge slowing as it lands.',
-            },
-            {
-                name: 'Tile by tile',
-                text: 'The share is drawn in from the left in 8 hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Gold laid',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Reed stroke',
-                text: 'A new tone knocks the meter up and back once, slowing as it lands.',
-            },
-            {
-                name: 'Tile by tile',
-                text: 'A new tone swells the meter once, slowing as it lands.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Gold laid',
-                text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
-            },
-            {
-                name: 'Reed stroke',
-                text: 'The mark moves easing in and out; a mark past the end leans over the end, › beside it.',
-            },
-            {
-                name: 'Tile by tile',
-                text: 'The mark moves in 4 hard steps; a mark past the end stands just outside the end, ✦ after it.',
             },
         ],
     },
@@ -1657,13 +1441,10 @@ const PICKED = {
     brutalism: ['1', '1', '1', '3', '3'],
     deco: ['1', '3', '2', '3', '3'],
     phantom: ['1', '1', '1', '1', '2'],
-    lapis: ['1', '2', '2', '2', '2'],
     nostromo: ['1', '1', '3', '2', '3'],
     titanium: ['1', '1', '3', '3', '3'],
     cyberpunk: ['2', '', '', '3', '3'],
     'high-contrast': ['2', '', '1', '1', '3'],
-    'shade-light': ['1', '', '1', '1', '2'],
-    'shade-dark': ['1', '', '1', '1', '2'],
     retro: ['1', '', '1', '2', '2'],
     grotesk: ['', '2', '3', '3', '2'],
 };

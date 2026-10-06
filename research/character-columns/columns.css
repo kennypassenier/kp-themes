@@ -1210,93 +1210,6 @@
         --cl-label-track: 0.12em;
     }
 
-    /* ── shade-light ── */
-    /* The window blinds: slatted light falling across every column. */
-    [data-theme='shade-light'] [data-cs-shape='1'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
-        --cl-frame: 1px solid var(--cl-rule);
-        --cl-pat: repeating-linear-gradient(170deg, color-mix(in oklch, var(--foreground) 5%, transparent) 0 0.6rem, transparent 0.6rem 1.4rem);
-        --cl-label-case: none;
-        --cl-label-track: 0.01em;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-    }
-
-    /* The paper cut-outs: each figure a sheet laid on two more, their edges
-       showing below and to the right. */
-    [data-theme='shade-light'] [data-cs-shape='2'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
-        --cl-gap: var(--kp-space-lg, 1.5rem);
-        --cl-frame: 1px solid var(--cl-rule);
-        --cl-radius: 2px;
-        --cl-shadow:
-            4px 4px 0 -1px var(--card), 4px 4px 0 0 color-mix(in oklch, var(--foreground) 22%, transparent), 8px 8px 0 -1px var(--card),
-            8px 8px 0 0 color-mix(in oklch, var(--foreground) 14%, transparent);
-        --cl-label-case: none;
-        --cl-label-track: 0.01em;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-    }
-
-    /* Embossed paper. */
-    [data-theme='shade-light'] [data-cs-shape='3'] .kp-kpis {
-        --cl-frame: 0 solid transparent;
-        --cl-radius: 1rem;
-        --cl-shadow:
-            6px 6px 14px color-mix(in oklch, var(--foreground) 14%, transparent), -4px -4px 10px color-mix(in oklch, var(--card) 90%, transparent),
-            inset 0 0 0 1px color-mix(in oklch, var(--foreground) 6%, transparent);
-    }
-
-    /* ── shade-dark ── */
-    /* The gallery wall: each figure a framed piece under its own picture
-       light. */
-    [data-theme='shade-dark'] [data-cs-shape='1'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
-        --cl-gap: var(--kp-space-lg, 1.5rem);
-        --cl-frame: 1px solid var(--cl-rule);
-        --cl-radius: 0;
-        --cl-shadow: inset 0 0 0 5px var(--cl-plate), inset 0 0 0 6px color-mix(in oklch, var(--cl-rule) 45%, transparent);
-        --cl-pat: radial-gradient(ellipse 55% 60% at 50% 0, color-mix(in oklch, var(--foreground) 9%, transparent), transparent);
-        --cl-align: center;
-        --cl-num-align: center;
-        --cl-label-case: none;
-        --cl-label-track: 0.02em;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-    }
-
-    /* The velvet tray: each figure set into a recessed well of the tray,
-       the columns parted by raised ridges. */
-    [data-theme='shade-dark'] [data-cs-shape='2'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--cl-ink) 78%, var(--cl-plate));
-        --cl-gap: 6px;
-        --cl-strip-bg: var(--muted);
-        --cl-strip-pad: 6px;
-        --cl-strip-radius: var(--radius, 0.5rem);
-        --cl-plate: var(--card);
-        --cl-frame: 0 solid transparent;
-        --cl-radius: calc(var(--radius, 0.5rem) * 0.75);
-        --cl-shadow: inset 0 3px 8px color-mix(in oklch, var(--background) 70%, transparent);
-        --cl-num-pad: 0 0.3em;
-        --cl-num-radius: 4px;
-        --cl-num-bg: color-mix(in oklch, var(--background) 60%, var(--card));
-        --cl-num-frame: inset 0 2px 5px color-mix(in oklch, var(--background) 80%, transparent);
-        --cl-label-case: none;
-        --cl-label-track: 0.02em;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-    }
-
-    /* The museum plaque. */
-    [data-theme='shade-dark'] [data-cs-shape='3'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--cl-ink) 72%, var(--cl-plate));
-        --cl-frame: 1px solid var(--cl-rule);
-        --cl-radius: 2px;
-        --cl-deco-inset: 0.3rem;
-        --cl-deco-border: 1px solid color-mix(in oklch, var(--foreground) 22%, transparent);
-        --cl-deco-radius: 1px;
-        --cl-align: center;
-        --cl-num-align: center;
-        --cl-label-font: var(--theme-font-display);
-        --cl-label-track: 0.1em;
-    }
-
     /* ── retro ── */
     /* The status bar: a raised grey bar holding a sunken pane per figure. */
     [data-theme='retro'] [data-cs-shape='1'] .kp-kpis {
@@ -1407,56 +1320,6 @@
         --cl-label-weight: 700;
         --cl-label-track: 0;
         --cl-label-size: var(--kp-text-sm, 0.875rem);
-    }
-
-    /* ── lapis ── */
-    /* The arcade: each figure under a pointed arch, framed in a double gold
-       rule. */
-    [data-theme='lapis'] [data-cs-shape='1'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--accent) 55%, var(--cl-ink));
-        --cl-frame: 1px solid var(--cl-rule);
-        --cl-radius: 50% 50% 3px 3px / 1.6rem 1.6rem 3px 3px;
-        --cl-shadow: inset 0 0 0 3px var(--cl-plate), inset 0 0 0 4px color-mix(in oklch, var(--cl-rule) 60%, transparent);
-        --cl-pad-top: 1.6rem;
-        --cl-align: center;
-        --cl-num-align: center;
-        --cl-label-font: var(--theme-font-display);
-        --cl-label-track: 0.08em;
-        --cl-num-font: var(--theme-font-display);
-    }
-
-    /* The illuminated band: a ribbon of gold lattice across the top of the
-       strip, the figures on vellum panels under it. */
-    [data-theme='lapis'] [data-cs-shape='2'] .kp-kpis {
-        --cl-rule: color-mix(in oklch, var(--accent) 55%, var(--cl-ink));
-        --cl-strip-pad: 1rem 0 0;
-        --cl-strip-under:
-            repeating-linear-gradient(45deg, var(--cl-rule) 0 1px, transparent 1px 7px) 0 0 / 100% 0.65rem no-repeat,
-            repeating-linear-gradient(-45deg, var(--cl-rule) 0 1px, transparent 1px 7px) 0 0 / 100% 0.65rem no-repeat;
-        --cl-plate: color-mix(in oklch, var(--foreground) 4%, var(--card));
-        --cl-frame: 1px solid color-mix(in oklch, var(--cl-rule) 70%, transparent);
-        --cl-radius: 2px;
-        --cl-label-font: var(--theme-font-display);
-        --cl-label-case: none;
-        --cl-label-style: italic;
-        --cl-label-track: 0.02em;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-        --cl-label-rule: 1px solid var(--cl-rule);
-        --cl-num-font: var(--theme-font-display);
-    }
-
-    /* The mosaic band. */
-    [data-theme='lapis'] [data-cs-shape='3'] .kp-kpis {
-        --cl-frame: 2px solid var(--cl-rule);
-        --cl-radius: 0;
-        --cl-pad-top: 1.5rem;
-        --cl-deco: repeating-conic-gradient(
-                color-mix(in oklch, var(--primary) 35%, transparent) 0 25%,
-                color-mix(in oklch, var(--accent) 35%, transparent) 0 50%
-            )
-            0 0 / 10px 10px;
-        --cl-deco-inset: 0 0 calc(100% - 0.625rem) 0;
-        --cl-deco-radius: 0;
     }
 
     /* ── nostromo ── */
@@ -1905,50 +1768,6 @@
         --cl-load-anim: cl-slide 2200ms ease-in-out infinite;
     }
 
-    /* ── shade-light ── */
-    /* The slats drift. */
-    [data-theme='shade-light'] [data-cs-loading='1'] .kp-kpis {
-        --cl-load: repeating-linear-gradient(170deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 0.6rem, transparent 0.6rem 1.4rem) 0 0 /
-            100% 300%;
-        --cl-load-anim: cl-roll 2400ms linear infinite;
-    }
-
-    /* A sheet slides in. */
-    [data-theme='shade-light'] [data-cs-loading='2'] .kp-kpis {
-        --cl-load: linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent), color-mix(in oklch, var(--foreground) 7%, transparent)) 0
-            100% / 100% 0 no-repeat;
-        --cl-load-anim: cl-fill 1800ms ease-in-out infinite alternate;
-    }
-
-    /* A cloud passes. */
-    [data-theme='shade-light'] [data-cs-loading='3'] .kp-kpis {
-        --cl-load: radial-gradient(ellipse 60% 80%, color-mix(in oklch, var(--foreground) 8%, transparent), transparent 70%) -50% 50% / 60% 100%
-            no-repeat;
-        --cl-load-anim: cl-slide 3000ms ease-in-out infinite;
-    }
-
-    /* ── shade-dark ── */
-    /* The lights breathe. */
-    [data-theme='shade-dark'] [data-cs-loading='1'] .kp-kpis {
-        --cl-load: radial-gradient(ellipse 55% 60% at 50% 0, color-mix(in oklch, var(--foreground) 10%, transparent), transparent) 50% 0 / 100% 100%
-            no-repeat;
-        --cl-load-anim: cl-breathe 1800ms ease-in-out infinite;
-    }
-
-    /* A sheen crosses. */
-    [data-theme='shade-dark'] [data-cs-loading='2'] .kp-kpis {
-        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 8%, transparent), transparent) -50% 0 / 40% 100%
-            no-repeat;
-        --cl-load-anim: cl-slide 2000ms ease-in-out infinite;
-    }
-
-    /* The light swings. */
-    [data-theme='shade-dark'] [data-cs-loading='3'] .kp-kpis {
-        --cl-load: radial-gradient(ellipse 50% 70% at 50% 0, color-mix(in oklch, var(--foreground) 11%, transparent), transparent) 0 0 / 50% 100%
-            no-repeat;
-        --cl-load-anim: cl-sway 2000ms ease-in-out infinite alternate;
-    }
-
     /* ── retro ── */
     /* The progress blocks. */
     [data-theme='retro'] [data-cs-loading='1'] .kp-kpis {
@@ -1986,29 +1805,6 @@
     [data-theme='grotesk'] [data-cs-loading='3'] .kp-kpis {
         --cl-load: linear-gradient(var(--cl-ink), var(--cl-ink)) 0 0.25rem / 0.5rem 0.5rem no-repeat;
         --cl-load-anim: cl-slide 1200ms steps(8) infinite;
-    }
-
-    /* ── lapis ── */
-    /* A glint runs across. */
-    [data-theme='lapis'] [data-cs-loading='1'] .kp-kpis {
-        --cl-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--accent) 28%, transparent) 50%, transparent 60%) -150% 0 / 250%
-            100% no-repeat;
-        --cl-load-anim: cl-glint 2000ms ease-in-out infinite;
-    }
-
-    /* The lattice is drawn. */
-    [data-theme='lapis'] [data-cs-loading='2'] .kp-kpis {
-        --cl-load:
-            repeating-linear-gradient(45deg, color-mix(in oklch, var(--accent) 24%, transparent) 0 1px, transparent 1px 10px) 0 0 / 40px 40px,
-            repeating-linear-gradient(-45deg, color-mix(in oklch, var(--accent) 24%, transparent) 0 1px, transparent 1px 10px) 0 0 / 40px 40px;
-        --cl-load-anim: cl-march 1400ms linear infinite;
-    }
-
-    /* The lamp in the arch. */
-    [data-theme='lapis'] [data-cs-loading='3'] .kp-kpis {
-        --cl-load: radial-gradient(ellipse 50% 60% at 50% 0, color-mix(in oklch, var(--accent) 24%, transparent), transparent) 50% 0 / 100% 100%
-            no-repeat;
-        --cl-load-anim: cl-breathe 1800ms ease-in-out infinite;
     }
 
     /* ── nostromo ── */
@@ -2385,50 +2181,6 @@
         --cl-arrive-stagger: 0ms;
     }
 
-    /* ── shade-light ── */
-    /* Laid down. */
-    [data-theme='shade-light'] [data-cs-arrival='1'] .kp-kpis {
-        --cl-arrive-num: none;
-        --cl-arrive-tile: cl-a-drop 500ms ease-out;
-        --cl-arrive-stagger: 70ms;
-    }
-
-    /* Rising. */
-    [data-theme='shade-light'] [data-cs-arrival='2'] .kp-kpis {
-        --cl-arrive-num: cl-a-rise 600ms ease-out;
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 0ms;
-    }
-
-    /* Pressed up. */
-    [data-theme='shade-light'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: none;
-        --cl-arrive-tile: cl-a-pop 500ms ease-out;
-        --cl-arrive-stagger: 80ms;
-    }
-
-    /* ── shade-dark ── */
-    /* Lit up. */
-    [data-theme='shade-dark'] [data-cs-arrival='1'] .kp-kpis {
-        --cl-arrive-num: cl-a-rise 800ms ease-out;
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 90ms;
-    }
-
-    /* Unveiled. */
-    [data-theme='shade-dark'] [data-cs-arrival='2'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 700ms ease-in-out;
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 0ms;
-    }
-
-    /* Unfolded. */
-    [data-theme='shade-dark'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: none;
-        --cl-arrive-tile: cl-a-unfold 500ms ease-out;
-        --cl-arrive-stagger: 80ms;
-    }
-
     /* ── retro ── */
     /* Painted. */
     [data-theme='retro'] [data-cs-arrival='1'] .kp-kpis {
@@ -2471,28 +2223,6 @@
         --cl-arrive-num: cl-a-rise 300ms steps(3);
         --cl-arrive-tile: none;
         --cl-arrive-stagger: 60ms;
-    }
-
-    /* ── lapis ── */
-    /* Gilded in. */
-    [data-theme='lapis'] [data-cs-arrival='1'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 700ms ease-in-out;
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 90ms;
-    }
-
-    /* Turned in. */
-    [data-theme='lapis'] [data-cs-arrival='2'] .kp-kpis {
-        --cl-arrive-num: none;
-        --cl-arrive-tile: cl-a-turn 600ms ease-out;
-        --cl-arrive-stagger: 100ms;
-    }
-
-    /* Rising. */
-    [data-theme='lapis'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: cl-a-rise 600ms ease-out;
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 0ms;
     }
 
     /* ── nostromo ── */
@@ -2853,46 +2583,6 @@
         --cl-delta-shadow: 0 0 0 2px var(--cl-plate);
     }
 
-    /* ── shade-light ── */
-    /* The soft pill. */
-    [data-theme='shade-light'] [data-cs-tone='1'] .kp-kpis {
-        --cl-delta-radius: 999px;
-    }
-
-    /* The small tag. */
-    [data-theme='shade-light'] [data-cs-tone='2'] .kp-kpis {
-        --cl-delta-radius: 2px;
-        --cl-delta-up: '↑\00a0';
-        --cl-delta-down: '↓\00a0';
-    }
-
-    /* The pressed pill. */
-    [data-theme='shade-light'] [data-cs-tone='3'] .kp-kpis {
-        --cl-delta-radius: 999px;
-        --cl-delta-shadow: inset 0 1px 2px color-mix(in oklch, var(--foreground) 35%, transparent);
-    }
-
-    /* ── shade-dark ── */
-    /* The square tag. */
-    [data-theme='shade-dark'] [data-cs-tone='1'] .kp-kpis {
-        --cl-delta-radius: 0;
-    }
-
-    /* The cushion. */
-    [data-theme='shade-dark'] [data-cs-tone='2'] .kp-kpis {
-        --cl-delta-radius: 4px;
-        --cl-delta-shadow: inset 0 1px 2px color-mix(in oklch, var(--foreground) 30%, transparent);
-    }
-
-    /* The engraved tag. */
-    [data-theme='shade-dark'] [data-cs-tone='3'] .kp-kpis {
-        --cl-delta-radius: 0;
-        --cl-delta-font: var(--theme-font-display);
-        --cl-delta-shadow: 0 2px 0 0 var(--cl-rule);
-        --cl-delta-up: '+\2009';
-        --cl-delta-down: '\2212\2009';
-    }
-
     /* ── retro ── */
     /* The flat tag. */
     [data-theme='retro'] [data-cs-tone='1'] .kp-kpis {
@@ -2936,27 +2626,6 @@
         --cl-delta-radius: 0;
         --cl-delta-up: '↗\00a0';
         --cl-delta-down: '↘\00a0';
-    }
-
-    /* ── lapis ── */
-    /* The small tag. */
-    [data-theme='lapis'] [data-cs-tone='1'] .kp-kpis {
-        --cl-delta-radius: 2px;
-    }
-
-    /* The gilded tag. */
-    [data-theme='lapis'] [data-cs-tone='2'] .kp-kpis {
-        --cl-delta-radius: 0;
-        --cl-delta-border: 1px solid var(--accent);
-        --cl-delta-style: italic;
-    }
-
-    /* The fleuron. */
-    [data-theme='lapis'] [data-cs-tone='3'] .kp-kpis {
-        --cl-delta-radius: 2px;
-        --cl-delta-font: var(--theme-font-display);
-        --cl-delta-up: '⌃\00a0';
-        --cl-delta-down: '⌄\00a0';
     }
 
     /* ── nostromo ── */
@@ -3295,44 +2964,6 @@
         --cl-live-tile: none;
     }
 
-    /* ── shade-light ── */
-    /* Risen. */
-    [data-theme='shade-light'] [data-cs-live='1'] .kp-kpis {
-        --cl-live-num: cl-a-rise 500ms ease-out;
-        --cl-live-tile: none;
-    }
-
-    /* The sheet stirs. */
-    [data-theme='shade-light'] [data-cs-live='2'] .kp-kpis {
-        --cl-live-num: none;
-        --cl-live-tile: cl-l-wiggle 700ms ease-in-out;
-    }
-
-    /* A soft ring. */
-    [data-theme='shade-light'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-l-ring 800ms ease-out;
-        --cl-live-tile: none;
-    }
-
-    /* ── shade-dark ── */
-    /* Underlined. */
-    [data-theme='shade-dark'] [data-cs-live='1'] .kp-kpis {
-        --cl-live-num: cl-l-under 1100ms ease-out;
-        --cl-live-tile: none;
-    }
-
-    /* A soft ring. */
-    [data-theme='shade-dark'] [data-cs-live='2'] .kp-kpis {
-        --cl-live-num: cl-l-ring 800ms ease-out;
-        --cl-live-tile: none;
-    }
-
-    /* Risen. */
-    [data-theme='shade-dark'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-a-rise 600ms ease-out;
-        --cl-live-tile: none;
-    }
-
     /* ── retro ── */
     /* Selected. */
     [data-theme='retro'] [data-cs-live='1'] .kp-kpis {
@@ -3371,27 +3002,6 @@
         --cl-live-num: cl-l-under 700ms ease-out;
         --cl-live-tile: none;
         --cl-live-ink: var(--cl-ink);
-    }
-
-    /* ── lapis ── */
-    /* Underlined in gold. */
-    [data-theme='lapis'] [data-cs-live='1'] .kp-kpis {
-        --cl-live-num: cl-l-under 1000ms ease-out;
-        --cl-live-tile: none;
-        --cl-live-ink: var(--accent);
-    }
-
-    /* A gold ring. */
-    [data-theme='lapis'] [data-cs-live='2'] .kp-kpis {
-        --cl-live-num: cl-l-ring 700ms ease-out;
-        --cl-live-tile: none;
-        --cl-live-ink: var(--accent);
-    }
-
-    /* Turned. */
-    [data-theme='lapis'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-l-flip 600ms ease-in-out;
-        --cl-live-tile: none;
     }
 
     /* ── nostromo ── */

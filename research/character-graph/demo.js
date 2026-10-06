@@ -600,72 +600,6 @@ const IDEAS = {
             ['The calling card', 'The changed site’s ring flashes red three times; its string is pulled again.'],
         ],
     },
-    'shade-light': {
-        shape: [
-            ['Pencil in the shade', 'Hatched paper, soft pencil links, lifted discs with a pencil rim; lifted paper chips.'],
-            ['The leaf shade', 'Dappled shade over the sheet, soft links, a sunny hub rim; plain chips.'],
-            [
-                'The paper lantern',
-                'Translucent paper lanterns: every site a pale disc with a warm inner glow and a fine rim, links as thin cords, body-face labels; the kinds as paper slips.',
-            ],
-        ],
-        loading: [
-            ['The sketch hatches', 'Character 1’s soft pencil ring, now hatched round stroke by stroke.'],
-            ['A cloud’s shade passes', 'Character 2’s wide shaded ring, with a cloud’s shadow passing slowly over the sheet.'],
-            ['The pencil circles', 'The pencil goes round and round, a short grey stroke circling the ring.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Sketched', 'Each link is sketched in with the pencil, the discs are laid on after.'],
-            ['Out of the shade', 'The sites step out of the shade into place, from slightly smaller, one after another.'],
-        ],
-        focus: [
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Lifted into the light', 'The pick lifts on a deeper shadow; the rest sinks into the shade at 40 %; a hidden kind is struck through.'],
-            ['The sunny spot', 'The pick stands in a warm sunny ring; the rest is shaded grey; a hidden kind is outlined dashed.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['A sunbeam', 'A warm light crosses the changed site’s ring and its link.'],
-            ['Retraced', 'The changed link is retraced in pencil; the site lifts a little and settles.'],
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            ['Silverpoint', 'Silver hairlines, silver rings over a dark core; silver hairline chips.'],
-            ['The reading lamp', 'A warm pool behind the hub, warm links and rims; plain chips.'],
-            [
-                'Moonlit',
-                'A blue-grey night: every site a moon disc (a pale ring with a crescent core), links as fine pale lines, labels on the dark; the kinds as pale outlined tags.',
-            ],
-        ],
-        loading: [
-            ['The silver hatches', 'Character 1’s fine silver ring, now drawn round stroke by stroke.'],
-            ['The pool breathes', 'Character 2’s warm pool ring, now breathing slowly.'],
-            ['The moth', 'A small silver mark circles the lamp’s ring, quick and unsteady.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Drawn in silver', 'Each silver line is drawn in, then the rings are set on them.'],
-            ['The lamp comes on', 'The sites switch on from the hub outwards, as a lamp lighting the desk.'],
-        ],
-        focus: [
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Under the lamp', 'The pick is lit warm under the lamp; the rest falls into the dark at 30 %; a hidden kind is struck through.'],
-            ['The silver ring', 'The pick gets a bright silver ring; the rest goes grey; a hidden kind is outlined dashed.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['The warm flicker', 'The changed site’s ring flickers warm like a lamp; its link glows.'],
-            ['Silver retraced', 'The changed link is drawn again in silver, the site blinks once.'],
-        ],
-    },
     retro: {
         shape: [
             ['The 1995 network diagram', 'A sunken white well, one-pixel links, bevelled grey discs; raised kind buttons that sink when off.'],
@@ -730,39 +664,6 @@ const IDEAS = {
             ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
             ['The train passes', 'A train runs along the changed line and the station’s ring flashes red.'],
             ['Re-set', 'The changed station pops and its line is laid again.'],
-        ],
-    },
-    lapis: {
-        shape: [
-            ['The girih lattice', 'A girih lattice on lapis in a double gold frame, gold lattice links, gold-ringed medallions; gold-framed tiles.'],
-            ['Lapis on vellum', 'Ivory vellum, lapis ink links, gold-rimmed lapis dots, serif italic labels; gold-framed chips.'],
-            [
-                'The star tile',
-                'An eight-pointed star tile: every site a star-cut medallion in gold with a lapis core, links in gold, display labels; the kinds as eight-cornered tiles.',
-            ],
-        ],
-        loading: [
-            ['A glint runs the frame', 'As character 1 had it: a gold glint runs round.'],
-            ['The burnisher', 'Character 2’s lapis ring, now polished round by the burnisher’s glint.'],
-            ['The tile is laid', 'The ring is laid tile by tile in gold, then cleared and laid again.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Inlaid', 'Every gold line is inlaid from the hub outwards, then the medallions are set.'],
-            ['The pattern turns', 'The whole pattern turns into place round the hub, as a lattice settling.'],
-        ],
-        focus: [
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Gilded', 'The pick is gilded with a gold glow; the rest goes dim at 30 %; a hidden kind is struck through.'],
-            ['Framed in gold', 'The pick gets a double gold frame; the rest loses its colour; a hidden kind is outlined dashed.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['The gold glint', 'A glint runs down the changed gold line and the medallion flashes.'],
-            ['The medallion turns', 'The changed medallion turns once and its line shines brighter.'],
         ],
     },
     nostromo: {
@@ -865,11 +766,8 @@ const PICKED = {
     brutalism: ['2', '3', '2', '2', '3'],
     deco: ['2', '3', '2', '3', '2'],
     phantom: ['1', '4', '2', '3', '2'],
-    'shade-light': ['3', '6', '2', '3', '2'],
-    'shade-dark': ['1', '4', '2', '2', '2'],
     retro: ['1', '1', '3', '2', '2'],
     grotesk: ['1', '3', '2', '2', '2'],
-    lapis: ['2', '6', '3', '2', '2'],
     nostromo: ['1', '2', '3', '3', '3'],
     titanium: ['2', '3', '1', '2', '2'],
 };

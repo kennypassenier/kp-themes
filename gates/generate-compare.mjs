@@ -138,13 +138,13 @@ export function diffs() {
     );
     const rules = read('css/_rules.css');
     const oldBlocks = themeBlocks(oldCss);
-    // Three themes changed name at their lift (Kenny, 2026-09-08): the
+    // Themes changed name at their lift (Kenny, 2026-09-08): the
     // 4.0.0 block to compare against still carries the old one, so the
     // lookup is by the name the released stylesheet used. Without this a
     // renamed theme reads as "new in 5.0.0" and its whole palette shows as
     // a difference, which is exactly the wrong story.
     /** @type {Record<string, string>} */
-    const RENAMED = { forest: 'topo', lapis: 'tazhib', woodblock: 'nishiki' };
+    const RENAMED = { forest: 'topo', woodblock: 'nishiki' };
     const was = (/** @type {string} */ name) => RENAMED[name] ?? name;
     const newBlocks = themeBlocks(newThemes);
     /** @type {Record<string, any>} */
@@ -307,7 +307,6 @@ const CURRENT = [
     'brutalism-register.css',
     'titanium-register.css',
     'pastel-register.css',
-    'shade-light-register.css',
     'forest-register.css',
     'deco-register.css',
     'light-register.css',
@@ -319,8 +318,6 @@ const CURRENT = [
     'sepia-register.css',
     'solstice-register.css',
     'high-contrast-register.css',
-    'lapis-register.css',
-    'shade-dark-register.css',
 ];
 
 /**
@@ -534,7 +531,7 @@ function foldLong(line) {
 
 /** The name 4.0.0 knew a renamed theme by [Kenny, 2026-09-08]. */
 /** @type {Record<string, string>} */
-const WAS = { forest: 'topo', lapis: 'tazhib', woodblock: 'nishiki' };
+const WAS = { forest: 'topo', woodblock: 'nishiki' };
 
 /** One theme's page: the statements, then the whole demo twice. @param {ThemeDiff} d */
 function themePage(d) {

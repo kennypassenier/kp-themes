@@ -709,72 +709,6 @@ const IDEAS = {
             { name: 'The halftone shifts', text: 'A hovered or focused entry’s halftone shifts a step; a press locks the shift in place.' },
         ],
     },
-    'shade-light': {
-        shape: [
-            { name: 'Pencil in the shade', text: 'A pencil-hatched plate, headings in a soft graphite stroke, a faint shadow band between groups.' },
-            { name: 'The leaf shade', text: 'Dappled leaf shade falls across the plate, headings sit plainly on the paper.' },
-            { name: 'The window light', text: 'A shaft of window light falls across the plate from the left, the plate otherwise plain.' },
-        ],
-        loading: [
-            { name: 'The hatching sweeps', text: 'Pencil hatching sweeps in across the loading row, then starts again.' },
-            { name: 'The cloud passes', text: 'A cloud’s shade passes over the loading row.' },
-            { name: 'Leaves sway', text: 'The leaf shade over the loading row sways to and fro.' },
-        ],
-        open: [
-            { name: 'Drawn in pencil', text: 'The menu is drawn in from the left, easing in and out, and erased the same way to close.' },
-            { name: 'Out of the shade', text: 'The menu rises from the shade below, slowing as it lands, and sinks back to close.' },
-            { name: 'The light falls', text: 'A shaft of light sweeps the menu into place, and sweeps it away to close.' },
-        ],
-        tone: [
-            {
-                name: 'The pinned note',
-                text: 'The destructive entry is marked along its left edge in its colour, as a note pinned to the card; the disabled reason sits on a paper chip.',
-            },
-            {
-                name: 'The graphite warning',
-                text: 'The destructive entry’s label sits over a darker pencil smudge; the disabled reason reads lighter.',
-            },
-            { name: 'The shaded band', text: 'A soft shaded band crosses the destructive entry; the disabled reason carries a lighter shadow.' },
-        ],
-        interact: [
-            { name: 'A breeze', text: 'A hovered or focused entry dips once and comes back, easing in and out; a press settles it still.' },
-            { name: 'Pencilled again', text: 'A hovered or focused entry’s underline is traced again lightly; a press deepens the trace.' },
-            { name: 'The shade lifts', text: 'A hovered or focused entry’s shade lifts a touch; a press darkens it back for a moment.' },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            { name: 'Silverpoint', text: 'A silver hairline runs above the headings over dark paper, entries in a faint silver wash.' },
-            { name: 'The reading lamp', text: 'A warm pool of light sits behind the headings, entries in warm ink.' },
-            { name: 'The night window', text: 'A shaft of moonlight falls across the plate, entries in a cool silver ink with a faint glow.' },
-        ],
-        loading: [
-            { name: 'The silver hatches', text: 'Silver hatching sweeps in across the loading row, then starts again.' },
-            { name: 'The lamp swells', text: 'A pool of lamplight on the loading row swells and settles.' },
-            { name: 'The candle flickers', text: 'A small candle flame flickers in the corner of the loading row.' },
-        ],
-        open: [
-            { name: 'Silverpoint drawn', text: 'The menu is drawn in from the left in silver, easing in and out, and erased the same way to close.' },
-            { name: 'The lamp is lit', text: 'The menu opens from its middle like a lamp catching, slowing as it lands, and dims shut to close.' },
-            { name: 'Moonrise', text: 'The menu rises softly into the moonlight, slowing as it lands, and sets back down to close.' },
-        ],
-        tone: [
-            {
-                name: 'The red lamp',
-                text: 'A band of colour lights over the destructive entry, a lamp lit over the card; the disabled reason sits under a soft chip.',
-            },
-            {
-                name: 'The silver warning',
-                text: 'A silver-edged rule in the destructive colour runs under that entry; the disabled reason reads in a dimmer silver.',
-            },
-            { name: 'The night flare', text: 'The destructive entry flares once with colour in the dark; the disabled reason carries a faint glow.' },
-        ],
-        interact: [
-            { name: 'A glint', text: 'A hovered or focused entry flares with light once, slowing as it lands; a press holds the glint steady.' },
-            { name: 'The lamp brightens', text: 'A hovered or focused entry’s pool of light brightens; a press dims it back for a moment.' },
-            { name: 'The silver traces', text: 'A hovered or focused entry’s underline traces in silver; a press deepens the trace for the press.' },
-        ],
-    },
     retro: {
         shape: [
             {
@@ -863,48 +797,6 @@ const IDEAS = {
             { name: 'Flipped', text: 'A hovered or focused entry flips a few degrees like a departure-board tile; a press holds the flip.' },
             { name: 'The bar runs', text: 'A hovered or focused entry’s top bar runs the entry’s width; a press pulls the bar back and in.' },
             { name: 'Shifted', text: 'A hovered or focused entry shifts a hair toward the margin rule; a press shifts it back flush.' },
-        ],
-    },
-    lapis: {
-        shape: [
-            { name: 'The girih tile', text: 'A faint star lattice runs behind the plate, a double gold frame, headings in the display face.' },
-            { name: 'Lapis on vellum', text: 'Entries in lapis ink on an ivory plate, a gold rim around it, headings in serif italic.' },
-            {
-                name: 'The manuscript margin',
-                text: 'A double gold rule runs down the plate’s left margin, headings in serif italic, a gold rule under each group.',
-            },
-        ],
-        loading: [
-            { name: 'The glint runs the frame', text: 'A glint runs the loading row’s frame, then starts again.' },
-            { name: 'The gold leaf is laid', text: 'A band of gold leaf is laid along the loading row, left to right, and laid again.' },
-            { name: 'The star turns', text: 'An eight-point star of gold rays turns slowly behind the loading row.' },
-        ],
-        open: [
-            {
-                name: 'Illuminated',
-                text: 'The menu opens from its middle like an illuminated page, slowing as it lands, and closes back to its middle.',
-            },
-            { name: 'Inked', text: 'The menu is drawn in from the left in lapis ink, easing in and out, and drawn back out to close.' },
-            { name: 'Unrolled', text: 'The menu unrolls from the top like a manuscript scroll, and rolls back up to close.' },
-        ],
-        tone: [
-            {
-                name: 'The rubric',
-                text: 'The destructive entry is marked down the margin in its colour, as a rubric in red; the disabled reason sits on a gold-ruled plate.',
-            },
-            {
-                name: 'The gold-ruled warning',
-                text: 'The destructive entry sits inside a double gold ring; the disabled reason reads in a fainter ink.',
-            },
-            {
-                name: 'The lapis mark',
-                text: 'A lapis-dark mark runs under the destructive entry’s label; the disabled reason reads under a thin gold tick.',
-            },
-        ],
-        interact: [
-            { name: 'Gilded', text: 'A hovered or focused entry flares with light once, slowing as it lands; a press holds the gilt bright.' },
-            { name: 'Inked again', text: 'A hovered or focused entry’s underline is traced again in lapis ink; a press deepens the trace.' },
-            { name: 'The star glints', text: 'A hovered or focused entry’s gold rim glints once; a press holds the glint steady while pressed.' },
         ],
     },
     nostromo: {
@@ -1041,11 +933,8 @@ const PICKED = {
     brutalism: ['2', '5', '1', '1', '1'],
     deco: ['1', '1', '3', '1', '1'],
     phantom: ['2', '3', '2', '1', '3'],
-    'shade-light': ['1', '3', '1', '1', '1'],
-    'shade-dark': ['3', '3', '3', '1', '1'],
     retro: ['1', '1', '1', '1', '1'],
     grotesk: ['1', '2', '1', '1', '2'],
-    lapis: ['2', '2', '3', '2', '3'],
     nostromo: ['1', '2', '3', '1', '2'],
     titanium: ['3', '1', '2', '1', '3'],
     cyberpunk: ['1', '3', '1', '3', '3'],

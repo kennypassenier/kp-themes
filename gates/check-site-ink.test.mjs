@@ -2,7 +2,7 @@
 //
 // Drilled red on 2026-09-17 before the tokens existed: with
 // `.kp-code__string` on `--chart-2`, the gate named seven themes from
-// 3.38:1 (lapis) to 4.14:1 (titanium) and exited 1. The chart tokens are
+// 3.38:1 (Lapis, since removed) to 4.14:1 (titanium) and exited 1. The chart tokens are
 // chosen and measured as lines in a graph, where SC 1.4.11 asks 3:1; text
 // asks 4.5:1, and nothing said so until this check.
 //
@@ -14,9 +14,9 @@ import { codeInks, inkFaults } from './check-site.mjs';
 import { contrast, hsl, paintedContrast } from './colour.mjs';
 
 const THEMES = {
-    // lapis, as it was and as it is: a dark card, so the string had to go
-    // lighter rather than darker.
-    lapis: { card: 'hsl(228, 57%, 31%)', 'chart-2': 'hsl(5, 80%, 62%)', 'code-string': 'hsl(5, 80%, 72%)' },
+    // A dark card (the removed Lapis theme's values), so the string had to
+    // go lighter rather than darker.
+    stone: { card: 'hsl(228, 57%, 31%)', 'chart-2': 'hsl(5, 80%, 62%)', 'code-string': 'hsl(5, 80%, 72%)' },
 };
 
 test('a code class reads its colour out of the stylesheet', () => {
@@ -27,7 +27,7 @@ test('a code class reads its colour out of the stylesheet', () => {
 test('an ink under 4.5:1 on its surface is refused, and the same hue above it is not [fix-58]', () => {
     const before = inkFaults([{ cls: 'kp-code__string', token: 'chart-2' }], THEMES);
     assert.equal(before.length, 1);
-    assert.match(before[0], /lapis: \.kp-code__string reads 3\.\d\d:1 on --card/);
+    assert.match(before[0], /stone: \.kp-code__string reads 3\.\d\d:1 on --card/);
     assert.deepEqual(inkFaults([{ cls: 'kp-code__string', token: 'code-string' }], THEMES), []);
 });
 
@@ -39,7 +39,7 @@ test('a code class whose surface is not named is itself a fault', () => {
 
 test('a token the theme does not declare is named, not skipped', () => {
     const faults = inkFaults([{ cls: 'kp-code__keyword', token: 'code-keyword' }], THEMES);
-    assert.deepEqual(faults, ['lapis: site.css colours .kp-code__keyword with --code-keyword, which the theme does not declare']);
+    assert.deepEqual(faults, ['stone: site.css colours .kp-code__keyword with --code-keyword, which the theme does not declare']);
 });
 
 // fix-59: the ink rule measures the way the browser paints, not the way

@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Removed: three themes, `lapis`, `shade-light` and `shade-dark`**
+  [breaking, next major release; Kenny, 2026-10-06 23:49: "Ik heb ook
+  beslist van drie themas te laten vallen, Lapis, Shade (light) en Shade
+  (dark) mogen vanaf nu verwijderd worden."]. Kenny decided to drop them
+  from the set, which leaves nineteen themes. Gone with them: their token
+  sources (`themes/<name>/`), their registers (`css/<name>-register.css`
+  and the `./css/<name>-register` and `/min` exports), their blocks in
+  `css/themes.css` and entries in `js/theme-registry.js` (and so in the
+  `ThemeName` type), the lapis texture in `css/_rules.css`, their 15
+  `kp-sig-<theme>-meter-*` TIMINGS rows, their hooks, the four font
+  families only they used (Source Sans 3 shipped as `KP Shade Sans`, Source
+  Serif 4, Vazirmatn, Markazi Text), their showcase, compare and concept
+  pages, and their theme-specific tests. A page that stores one of the
+  three names falls back to the default theme. See MIGRATION.md.
 - **The meter draws itself each theme's way in all 22 registers** [feature,
   9.3.0; research/character-meter round 4, Kenny's picks of 2026-10-05]:
   cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2,

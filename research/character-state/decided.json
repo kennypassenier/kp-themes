@@ -77,16 +77,6 @@
             "tone": "2",
             "change": "1"
         },
-        "shade-light": {
-            "shape": "3",
-            "tone": "3",
-            "change": "3"
-        },
-        "shade-dark": {
-            "shape": "2",
-            "tone": "3",
-            "change": "3"
-        },
         "retro": {
             "shape": "1",
             "tone": "3",
@@ -96,11 +86,6 @@
             "shape": "3",
             "tone": "3",
             "change": "1"
-        },
-        "lapis": {
-            "shape": "3",
-            "tone": "3",
-            "change": "3"
         },
         "nostromo": {
             "shape": "3",

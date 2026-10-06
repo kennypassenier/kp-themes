@@ -124,23 +124,4 @@ export default {
             },
         ],
     },
-    'shade-light': {
-        shape: [
-            {
-                key: 'r3c-shl-sh-1',
-                name: 'The sundial',
-                text: 'The plot reads its own shadows: long diagonal shade lines stand in for the grid, as a gnomon would cast them, the tick labels in the serif. The lines carry a soft cast shadow below them; the legend small numeral pills with the same soft shade.',
-            },
-            {
-                key: 'r3c-shl-sh-2',
-                name: 'The windowpane',
-                text: 'Two broad bands of window light cross the paper at a slant, left pale and right in shade, the grid a faint seam, the tick labels in the medium-weight sans. The lines stay crisp through both; the legend small pane tiles, lit where pressed.',
-            },
-            {
-                key: 'r3c-shl-sh-3',
-                name: 'The parasol',
-                text: "Shade pools from the plot's upper corner like a parasol held overhead, lighter at the foot, the grid fine rib-shadows radiating from that corner, the tick labels in the serif italic. The lines are warm ink; the legend round pebble pills with a soft shade.",
-            },
-        ],
-    },
 };

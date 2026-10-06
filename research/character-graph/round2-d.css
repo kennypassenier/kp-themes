@@ -297,60 +297,6 @@
         --cg-node-anim: r3-d-flare 3200ms ease-in-out infinite;
         --cg-node-stagger: 260ms;
     }
-
-    /* ══ shade-light · While loading ════════════════════════════════════ */
-
-    /* shade-light · loading r3-d-shl-load-1 · The pencil sketches the lines */
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-1'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 100;
-        --cg-edge-anim: r3-d-reveal 1800ms ease-in-out infinite;
-        --cg-edge-stagger: 260ms;
-    }
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-1'] .kp-graph__ghost .kp-graph__node {
-        --cg-node-anim: r3-d-pop 1800ms ease-out infinite;
-        --cg-node-stagger: 260ms;
-        --cg-node-delay: 900ms;
-    }
-
-    /* shade-light · loading r3-d-shl-load-2 · A cloud's shadow drifts */
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-2'] .kp-graph {
-        --gr-load-over: radial-gradient(ellipse 45% 55% at 30% 30%, color-mix(in oklch, var(--foreground) 10%, transparent), transparent 70%);
-        --gr-load-over-size: 220% 220%;
-        --gr-load-over-anim: r3-d-dot-drift 5000ms ease-in-out infinite alternate;
-        --cg-ghost: 0.55;
-    }
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-2'] .kp-graph__ghost .kp-graph__node {
-        --cg-node-anim: r3-d-breathe-filter 5000ms ease-in-out infinite;
-        --cg-node-stagger: 420ms;
-    }
-
-    /* shade-light · loading r3-d-shl-load-3 · Leaves sway over the network:
-       a whole-picture idea, its own media block below. */
-
-    /* shade-light · loading r3-d-shl-load-4 · The lantern glow breathes */
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-4'] .kp-graph__ghost .kp-graph__node {
-        --cg-node-anim: r3-d-breathe-filter 2200ms ease-in-out infinite;
-    }
-
-    /* shade-light · loading r3-d-shl-load-5 · Hatched in, stroke by stroke */
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-5'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 100;
-        --cg-edge-anim: r3-d-reveal 1600ms steps(8) infinite;
-        --cg-edge-stagger: 200ms;
-    }
-
-    /* shade-light · loading r3-d-shl-load-6 · Dappled light crosses the ring */
-
-    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-6'] .kp-graph__ghost .kp-graph__node {
-        --cg-node-anim: r3-d-flare 2600ms ease-in-out infinite;
-        --cg-node-stagger: 220ms;
-    }
 }
 
 /* ── Motion: the whole-picture ideas only (no shared consumer exists for
@@ -398,14 +344,6 @@
             transform-box: fill-box;
             transform-origin: 50% 46%;
             animation: r3-d-sway-group 3200ms ease-in-out infinite alternate;
-        }
-
-        /* shade-light · loading r3-d-shl-load-3 · Leaves sway over the
-           network */
-        [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-3'] .kp-graph__ghost {
-            transform-box: fill-box;
-            transform-origin: 50% 46%;
-            animation: r3-d-sway-group 3400ms ease-in-out infinite alternate;
         }
     }
 }

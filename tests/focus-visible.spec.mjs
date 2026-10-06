@@ -22,7 +22,7 @@
 // edge in pixels):
 //   - dark and titanium, button and primary: 0 on every side, 0 outside, 0
 //     edge — the chamfer's clip-path cut the ring away;
-//   - the field in formal, light, pastel, blueprint, solstice, shade-light:
+//   - the field in formal, light, pastel, blueprint, solstice, Shade (light):
 //     0 everywhere — kp.components' offset shadow on .kp-field__input beat
 //     the inner ring in kp.base, and the outer half is the field's ground;
 //   - the bar link in pastel and sepia: 0 everywhere; synthwave: top, start,

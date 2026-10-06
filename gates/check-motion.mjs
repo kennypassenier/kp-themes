@@ -178,7 +178,7 @@ const OUT_OF_SCOPE = {
     // once across a headline or a redaction bar (mask-position).
     'kp-wipe':
         'a hard-edge mask sweeping once across a headline (the whole line, unsplit) or a redaction bar (mark::after); the content under the mask keeps its own colours, only the reveal edge moves',
-    // The lapis register [S48, LIFT_PLAN row 6].
+    // The Lapis register [S48, LIFT_PLAN row 6].
     'kp-burnish':
         'a clip-path wipe over the headline once (the burnish); the text is gold from the first frame of the wipe and stays gold, only the reveal boundary moves',
     // The blueprint register [S48, LIFT_PLAN row 6]: the two dimension
@@ -187,7 +187,7 @@ const OUT_OF_SCOPE = {
     'kp-elev-draw': 'a vertical scale on a hairline beside the headline, once; no luminance change and nothing over 341x256 px',
     // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
     // resolve, on the whole, unsplit line (`kp-sharpen-in` — not
-    // `kp-focus`/`focus`, which the dark and shade-dark registers
+    // `kp-focus`/`focus`, which the dark and Shade (dark) registers
     // already own for their own, different mechanics).
     'kp-sharpen-in':
         "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
@@ -198,7 +198,7 @@ const OUT_OF_SCOPE = {
     'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
     // The forest register [TP1]: the contour trace beside the headline.
     'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
-    // The shade-light register [SL2]: the lede mark's ink-fill is a
+    // The Shade (light) register [SL2]: the lede mark's ink-fill is a
     // background-size change, not a luminance one — the fill colour and
     // its alpha are constant throughout, only the covered area grows.
     'kp-mark-in': 'a background-size widening over a mark once, 0% to 100%; the fill colour and alpha never change, only the area',
@@ -294,11 +294,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-phantom-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
     'kp-sig-phantom-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-phantom-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-lapis-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-lapis-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-lapis-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-lapis-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-lapis-meter-width': 'the loading picture of a meter a few px tall widening across it; its colour never changes, only the area',
     'kp-sig-nostromo-meter-scan': 'a lit band sliding along the tube of a loading meter; the band keeps its colour, only its position moves',
     'kp-sig-nostromo-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-nostromo-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
@@ -327,16 +322,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-high-contrast-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
     'kp-sig-high-contrast-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-high-contrast-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
-    'kp-sig-shade-light-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
-    'kp-sig-shade-light-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
-    'kp-sig-shade-light-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-shade-light-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
-    'kp-sig-shade-dark-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
-    'kp-sig-shade-dark-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
-    'kp-sig-shade-dark-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-shade-dark-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
     'kp-sig-retro-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-retro-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-retro-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',

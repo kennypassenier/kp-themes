@@ -77,16 +77,6 @@
             "menu": "3",
             "interactive": "1"
         },
-        "shade-light": {
-            "shape": "1",
-            "menu": "1",
-            "interactive": "3"
-        },
-        "shade-dark": {
-            "shape": "1",
-            "menu": "1",
-            "interactive": "3"
-        },
         "retro": {
             "shape": "1",
             "menu": "1",
@@ -96,11 +86,6 @@
             "shape": "3",
             "menu": "1",
             "interactive": "1"
-        },
-        "lapis": {
-            "shape": "1",
-            "menu": "2",
-            "interactive": "3"
         },
         "nostromo": {
             "shape": "1",

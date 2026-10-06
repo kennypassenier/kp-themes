@@ -25,25 +25,6 @@ export default {
             },
         ],
     },
-    lapis: {
-        shape: [
-            {
-                key: 'r2-la-shape-1',
-                name: 'The illuminated initial',
-                text: "A plate rounded only at two opposite corners with a gold wash let into the top-left, as an illuminated initial is gilded at its corner, echoing the columns tile's Gilded in arrival. Unlike the rubricated ledger and the gold medallion, only the corners carry the gilt; the rest of the frame stays plain.",
-            },
-            {
-                key: 'r2-la-shape-2',
-                name: 'The rubricated ledger',
-                text: "A square-cornered plate with a thick rubric column down its left edge, the mark a rubricator leaves at each entry, echoing the graph's rubricator loading and the trend tile's rubric tone. Unlike the illuminated initial and the gold medallion, the gilt sits as one bar, not a corner or a ring.",
-            },
-            {
-                key: 'r2-la-shape-3',
-                name: 'The gold medallion',
-                text: "A rounded medallion ringed in alternating gold and ground over a faint gold-dust wash at its centre, echoing the chart's gold dust loading and its gold event rings. Unlike the illuminated initial and the rubricated ledger, the whole plate is round, not a rectangle with a gilt accent.",
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {

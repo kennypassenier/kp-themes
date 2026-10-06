@@ -1567,116 +1567,6 @@
         color: var(--primary-foreground);
     }
 
-    /* shade-light · shape 1 · Pencil in the shade */
-
-    [data-theme='shade-light'] [data-cg-shape='1'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-under: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 3%, transparent) 0 1px, transparent 1px 6px);
-        --gr-cap: round;
-        --gr-edge-w: 1.4;
-        --gr-edge-mix: 45%;
-        --gr-ring: color-mix(in oklch, var(--foreground) 70%, var(--card));
-        --gr-ring-w: 1.4;
-        --gr-ring-fill: var(--card);
-        --gr-node-glow: drop-shadow(0 3px 4px color-mix(in oklch, var(--foreground) 22%, transparent));
-        --gr-core-op: 0.75;
-        --gr-node-mix: 60%;
-        --gr-chip-border: 0;
-        --gr-chip-shadow: 0 2px 5px color-mix(in oklch, var(--foreground) 18%, transparent);
-    }
-
-    /* shade-light · shape 2 · The leaf shade */
-
-    [data-theme='shade-light'] [data-cg-shape='2'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-under:
-            radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 6%, transparent) 0 40px, transparent 41px),
-            radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--foreground) 5%, transparent) 0 60px, transparent 61px),
-            radial-gradient(circle at 60% 20%, color-mix(in oklch, var(--foreground) 4%, transparent) 0 30px, transparent 31px);
-        --gr-cap: round;
-        --gr-edge-mix: 50%;
-        --gr-ring-w: 3;
-        --gr-node-mix: 60%;
-        --gr-hub: color-mix(in oklch, var(--warning) 50%, var(--foreground));
-        --gr-chip-bg: var(--card);
-    }
-
-    /* shade-light · shape 3 · The paper lantern */
-
-    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-cap: round;
-        --gr-edge-w: 1.4;
-        --gr-edge-mix: 50%;
-        --gr-ring: color-mix(in oklch, var(--foreground) 70%, var(--card));
-        --gr-ring-w: 1.4;
-        --gr-core-op: 0.5;
-        --gr-node-mix: 60%;
-        --gr-hub: color-mix(in oklch, var(--warning) 55%, var(--foreground));
-        --gr-chip-radius: 2px;
-        --gr-chip-border: 1px solid var(--border);
-        --gr-chip-bg: var(--card);
-    }
-
-    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph__core {
-        r: 9px;
-    }
-
-    [data-theme='shade-light'] [data-cg-shape='3'] .kp-graph__node {
-        --gr-node-glow: drop-shadow(0 0 4px color-mix(in oklch, var(--warning) 40%, transparent));
-    }
-
-    /* shade-dark · shape 1 · Silverpoint */
-
-    [data-theme='shade-dark'] [data-cg-shape='1'] .kp-graph {
-        --gr-paper: var(--background);
-        --gr-edge-w: 1;
-        --gr-edge-on-w: 2;
-        --gr-edge-mix: 45%;
-        --gr-ring: color-mix(in oklch, var(--foreground) 85%, var(--background));
-        --gr-ring-w: 1.3;
-        --gr-ring-fill: color-mix(in oklch, oklch(from var(--background) 0 0 h) 30%, var(--background));
-        --gr-core-op: 0.8;
-        --gr-node-mix: 60%;
-        --gr-chip-bg: transparent;
-        --gr-chip-border: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
-    }
-
-    /* shade-dark · shape 2 · The reading lamp */
-
-    [data-theme='shade-dark'] [data-cg-shape='2'] .kp-graph {
-        --gr-paper: var(--background);
-        --gr-under: radial-gradient(ellipse 45% 50% at 50% 46%, color-mix(in oklch, var(--warning) 14%, transparent), transparent 75%);
-        --gr-cap: round;
-        --gr-edge-mix: 55%;
-        --gr-ring-w: 2.5;
-        --gr-node-mix: 70%;
-        --gr-hub: color-mix(in oklch, var(--warning) 70%, var(--foreground));
-        --gr-chip-bg: var(--card);
-    }
-
-    /* shade-dark · shape 3 · Moonlit */
-
-    [data-theme='shade-dark'] [data-cg-shape='3'] .kp-graph {
-        --gr-paper: var(--background);
-        --gr-under: radial-gradient(circle at 80% 15%, color-mix(in oklch, var(--foreground) 8%, transparent) 0 50px, transparent 120px);
-        --gr-cap: round;
-        --gr-edge-w: 1.2;
-        --gr-edge-mix: 45%;
-        --gr-ring: color-mix(in oklch, var(--foreground) 80%, var(--background));
-        --gr-ring-w: 1.6;
-        --gr-core-op: 0.9;
-        --gr-node-mix: 60%;
-        --gr-chip-radius: 999px;
-        --gr-chip-bg: transparent;
-        --gr-chip-border: 1px solid color-mix(in oklch, var(--foreground) 60%, transparent);
-    }
-
-    [data-theme='shade-dark'] [data-cg-shape='3'] .kp-graph__core {
-        transform: translate(2px, -2px);
-        r: 6px;
-    }
-
     /* retro · shape 1 · The 1995 network diagram */
 
     [data-theme='retro'] [data-cg-shape='1'] .kp-graph {
@@ -1839,76 +1729,6 @@
     [data-theme='grotesk'] [data-cg-shape='3'] .kp-graph__ring {
         stroke: var(--foreground);
         stroke-width: 1.5;
-    }
-
-    /* lapis · shape 1 · The girih lattice */
-
-    [data-theme='lapis'] [data-cg-shape='1'] .kp-graph {
-        --gr-paper: var(--background);
-        --gr-pat:
-            repeating-linear-gradient(60deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 28px),
-            repeating-linear-gradient(-60deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 28px),
-            repeating-linear-gradient(0deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 1px, transparent 1px 24px);
-        --gr-frame: 1px solid var(--primary);
-        --gr-shadow: inset 0 0 0 3px var(--background), inset 0 0 0 4px var(--primary);
-        --gr-font: var(--theme-font-display);
-        --gr-size: 13px;
-        --gr-edge-mix: 50%;
-        --gr-ring: var(--primary);
-        --gr-ring-w: 2.5;
-        --gr-ring-fill: color-mix(in oklch, var(--card) 70%, var(--background));
-        --gr-hub-w: 5;
-        --gr-node-mix: 75%;
-        --gr-chip-radius: 0;
-        --gr-chip-border: 1px solid var(--primary);
-        --gr-chip-bg: var(--background);
-    }
-
-    /* lapis · shape 2 · Lapis on vellum */
-
-    [data-theme='lapis'] [data-cg-shape='2'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-label: var(--card-foreground);
-        --gr-font: var(--theme-font-display);
-        --gr-italic: italic;
-        --gr-size: 13px;
-        --gr-edge-mix: 45%;
-        --gr-ring: color-mix(in oklch, var(--primary) 75%, var(--card-foreground));
-        --gr-ring-w: 2.5;
-        --gr-ring-fill: color-mix(in oklch, var(--background) 65%, var(--card));
-        --gr-core-op: 0.6;
-        --gr-chip-radius: 0;
-        --gr-chip-border: 1px solid var(--primary);
-        --gr-chip-bg: var(--card);
-        --gr-chip-fg: var(--card-foreground);
-    }
-
-    /* lapis · shape 3 · The star tile */
-
-    [data-theme='lapis'] [data-cg-shape='3'] .kp-graph {
-        --gr-paper: var(--background);
-        --gr-pat: repeating-conic-gradient(
-            from 22.5deg at 50% 46%,
-            color-mix(in oklch, var(--primary) 8%, transparent) 0 22.5deg,
-            transparent 22.5deg 45deg
-        );
-        --gr-font: var(--theme-font-display);
-        --gr-size: 13px;
-        --gr-edge-w: 1.6;
-        --gr-edge-mix: 45%;
-        --gr-ring: var(--primary);
-        --gr-ring-w: 3;
-        --gr-ring-fill: var(--background);
-        --gr-core-op: 0.9;
-        --gr-hub-w: 4;
-        --gr-chip-radius: 0;
-        --gr-chip-border: 1px solid var(--primary);
-        --gr-chip-bg: var(--background);
-        --gr-chip-clip: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
-    }
-
-    [data-theme='lapis'] [data-cg-shape='3'] .kp-graph__ring {
-        clip-path: polygon(50% 0, 62% 26%, 100% 38%, 74% 62%, 82% 100%, 50% 84%, 18% 100%, 26% 62%, 0 38%, 38% 26%);
     }
 
     /* nostromo · shape 1 · The CRT radar */
@@ -2521,63 +2341,6 @@
         --gr-load-over-anim: gr-pan 1200ms steps(6) infinite;
     }
 
-    /* shade-light · loading 1 · The sketch hatches */
-
-    [data-theme='shade-light'] [data-cg-loading='1'] .kp-graph {
-        --gr-skel: color-mix(in oklch, var(--foreground) 40%, var(--card));
-        --gr-skel-w: 3;
-        --gr-skel-dash: 2 3;
-        --gr-skel-anim: gr-march 3000ms steps(20) infinite;
-    }
-
-    /* shade-light · loading 2 · A cloud’s shade passes */
-
-    [data-theme='shade-light'] [data-cg-loading='2'] .kp-graph {
-        --gr-skel-w: 10;
-        --gr-skel: color-mix(in oklch, var(--foreground) 20%, var(--card));
-        --gr-skel-anim: gr-sway 3000ms ease-in-out infinite;
-        --gr-load-over: linear-gradient(100deg, transparent 30%, color-mix(in oklch, var(--foreground) 7%, transparent) 45% 55%, transparent 70%);
-        --gr-load-over-size: 300% 100%;
-        --gr-load-over-anim: gr-cloud 4000ms linear infinite;
-    }
-
-    /* shade-light · loading 3 · The pencil circles */
-
-    [data-theme='shade-light'] [data-cg-loading='3'] .kp-graph {
-        --gr-skel: color-mix(in oklch, var(--foreground) 55%, var(--card));
-        --gr-skel-w: 2;
-        --gr-skel-dash: 120 1400;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 1600ms linear infinite;
-    }
-
-    /* shade-dark · loading 1 · The silver hatches */
-
-    [data-theme='shade-dark'] [data-cg-loading='1'] .kp-graph {
-        --gr-skel: color-mix(in oklch, var(--foreground) 50%, var(--background));
-        --gr-skel-w: 1;
-        --gr-skel-dash: 2 2;
-        --gr-skel-anim: gr-march 4000ms steps(25) infinite;
-    }
-
-    /* shade-dark · loading 2 · The pool breathes */
-
-    [data-theme='shade-dark'] [data-cg-loading='2'] .kp-graph {
-        --gr-skel: color-mix(in oklch, var(--warning) 40%, var(--background));
-        --gr-skel-w: 10;
-        --gr-skel-anim: gr-breathe 3000ms ease-in-out infinite;
-    }
-
-    /* shade-dark · loading 3 · The moth */
-
-    [data-theme='shade-dark'] [data-cg-loading='3'] .kp-graph {
-        --gr-skel: color-mix(in oklch, var(--foreground) 70%, var(--background));
-        --gr-skel-w: 4;
-        --gr-skel-dash: 8 1400;
-        --gr-skel-cap: round;
-        --gr-skel-anim: gr-march 1800ms cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite, gr-sway 500ms ease-in-out infinite;
-    }
-
     /* retro · loading 1 · The hourglass dither */
 
     [data-theme='retro'] [data-cg-loading='1'] .kp-graph {
@@ -2631,33 +2394,6 @@
         --gr-skel-w: 12;
         --gr-skel-dash: 200 1000;
         --gr-skel-anim: gr-march 2000ms steps(4) infinite;
-    }
-
-    /* lapis · loading 1 · A glint runs the frame */
-
-    [data-theme='lapis'] [data-cg-loading='1'] .kp-graph {
-        --gr-skel: var(--primary);
-        --gr-skel-w: 3;
-        --gr-skel-dash: 30 200;
-        --gr-skel-anim: gr-march 2400ms linear infinite;
-    }
-
-    /* lapis · loading 2 · The burnisher */
-
-    [data-theme='lapis'] [data-cg-loading='2'] .kp-graph {
-        --gr-skel: var(--primary);
-        --gr-skel-w: 4;
-        --gr-skel-dash: 30 200;
-        --gr-skel-anim: gr-march 2400ms ease-in-out infinite;
-    }
-
-    /* lapis · loading 3 · The tile is laid */
-
-    [data-theme='lapis'] [data-cg-loading='3'] .kp-graph {
-        --gr-skel: var(--primary);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 1400;
-        --gr-skel-anim: gr-write 3200ms steps(16) infinite;
     }
 
     /* nostromo · loading 1 · The radar sweep */
@@ -3004,43 +2740,6 @@
         --gr-edge-at: 250ms;
     }
 
-    /* shade-light · arrival 2 · Sketched */
-
-    [data-theme='shade-light'] [data-cg-arrival='2'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 1000ms ease-in-out both;
-        --gr-arr-node: gr-rise-in 400ms ease-out both;
-        --gr-stagger: 40ms;
-        --gr-estagger: 40ms;
-        --gr-node-at: 600ms;
-    }
-
-    /* shade-light · arrival 3 · Out of the shade */
-
-    [data-theme='shade-light'] [data-cg-arrival='3'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 800ms ease-out both;
-        --gr-arr-node: gr-grow 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        --gr-stagger: 50ms;
-        --gr-edge-at: 300ms;
-    }
-
-    /* shade-dark · arrival 2 · Drawn in silver */
-
-    [data-theme='shade-dark'] [data-cg-arrival='2'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 1100ms ease-in-out both;
-        --gr-arr-node: gr-grow 350ms ease-out both;
-        --gr-stagger: 40ms;
-        --gr-node-at: 700ms;
-    }
-
-    /* shade-dark · arrival 3 · The lamp comes on */
-
-    [data-theme='shade-dark'] [data-cg-arrival='3'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 600ms ease-out both;
-        --gr-arr-node: gr-appear 1ms both;
-        --gr-stagger: 60ms;
-        --gr-edge-at: 700ms;
-    }
-
     /* retro · arrival 2 · Painted in */
 
     [data-theme='retro'] [data-cg-arrival='2'] .kp-graph {
@@ -3075,23 +2774,6 @@
         --gr-arr-edge: gr-stretch-in 420ms cubic-bezier(0.6, 0, 0.2, 1) both;
         --gr-arr-node: gr-slash-in 420ms cubic-bezier(0.6, 0, 0.2, 1) both;
         --gr-stagger: 15ms;
-    }
-
-    /* lapis · arrival 2 · Inlaid */
-
-    [data-theme='lapis'] [data-cg-arrival='2'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 900ms ease-out both;
-        --gr-arr-node: gr-spin-in 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        --gr-stagger: 35ms;
-        --gr-node-at: 600ms;
-    }
-
-    /* lapis · arrival 3 · The pattern turns */
-
-    [data-theme='lapis'] [data-cg-arrival='3'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 900ms ease-out both;
-        --gr-arr-node: gr-spin-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        --gr-arr-box: view-box;
     }
 
     /* nostromo · arrival 2 · Blips acquired */
@@ -3482,53 +3164,9 @@
         --gr-off-deco: line-through 2px;
     }
 
-    /* shade-light · focus 1 · The package’s dimming */
-
     /* the package’s own dimming: nothing to write */
 
-    /* shade-light · focus 2 · Lifted into the light */
-
-    [data-theme='shade-light'] [data-cg-focus='2'] .kp-graph {
-        --gr-pick: var(--foreground);
-        --gr-pick-w: 3;
-        --gr-pick-glow: drop-shadow(0 4px 4px color-mix(in oklch, var(--foreground) 35%, transparent));
-        --gr-node-dim: 0.4;
-        --gr-off-deco: line-through;
-    }
-
-    /* shade-light · focus 3 · The sunny spot */
-
-    [data-theme='shade-light'] [data-cg-focus='3'] .kp-graph {
-        --gr-pick: color-mix(in oklch, var(--warning) 55%, var(--foreground));
-        --gr-pick-w: 6;
-        --gr-node-dim: 0.5;
-        --gr-dim-filter: grayscale(0.8);
-        --gr-off-outline: 1px dashed currentColor;
-    }
-
-    /* shade-dark · focus 1 · The package’s dimming */
-
     /* the package’s own dimming: nothing to write */
-
-    /* shade-dark · focus 2 · Under the lamp */
-
-    [data-theme='shade-dark'] [data-cg-focus='2'] .kp-graph {
-        --gr-pick: color-mix(in oklch, var(--warning) 70%, var(--foreground));
-        --gr-pick-w: 5;
-        --gr-pick-glow: drop-shadow(0 0 5px color-mix(in oklch, var(--warning) 50%, transparent));
-        --gr-node-dim: 0.3;
-        --gr-off-deco: line-through;
-    }
-
-    /* shade-dark · focus 3 · The silver ring */
-
-    [data-theme='shade-dark'] [data-cg-focus='3'] .kp-graph {
-        --gr-pick: var(--foreground);
-        --gr-pick-w: 3;
-        --gr-node-dim: 0.45;
-        --gr-dim-filter: grayscale(1);
-        --gr-off-outline: 1px dashed currentColor;
-    }
 
     /* retro · focus 1 · The package’s dimming */
 
@@ -3578,30 +3216,7 @@
         --gr-off-outline: 2px dashed currentColor;
     }
 
-    /* lapis · focus 1 · The package’s dimming */
-
     /* the package’s own dimming: nothing to write */
-
-    /* lapis · focus 2 · Gilded */
-
-    [data-theme='lapis'] [data-cg-focus='2'] .kp-graph {
-        --gr-pick: var(--primary);
-        --gr-pick-w: 5;
-        --gr-pick-glow: drop-shadow(0 0 5px var(--primary));
-        --gr-node-dim: 0.3;
-        --gr-off-deco: line-through;
-    }
-
-    /* lapis · focus 3 · Framed in gold */
-
-    [data-theme='lapis'] [data-cg-focus='3'] .kp-graph {
-        --gr-pick: var(--primary);
-        --gr-pick-w: 3;
-        --gr-pick-glow: drop-shadow(0 0 0 var(--primary)) drop-shadow(0 0 2px var(--primary));
-        --gr-node-dim: 0.45;
-        --gr-dim-filter: grayscale(1);
-        --gr-off-outline: 1px dashed currentColor;
-    }
 
     /* nostromo · focus 1 · The package’s dimming */
 
@@ -3894,38 +3509,6 @@
         --gr-live-c: var(--primary);
     }
 
-    /* shade-light · live 2 · A sunbeam */
-
-    [data-theme='shade-light'] [data-cg-live='2'] .kp-graph {
-        --gr-live-ring: gr-flash-ring 1500ms ease-out;
-        --gr-live-edge: gr-surge 1500ms ease-out;
-        --gr-live-c: color-mix(in oklch, var(--warning) 55%, var(--foreground));
-    }
-
-    /* shade-light · live 3 · Retraced */
-
-    [data-theme='shade-light'] [data-cg-live='3'] .kp-graph {
-        --gr-live-node: gr-hop 700ms ease-out;
-        --gr-live-edge: gr-draw-in 900ms ease-in-out;
-        --gr-live-c: var(--foreground);
-    }
-
-    /* shade-dark · live 2 · The warm flicker */
-
-    [data-theme='shade-dark'] [data-cg-live='2'] .kp-graph {
-        --gr-live-ring: gr-flash-ring 1400ms ease-out;
-        --gr-live-edge: gr-surge 1400ms ease-out;
-        --gr-live-c: color-mix(in oklch, var(--warning) 70%, var(--foreground));
-    }
-
-    /* shade-dark · live 3 · Silver retraced */
-
-    [data-theme='shade-dark'] [data-cg-live='3'] .kp-graph {
-        --gr-live-node: gr-blink3 600ms steps(1);
-        --gr-live-edge: gr-draw-in 900ms ease-in-out;
-        --gr-live-c: var(--foreground);
-    }
-
     /* retro · live 2 · Repainted */
 
     [data-theme='retro'] [data-cg-live='2'] .kp-graph {
@@ -3956,22 +3539,6 @@
         --gr-live-node: gr-bump 400ms cubic-bezier(0.6, 0, 0.2, 1);
         --gr-live-edge: gr-draw-in 500ms cubic-bezier(0.6, 0, 0.2, 1);
         --gr-live-c: var(--foreground);
-    }
-
-    /* lapis · live 2 · The gold glint */
-
-    [data-theme='lapis'] [data-cg-live='2'] .kp-graph {
-        --gr-live-ring: gr-flash-ring 1100ms ease-out;
-        --gr-live-edge: gr-packet 900ms ease-in-out;
-        --gr-live-c: var(--primary);
-    }
-
-    /* lapis · live 3 · The medallion turns */
-
-    [data-theme='lapis'] [data-cg-live='3'] .kp-graph {
-        --gr-live-node: gr-turn-once 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
-        --gr-live-edge: gr-surge 1000ms ease-out;
-        --gr-live-c: var(--primary);
     }
 
     /* nostromo · live 2 · The ping */

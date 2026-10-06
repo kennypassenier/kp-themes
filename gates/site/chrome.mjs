@@ -77,7 +77,6 @@ ${noFlashSnippet()}
         <link rel="stylesheet" href="${up}css/brutalism-register.css" />
         <link rel="stylesheet" href="${up}css/titanium-register.css" />
         <link rel="stylesheet" href="${up}css/pastel-register.css" />
-        <link rel="stylesheet" href="${up}css/shade-light-register.css" />
         <link rel="stylesheet" href="${up}css/forest-register.css" />
         <link rel="stylesheet" href="${up}css/deco-register.css" />
         <link rel="stylesheet" href="${up}css/light-register.css" />
@@ -89,8 +88,6 @@ ${noFlashSnippet()}
         <link rel="stylesheet" href="${up}css/sepia-register.css" />
         <link rel="stylesheet" href="${up}css/solstice-register.css" />
         <link rel="stylesheet" href="${up}css/high-contrast-register.css" />
-        <link rel="stylesheet" href="${up}css/lapis-register.css" />
-        <link rel="stylesheet" href="${up}css/shade-dark-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />
     </head>
     <body>

@@ -1026,63 +1026,6 @@
         --tr-area-op: 0.08;
     }
 
-    /* shade-light · shape 1: Pencil in the shade */
-    [data-theme='shade-light'] [data-ct-shape='1'] .kp-kpi--trend {
-        --tr-plot-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 8%, transparent) 0 1px, transparent 1px 6px);
-        --tr-line-mix: 50%;
-        --tr-line-w: 1.8;
-        --tr-line-cap: round;
-        --tr-area-op: 0.08;
-    }
-
-    /* shade-light · shape 2: The leaf shade */
-    [data-theme='shade-light'] [data-ct-shape='2'] .kp-kpi--trend {
-        --tr-pat:
-            radial-gradient(circle at 20% 30%, color-mix(in oklch, var(--foreground) 7%, transparent), transparent 22%),
-            radial-gradient(circle at 75% 65%, color-mix(in oklch, var(--foreground) 6%, transparent), transparent 26%),
-            radial-gradient(circle at 55% 15%, color-mix(in oklch, var(--foreground) 5%, transparent), transparent 18%);
-        --tr-line-w: 1.8;
-        --tr-line-cap: round;
-        --tr-area-op: 0.1;
-    }
-
-    /* shade-light · shape 3: The window light */
-    [data-theme='shade-light'] [data-ct-shape='3'] .kp-kpi--trend {
-        --tr-pat:
-            linear-gradient(115deg, transparent 0 35%, color-mix(in oklch, var(--card) 70%, transparent) 35% 55%, transparent 55%),
-            linear-gradient(color-mix(in oklch, var(--foreground) 4%, transparent), color-mix(in oklch, var(--foreground) 4%, transparent));
-        --tr-line-mix: 55%;
-        --tr-line-w: 1.8;
-        --tr-line-cap: round;
-        --tr-area-op: 0.08;
-    }
-
-    /* shade-dark · shape 1: Silverpoint */
-    [data-theme='shade-dark'] [data-ct-shape='1'] .kp-kpi--trend {
-        --tr-shadow: inset 0 1px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
-        --tr-line-override: color-mix(in oklch, var(--foreground) 85%, var(--background));
-        --tr-line-w: 1;
-        --tr-area: var(--foreground);
-        --tr-area-op: 0.08;
-    }
-
-    /* shade-dark · shape 2: The reading lamp */
-    [data-theme='shade-dark'] [data-ct-shape='2'] .kp-kpi--trend {
-        --tr-pat: radial-gradient(ellipse 60% 70% at 25% 40%, color-mix(in oklch, var(--warning) 22%, transparent), transparent 70%);
-        --tr-line-override: color-mix(in oklch, var(--warning) 45%, var(--foreground));
-        --tr-line-w: 1.8;
-        --tr-area-op: 0.12;
-    }
-
-    /* shade-dark · shape 3: The night window */
-    [data-theme='shade-dark'] [data-ct-shape='3'] .kp-kpi--trend {
-        --tr-pat: linear-gradient(115deg, transparent 0 35%, color-mix(in oklch, var(--foreground) 6%, transparent) 35% 55%, transparent 55%);
-        --tr-line-override: color-mix(in oklch, var(--foreground) 70%, var(--primary));
-        --tr-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--foreground) 30%, transparent));
-        --tr-line-w: 1.4;
-        --tr-area-op: 0.06;
-    }
-
     /* retro · shape 1: The 1995 dialog */
     [data-theme='retro'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-plate: var(--background);
@@ -1173,54 +1116,6 @@
         --tr-line-w: 2;
         --tr-line-cap: butt;
         --tr-area-op: 0;
-    }
-
-    /* lapis · shape 1: The girih tile */
-    [data-theme='lapis'] [data-ct-shape='1'] .kp-kpi--trend {
-        --tr-pat: repeating-conic-gradient(from 22.5deg, color-mix(in oklch, var(--primary) 9%, transparent) 0 45deg, transparent 45deg 90deg) 0 0 /
-            28px 28px;
-        --tr-shadow: inset 0 0 0 1px var(--primary), inset 0 0 0 4px var(--card), inset 0 0 0 5px var(--primary);
-        --tr-frame: 0;
-        --tr-radius: 0;
-        --tr-num-font: var(--theme-font-display);
-        --tr-label-font: var(--theme-font-display);
-        --tr-label-track: 0.1em;
-        --tr-line-override: color-mix(in oklch, var(--primary) 85%, var(--tr-ink));
-        --tr-line-w: 1.8;
-        --tr-area-op: 0.12;
-    }
-
-    /* lapis · shape 2: Lapis on vellum */
-    [data-theme='lapis'] [data-ct-shape='2'] .kp-kpi--trend {
-        --tr-plate: color-mix(in oklch, var(--foreground) 92%, var(--background));
-        --tr-ink: var(--background);
-        --tr-mute: color-mix(in oklch, var(--background) 80%, var(--foreground));
-        --tr-label-font: var(--theme-font-display);
-        --tr-label-case: none;
-        --tr-label-style: italic;
-        --tr-label-size: 0.875rem;
-        --tr-plot-frame: inset 0 0 0 1px var(--primary);
-        --tr-plot-radius: 2px;
-        --tr-line-override: color-mix(in oklch, var(--background) 80%, var(--chart-1));
-        --tr-line-w: 1.8;
-        --tr-area-op: 0.1;
-    }
-
-    /* lapis · shape 3: The manuscript margin */
-    [data-theme='lapis'] [data-ct-shape='3'] .kp-kpi--trend {
-        --tr-radius: 0;
-        --tr-pat:
-            linear-gradient(var(--primary), var(--primary)) 0.35rem 0 / 1px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0.55rem 0 / 1px 100% no-repeat;
-        --tr-label-font: var(--theme-font-display);
-        --tr-label-case: none;
-        --tr-label-style: italic;
-        --tr-label-size: 0.875rem;
-        --tr-num-font: var(--theme-font-display);
-        --tr-plot-frame: inset 0 -1px 0 var(--primary);
-        --tr-plot-radius: 0;
-        --tr-line-w: 1.4;
-        --tr-area-op: 0.08;
     }
 
     /* nostromo · shape 1: The CRT trace */
@@ -1632,47 +1527,6 @@
         --tr-load-anim: tr-slide 1500ms steps(5) infinite;
     }
 
-    /* shade-light · loading 1: Pencil in the shade */
-    [data-theme='shade-light'] [data-ct-loading='1'] .kp-kpi--trend {
-        --tr-load: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
-    }
-
-    /* shade-light · loading 2: The leaf shade */
-    [data-theme='shade-light'] [data-ct-loading='2'] .kp-kpi--trend {
-        --tr-load: radial-gradient(ellipse, color-mix(in oklch, var(--foreground) 16%, transparent), transparent 70%) -50% 50% / 50% 140% no-repeat;
-        --tr-load-anim: tr-slide 3200ms ease-in-out infinite;
-    }
-
-    /* shade-light · loading 3: Leaves sway */
-    [data-theme='shade-light'] [data-ct-loading='3'] .kp-kpi--trend {
-        --tr-load:
-            radial-gradient(circle at 30% 40%, color-mix(in oklch, var(--foreground) 12%, transparent), transparent 25%),
-            radial-gradient(circle at 70% 60%, color-mix(in oklch, var(--foreground) 10%, transparent), transparent 22%);
-        --tr-load-anim: tr-sway 2200ms ease-in-out infinite alternate;
-    }
-
-    /* shade-dark · loading 1: Silverpoint */
-    [data-theme='shade-dark'] [data-ct-loading='1'] .kp-kpi--trend {
-        --tr-load: repeating-linear-gradient(-45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 1px, transparent 1px 4px) -50% 0 / 30%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2400ms ease-in-out infinite;
-    }
-
-    /* shade-dark · loading 2: The lamp */
-    [data-theme='shade-dark'] [data-ct-loading='2'] .kp-kpi--trend {
-        --tr-load: radial-gradient(ellipse at 30% 50%, color-mix(in oklch, var(--warning) 40%, transparent), transparent 70%);
-        --tr-load-anim: tr-breathe 2400ms ease-in-out infinite alternate;
-    }
-
-    /* shade-dark · loading 3: The candle */
-    [data-theme='shade-dark'] [data-ct-loading='3'] .kp-kpi--trend {
-        --tr-load: radial-gradient(ellipse 14px 20px at 50% 60%, color-mix(in oklch, var(--warning) 55%, transparent), transparent 70%) 85% 50% / 40px
-            100% no-repeat;
-        --tr-load-anim: tr-flick 1300ms steps(1) infinite;
-    }
-
     /* retro · loading 1: The progress blocks */
     [data-theme='retro'] [data-ct-loading='1'] .kp-kpi--trend {
         --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) 3px calc(100% - 3px) / 0% 10px no-repeat;
@@ -1715,30 +1569,6 @@
             linear-gradient(var(--primary), var(--primary)) 50% 50% / 30% 40% no-repeat,
             linear-gradient(var(--foreground), var(--foreground)) 100% 50% / 30% 40% no-repeat;
         --tr-load-anim: tr-flap 900ms steps(3) infinite;
-    }
-
-    /* lapis · loading 1: The girih tile */
-    [data-theme='lapis'] [data-ct-loading='1'] .kp-kpi--trend {
-        --tr-load: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 65%, transparent) 50%, transparent 60%) -50% 0 / 40%
-            100% no-repeat;
-        --tr-load-anim: tr-slide 2200ms ease-in-out infinite;
-    }
-
-    /* lapis · loading 2: The gold leaf is laid */
-    [data-theme='lapis'] [data-ct-loading='2'] .kp-kpi--trend {
-        --tr-load: linear-gradient(color-mix(in oklch, var(--primary) 70%, transparent), color-mix(in oklch, var(--primary) 70%, transparent)) 0
-            100% / 0% 4px no-repeat;
-        --tr-load-anim: tr-rule 2200ms ease-in-out infinite;
-    }
-
-    /* lapis · loading 3: The star turns */
-    [data-theme='lapis'] [data-ct-loading='3'] .kp-kpi--trend {
-        --tr-load: repeating-conic-gradient(
-            from 0deg at 50% 50%,
-            color-mix(in oklch, var(--primary) 35%, transparent) 0 6deg,
-            transparent 6deg 45deg
-        );
-        --tr-load-anim: tr-spin 6000ms linear infinite;
     }
 
     /* nostromo · loading 1: The CRT trace */
@@ -2051,42 +1881,6 @@
         --tr-arr-num: tr-n-skew 450ms cubic-bezier(0.7, 0, 0.3, 1) both;
     }
 
-    /* shade-light · arrival 1: At once */
-    [data-theme='shade-light'] [data-ct-arrival='1'] .kp-kpi--trend {
-        --tr-arr-line: none;
-        --tr-arr-num: none;
-    }
-
-    /* shade-light · arrival 2: Drawn in pencil */
-    [data-theme='shade-light'] [data-ct-arrival='2'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-wipe 1400ms ease-in-out both;
-        --tr-arr-num: tr-n-wipe 1400ms ease-in-out both;
-    }
-
-    /* shade-light · arrival 3: Out of the shade */
-    [data-theme='shade-light'] [data-ct-arrival='3'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-rise 1200ms ease-out both;
-        --tr-arr-num: tr-n-rise 1200ms ease-out both;
-    }
-
-    /* shade-dark · arrival 1: At once */
-    [data-theme='shade-dark'] [data-ct-arrival='1'] .kp-kpi--trend {
-        --tr-arr-line: none;
-        --tr-arr-num: none;
-    }
-
-    /* shade-dark · arrival 2: Silverpoint */
-    [data-theme='shade-dark'] [data-ct-arrival='2'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-wipe 1600ms ease-in-out both;
-        --tr-arr-num: tr-n-wipe 1600ms ease-in-out both;
-    }
-
-    /* shade-dark · arrival 3: The lamp is lit */
-    [data-theme='shade-dark'] [data-ct-arrival='3'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-mid 1000ms ease-out both;
-        --tr-arr-num: tr-n-rise 1000ms ease-out both;
-    }
-
     /* retro · arrival 1: At once */
     [data-theme='retro'] [data-ct-arrival='1'] .kp-kpi--trend {
         --tr-arr-line: none;
@@ -2121,24 +1915,6 @@
     [data-theme='grotesk'] [data-ct-arrival='3'] .kp-kpi--trend {
         --tr-arr-line: tr-a-rise 450ms steps(3) both;
         --tr-arr-num: tr-n-rise 450ms steps(3) both;
-    }
-
-    /* lapis · arrival 1: At once */
-    [data-theme='lapis'] [data-ct-arrival='1'] .kp-kpi--trend {
-        --tr-arr-line: none;
-        --tr-arr-num: none;
-    }
-
-    /* lapis · arrival 2: Illuminated */
-    [data-theme='lapis'] [data-ct-arrival='2'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-mid 1300ms ease-out both;
-        --tr-arr-num: tr-n-rise 1300ms ease-out both;
-    }
-
-    /* lapis · arrival 3: Inked */
-    [data-theme='lapis'] [data-ct-arrival='3'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-wipe 1500ms ease-in-out both;
-        --tr-arr-num: tr-n-wipe 1500ms ease-in-out both;
     }
 
     /* nostromo · arrival 1: At once */
@@ -2491,41 +2267,6 @@
         --tr-note-border: 1px solid currentColor;
     }
 
-    /* shade-light · tone 1: Pencil in the shade */
-    [data-theme='shade-light'] [data-ct-tone='1'] .kp-kpi--trend {
-        --tr-delta-radius: 3px;
-        --tr-delta-shadow: 0 2px 4px color-mix(in oklch, var(--foreground) 22%, transparent);
-    }
-
-    /* shade-light · tone 2: The leaf shade */
-    [data-theme='shade-light'] [data-ct-tone='2'] .kp-kpi--trend {
-        --tr-delta-radius: 999px;
-    }
-
-    /* shade-light · tone 3: The pinned note */
-    [data-theme='shade-light'] [data-ct-tone='3'] .kp-kpi--trend {
-        --tr-delta-radius: 2px;
-        --tr-delta-shadow: 1px 2px 0 color-mix(in oklch, var(--foreground) 25%, transparent);
-        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
-    }
-
-    /* shade-dark · tone 1: Silverpoint */
-    [data-theme='shade-dark'] [data-ct-tone='1'] .kp-kpi--trend {
-        --tr-delta-radius: 2px;
-    }
-
-    /* shade-dark · tone 2: The reading lamp */
-    [data-theme='shade-dark'] [data-ct-tone='2'] .kp-kpi--trend {
-        --tr-delta-radius: 999px;
-    }
-
-    /* shade-dark · tone 3: The red lamp */
-    [data-theme='shade-dark'] [data-ct-tone='3'] .kp-kpi--trend {
-        --tr-delta-radius: 999px;
-        --tr-delta-shadow: 0 0 6px color-mix(in oklch, var(--foreground) 25%, transparent);
-        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 5px no-repeat;
-    }
-
     /* retro · tone 1: The 1995 dialog */
     [data-theme='retro'] [data-ct-tone='1'] .kp-kpi--trend {
         --tr-delta-radius: 0;
@@ -2571,23 +2312,6 @@
         --tr-tone-num-bg: var(--tr-tc);
         --tr-tone-num-fg: var(--tr-tf);
         --tr-tone-num-pad: 0.25em;
-    }
-
-    /* lapis · tone 1: The girih tile */
-    [data-theme='lapis'] [data-ct-tone='1'] .kp-kpi--trend {
-        --tr-delta-radius: 0;
-    }
-
-    /* lapis · tone 2: Lapis on vellum */
-    [data-theme='lapis'] [data-ct-tone='2'] .kp-kpi--trend {
-        --tr-delta-radius: 2px;
-    }
-
-    /* lapis · tone 3: The rubric */
-    [data-theme='lapis'] [data-ct-tone='3'] .kp-kpi--trend {
-        --tr-delta-radius: 0;
-        --tr-delta-border: 1px solid var(--primary);
-        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 5px 100% no-repeat;
     }
 
     /* nostromo · tone 1: The CRT trace */
@@ -2901,42 +2625,6 @@
         --tr-live-area: tr-l-jolt 400ms steps(3);
     }
 
-    /* shade-light · live 1: Redrawn */
-    [data-theme='shade-light'] [data-ct-live='1'] .kp-kpi--trend {
-        --tr-live-line: none;
-        --tr-live-area: none;
-    }
-
-    /* shade-light · live 2: A breeze */
-    [data-theme='shade-light'] [data-ct-live='2'] .kp-kpi--trend {
-        --tr-live-line: tr-l-sink 900ms ease-in-out;
-        --tr-live-area: tr-l-sink 900ms ease-in-out;
-    }
-
-    /* shade-light · live 3: Pencilled again */
-    [data-theme='shade-light'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-retrace 1200ms ease-in-out;
-        --tr-live-area: none;
-    }
-
-    /* shade-dark · live 1: Redrawn */
-    [data-theme='shade-dark'] [data-ct-live='1'] .kp-kpi--trend {
-        --tr-live-line: none;
-        --tr-live-area: none;
-    }
-
-    /* shade-dark · live 2: A glint */
-    [data-theme='shade-dark'] [data-ct-live='2'] .kp-kpi--trend {
-        --tr-live-line: tr-l-flare 900ms ease-out;
-        --tr-live-area: none;
-    }
-
-    /* shade-dark · live 3: The page moves */
-    [data-theme='shade-dark'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-shift 900ms ease-in-out;
-        --tr-live-area: tr-l-shift 900ms ease-in-out;
-    }
-
     /* retro · live 1: Redrawn */
     [data-theme='retro'] [data-ct-live='1'] .kp-kpi--trend {
         --tr-live-line: none;
@@ -2971,24 +2659,6 @@
     [data-theme='grotesk'] [data-ct-live='3'] .kp-kpi--trend {
         --tr-live-line: tr-l-shift 300ms cubic-bezier(0.7, 0, 0.3, 1);
         --tr-live-area: tr-l-shift 300ms cubic-bezier(0.7, 0, 0.3, 1);
-    }
-
-    /* lapis · live 1: Redrawn */
-    [data-theme='lapis'] [data-ct-live='1'] .kp-kpi--trend {
-        --tr-live-line: none;
-        --tr-live-area: none;
-    }
-
-    /* lapis · live 2: Gilded */
-    [data-theme='lapis'] [data-ct-live='2'] .kp-kpi--trend {
-        --tr-live-line: tr-l-flare 1000ms ease-out;
-        --tr-live-area: none;
-    }
-
-    /* lapis · live 3: Inked again */
-    [data-theme='lapis'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-retrace 1300ms ease-in-out;
-        --tr-live-area: none;
     }
 
     /* nostromo · live 1: Redrawn */

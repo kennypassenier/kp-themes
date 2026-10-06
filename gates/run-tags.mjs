@@ -147,7 +147,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     );
     const env = envFor(level);
     if (level !== 'release' && level !== 'changed')
-        console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 22 at the release level) [scope-103]`);
+        console.log(`theme sweeps: ${NARROW_THEMES.join(', ')} (all 19 at the release level) [scope-103]`);
     if (args.dryRun) {
         if (pw) console.log(`tests: ${count(pw, env)}`);
         process.exit(0);

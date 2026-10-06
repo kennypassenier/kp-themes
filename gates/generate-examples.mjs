@@ -50,7 +50,6 @@ const SHEETS = [
     'brutalism-register.css',
     'titanium-register.css',
     'pastel-register.css',
-    'shade-light-register.css',
     'forest-register.css',
     'deco-register.css',
     'light-register.css',
@@ -62,8 +61,6 @@ const SHEETS = [
     'sepia-register.css',
     'solstice-register.css',
     'high-contrast-register.css',
-    'lapis-register.css',
-    'shade-dark-register.css',
 ];
 
 /**

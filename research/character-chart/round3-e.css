@@ -136,48 +136,11 @@
         padding-inline-start: 1rem;
     }
 
-    /* ══ lapis: while loading ═══════════════════════════════════════════ */
-
     /* The gilt brushstroke: a soft gold bar sweeps and back. */
-
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::before {
-        inset: calc(50% - 9px) auto auto -30%;
-        inline-size: 30%;
-        block-size: 18px;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            hsl(from var(--ccl-i) h s l / 0.85) 45%,
-            hsl(from var(--ccl-i) h s l / 0.85) 55%,
-            transparent
-        );
-    }
-
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::after {
-        inset: calc(50% - 1px) 6%;
-        block-size: 1px;
-        background: hsl(from var(--ccl-j) h s l / 0.3);
-    }
 
     /* The girih weave: two sets of gold lines drift diagonally past each other. */
 
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::before {
-        background: repeating-linear-gradient(45deg, hsl(from var(--ccl-i) h s l / 0.5) 0 2px, transparent 2px 16px);
-    }
-
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::after {
-        background: repeating-linear-gradient(-45deg, hsl(from var(--ccl-j) h s l / 0.5) 0 2px, transparent 2px 16px);
-    }
-
     /* The gold dust: fine flecks drift slowly down the page. */
-
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::before {
-        background: radial-gradient(circle, hsl(from var(--ccl-i) h s l / 0.55) 1.2px, transparent 1.6px) 0 0 / 14px 14px;
-    }
-
-    [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::after {
-        background: radial-gradient(circle, hsl(from var(--ccl-j) h s l / 0.45) 1px, transparent 1.4px) 7px 7px / 14px 14px;
-    }
 
     /* ══ nostromo ═══════════════════════════════════════════════════════ */
 
@@ -311,26 +274,6 @@
 
         [data-theme='grotesk'] [data-cc-loading='r3-gr-load-3'] .kp-chart__state[data-kp-state='loading']::after {
             animation: r3e-gr-marker 2.4s steps(6, jump-none) infinite;
-        }
-
-        [data-theme='lapis'] [data-cc-loading='r3-la-load-1'] .kp-chart__state[data-kp-state='loading']::before {
-            animation: r3e-la-brush 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::before {
-            animation: r3e-la-weave-a 3.2s linear infinite;
-        }
-
-        [data-theme='lapis'] [data-cc-loading='r3-la-load-2'] .kp-chart__state[data-kp-state='loading']::after {
-            animation: r3e-la-weave-b 3.2s linear infinite;
-        }
-
-        [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::before {
-            animation: r3e-la-dust 3.6s linear infinite;
-        }
-
-        [data-theme='lapis'] [data-cc-loading='r3-la-load-3'] .kp-chart__state[data-kp-state='loading']::after {
-            animation: r3e-la-dust2 3.6s linear infinite;
         }
 
         [data-theme='nostromo'] [data-cc-loading='r3-no-load-1'] .kp-chart__state[data-kp-state='loading']::before {

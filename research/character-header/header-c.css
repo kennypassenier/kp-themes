@@ -662,58 +662,7 @@
         box-shadow: inset 0 0 0 2px var(--primary);
     }
 
-    /* ══════════════════════════════════════════════════ shade-light ══ */
-
     /* --- Shape --------------------------------------------------------- */
-
-    /* 1, pencil in the shade: a pencil sketch on paper in soft shade, the
-       title in a hand-drawn weight, the actions as lifted paper chips. */
-    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header {
-        --ph-plate: var(--card);
-        --ph-ink: var(--card-foreground);
-        --ph-frame: 1px solid var(--border-strong);
-        --ph-pat: repeating-linear-gradient(60deg, color-mix(in oklch, var(--foreground) 4%, transparent) 0 1px, transparent 1px 7px);
-    }
-    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, serif);
-        --ph-title-style: italic;
-    }
-    [data-theme='shade-light'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid var(--border-strong);
-        --ph-btn-shadow: 0 2px 3px 0 color-mix(in oklch, var(--foreground) 16%, transparent);
-    }
-
-    /* 2, the leaf shade: dappled leaf shade over the header, a soft line
-       under the title, the actions plain on the paper. */
-    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header {
-        --ph-plate: var(--card);
-        --ph-ink: var(--card-foreground);
-        --ph-frame: 1px solid var(--border-strong);
-        --ph-pat:
-            radial-gradient(circle at 18% 20%, color-mix(in oklch, var(--foreground) 7%, transparent) 0 11%, transparent 12%),
-            radial-gradient(circle at 72% 65%, color-mix(in oklch, var(--foreground) 6%, transparent) 0 9%, transparent 10%);
-    }
-    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, serif);
-    }
-    [data-theme='shade-light'] [data-ph-shape='2'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
-
-    /* 3, the window light: a shaft of window light falls across the header
-       from the left, the title in soft graphite, the actions plain. */
-    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header {
-        --ph-plate: var(--card);
-        --ph-ink: var(--card-foreground);
-        --ph-frame: 1px solid var(--border-strong);
-        --ph-pat: linear-gradient(100deg, color-mix(in oklch, var(--primary) 10%, transparent) 0 22%, transparent 38%);
-    }
-    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, serif);
-    }
-    [data-theme='shade-light'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 1px solid var(--border-strong);
-    }
 
     /* --- The overflow menu's open and its mirrored close ---------------- */
 
@@ -752,66 +701,7 @@
                 clip-path: inset(0 0 0% 0);
             }
         }
-
-        [data-theme='shade-light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-shadelight-pencil 240ms ease-in-out;
-        }
-        [data-theme='shade-light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-shadelight-pencil 240ms ease-in-out reverse;
-        }
-        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel] {
-            --ph-menu-origin: bottom right;
-        }
-        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-shadelight-shade 260ms ease-out;
-        }
-        [data-theme='shade-light'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-shadelight-shade 260ms ease-out reverse;
-        }
-        [data-theme='shade-light'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-shadelight-breeze 300ms ease-in-out;
-        }
-        [data-theme='shade-light'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-shadelight-breeze 300ms ease-in-out reverse;
-        }
     }
 
     /* --- Hover, focus, press --------------------------------------------- */
-
-    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        transform: translateY(-1px);
-        --ph-btn-shadow: 0 3px 4px 0 color-mix(in oklch, var(--foreground) 20%, transparent);
-    }
-    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='shade-light'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-
-    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 94%, var(--foreground) 6%);
-    }
-    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='shade-light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        background-color: color-mix(in oklch, var(--ph-btn-bg, var(--secondary)) 89%, var(--foreground) 11%);
-    }
-
-    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: 0 1px 0 0 var(--border-strong);
-        transform: translateY(-1px);
-    }
-    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='shade-light'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        transform: translateY(1px);
-        box-shadow: none;
-    }
 }

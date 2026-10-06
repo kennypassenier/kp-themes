@@ -1,13 +1,12 @@
 # @kp-soft/themes
 
-The house themes as a shared package: twenty-two `data-theme` palettes
-— ten light (formal, light, pastel, forest, high-contrast, sepia,
-brutalism, shade-light, retro, grotesk) and twelve dark (dark, titanium,
-cyberpunk, synthwave, terminal, blueprint, solstice, deco, phantom,
-shade-dark, lapis, nostromo) — as plain CSS custom properties, the
+The house themes as a shared package: nineteen `data-theme` palettes
+— nine light (formal, light, pastel, forest, high-contrast, sepia,
+brutalism, retro, grotesk) and ten dark (dark, titanium, cyberpunk,
+synthwave, terminal, blueprint, solstice, deco, phantom, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
 form fields, print), twenty-one components, a theme picker, and a register
-for every one of the twenty-two themes — the opt-in stylesheet that
+for every one of the nineteen themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
@@ -100,7 +99,7 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the twenty-two themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the nineteen themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
 @import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
@@ -135,7 +134,7 @@ under `fonts/` (latin for every family, Arabic and Japanese where a theme
 needs them), each with its licence beside it. Without that file the
 stacks fall back to a system face and the page still reads.
 
-Seven families carry a Reserved Font Name under the OFL, and a subset is
+Four families carry a Reserved Font Name under the OFL, and a subset is
 a Modified Version that may not carry that name — not even as part of a
 new one. They ship renamed, and the tokens name the renamed family first
 and the original after it, for a reader who has the original installed:
@@ -145,7 +144,6 @@ and the original after it, for a reader who has the original installed:
 | `KP Tech Mono`      | Share Tech Mono | terminal, the registers |
 | `KP Deco Sans`      | Josefin Sans    | deco                    |
 | `KP Ticker Mono`    | IBM Plex Mono   | dark                    |
-| `KP Shade Sans`     | Source Sans 3   | shade-light, shade-dark |
 | `KP Outrun Display` | Orbitron        | synthwave               |
 
 `gates/check-fonts.mjs` reads every shipped file's name table and refuses
@@ -185,9 +183,9 @@ refuses a theme that leaves a hook unanswered.
 ### `data-theme` and the `.dark` class
 
 A theme is active when `<html data-theme="…">` carries its name; without
-the attribute the `:root` fallback is `formal`. The twelve dark themes
+the attribute the `:root` fallback is `formal`. The ten dark themes
 (`dark`, `titanium`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`,
-`solstice`, `deco`, `phantom`, `shade-dark`, `lapis`, `nostromo`)
+`solstice`, `deco`, `phantom`, `nostromo`)
 additionally need the `.dark` class on
 `<html>` so existing `dark:` variants keep working — `applyTheme()` sets
 both. To avoid a flash before React mounts, call `initializeTheme()`
@@ -235,13 +233,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Twenty-two themes, twenty-two registers, one picker: which of them does
+Nineteen themes, nineteen registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
-`dist/kp-themes.css` is twenty-nine stylesheets concatenated: the palette,
-the components, **all twenty-two registers**, layout and utilities. Every
+`dist/kp-themes.css` is twenty-three stylesheets concatenated: the palette,
+the components, **all nineteen registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -636,7 +634,7 @@ you do not use shadcn. The class-based hooks (`.microlabel`, `.fx-notch`,
 
 ## The same themes outside the browser
 
-The twenty-two themes also exist as desktop, editor, terminal and dashboard
+The themes also exist as desktop, editor, terminal and dashboard
 themes. Each lives in a repository of its own since 8.0.0:
 
 | Repository                                                                 | What it holds                                                                                 |
@@ -831,8 +829,8 @@ beside it.
 The labels are English in the token source since 3.0.0 — "Formal",
 "Light", "Dark", "High contrast", "Blueprint", "Solstice", "Forest",
 and the rest are names; the thirteen themes of 3.1.0 arrived with English
-labels ("Art Deco", "Shade (light)", "Shade (dark)"). The interface names
-(`formal`, `forest`, `shade-light`) did not change. Override any label in
+labels ("Art Deco"). The interface names (`formal`, `forest`) did not
+change. Override any label in
 either channel:
 
 ```jsx

@@ -611,7 +611,7 @@ test.describe(
 /* ───────────────────────────── 6 · room around a call to action's plate */
 
 // Forest stands for the registers that draw a plate. Until 2026-10-04
-// solstice, shade-dark, lapis and nostromo ran the same test; Kenny trimmed
+// solstice, Shade (dark), Lapis and nostromo ran the same test; Kenny trimmed
 // them (form v9, trim-copies): their plates are in the approved screenshots.
 for (const theme of ['forest']) {
     test.describe(

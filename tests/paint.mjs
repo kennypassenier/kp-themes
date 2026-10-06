@@ -92,7 +92,7 @@ export const bootGone = (page) => expect(page.locator('.kp-boot')).toHaveCount(0
  * finish the animation first.
  *
  * That is the shape that failed in Kenny's verify run of 2026-09-10:
- * `register-shade-light.spec.mjs` read `animationName` on the first word
+ * `register-Shade (light).spec.mjs` read `animationName` on the first word
  * one moment after the page loaded and got `""`. Three specs read a
  * running keyframe that way; four others already did it correctly, by
  * arming a listener in an init script before the page existed. This is

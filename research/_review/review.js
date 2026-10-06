@@ -90,6 +90,368 @@ const NEXT = (() => {
         return '';
     }
 })();
+/*
+ * Embed mode (Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande
+ * laadschermen per thema te tonen, zodat ik dan bij andere thema's ook kan
+ * kiezen welke de beste zijn … Hetzelfde doen we dan per familie van
+ * animaties of keuzes"). research/families/ shows one family of motion
+ * (loading, arrival, …) of every component side by side, each component's
+ * own demo in an iframe at `demo.html?embed=<aspect>&theme=<theme>`:
+ *
+ * - only the demo's combination of its picks is shown, the element marked
+ *   `data-review-preview` (everything else on the page is set aside, also what
+ *   the catalogue shell adds after this module);
+ * - the demo's own controls for that aspect are pressed, the ones whose
+ *   `data-review-plays` names it, the same buttons the dialog's autoplay
+ *   presses; with `loop=1` they are pressed again whenever the motion has
+ *   ended (an arrival, a live update), a looping picture is left alone;
+ * - `speed=<1|0.5|0.25>` presses the demo's own speed button;
+ * - the frame tells its parent its height, the picked option's name (from the
+ *   demo's own "Your combination" words) and key (the preview's
+ *   `data-<prefix>-<aspect>` attribute), and takes `replay` and `speed`
+ *   messages back; a key pressed inside it is handed to the parent, so the
+ *   review dialog's keys keep working when the focus sits in a frame.
+ *
+ * Without `embed` in the address nothing here runs, and the review kit
+ * below (bar, dialog, answer) is built as always; with it, the kit stops
+ * here, since an embedded copy is never judged on its own.
+ */
+const EMBED = params.get('embed');
+if (EMBED) {
+    embed(EMBED);
+    await new Promise(() => {});
+}
+
+/** Runs one demo as a frame of research/families/ (see above). @param {string} aspect */
+function embed(aspect) {
+    root.setAttribute('data-review-embed', aspect);
+    const style = document.createElement('style');
+    style.textContent = `
+        html[data-review-embed] body { margin: 0; padding: 1rem; min-height: 0; }
+        html[data-review-embed] body :not([data-rv-embed-path], [data-rv-embed-shown], [data-rv-embed-shown] *, script, style, link) { display: none !important; }
+        html[data-review-embed] [data-rv-embed-path] { display: block !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
+            max-width: none !important; min-height: 0 !important; inline-size: auto !important; background: none !important; box-shadow: none !important; }
+        html[data-review-embed] [data-rv-embed-shown] { margin: 0 !important; }`;
+    document.head.append(style);
+    const preview = () => /** @type {HTMLElement | null} */ (document.querySelector('[data-review-preview]'));
+    /** Marks the way from the body down to the preview, so the style above sets everything else aside. */
+    const mark = () => {
+        const shown = preview();
+        if (!shown) return;
+        for (const el of document.querySelectorAll('[data-rv-embed-path]')) if (!el.contains(shown)) el.removeAttribute('data-rv-embed-path');
+        shown.setAttribute('data-rv-embed-shown', '');
+        for (let el = shown.parentElement; el && el !== document.body; el = el.parentElement)
+            if (!el.hasAttribute('data-rv-embed-path')) el.setAttribute('data-rv-embed-path', '');
+    };
+    mark();
+    new MutationObserver(mark).observe(document.body, { childList: true });
+
+    const loop = params.get('loop') === '1';
+    /** The words of the buttons pressed for this aspect, told to the parent. @type {string[]} */
+    let played = [];
+    /** The demo's own buttons for this aspect, pressed in the page's order. */
+    const press = () => {
+        played = [];
+        for (const b of document.querySelectorAll('[data-review-plays]'))
+            if ((b.getAttribute('data-review-plays') || '').split(/\s+/).includes(aspect)) {
+                /** @type {HTMLElement} */ (b).click();
+                played.push((b.textContent || '').replace(/\s+/g, ' ').trim());
+            }
+        // Buttons only an embed presses (a state the dialog leaves to the
+        // reviewer, a toggle it must not flip), pressed once: a toggle stays on.
+        for (const b of document.querySelectorAll('[data-review-embed-plays]'))
+            if ((b.getAttribute('data-review-embed-plays') || '').split(/\s+/).includes(aspect)) {
+                if (b.getAttribute('aria-pressed') !== 'true') /** @type {HTMLElement} */ (b).click();
+                played.push((b.textContent || '').replace(/\s+/g, ' ').trim());
+            }
+        const shown = preview();
+        if (shown) requestAnimationFrame(() => restartMotion(shown));
+    };
+    const moving = () => (preview()?.getAnimations({ subtree: true }) || []).some((a) => a.playState === 'running');
+    let quiet = 0;
+    const tick = () => {
+        // Pressed again once the motion has stood still for a moment (two looks, 0.8 s apart).
+        quiet = moving() ? 0 : quiet + 1;
+        if (quiet >= 2) {
+            quiet = 0;
+            press();
+        }
+    };
+
+    /** @type {Element | undefined} */
+    let words;
+    /** The picked option's name, read from the demo's "Your combination" words ("<label>: <n>, <name> · …"). */
+    const nameOf = () => {
+        const choices = (() => {
+            try {
+                return JSON.parse(document.querySelector('[data-review-choices]')?.getAttribute('data-review-choices') || '[]');
+            } catch {
+                return [];
+            }
+        })();
+        const label = choices.find((/** @type {{ id: string }} */ c) => c.id === aspect)?.label;
+        words ??= [...document.querySelectorAll('p, span, div')].find((el) => [...el.attributes].some((a) => /^data-[a-z]+-picks$/.test(a.name)));
+        if (!label || !words) return '';
+        const part = (words.textContent || '').split(' · ').find((p) => p.startsWith(`${label}: `));
+        return part
+            ? part
+                  .slice(label.length + 2)
+                  .replace(/^\d+, /, '')
+                  .replace(/ \(not ticked yet\)$/, '')
+                  .trim()
+            : '';
+    };
+    /** The picked option's key: the preview's own `data-<prefix>-<aspect>`, or the first wrapper inside it that carries one. */
+    const keyOf = () => {
+        const shown = preview();
+        if (!shown) return '';
+        const attr = new RegExp(`^data-[a-z]+-${aspect.replace(/[^a-z0-9-]/g, '')}$`);
+        for (const el of [shown, ...shown.querySelectorAll('*')]) for (const a of el.attributes) if (attr.test(a.name) && a.value) return a.value;
+        return '';
+    };
+    /*
+     * The pointer, played (`point=1`, the hover family): a script cannot hover
+     * or press, so every rule of the page that answers `:hover`,
+     * `:focus-visible`/`:focus` or `:active` is copied with an attribute in
+     * the pseudo-class's place, and the attributes walk the preview's
+     * pointable parts, each in turn pointed at, focused and pressed. A demo
+     * with a button of its own for the aspect alone (tiles' Pointed at) plays
+     * that instead. The frame tells its parent which part is in which state.
+     */
+    let pointer = '';
+    let pace = Number(params.get('speed')) || 1;
+    const PSEUDO = /** @type {[string, RegExp][]} */ ([
+        ['hover', /:hover\b/g],
+        ['focus', /:focus-visible\b|:focus(?![-\w])/g],
+        ['press', /:active\b/g],
+    ]);
+    const ANY_PSEUDO = /:hover\b|:focus-visible\b|:focus(?![-\w])|:active\b/;
+    const ownButton = () =>
+        [...document.querySelectorAll('[data-review-plays]')].some((b) => (b.getAttribute('data-review-plays') || '').trim() === aspect);
+    const playPointer = () => {
+        // The demo's own sheets (research/…) come first: an aspect's answer to
+        // the pointer is drawn there, the shared components' answer after it.
+        /** @type {Set<string>} */
+        const own = new Set();
+        /** @type {Set<string>} */
+        const shared = new Set();
+        /** @type {Set<string>} */
+        let subjects = own;
+        /** The element a pseudo-class sits on: the selector up to it, without the other states. @param {string} selectorText */
+        const collect = (selectorText) => {
+            let depth = 0;
+            let from = 0;
+            const parts = [];
+            for (let i = 0; i < selectorText.length; i++) {
+                const c = selectorText[i];
+                if (c === '(') depth++;
+                else if (c === ')') depth--;
+                else if (c === ',' && depth === 0) {
+                    parts.push(selectorText.slice(from, i));
+                    from = i + 1;
+                }
+            }
+            parts.push(selectorText.slice(from));
+            for (const part of parts) {
+                const at = part.search(ANY_PSEUDO);
+                if (at < 0) continue;
+                const subject = part.slice(0, at).replace(new RegExp(ANY_PSEUDO.source, 'g'), '').trim();
+                if (subject && !/[>+~(&]$/.test(subject)) subjects.add(subject);
+            }
+        };
+        const rewrite = (/** @type {string} */ text) => PSEUDO.reduce((t, [name, re]) => t.replace(re, `[data-rv-${name}]`), text);
+        /** @param {CSSRuleList} rules @returns {string} */
+        const walk = (rules) => {
+            let css = '';
+            for (const rule of rules) {
+                if (rule instanceof CSSStyleRule) {
+                    if (!ANY_PSEUDO.test(rule.cssText)) continue;
+                    css += rewrite(rule.cssText);
+                    collect(rule.selectorText);
+                } else if (rule instanceof CSSMediaRule || rule instanceof CSSSupportsRule) {
+                    const inner = walk(rule.cssRules);
+                    if (inner) css += `@${rule instanceof CSSMediaRule ? 'media' : 'supports'} ${rule.conditionText}{${inner}}`;
+                } else if (rule instanceof CSSLayerBlockRule) {
+                    const inner = walk(rule.cssRules);
+                    if (inner) css += `@layer ${rule.name}{${inner}}`;
+                }
+            }
+            return css;
+        };
+        let css = '';
+        for (const sheet of document.styleSheets)
+            try {
+                subjects = sheet.href && !new URL(sheet.href).pathname.includes('/research/') ? shared : own;
+                css += walk(sheet.cssRules);
+            } catch {
+                // A sheet the page may not read is left as it is.
+            }
+        const played = document.createElement('style');
+        played.textContent = css;
+        document.head.append(played);
+
+        const shown = preview();
+        if (!shown) return;
+        const visible = (/** @type {Element} */ el) => el.getClientRects().length > 0 && el.getBoundingClientRect().width > 0;
+        const matches = (/** @type {Element} */ el, /** @type {Set<string>} */ set) =>
+            [...set].some((s) => {
+                try {
+                    return el.matches(s);
+                } catch {
+                    return false;
+                }
+            });
+        const pointable = () => {
+            const all = [shown, ...shown.querySelectorAll('*')].filter(visible);
+            const reachable = (/** @type {Element[]} */ els) =>
+                els.filter((el) => el.matches('a[href], button, input, select, textarea, [tabindex], [role="button"], [role="menuitem"]'));
+            const ranked = (/** @type {Set<string>} */ set) => {
+                const hit = all.filter((el) => matches(el, set));
+                return [...reachable(hit), ...hit.filter((el) => !reachable([el]).length)];
+            };
+            return [...new Set([...ranked(own), ...ranked(shared)])].slice(0, 4);
+        };
+        const nameOfPart = (/** @type {HTMLElement} */ el) => {
+            const words = (el.getAttribute('aria-label') || el.innerText || '').split('\n').find((line) => line.trim()) || el.tagName.toLowerCase();
+            return words.trim().slice(0, 32);
+        };
+        const STEPS = /** @type {[string, string, number][]} */ ([
+            ['hover', 'pointed at', 1500],
+            ['focus', 'keyboard focus', 1500],
+            ['press', 'pressed', 700],
+            ['', 'away', 700],
+        ]);
+        let part = 0;
+        let step = 0;
+        const next = () => {
+            for (const el of document.querySelectorAll('[data-rv-hover], [data-rv-focus], [data-rv-press]'))
+                for (const [name] of PSEUDO) el.removeAttribute(`data-rv-${name}`);
+            const parts = pointable();
+            const el = /** @type {HTMLElement | undefined} */ (parts[part % Math.max(parts.length, 1)]);
+            const [state, words, ms] = STEPS[step];
+            if (el && state) {
+                el.setAttribute(`data-rv-${state}`, '');
+                // A press is pointed at and focused as well, as a real one is.
+                if (state === 'press') el.setAttribute('data-rv-hover', '');
+            }
+            pointer = el ? `${nameOfPart(el)}: ${words}` : 'nothing here answers the pointer';
+            tell();
+            step = (step + 1) % STEPS.length;
+            if (step === 0) part++;
+            setTimeout(next, ms / pace);
+        };
+        next();
+    };
+
+    let told = '';
+    let telling = 0;
+    /** Tells the parent what changed, at most once a frame. */
+    const tell = () => {
+        if (telling || parent === window) return;
+        telling = requestAnimationFrame(() => {
+            telling = 0;
+            const shown = preview();
+            if (!shown) return;
+            const height = Math.ceil(shown.getBoundingClientRect().bottom + scrollY) + 16;
+            const news = { type: 'rv-embed', aspect, height, name: nameOf(), key: keyOf(), pointer, played, found: true };
+            if (JSON.stringify(news) === told) return;
+            told = JSON.stringify(news);
+            parent.postMessage(news, location.origin);
+        });
+    };
+
+    addEventListener('message', (event) => {
+        if (event.origin !== location.origin || event.source !== parent) return;
+        const { type, value } = event.data || {};
+        if (type === 'rv-embed-replay') press();
+        else if (type === 'rv-embed-speed') {
+            pace = Number(value) || 1;
+            pressSpeed(String(value));
+        }
+    });
+    // A key pressed in the frame belongs to the page around it (the review
+    // dialog's keys, wherever the focus sits).
+    addEventListener(
+        'keydown',
+        (event) => {
+            if (parent === window) return;
+            event.preventDefault();
+            event.stopPropagation();
+            const { key, code, shiftKey, altKey, ctrlKey, metaKey } = event;
+            parent.postMessage({ type: 'rv-embed-key', key, code, shiftKey, altKey, ctrlKey, metaKey }, location.origin);
+        },
+        true,
+    );
+
+    /**
+     * The decided picks shown, whatever the demo itself ticks by default: the
+     * demo's `decided.json` (one per character demo, the preview's key per
+     * theme and aspect). A key that is one of the aspect's options is played
+     * the way the dialog plays a tick, a `review:choice` on the demo's
+     * section, so its words follow; any other key (a later round's own key)
+     * is written on the preview's `data-<prefix>-<aspect>` itself.
+     */
+    const applyDecided = async () => {
+        try {
+            const response = await fetch(new URL('decided.json', location.href));
+            if (!response.ok) return;
+            const picks = (await response.json()).picks?.[root.getAttribute('data-theme') || 'formal'] || {};
+            const section = /** @type {HTMLElement | null} */ (document.querySelector('[data-review-item]'));
+            /** @type {{ id: string, options: { value: string }[] }[]} */
+            const choices = JSON.parse(section?.getAttribute('data-review-choices') || '[]');
+            for (const [id, raw] of Object.entries(picks)) {
+                const value = String(raw);
+                if (choices.find((c) => c.id === id)?.options.some((o) => o.value === value))
+                    section?.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id, value } }));
+                else {
+                    const shown = preview();
+                    const attr = new RegExp(`^data-[a-z]+-${id.replace(/[^a-z0-9-]/g, '')}$`);
+                    const carrier = shown && [shown, ...shown.querySelectorAll('*')].find((el) => [...el.attributes].some((a) => attr.test(a.name)));
+                    const name = carrier && [...carrier.attributes].find((a) => attr.test(a.name))?.name;
+                    if (carrier && name && carrier.getAttribute(name) !== value) carrier.setAttribute(name, value);
+                }
+            }
+        } catch {
+            // No decided picks: the demo's own ticks stand.
+        }
+    };
+
+    const start = async () => {
+        await applyDecided();
+        mark();
+        if (!preview() && parent !== window) parent.postMessage({ type: 'rv-embed', aspect, found: false }, location.origin);
+        const speed = params.get('speed');
+        if (speed) pressSpeed(speed);
+        press();
+        if (loop) setInterval(tick, 800);
+        if (params.get('point') === '1' && !ownButton()) playPointer();
+        const shown = preview();
+        if (shown) {
+            new ResizeObserver(tell).observe(shown);
+            // The words change when the demo redraws the combination.
+            nameOf();
+            new MutationObserver(tell).observe(words || shown, { subtree: true, characterData: true, childList: true });
+        }
+        tell();
+        setTimeout(tell, 600);
+    };
+    if (document.readyState === 'complete') void start();
+    else addEventListener('load', () => void start(), { once: true });
+}
+
+/*
+ * The other side of the embed: a key pressed inside an embedded demo arrives
+ * here and is played on this page, so the dialog's keys work wherever the
+ * focus sits.
+ */
+addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (event.origin !== location.origin || data.type !== 'rv-embed-key') return;
+    const { key, code, shiftKey, altKey, ctrlKey, metaKey } = data;
+    (document.activeElement || document.body).dispatchEvent(
+        new KeyboardEvent('keydown', { key, code, shiftKey, altKey, ctrlKey, metaKey, bubbles: true, cancelable: true }),
+    );
+});
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const ORDER = root.dataset.reviewThemes
     ? root.dataset.reviewThemes

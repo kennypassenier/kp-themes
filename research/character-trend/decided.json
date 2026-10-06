@@ -107,20 +107,6 @@
             "tone": "3",
             "live": "1"
         },
-        "shade-light": {
-            "shape": "1",
-            "loading": "1",
-            "arrival": "1",
-            "tone": "3",
-            "live": "1"
-        },
-        "shade-dark": {
-            "shape": "1",
-            "loading": "1",
-            "arrival": "2",
-            "tone": "3",
-            "live": "2"
-        },
         "retro": {
             "shape": "2",
             "loading": "1",
@@ -134,13 +120,6 @@
             "arrival": "2",
             "tone": "3",
             "live": "1"
-        },
-        "lapis": {
-            "shape": "2",
-            "loading": "1",
-            "arrival": "3",
-            "tone": "3",
-            "live": "2"
         },
         "nostromo": {
             "shape": "1",

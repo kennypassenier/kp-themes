@@ -205,7 +205,7 @@ test.describe('the application shell', { tag: ['@component:navigation', '@compon
             // nine the nav inside it; nothing in the base did. Measured on the old
             // code in firefox, the next element on the popover layer painted over
             // the open dropdown in six themes: light, forest, high-contrast,
-            // solstice, shade-light and shade-dark.
+            // solstice, Shade (light) and Shade (dark).
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.goto('/examples/app-shell.html');
             await page.evaluate(() => {

@@ -125,7 +125,7 @@ export const STATE = Object.freeze({
     // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
     // blur+brightness resolve, a one-shot optical sweep on the whole,
     // unsplit line — no word-splitting, so it is its own routine rather
-    // than the shared `focus` word-stagger group shade-dark already owns.
+    // than the shared `focus` word-stagger group the removed Shade (dark) theme owned.
     sharpening: 'is-sharpening',
     in: 'is-in',
     cleared: 'is-cleared',
@@ -155,7 +155,7 @@ export const STATE = Object.freeze({
     // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
     // across the whole, unsplit line once.
     revealed: 'is-revealed',
-    // The lapis headline [S48, LIFT_PLAN row 6]: a single wipe over the
+    // The Lapis headline (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: a single wipe over the
     // whole clause, once — the gilder's burnishing pass, not a per-word or
     // per-glyph reveal, so it earns its own routine rather than reusing
     // `dissolve` or `type` [S49].
@@ -451,7 +451,7 @@ export const TIMINGS = Object.freeze({
     'kp-alarm-caret': { durationMs: 1000, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
     'kp-alarm-march': { durationMs: 1600, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-alarm-sweep': { durationMs: 6000, cycles: Infinity, property: 'translate', luminanceSteps: [] },
-    // The shade-dark register [S48, LIFT_PLAN row 24]: the headline's words
+    // The Shade (dark) register (theme removed 2026-10-06) [S48, LIFT_PLAN row 24]: the headline's words
     // arriving out of a blur, the hero button and the dossier card settling
     // out of the same blur once on load, and the confirmation dialog's
     // native open/close — the last two shared with academia's, which mounts
@@ -487,7 +487,7 @@ export const TIMINGS = Object.freeze({
     // No luminance step: the mask moves, the content under it does not
     // change colour.
     'kp-wipe': { durationMs: 600, cycles: 1, property: 'mask-position', luminanceSteps: [] },
-    // The lapis register [S48, LIFT_PLAN row 6]: the burnish, a single
+    // The Lapis register (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: the burnish, a single
     // clip-path wipe over the headline once, no loop.
     'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
@@ -507,10 +507,9 @@ export const TIMINGS = Object.freeze({
     'kp-slice-2': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-charge': { durationMs: 520, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-slide-in': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
-    // The base layer's shared rule draw. One keyframe, nine registers, each
-    // with its own duration: nostromo 280ms, blueprint 420ms, lapis 480ms
-    // (its --kp-rule knob, which is what runs), light and retro 480ms, deco
-    // 600ms, brutalism 620ms, terminal 900ms, shade-light its --fx-duration.
+    // The base layer's shared rule draw. One keyframe, seven registers, each
+    // with its own duration: nostromo 280ms, blueprint 420ms, light and retro
+    // 480ms, deco 600ms, brutalism 620ms, terminal 900ms.
     // The row carries the shortest, the worst case a rate is read at; it
     // used to say 420ms, blueprint's alone [scope-100].
     'kp-rule-in': { durationMs: 280, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -546,7 +545,7 @@ export const TIMINGS = Object.freeze({
     'kp-registration': { durationMs: 650, cycles: 1, property: 'opacity', luminanceSteps: [0, 0.55] },
     'kp-fill': { durationMs: 420, cycles: 1, property: 'background-size', luminanceSteps: [] },
     'kp-draw': { durationMs: 500, cycles: 1, property: 'width', luminanceSteps: [] },
-    // The shade-light register [SL2]: the headline's words resolving out
+    // The Shade (light) register (theme removed 2026-10-06) [SL2]: the headline's words resolving out
     // of a blur, the lede's marks filling in (a size, not a luminance
     // change), and the dialog rising into place.
     'kp-word-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
@@ -570,9 +569,9 @@ export const TIMINGS = Object.freeze({
     // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
     // resolve, a monotone blur+brightness sweep, once, on the whole,
     // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
-    // dark and shade-dark registers already own for their own, different
+    // dark and the removed Shade (dark) registers owned for their own, different
     // mechanics). The confirmation dialog's one-shot open reuses the
-    // `kp-dialog-in` row above, which academia, nostromo and shade-dark
+    // `kp-dialog-in` row above, which nostromo (and the removed academia and Shade (dark))
     // already share.
     'kp-sharpen-in': { durationMs: 640, cycles: 1, property: 'filter', luminanceSteps: [] },
     // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
@@ -660,11 +659,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-phantom-meter-jolt-o': { durationMs: 200, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-phantom-meter-jolt-w': { durationMs: 200, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-phantom-meter-slant-o': { durationMs: 220, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-lapis-meter-knock-d': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-lapis-meter-knock-o': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-lapis-meter-knock-w': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-lapis-meter-slant-o': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-lapis-meter-width': { durationMs: 2400, cycles: Infinity, property: 'inline-size', luminanceSteps: [] },
     'kp-sig-nostromo-meter-scan': { durationMs: 2000, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-nostromo-meter-jolt-d': { durationMs: 200, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-nostromo-meter-jolt-o': { durationMs: 200, cycles: 1, property: 'translate', luminanceSteps: [] },
@@ -676,8 +670,8 @@ export const TIMINGS = Object.freeze({
     'kp-sig-titanium-meter-jolt-o': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-titanium-meter-jolt-w': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     // The meter, round 4 [Kenny's picks on research/character-meter, 2026-10-05]:
-    // dark (loading and arrival redrawn), cyberpunk, high-contrast, shade-light,
-    // shade-dark, retro and grotesk. Every loading picture loops while loading.
+    // dark (loading and arrival redrawn), cyberpunk, high-contrast, retro and
+    // grotesk. Every loading picture loops while loading.
     'kp-sig-dark-meter-bump-d': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-dark-meter-bump-o': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-dark-meter-bump-w': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
@@ -692,14 +686,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-high-contrast-meter-wipe-d': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-high-contrast-meter-wipe-o': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-high-contrast-meter-wipe-w': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-light-meter-pos': { durationMs: 700, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
-    'kp-sig-shade-light-meter-wipe-d': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-light-meter-wipe-o': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-light-meter-wipe-w': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-dark-meter-pos': { durationMs: 700, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
-    'kp-sig-shade-dark-meter-wipe-d': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-dark-meter-wipe-o': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-shade-dark-meter-wipe-w': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-d': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-o': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-w': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },

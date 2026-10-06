@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="families">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — every component's pick, family by family, per theme</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="fm-page">
+            <header class="fm-intro">
+                <h1>Every component's pick, family by family, per theme</h1>
+                <p>
+                    Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande laadschermen per thema te tonen, zodat ik dan bij andere thema's
+                    ook kan kiezen welke de beste zijn of eventueel nog eentje laten bijmaken. Hetzelfde doen we dan per familie van animaties of
+                    keuzes." Every character demo is decided, one pick per aspect per theme. This page lays those picks side by side by family: every
+                    loading picture of one theme together, then every arrival, every live update, every hover, every tone and every shape. Per theme
+                    and family you pick the one component whose picture the whole theme should speak, or None of these with a note (a new one to make,
+                    say).
+                </p>
+                <p class="fm-meta">
+                    Each card is the component's own demo (<code>research/character-*/demo.html</code>), embedded: it shows only that demo's
+                    combination of the picks, and presses the demo's own buttons for the family, the same ones the review dialog presses. A card loads
+                    when it comes on screen. This theme: <b data-fm-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="fm-sec"
+                data-review-item="families"
+                data-review-mode="aspects"
+                data-review-rows="data-fm-aspect"
+                data-review-components="families"
+                data-review-title="Every component's pick, by family"
+                aria-labelledby="h-families"
+            >
+                <div class="fm-sec__head">
+                    <h2 id="h-families">The families in <span data-fm-theme-name>this theme</span></h2>
+                    <p>
+                        One row per family, one card per component that has it, each playing its pick. <b>Replay</b> plays every card again, the speed
+                        slows every card's animation.
+                    </p>
+                </div>
+                <div class="fm-controls" data-review-controls>
+                    <div class="fm-actions" role="group" aria-label="Every card">
+                        <b>Every card:</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-fm-replay
+                            data-review-plays="loading arrival live hover tone shape"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="fm-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-fm-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fm-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fm-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="fm-rows" data-fm-rows></div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

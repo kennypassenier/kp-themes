@@ -2449,275 +2449,6 @@
         font: italic 900 0.75rem/1 var(--theme-font-display, sans-serif);
     }
 
-    /* ── shade-light · shape 1 ── */
-
-    /* ── shade-light · the pencil gauge ───────────────────────────── */
-    [data-theme='shade-light'] [data-cm-shape='1'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.75rem;
-        border-radius: 2px;
-        background: var(--card);
-        box-shadow:
-            inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.65),
-            0.5px 0.5px 0 hsl(from var(--foreground) h s l / 0.3);
-    }
-
-    /* The blue plate hatched over in pencil. */
-    [data-theme='shade-light'] [data-cm-shape='1'] .kp-meter::before {
-        border-radius: 2px;
-        background:
-            repeating-linear-gradient(-55deg, hsl(from var(--primary-foreground) h s l / 0.2) 0 1px, transparent 1px 3px), var(--kp-meter-fill-colour);
-    }
-
-    /* A graphite stroke with a soft shade beside it. */
-    [data-theme='shade-light'] [data-cm-shape='1'] .kp-meter__mark {
-        inset-block: -4px;
-        border-radius: 1px;
-        background: var(--foreground);
-        box-shadow:
-            0 0 0 1px var(--card),
-            2px 1px 2px hsl(from var(--foreground) h s l / 0.3);
-    }
-
-    /* A patch of pencil scribble past the end. */
-    [data-theme='shade-light'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block: -2px;
-        inline-size: 0.5rem;
-        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
-        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
-    }
-
-    /* ── shade-light · shape 2 ── */
-
-    /* ── shade-light · 2 · the pin and its shade ──────────────────────── */
-    [data-theme='shade-light'] [data-cm-shape='2'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.75rem;
-        border-radius: 2px;
-        background: var(--muted);
-        box-shadow:
-            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.22),
-            0 0 0 1px hsl(from var(--border-strong) h s l / 0.65);
-    }
-
-    /* A raised blue strip throwing a soft shade. */
-    [data-theme='shade-light'] [data-cm-shape='2'] .kp-meter::before {
-        border-radius: 2px;
-        background: linear-gradient(to bottom, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
-        box-shadow: 1px 2px 3px hsl(from var(--foreground) h s l / 0.3);
-    }
-
-    /* A pin with a magenta head, its shade falling to the side. */
-    [data-theme='shade-light'] [data-cm-shape='2'] .kp-meter__mark {
-        inset-block: -4px 0;
-        border-radius: 1px 1px 0 0;
-        background: var(--foreground);
-        box-shadow: 0 0 0 1px var(--card);
-    }
-
-    [data-theme='shade-light'] [data-cm-shape='2'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset-block-start: -4px;
-        inset-inline-start: 50%;
-        inline-size: 6px;
-        block-size: 6px;
-        translate: -50% 0;
-        border-radius: 50%;
-        background: var(--fx-signal);
-        box-shadow:
-            0 0 0 1px var(--card),
-            4px 3px 2px hsl(from var(--foreground) h s l / 0.3);
-    }
-
-    /* The strip hangs over the end, its shade falling beyond. */
-    [data-theme='shade-light'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% - 3px);
-        inset-block: 0;
-        inline-size: 0.625rem;
-        border-radius: 0 2px 2px 0;
-        background: linear-gradient(to bottom, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
-        box-shadow: 3px 5px 4px hsl(from var(--foreground) h s l / 0.4);
-        rotate: -8deg;
-        transform-origin: 0 100%;
-    }
-
-    /* ── shade-light · shape 3 ── */
-
-    /* ── shade-light · 3 · the paper cut-out ── */
-    [data-theme='shade-light'] [data-cm-shape='3'] .kp-meter {
-        --kp-meter-height: 0.625rem;
-        --cm-room: 0.75rem;
-        border-radius: 3px;
-        background: var(--muted);
-        box-shadow:
-            inset 0 2px 3px hsl(from var(--foreground) h s l / 0.25),
-            0 1px 0 var(--card);
-    }
-
-    /* A strip of coloured paper laid in the cut, its own soft shadow. */
-    [data-theme='shade-light'] [data-cm-shape='3'] .kp-meter::before {
-        inset-block: 1px;
-        border-radius: 2px;
-        background: var(--kp-meter-fill-colour);
-        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.35);
-    }
-
-    /* A magenta paper flag on a pin. */
-    [data-theme='shade-light'] [data-cm-shape='3'] .kp-meter__mark {
-        inset-block: -6px -2px;
-        background: var(--foreground);
-        box-shadow: 0 0 0 1px var(--card);
-    }
-
-    [data-theme='shade-light'] [data-cm-shape='3'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset-block-start: 0;
-        inset-inline-start: 100%;
-        inline-size: 7px;
-        block-size: 5px;
-        background: var(--accent);
-        clip-path: polygon(0 0, 100% 50%, 0 100%);
-        filter: drop-shadow(0 1px 1px hsl(from var(--foreground) h s l / 0.3));
-    }
-
-    [data-theme='shade-light'] [data-cm-shape='3'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 1px);
-        inset-block: 1px;
-        inline-size: 0.5rem;
-        border-radius: 0 50% 50% 0;
-        background: var(--kp-meter-fill-colour);
-        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.35);
-    }
-
-    /* ── shade-dark · shape 1 ── */
-
-    /* ── shade-dark · silverpoint ─────────────────────────────────── */
-    [data-theme='shade-dark'] [data-cm-shape='1'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.75rem;
-        --cm-mo-halo: var(--background);
-        border-radius: 2px;
-        background: repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px), var(--background);
-        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.6);
-    }
-
-    /* The blue plate laid over the silver lines, its top edge lit. */
-    [data-theme='shade-dark'] [data-cm-shape='1'] .kp-meter::before {
-        border-radius: 2px;
-        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.55) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
-    }
-
-    /* A pale metal stroke. */
-    [data-theme='shade-dark'] [data-cm-shape='1'] .kp-meter__mark {
-        inset-block: -4px;
-        border-radius: 1px;
-        background: var(--foreground);
-        box-shadow: 0 0 0 1px var(--background);
-    }
-
-    [data-theme='shade-dark'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block: -2px;
-        inline-size: 0.5rem;
-        background: repeating-linear-gradient(-55deg, var(--foreground) 0 1px, transparent 1px 2.5px);
-        clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
-    }
-
-    /* ── shade-dark · shape 2 ── */
-
-    /* ── shade-dark · 2 · the reading lamp ────────────────────────────── */
-    [data-theme='shade-dark'] [data-cm-shape='2'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.875rem;
-        --cm-mo-halo: var(--background);
-        border-radius: 2px;
-        background: var(--background);
-        box-shadow:
-            inset 0 1px 2px hsl(from var(--background) h s l / 0.9),
-            0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
-    }
-
-    /* The blue plate lifted out of the shade. */
-    [data-theme='shade-dark'] [data-cm-shape='2'] .kp-meter::before {
-        border-radius: 2px;
-        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
-    }
-
-    /* A pale pin under a pool of lamplight: the target is where the light is. */
-    [data-theme='shade-dark'] [data-cm-shape='2'] .kp-meter__mark {
-        inset-block: -4px;
-        border-radius: 1px;
-        background: var(--foreground);
-        box-shadow: 0 0 0 1px var(--background);
-    }
-
-    [data-theme='shade-dark'] [data-cm-shape='2'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset-block: -11px calc(100% - 4px);
-        inset-inline-start: 50%;
-        inline-size: 1.5rem;
-        translate: -50% 0;
-        border-radius: 50% 50% 0 0;
-        background: radial-gradient(farthest-side at 50% 100%, hsl(from var(--foreground) h s l / 0.45), transparent);
-    }
-
-    /* The light spills out beyond the well. */
-    [data-theme='shade-dark'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% - 2px);
-        inset-block: -7px;
-        inline-size: 1.25rem;
-        border-radius: 50%;
-        background:
-            radial-gradient(circle, var(--foreground) 0 2px, transparent 2.5px),
-            radial-gradient(closest-side, hsl(from var(--foreground) h s l / 0.5), transparent);
-    }
-
-    /* ── shade-dark · shape 3 ── */
-
-    /* ── shade-dark · 3 · the stitched leather ── */
-    [data-theme='shade-dark'] [data-cm-shape='3'] .kp-meter {
-        --kp-meter-height: 0.75rem;
-        --cm-room: 0.75rem;
-        border-radius: 3px;
-        background:
-            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.35) 0 3px, transparent 3px 5px) 0 1px / 5px 1px repeat-x,
-            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.35) 0 3px, transparent 3px 5px) 0 calc(100% - 1px) / 5px 1px repeat-x,
-            var(--muted);
-        box-shadow: inset 0 1px 2px hsl(from var(--background) h s l / 0.7);
-    }
-
-    [data-theme='shade-dark'] [data-cm-shape='3'] .kp-meter::before {
-        inset-block: 3px;
-        border-radius: 1px;
-        background: linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px), var(--kp-meter-fill-colour);
-    }
-
-    /* A pale silver rivet. */
-    [data-theme='shade-dark'] [data-cm-shape='3'] .kp-meter__mark {
-        --cm-mw: 8px;
-        inset-block: auto;
-        inset-block-start: calc(50% - 4px);
-        block-size: 8px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 35%, var(--foreground), color-mix(in oklab, var(--foreground) 60%, var(--muted)));
-        box-shadow: 0 0 0 1.5px var(--background);
-    }
-
-    [data-theme='shade-dark'] [data-cm-shape='3'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block-start: 50%;
-        inline-size: 6px;
-        block-size: 6px;
-        translate: 0 -50%;
-        border-radius: 50%;
-        background: var(--kp-meter-fill-colour);
-        box-shadow: 0 0 0 1px var(--foreground);
-    }
-
     /* ── retro · shape 1 ── */
 
     /* ── retro · the system monitor ────────────────────────────────────── */
@@ -3042,159 +2773,6 @@
             linear-gradient(90deg, transparent 3px, var(--primary) 3px 4px, transparent 4px) 0 0 / 4px 100% repeat-x,
             linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 1px no-repeat,
             linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 1px no-repeat;
-    }
-
-    /* ── lapis · shape 1 ── */
-
-    /* ── lapis · the gilt band ────────────────────────────────────── */
-    [data-theme='lapis'] [data-cm-shape='1'] .kp-meter {
-        --kp-meter-height: 0.625rem;
-        --cm-room: 0.875rem;
-        --cm-mo-ink: var(--primary);
-        --cm-mo-halo: var(--primary-foreground);
-        border-radius: 0;
-        background: var(--primary-foreground);
-        box-shadow:
-            inset 0 1px 0 var(--primary),
-            inset 0 -1px 0 var(--primary);
-    }
-
-    /* Gold leaf tooled with a fine lattice. */
-    [data-theme='lapis'] [data-cm-shape='1'] .kp-meter::before {
-        inset-block: 2px;
-        border-radius: 0;
-        background:
-            repeating-linear-gradient(60deg, transparent 0 3px, hsl(from var(--primary-foreground) h s l / 0.4) 3px 4px),
-            repeating-linear-gradient(-60deg, transparent 0 3px, hsl(from var(--primary-foreground) h s l / 0.4) 3px 4px), var(--kp-meter-fill-colour);
-    }
-
-    /* A vermilion reed stroke with its diamond dot above. */
-    [data-theme='lapis'] [data-cm-shape='1'] .kp-meter__mark {
-        --cm-mw: 3px;
-        inset-block: -3px;
-        border-radius: 2px 2px 1px 1px;
-        background: var(--accent);
-        box-shadow: 0 0 0 1px var(--primary-foreground);
-    }
-
-    [data-theme='lapis'] [data-cm-shape='1'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset-block-end: calc(100% + 2px);
-        inset-inline-start: 50%;
-        inline-size: 4px;
-        block-size: 4px;
-        translate: -50% 0;
-        rotate: 45deg;
-        background: var(--accent);
-        box-shadow: 0 0 0 1px var(--primary-foreground);
-    }
-
-    /* A vermilion toranj past the end. */
-    [data-theme='lapis'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block: -3px;
-        inline-size: 0.625rem;
-        background: radial-gradient(circle, var(--primary) 0 1.25px, transparent 1.75px), var(--accent);
-        clip-path: polygon(0 50%, 25% 15%, 50% 0, 75% 15%, 100% 50%, 75% 85%, 50% 100%, 25% 85%);
-    }
-
-    /* ── lapis · shape 2 ── */
-
-    /* ── lapis · 2 · lapis stone on vellum ────────────────────────────── */
-    [data-theme='lapis'] [data-cm-shape='2'] .kp-meter {
-        --kp-meter-height: 0.5rem;
-        --cm-room: 0.75rem;
-        --cm-mo-ink: var(--primary-foreground);
-        --cm-mo-halo: var(--foreground);
-        --cm-stone: color-mix(in oklab, var(--background) 65%, var(--primary-foreground));
-        --cm-flecks:
-            radial-gradient(circle at 15% 30%, var(--primary) 0 0.7px, transparent 1.1px) 0 0 / 9px 100%,
-            radial-gradient(circle at 60% 70%, var(--primary) 0 0.6px, transparent 1px) 0 0 / 13px 100%;
-        border-radius: 1px;
-        background: color-mix(in oklab, var(--foreground) 88%, var(--background));
-        box-shadow: 0 0 0 1px var(--primary);
-    }
-
-    [data-theme='lapis'] [data-cm-shape='2'] .kp-meter[data-kp-tone] {
-        --cm-stone: var(--kp-meter-fill-colour);
-    }
-
-    /* The stone: deep lapis flecked with pyrite, a streak of calcite. */
-    [data-theme='lapis'] [data-cm-shape='2'] .kp-meter::before {
-        border-radius: 1px;
-        background:
-            var(--cm-flecks),
-            linear-gradient(100deg, transparent 0 40%, hsl(from var(--foreground) h s l / 0.28) 45%, transparent 50%) 0 0 / 23px 100%,
-            var(--cm-stone);
-    }
-
-    /* A gold leaf stroke. */
-    [data-theme='lapis'] [data-cm-shape='2'] .kp-meter__mark {
-        inset-block: -3px;
-        border-radius: 0;
-        background: var(--primary);
-        box-shadow: 0 0 0 1px var(--primary-foreground);
-    }
-
-    /* A chipped shard of the stone past the end. */
-    [data-theme='lapis'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block: -1px;
-        inline-size: 0.4375rem;
-        background: var(--cm-flecks), var(--cm-stone);
-        clip-path: polygon(0 10%, 70% 0, 100% 45%, 60% 100%, 10% 85%);
-    }
-
-    /* ── lapis · shape 3 ── */
-
-    /* ── lapis · 3 · the tile frieze ── */
-    [data-theme='lapis'] [data-cm-shape='3'] .kp-meter {
-        --kp-meter-height: 0.625rem;
-        --cm-room: 0.875rem;
-        --cm-mo-ink: var(--accent);
-        border-radius: 0;
-        background:
-            linear-gradient(90deg, var(--primary) 0 1px, transparent 1px) 0 0 / 10px 100% repeat-x,
-            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 1px no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 1px no-repeat,
-            var(--muted);
-    }
-
-    /* Glazed tiles, each with its gold joint. */
-    [data-theme='lapis'] [data-cm-shape='3'] .kp-meter::before {
-        inset-block: 1px;
-        border-radius: 0;
-        background:
-            linear-gradient(90deg, var(--primary) 0 1px, transparent 1px) 0 0 / 10px 100% repeat-x,
-            radial-gradient(circle, hsl(from var(--card) h s l / 0.35) 0 1px, transparent 1.5px) 5px 50% / 10px 100% repeat-x,
-            var(--kp-meter-fill-colour);
-    }
-
-    /* A vermilion lozenge in gold. */
-    [data-theme='lapis'] [data-cm-shape='3'] .kp-meter__mark {
-        --cm-mw: 12px;
-        inset-block: -4px;
-        border-radius: 0;
-        background: radial-gradient(closest-side, var(--primary) 0 70%, var(--card) 71%);
-        box-shadow: none;
-        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-    }
-
-    [data-theme='lapis'] [data-cm-shape='3'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset: 3px;
-        background: var(--accent);
-        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-    }
-
-    [data-theme='lapis'] [data-cm-shape='3'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 1px);
-        inset-block: -1px;
-        inline-size: 0.625rem;
-        background: var(--accent);
-        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
     }
 
     /* ── nostromo · shape 1 ── */
@@ -4524,156 +4102,28 @@
         }
     }
 
-    /* ── shade-light · loading 1 ── */
-
-    /* Round 4. Cross-hatching drifts: pencil hatching in two directions slides across the empty gauge, the two layers against each other, so the paper shimmers while it waits. */
-    [data-theme='shade-light'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        background:
-            repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.28) 0 1px, transparent 1px 4px),
-            repeating-linear-gradient(55deg, hsl(from var(--foreground) h s l / 0.28) 0 1px, transparent 1px 4px);
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-sh4-cross 900ms linear infinite;
-        }
-    }
-
-    /* ── shade-light · loading 2 ── */
-
-    /* Round 4. The crease passes: a fold in the paper, a pencil shade on one side and a lit edge on the other, crosses the gauge and comes round again. */
-    [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        background: linear-gradient(
-                90deg,
-                transparent,
-                hsl(from var(--foreground) h s l / calc(0.6 / 3)) 8px,
-                hsl(from var(--foreground) h s l / 0.6) 9px 10px,
-                hsl(from var(--card) h s calc(l + 10)) 10px 11px,
-                transparent 11px
-            ) -12px
-            0 / 12px 100% no-repeat;
-        --cm-l0: -12px 0;
-        --cm-l1: calc(100% + 12px) 0;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1800ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-theme='shade-light'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            background-position: 45% 0;
-        }
-    }
-
-    /* ── shade-light · loading 3 ── */
-
-    /* Round 4. Pencil dashes run: a dashed pencil line along the middle of the gauge runs on and on. */
-    [data-theme='shade-light'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0 2px;
-        pointer-events: none;
-        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.6) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
-        --cm-l0: 0 50%;
-        --cm-l1: 7px 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 700ms linear infinite;
-        }
-    }
-
-    /* ── shade-dark · loading 1 ── */
-
-    /* Round 4. Silver cross-hatching drifts: silver hatching in two directions slides over the dark ground, the two layers against each other, so the silver glints while it waits. */
-    [data-theme='shade-dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        background:
-            repeating-linear-gradient(-55deg, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px 4px),
-            repeating-linear-gradient(55deg, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px 4px);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-sh4-cross 900ms linear infinite;
-        }
-    }
-
-    /* ── shade-dark · loading 2 ── */
-
-    /* Round 4. The glint passes: a pale metal glint with its shade crosses the well and comes round again. */
-    [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        border-radius: inherit;
-        background: linear-gradient(
-                90deg,
-                transparent,
-                hsl(from var(--foreground) h s l / calc(0.7 / 3)) 8px,
-                hsl(from var(--foreground) h s l / 0.7) 9px 10px,
-                hsl(from var(--card) h s calc(l + 10)) 10px 11px,
-                transparent 11px
-            ) -12px
-            0 / 12px 100% no-repeat;
-        --cm-l0: -12px 0;
-        --cm-l1: calc(100% + 12px) 0;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1800ms cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-theme='shade-dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            background-position: 45% 0;
-        }
-    }
-
-    /* ── shade-dark · loading 3 ── */
-
-    /* Round 4. Silver stitches run: a running stitch of silver along the middle of the well runs on and on. */
-    [data-theme='shade-dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0 2px;
-        pointer-events: none;
-        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.7) 0 4px, transparent 4px) 0 50% / 7px 1px repeat-x;
-        --cm-l0: 0 50%;
-        --cm-l1: 7px 50%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 700ms linear infinite;
-        }
     }
 
     /* ── retro · loading 1 ── */
@@ -4805,63 +4255,13 @@
         }
     }
 
-    /* ── lapis · loading 1 ── */
-
-    /* A burnisher's glint runs along the gold. */
-    [data-theme='lapis'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        background: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.5), transparent) 50% 0 / 25% 100% no-repeat;
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-la-burnish 2800ms ease-in-out infinite;
-        }
-    }
-
-    /* ── lapis · loading 2 ── */
-
-    [data-theme='lapis'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
-    [data-theme='lapis'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: radial-gradient(circle, var(--primary) 1px, transparent 1.5px) 0 50% / 6px 100% repeat-x;
-        inset-inline-end: auto;
-        inline-size: 100%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-width 2400ms ease-in-out infinite;
-        }
-    }
-
-    /* ── lapis · loading 3 ── */
-
-    [data-theme='lapis'] [data-cm-loading='3'] .kp-meter[data-kp-loading] {
-        animation: none;
-    }
-
-    [data-theme='lapis'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(var(--accent), var(--accent)) 50% 50% / 6px 100% no-repeat;
-        --cm-l0: 0% 50%;
-        --cm-l1: 100% 50%;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 2600ms steps(13) infinite;
-        }
     }
 
     /* ── nostromo · loading 1 ── */
@@ -5687,98 +5087,22 @@
         }
     }
 
-    /* ── shade-light · arrival 1 ── */
-
-    [data-theme='shade-light'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 900ms ease-out backwards;
-            transition: inline-size 900ms ease-out;
-        }
-    }
-
-    /* ── shade-light · arrival 2 ── */
-
-    [data-theme='shade-light'] [data-cm-arrival='2'] .kp-meter {
-        --cm-arr-o: cm-x-press-o;
-        --cm-arr-w: cm-x-press-w;
-        --cm-arr-d: cm-x-press-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-arrival='2'] .kp-meter::before {
-            animation: var(--cm-arr-o) 500ms ease-out backwards;
-            transition: inline-size 500ms ease-out;
-            transform-origin: 50% 50%;
-        }
-    }
-
-    /* ── shade-light · arrival 3 ── */
-
-    [data-theme='shade-light'] [data-cm-arrival='3'] .kp-meter {
-        --cm-arr-o: cm-x-grow-o;
-        --cm-arr-w: cm-x-grow-w;
-        --cm-arr-d: cm-x-grow-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 800ms ease-in-out backwards;
-            transition: inline-size 800ms ease-in-out;
-            transform-origin: 0 50%;
-        }
-    }
-
-    /* ── shade-dark · arrival 1 ── */
-
-    [data-theme='shade-dark'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 900ms ease-out backwards;
-            transition: inline-size 900ms ease-out;
-        }
-    }
-
-    /* ── shade-dark · arrival 2 ── */
-
-    [data-theme='shade-dark'] [data-cm-arrival='2'] .kp-meter {
-        --cm-arr-o: cm-x-press-o;
-        --cm-arr-w: cm-x-press-w;
-        --cm-arr-d: cm-x-press-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-arrival='2'] .kp-meter::before {
-            animation: var(--cm-arr-o) 500ms ease-out backwards;
-            transition: inline-size 500ms ease-out;
-            transform-origin: 50% 50%;
-        }
-    }
-
-    /* ── shade-dark · arrival 3 ── */
-
-    [data-theme='shade-dark'] [data-cm-arrival='3'] .kp-meter {
-        --cm-arr-o: cm-x-grow-o;
-        --cm-arr-w: cm-x-grow-w;
-        --cm-arr-d: cm-x-grow-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 800ms ease-in-out backwards;
-            transition: inline-size 800ms ease-in-out;
-            transform-origin: 0 50%;
-        }
     }
 
     /* ── retro · arrival 1 ── */
@@ -5873,49 +5197,13 @@
         }
     }
 
-    /* ── lapis · arrival 1 ── */
-
-    [data-theme='lapis'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 1100ms cubic-bezier(0.4, 0, 0.2, 1) backwards;
-            transition: inline-size 1100ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-    }
-
-    /* ── lapis · arrival 2 ── */
-
-    [data-theme='lapis'] [data-cm-arrival='2'] .kp-meter {
-        --cm-arr-o: cm-x-slant-o;
-        --cm-arr-w: cm-x-slant-w;
-        --cm-arr-d: cm-x-slant-d;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-arrival='2'] .kp-meter::before {
-            animation: var(--cm-arr-o) 900ms cubic-bezier(0.5, 0, 0.3, 1) backwards;
-            transition: inline-size 900ms cubic-bezier(0.5, 0, 0.3, 1);
-        }
-    }
-
-    /* ── lapis · arrival 3 ── */
-
-    [data-theme='lapis'] [data-cm-arrival='3'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 1200ms steps(8) backwards;
-            transition: inline-size 1200ms steps(8);
-        }
     }
 
     /* ── nostromo · arrival 1 ── */
@@ -6680,92 +5968,22 @@
         }
     }
 
-    /* ── shade-light · tone 1 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-tone='1'] .kp-meter[data-kp-tone='warning']::before {
-            animation-name: var(--cm-arr-w);
-        }
-
-        [data-theme='shade-light'] [data-cm-tone='1'] .kp-meter[data-kp-tone='destructive']::before {
-            animation-name: var(--cm-arr-d);
-        }
     }
 
-    /* ── shade-light · tone 2 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-knock-o 260ms ease-out;
-        }
-
-        [data-theme='shade-light'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-knock-w 260ms ease-out;
-        }
-
-        [data-theme='shade-light'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-knock-d 260ms ease-out;
-        }
     }
 
-    /* ── shade-light · tone 3 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-bump-o 300ms ease-out;
-        }
-
-        [data-theme='shade-light'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-bump-w 300ms ease-out;
-        }
-
-        [data-theme='shade-light'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-bump-d 300ms ease-out;
-        }
     }
 
-    /* ── shade-dark · tone 1 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-tone='1'] .kp-meter[data-kp-tone='warning']::before {
-            animation-name: var(--cm-arr-w);
-        }
-
-        [data-theme='shade-dark'] [data-cm-tone='1'] .kp-meter[data-kp-tone='destructive']::before {
-            animation-name: var(--cm-arr-d);
-        }
     }
 
-    /* ── shade-dark · tone 2 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-knock-o 260ms ease-out;
-        }
-
-        [data-theme='shade-dark'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-knock-w 260ms ease-out;
-        }
-
-        [data-theme='shade-dark'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-knock-d 260ms ease-out;
-        }
     }
 
-    /* ── shade-dark · tone 3 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-bump-o 300ms ease-out;
-        }
-
-        [data-theme='shade-dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-bump-w 300ms ease-out;
-        }
-
-        [data-theme='shade-dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-bump-d 300ms ease-out;
-        }
     }
 
     /* ── retro · tone 1 ── */
@@ -6856,48 +6074,13 @@
         }
     }
 
-    /* ── lapis · tone 1 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-tone='1'] .kp-meter[data-kp-tone='warning']::before {
-            animation-name: var(--cm-arr-w);
-        }
-
-        [data-theme='lapis'] [data-cm-tone='1'] .kp-meter[data-kp-tone='destructive']::before {
-            animation-name: var(--cm-arr-d);
-        }
     }
 
-    /* ── lapis · tone 2 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-knock-o 300ms ease-out;
-        }
-
-        [data-theme='lapis'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-knock-w 300ms ease-out;
-        }
-
-        [data-theme='lapis'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-knock-d 300ms ease-out;
-        }
     }
 
-    /* ── lapis · tone 3 ── */
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-bump-o 320ms ease-out;
-        }
-
-        [data-theme='lapis'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-bump-w 320ms ease-out;
-        }
-
-        [data-theme='lapis'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-bump-d 320ms ease-out;
-        }
     }
 
     /* ── nostromo · tone 1 ── */
@@ -7905,126 +7088,22 @@
         }
     }
 
-    /* ── shade-light · mark 1 ── */
-
-    [data-theme='shade-light'] [data-cm-mark='1'] .kp-meter {
-        --cm-mo-sign: '›';
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-mark='1'] .kp-meter__mark {
-            transition:
-                inset-inline-start 500ms ease-in-out,
-                rotate 500ms ease-in-out;
-        }
-    }
-
-    /* ── shade-light · mark 2 ── */
-
-    [data-theme='shade-light'] [data-cm-mark='2'] .kp-meter {
-        --cm-mo-sign: '›';
-    }
-
-    [data-theme='shade-light'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% - var(--cm-mw) - 1px);
-        rotate: 24deg;
-        transform-origin: 50% 100%;
-    }
-
-    [data-theme='shade-light'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 3px);
-        rotate: -24deg;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-mark='2'] .kp-meter__mark {
-            transition:
-                inset-inline-start 600ms ease-out,
-                rotate 600ms ease-out;
-        }
-    }
-
-    /* ── shade-light · mark 3 ── */
-
-    [data-theme='shade-light'] [data-cm-mark='3'] .kp-meter {
-        --cm-mo-sign: '›';
-    }
-
-    [data-theme='shade-light'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% + 3px);
-    }
-
-    [data-theme='shade-light'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-light'] [data-cm-mark='3'] .kp-meter__mark {
-            transition:
-                inset-inline-start 400ms ease-out,
-                rotate 400ms ease-out;
-        }
-    }
-
-    /* ── shade-dark · mark 1 ── */
-
-    [data-theme='shade-dark'] [data-cm-mark='1'] .kp-meter {
-        --cm-mo-sign: '›';
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-mark='1'] .kp-meter__mark {
-            transition:
-                inset-inline-start 500ms ease-in-out,
-                rotate 500ms ease-in-out;
-        }
-    }
-
-    /* ── shade-dark · mark 2 ── */
-
-    [data-theme='shade-dark'] [data-cm-mark='2'] .kp-meter {
-        --cm-mo-sign: '›';
-    }
-
-    [data-theme='shade-dark'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% - var(--cm-mw) - 1px);
-        rotate: 24deg;
-        transform-origin: 50% 100%;
-    }
-
-    [data-theme='shade-dark'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 3px);
-        rotate: -24deg;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-mark='2'] .kp-meter__mark {
-            transition:
-                inset-inline-start 600ms ease-out,
-                rotate 600ms ease-out;
-        }
-    }
-
-    /* ── shade-dark · mark 3 ── */
-
-    [data-theme='shade-dark'] [data-cm-mark='3'] .kp-meter {
-        --cm-mo-sign: '›';
-    }
-
-    [data-theme='shade-dark'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% + 3px);
-    }
-
-    [data-theme='shade-dark'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='shade-dark'] [data-cm-mark='3'] .kp-meter__mark {
-            transition:
-                inset-inline-start 400ms ease-out,
-                rotate 400ms ease-out;
-        }
     }
 
     /* ── retro · mark 1 ── */
@@ -8138,65 +7217,13 @@
         }
     }
 
-    /* ── lapis · mark 1 ── */
-
-    [data-theme='lapis'] [data-cm-mark='1'] .kp-meter {
-        --cm-mo-sign: '›';
+    @media (prefers-reduced-motion: no-preference) {
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-mark='1'] .kp-meter__mark {
-            transition:
-                inset-inline-start 700ms ease-in-out,
-                rotate 700ms ease-in-out;
-        }
-    }
-
-    /* ── lapis · mark 2 ── */
-
-    [data-theme='lapis'] [data-cm-mark='2'] .kp-meter {
-        --cm-mo-sign: '›';
-    }
-
-    [data-theme='lapis'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% - var(--cm-mw) - 1px);
-        rotate: 24deg;
-        transform-origin: 50% 100%;
-    }
-
-    [data-theme='lapis'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 3px);
-        rotate: -24deg;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-mark='2'] .kp-meter__mark {
-            transition:
-                inset-inline-start 600ms ease-in-out,
-                rotate 600ms ease-in-out;
-        }
-    }
-
-    /* ── lapis · mark 3 ── */
-
-    [data-theme='lapis'] [data-cm-mark='3'] .kp-meter {
-        --cm-mo-sign: '✦';
-    }
-
-    [data-theme='lapis'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% + 3px);
-    }
-
-    [data-theme='lapis'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='lapis'] [data-cm-mark='3'] .kp-meter__mark {
-            transition:
-                inset-inline-start 500ms steps(4),
-                rotate 500ms steps(4);
-        }
     }
 
     /* ── nostromo · mark 1 ── */
@@ -8875,9 +7902,6 @@
             0 0;
     }
 }
-
-/* ── Round 4 (2026-10-05): cyberpunk loading and arrival, dark, high-contrast,
-   shade-light, shade-dark and retro loading. ── */
 
 @keyframes cm-cy4-scan {
     from {

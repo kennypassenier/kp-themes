@@ -16,18 +16,6 @@
                 "firefox": "content 71 wide in a box of 69"
             }
         ],
-        "lapis": [
-            {
-                "where": "div.kp-card",
-                "chromium": "content 271 wide in a box of 262",
-                "firefox": "content 271 wide in a box of 262"
-            },
-            {
-                "where": "div.kp-stack",
-                "chromium": "content 272 wide in a box of 264",
-                "firefox": "content 272 wide in a box of 264"
-            }
-        ],
         "pastel": [
             {
                 "where": "div.kp-stack",

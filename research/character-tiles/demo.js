@@ -530,73 +530,6 @@ const IDEAS = {
             { name: 'The string twangs', text: 'The tile jolts once, as a needle does.' },
         ],
     },
-    'shade-light': {
-        shape: [
-            { name: 'Pencil in the shade', text: 'Hatched pencil lines, the mark a soft graphite dot, paper on paper.' },
-            { name: 'The leaf shade', text: 'Dappled leaf shade over the card, the mark a soft leaf dot.' },
-            { name: 'The window light', text: 'A shaft of window light falls across the card, the mark a soft dot.' },
-        ],
-        loading: [
-            { name: 'Pencil in the shade', text: 'The hatching sweeps in.' },
-            { name: 'The leaf shade', text: 'A cloud’s shade passes.' },
-            { name: 'Leaves sway', text: 'The leaf shade over the body sways to and fro.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Drawn in pencil', text: 'The body is drawn in from the left, easing in and out.' },
-            { name: 'Out of the shade', text: 'Tile after tile rises from the baseline, slowing as it lands.' },
-        ],
-        tone: [
-            { name: 'The paper chip', text: 'A warning or destructive tile shows the note on a lifted paper chip.' },
-            { name: 'The status plate', text: 'A warning or destructive tile shows the note on its own status plate.' },
-            { name: 'The pinned note', text: 'A warning or destructive tile is marked along the left edge, as a note pinned to the card.' },
-        ],
-        hover: [
-            { name: 'The pencil presses', text: 'The hatching darkens a shade; Open underlines in graphite; focus adds a soft pencil ring.' },
-            { name: 'The shade shifts', text: 'The leaf shade settles still; Open gains a leaf dot; focus halos the tile softly.' },
-            { name: 'The light widens', text: 'The window light widens across the card; Open underlines; focus traces the shaft of light.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'A breeze', text: 'The tile dips once and comes back, easing in and out.' },
-            { name: 'Pencilled again', text: 'The tile is traced again from its edge, easing in and out.' },
-        ],
-    },
-    'shade-dark': {
-        shape: [
-            { name: 'Silverpoint', text: 'A silver hairline over a faint wash, the mark a silver dot.' },
-            { name: 'The reading lamp', text: 'A pool of warm light behind the title, the mark a lamp dot.' },
-            { name: 'The night window', text: 'A shaft of moonlight across the card, the mark a cool silver dot.' },
-        ],
-        loading: [
-            { name: 'Silverpoint', text: 'The silver hatches in.' },
-            { name: 'The lamp', text: 'The pool of lamplight swells and settles.' },
-            { name: 'The candle', text: 'A small candle flame flickers in the corner of the body.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Silverpoint', text: 'The body is drawn in from the left, easing in and out.' },
-            { name: 'The lamp is lit', text: 'Tile after tile opens from the middle, slowing as it lands.' },
-        ],
-        tone: [
-            { name: 'The status plate', text: 'A warning or destructive tile shows the note on its own status plate.' },
-            { name: 'The soft chip', text: 'A warning or destructive tile shows the note on a soft chip.' },
-            {
-                name: 'The red lamp',
-                text: 'A warning or destructive tile is marked by a band of its colour along the top, a lamp lit over the card.',
-            },
-        ],
-        hover: [
-            { name: 'The silver glints', text: 'The silver hairline glints; Open underlines in silver; focus adds a faint silver halo.' },
-            { name: 'The lamp brightens', text: 'The pool of lamplight widens; Open glows warmly; focus halos the tile in lamp light.' },
-            { name: 'The window clears', text: 'The moonlight sharpens; Open underlines in cool silver; focus traces the shaft of light.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'A glint', text: 'The tile flares with light once, slowing as it lands.' },
-            { name: 'The page moves', text: 'The footer’s timestamp steps forward, easing in and out.' },
-        ],
-    },
     retro: {
         shape: [
             { name: 'The 1995 dialog', text: 'A raised grey bevel, the title in the system face, the mark a raised button dot.' },
@@ -659,38 +592,6 @@ const IDEAS = {
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
             { name: 'Flipped', text: 'The tile jolts once, as a needle does, in hard steps.' },
             { name: 'Shifted', text: 'The footer’s timestamp steps forward, easing in and out.' },
-        ],
-    },
-    lapis: {
-        shape: [
-            { name: 'The girih tile', text: 'A faint star lattice, a double gold frame, the mark a gold star dot.' },
-            { name: 'Lapis on vellum', text: 'A gold rim around the plate, the mark a lapis-ink dot, serif italic.' },
-            { name: 'The manuscript margin', text: 'A double gold rule down the left margin, the mark a gold leaf dot.' },
-        ],
-        loading: [
-            { name: 'The girih tile', text: 'A glint runs the frame.' },
-            { name: 'The gold leaf is laid', text: 'A band of gold leaf is laid along the foot of the body, left to right, and laid again.' },
-            { name: 'The star turns', text: 'An eight-point star of gold rays turns slowly behind the body.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Illuminated', text: 'The tile opens from its middle, slowing as it lands.' },
-            { name: 'Inked', text: 'Tile after tile is drawn in from the left, easing in and out.' },
-        ],
-        tone: [
-            { name: 'The status plate', text: 'A warning or destructive tile shows the note on its own status plate.' },
-            { name: 'The gold-ruled plate', text: 'A warning or destructive tile shows the note on a gold-ruled plate.' },
-            { name: 'The rubric', text: 'A warning or destructive tile is marked down the margin in its colour, as a rubric in red.' },
-        ],
-        hover: [
-            { name: 'The lattice glints', text: 'The star lattice glints gold; Open underlines in gold; focus traces a double gold ring.' },
-            { name: 'The vellum warms', text: 'The gold rim brightens; Open underlines in lapis ink; focus halos the tile in gold.' },
-            { name: 'The margin brightens', text: 'The gold margin rule doubles; Open underlines; focus adds a rubric-red mark.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Gilded', text: 'The tile flares with light once, slowing as it lands.' },
-            { name: 'Inked again', text: 'The tile is traced again from its edge, easing in and out.' },
         ],
     },
     nostromo: {
@@ -789,11 +690,8 @@ const PICKED = {
     brutalism: ['2', '1', '3', '1', '1', '2'],
     deco: ['3', '2', '3', '1', '2', '2'],
     phantom: ['2', '2', '2', '3', '1', '1'],
-    'shade-light': ['1', '2', '2', '1', '3', '2'],
-    'shade-dark': ['1', '1', '3', '1', '1', '2'],
     retro: ['1', '1', '3', '1', '1', '3'],
     grotesk: ['1', '3', '2', '2', '1', '2'],
-    lapis: ['1', '3', '3', '2', '3', '2'],
     nostromo: ['2', '1', '2', '3', '3', '1'],
     titanium: ['1', '2', '2', '1', '2', '3'],
 };

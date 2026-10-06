@@ -13,40 +13,6 @@
    can never collide with round 2's plain `1`/`2`/`3` or another group's
    keys. */
 export default {
-    'shade-dark': {
-        loading: [
-            [
-                'The silverpoint trace',
-                'Every link draws itself in from the hub outward, one after another round the ring, a thin silver line finding its way across the dark sheet; once the ring is traced it fades back to the start and draws again.',
-                'r3-sh-load-1',
-            ],
-            [
-                'The ring is hatched',
-                'Each node’s ring is laid down in short silver hatching strokes, one ring after another round the circle, as if a hand is sketching every site into the dark paper in turn.',
-                'r3-sh-load-2',
-            ],
-            [
-                'The pencil travels the line',
-                'A bright silver point runs the full length of every link out from the hub, over and over, like a drafting pencil tracking each wire to find where it goes.',
-                'r3-sh-load-3',
-            ],
-            [
-                'Struck onto the page',
-                'Each site swells once and settles, round the ring in turn, as if it is being struck onto the dark sheet one mark at a time; the hub keeps a slow, steady breath beneath it all.',
-                'r3-sh-load-4',
-            ],
-            [
-                'The hub pings out',
-                'A faint silver ring breathes outward from the hub again and again, and as it passes each link that link’s line thickens for a moment, a pulse read all the way out to the rim.',
-                'r3-sh-load-5',
-            ],
-            [
-                'The hand still sketching',
-                'The whole network sways very slightly, as a hand still holding the pencil would, while every node’s core quietly swells and settles in its own turn — the sheet is not finished yet.',
-                'r3-sh-load-6',
-            ],
-        ],
-    },
     retro: {
         loading: [
             [
@@ -112,40 +78,6 @@ export default {
                 'The timetable flips through every stop',
                 'Each site flips a quarter turn and holds, one after another round the ring, square and definite, like a split-flap timetable display working through every stop on the line.',
                 'r3-gk-load-6',
-            ],
-        ],
-    },
-    lapis: {
-        loading: [
-            [
-                'A glint runs the gilt lines',
-                'A bright gold glint runs the full length of every link, hub to rim, one after another round the ring, the way gilding catches the light as a hand draws it out line by line.',
-                'r3-lp-load-1',
-            ],
-            [
-                'The burnisher turns on every ring',
-                'Each node’s gold rim turns slowly under an unseen burnisher, one medallion after another round the ring, polishing every site in its turn before moving to the next.',
-                'r3-lp-load-2',
-            ],
-            [
-                'The lattice is laid, link by link',
-                'Every link draws itself in from the hub outward, one tessera of the lattice after another, the pattern assembling itself round the ring before it starts again from the centre.',
-                'r3-lp-load-3',
-            ],
-            [
-                'Gold leaf is tapped into place',
-                'Each site settles into the page with a small, soft bounce, one after another round the ring, as if a leaf of gold is being tapped down and smoothed at every site in turn.',
-                'r3-lp-load-4',
-            ],
-            [
-                'Illumination spreads from the hub',
-                'The hub breathes a slow gold glow, and that glow travels straight out along every link in turn, the way the light in an illuminated capital spreads out across the page.',
-                'r3-lp-load-5',
-            ],
-            [
-                'The star tile slowly turns',
-                'The whole lattice of nodes and links turns gently about the hub, round and round without hurry, the way a girih star tile turns under the glass to show every facet in turn.',
-                'r3-lp-load-6',
             ],
         ],
     },

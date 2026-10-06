@@ -1,0 +1,158 @@
+/* The page: a centred column, one section with its controls and one row per
+   family, each row a grid of cards, one card per component: its name, the
+   picked option's name and key, and the component's own demo in a frame. */
+.fm-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 110rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.fm-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fm-intro h1,
+.fm-intro p {
+    margin: 0;
+}
+
+.fm-meta {
+    color: var(--muted-foreground);
+}
+
+.fm-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-fm-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.fm-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.fm-sec__head,
+.fm-family__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.fm-sec__head h2,
+.fm-sec__head p,
+.fm-family__head h3,
+.fm-family__head p,
+[data-review-look] p {
+    margin: 0;
+}
+
+.fm-sec__head p,
+.fm-family__head p {
+    color: var(--muted-foreground);
+}
+
+.fm-rows {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.fm-family {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two cards side by side on a desk, one on a phone; every card in a row the
+   same width and the same height (the taller picture sets it, the shorter one
+   sits at the top), so the pictures compare at one size and the gallery's
+   edges line up. */
+.fm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 34rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.fm-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.fm-card__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--kp-space-xs, 0.25rem);
+    min-block-size: 1.5em;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.fm-card__label [data-fm-name] {
+    color: var(--muted-foreground);
+}
+
+.fm-card__label code {
+    margin-inline-start: auto;
+    color: var(--muted-foreground);
+    font-size: 0.85em;
+}
+
+/* The frame keeps a height until its demo says its own, so a card that has
+   not loaded yet holds its place. */
+.fm-card__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: 16rem;
+    border: 0;
+    background: var(--background);
+}
+
+.fm-card[data-fm-missing] .fm-card__frame {
+    outline: 2px dashed var(--destructive);
+}
+
+/* In the review dialog the shown card takes the stage's width. */
+[data-rv-flip-trio] .fm-card__frame {
+    min-inline-size: min(100%, 60rem);
+}
+
+/* What the frame tells beside the key: the played pointer's part and state,
+   or a key that differs from the decided one (a fault, in the warning ink). */
+.fm-card__label [data-fm-told] {
+    flex-basis: 100%;
+    color: var(--muted-foreground);
+    font-size: 0.85em;
+}
+
+.fm-card[data-fm-wrong] {
+    border-color: var(--destructive);
+}
+
+.fm-card[data-fm-wrong] [data-fm-told] {
+    color: var(--destructive);
+}

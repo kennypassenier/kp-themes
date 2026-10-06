@@ -107,20 +107,6 @@
             "focus": "3",
             "live": "2"
         },
-        "shade-light": {
-            "shape": "3",
-            "loading": "r3-d-shl-load-6",
-            "arrival": "2",
-            "focus": "3",
-            "live": "2"
-        },
-        "shade-dark": {
-            "shape": "1",
-            "loading": "r3-sh-load-4",
-            "arrival": "2",
-            "focus": "2",
-            "live": "2"
-        },
         "retro": {
             "shape": "1",
             "loading": "r3-rt-load-1",
@@ -132,13 +118,6 @@
             "shape": "1",
             "loading": "r5-gk-load-3",
             "arrival": "2",
-            "focus": "2",
-            "live": "2"
-        },
-        "lapis": {
-            "shape": "2",
-            "loading": "r4-lp-load-6",
-            "arrival": "3",
             "focus": "2",
             "live": "2"
         },

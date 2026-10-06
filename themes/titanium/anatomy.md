@@ -13,7 +13,7 @@ round that produced this theme opened asking for one called hypertech —
 a category, defined by an empty place on the colour wheel — and it cost
 six refused worlds before the answer turned out to be a material, which
 is how every theme in this package is named. Retro is the desktop,
-terminal is the tube, blueprint is the drawing, lapis is the stone.
+terminal is the tube, blueprint is the drawing, forest is the map.
 
 The colour has a **cause**, and that is the whole theme. Anodising does
 not add pigment: it grows an oxide film, and the film's thickness decides
@@ -59,7 +59,7 @@ Kenny**, not corrections made here:
 All three are hairline — two of them by five hundredths — and all three
 come from the same root: the demo's signal is a near-white at 87%
 lightness, so two derived steps down do not travel far enough to read as
-a press. That is the same complaint Kenny made about shade-dark on
+a press. That is the same complaint Kenny made about Shade (dark) on
 2026-09-11, arriving from the other direction.
 
 ## Answers to the invariant questions

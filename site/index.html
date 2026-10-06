@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Start — kp-themes</title>
-        <meta name="description" content="The kp-themes design system: 22 themes, two delivery channels, no runtime dependencies." />
+        <meta name="description" content="The kp-themes design system: 19 themes, two delivery channels, no runtime dependencies." />
         <!-- The theme a reader chose on another page, before first paint:
              without it every page opened in formal again. -->
         <script>
@@ -33,7 +33,6 @@
         <link rel="stylesheet" href="../css/brutalism-register.css" />
         <link rel="stylesheet" href="../css/titanium-register.css" />
         <link rel="stylesheet" href="../css/pastel-register.css" />
-        <link rel="stylesheet" href="../css/shade-light-register.css" />
         <link rel="stylesheet" href="../css/forest-register.css" />
         <link rel="stylesheet" href="../css/deco-register.css" />
         <link rel="stylesheet" href="../css/light-register.css" />
@@ -45,15 +44,13 @@
         <link rel="stylesheet" href="../css/sepia-register.css" />
         <link rel="stylesheet" href="../css/solstice-register.css" />
         <link rel="stylesheet" href="../css/high-contrast-register.css" />
-        <link rel="stylesheet" href="../css/lapis-register.css" />
-        <link rel="stylesheet" href="../css/shade-dark-register.css" />
         <link rel="stylesheet" href="../site/site.css" />
     </head>
     <body>
         <a class="sc-skip" href="#main">Skip to content</a>
         <!-- The theme switcher, fixed in the top right corner of every page
              (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
-        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="shade-light"><span class="kp-swatch" data-theme="shade-light"></span>Shade (light)</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="shade-dark"><span class="kp-swatch" data-theme="shade-dark"></span>Shade (dark)</button></li><li><button type="button" data-kp-theme="lapis"><span class="kp-swatch" data-theme="lapis"></span>Lapis</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="high-contrast"><span class="kp-swatch" data-theme="high-contrast"></span>High contrast</button></li><li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="retro"><span class="kp-swatch" data-theme="retro"></span>Retro</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
         <div class="kp-sidebar">
             <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
                 <a class="sc-brand kp-fw-bold" href="../site/index.html">kp-themes</a>
@@ -178,7 +175,7 @@
                 <div class="kp-page sc-measure">
                 <header class="kp-section">
                     <h1 class="kp-fw-bold">kp-themes</h1>
-                    <p class="kp-prose">One design system, 22 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
+                    <p class="kp-prose">One design system, 19 themes, two delivery channels and no runtime dependencies. Every page on this site is generated from the package's own sources, so nothing here can drift from what ships.</p>
                 </header>
                 <section class="kp-section" data-sc-section="install" id="install">
                     <h2 class="kp-fw-semibold">Install</h2>
@@ -189,7 +186,7 @@
 &lt;<span class="kp-code__keyword">link</span> <span class="kp-code__keyword">rel</span><span class="kp-code__string">=&quot;stylesheet&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;node_modules/@kp-soft/themes/css/utilities.css&quot;</span> /&gt;</code></pre>
                 </section>
                 <section class="kp-section" data-sc-section="themes" id="themes">
-                    <h2 class="kp-fw-semibold">The 22 themes</h2>
+                    <h2 class="kp-fw-semibold">The 19 themes</h2>
                     <p class="kp-prose">Each theme answers the same questions differently. What follows is why each one exists, taken from its own anatomy document, with its live tokens beside it.</p>
                     <div class="kp-autogrid kp-gap-lg">
                     <article class="kp-card sc-story" data-sc-story="formal" data-theme="formal">
@@ -836,147 +833,6 @@ would make this a dark grey theme with a red button.</li>
 </ol>
                         </div>
                     </article>
-                    <article class="kp-card sc-story" data-sc-story="shade-light" data-theme="shade-light">
-                        <h3 class="kp-fw-semibold kp-mb-sm">shade-light</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>Reading a book in the shade, not in the sun. The only theme in the set
-built on medium contrast: warm off-white paper and a blue-grey ink that
-stops well short of black, so a long text is restful rather than sharp.
-Derived from Solarized, whose sixteen values were designed for exactly
-this, and shipped as a pair — <code>shade-light</code> and <code>shade-dark</code> share one
-scheme with the lightness steps mirrored.</p>
-<p>The lift adds one idea on top of the base tokens: <strong>soft elevation,
-layered surfaces, shadow doing the work colour usually does</strong> — the
-direction the round's own plan names for this theme. A floating surface
-(a dropdown, a popover, a toast, a dialog) lifts off the page on a
-shadow in the theme's own ink, at low opacity; a flat surface (a card,
-an alert, the dossier, the spec sheet) stays exactly that, a border and
-nothing else, because the demo itself is this restrained — only the
-nav's dropdown and the wipe-confirmation dialog carry a shadow at all.
-The register generalises that restraint to every floating surface the
-package has (the popover, the toast, the tooltip, the confirm dialog,
-the datepicker panel, the combobox list, the command palette, the
-shortcut sheet, the theme menu) rather than leaving them plain, the same
-way retro generalised its bevel from the two controls the 3.1.0 base
-already carried to the whole desktop.</p>
-<ol>
-<li><strong>The ink is base01, not base00.</strong> Solarized's own light-mode text
-colour <code>#657b83</code> measures 4.13:1 on <code>#fdf6e3</code> and fails AA; the
-darker <code>#586e75</code> — <code>hsl(194, 14%, 40%)</code> — measures 4.99:1 and was the
-text. That is the whole meaning of &quot;medium contrast&quot; here: as low as
-AA allows, and not lower. <strong>Deepened to <code>hsl(194, 14%, 36%)</code> at
-<code>scope-102</code></strong> (Kenny, 2026-09-16, shade-light-muted &quot;Gewone tekst ook
-donkerder&quot;), the same hue and saturation four steps down: base01 at
-40% left no room under it for a muted ink, because <code>scope-101</code> had to
-push <code>--muted-foreground</code> to 39% to clear AA at all, and the quiet
-text then read stronger than the running text. The body ink now
-measures 5.30 on <code>--muted</code>, 5.86 on <code>--background</code> and 6.07 on
-<code>--card</code>, against the muted ink's 4.71, 5.21 and 5.39 — 0.59 to 0.68
-of separation, with both over 4.5:1 everywhere. One ink, one value:
-<code>--card-foreground</code>, <code>--popover-foreground</code>, <code>--surface-hero-fg</code> and
-<code>--surface-hero-card-foreground</code> carry the same colour and moved with
-it. <code>--surface-hero-muted</code> stayed at 40% and so became the hero's own
-quiet ink (4.99 against the hero body's 5.86), which it had never
-been.</li>
-<li><strong>Accents are plates, never words.</strong> Solarized's blue, cyan, yellow,
-magenta and red were drawn for syntax highlighting, where 3:1 is
-normal. As text they fail, so each is deepened where it carries text
-(<code>--primary</code> blue at 38% instead of 49%) and otherwise used as a
-plate with paper ink. The demo states this rule in its own words, in
-its own lede — &quot;accents that stay plates, never words&quot; — and the
-register holds it: <code>--accent</code> never sets <code>color</code> on real text
-anywhere in <code>css/shade-light-register.css</code>, only <code>background</code>,
-<code>border</code> or a small dot.</li>
-<li><strong>The card is lighter than the paper.</strong> Solarized puts base2 below
-base3; the DI6 gate, which holds a raised surface above the one below
-it in every theme, sent the card the other way. The base2 value
-survives as <code>--secondary</code> and the borders.</li>
-<li><strong>Source Serif 4 for headings, Source Sans 3 for the body</strong>, the pair
-Adobe drew to sit together — this is a text theme and its type should
-say so. Both are shipped (C4); the body face is renamed &quot;KP Shade
-Sans&quot; at build, because its OFL carries a Reserved Font Name clause
-(<code>fonts/families.json</code>) and a subset is a Modified Version that may
-not keep the original name.</li>
-<li><strong>The light is the pointer, since <code>scope-101</code></strong> (scope-25, Kenny:
-&quot;the pointer is the light, and the light half throws its shade away
-from it while the dark half is lifted out of shade by it&quot;). The plain
-button, the card and the hero headline multiply the offsets scope-12
-fixed at the top left by the direction away from the pointer that
-<code>js/effects.js</code> writes on each of them. It is the same
-<code>--kp-pointer: track</code> bus dark and titanium already arm, with
-<code>--kp-light: pointer</code> naming the lit surfaces; every rule falls back
-to the old fixed light, so a touch screen, a keyboard, reduced motion
-or a page without the module paints exactly what shipped before.</li>
-<li><strong>The shadow is one token, three depths.</strong> <code>--kp-shadow-1/2/3</code> in
-<code>css/shade-light-register.css</code> are all <code>hsl(from var(--foreground) h s l / a)</code>
-at increasing blur and increasing alpha (0.1, 0.3, 0.35) — never a
-colour of the register's own, and never applied to a flat surface.
-Only the second and third are carried by a surface (below);
-<code>--kp-shadow-1</code> is declared and nothing in the package uses it.</li>
-</ol>
-                        </div>
-                    </article>
-                    <article class="kp-card sc-story" data-sc-story="shade-dark" data-theme="shade-dark">
-                        <h3 class="kp-fw-semibold kp-mb-sm">shade-dark</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>The dark half of the shade pair: the same Solarized scheme with the
-lightness steps mirrored, so switching between the two halves changes the
-ground and keeps the accents. Medium contrast on a deep blue-black, for
-reading at night without the glare of white text. See
-<a href="../shade-light/anatomy.md">shade-light</a> for the idea the pair shares;
-this document records only what the dark half does differently.</p>
-<p>Shade-dark is a <strong>one-ground theme</strong>: the hero and the app share
-<code>--background</code> (<code>--surface-hero-bg</code> equals <code>--background</code> in
-<code>tokens.json</code>), which is load-bearing for the divider below — a plain
-fade to transparent would fade to the colour it already sits on and
-vanish.</p>
-<ol>
-<li><strong>The ground is base03, the text is lifted.</strong> <code>hsl(192, 100%, 11%)</code> is
-Solarized's own; the canonical text colour base0 measured 4.28:1 on
-the card and was lifted to <code>hsl(186, 8%, 64%)</code>, which reads at 4.5 on
-every surface and still stops far short of white.</li>
-<li><strong>Accents lighter than the light half's.</strong> Blue at 60% instead of
-38%, magenta at 58%, red at 66%: the same hues, mirrored across the
-middle, so a plate reads at the same contrast on either ground.</li>
-<li><strong>The layers rise.</strong> Ground 11%, card 14%, popover 17% — deliberate,
-where the light half's card goes the other way.</li>
-<li><strong>No elevation shadow.</strong> <code>--fx-lift: 0px</code> and <code>--fx-shadow-offset: 0px</code>
-already shipped; three independently measured sources (this
-theme's own research, obsidianassembly.com, Dark_Editorial.html)
-carried between zero and three soft box-shadows each. Depth between
-surfaces (bg → card → popover, and the dossier card) comes from the
-tone ladder alone. What does cast a shadow is a control, not a
-surface: since scope-12 the plain button (not the variants) and the
-back-to-top control lie under one light from the top left, and the
-side navigation's current row and a media frame are set into the page
-with an inset one. <strong>Since <code>scope-101</code> that light is the pointer</strong>
-(scope-25, &quot;the dark half is lifted out of shade by it&quot;): the plain
-button, the card and the hero take the direction away from the pointer
-and a pale radial patch of the foreground where it stands — 8% on a
-button, 6% on a card and the hero. Without a pointer, under reduced
-motion, on a touch screen, while tabbing or without <code>js/effects.js</code>
-the fixed top-left light is what paints, unchanged from scope-12.</li>
-<li><strong>No texture.</strong> <code>--fx-texture</code> stays unset. No starfield, no grain —
-the register adds nothing to the ground.</li>
-</ol>
-                        </div>
-                    </article>
                     <article class="kp-card sc-story" data-sc-story="retro" data-theme="retro">
                         <h3 class="kp-fw-semibold kp-mb-sm">retro</h3>
                         <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
@@ -1070,64 +926,6 @@ content/spec split, the redaction bars: nothing in this register is a
 </ol>
                         </div>
                     </article>
-                    <article class="kp-card sc-story" data-sc-story="lapis" data-theme="lapis">
-                        <h3 class="kp-fw-semibold kp-mb-sm">lapis</h3>
-                        <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
-                            <li class="sc-swatch" data-sc-token="background"><span class="sc-swatch__chip" data-sc-swatch="background"></span><span class="sc-swatch__name">background</span></li>
-                            <li class="sc-swatch" data-sc-token="card"><span class="sc-swatch__chip" data-sc-swatch="card"></span><span class="sc-swatch__name">card</span></li>
-                            <li class="sc-swatch" data-sc-token="foreground"><span class="sc-swatch__chip" data-sc-swatch="foreground"></span><span class="sc-swatch__name">foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="primary"><span class="sc-swatch__chip" data-sc-swatch="primary"></span><span class="sc-swatch__name">primary</span></li>
-                            <li class="sc-swatch" data-sc-token="muted-foreground"><span class="sc-swatch__chip" data-sc-swatch="muted-foreground"></span><span class="sc-swatch__name">muted-foreground</span></li>
-                            <li class="sc-swatch" data-sc-token="border"><span class="sc-swatch__chip" data-sc-swatch="border"></span><span class="sc-swatch__name">border</span></li>
-                        </ul>
-                        <div class="kp-prose">
-<p>Tazhib, the illumination of a Persian manuscript: a lapis-ultramarine
-ground, ivory text, gold ruling, vermilion accents, and a ten-fold girih
-star tiled under the glass of the hero and the app surface. The only dark
-theme in the set built on a saturated pigment rather than a neutral —
-formal has the navy and the bronze but on light paper, blueprint has the
-blue but as a technical drawing, and neither is black anywhere. Nothing
-here is.</p>
-<p>Round six's approved concept demo, &quot;Lapis and Leaf&quot; (2026-09-08), is the
-specification this register is built from (S49); this document is the
-anatomy's answer, not the demo itself.</p>
-<ol>
-<li><strong>The ground is a pigment.</strong> <code>hsl(228, 60%, 26%)</code> is lapis, not navy;
-the card and popover are the same pigment lifted (31%, 36%), so DI6's
-rising layers are written in lightness, not in saturation — a more
-saturated lapis would look richer and read as lower.</li>
-<li><strong>Gold acts.</strong> <code>--primary</code> at <code>hsl(43, 67%, 50%)</code> measures 5.83:1 on
-lapis and carries a deep-blue ink; the boundaries are a quieter gold
-(<code>--border-strong</code>, <code>hsl(43, 45%, 52%)</code>), and the card, the popover,
-the spec sheet and every dropdown carry a four-ring frame — a ruled
-border of concentric insets drawn rather than filled, the page a
-manuscript was ruled inside.</li>
-<li><strong>Vermilion is a plate, never text.</strong> <code>hsl(5, 75%, 55%)</code> on lapis
-measures 3.24:1 and on card 2.78:1 — enough for a large-text accent
-or a filled chip with a dark ink, not for a word of running prose.
-Where red must be text (<code>--destructive</code>) it is lifted to 70%
-lightness (<code>hsl(5, 90%, 70%)</code>, 4.99:1 on lapis).</li>
-<li><strong>Markazi Text for headings, Vazirmatn for the body.</strong> Both drawn for
-Arabic script with a Latin that holds its own; the pairing is the
-manuscript and its margin notes. Both are already shipped
-(<code>fonts/families.json</code>, OFL-1.1, no Reserved Font Name clause) — X3
-needed no work.</li>
-<li><strong>The girih tile is confined to what it decorates.</strong> The demo refuses
-this theme's own pre-round-six page-wide texture (3.1.1, TH74) as a
-hazard — &quot;the same conic-gradient recipe at 5%, confined to the
-hero/app surfaces, not the whole page&quot; — so the register turns the
-page-wide layer off (<code>--fx-texture-opacity: 0</code>, a later cascade layer
-than <code>css/_rules.css</code>'s <code>kp.base</code> declaration of it) and paints the
-tile itself only where <code>[data-kp-surface]</code> stands.</li>
-<li><strong>The burnish, not a decipher or a type.</strong> The headline is whole and
-already gold; a single clip-path wipe opens it left to right once,
-with a brief brightness lift that settles as it lands — a gilder's
-burnishing pass, not a per-glyph or per-word reveal. This is the
-theme's own headline routine, <code>gild</code> (S49, X2 — see &quot;What the demo
-showed&quot; below).</li>
-</ol>
-                        </div>
-                    </article>
                     <article class="kp-card sc-story" data-sc-story="nostromo" data-theme="nostromo">
                         <h3 class="kp-fw-semibold kp-mb-sm">nostromo</h3>
                         <ul class="sc-swatches kp-row kp-gap-xs kp-mb-md">
@@ -1186,7 +984,7 @@ round that produced this theme opened asking for one called hypertech —
 a category, defined by an empty place on the colour wheel — and it cost
 six refused worlds before the answer turned out to be a material, which
 is how every theme in this package is named. Retro is the desktop,
-terminal is the tube, blueprint is the drawing, lapis is the stone.</p>
+terminal is the tube, blueprint is the drawing, forest is the map.</p>
 <p>The colour has a <strong>cause</strong>, and that is the whole theme. Anodising does
 not add pigment: it grows an oxide film, and the film's thickness decides
 which wavelength survives. So the blue-violet on every edge really is
