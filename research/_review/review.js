@@ -1046,6 +1046,16 @@ async function show(at) {
         // A demo can act when its section comes on screen (signature-dialog
         // opens its dialog, so the entrance plays without a click).
         for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
+        // Every pick already on file goes to the demo before the next aspect is
+        // shown: the shape picked one step earlier is the shape every later
+        // option is drawn in (Kenny, 2026-10-06 18:50). A pick made by flipping
+        // never passed through the radio's change handler, so the demo kept
+        // drawing its default.
+        for (const pair of shownPairs)
+            for (const choice of pair.item?.choices || []) {
+                const value = choiceOf(pair, choice);
+                if (value) pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value } }));
+            }
         // The shown option's own motion plays at once: its controls are pressed for the reviewer.
         if (step.aspect) requestAnimationFrame(() => paintFlip(step));
     } finally {
@@ -1176,73 +1186,87 @@ dialog.addEventListener('click', (event) => {
     if (target.closest('[data-rv-approve]')) approveStep();
 });
 
-dialog.addEventListener('keydown', (event) => {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
-    // Closed here rather than by the browser's own cancel: Chromium dropped
-    // the Escape after the dialog had switched the theme a few times.
-    if (event.key === 'Escape') {
-        event.preventDefault();
-        dialog.close();
-        return;
-    }
-    // Inside a note the arrows move the caret. Inside the demo on stage and
-    // its mirrored controls they scroll, walk a chart or move a day; there
-    // the step keys stay off, so a key meant for the demo never approves or
-    // switches the theme [fix-103].
-    const from = /** @type {HTMLElement} */ (event.target);
-    if (from.matches('textarea, input')) return;
-    // The home-row letters never mean anything to a demo, so they act even when
-    // the focus sits in the demo or its controls (after a click there); the
-    // arrows, Space and Enter stay the demo's own there [fix-103].
-    const letter = /^Key[A-Z]$/.test(event.code) || (event.code === 'Space' && Boolean(steps[index]?.aspect) && !stage.contains(from));
-    if (!letter && (event.defaultPrevented || stage.contains(from) || controlsBox.contains(from))) return;
-    const step = steps[index];
-    // ←/→ flip the option shown on an aspect page; on a page without aspects
-    // they still move between steps, as before. Moving between pages always
-    // works via PageUp/PageDown now that ←/→ can mean "flip" [form v32].
-    if (event.key === 'PageUp' || event.key === 'PageDown') {
-        event.preventDefault();
-        show(index + (event.key === 'PageDown' ? 1 : -1));
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        if (step?.aspect) flip(step, event.key === 'ArrowRight' ? 1 : -1);
-        else show(index + (event.key === 'ArrowRight' ? 1 : -1));
-    } else if (event.key === 'ArrowUp' || (event.key === 'Enter' && step?.aspect && !from.matches('button, a, summary'))) {
-        // A focused button/link keeps its own Space/Enter (the flip arrows, Replay,
-        // Pause, Speed, or the approve button itself, which calls approveStep() too).
-        event.preventDefault();
-        approveStep();
-    } else if (step?.aspect && (event.key === 'ArrowDown' || event.key.toLowerCase() === 'n')) {
-        event.preventDefault();
-        const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
-        if (box && !box.checked) {
-            box.checked = true;
-            box.dispatchEvent(new Event('change'));
-        }
-    } else if (step?.aspect) {
-        // The left hand on its home row: physical keys (event.code), so they sit
-        // under the same fingers on AZERTY (labels Q S D F, A Z E R) and QWERTY.
-        const act = {
-            KeyA: () => stepGroup(0, -1), // AZERTY Q: the state before
-            KeyS: () => stepGroup(0, 1), // S: the next state
-            KeyD: () => stepGroup(1, 1), // D: the next tone
-            KeyF: () => stepGroup(2, 1), // F: the next value of the third set
-            KeyR: () => replay(step), // R: replay
-            KeyE: () => cycleSpeed(), // E: speed
-            KeyQ: () => toggleTour(), // AZERTY A: tour the states by itself
-            KeyW: () => liveUpdate(), // AZERTY Z: a live update (Kenny, 2026-10-06 17:21)
-            Space: () => togglePause(), // the thumb: pause
-            KeyP: () => togglePause(),
-        }[event.code];
-        // Space always pauses on an aspect page, also when a button has the
-        // focus: the approve button holds the focus after every page change,
-        // and Space on it picked and moved on (Kenny, 2026-10-06 17:27).
-        if (act) {
+// Listened for on the document, not the dialog: when the focused option is
+// flipped away its element hides, the focus falls back to <body>, and a key
+// from there never reached a listener on the dialog (Kenny, 2026-10-06 18:50:
+// a click on the middle hover tile, then the arrows did nothing).
+document.addEventListener(
+    'keydown',
+    (event) => {
+        if (!dialog.open || event.altKey || event.ctrlKey || event.metaKey) return;
+        // Closed here rather than by the browser's own cancel: Chromium dropped
+        // the Escape after the dialog had switched the theme a few times.
+        if (event.key === 'Escape') {
             event.preventDefault();
-            act();
+            dialog.close();
+            return;
         }
-    }
-});
+        // Inside a note the arrows move the caret. Inside the demo on stage and
+        // its mirrored controls they scroll, walk a chart or move a day; there
+        // the step keys stay off, so a key meant for the demo never approves or
+        // switches the theme [fix-103].
+        const from = /** @type {HTMLElement} */ (event.target);
+        if (from.matches('textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="button"])')) return;
+        // On an aspect page every shortcut acts wherever the focus sits: on a tile
+        // clicked in the demo, a link, a control or a dialog button (Kenny,
+        // 2026-10-06 18:50: "alle shortcuts moeten altijd blijven werken"). The
+        // listener runs in the capture phase and keeps the key from the demo, so a
+        // focused demo element can neither swallow it nor act on it as well.
+        if (steps[index]?.aspect) {
+            if (/^(Arrow(Left|Right|Up|Down)|Enter|NumpadEnter|Space|Page(Up|Down)|Key[A-Z])$/.test(event.code)) event.stopPropagation();
+        } else if (stage.contains(from) || controlsBox.contains(from)) {
+            // Off the aspect pages the demo keeps its own keys [fix-103].
+            if (!/^Key[A-Z]$/.test(event.code)) return;
+        }
+        const step = steps[index];
+        // ←/→ flip the option shown on an aspect page; on a page without aspects
+        // they still move between steps, as before. Moving between pages always
+        // works via PageUp/PageDown now that ←/→ can mean "flip" [form v32].
+        if (event.key === 'PageUp' || event.key === 'PageDown') {
+            event.preventDefault();
+            show(index + (event.key === 'PageDown' ? 1 : -1));
+        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.preventDefault();
+            if (step?.aspect) flip(step, event.key === 'ArrowRight' ? 1 : -1);
+            else show(index + (event.key === 'ArrowRight' ? 1 : -1));
+        } else if (event.key === 'ArrowUp' || (event.key === 'Enter' && (step?.aspect || !from.matches('button, a, summary')))) {
+            // On an aspect page Enter always picks; elsewhere a focused button or
+            // link keeps its own Enter.
+            event.preventDefault();
+            approveStep();
+        } else if (step?.aspect && (event.key === 'ArrowDown' || event.key.toLowerCase() === 'n')) {
+            event.preventDefault();
+            const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
+            if (box && !box.checked) {
+                box.checked = true;
+                box.dispatchEvent(new Event('change'));
+            }
+        } else if (step?.aspect) {
+            // The left hand on its home row: physical keys (event.code), so they sit
+            // under the same fingers on AZERTY (labels Q S D F, A Z E R) and QWERTY.
+            const act = {
+                KeyA: () => stepGroup(0, -1), // AZERTY Q: the state before
+                KeyS: () => stepGroup(0, 1), // S: the next state
+                KeyD: () => stepGroup(1, 1), // D: the next tone
+                KeyF: () => stepGroup(2, 1), // F: the next value of the third set
+                KeyR: () => replay(step), // R: replay
+                KeyE: () => cycleSpeed(), // E: speed
+                KeyQ: () => toggleTour(), // AZERTY A: tour the states by itself
+                KeyW: () => liveUpdate(), // AZERTY Z: a live update (Kenny, 2026-10-06 17:21)
+                Space: () => togglePause(), // the thumb: pause
+                KeyP: () => togglePause(),
+            }[event.code];
+            // Space always pauses on an aspect page, also when a button has the
+            // focus: the approve button holds the focus after every page change,
+            // and Space on it picked and moved on (Kenny, 2026-10-06 17:27).
+            if (act) {
+                event.preventDefault();
+                act();
+            }
+        }
+    },
+    true,
+);
 
 dialog.addEventListener('close', putBack);
 

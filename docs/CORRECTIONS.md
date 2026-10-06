@@ -6321,3 +6321,49 @@ on the fix: all three stay and toggle the pause. Queued as fix-107-M1.
 after a page change.
 
 **9 · When we review the measure.** When the dialog's keys change.
+
+## fix-108 · A flipped pick did not carry into later steps, and a click in the demo stopped the arrows (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 18:50, on character-kpi: "Ik heb
+bij cyberpunk de shape gekozen, maar als ik verderga naar de volgende rondes
+is het een andere shape? En alle shortcuts moeten altijd blijven werken, ook
+als ik op een ander item focus, als ik bij hover op de middelste shape klik,
+dan werken mijn pijltjes bv niet meer." Two causes in research/_review/review.js.
+A pick made by flipping (ArrowUp or Enter) was stored, but only the old radio
+handler sent `review:choice` to the demo, so every later aspect was drawn in
+the default shape. And the key handler sat on the dialog and stepped aside
+for any focus inside the demo or its controls; once the focused option was
+flipped away it hid, the focus fell to `<body>`, and no key reached the
+dialog any more.
+
+**2 · Which gate let it through.** My key checks pressed keys after a click
+on the stage's empty space, never with a link inside an option focused, and
+never walked from one aspect to the next to see what the next row drew.
+
+**3 · Where else the same fault sits.** Every way the focus can sit away from
+the dialog: a demo link or button, a mirrored control, the None-of-these
+checkbox, and `<body>` after a hidden element. All four now go through the
+same handler. A text field and the note keep their own keys.
+
+**4 · How we prevent a repeat.** Every pick on file is sent to the demo each
+time a page is shown. On an aspect page the keys are read on the document in
+the capture phase, whatever has the focus, and kept from the demo.
+
+**5 · What the remedy costs.** On an aspect page a focused demo element no
+longer gets the arrows, Enter or Space itself; the demo's controls still
+answer a click.
+
+**6 · Who enforces it.** Code (the key handler and `show()`).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs picks shape 3, checks the next row draws
+shape 3, then focuses a link inside the shown option and a control and
+presses the arrows. Measured on the fix in Firefox on character-kpi: the
+next row drew shape 3 in all three cells, and ArrowRight/ArrowLeft flipped
+2, 3, 2 with the focus on a demo link (it fell to `<body>` after the first)
+and again with a control focused. Queued as fix-108-M1.
+
+**8 · Fallback.** If a key still goes missing, the dialog takes the focus
+back after every flip.
+
+**9 · When we review the measure.** When the dialog's keys change.
