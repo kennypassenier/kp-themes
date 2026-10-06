@@ -6414,6 +6414,8 @@ demo's own overflow rules.
 
 ## fix-110 · The page header's More menu was cut off (2026-10-06)
 
+Kenny, form v36 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 19:39: "pressing "More" makes the
 menu that pops up cut out, still need vertical space!" The header's pane
 `.ph-resize` (research/character-header/demo.css) clipped with `overflow:
