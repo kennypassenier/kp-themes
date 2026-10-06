@@ -6372,6 +6372,8 @@ back after every flip.
 
 ## fix-109 · The page header was cut off in the review dialog (2026-10-06)
 
+Kenny, form v35 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 19:26: "the page header on it's
 own demo, the component itself isn't even drawn fully vertically? I don't get
 how that happens, you have so much space on the page". In the flip, the shown

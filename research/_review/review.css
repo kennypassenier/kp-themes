@@ -548,3 +548,16 @@
         block-size: 2rem;
     }
 }
+
+/* The part an aspect is about, when the demo names it: a dashed outline
+   well outside the component's own border, in a colour no theme uses for
+   its parts, so it reads as the review's mark, not the theme's. */
+[data-rv-target] {
+    outline: 2px dashed #d946ef !important;
+    outline-offset: 6px !important;
+}
+
+.rv-flip__target {
+    color: #c026d3;
+    font-weight: 600;
+}

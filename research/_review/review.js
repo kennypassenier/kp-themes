@@ -608,6 +608,7 @@ function paintFlip(step) {
     } else {
         playAspect(flipPair.item.section, step.aspect);
     }
+    markTarget(shown);
     if (shown)
         requestAnimationFrame(() => {
             fitShown(shown);
@@ -626,6 +627,41 @@ function fitShown(/** @type {HTMLElement} */ shown) {
     const room = stage.clientHeight - top - 8;
     const need = shown.getBoundingClientRect().height;
     if (need > room && room > 0) shown.style.setProperty('zoom', String(Math.max(0.4, room / need)));
+}
+
+/**
+ * Outlines the part of the demo the aspect is about, when the demo names it
+ * (a choice's `target` selector and `targetName` words), and says so under
+ * the option's name (Kenny, 2026-10-06 19:33: "it's really not clear which
+ * parts of the demo you are targeting for evaluation"). A part that only
+ * appears later (the tour's ring after Next) is outlined when it does.
+ */
+let targetWatch = null;
+function markTarget(/** @type {HTMLElement | undefined} */ shown) {
+    targetWatch?.disconnect();
+    targetWatch = null;
+    for (const el of document.querySelectorAll('[data-rv-target]')) el.removeAttribute('data-rv-target');
+    const selector = flipChoice?.target;
+    if (!shown || !selector) return;
+    const mark = () => {
+        for (const el of document.querySelectorAll('[data-rv-target]'))
+            if (!shown.contains(el) || !el.matches(selector)) el.removeAttribute('data-rv-target');
+        for (const el of shown.querySelectorAll(selector)) if (!el.hasAttribute('data-rv-target')) el.setAttribute('data-rv-target', '');
+    };
+    mark();
+    targetWatch = new MutationObserver(mark);
+    targetWatch.observe(shown, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['data-kp-tour-target', 'class', 'open', 'hidden'],
+    });
+    if (flipChoice.targetName) {
+        const small = document.createElement('small');
+        small.className = 'rv-flip__target';
+        small.textContent = `Judge only what the dashed outline marks: ${flipChoice.targetName}.`;
+        flipLabel.append(small);
+    }
 }
 
 /** ←/→ and the on-screen arrows: the next or previous option, its motion restarted; never leaves the page. */
@@ -700,7 +736,16 @@ function liveUpdate() {
     const live = [...section.querySelectorAll('[data-review-controls] button')].find(
         (b) => !b.closest('.rv-controls') && (Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || '')),
     );
-    live?.click();
+    if (live) return live.click();
+    // A demo without a live update (busy, drawer, header …) says so instead
+    // of doing nothing (Kenny, 2026-10-06 19:29: "when I press Z … what's
+    // supposed to happen here?").
+    flipLabel.querySelector('.rv-flip__nokey')?.remove();
+    const note = document.createElement('small');
+    note.className = 'rv-flip__nokey';
+    note.textContent = 'This component has no live update, so Z does nothing here.';
+    flipLabel.append(note);
+    setTimeout(() => note.remove(), 2500);
 }
 
 function replay(step) {
@@ -767,6 +812,7 @@ function focusAspect(section, aspect) {
 }
 
 function putBack() {
+    markTarget(undefined);
     stopTour();
     teardownFlip();
     for (const [, section] of moved) focusAspect(section, null);

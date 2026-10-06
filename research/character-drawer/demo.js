@@ -1616,12 +1616,24 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 
 const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
     Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at].name}. ${idea[aspect][at].text}`]));
+/** The part each aspect is about, outlined in the review dialog. @type {Record<Aspect, { target: string, targetName: string }>} */
+const TARGETS = {
+    shape: { target: '.kp-drawer', targetName: 'the drawer panel: its plate, frame and dividers' },
+    openclose: { target: '.kp-drawer', targetName: 'the drawer panel as it opens and closes' },
+    highlight: { target: '[data-kp-tour-target]', targetName: 'the ring the tour draws around the part it talks about' },
+    card: { target: '.kp-tour', targetName: 'the tour’s step card' },
+    next: { target: '.kp-tour', targetName: 'the step card and its count as the tour moves on' },
+};
 section.setAttribute(
     'data-review-choices',
     JSON.stringify(
         ASPECTS.map(({ id, label }) => ({
             id,
             label,
+            // What the dialog outlines while this aspect is judged (Kenny,
+            // 2026-10-06 19:33: "it's really not clear which parts of the demo
+            // you are targeting for evaluation").
+            ...TARGETS[id],
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
         })),
     ),
