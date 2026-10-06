@@ -1318,7 +1318,12 @@ const setThemeName = () => {
     const name = theme();
     for (const el of document.querySelectorAll('[data-mb-theme-name]')) el.textContent = LABEL[name] ?? name;
 };
-new MutationObserver(setThemeName).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+// A theme switch (the review dialog walks the themes) recomposes too: which
+// rows are open, and every cell's options, depend on the theme.
+new MutationObserver(() => {
+    setThemeName();
+    compose();
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 setThemeName();
 
 compose();

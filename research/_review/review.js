@@ -409,7 +409,20 @@ dialog.innerHTML = `
                 <summary class="rv-controls__hint">Try every state and the speed before you judge</summary>
                 <div class="rv-controls__body" data-rv-controls-body></div>
             </details>
-            <div class="rv-dialog__stage" data-rv-stage></div>
+            <div class="rv-flip" data-rv-flip>
+                <button type="button" class="rv-flip__arrow rv-flip__arrow--left" data-rv-flip-prev aria-label="Previous option (←)" hidden>←</button>
+                <div class="rv-dialog__stage" data-rv-stage></div>
+                <button type="button" class="rv-flip__arrow rv-flip__arrow--right" data-rv-flip-next aria-label="Next option (→)" hidden>→</button>
+            </div>
+            <div class="rv-flip__bar" data-rv-flip-bar hidden>
+                <div class="rv-flip__dots" data-rv-flip-dots></div>
+                <p class="rv-flip__label" data-rv-flip-label></p>
+                <div class="rv-flip__tools" role="group" aria-label="Motion, for the option shown">
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-replay>⟲ Replay (R)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-pause aria-pressed="false">Pause (P)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-speed>Speed: Full (S)</button>
+                </div>
+            </div>
         </div>
         <div class="rv-dialog__side">
             <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
@@ -429,6 +442,15 @@ const stage = $('[data-rv-stage]');
 const list = $('[data-rv-list]');
 const refused = $('[data-rv-refused]');
 const approveButton = $('[data-rv-approve]');
+const flipWrap = $('[data-rv-flip]');
+const flipPrev = $('[data-rv-flip-prev]');
+const flipNext = $('[data-rv-flip-next]');
+const flipBar = $('[data-rv-flip-bar]');
+const flipDots = $('[data-rv-flip-dots]');
+const flipLabel = $('[data-rv-flip-label]');
+const flipPauseBtn = $('[data-rv-flip-pause]');
+const flipSpeedBtn = $('[data-rv-flip-speed]');
+const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let index = 0;
 /** The pairs on screen: the open ones of the step, or all of it once it is judged. */
@@ -437,6 +459,201 @@ let shownPairs = [];
 let moved = [];
 /** True while a theme loads: a key pressed then would judge a step not yet on screen. */
 let busy = false;
+
+/* ------------------------------------------------------- aspect flip ---
+ * One aspect page shows one option at a time, large (Kenny, form v32,
+ * 2026-10-06: Flip, "er moeten wel opties zijn om bv animaties terug te
+ * starten bv"). Every demo names its option cards the same way (an
+ * attribute ending in "-option", e.g. data-cc-option/data-tr-option): no
+ * per-demo class names are hard-coded here, so this works for every
+ * character-* demo in aspect mode without touching the demos themselves.
+ */
+let flipRow = null;
+let flipCells = [];
+let flipTrio = null;
+let flipChoice = null;
+let flipPair = null;
+let flipAt = 0;
+let motionPaused = false;
+let motionSpeed = '1';
+
+const optionIndexOf = (el) => {
+    for (const attr of el.attributes) if (/-option$/.test(attr.name)) return Number(attr.value);
+    return null;
+};
+/** The row's option cards, in order, however the demo names its own attribute. */
+const cellsOf = (row) =>
+    [...row.querySelectorAll('*')]
+        .map((el) => /** @type {[Element, number | null]} */ ([el, optionIndexOf(el)]))
+        .filter(([, n]) => n != null && !Number.isNaN(n))
+        .sort((a, b) => a[1] - b[1])
+        .map(([el]) => el);
+
+/** Re-presses the demo's own data-review-plays controls for one aspect (outside the mirrored copy). */
+function playAspect(section, aspectId) {
+    for (const b of section.querySelectorAll('[data-review-plays]'))
+        if (!b.closest('.rv-controls') && b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) /** @type {HTMLElement} */ (b).click();
+}
+
+/** Forces every CSS animation under `root` to restart from its first frame. */
+function restartMotion(root) {
+    const els = [root, ...root.querySelectorAll('*')];
+    for (const el of els) /** @type {HTMLElement} */ (el).style.animation = 'none';
+    void (/** @type {HTMLElement} */ (root).offsetWidth); // reflow, so the clear below is not coalesced with the set above
+    for (const el of els) /** @type {HTMLElement} */ (el).style.removeProperty('animation');
+}
+
+/** Finds the demo's own speed button (its attribute ends in "-speed") carrying this value, and clicks it. */
+function pressSpeed(value) {
+    for (const el of document.querySelectorAll('button')) {
+        if (el.closest('.rv-controls')) continue; // the mirrored copy; its click only forwards to this one anyway
+        for (const attr of el.attributes)
+            if (/-speed$/.test(attr.name) && attr.value === value) {
+                /** @type {HTMLElement} */ (el).click();
+                return;
+            }
+    }
+}
+
+/** Injects/updates the "every animation paused" rule the P key and button toggle. */
+function applyPauseStyle() {
+    let style = document.getElementById('rv-flip-pause');
+    if (!style) {
+        style = document.createElement('style');
+        style.id = 'rv-flip-pause';
+        document.head.append(style);
+    }
+    style.textContent = motionPaused ? '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' : '';
+    flipPauseBtn.setAttribute('aria-pressed', String(motionPaused));
+    flipPauseBtn.textContent = motionPaused ? 'Resume (P)' : 'Pause (P)';
+}
+
+/** Leaves the demo exactly as focusAspect found it: every cell shown again, no leftover sizing. */
+function teardownFlip() {
+    if (flipTrio) flipTrio.removeAttribute('data-rv-flip-trio');
+    for (const cell of flipCells) {
+        /** @type {HTMLElement} */ (cell).hidden = false;
+        /** @type {HTMLElement} */ (cell).style.removeProperty('--kp-kpi-spark-height');
+        /** @type {HTMLElement} */ (cell).style.removeProperty('--kp-graph-height');
+    }
+    flipRow = null;
+    flipCells = [];
+    flipTrio = null;
+    flipChoice = null;
+    flipPair = null;
+    flipWrap.classList.remove('rv-flip--active');
+    flipPrev.hidden = flipNext.hidden = true;
+    flipBar.hidden = true;
+}
+
+/** Finds the aspect's row and its option cards, and the flip's starting position (the pick already on file, else the first). */
+function setupFlip(step, pair) {
+    const section = pair.item.section;
+    const rowsAttr = section.dataset.reviewRows;
+    const row = rowsAttr ? section.querySelector(`[${rowsAttr}="${CSS.escape(step.aspect)}"]`) : null;
+    flipChoice = pair.item.choices.find((c) => c.id === step.aspect) || null;
+    flipPair = pair;
+    flipRow = row;
+    flipCells = row ? cellsOf(row).slice(0, flipChoice?.options.length || 0) : [];
+    flipTrio = flipCells[0]?.parentElement || null;
+    if (flipTrio) flipTrio.setAttribute('data-rv-flip-trio', '');
+    const already = flipChoice ? choiceOf(pair, flipChoice) : '';
+    const at = already ? flipChoice.options.findIndex((o) => o.value === already) : 0;
+    flipAt = at >= 0 ? at : 0;
+    flipWrap.classList.add('rv-flip--active');
+    flipPrev.hidden = flipNext.hidden = false;
+    flipBar.hidden = false;
+}
+
+/** Shows only flipCells[flipAt], large; its number, name and one-line note once; plays and restarts its motion. */
+function paintFlip(step) {
+    if (!flipRow) return;
+    flipCells.forEach((cell, i) => {
+        /** @type {HTMLElement} */ (cell).hidden = i !== flipAt;
+        /** @type {HTMLElement} */ (cell).style.removeProperty('--kp-kpi-spark-height');
+        /** @type {HTMLElement} */ (cell).style.removeProperty('--kp-graph-height');
+    });
+    const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
+    if (shown) {
+        shown.style.setProperty('--kp-kpi-spark-height', '16rem');
+        shown.style.setProperty('--kp-graph-height', '26rem');
+    }
+    const option = flipChoice?.options[flipAt];
+    flipLabel.replaceChildren();
+    if (option) {
+        const b = document.createElement('b');
+        b.textContent = `${flipAt + 1}/${flipChoice.options.length} · ${option.label}`;
+        flipLabel.append(b);
+        const hint = option.hints?.[flipPair.theme] || option.hint || '';
+        if (hint) {
+            const small = document.createElement('small');
+            small.textContent = hint;
+            flipLabel.append(small);
+        }
+    }
+    flipDots.replaceChildren(
+        ...(flipChoice?.options || []).map((_, i) => {
+            const dot = document.createElement('span');
+            if (i === flipAt) dot.className = 'rv-flip__dot--active';
+            return dot;
+        }),
+    );
+    const reduced = prefersReducedMotion();
+    if (reduced) {
+        const note = document.createElement('small');
+        note.className = 'rv-flip__reduced';
+        note.textContent = 'Reduced motion: still frame, no autoplay.';
+        flipLabel.append(note);
+    } else {
+        playAspect(flipPair.item.section, step.aspect);
+    }
+    if (shown)
+        requestAnimationFrame(() => {
+            fitShown(shown);
+            restartMotion(shown);
+        });
+    applyPauseStyle();
+    pressSpeed(motionSpeed);
+    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (S)`;
+}
+
+/** Scales the shown option down until all of it fits the stage's height: the element whole, never cropped. */
+function fitShown(/** @type {HTMLElement} */ shown) {
+    shown.style.removeProperty('zoom');
+    stage.scrollTop = 0;
+    const top = shown.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+    const room = stage.clientHeight - top - 8;
+    const need = shown.getBoundingClientRect().height;
+    if (need > room && room > 0) shown.style.setProperty('zoom', String(Math.max(0.4, room / need)));
+}
+
+/** ←/→ and the on-screen arrows: the next or previous option, its motion restarted; never leaves the page. */
+function flip(step, dir) {
+    if (!flipChoice || !step?.aspect) return;
+    flipAt = (flipAt + dir + flipChoice.options.length) % flipChoice.options.length;
+    paintFlip(step);
+}
+
+/** Replay (R / the button): restarts the shown option's motion from the start, without flipping away. */
+function replay(step) {
+    if (!step?.aspect || !flipPair) return;
+    const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
+    if (!prefersReducedMotion()) playAspect(flipPair.item.section, step.aspect);
+    if (shown) requestAnimationFrame(() => restartMotion(shown));
+}
+
+/** P / the button: pauses or resumes every animation and transition on the page. */
+function togglePause() {
+    motionPaused = !motionPaused;
+    applyPauseStyle();
+}
+
+/** S / the button: cycles the demo's own speed control through full, ½ and ¼. */
+function cycleSpeed() {
+    motionSpeed = motionSpeed === '1' ? '0.5' : motionSpeed === '0.5' ? '0.25' : '1';
+    pressSpeed(motionSpeed);
+    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (S)`;
+}
 /**
  * Resolves once the page's own scripts have run. The catalogue shell
  * (catalogue/catalogue.js, a module after this one) moves every child of the
@@ -482,6 +699,7 @@ function focusAspect(section, aspect) {
 }
 
 function putBack() {
+    teardownFlip();
     for (const [, section] of moved) focusAspect(section, null);
     unmirror();
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
@@ -624,9 +842,11 @@ function rowFor(pair, only = null) {
     if (look && !only) lookBox.innerHTML = look;
     else lookBox.remove();
     const choiceBox = li.querySelector('[data-rv-choices]');
-    for (const choice of pair.item?.choices || []) {
+    // In aspect mode the option itself is picked by flipping it large in the stage
+    // (flip()/paintFlip()), not by a radio here, so the sidebar carries only the
+    // "None of these" checkbox and note for this one aspect.
+    for (const choice of only ? [] : pair.item?.choices || []) {
         if (fixedFor(pair, choice)) continue;
-        if (only && choice.id !== only) continue;
         const set = document.createElement('fieldset');
         set.className = 'rv-choice';
         set.dataset.rvChoice = choice.id;
@@ -734,9 +954,13 @@ async function show(at) {
         // beoordelen ook in de dialog ... fix het"), never folded away.
         controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.aspect
-            ? 'One aspect per page, its motion already playing. Pick the option you want, or tick None of these and say what should change.'
+            ? 'One option at a time, large, its motion already playing. ←/→ flips to the next one; Space/Enter picks it; N is None of these.'
             : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
+        $('#rv-keys').textContent = step.aspect
+            ? '←/→ flip options · Space/Enter pick · N none of these · R replay · P pause · S speed · PageUp/PageDown move between pages · Escape closes.'
+            : 'Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
+        if (step.aspect) setupFlip(step, shownPairs[0]);
         const judgedHere = step.pairs.length - shownPairs.length;
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
@@ -753,14 +977,8 @@ async function show(at) {
         // A demo can act when its section comes on screen (signature-dialog
         // opens its dialog, so the entrance plays without a click).
         for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
-        // The aspect's own motion plays at once: its controls are pressed for the reviewer.
-        if (step.aspect)
-            for (const pair of shownPairs)
-                requestAnimationFrame(() => {
-                    for (const b of pair.item?.section.querySelectorAll('[data-review-plays]') || [])
-                        if (!b.closest('.rv-controls') && b.getAttribute('data-review-plays').split(/\s+/).includes(step.aspect))
-                            /** @type {HTMLElement} */ (b).click();
-                });
+        // The shown option's own motion plays at once: its controls are pressed for the reviewer.
+        if (step.aspect) requestAnimationFrame(() => paintFlip(step));
     } finally {
         busy = false;
     }
@@ -823,14 +1041,17 @@ function answerAspect(step) {
     if (!row || !pair) return;
     const none = /** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked;
     const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
-    const choice = pair.item.choices.find((c) => c.id === step.aspect);
+    // The pick comes from the flip stage (flipAt), not a radio here: one option is
+    // shown at a time, large, and ←/→ (or the on-screen arrows) choose it.
+    const choice = flipChoice || pair.item.choices.find((c) => c.id === step.aspect);
+    const value = choice?.options[flipAt]?.value || '';
     if (none && !note) {
         refused.textContent = 'None of these needs a note: what should change?';
         refused.hidden = false;
         row.querySelector('[data-rv-row-note]').focus();
         return;
     }
-    if (!none && !choiceOf(pair, choice)) {
+    if (!none && !value) {
         refused.textContent = `Pick one of the options, or tick None of these.`;
         refused.hidden = false;
         return;
@@ -842,7 +1063,7 @@ function answerAspect(step) {
         entry.redo[step.aspect] = note;
         delete entry.choices[step.aspect];
     } else {
-        entry.choices[step.aspect] = choiceOf(pair, choice);
+        entry.choices[step.aspect] = value;
         delete entry.redo[step.aspect];
     }
     state[pair.key] = entry;
@@ -877,6 +1098,12 @@ dialog.addEventListener('click', (event) => {
     if (target.closest('[data-rv-close]')) return dialog.close();
     const go = target.closest('[data-rv-go]');
     if (go) return show(index + Number(go.getAttribute('data-rv-go')));
+    const step = steps[index];
+    if (target.closest('[data-rv-flip-prev]')) return flip(step, -1);
+    if (target.closest('[data-rv-flip-next]')) return flip(step, 1);
+    if (target.closest('[data-rv-flip-replay]')) return replay(step);
+    if (target.closest('[data-rv-flip-pause]')) return togglePause();
+    if (target.closest('[data-rv-flip-speed]')) return cycleSpeed();
     if (target.closest('[data-rv-approve]')) approveStep();
 });
 
@@ -894,13 +1121,39 @@ dialog.addEventListener('keydown', (event) => {
     // the step keys stay off, so a key meant for the demo never approves or
     // switches the theme [fix-103].
     const from = /** @type {HTMLElement} */ (event.target);
-    if (event.defaultPrevented || from.matches('textarea') || stage.contains(from) || controlsBox.contains(from)) return;
-    if (event.key === 'ArrowUp') {
+    if (event.defaultPrevented || from.matches('textarea, input') || stage.contains(from) || controlsBox.contains(from)) return;
+    const step = steps[index];
+    // ←/→ flip the option shown on an aspect page; on a page without aspects
+    // they still move between steps, as before. Moving between pages always
+    // works via PageUp/PageDown now that ←/→ can mean "flip" [form v32].
+    if (event.key === 'PageUp' || event.key === 'PageDown') {
         event.preventDefault();
-        approveStep();
+        show(index + (event.key === 'PageDown' ? 1 : -1));
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         event.preventDefault();
-        show(index + (event.key === 'ArrowRight' ? 1 : -1));
+        if (step?.aspect) flip(step, event.key === 'ArrowRight' ? 1 : -1);
+        else show(index + (event.key === 'ArrowRight' ? 1 : -1));
+    } else if (event.key === 'ArrowUp' || ((event.key === ' ' || event.key === 'Enter') && step?.aspect && !from.matches('button, a, summary'))) {
+        // A focused button/link keeps its own Space/Enter (the flip arrows, Replay,
+        // Pause, Speed, or the approve button itself, which calls approveStep() too).
+        event.preventDefault();
+        approveStep();
+    } else if (step?.aspect && event.key.toLowerCase() === 'n') {
+        event.preventDefault();
+        const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
+        if (box && !box.checked) {
+            box.checked = true;
+            box.dispatchEvent(new Event('change'));
+        }
+    } else if (step?.aspect && event.key.toLowerCase() === 'r') {
+        event.preventDefault();
+        replay(step);
+    } else if (step?.aspect && event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        togglePause();
+    } else if (step?.aspect && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        cycleSpeed();
     }
 });
 
