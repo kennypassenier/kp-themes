@@ -1,4 +1,426 @@
-/* research/character-drawer, round 2 (Kenny, 2026-10-06 20:45): the new options of group b. */
+/* research/character-drawer, round 2, group b: high-contrast and
+   brutalism (css/components.css's `.kp-drawer__desc` is hard-coded to
+   `color: var(--muted-foreground)`, which only reads on a light head; every
+   shape below that darkens or inverts the head sets the description's
+   colour explicitly, right beside the head's own background, so it is
+   never left on the fixed grey. Every highlight below dims the stage with
+   the theme's own foreground colour at an alpha fraction (`hsl(from
+   var(--foreground) h s l / <alpha>)`), never a forced 50% lightness — the
+   measured cause of round 1's "it's just grey". `kp.signature` sits after
+   `kp.components` in the layer order (css/_header.css), so these rules win
+   over the package's own without needing extra specificity or
+   `!important`. */
 
 @layer kp.signature {
+    /* ════════════════════════ high-contrast: round 2 ═══════════════════ */
+
+    /* shape 1: the ink frame — a black head bar, white ink throughout, no grey */
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-1'] .dt-drawer {
+        --dt-plate: var(--background);
+        --dt-ink: var(--foreground);
+        border: 4px solid var(--foreground);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--foreground);
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-1'] .dt-drawer .kp-drawer__desc {
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--foreground);
+    }
+
+    /* shape 2: the signal board — a yellow warning strip across the top, black ink on white otherwise */
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-2'] .dt-drawer {
+        --dt-plate: var(--background);
+        --dt-ink: var(--foreground);
+        border: 4px solid var(--foreground);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-2'] .dt-drawer::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        block-size: 0.5rem;
+        background: var(--accent);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-2'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--foreground);
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-2'] .dt-drawer .kp-drawer__desc {
+        color: var(--foreground);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--foreground);
+    }
+
+    /* shape 3: the inverse plate — the whole panel inverted, ink set directly */
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-3'] .dt-drawer {
+        --dt-plate: var(--foreground);
+        --dt-ink: var(--background);
+        border: 4px solid var(--background);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 4px solid var(--background);
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-3'] .dt-drawer .kp-drawer__desc {
+        color: var(--background);
+    }
+
+    [data-theme='high-contrast'] [data-dt-shape='r2-hc-shape-3'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 4px solid var(--background);
+    }
+
+    /* openclose 1: it is switched — a single hard binary cut, no travel seen */
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-1'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-1 120ms steps(2, jump-end) both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-1 120ms steps(2, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-hc-openclose-1 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 2: it marches in — four equal hard-edged steps */
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-2 320ms steps(4, jump-end) both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-2 320ms steps(4, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-hc-openclose-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is racked into place — three hard stepped jumps, from below */
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-3'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-3'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 30%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-3 280ms steps(3, jump-end) both;
+        }
+
+        [data-theme='high-contrast'] [data-dt-openclose='r2-hc-openclose-3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-hc-openclose-3 280ms steps(3, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-hc-openclose-3 {
+        0% {
+            translate: 0 30%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* highlight 1: the inverse frame — true dark scrim at the foreground's own alpha, never a locked grey */
+    [data-theme='high-contrast'] [data-dt-highlight='r2-hc-highlight-1'] [data-kp-tour-target] {
+        outline: 6px solid var(--foreground);
+        outline-offset: 3px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.88);
+    }
+
+    /* highlight 2: the hazard ring — a dashed solid-accent ring (the closest
+       CSS-only reading of hazard tape), outside the border box so the
+       target's own content is never covered */
+    [data-theme='high-contrast'] [data-dt-highlight='r2-hc-highlight-2'] [data-kp-tour-target] {
+        outline: 5px dashed var(--accent);
+        outline-offset: 5px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.88);
+    }
+
+    /* highlight 3: the signal ring — a thick solid accent ring on true dark */
+    [data-theme='high-contrast'] [data-dt-highlight='r2-hc-highlight-3'] [data-kp-tour-target] {
+        outline: 6px solid var(--accent);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--foreground) h s l / 0.88);
+    }
+
+    /* ════════════════════════════ brutalism: round 2 ═══════════════════ */
+
+    /* shape 1: the stacked blocks — a solid black head bar, ink set directly, hard offset shadow */
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-1'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: var(--kp-line, 3px) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-1'] .dt-drawer .kp-drawer__head {
+        background: var(--foreground);
+        color: var(--background);
+        border-block-end: var(--kp-line, 3px) solid var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-1'] .dt-drawer .kp-drawer__desc {
+        color: var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: var(--kp-line, 3px) solid var(--border-strong);
+    }
+
+    /* shape 2: the poster plate — a bold accent strip in the head, black ink stays on it */
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-2'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: var(--kp-line, 3px) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-2'] .dt-drawer .kp-drawer__head {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-block-end: var(--kp-line, 3px) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-2'] .dt-drawer .kp-drawer__desc {
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-2'] .dt-drawer .kp-drawer__foot {
+        border-block-start: var(--kp-line, 3px) solid var(--border-strong);
+    }
+
+    /* shape 3: the slab — squared off, black head and foot bars, ink set directly, faint form-tie dots */
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-3'] .dt-drawer {
+        --dt-plate: var(--card);
+        --dt-ink: var(--card-foreground);
+        border: var(--kp-line, 3px) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--dt-plate);
+        color: var(--dt-ink);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-3'] .dt-drawer .kp-drawer__head {
+        background: var(--foreground);
+        color: var(--background);
+        border-block-end: var(--kp-line, 3px) solid var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-3'] .dt-drawer .kp-drawer__desc {
+        color: var(--background);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-3'] .dt-drawer .kp-drawer__body {
+        background-image: radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.35) 1px, transparent 1.5px);
+        background-repeat: repeat;
+        background-size: 14px 14px;
+        background-color: var(--card);
+    }
+
+    [data-theme='brutalism'] [data-dt-shape='r2-br-shape-3'] .dt-drawer .kp-drawer__foot {
+        background: var(--foreground);
+        color: var(--background);
+        border-block-start: var(--kp-line, 3px) solid var(--background);
+    }
+
+    /* openclose 1: it is slammed down — a hard linear fall, the shadow snapping in on impact */
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-1'] .dt-drawer {
+        translate: 0 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-1'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 -120%;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-1'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-1 260ms linear both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-1'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-1 220ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-br-openclose-1 {
+        0% {
+            translate: 0 -120%;
+            box-shadow: none;
+        }
+
+        85% {
+            translate: 0 0;
+            box-shadow: none;
+        }
+
+        100% {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow);
+        }
+    }
+
+    /* openclose 2: it is cast in one pour — a short hard, fast, linear push, no overshoot */
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-2'] .dt-drawer {
+        translate: 0 0;
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-2'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-2 160ms linear both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-2 160ms linear both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-br-openclose-2 {
+        0% {
+            translate: 100% 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* openclose 3: it is thrown on — the shadow overshoots first, then snaps down with the panel's hard arrival */
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-3'] .dt-drawer {
+        translate: 0 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-3'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-3 300ms steps(3, jump-end) both;
+        }
+
+        [data-theme='brutalism'] [data-dt-openclose='r2-br-openclose-3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-r2-br-openclose-3 260ms steps(3, jump-end) both reverse;
+        }
+    }
+
+    @keyframes kp-sig-r2-br-openclose-3 {
+        0% {
+            translate: 100% 0;
+            box-shadow: none;
+        }
+
+        66% {
+            translate: 30% 0;
+            box-shadow: 6px 6px 0 var(--border-strong);
+        }
+
+        100% {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow);
+        }
+    }
+
+    /* highlight 1: the rivet ring — a thick black ring with square corner ticks, true dark scrim */
+    [data-theme='brutalism'] [data-dt-highlight='r2-br-highlight-1'] [data-kp-tour-target] {
+        outline: var(--kp-line, 3px) solid var(--border-strong);
+        outline-offset: 6px;
+        box-shadow:
+            var(--kp-pixel),
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.78);
+    }
+
+    /* highlight 2: the warning frame — a black ring then an accent ring (the
+       closest CSS-only reading of a hazard stripe, kept off the target's
+       own content: both rings are box-shadow bands outside the border box,
+       never a background painted under the target's text) */
+    [data-theme='brutalism'] [data-dt-highlight='r2-br-highlight-2'] [data-kp-tour-target] {
+        outline: none;
+        box-shadow:
+            0 0 0 4px var(--border-strong),
+            0 0 0 8px var(--secondary),
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.78);
+    }
+
+    /* highlight 3: the struck plate — a heavy ring with its own hard offset shadow, true dark scrim */
+    [data-theme='brutalism'] [data-dt-highlight='r2-br-highlight-3'] [data-kp-tour-target] {
+        outline: var(--kp-line, 3px) solid var(--border-strong);
+        outline-offset: 5px;
+        box-shadow:
+            var(--kp-shadow),
+            0 0 0 100vmax hsl(from var(--foreground) h s l / 0.78);
+    }
 }
