@@ -1,5 +1,7 @@
 # The data table's busy overlay, of its own, per theme
 
+**Decided (2026-10-06 23:41).** Kenny approved all 22 themes, one pick per aspect; the picks are in [decided.json](decided.json) (shape / loading / arrival / failure / phone). The package fades a loading table to 70 % (PACKAGE_FINDINGS).
+
 Phase 1 (Kenny, scratchpad/phase1-brief.md, 2026-10-05): the fourteenth
 component of the character round, and the first one that is not a tile or a
 chart — the panel that covers a data table while it loads

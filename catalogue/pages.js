@@ -80,8 +80,6 @@ export const PAGES = [
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
-            // The character round, fourteenth component: the data table's busy overlay, shape/loading/arrival/failure/phone, one pick per aspect (formal and titanium built first).
-            { href: 'research/character-busy/demo.html', label: "A data table's busy overlay, of its own, per theme" },
         ],
     },
     {
@@ -90,6 +88,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 23:41: Kenny approved the data table's busy overlay in all 22 themes (research/character-busy/decided.json); it moves into the registers at the port.
+            { href: 'research/character-busy/demo.html', label: "A data table's busy overlay, of its own, per theme" },
             // Decided 2026-10-06 21:54: Kenny approved the drawer and its tour in all 22 themes (research/character-drawer/decided.json); they move into the registers at the port.
             { href: 'research/character-drawer/demo.html', label: 'A drawer and its guided tour, each of its own, per theme' },
             // Decided 2026-10-06 21:50: Kenny approved the header in all 22 themes (research/character-header/decided.json); it moves into the registers at the port.

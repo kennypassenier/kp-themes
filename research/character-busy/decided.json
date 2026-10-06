@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 23:41 Brussels, Kenny: 22 of 22 approved (character-busy round 3)",
+    "attributes": "data-bo-<aspect>=\"<key>\" on the table wrapper [data-bo], research/character-busy/ (busy.css, busy-a..d.css, round2-a..d, round3-a/b)",
+    "picks": {
+        "formal": {
+            "shape": "1",
+            "loading": "3",
+            "arrival": "3",
+            "failure": "3",
+            "phone": "1"
+        },
+        "light": {
+            "shape": "2",
+            "loading": "1",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "1"
+        },
+        "dark": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "2",
+            "phone": "1"
+        },
+        "cyberpunk": {
+            "shape": "r2-cy-shape-2",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "synthwave": {
+            "shape": "r2-sw-shape-1",
+            "loading": "3",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "pastel": {
+            "shape": "r2-pt-shape-1",
+            "loading": "2",
+            "arrival": "2",
+            "failure": "3",
+            "phone": "1"
+        },
+        "terminal": {
+            "shape": "r2-tm-shape-1",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "forest": {
+            "shape": "r2-fo-shape-2",
+            "loading": "1",
+            "arrival": "2",
+            "failure": "r3-fo-failure-1",
+            "phone": "3"
+        },
+        "high-contrast": {
+            "shape": "r2-hc-shape-2",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "sepia": {
+            "shape": "r2-se-shape-3",
+            "loading": "3",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "1"
+        },
+        "blueprint": {
+            "shape": "r2-bp-shape-3",
+            "loading": "2",
+            "arrival": "3",
+            "failure": "1",
+            "phone": "1"
+        },
+        "solstice": {
+            "shape": "r2-so-shape-2",
+            "loading": "3",
+            "arrival": "3",
+            "failure": "1",
+            "phone": "1"
+        },
+        "brutalism": {
+            "shape": "r2-br-shape-2",
+            "loading": "2",
+            "arrival": "2",
+            "failure": "2",
+            "phone": "1"
+        },
+        "deco": {
+            "shape": "r2-dc-shape-1",
+            "loading": "2",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "1"
+        },
+        "phantom": {
+            "shape": "r2-ph-shape-3",
+            "loading": "3",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "1"
+        },
+        "shade-light": {
+            "shape": "r2-sl-shape-1",
+            "loading": "3",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "shade-dark": {
+            "shape": "r2-sd-shape-1",
+            "loading": "3",
+            "arrival": "1",
+            "failure": "2",
+            "phone": "1"
+        },
+        "retro": {
+            "shape": "r2-rt-shape-1",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "1",
+            "phone": "1"
+        },
+        "grotesk": {
+            "shape": "r3-gk-shape-3",
+            "loading": "2",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "1"
+        },
+        "lapis": {
+            "shape": "r3-la-shape-1",
+            "loading": "1",
+            "arrival": "1",
+            "failure": "3",
+            "phone": "r3-la-phone-1"
+        },
+        "nostromo": {
+            "shape": "r3-b-no-shape-1",
+            "loading": "1",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "r3-b-no-phone-1"
+        },
+        "titanium": {
+            "shape": "r3-b-ti-shape-2",
+            "loading": "2",
+            "arrival": "2",
+            "failure": "1",
+            "phone": "r3-b-ti-phone-1"
+        }
+    }
+}

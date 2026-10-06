@@ -1688,7 +1688,7 @@ const KEPT = {
     synthwave: { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },
     pastel: { loading: '2', arrival: '2', failure: '3', shape: '1', phone: '1' },
     terminal: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
-    forest: { loading: '1', arrival: '2', shape: '2', phone: '3' },
+    forest: { loading: '1', arrival: '2', shape: '2', phone: '3', failure: '1' },
     'high-contrast': { loading: '1', arrival: '1', failure: '1', shape: '2', phone: '1' },
     sepia: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
     blueprint: { loading: '2', arrival: '3', failure: '1', shape: '3', phone: '1' },
@@ -1699,10 +1699,10 @@ const KEPT = {
     'shade-light': { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },
     'shade-dark': { loading: '3', arrival: '1', failure: '2', shape: '1', phone: '1' },
     retro: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
-    grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1' },
-    lapis: { loading: '1', arrival: '1', failure: '3' },
-    nostromo: { loading: '1', arrival: '2', failure: '1' },
-    titanium: { loading: '2', arrival: '2', failure: '1' },
+    grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1', shape: '3' },
+    lapis: { loading: '1', arrival: '1', failure: '3', shape: '1', phone: '1' },
+    nostromo: { loading: '1', arrival: '2', failure: '1', shape: '1', phone: '1' },
+    titanium: { loading: '2', arrival: '2', failure: '1', shape: '2', phone: '1' },
 };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => KEPT[t]?.[id] ?? '';
 // Round 2 (Kenny, 2026-10-06 22:30: "wat evalueren we bij shape? ik zie enkel
