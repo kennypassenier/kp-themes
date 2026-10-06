@@ -19,4 +19,20 @@
     [data-theme] [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__note {
         inset: auto var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem);
     }
+
+    /* The one place a loading option sets the ghost's motion: an option
+       names its keyframes in --cg-edge-anim / --cg-node-anim, with a stagger
+       per --i and a delay. Scoped to the loading state so it outweighs the
+       arrival rules of graphs.css. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+            animation: var(--cg-edge-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--cg-edge-stagger, 0ms) + var(--cg-edge-delay, 0ms));
+        }
+
+        [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__node {
+            animation: var(--cg-node-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--cg-node-stagger, 0ms) + var(--cg-node-delay, 0ms));
+        }
+    }
 }

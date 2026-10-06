@@ -1226,6 +1226,9 @@ function draw(moment = 'arrive') {
     for (const el of graphs()) {
         el.setAttribute('data-cg-moment', moment);
         if (state.shown !== 'ready') {
+            // No arrival or live moment while loading: their rules would
+            // otherwise animate the ghost network instead of the loading option.
+            el.removeAttribute('data-cg-moment');
             setGraphState(el, state.shown, WORDS[state.shown]);
             ghost(el);
             const svg = el.querySelector('.kp-graph__svg');

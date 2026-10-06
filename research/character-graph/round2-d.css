@@ -1,4 +1,533 @@
-/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new options of group d. */
+/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new
+   loading options of group d — brutalism (loading only; its shape stays 2,
+   its arrival/focus/live are group f's), solstice, deco, phantom and
+   shade-light. Loaded after graphs.css in the same `@layer kp.signature`;
+   these rules (new, namespaced `data-cg-loading='r3-d-<theme>-load-<n>'`
+   values) only add to it. Every option moves the ghost network demo.js
+   lays into the picture (`.kp-graph__ghost`: `.kp-graph__edges >
+   path.kp-graph__edge` with `pathLength="100"`, and `g.kp-graph__node`
+   holding `.kp-graph__ring` and `.kp-graph__core`, each carrying `--i`,
+   its order from the hub round the ring).
+
+   A link or a site's own motion is set with two custom properties, never
+   the bare `animation` property:
+
+     --cg-edge-anim / --cg-node-anim          the animation shorthand
+     --cg-edge-stagger / --cg-node-stagger    ms multiplied by --i
+     --cg-edge-delay / --cg-node-delay        a flat ms offset
+
+   read by group a's shared consumer (round2-a.css, loaded first,
+   `@media (prefers-reduced-motion: no-preference) { [data-cg]
+   .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+   animation: var(--cg-edge-anim, none); … } }`), itself scoped through
+   `.kp-graph[data-kp-state='loading']` so it out-specifies graphs.css's
+   own arrival consumer. Setting the bare `animation` property here
+   directly loses that tie (found by measuring: it matched, but the
+   animation never ran — group a's consumer is more specific and resets it
+   to `none`), so every edge or node idea below goes through the two
+   properties instead. A fixed `stroke-dasharray` or `filter` (never inside
+   a motion property) gives an idea's links their look regardless of
+   motion, and still reads as a drawn link under reduced motion. A whole-
+   picture idea (the group sways, rises or shakes) has no such shared
+   consumer, so it sets `animation` directly on `.kp-graph__ghost` itself,
+   inside this file's own reduced-motion block. An overlay idea reuses
+   graphs.css's own `--gr-load-over` / `--gr-load-over-anim` knobs on
+   `.kp-graph__box::after`, already wired the same way. */
 
 @layer kp.signature {
+    /* ══ brutalism · While loading (loading only) ═══════════════════════ */
+
+    /* brutalism · loading r3-d-bru-load-1 · The girder is bolted */
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 900ms steps(3) infinite;
+        --cg-edge-stagger: 160ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-pop 900ms steps(2) infinite;
+        --cg-node-stagger: 160ms;
+        --cg-node-delay: 450ms;
+    }
+
+    /* brutalism · loading r3-d-bru-load-2 · The rivets hammer round */
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-stamp-beat 1000ms steps(2) infinite;
+        --cg-node-stagger: 190ms;
+    }
+
+    /* brutalism · loading r3-d-bru-load-3 · The slab drops */
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-3'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: gr-drop 700ms steps(4) infinite;
+        --cg-node-stagger: 210ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 700ms steps(2) infinite;
+        --cg-edge-stagger: 210ms;
+    }
+
+    /* brutalism · loading r3-d-bru-load-4 · The jackhammer shakes the frame */
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-4'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 1200ms steps(4) infinite;
+        --cg-node-stagger: 170ms;
+        filter: drop-shadow(2px 2px 0 var(--foreground));
+    }
+
+    /* brutalism · loading r3-d-bru-load-5 · Poster ink stamped on */
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-5'] .kp-graph {
+        --gr-load-over: linear-gradient(var(--warning), var(--warning));
+        --gr-load-over-anim: gr-blink 900ms steps(1, jump-end) infinite;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 1200ms steps(6) infinite;
+        --cg-edge-stagger: 150ms;
+    }
+
+    /* ══ solstice · While loading ══════════════════════════════════════ */
+
+    /* solstice · loading r3-d-sol-load-1 · Sunrise sweep */
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-1'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--primary) 32%, transparent) 0 28deg, transparent 28deg 360deg);
+        --gr-load-over-anim: gr-sweep 3600ms linear infinite;
+    }
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 3600ms ease-in-out infinite;
+        --cg-node-stagger: 280ms;
+    }
+
+    /* solstice · loading r3-d-sol-load-2 · Embers catching */
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-2'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 10 90;
+        filter: drop-shadow(0 0 3px color-mix(in oklch, var(--warning) 70%, transparent));
+        --cg-edge-anim: r3-d-signal 1300ms linear infinite;
+        --cg-edge-stagger: 90ms;
+    }
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 1300ms ease-out infinite;
+        --cg-node-stagger: 90ms;
+        --cg-node-delay: 420ms;
+    }
+
+    /* solstice · loading r3-d-sol-load-3 · The shadow turns */
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-3'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--foreground) 38%, transparent) 0 4deg, transparent 4deg 360deg);
+        --gr-load-over-anim: gr-sweep 4200ms linear infinite;
+    }
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-3'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 4200ms ease-in-out infinite;
+        --cg-node-stagger: 320ms;
+    }
+
+    /* solstice · loading r3-d-sol-load-4 · Kindled one by one: edges and
+       nodes only, no overlay — the ring itself is the picture. */
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        filter: drop-shadow(0 0 2px color-mix(in oklch, var(--warning) 60%, transparent));
+        --cg-edge-anim: r3-d-reveal 1800ms ease-out infinite;
+        --cg-edge-stagger: 220ms;
+    }
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-4'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-pop 1800ms ease-out infinite;
+        --cg-node-stagger: 220ms;
+        --cg-node-delay: 900ms;
+    }
+
+    /* solstice · loading r3-d-sol-load-5 · The low sun rises: a whole-
+       picture idea, no shared consumer — its own media block below. */
+
+    /* solstice · loading r3-d-sol-load-6 · Sparks leap the gaps */
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-6'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 14 86;
+        filter: drop-shadow(0 0 3px color-mix(in oklch, var(--destructive) 65%, transparent));
+        --cg-edge-anim: r3-d-signal 1200ms steps(6) infinite;
+        --cg-edge-stagger: 110ms;
+    }
+
+    [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-stamp-beat 1200ms steps(4) infinite;
+        --cg-node-stagger: 110ms;
+    }
+
+    /* ══ deco · While loading ═══════════════════════════════════════════ */
+
+    /* deco · loading r3-d-dec-load-1 · A gold wire rolls round */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 1600ms ease-in-out infinite;
+        --cg-edge-stagger: 180ms;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 1600ms ease-out infinite;
+        --cg-node-stagger: 180ms;
+        --cg-node-delay: 800ms;
+    }
+
+    /* deco · loading r3-d-dec-load-2 · The marquee chases */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-2'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 92;
+        filter: drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 60%, transparent));
+        --cg-edge-anim: r3-d-signal 900ms linear infinite;
+        --cg-edge-stagger: 80ms;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 900ms ease-out infinite;
+        --cg-node-stagger: 80ms;
+        --cg-node-delay: 320ms;
+    }
+
+    /* deco · loading r3-d-dec-load-3 · The spotlight sweeps the stage */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-3'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--primary) 30%, transparent) 0 42deg, transparent 42deg 360deg);
+        --gr-load-over-anim: gr-sweep 4000ms linear infinite;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-3'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 4000ms ease-in-out infinite;
+        --cg-node-stagger: 300ms;
+    }
+
+    /* deco · loading r3-d-dec-load-4 · The rays fan out */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 900ms ease-out infinite;
+        --cg-edge-stagger: 90ms;
+    }
+
+    /* deco · loading r3-d-dec-load-5 · The curtain rises on the gold: a
+       whole-picture idea, its own media block below. */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-5'] .kp-graph {
+        --gr-load-over: linear-gradient(to top, color-mix(in oklch, var(--primary) 32%, transparent), transparent 60%);
+    }
+
+    /* deco · loading r3-d-dec-load-6 · The bulbs count the ring */
+
+    [data-theme='deco'] [data-cg-loading='r3-d-dec-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-pop 1400ms ease-out infinite;
+        --cg-node-stagger: 180ms;
+    }
+
+    /* ══ phantom · While loading ════════════════════════════════════════ */
+
+    /* phantom · loading r3-d-pha-load-1 · The string is pulled taut */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 1000ms ease-in infinite;
+        --cg-edge-stagger: 180ms;
+    }
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-pop 1000ms ease-out infinite;
+        --cg-node-stagger: 180ms;
+        --cg-node-delay: 700ms;
+    }
+
+    /* phantom · loading r3-d-pha-load-2 · The stamp beats the ring */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-stamp-beat 1200ms steps(1, jump-end) infinite;
+        --cg-node-stagger: 200ms;
+    }
+
+    /* phantom · loading r3-d-pha-load-3 · Tags pinned one by one */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 700ms ease-out infinite;
+        --cg-edge-stagger: 220ms;
+        --cg-edge-delay: 420ms;
+    }
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-3'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-tag-pin 1500ms ease-out infinite;
+        --cg-node-stagger: 220ms;
+    }
+
+    /* phantom · loading r3-d-pha-load-4 · The red string races out */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 10 90;
+        filter: drop-shadow(0 0 2px color-mix(in oklch, var(--primary) 70%, transparent));
+        --cg-edge-anim: r3-d-signal 900ms steps(5) infinite;
+        --cg-edge-stagger: 70ms;
+    }
+
+    /* phantom · loading r3-d-pha-load-5 · The halftone flickers */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-5'] .kp-graph {
+        --gr-load-over: radial-gradient(color-mix(in oklch, var(--foreground) 55%, transparent) 1px, transparent 1.6px);
+        --gr-load-over-size: 7px 7px;
+        --gr-load-over-anim: r3-d-dot-drift 3600ms linear infinite alternate;
+    }
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-breathe-filter 2400ms ease-in-out infinite;
+        --cg-node-stagger: 140ms;
+    }
+
+    /* phantom · loading r3-d-pha-load-6 · The calling card spins in: the
+       group sway has no shared consumer, its own media block below. */
+
+    [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 3200ms ease-in-out infinite;
+        --cg-node-stagger: 260ms;
+    }
+
+    /* ══ shade-light · While loading ════════════════════════════════════ */
+
+    /* shade-light · loading r3-d-shl-load-1 · The pencil sketches the lines */
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 1800ms ease-in-out infinite;
+        --cg-edge-stagger: 260ms;
+    }
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-pop 1800ms ease-out infinite;
+        --cg-node-stagger: 260ms;
+        --cg-node-delay: 900ms;
+    }
+
+    /* shade-light · loading r3-d-shl-load-2 · A cloud's shadow drifts */
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-2'] .kp-graph {
+        --gr-load-over: radial-gradient(ellipse 45% 55% at 30% 30%, color-mix(in oklch, var(--foreground) 10%, transparent), transparent 70%);
+        --gr-load-over-size: 220% 220%;
+        --gr-load-over-anim: r3-d-dot-drift 5000ms ease-in-out infinite alternate;
+        --cg-ghost: 0.55;
+    }
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-breathe-filter 5000ms ease-in-out infinite;
+        --cg-node-stagger: 420ms;
+    }
+
+    /* shade-light · loading r3-d-shl-load-3 · Leaves sway over the network:
+       a whole-picture idea, its own media block below. */
+
+    /* shade-light · loading r3-d-shl-load-4 · The lantern glow breathes */
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-4'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-breathe-filter 2200ms ease-in-out infinite;
+    }
+
+    /* shade-light · loading r3-d-shl-load-5 · Hatched in, stroke by stroke */
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r3-d-reveal 1600ms steps(8) infinite;
+        --cg-edge-stagger: 200ms;
+    }
+
+    /* shade-light · loading r3-d-shl-load-6 · Dappled light crosses the ring */
+
+    [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-d-flare 2600ms ease-in-out infinite;
+        --cg-node-stagger: 220ms;
+    }
+}
+
+/* ── Motion: the whole-picture ideas only (no shared consumer exists for
+   the bare `.kp-graph__ghost` the way group a's does for its children), so
+   each sets `animation` directly here, inside one `prefers-reduced-motion:
+   no-preference` block of this group's own. Everything else above reads
+   its motion through `--cg-edge-anim`/`--cg-node-anim` (group a's
+   consumer) or `--gr-load-over-anim` (graphs.css's own), both already
+   gated the same way. ───────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        /* brutalism · loading r3-d-bru-load-4 · The jackhammer shakes the
+           frame */
+        [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-4'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 46%;
+            animation: gr-shake 600ms steps(1, jump-end) infinite;
+        }
+
+        /* brutalism · loading r3-d-bru-load-6 · The crane swings it into
+           place */
+        [data-theme='brutalism'] [data-cg-loading='r3-d-bru-load-6'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 20%;
+            animation: r3-d-crane-swing 1400ms steps(5) infinite;
+        }
+
+        /* solstice · loading r3-d-sol-load-5 · The low sun rises */
+        [data-theme='solstice'] [data-cg-loading='r3-d-sol-load-5'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 90%;
+            animation: r3-d-rise-group 2600ms ease-in-out infinite alternate;
+        }
+
+        /* deco · loading r3-d-dec-load-5 · The curtain rises on the gold */
+        [data-theme='deco'] [data-cg-loading='r3-d-dec-load-5'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 90%;
+            animation: r3-d-rise-group 2400ms ease-in-out infinite alternate;
+        }
+
+        /* phantom · loading r3-d-pha-load-6 · The calling card spins in */
+        [data-theme='phantom'] [data-cg-loading='r3-d-pha-load-6'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 46%;
+            animation: r3-d-sway-group 3200ms ease-in-out infinite alternate;
+        }
+
+        /* shade-light · loading r3-d-shl-load-3 · Leaves sway over the
+           network */
+        [data-theme='shade-light'] [data-cg-loading='r3-d-shl-load-3'] .kp-graph__ghost {
+            transform-box: fill-box;
+            transform-origin: 50% 46%;
+            animation: r3-d-sway-group 3400ms ease-in-out infinite alternate;
+        }
+    }
+}
+
+@keyframes r3-d-reveal {
+    from {
+        stroke-dashoffset: 100;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r3-d-signal {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+@keyframes r3-d-flare {
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.28);
+        filter: brightness(1.8);
+    }
+}
+
+@keyframes r3-d-pop {
+    0% {
+        transform: scale(0.3);
+    }
+    60% {
+        transform: scale(1.18);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes r3-d-tag-pin {
+    0% {
+        transform: scale(0.2) rotate(-14deg);
+    }
+    55% {
+        transform: scale(1.18) rotate(4deg);
+    }
+    100% {
+        transform: scale(1) rotate(-2deg);
+    }
+}
+
+@keyframes r3-d-stamp-beat {
+    0%,
+    70%,
+    100% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(0.82);
+    }
+    30% {
+        transform: scale(1.18);
+    }
+}
+
+@keyframes r3-d-sway-group {
+    from {
+        transform: rotate(-1.8deg);
+    }
+    to {
+        transform: rotate(1.8deg);
+    }
+}
+
+@keyframes r3-d-rise-group {
+    from {
+        transform: translateY(10px);
+        filter: brightness(0.85);
+    }
+    to {
+        transform: translateY(0);
+        filter: brightness(1.1);
+    }
+}
+
+@keyframes r3-d-breathe-filter {
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.08);
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes r3-d-crane-swing {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    40% {
+        transform: rotate(6deg);
+    }
+    70% {
+        transform: rotate(-4deg);
+    }
+}
+
+@keyframes r3-d-dot-drift {
+    from {
+        background-position: -30% -20%;
+    }
+    to {
+        background-position: 40% 35%;
+    }
 }

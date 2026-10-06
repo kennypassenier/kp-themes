@@ -1,4 +1,344 @@
-/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new options of group b. */
+/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new
+   loading options of group b — cyberpunk, synthwave, pastel, terminal.
+   Loaded after graphs.css and round2-a.css in the same `@layer
+   kp.signature`, so these rules (new, namespaced `data-cg-loading='r3-b-cp-…'
+   | 'r3-b-sw-…' | 'r3-b-ps-…' | 'r3-b-tm-…'` values) simply add to it; the
+   old `='1'|'2'|'3'` loading rules for these four themes are never matched
+   again because nothing still carries those values for them.
+
+   Every idea moves the ghost network demo.js already lays into the picture
+   while loading (`.kp-graph__ghost`, the package's own `.kp-graph__edge`
+   and `.kp-graph__node` with `.kp-graph__ring` / `.kp-graph__core`, each
+   carrying `--i`, its order from the hub round the ring; the ghost edges
+   carry `pathLength="100"`, so a dasharray or dashoffset in 0..100 traces a
+   link end to end). The theme's settled shape already colours these parts
+   (graphs.css's shared `[data-cg] .kp-graph__edge` / `__node` / `__ring` /
+   `__core` rules match the ghost's parts too, since it reuses the same
+   classes); every rule here only adds motion, by setting the two custom
+   properties round2-a.css's shared block already reads (never the bare
+   `animation` property directly — a direct `animation` on `.kp-graph__ghost
+   .kp-graph__edge` loses the specificity contest to that shared block's own
+   `[data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__ghost
+   .kp-graph__edge` selector, which this file does not repeat):
+
+     --cg-edge-anim / --cg-node-anim         the animation shorthand
+     --cg-edge-stagger / --cg-node-stagger   ms multiplied by --i
+     --cg-edge-delay / --cg-node-delay       a flat ms offset
+
+   so every link or site starts its motion at `--i * stagger + delay`,
+   staggered one after another round the ring from the hub outward. A hub
+   that should sit out a ring-wide idea is reset with `.kp-graph__node--hub
+   { --cg-node-anim: none; }` (a more specific selector, so it wins for the
+   hub alone); a hub that should lead an idea on its own is set directly on
+   `.kp-graph__node--hub`, never touching the ring. A fixed
+   `stroke-dasharray` outside any motion block gives a "signal" idea's links
+   their look (a short comet, say) that still reads under reduced motion; a
+   "draw" idea leaves it unset, so a still frame reads as an already-drawn,
+   solid link. Six ideas per theme: a hub ping with every link tracing out
+   at once (1), sites lighting up round the ring in turn (2), links tracing
+   in from the hub one after another (3), a signal travelling out along
+   every link continuously (4), the ring of sites assembling in turn (5), a
+   sweep over the box with the ring lighting as it passes (6). Every rule is
+   scoped to `.kp-graph__ghost …` only, never the bare `.kp-graph`, so
+   nothing here reaches the drawn network once the real data arrives. */
 
 @layer kp.signature {
+    /* A few ideas want the ghost a touch fuller, since the loading picture
+       should take advantage of the whole box, not sit faint in the middle. */
+    [data-theme='cyberpunk'] [data-cg-loading^='r3-b-cp-load-'] .kp-graph__ghost,
+    [data-theme='synthwave'] [data-cg-loading^='r3-b-sw-load-'] .kp-graph__ghost,
+    [data-theme='pastel'] [data-cg-loading^='r3-b-ps-load-'] .kp-graph__ghost,
+    [data-theme='terminal'] [data-cg-loading^='r3-b-tm-load-'] .kp-graph__ghost {
+        --cg-ghost: 0.62;
+    }
+
+    /* ══ cyberpunk, fast and digital: steps and hard linear. ══ */
+
+    /* cyberpunk · loading r3-b-cp-load-1 · The handshake ping */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-1'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: r3-b-pulse-big 1200ms steps(6) infinite;
+    }
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-1'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw 1200ms steps(6) infinite alternate;
+        --cg-edge-stagger: 70ms;
+    }
+
+    /* cyberpunk · loading r3-b-cp-load-2 · The port scan */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 1700ms steps(4) infinite;
+        --cg-node-stagger: 90ms;
+    }
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-2'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* cyberpunk · loading r3-b-cp-load-3 · The breach trace */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-3'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw-reset 1900ms steps(5) infinite, gr-glitch 500ms steps(3) infinite;
+        --cg-edge-stagger: 110ms;
+    }
+
+    /* cyberpunk · loading r3-b-cp-load-4 · The packet race */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 12 88;
+        --cg-edge-anim: r3-b-signal 900ms linear infinite;
+        --cg-edge-stagger: -80ms;
+    }
+
+    /* cyberpunk · loading r3-b-cp-load-5 · The grid boot */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-assemble 2000ms steps(4) infinite;
+        --cg-node-stagger: 95ms;
+    }
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* cyberpunk · loading r3-b-cp-load-6 · The firewall sweep (overlay below, ring flash here) */
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 2200ms linear infinite;
+        --cg-node-stagger: 100ms;
+    }
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-6'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+    [data-theme='cyberpunk'] [data-cg-loading='r3-b-cp-load-6'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--primary) 55%, transparent) 0 14deg, transparent 14deg 360deg);
+        --gr-load-over-anim: gr-sweep 2200ms linear infinite;
+    }
+
+    /* ══ synthwave, slow and chrome: ease-in-out. ══ */
+
+    /* synthwave · loading r3-b-sw-load-1 · The laser handshake */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-1'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: r3-b-pulse-big 2200ms ease-in-out infinite;
+    }
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-1'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw 2200ms ease-in-out infinite alternate;
+        --cg-edge-stagger: 100ms;
+    }
+
+    /* synthwave · loading r3-b-sw-load-2 · The marquee lights */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 2000ms ease-in-out infinite;
+        --cg-node-stagger: 120ms;
+    }
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-2'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* synthwave · loading r3-b-sw-load-3 · The vector trace */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-3'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw-reset 2400ms ease-in-out infinite;
+        --cg-edge-stagger: 130ms;
+    }
+
+    /* synthwave · loading r3-b-sw-load-4 · The outrun pulse */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 18 82;
+        --cg-edge-anim: r3-b-signal 1400ms linear infinite;
+        --cg-edge-stagger: -110ms;
+    }
+
+    /* synthwave · loading r3-b-sw-load-5 · The grid rez */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-assemble 2600ms ease-in-out infinite;
+        --cg-node-stagger: 130ms;
+    }
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* synthwave · loading r3-b-sw-load-6 · The horizon sweep (overlay below, ring glow here) */
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 3200ms linear infinite;
+        --cg-node-stagger: 150ms;
+    }
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-6'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+    [data-theme='synthwave'] [data-cg-loading='r3-b-sw-load-6'] .kp-graph {
+        --gr-load-over: conic-gradient(
+            from 0deg at 50% 46%,
+            color-mix(in oklch, var(--accent) 45%, transparent) 0 10deg,
+            color-mix(in oklch, var(--primary) 45%, transparent) 10deg 20deg,
+            transparent 20deg 360deg
+        );
+        --gr-load-over-anim: gr-sweep 3200ms linear infinite;
+    }
+
+    /* ══ pastel, soft and bouncy: cubic-bezier overshoot. ══ */
+
+    /* pastel · loading r3-b-ps-load-1 · The bubble handshake */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-1'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: r3-b-pulse-big 1800ms ease-in-out infinite;
+    }
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-1'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw 1800ms ease-in-out infinite alternate;
+        --cg-edge-stagger: 90ms;
+    }
+
+    /* pastel · loading r3-b-ps-load-2 · The bead lights */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 1600ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+        --cg-node-stagger: 110ms;
+    }
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-2'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* pastel · loading r3-b-ps-load-3 · The crayon trace */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-3'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw-reset 2000ms ease-in-out infinite;
+        --cg-edge-stagger: 120ms;
+    }
+
+    /* pastel · loading r3-b-ps-load-4 · The sprinkle drift */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 10 90;
+        --cg-edge-anim: r3-b-signal 1800ms ease-in-out infinite;
+        --cg-edge-stagger: -130ms;
+    }
+
+    /* pastel · loading r3-b-ps-load-5 · The balloon bunch */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-assemble 2200ms cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+        --cg-node-stagger: 120ms;
+    }
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* pastel · loading r3-b-ps-load-6 · The watercolour wash (overlay below, bead bloom here) */
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 2600ms ease-in-out infinite;
+        --cg-node-stagger: 130ms;
+    }
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-6'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+    [data-theme='pastel'] [data-cg-loading='r3-b-ps-load-6'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--accent) 35%, transparent) 0 40deg, transparent 40deg 360deg);
+        --gr-load-over-anim: gr-sweep 2600ms ease-in-out infinite;
+    }
+
+    /* ══ terminal, crisp and monospace: steps() throughout. ══ */
+
+    /* terminal · loading r3-b-tm-load-1 · The ping sweep */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-1'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: r3-b-pulse-big 1000ms steps(5) infinite;
+    }
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-1'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw 1000ms steps(5) infinite alternate;
+        --cg-edge-stagger: 60ms;
+    }
+
+    /* terminal · loading r3-b-tm-load-2 · The node scan */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 1400ms steps(2, jump-start) infinite;
+        --cg-node-stagger: 100ms;
+    }
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-2'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* terminal · loading r3-b-tm-load-3 · The boot trace */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-3'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r3-b-draw-reset 1600ms steps(4) infinite;
+        --cg-edge-stagger: 100ms;
+    }
+
+    /* terminal · loading r3-b-tm-load-4 · The packet stream */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 92;
+        --cg-edge-anim: r3-b-signal 800ms steps(10) infinite;
+        --cg-edge-stagger: -70ms;
+    }
+
+    /* terminal · loading r3-b-tm-load-5 · The array init */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-assemble 1600ms steps(2, jump-start) infinite;
+        --cg-node-stagger: 90ms;
+    }
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+
+    /* terminal · loading r3-b-tm-load-6 · The scanline sweep (overlay below, node flash here) */
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r3-b-pulse 1600ms steps(2, jump-start) infinite;
+        --cg-node-stagger: 100ms;
+    }
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-6'] .kp-graph__ghost .kp-graph__node--hub {
+        --cg-node-anim: none;
+    }
+    [data-theme='terminal'] [data-cg-loading='r3-b-tm-load-6'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--foreground) 30%, transparent) 0 8deg, transparent 8deg 360deg);
+        --gr-load-over-anim: gr-sweep 1600ms steps(16) infinite;
+    }
+}
+
+/* ── Motion: the shared keyframes every idea above draws on; colour-free,
+   so every theme reads them in its own picked stroke and fill. The
+   animation itself is only ever applied by round2-a.css's shared ghost
+   motion block (`--cg-edge-anim` / `--cg-node-anim`, read inside `@media
+   (prefers-reduced-motion: no-preference)`), so nothing here needs its own
+   copy of that gate. ───────────────────────────────────────────────────── */
+
+@keyframes r3-b-draw {
+    from {
+        stroke-dasharray: 0 100;
+    }
+    to {
+        stroke-dasharray: 100 0;
+    }
+}
+
+@keyframes r3-b-draw-reset {
+    0% {
+        stroke-dasharray: 0 100;
+    }
+    45%,
+    58% {
+        stroke-dasharray: 100 0;
+    }
+    100% {
+        stroke-dasharray: 0 100;
+    }
+}
+
+@keyframes r3-b-signal {
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+@keyframes r3-b-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes r3-b-pulse-big {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.45);
+    }
+}
+
+@keyframes r3-b-assemble {
+    0%,
+    100% {
+        transform: scale(0.3);
+    }
+    50% {
+        transform: scale(1);
+    }
 }

@@ -1,4 +1,644 @@
-/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new options of group e. */
+/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new
+   "While loading" options of group e — shade-dark, retro, grotesk, lapis,
+   nostromo. Loaded after graphs.css and ghost.css in the same
+   `@layer kp.signature`, so these rules (new, namespaced
+   `data-cg-loading="r3-<tag>-load-<n>"` values) simply add to it; the old
+   `='1'|'2'|'3'` loading rules for these five themes in graphs.css are
+   never matched again, because nothing still carries those values for
+   them now that their loading aspect is open again.
+
+   Every option moves `.kp-graph__ghost` (demo.js's `ghost()`): the coming
+   network laid under the hidden skeleton in the package's own classes
+   (`.kp-graph__edge`, `.kp-graph__node` with `.kp-graph__ring` /
+   `.kp-graph__core`), each part carrying `--i` (its order from the hub
+   round the ring) and the ghost `--n` (how many).
+
+   For an edge or a node, this group never writes the bare `animation`
+   property: group a's own shared consumer (round2-a.css,
+   `[data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__ghost
+   .kp-graph__edge|.kp-graph__node { animation: var(--cg-edge-anim|
+   --cg-node-anim, none); animation-delay: calc(var(--i,0) *
+   var(--cg-edge-stagger|--cg-node-stagger, 0ms) + var(--cg-edge-delay|
+   --cg-node-delay, 0ms)); }`, itself scoped through `.kp-graph[data-kp-
+   state='loading']` so it out-specifies graphs.css's own arrival consumer)
+   already reads those four custom properties for every theme; writing the
+   `animation` shorthand straight onto `.kp-graph__edge`/`.kp-graph__node`
+   here would lose to that shared rule's higher specificity and never run
+   (found live: every edge/node animation below came back with
+   `animationName: none` until converted to the shared properties). A ring
+   or the whole ghost has no such shared consumer, so those two still carry
+   `animation` directly, as does `.kp-graph__box::after` through graphs.css's
+   own `--gr-load-over-anim`. Static properties (dash patterns, the overlay
+   gradients) are unconditional; every motion-bearing property above is set
+   only inside the `prefers-reduced-motion: no-preference` block, so a
+   system asking for reduced motion gets the still ghost the settled shape
+   already draws, at rest, with no running animation.
+
+   `.kp-graph__node` and `.kp-graph__edge` already carry
+   `transform-box: fill-box; transform-origin: center` from graphs.css, so
+   every scale/punch below is applied to `.kp-graph__node` (ring and core
+   together), never to a ring or core circle alone — a lone circle is
+   rotationally symmetric, so a turning idea here moves the node group
+   itself, or the ring's own dash pattern, never a bare transform on the
+   circle. 50% 46% is the hub's own centre in every theme's box (graphs.css's
+   own radial effects use the same point). An idea that needs each site's
+   motion timed to its angle round the ring (a sweep catching every site in
+   turn) approximates `--i / --n` with a flat stagger sized to this
+   network's twelve sites, since the shared consumer's delay is `--i *
+   stagger`, not a division. */
 
 @layer kp.signature {
+    /* ═══════════════════════════ shade-dark ═══════════════════════════ */
+
+    /* shade-dark · loading r3-sh-load-1 · The silverpoint trace */
+
+    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* shade-dark · loading r3-sh-load-2 · The ring is hatched */
+
+    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-2'] .kp-graph__ghost .kp-graph__ring {
+        stroke-dasharray: 4 5;
+    }
+
+    /* shade-dark · loading r3-sh-load-3 · The pencil travels the line */
+
+    [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 22 78;
+    }
+
+    /* shade-dark · loading r3-sh-load-4 · Struck onto the page (no static knobs) */
+    /* shade-dark · loading r3-sh-load-5 · The hub pings out (no static knobs) */
+    /* shade-dark · loading r3-sh-load-6 · The hand still sketching (no static knobs) */
+
+    /* ═════════════════════════════ retro ═══════════════════════════════ */
+
+    /* retro · loading r3-rt-load-1 · Marching ants select the network */
+
+    [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__ring {
+        stroke-dasharray: 4 4;
+    }
+
+    /* retro · loading r3-rt-load-2 · Each site takes its turn (no static knobs) */
+
+    /* retro · loading r3-rt-load-3 · The progress blocks fill in */
+
+    [data-theme='retro'] [data-cg-loading='r3-rt-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 14 8;
+    }
+
+    /* retro · loading r3-rt-load-4 · The modem lights blink in turn (no static knobs) */
+
+    /* retro · loading r3-rt-load-5 · The cursor steps along the wire */
+
+    [data-theme='retro'] [data-cg-loading='r3-rt-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 20 80;
+    }
+
+    /* retro · loading r3-rt-load-6 · The buttons press round the ring (no static knobs) */
+
+    /* ═══════════════════════════ grotesk ═══════════════════════════════ */
+
+    /* grotesk · loading r3-gk-load-1 · The transit line runs */
+
+    [data-theme='grotesk'] [data-cg-loading='r3-gk-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* grotesk · loading r3-gk-load-2 · The interchange ticks */
+
+    [data-theme='grotesk'] [data-cg-loading='r3-gk-load-2'] .kp-graph__ghost .kp-graph__ring {
+        stroke-dasharray: 3 6;
+    }
+
+    /* grotesk · loading r3-gk-load-3 · The grid snaps into place */
+
+    [data-theme='grotesk'] [data-cg-loading='r3-gk-load-3'] .kp-graph {
+        --gr-load-over: linear-gradient(
+            90deg,
+            transparent 0 40%,
+            color-mix(in oklch, var(--destructive) 55%, transparent) 40% 46%,
+            transparent 46% 100%
+        );
+        --gr-load-over-size: 300% 100%;
+    }
+
+    /* grotesk · loading r3-gk-load-4 · The route is checked end to end */
+
+    [data-theme='grotesk'] [data-cg-loading='r3-gk-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* grotesk · loading r3-gk-load-5 · The signal pulses down every line (no static knobs) */
+
+    /* grotesk · loading r3-gk-load-6 · The timetable flips through every stop (no static knobs) */
+
+    /* ════════════════════════════ lapis ════════════════════════════════ */
+
+    /* lapis · loading r3-lp-load-1 · A glint runs the gilt lines */
+
+    [data-theme='lapis'] [data-cg-loading='r3-lp-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* lapis · loading r3-lp-load-2 · The burnisher turns on every ring */
+
+    [data-theme='lapis'] [data-cg-loading='r3-lp-load-2'] .kp-graph__ghost .kp-graph__ring {
+        stroke-dasharray: 4 40;
+    }
+
+    /* lapis · loading r3-lp-load-3 · The lattice is laid, link by link */
+
+    [data-theme='lapis'] [data-cg-loading='r3-lp-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* lapis · loading r3-lp-load-4 · Gold leaf is tapped into place (no static knobs) */
+
+    /* lapis · loading r3-lp-load-5 · Illumination spreads from the hub (no static knobs) */
+
+    /* lapis · loading r3-lp-load-6 · The star tile slowly turns */
+
+    [data-theme='lapis'] [data-cg-loading='r3-lp-load-6'] .kp-graph__ghost {
+        transform-box: view-box;
+        transform-origin: 50% 46%;
+    }
+
+    /* ═══════════════════════════ nostromo ══════════════════════════════ */
+
+    /* nostromo's ghost sits at the package's default 0.45 opacity on a
+       near-black board; its own edges mix only 25% of the kind's colour
+       (`--gr-edge-mix`), so on the undrawn ghost they all but vanish.
+       Every option here brightens the ghost itself and gives its edges a
+       touch of the shape's own phosphor glow, so the lines stay legible
+       under every idea below, not only the ones that already animate
+       the edges. */
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-1'] .kp-graph__ghost,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-2'] .kp-graph__ghost,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-3'] .kp-graph__ghost,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-4'] .kp-graph__ghost,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-5'] .kp-graph__ghost,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-6'] .kp-graph__ghost {
+        --cg-ghost: 0.7;
+    }
+
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-1'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-2'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-3'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-4'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-5'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-6'] .kp-graph__ghost .kp-graph__edge {
+        filter: drop-shadow(0 0 1.5px var(--success));
+    }
+
+    /* nostromo · loading r3-no-load-1 · The sweep finds every contact */
+
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-1'] .kp-graph {
+        --gr-load-over: conic-gradient(from 0deg at 50% 46%, color-mix(in oklch, var(--success) 45%, transparent) 0 6deg, transparent 6deg 360deg);
+        --gr-load-over-origin: 50% 46%;
+    }
+
+    /* nostromo · loading r3-no-load-2 · Blips surface round the scope: the shared boost above is enough */
+
+    /* nostromo · loading r3-no-load-3 · Phosphor traces every line */
+
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+    }
+
+    /* nostromo · loading r3-no-load-4 · MOTHER reads the network */
+
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 20 80;
+    }
+
+    /* nostromo · loading r3-no-load-5 · The lamps scan the board: the shared boost above is enough */
+
+    /* nostromo · loading r3-no-load-6 · The scanline rolls down the board */
+
+    [data-theme='nostromo'] [data-cg-loading='r3-no-load-6'] .kp-graph {
+        --gr-load-over: linear-gradient(
+            to bottom,
+            transparent 0 40%,
+            color-mix(in oklch, var(--success) 30%, transparent) 40% 46%,
+            transparent 46% 100%
+        );
+        --gr-load-over-size: 100% 400%;
+        --gr-roll-to: 400%;
+    }
+}
+
+/* ── Motion: every property that drives an animation sits here, gated, so
+   reduced motion runs none of it; the still ghost the settled shape draws
+   already reads as the network waiting to be read. An edge or a node sets
+   only `--cg-edge-anim`/`--cg-node-anim` (+ `--cg-edge-stagger`/
+   `--cg-node-stagger`), read by group a's shared consumer
+   (round2-a.css); a ring or the whole ghost group, which that consumer
+   does not cover, still carries `animation` directly. Reused keyframes:
+   gr-breathe, gr-pop, gr-march, gr-sweep, gr-roll, gr-blink, gr-flicker,
+   gr-sway (graphs.css). ── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        /* ── shade-dark ── */
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-1'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-sh-load-1-trace 2200ms ease-in-out infinite;
+            --cg-edge-stagger: 160ms;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-2'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-march 1800ms linear infinite;
+            animation-delay: calc(var(--i) * 150ms);
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-3'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: gr-march 1400ms linear infinite;
+            --cg-edge-stagger: 120ms;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-4'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-sh-load-4-struck 1900ms ease-out infinite;
+            --cg-node-stagger: 160ms;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-4'] .kp-graph__ghost .kp-graph__node--hub {
+            --cg-node-anim: gr-breathe 2600ms ease-in-out infinite;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+            --cg-node-anim: gr-breathe 2000ms ease-in-out infinite;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-5'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-sh-load-5-ping 2000ms ease-out infinite;
+            --cg-edge-stagger: 140ms;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-6'] .kp-graph__ghost {
+            transform-box: view-box;
+            transform-origin: 50% 46%;
+            animation: gr-sway 4200ms ease-in-out infinite;
+        }
+
+        [data-theme='shade-dark'] [data-cg-loading='r3-sh-load-6'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: gr-breathe 2600ms ease-in-out infinite;
+        }
+
+        /* ── retro ── */
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: gr-march 700ms steps(4) infinite;
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-march 700ms steps(4) infinite;
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-2'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-rt-load-2-hourglass 1700ms steps(6) infinite;
+            --cg-node-stagger: 140ms;
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-3'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-rt-load-3-fill 1200ms steps(8) infinite;
+            --cg-edge-stagger: 110ms;
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-4'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-blink 900ms steps(1) infinite;
+            animation-delay: calc(var(--i) * 130ms);
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-5'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-rt-load-5-cursor 1400ms steps(8) infinite;
+            --cg-edge-stagger: 100ms;
+        }
+
+        [data-theme='retro'] [data-cg-loading='r3-rt-load-6'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-rt-load-6-press 900ms steps(2) infinite;
+            --cg-node-stagger: 150ms;
+        }
+
+        /* ── grotesk ── */
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-1'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-gk-load-1-run 1300ms steps(6) infinite;
+            --cg-edge-stagger: 130ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-2'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-march 1200ms steps(4) infinite;
+            animation-delay: calc(var(--i) * 120ms);
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+            animation: r3-gk-load-3-snap 1400ms steps(6) infinite;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-3'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-gk-load-3-catch 1400ms steps(2) infinite;
+            --cg-edge-stagger: 117ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-4'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-gk-load-4-back 1300ms steps(6) infinite;
+            --cg-edge-stagger: 120ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+            --cg-node-anim: r3-gk-load-5-flash 1400ms steps(2) infinite;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-5'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-gk-load-5-flash 1400ms steps(2) infinite;
+            --cg-edge-stagger: 110ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r3-gk-load-6'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-gk-load-6-flip 1000ms steps(4) infinite;
+            --cg-node-stagger: 140ms;
+        }
+
+        /* ── lapis ── */
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-1'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-lp-load-1-glint 2000ms ease-in-out infinite;
+            --cg-edge-stagger: 170ms;
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-2'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-march 1600ms linear infinite;
+            animation-delay: calc(var(--i) * 150ms);
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-3'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-lp-load-3-lay 2200ms ease-out infinite;
+            --cg-edge-stagger: 220ms;
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-4'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: gr-pop 1600ms ease-out infinite;
+            --cg-node-stagger: 160ms;
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-5'] .kp-graph__ghost .kp-graph__node--hub {
+            --cg-node-anim: gr-breathe 2000ms ease-in-out infinite;
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-5'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-lp-load-5-glow 2000ms linear infinite;
+            --cg-edge-stagger: 167ms;
+        }
+
+        [data-theme='lapis'] [data-cg-loading='r3-lp-load-6'] .kp-graph__ghost {
+            animation: gr-sweep 16000ms linear infinite;
+        }
+
+        /* ── nostromo ── */
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-1'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+            animation: gr-sweep 3000ms linear infinite;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-1'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-no-load-1-catch 3000ms linear infinite;
+            --cg-node-stagger: 250ms;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-2'] .kp-graph__ghost .kp-graph__node--hub {
+            --cg-node-anim: gr-breathe 2400ms ease-in-out infinite;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-2'] .kp-graph__ghost .kp-graph__ring {
+            animation: gr-blink 1000ms steps(1) infinite;
+            animation-delay: calc(var(--i) * 130ms);
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-3'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r3-no-load-3-phosphor 1800ms linear infinite;
+            --cg-edge-stagger: 150ms;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-4'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: gr-march 1100ms steps(8) infinite;
+            --cg-edge-stagger: 110ms;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-4'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: gr-flicker 1100ms steps(1) infinite;
+            --cg-node-stagger: 140ms;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-5'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r3-no-load-5-lamp 1400ms ease-in-out infinite;
+            --cg-node-stagger: 130ms;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-6'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+            animation: gr-roll 2600ms linear infinite;
+        }
+
+        [data-theme='nostromo'] [data-cg-loading='r3-no-load-6'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: gr-breathe 2600ms ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes r3-sh-load-1-trace {
+    0% {
+        stroke-dashoffset: 100;
+    }
+    55%,
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r3-sh-load-4-struck {
+    0%,
+    80%,
+    100% {
+        transform: none;
+    }
+    15% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes r3-sh-load-5-ping {
+    0%,
+    100% {
+        filter: none;
+    }
+    40% {
+        filter: drop-shadow(0 0 3px color-mix(in oklch, var(--foreground) 70%, transparent));
+    }
+}
+
+@keyframes r3-rt-load-2-hourglass {
+    0%,
+    100% {
+        transform: none;
+    }
+    50% {
+        transform: scaleY(0.35);
+    }
+}
+
+@keyframes r3-rt-load-3-fill {
+    from {
+        stroke-dashoffset: 100;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r3-rt-load-5-cursor {
+    to {
+        stroke-dashoffset: -100;
+    }
+}
+
+@keyframes r3-rt-load-6-press {
+    0%,
+    100% {
+        transform: none;
+    }
+    50% {
+        transform: scale(0.82);
+    }
+}
+
+@keyframes r3-gk-load-1-run {
+    0% {
+        stroke-dashoffset: 100;
+    }
+    60%,
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r3-gk-load-3-snap {
+    from {
+        background-position: -100% 0;
+    }
+    to {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes r3-gk-load-3-catch {
+    0%,
+    100% {
+        filter: none;
+    }
+    50% {
+        filter: drop-shadow(0 0 3px var(--destructive));
+    }
+}
+
+@keyframes r3-gk-load-4-back {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    60%,
+    100% {
+        stroke-dashoffset: 100;
+    }
+}
+
+@keyframes r3-gk-load-5-flash {
+    0%,
+    100% {
+        filter: none;
+    }
+    50% {
+        filter: drop-shadow(0 0 3px var(--destructive));
+    }
+}
+
+@keyframes r3-gk-load-6-flip {
+    0%,
+    100% {
+        transform: none;
+    }
+    50% {
+        transform: scaleY(0.08);
+    }
+}
+
+@keyframes r3-lp-load-1-glint {
+    0% {
+        stroke-dashoffset: 100;
+        filter: none;
+    }
+    50% {
+        filter: drop-shadow(0 0 2px var(--primary));
+    }
+    60%,
+    100% {
+        stroke-dashoffset: 0;
+        filter: none;
+    }
+}
+
+@keyframes r3-lp-load-3-lay {
+    0% {
+        stroke-dashoffset: 100;
+    }
+    70%,
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r3-lp-load-5-glow {
+    0%,
+    100% {
+        filter: none;
+    }
+    30% {
+        filter: drop-shadow(0 0 3px var(--primary));
+    }
+}
+
+@keyframes r3-no-load-1-catch {
+    0%,
+    85%,
+    100% {
+        filter: none;
+    }
+    5% {
+        filter: drop-shadow(0 0 4px var(--gr-label, var(--success)));
+    }
+}
+
+@keyframes r3-no-load-3-phosphor {
+    0% {
+        stroke-dashoffset: 100;
+        filter: none;
+    }
+    50% {
+        filter: drop-shadow(0 0 3px var(--success));
+    }
+    65%,
+    100% {
+        stroke-dashoffset: 0;
+        filter: none;
+    }
+}
+
+@keyframes r3-no-load-5-lamp {
+    0%,
+    100% {
+        filter: none;
+    }
+    30% {
+        filter: drop-shadow(0 0 4px var(--success));
+    }
 }

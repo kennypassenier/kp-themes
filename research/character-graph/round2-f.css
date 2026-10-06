@@ -1,4 +1,106 @@
-/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new options of group f. */
+/* research/character-graph, round 3 (Kenny, 2026-10-06 10:58): the new
+   options of group f — brutalism, every aspect but the shape and the
+   loading picture (owned by another helper, on a new ghost-network base).
+   Loaded after graphs.css in the same `@layer kp.signature`, so these rules
+   (new, namespaced `data-cg-*='r3-fo-…'` values) simply add to it; the old
+   `='1'|'2'|'3'` rules for these aspects are never matched again because
+   nothing still carries those values for brutalism's open aspects. */
 
 @layer kp.signature {
+    /* ══ How the network arrives (data-cg-arrival): played once when the
+       drawn network comes in (data-cg-moment="arrive"). ══ */
+
+    /* brutalism · arrival r3-fo-arr-1 · Bolted on */
+
+    [data-theme='brutalism'] [data-cg-arrival='r3-fo-arr-1'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 420ms steps(6) both;
+        --gr-arr-node: gr-burst 340ms steps(3) both;
+        --gr-arr-chip: gr-burst 300ms steps(3) both;
+        --gr-stagger: 50ms;
+        --gr-edge-at: 0ms;
+    }
+
+    /* brutalism · arrival r3-fo-arr-2 · Girder swing */
+
+    [data-theme='brutalism'] [data-cg-arrival='r3-fo-arr-2'] .kp-graph {
+        --gr-arr-edge: gr-thick-in 260ms steps(2) both;
+        --gr-arr-node: gr-tilt-in 340ms steps(3) both;
+        --gr-stagger: 60ms;
+        --gr-edge-at: 300ms;
+    }
+
+    /* brutalism · arrival r3-fo-arr-3 · Riveted in */
+
+    [data-theme='brutalism'] [data-cg-arrival='r3-fo-arr-3'] .kp-graph {
+        --gr-arr-edge: gr-stretch-in 300ms steps(3) both;
+        --gr-arr-node: gr-spin-in 360ms steps(4) both;
+        --gr-stagger: 45ms;
+        --gr-estagger: 30ms;
+        --gr-node-at: 250ms;
+    }
+
+    /* ══ The picked node and the hidden kind (data-cg-focus). ══ */
+
+    /* brutalism · focus r3-fo-focus-1 · The target lock */
+
+    [data-theme='brutalism'] [data-cg-focus='r3-fo-focus-1'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 7;
+        --gr-node-dim: 0.15;
+        --gr-dim-filter: grayscale(0.9) contrast(1.1);
+        --gr-off-deco: line-through 5px;
+    }
+
+    /* brutalism · focus r3-fo-focus-2 · The hazard tag */
+
+    [data-theme='brutalism'] [data-cg-focus='r3-fo-focus-2'] .kp-graph {
+        --gr-pick: var(--warning);
+        --gr-pick-w: 6;
+        --gr-pick-glow: drop-shadow(3px 3px 0 var(--foreground));
+        --gr-node-dim: 0.1;
+        --gr-dim-filter: grayscale(1);
+        --gr-chip-off-bg: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--foreground) 6px 12px);
+        --gr-off-outline: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-focus='r3-fo-focus-2'] .kp-graph__kind[aria-pressed='false'] {
+        color: var(--foreground);
+    }
+
+    /* brutalism · focus r3-fo-focus-3 · Taped off */
+
+    [data-theme='brutalism'] [data-cg-focus='r3-fo-focus-3'] .kp-graph {
+        --gr-pick: var(--accent);
+        --gr-pick-w: 8;
+        --gr-node-dim: 0.25;
+        --gr-dim-filter: grayscale(1);
+        --gr-off-outline: 3px double var(--foreground);
+    }
+
+    /* ══ Live update (data-cg-live): played on the site and link a live
+       update just changed (data-cg-moment="live", data-cg-changed). ══ */
+
+    /* brutalism · live r3-fo-live-1 · The siren */
+
+    [data-theme='brutalism'] [data-cg-live='r3-fo-live-1'] .kp-graph {
+        --gr-live-node: gr-blink3 700ms steps(1);
+        --gr-live-edge: gr-packet 700ms steps(6);
+        --gr-live-c: var(--destructive);
+    }
+
+    /* brutalism · live r3-fo-live-2 · The dial clicks */
+
+    [data-theme='brutalism'] [data-cg-live='r3-fo-live-2'] .kp-graph {
+        --gr-live-ring: gr-flash-ring 500ms steps(2);
+        --gr-live-edge: gr-surge 500ms steps(2);
+        --gr-live-c: var(--accent);
+    }
+
+    /* brutalism · live r3-fo-live-3 · The hazard strobe */
+
+    [data-theme='brutalism'] [data-cg-live='r3-fo-live-3'] .kp-graph {
+        --gr-live-node: gr-ignite 700ms steps(1);
+        --gr-live-edge: gr-flicker 700ms steps(1);
+        --gr-live-c: var(--warning);
+    }
 }
