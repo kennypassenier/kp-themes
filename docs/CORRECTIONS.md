@@ -6652,3 +6652,37 @@ published site: exactly that, through cyberpunk. Queued as fix-115-M1.
 under the controls with a button to clear them.
 
 **9 · When we review the measure.** With fix-112.
+
+## fix-116 · Busy's three shapes looked the same (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 22:15: "bij cyberpunk krijg ik een
+beoordeling voor shape, maar de drie opties zien er exact hetzelfde uit".
+fix-115 let the Shape and phone pages follow the reviewer's own state; with
+Ready kept from an earlier page, no panel showed, so the three shapes were
+three identical plain tables (measured in cyberpunk: Ready shows no panel,
+Loading shows the neon trace, the glitch HUD and the holo card).
+
+**2 · Which gate let it through.** fix-115's measure read which state button
+was pressed, not whether the judged part was on screen.
+
+**3 · Where else the same fault sits.** Every aspect whose part only exists
+in one state. Searched with `grep -n "data-review-plays" research/character-busy/demo.html`:
+shape and phone (the panel) besides loading and failure; the other demos'
+judged parts exist in every state.
+
+**4 · How we prevent a repeat.** Busy's Loading button forces Loading on the
+shape, loading and phone pages (`data-review-forces="loading shape phone"`).
+
+**5 · What the remedy costs.** On busy the reviewer's own state applies to the
+arrival page only.
+
+**6 · Who enforces it.** Code (research/character-busy/demo.html).
+
+**7 · How and when we measure.** At the 9.3.0 release suite, the fix-115-M1
+test also checks that the panel is on screen on busy's Shape and phone
+pages after Ready was picked elsewhere. Queued as fix-116-M1.
+
+**8 · Fallback.** If a judged part is still missing, the dialog checks the
+outlined target is visible and says so.
+
+**9 · When we review the measure.** With fix-115.
