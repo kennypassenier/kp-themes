@@ -419,8 +419,9 @@ dialog.innerHTML = `
                 <p class="rv-flip__label" data-rv-flip-label></p>
                 <div class="rv-flip__tools" role="group" aria-label="Motion, for the option shown">
                     <button type="button" class="kp-button kp-button--sm" data-rv-flip-replay>⟲ Replay (R)</button>
-                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-pause aria-pressed="false">Pause (P)</button>
-                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-speed>Speed: Full (S)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-pause aria-pressed="false">Pause (Space)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-speed>Speed: Full (E)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-flip-tour aria-pressed="false">Tour the states (A)</button>
                 </div>
             </div>
         </div>
@@ -525,7 +526,7 @@ function applyPauseStyle() {
     }
     style.textContent = motionPaused ? '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' : '';
     flipPauseBtn.setAttribute('aria-pressed', String(motionPaused));
-    flipPauseBtn.textContent = motionPaused ? 'Resume (P)' : 'Pause (P)';
+    flipPauseBtn.textContent = motionPaused ? 'Resume (Space)' : 'Pause (Space)';
 }
 
 /** Leaves the demo exactly as focusAspect found it: every cell shown again, no leftover sizing. */
@@ -614,7 +615,7 @@ function paintFlip(step) {
         });
     applyPauseStyle();
     pressSpeed(motionSpeed);
-    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (S)`;
+    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (E)`;
 }
 
 /** Scales the shown option down until all of it fits the stage's height: the element whole, never cropped. */
@@ -635,6 +636,63 @@ function flip(step, dir) {
 }
 
 /** Replay (R / the button): restarts the shown option's motion from the start, without flipping away. */
+/**
+ * The demo's own control groups, in order, without the speed group (the
+ * dialog has its own): the state words first, then the tone, then any
+ * further set (Kenny, 2026-10-06 17:14: "I would like to be able to not
+ * have to take my hands off the keyboard ... left hand on the normal
+ * position and the right hand on the arrow keys").
+ */
+function controlGroups() {
+    const section = flipPair?.item?.section;
+    if (!section) return [];
+    return [...section.querySelectorAll('[data-review-controls] [role="group"]')]
+        .filter(
+            (g) =>
+                !g.closest('.rv-controls') &&
+                !/speed/i.test(g.getAttribute('aria-label') || '') &&
+                !g.querySelector('[data-cc-speed], [data-ct-speed], [data-tl-speed]'),
+        )
+        .map((g) => /** @type {HTMLElement[]} */ ([...g.querySelectorAll('button')].filter((b) => !/speed/i.test(Object.keys(b.dataset).join(' ')))))
+        .filter((buttons) => buttons.length);
+}
+/** Presses the next (or previous) button of control group n, as the demo's own click would. */
+function stepGroup(n, dir = 1) {
+    const buttons = controlGroups()[n];
+    if (!buttons) return;
+    const pressed = buttons.findIndex((b) => b.getAttribute('aria-pressed') === 'true');
+    const last = Number(buttons[0].closest('[role="group"]')?.getAttribute('data-rv-last') ?? (pressed >= 0 ? pressed : -1));
+    const at = ((pressed >= 0 ? pressed : last) + dir + buttons.length) % buttons.length;
+    buttons[0].closest('[role="group"]')?.setAttribute('data-rv-last', String(at));
+    buttons[at].click();
+    const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
+    if (shown) requestAnimationFrame(() => fitShown(shown));
+}
+/** A: tours the first group's states by itself, then the next tone, over and over, until pressed again or the page changes. */
+let tourTimer = 0;
+let tourCount = 0;
+const tourButton = $('[data-rv-flip-tour]');
+function stopTour() {
+    clearInterval(tourTimer);
+    tourTimer = 0;
+    tourButton?.setAttribute('aria-pressed', 'false');
+}
+function toggleTour() {
+    if (tourTimer) return stopTour();
+    tourCount = 0;
+    tourButton?.setAttribute('aria-pressed', 'true');
+    const tick = () => {
+        const groups = controlGroups();
+        if (!groups.length) return stopTour();
+        stepGroup(0);
+        tourCount += 1;
+        if (groups[1] && tourCount % groups[0].length === 0) stepGroup(1);
+    };
+    tick();
+    tourTimer = setInterval(tick, 3000);
+}
+tourButton?.addEventListener('click', () => toggleTour());
+
 function replay(step) {
     if (!step?.aspect || !flipPair) return;
     const shown = /** @type {HTMLElement} */ (flipCells[flipAt]);
@@ -652,7 +710,7 @@ function togglePause() {
 function cycleSpeed() {
     motionSpeed = motionSpeed === '1' ? '0.5' : motionSpeed === '0.5' ? '0.25' : '1';
     pressSpeed(motionSpeed);
-    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (S)`;
+    flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (E)`;
 }
 /**
  * Resolves once the page's own scripts have run. The catalogue shell
@@ -699,6 +757,7 @@ function focusAspect(section, aspect) {
 }
 
 function putBack() {
+    stopTour();
     teardownFlip();
     for (const [, section] of moved) focusAspect(section, null);
     unmirror();
@@ -954,10 +1013,10 @@ async function show(at) {
         // beoordelen ook in de dialog ... fix het"), never folded away.
         controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.aspect
-            ? 'One option at a time, large, its motion already playing. ←/→ flips to the next one; Space/Enter picks it; N is None of these.'
+            ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, R replays, E speed, A tours the states by itself, Space pauses.'
             : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
         $('#rv-keys').textContent = step.aspect
-            ? '←/→ flip options · Space/Enter pick · N none of these · R replay · P pause · S speed · PageUp/PageDown move between pages · Escape closes.'
+            ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
             : 'Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
@@ -1133,27 +1192,36 @@ dialog.addEventListener('keydown', (event) => {
         event.preventDefault();
         if (step?.aspect) flip(step, event.key === 'ArrowRight' ? 1 : -1);
         else show(index + (event.key === 'ArrowRight' ? 1 : -1));
-    } else if (event.key === 'ArrowUp' || ((event.key === ' ' || event.key === 'Enter') && step?.aspect && !from.matches('button, a, summary'))) {
+    } else if (event.key === 'ArrowUp' || (event.key === 'Enter' && step?.aspect && !from.matches('button, a, summary'))) {
         // A focused button/link keeps its own Space/Enter (the flip arrows, Replay,
         // Pause, Speed, or the approve button itself, which calls approveStep() too).
         event.preventDefault();
         approveStep();
-    } else if (step?.aspect && event.key.toLowerCase() === 'n') {
+    } else if (step?.aspect && (event.key === 'ArrowDown' || event.key.toLowerCase() === 'n')) {
         event.preventDefault();
         const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
         if (box && !box.checked) {
             box.checked = true;
             box.dispatchEvent(new Event('change'));
         }
-    } else if (step?.aspect && event.key.toLowerCase() === 'r') {
-        event.preventDefault();
-        replay(step);
-    } else if (step?.aspect && event.key.toLowerCase() === 'p') {
-        event.preventDefault();
-        togglePause();
-    } else if (step?.aspect && event.key.toLowerCase() === 's') {
-        event.preventDefault();
-        cycleSpeed();
+    } else if (step?.aspect) {
+        // The left hand on its home row: physical keys (event.code), so they sit
+        // under the same fingers on AZERTY (labels Q S D F, A Z E R) and QWERTY.
+        const act = {
+            KeyA: () => stepGroup(0, -1), // AZERTY Q: the state before
+            KeyS: () => stepGroup(0, 1), // S: the next state
+            KeyD: () => stepGroup(1, 1), // D: the next tone
+            KeyF: () => stepGroup(2, 1), // F: the next value of the third set
+            KeyR: () => replay(step), // R: replay
+            KeyE: () => cycleSpeed(), // E: speed
+            KeyQ: () => toggleTour(), // AZERTY A: tour the states by itself
+            Space: () => togglePause(), // the thumb: pause
+            KeyP: () => togglePause(),
+        }[event.code];
+        if (act && !(event.code === 'Space' && from.matches('button, a, summary'))) {
+            event.preventDefault();
+            act();
+        }
     }
 });
 
