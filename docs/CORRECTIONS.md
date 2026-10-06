@@ -6158,3 +6158,48 @@ no contrast requirement. Queued as fix-104-M1 in docs/MINI_ROUNDS.md.
 requirements from RULES.md.
 
 **9 · When we review the measure.** When Kenny makes contrast a gate again.
+
+## fix-103 · The review dialog jumped to the next theme after a click on a demo control (2026-10-05)
+
+Kenny, form v27 (2026-10-06): "nee die uitleg klopt niet, ik klikte op een
+knop die een optie veranderde en ik ging naar een volgend thema, heeft niks
+met die pijltjestoetsen te maken. Ik heb het niet meer meegemaakt dus
+voorlopig ok".
+
+**1 · What went wrong.** Kenny, 2026-10-05 23:23, judging formal in a
+character demo: a click on a control that changed an option moved the
+dialog to the next theme. Not reproduced: in Firefox every mirrored control
+of all 15 demos was clicked in formal and none changed the step. While
+looking, a different fault was found and fixed in 7d8c4d73: after such a
+click the focus sits in the dialog, and the arrow keys switched or approved
+the step. Kenny says that was not his case; the cause of his jump is
+unknown.
+
+**2 · Which gate let it through.** No test drives the mirrored controls or
+the choice ticks of the review kit.
+
+**3 · Where else the same fault sits.** Unknown until the cause is. Searched
+for every path that moves the step: `grep -n "show(\|nextOpenStep(" research/_review/review.js`
+(approve, the step buttons, the arrow keys, the open button); none runs on
+a control's click.
+
+**4 · How we prevent a repeat.** Nothing yet, consciously: the cause is not
+known. The arrow-key fix stays.
+
+**5 · What the remedy costs.** Nothing.
+
+**6 · Who enforces it.** Discipline: Kenny names the demo, the theme and
+the button when it happens again, and Claude reproduces it on the published
+page.
+
+**7 · How and when we measure.** At Kenny's next report of a jump, or at the
+9.3.0 release suite, where tests/review-kit-dialog.spec.mjs clicks every
+mirrored control and every choice tick in one demo and the step must stay.
+Queued as fix-103-M1 in docs/MINI_ROUNDS.md.
+
+**8 · Fallback.** If it recurs and cannot be reproduced, the dialog logs
+every step change with its cause in the console, so the next report carries
+it.
+
+**9 · When we review the measure.** When the review kit's dialog changes how
+steps move.
