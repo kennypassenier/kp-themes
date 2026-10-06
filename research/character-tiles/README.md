@@ -1,5 +1,7 @@
 # research/character-tiles
 
+**Decided (2026-10-06 21:11).** Kenny approved all 22 themes in full, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / arrival / tone / hover / live). They move into the registers exactly as the demo draws them at the port, after every component's verdict (research/PACKAGE_FINDINGS.md lists what the package must learn first).
+
 Dashboard tiles of their own, per theme (Kenny, 2026-10-05): six aspects —
 shape, while loading, how the tiles arrive, the tone of a tile, hover and
 focus, and a live update — each picked on its own from three theme-native

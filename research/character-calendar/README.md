@@ -1,5 +1,7 @@
 # A month heatmap of its own, per theme
 
+**Decided (2026-10-06 21:03).** Kenny approved all 22 themes in full, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / arrival / tone / select). They move into the registers exactly as the demo draws them at the port, after every component's verdict (research/PACKAGE_FINDINGS.md lists what the package must learn first).
+
 Kenny, form v18 (2026-10-05): the character round, one component at a time,
 all 22 themes in one demo. The meter (`research/character-meter`) and the
 time chart (`research/character-chart`) came first; this is the third

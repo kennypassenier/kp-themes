@@ -1,5 +1,7 @@
 # A time chart of its own, per theme
 
+**Decided (2026-10-06 21:02).** Kenny approved all 22 themes in full, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / arrival / update / events / tip). They move into the registers exactly as the demo draws them at the port, after every component's verdict (research/PACKAGE_FINDINGS.md lists what the package must learn first).
+
 **Judged (2026-10-05 20:03).** Kenny judged all 22 themes from To judge: 19 approved with a pick, 3 not approved. His condition on every approval: the loading screens are NOT approved; he wants them as a separate aspect ("I want those in a separate demo"). Picks: Character 2 for formal, light, dark, terminal, phantom, retro, lapis; Character 1 for cyberpunk, synthwave, pastel, forest, sepia, blueprint, deco, shade-light, shade-dark, grotesk, nostromo, titanium. Not approved: high-contrast ("don't like the options, get new ones"), solstice ("I like the background of character 1, but the riveted tooltip from character 2, combine them"), brutalism ("don't like it, get a new proposal").
 
 Kenny, form v18 (2026-10-05): the character round, one component at a time,

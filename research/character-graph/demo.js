@@ -42,6 +42,8 @@ import R2F from './round2-f.js';
 import R3A from './round3-a.js';
 import R3B from './round3-b.js';
 import R3C from './round3-c.js';
+import R4A from './round4-a.js';
+import R4B from './round4-b.js';
 
 /** @typedef {[name: string, text: string, key?: string]} Option */
 /** @typedef {'shape' | 'loading' | 'arrival' | 'focus' | 'live'} Aspect */
@@ -840,6 +842,9 @@ const IDEAS = {
  * Be creative"); brutalism keeps only its shape ("Only the shape is good,
  * the rest needs to be redone").
  * @type {Record<string, string[]>}
+ * Round 4's verdicts (Kenny, 2026-10-06 21:07) settle all but the loading
+ * of brutalism ("none fits brutalism … be creative") and grotesk ("some
+ * don't even move"): six new options each in round 5 (round4-a/b).
  */
 const PICKED = {
     formal: ['3', '3', '3', '3', '2'],
@@ -850,18 +855,18 @@ const PICKED = {
     pastel: ['1', '4', '2', '1', '3'],
     terminal: ['1', '4', '2', '2', '2'],
     forest: ['3', '3', '2', '3', '2'],
-    'high-contrast': ['3', '', '2', '2', '2'],
+    'high-contrast': ['3', '2', '2', '2', '2'],
     sepia: ['2', '1', '2', '3', '3'],
     blueprint: ['2', '3', '2', '2', '2'],
     solstice: ['1', '2', '3', '2', '2'],
-    brutalism: ['2', '', '', '', ''],
-    deco: ['2', '', '2', '3', '2'],
+    brutalism: ['2', '', '2', '2', '3'],
+    deco: ['2', '3', '2', '3', '2'],
     phantom: ['1', '4', '2', '3', '2'],
     'shade-light': ['3', '6', '2', '3', '2'],
     'shade-dark': ['1', '4', '2', '2', '2'],
     retro: ['1', '1', '3', '2', '2'],
     grotesk: ['1', '', '2', '2', '2'],
-    lapis: ['2', '', '3', '2', '2'],
+    lapis: ['2', '6', '3', '2', '2'],
     nostromo: ['1', '2', '3', '3', '3'],
     titanium: ['2', '3', '1', '2', '2'],
 };
@@ -873,7 +878,7 @@ const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PI
 // Merged per aspect, so two files may each bring one theme's aspects.
 // An aspect takes the newest round's options it has (round 4's, else round
 // 3's), whether open or settled: a settled number counts in that list.
-for (const file of [R2A, R2B, R2C, R2D, R2E, R2F, R3A, R3B, R3C])
+for (const file of [R2A, R2B, R2C, R2D, R2E, R2F, R3A, R3B, R3C, R4A, R4B])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 /** The attribute value of option n of an aspect in a theme. */

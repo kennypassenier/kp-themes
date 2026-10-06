@@ -1,0 +1,182 @@
+{
+    "decided": "2026-10-06 21:11 Brussels, Kenny: 22 of 22 approved in full (character-tiles)",
+    "attributes": "data-ti-<aspect>=\"<key>\" on the preview wrapper [data-ti], research/character-tiles/ (tiles.css, tiles-a..e.css and round2-a..d)",
+    "picks": {
+        "formal": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "1",
+            "live": "3"
+        },
+        "light": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "1",
+            "live": "2"
+        },
+        "dark": {
+            "shape": "2",
+            "loading": "1",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "1",
+            "live": "2"
+        },
+        "cyberpunk": {
+            "shape": "3",
+            "loading": "r2-cy-load-6",
+            "arrival": "r2-cy-arrive-3",
+            "tone": "r2-cy-tone-2",
+            "hover": "1",
+            "live": "r2-cy-live-3"
+        },
+        "synthwave": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "1",
+            "tone": "r2-sw-tone-3",
+            "hover": "3",
+            "live": "2"
+        },
+        "pastel": {
+            "shape": "3",
+            "loading": "2",
+            "arrival": "1",
+            "tone": "2",
+            "hover": "1",
+            "live": "3"
+        },
+        "terminal": {
+            "shape": "2",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "3",
+            "live": "2"
+        },
+        "forest": {
+            "shape": "3",
+            "loading": "2",
+            "arrival": "3",
+            "tone": "3",
+            "hover": "3",
+            "live": "2"
+        },
+        "high-contrast": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "3",
+            "hover": "2",
+            "live": "2"
+        },
+        "sepia": {
+            "shape": "3",
+            "loading": "1",
+            "arrival": "2",
+            "tone": "r2-se-tone-1",
+            "hover": "1",
+            "live": "3"
+        },
+        "blueprint": {
+            "shape": "3",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "1",
+            "live": "3"
+        },
+        "solstice": {
+            "shape": "3",
+            "loading": "3",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "3",
+            "live": "3"
+        },
+        "brutalism": {
+            "shape": "2",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "1",
+            "live": "2"
+        },
+        "deco": {
+            "shape": "3",
+            "loading": "2",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "2",
+            "live": "2"
+        },
+        "phantom": {
+            "shape": "2",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "3",
+            "hover": "r2-ph-hover-1",
+            "live": "r2-ph-live-1"
+        },
+        "shade-light": {
+            "shape": "1",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "3",
+            "live": "2"
+        },
+        "shade-dark": {
+            "shape": "1",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "1",
+            "live": "2"
+        },
+        "retro": {
+            "shape": "r2-rt-shape-1",
+            "loading": "1",
+            "arrival": "3",
+            "tone": "1",
+            "hover": "1",
+            "live": "3"
+        },
+        "grotesk": {
+            "shape": "1",
+            "loading": "3",
+            "arrival": "2",
+            "tone": "2",
+            "hover": "1",
+            "live": "2"
+        },
+        "lapis": {
+            "shape": "1",
+            "loading": "3",
+            "arrival": "3",
+            "tone": "2",
+            "hover": "3",
+            "live": "2"
+        },
+        "nostromo": {
+            "shape": "2",
+            "loading": "1",
+            "arrival": "2",
+            "tone": "3",
+            "hover": "3",
+            "live": "1"
+        },
+        "titanium": {
+            "shape": "1",
+            "loading": "2",
+            "arrival": "2",
+            "tone": "1",
+            "hover": "2",
+            "live": "3"
+        }
+    }
+}

@@ -77,17 +77,9 @@ export const PAGES = [
             { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
             { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
-            // The character round's second component (form v18, 2026-10-05): two time charts of its own per theme, all 22 in one demo.
-            { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
-            // The character round, third demo (2026-10-05): the month heatmap in 22 themes, two characters each.
-            { href: 'research/character-calendar/demo.html', label: 'A month heatmap of its own, per theme' },
             // The character round, fourth demo (2026-10-05): the network graph in 22 themes, two characters each.
             { href: 'research/character-graph/demo.html', label: 'A network graph of its own, per theme' },
-            // The character round, fifth demo (2026-10-05): the key figure's trend tile in 22 themes, two characters each.
-            { href: 'research/character-trend/demo.html', label: 'A trend tile of its own, per theme' },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
-            // The character round, seventh component: the dashboard tiles.
-            { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
             { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
@@ -109,6 +101,14 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 21:02: Kenny approved the time chart in all 22 themes, one pick per aspect (research/character-chart/decided.json); it moves into the registers at the character round's port.
+            { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
+            // Decided 2026-10-06 21:03: Kenny approved the month heatmap in all 22 themes (research/character-calendar/decided.json); it moves into the registers at the port.
+            { href: 'research/character-calendar/demo.html', label: 'A month heatmap of its own, per theme' },
+            // Decided 2026-10-06 21:08: Kenny approved the trend tile in all 22 themes (research/character-trend/decided.json); it moves into the registers at the port.
+            { href: 'research/character-trend/demo.html', label: 'A trend tile of its own, per theme' },
+            // Decided 2026-10-06 21:11: Kenny approved the dashboard tiles in all 22 themes (research/character-tiles/decided.json); they move into the registers at the port.
+            { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
             // Decided 2026-10-06 11:50: Kenny approved the strip columns in all 22 themes, one pick per aspect (research/character-columns/decided.json); they move into the registers at the character round's port.
             { href: 'research/character-columns/demo.html', label: 'A key-figure strip of its own, per theme' },
             // Decided 2026-10-05 12:30: Kenny picked formal's checked stamp, cyberpunk's glitch and settle and titanium's heat tint; moved into the package (js/update.js, `--kp-update` in the three registers, catalogue/motion.html#update).

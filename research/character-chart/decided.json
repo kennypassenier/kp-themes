@@ -1,0 +1,182 @@
+{
+    "decided": "2026-10-06 21:02 Brussels, Kenny: 22 of 22 approved in full (character-chart)",
+    "attributes": "data-cc-<aspect>=\"<key>\" on the preview wrapper [data-cc], research/character-chart/ (chart.css and round3/round4 files)",
+    "picks": {
+        "formal": {
+            "shape": "b",
+            "loading": "stamp",
+            "arrival": "draw",
+            "update": "none",
+            "events": "shape",
+            "tip": "b"
+        },
+        "light": {
+            "shape": "b",
+            "loading": "rise",
+            "arrival": "rise",
+            "update": "none",
+            "events": "halo",
+            "tip": "b"
+        },
+        "dark": {
+            "shape": "a",
+            "loading": "cutter",
+            "arrival": "linear",
+            "update": "none",
+            "events": "target",
+            "tip": "a"
+        },
+        "cyberpunk": {
+            "shape": "r3-cy-ice",
+            "loading": "r3-cy-ld-rain",
+            "arrival": "r3-cy-ar-chrome",
+            "update": "none",
+            "events": "target",
+            "tip": "a"
+        },
+        "synthwave": {
+            "shape": "a",
+            "loading": "feed",
+            "arrival": "rise",
+            "update": "none",
+            "events": "ring",
+            "tip": "a"
+        },
+        "pastel": {
+            "shape": "r3-pa-bubblegum",
+            "loading": "halftone",
+            "arrival": "rise",
+            "update": "none",
+            "events": "r4-pa-ev-scallop",
+            "tip": "a"
+        },
+        "terminal": {
+            "shape": "a",
+            "loading": "r4-tm-load-dialup",
+            "arrival": "r3-tm-ar-print",
+            "update": "none",
+            "events": "ring",
+            "tip": "b"
+        },
+        "forest": {
+            "shape": "a",
+            "loading": "r4-fo-map",
+            "arrival": "rise",
+            "update": "none",
+            "events": "r3-fo-ev-trig",
+            "tip": "a"
+        },
+        "high-contrast": {
+            "shape": "hc1",
+            "loading": "march",
+            "arrival": "linear",
+            "update": "none",
+            "events": "bead",
+            "tip": "hc1"
+        },
+        "sepia": {
+            "shape": "b",
+            "loading": "r4-se-load-fox",
+            "arrival": "stamp",
+            "update": "none",
+            "events": "bead",
+            "tip": "b"
+        },
+        "blueprint": {
+            "shape": "a",
+            "loading": "r4-bp-ld-5",
+            "arrival": "linear",
+            "update": "none",
+            "events": "r3-bp-ev-weld",
+            "tip": "a"
+        },
+        "solstice": {
+            "shape": "so3",
+            "loading": "embers",
+            "arrival": "rise",
+            "update": "swell",
+            "events": "bead",
+            "tip": "a"
+        },
+        "brutalism": {
+            "shape": "br1",
+            "loading": "r3c-bru-load-3",
+            "arrival": "drop",
+            "update": "none",
+            "events": "bead",
+            "tip": "r3c-bru-tip-1"
+        },
+        "deco": {
+            "shape": "a",
+            "loading": "fan",
+            "arrival": "rise",
+            "update": "none",
+            "events": "r3c-deco-ev-1",
+            "tip": "a"
+        },
+        "phantom": {
+            "shape": "b",
+            "loading": "r3c-pha-load-2",
+            "arrival": "r3c-pha-arr-1",
+            "update": "none",
+            "events": "r3c-pha-ev-1",
+            "tip": "b"
+        },
+        "shade-light": {
+            "shape": "r3c-shl-sh-3",
+            "loading": "pen",
+            "arrival": "wipe",
+            "update": "none",
+            "events": "pin",
+            "tip": "a"
+        },
+        "shade-dark": {
+            "shape": "b",
+            "loading": "hatch",
+            "arrival": "wipe",
+            "update": "none",
+            "events": "ring",
+            "tip": "a"
+        },
+        "retro": {
+            "shape": "r3-rt-shape-1",
+            "loading": "r3-rt-load-3",
+            "arrival": "r3-rt-arr-2",
+            "update": "r3-rt-upd-3",
+            "events": "r3-rt-events-2",
+            "tip": "r3-rt-tip-3"
+        },
+        "grotesk": {
+            "shape": "a",
+            "loading": "r3-gr-load-2",
+            "arrival": "linear",
+            "update": "none",
+            "events": "shape",
+            "tip": "r3-gr-tip-3"
+        },
+        "lapis": {
+            "shape": "b",
+            "loading": "r3-la-load-3",
+            "arrival": "centre",
+            "update": "none",
+            "events": "ring",
+            "tip": "b"
+        },
+        "nostromo": {
+            "shape": "a",
+            "loading": "r3-no-load-1",
+            "arrival": "r3-no-arr-3",
+            "update": "none",
+            "events": "target",
+            "tip": "a"
+        },
+        "titanium": {
+            "shape": "a",
+            "loading": "cutter",
+            "arrival": "draw",
+            "update": "none",
+            "events": "r3-ti-ev-2",
+            "tip": "a"
+        }
+    }
+}
