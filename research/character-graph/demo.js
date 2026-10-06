@@ -845,6 +845,9 @@ const IDEAS = {
  * Round 4's verdicts (Kenny, 2026-10-06 21:07) settle all but the loading
  * of brutalism ("none fits brutalism … be creative") and grotesk ("some
  * don't even move"): six new options each in round 5 (round4-a/b).
+ * Round 5's verdict (Kenny, 2026-10-06 21:37): brutalism 3, grotesk 3 (Out
+ * of register, which also starts a grotesk-only loading demo after the
+ * titanium one). Decided.
  */
 const PICKED = {
     formal: ['3', '3', '3', '3', '2'],
@@ -859,13 +862,13 @@ const PICKED = {
     sepia: ['2', '1', '2', '3', '3'],
     blueprint: ['2', '3', '2', '2', '2'],
     solstice: ['1', '2', '3', '2', '2'],
-    brutalism: ['2', '', '2', '2', '3'],
+    brutalism: ['2', '3', '2', '2', '3'],
     deco: ['2', '3', '2', '3', '2'],
     phantom: ['1', '4', '2', '3', '2'],
     'shade-light': ['3', '6', '2', '3', '2'],
     'shade-dark': ['1', '4', '2', '2', '2'],
     retro: ['1', '1', '3', '2', '2'],
-    grotesk: ['1', '', '2', '2', '2'],
+    grotesk: ['1', '3', '2', '2', '2'],
     lapis: ['2', '6', '3', '2', '2'],
     nostromo: ['1', '2', '3', '3', '3'],
     titanium: ['2', '3', '1', '2', '2'],

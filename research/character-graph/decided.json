@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 21:37 Brussels, Kenny: 22 of 22 approved (character-graph round 5; grotesk loading Out of register)",
+    "attributes": "data-cg-<aspect>=\"<key>\" on the graph wrapper, research/character-graph/ (graphs.css, ghost.css, round2-*, round3-*, round4-*)",
+    "picks": {
+        "formal": {
+            "shape": "3",
+            "loading": "r3-fm-load-3",
+            "arrival": "3",
+            "focus": "3",
+            "live": "2"
+        },
+        "light": {
+            "shape": "1",
+            "loading": "r3-lt-load-3",
+            "arrival": "3",
+            "focus": "3",
+            "live": "2"
+        },
+        "dark": {
+            "shape": "1",
+            "loading": "r3-dk-load-3",
+            "arrival": "2",
+            "focus": "3",
+            "live": "3"
+        },
+        "cyberpunk": {
+            "shape": "3",
+            "loading": "r3-b-cp-load-4",
+            "arrival": "2",
+            "focus": "3",
+            "live": "3"
+        },
+        "synthwave": {
+            "shape": "1",
+            "loading": "r3-b-sw-load-4",
+            "arrival": "2",
+            "focus": "2",
+            "live": "3"
+        },
+        "pastel": {
+            "shape": "1",
+            "loading": "r3-b-ps-load-4",
+            "arrival": "2",
+            "focus": "1",
+            "live": "3"
+        },
+        "terminal": {
+            "shape": "1",
+            "loading": "r3-b-tm-load-4",
+            "arrival": "2",
+            "focus": "2",
+            "live": "2"
+        },
+        "forest": {
+            "shape": "3",
+            "loading": "r3-fr-load-3",
+            "arrival": "2",
+            "focus": "3",
+            "live": "2"
+        },
+        "high-contrast": {
+            "shape": "3",
+            "loading": "r4-hc-load-2",
+            "arrival": "2",
+            "focus": "2",
+            "live": "2"
+        },
+        "sepia": {
+            "shape": "2",
+            "loading": "r3-se-load-1",
+            "arrival": "2",
+            "focus": "3",
+            "live": "3"
+        },
+        "blueprint": {
+            "shape": "2",
+            "loading": "r3-bp-load-3",
+            "arrival": "2",
+            "focus": "2",
+            "live": "2"
+        },
+        "solstice": {
+            "shape": "1",
+            "loading": "r3-d-sol-load-2",
+            "arrival": "3",
+            "focus": "2",
+            "live": "2"
+        },
+        "brutalism": {
+            "shape": "2",
+            "loading": "r5-br-load-3",
+            "arrival": "r4-c-bru-arr-2",
+            "focus": "r4-c-bru-focus-2",
+            "live": "r4-c-bru-live-3"
+        },
+        "deco": {
+            "shape": "2",
+            "loading": "r4-dec-load-3",
+            "arrival": "2",
+            "focus": "3",
+            "live": "2"
+        },
+        "phantom": {
+            "shape": "1",
+            "loading": "r3-d-pha-load-4",
+            "arrival": "2",
+            "focus": "3",
+            "live": "2"
+        },
+        "shade-light": {
+            "shape": "3",
+            "loading": "r3-d-shl-load-6",
+            "arrival": "2",
+            "focus": "3",
+            "live": "2"
+        },
+        "shade-dark": {
+            "shape": "1",
+            "loading": "r3-sh-load-4",
+            "arrival": "2",
+            "focus": "2",
+            "live": "2"
+        },
+        "retro": {
+            "shape": "1",
+            "loading": "r3-rt-load-1",
+            "arrival": "3",
+            "focus": "2",
+            "live": "2"
+        },
+        "grotesk": {
+            "shape": "1",
+            "loading": "r5-gk-load-3",
+            "arrival": "2",
+            "focus": "2",
+            "live": "2"
+        },
+        "lapis": {
+            "shape": "2",
+            "loading": "r4-lp-load-6",
+            "arrival": "3",
+            "focus": "2",
+            "live": "2"
+        },
+        "nostromo": {
+            "shape": "1",
+            "loading": "r3-no-load-2",
+            "arrival": "3",
+            "focus": "3",
+            "live": "3"
+        },
+        "titanium": {
+            "shape": "2",
+            "loading": "r3-tn-load-3",
+            "arrival": "1",
+            "focus": "2",
+            "live": "2"
+        }
+    }
+}

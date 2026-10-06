@@ -1,5 +1,7 @@
 # A network graph of its own, per theme
 
+**Decided (2026-10-06 21:37).** Kenny approved all 22 themes, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / arrival / focus / live). The loading pictures need the ghost network in the package (PACKAGE_FINDINGS). Grotesk's loading, Out of register, also starts a grotesk-only demo of every loading element, after the titanium one (Kenny, 2026-10-06 21:37).
+
 Kenny, form v18 (2026-10-05): the character round, one component at a time,
 all 22 themes in one demo. The meter (`research/character-meter`), the time
 chart (`research/character-chart`) and the month heatmap
