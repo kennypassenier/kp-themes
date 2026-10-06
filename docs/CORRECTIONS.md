@@ -6203,3 +6203,43 @@ it.
 
 **9 · When we review the measure.** When the review kit's dialog changes how
 steps move.
+
+## fix-105 · Phantom's menu did not sit at its More tile and stretched it (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 12:59, judging the menu demo in
+phantom: "als ik more klik, dan verschijnt het menu niet mooi aan de more
+tegel, waardoor de more tegel zelf ook soms super lang is". Shape option 2
+("The calling card", research/character-menu/menu-c.css) set the menu to
+`position: relative`, with the same specificity as and later than the
+package's `.kp-menu-button > .kp-menu { position: absolute }`; the menu
+flowed inside the inline-flex button, which stretched to 275 px instead of
+36 px.
+
+**2 · Which gate let it through.** No check measured a menu against its
+button in the demos; the helper's checks counted animations and labels.
+
+**3 · Where else the same fault sits.** A demo or register rule that sets
+`position` on `.kp-menu`. Searched with
+`grep -rn "kp-menu[^-].*{[^}]*position" research/character-menu css/*-register.css`
+and the phantom rule was the only one.
+
+**4 · How we prevent a repeat.** The helper briefs name it as a CSS trap:
+never set `position` on a package-positioned part (the menu, a tooltip, a
+popover); and a menu demo's check measures the menu's edge against its
+button (within 8 px) and the button's height (one height).
+
+**5 · What the remedy costs.** One line in the brief, one measurement per
+menu check.
+
+**6 · Who enforces it.** Discipline (the brief and the check script); no
+gate reads research CSS.
+
+**7 · How and when we measure.** At the menu port: in every register the
+menu's top or bottom lies within 8 px of its button and the button stays
+36 px high, in Firefox. Queued as fix-105-M1.
+
+**8 · Fallback.** If a register still moves the menu, the port adds a
+package test for the menu's anchor.
+
+**9 · When we review the measure.** When js/menu-button.js changes how it
+places the menu.
