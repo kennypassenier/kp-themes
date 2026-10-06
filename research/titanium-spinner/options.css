@@ -1,0 +1,397 @@
+/* research/titanium-spinner: six new spinners for titanium, and the drill as
+   it is today (Kenny, 2026-10-07 00:54: "ik wil ook een paar nieuwe
+   ontwerpen voor de spinner (die ook in andere componenten terugkomt)").
+
+   Every option is drawn on the package's own element, `.kp-spinner`, with
+   its two pseudo-elements and nothing else, so the contract does not move:
+   one span, `--kp-spinner-size` for the size, `role`/`aria-*` on the span,
+   and a still pose under reduced motion that still reads as "busy".
+
+   Scoped by `[data-ts-spinner='<key>']` on an ancestor; `drill` is left to
+   the register as it is. Tokens only. The grammar is
+   themes/titanium/CHARACTER.md §0/§1: loops keep a constant feed (linear),
+   a discrete count indexes with steps(), never an overshoot; the feed runs
+   start → end (clockwise in a left-to-right page, mirrored with `dir`);
+   oxide colour only where heat or the bath put it, in the heat order gold →
+   (bronze) → violet → blue → cyan; round only because each of these is a
+   turned part; square with the TL/BR chamfer otherwise. Every animation
+   sits under prefers-reduced-motion: no-preference; the base is the still
+   pose. `--ts-slow` (the page's speed buttons) stretches every period. */
+
+@layer kp.signature {
+    /* ── Shared: the package's ring is taken off; each option draws its own
+       part on the span and its two pseudo-elements. :where() keeps this at
+       the register's own weight, so it wins by order and every option's own
+       rule below wins by weight. ── */
+    [data-theme='titanium'] :where([data-ts-spinner]:not([data-ts-spinner='drill'])) .kp-spinner {
+        --ts-s: var(--kp-spinner-size, 1.25rem);
+        --ts-line: max(1.5px, calc(var(--ts-s) * 0.07));
+        position: relative;
+        display: inline-block;
+        flex: none;
+        inline-size: var(--ts-s);
+        block-size: var(--ts-s);
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        clip-path: none;
+        vertical-align: middle;
+        isolation: isolate;
+        animation: none;
+    }
+
+    [data-theme='titanium'] :where([data-ts-spinner]:not([data-ts-spinner='drill'])) .kp-spinner::before,
+    [data-theme='titanium'] :where([data-ts-spinner]:not([data-ts-spinner='drill'])) .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        inline-size: auto;
+        box-sizing: border-box;
+        background: none;
+        animation: none;
+    }
+
+    /* Start → end in a right-to-left page is the mirror image. */
+    [data-theme='titanium'] [dir='rtl'] :where([data-ts-spinner]:not([data-ts-spinner='drill'])) .kp-spinner,
+    [data-theme='titanium'][dir='rtl'] :where([data-ts-spinner]:not([data-ts-spinner='drill'])) .kp-spinner {
+        scale: -1 1;
+    }
+
+    /* The drill keeps every value of the register; only the page's speed
+       buttons reach its period. */
+    [data-theme='titanium'] [data-ts-spinner='drill'] .kp-spinner {
+        --kp-sig-dur: calc(480ms * var(--ts-slow, 1));
+    }
+
+    /* ── 1 · The facing cut. The end of a bar turning on the lathe, seen
+       face on: concentric turning grain, a centre point. The tool tip (a
+       bright radial line, --primary) runs round the face and leaves the
+       oxide film in its track, thin gold far behind, thickest cyan right
+       behind the tip; the track fades out into bare metal before the tip
+       comes round again. G10 (the cutter leaving heat) on a round part;
+       one revolution per 1800 ms, the bath's period. ── */
+    [data-theme='titanium'] [data-ts-spinner='facing'] .kp-spinner {
+        border-radius: 50%;
+        background:
+            radial-gradient(circle closest-side, var(--primary) 0 9%, transparent 11%),
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='facing'] .kp-spinner::before {
+        border-radius: 50%;
+        background: conic-gradient(
+            transparent 0 105deg,
+            var(--warning-foreground) 170deg,
+            var(--chart-4) 205deg,
+            var(--chart-2) 245deg,
+            var(--chart-1) 295deg,
+            var(--chart-3) 340deg,
+            var(--primary) 352deg 360deg
+        );
+        mask: radial-gradient(circle closest-side, transparent 0 44%, #000 47% 100%, transparent 100%);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='facing'] .kp-spinner::after {
+        border-radius: 50%;
+        /* The tool tip: a bright line from the rim inwards, a dark cut beside
+           it on the side it travels to. */
+        background:
+            linear-gradient(var(--primary), var(--primary)) 50% 0 / var(--ts-line) 48% no-repeat,
+            linear-gradient(var(--background), var(--background)) calc(50% + var(--ts-line)) 0 / 1px 48% no-repeat;
+    }
+
+    /* ── 2 · The tag in the bath. An anodising tag, square with titanium's
+       chamfer (top-left, bottom-right) and a punched hole, bare brushed
+       metal. A bright waterline (--primary) runs start → end across it and
+       behind the line the film has grown: thin gold at the line, thickest
+       cyan where the tag went in first. At the end the next tag goes in. The
+       key figure's anodising bath, made into a part; 1800 ms a pass. ── */
+    [data-theme='titanium'] [data-ts-spinner='bath'] .kp-spinner {
+        --ts-c: 24%;
+        overflow: hidden;
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.07) 0 1px, transparent 1px 3px),
+            hsl(from var(--primary) h s calc(l - 42));
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.35);
+        clip-path: polygon(var(--ts-c) 0, 100% 0, 100% calc(100% - var(--ts-c)), calc(100% - var(--ts-c)) 100%, 0 100%, 0 var(--ts-c));
+        mask: radial-gradient(circle at 34% 34%, transparent 0 calc(var(--ts-s) * 0.075), #000 calc(var(--ts-s) * 0.075 + 0.5px));
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='bath'] .kp-spinner::before {
+        border-right: var(--ts-line) solid var(--primary);
+        background: linear-gradient(
+            to right,
+            var(--chart-3),
+            var(--chart-1) 28%,
+            var(--chart-2) 54%,
+            var(--chart-4) 76%,
+            var(--warning-foreground) 94%
+        );
+        /* The still pose: the tag six tenths in. */
+        translate: -40% 0;
+    }
+
+    /* ── 3 · The indexing turret. A hexagonal turret with six tool
+       stations. It indexes one station per 300 ms (steps, never a glide):
+       the station in work is the bright tool (--primary); the one that just
+       cut keeps its heat (gold), the one before has grown to blue; the rest
+       are empty bores. A count, so steps(); one turn per 1800 ms. ── */
+    [data-theme='titanium'] [data-ts-spinner='turret'] .kp-spinner {
+        --ts-b: calc(var(--ts-s) * 0.1);
+        --ts-bores:
+            radial-gradient(circle at 50% 21%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px)),
+            radial-gradient(circle at 75.1% 35.5%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px)),
+            radial-gradient(circle at 75.1% 64.5%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px)),
+            radial-gradient(circle at 50% 79%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px)),
+            radial-gradient(circle at 24.9% 64.5%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px)),
+            radial-gradient(circle at 24.9% 35.5%, var(--background) 0 var(--ts-b), transparent calc(var(--ts-b) + 0.5px));
+        background:
+            radial-gradient(circle closest-side, var(--border-strong) 0 12%, transparent 14%),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            linear-gradient(hsl(from var(--foreground) h s l / 0.18), transparent 40%), var(--accent);
+        clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='turret'] .kp-spinner::before {
+        background: var(--ts-bores);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='turret'] .kp-spinner::after {
+        background: conic-gradient(
+            from -30deg,
+            var(--primary) 0 60deg,
+            transparent 60deg 240deg,
+            var(--chart-1) 240deg 300deg,
+            var(--warning-foreground) 300deg 360deg
+        );
+        /* Six-fold, so a turn in sixths lands every lit station on a bore. */
+        mask: var(--ts-bores);
+    }
+
+    /* ── 4 · The end mill. A four-flute cutter seen end on, turning in its
+       spindle at a constant 960 ms a turn. The cut is on one side
+       (inline-end): there every flute that passes catches the heat and
+       shows the oxide colour, gold into blue, and runs back to bare metal
+       as it leaves the cut. The flutes catching heat, the cause shown. ── */
+    [data-theme='titanium'] [data-ts-spinner='mill'] .kp-spinner {
+        border-radius: 50%;
+        background: var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='mill'] .kp-spinner::before {
+        inset: 6%;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle closest-side, var(--primary) 0 20%, hsl(from var(--primary) h s calc(l - 40)) 22% 26%, transparent 28%),
+            repeating-conic-gradient(
+                var(--primary) 0 30deg,
+                hsl(from var(--primary) h s calc(l - 26)) 30deg 48deg,
+                hsl(from var(--background) h s l / 0.9) 48deg 90deg
+            );
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='mill'] .kp-spinner::after {
+        border-radius: 50%;
+        background: conic-gradient(
+            transparent 0 25deg,
+            var(--warning-foreground) 55deg,
+            var(--chart-2) 95deg,
+            var(--chart-1) 130deg,
+            transparent 165deg
+        );
+        mix-blend-mode: color;
+    }
+
+    /* ── 5 · The dial indicator. The machinist's test gauge: a bezel, an
+       engraved face of twelve ticks, a bright needle on a dark hub that
+       sweeps round at a constant 1800 ms a turn, the way the needle runs
+       while a part turns under the probe. No colour: a gauge measures, it
+       is not heated. ── */
+    [data-theme='titanium'] [data-ts-spinner='dial'] .kp-spinner {
+        border-radius: 50%;
+        background: radial-gradient(circle closest-side, var(--card) 0 80%, var(--muted) 86%);
+        box-shadow:
+            inset 0 0 0 var(--ts-line) var(--border-strong),
+            inset 0 1px 0 calc(var(--ts-line) + 1px) hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='dial'] .kp-spinner::before {
+        inset: 12%;
+        border-radius: 50%;
+        background:
+            conic-gradient(from -4deg, var(--primary) 0 8deg, transparent 8deg),
+            repeating-conic-gradient(var(--foreground) 0 3deg, transparent 3deg 30deg);
+        mask: radial-gradient(circle closest-side, transparent 0 70%, #000 73% 100%, transparent 100%);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='dial'] .kp-spinner::after {
+        border-radius: 50%;
+        background:
+            radial-gradient(circle closest-side, var(--border-strong) 0 12%, var(--background) 13% 17%, transparent 19%),
+            linear-gradient(var(--primary), var(--primary)) 50% 18% / var(--ts-line) 34% no-repeat;
+    }
+
+    /* ── 6 · The slitting saw. A slitting saw, twelve hooked teeth with
+       their faces leading, a bright ground rim on the teeth, radial grinding
+       sheen on the blade and the arbor hole in the middle, turning at a
+       constant 1200 ms a turn. No colour: the coolant takes the heat. The
+       silhouette alone, toothed, tells it apart at a glance. ── */
+    [data-theme='titanium'] [data-ts-spinner='saw'] .kp-spinner {
+        background:
+            conic-gradient(
+                hsl(from var(--foreground) h s l / 0.32),
+                transparent 25%,
+                hsl(from var(--foreground) h s l / 0.32) 50%,
+                transparent 75%,
+                hsl(from var(--foreground) h s l / 0.32)
+            ),
+            hsl(from var(--primary) h s calc(l - 34));
+        clip-path: polygon(
+            50% 0%,
+            51.4% 10%,
+            53.8% 14.2%,
+            75% 6.7%,
+            71.2% 16.1%,
+            71.2% 20.9%,
+            93.3% 25%,
+            85.3% 31.2%,
+            82.9% 35.4%,
+            100% 50%,
+            90% 51.4%,
+            85.8% 53.8%,
+            93.3% 75%,
+            83.9% 71.2%,
+            79.1% 71.2%,
+            75% 93.3%,
+            68.8% 85.3%,
+            64.6% 82.9%,
+            50% 100%,
+            48.6% 90%,
+            46.2% 85.8%,
+            25% 93.3%,
+            28.8% 83.9%,
+            28.8% 79.1%,
+            6.7% 75%,
+            14.7% 68.8%,
+            17.1% 64.6%,
+            0% 50%,
+            10% 48.6%,
+            14.2% 46.2%,
+            6.7% 25%,
+            16.1% 28.8%,
+            20.9% 28.8%,
+            25% 6.7%,
+            31.2% 14.7%,
+            35.4% 17.1%
+        );
+        mask: radial-gradient(circle closest-side, transparent 0 22%, #000 25%);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='saw'] .kp-spinner::before {
+        background: radial-gradient(circle closest-side, transparent 0 74%, var(--primary) 78%);
+    }
+
+    [data-theme='titanium'] [data-ts-spinner='saw'] .kp-spinner::after {
+        background: radial-gradient(circle closest-side, transparent 0 30%, var(--background) 31% 36%, transparent 37%);
+    }
+
+    /* ── The anodising bath, the key figure's loading picture
+       (research/character-kpi/round2-d.css, r2-ti-load-1), drawn here on a
+       plain tile so each spinner can be seen beside it. Same band, same
+       stops, same 2200 ms. ── */
+    [data-theme='titanium'] .ts-bath {
+        --ts-plate: var(--card);
+        position: relative;
+        overflow: hidden;
+    }
+
+    [data-theme='titanium'] .ts-bath::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+                100deg,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--ts-plate)),
+                color-mix(in oklab, var(--chart-4) 32%, var(--ts-plate)) 25%,
+                color-mix(in oklab, var(--chart-2) 32%, var(--ts-plate)) 50%,
+                color-mix(in oklab, var(--chart-1) 32%, var(--ts-plate)) 72%,
+                color-mix(in oklab, var(--chart-3) 32%, var(--ts-plate)) 90%,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--ts-plate))
+            )
+            0 0 / 260% 100%;
+    }
+
+    [data-theme='titanium'] .ts-bath > * {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-ts-spinner='facing'] .kp-spinner::before,
+        [data-theme='titanium'] [data-ts-spinner='facing'] .kp-spinner::after {
+            animation: ts-turn calc(1800ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        [data-theme='titanium'] [data-ts-spinner='bath'] .kp-spinner::before {
+            animation: ts-dip calc(1800ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        [data-theme='titanium'] [data-ts-spinner='turret'] .kp-spinner::after {
+            animation: ts-turn calc(1800ms * var(--ts-slow, 1)) steps(6, end) infinite;
+        }
+
+        [data-theme='titanium'] [data-ts-spinner='mill'] .kp-spinner::before {
+            animation: ts-turn calc(960ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        [data-theme='titanium'] [data-ts-spinner='dial'] .kp-spinner::after {
+            animation: ts-turn calc(1800ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        /* The saw turns as a whole (its teeth are its outline); mirroring it
+           for a right-to-left page reverses the turn by hand, since `scale`
+           alone keeps the direction of `rotate`. */
+        [data-theme='titanium'] [data-ts-spinner='saw'] .kp-spinner {
+            animation: ts-turn calc(1200ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        [data-theme='titanium'] [dir='rtl'] [data-ts-spinner='saw'] .kp-spinner,
+        [data-theme='titanium'][dir='rtl'] [data-ts-spinner='saw'] .kp-spinner {
+            animation-direction: reverse;
+        }
+
+        [data-theme='titanium'] .ts-bath::before {
+            animation: ts-bath calc(2200ms * var(--ts-slow, 1)) linear infinite;
+        }
+
+        @keyframes ts-turn {
+            from {
+                rotate: 0turn;
+            }
+            to {
+                rotate: 1turn;
+            }
+        }
+
+        @keyframes ts-dip {
+            from {
+                translate: -100% 0;
+            }
+            to {
+                translate: 0 0;
+            }
+        }
+
+        @keyframes ts-bath {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -160% 0;
+            }
+        }
+    }
+}

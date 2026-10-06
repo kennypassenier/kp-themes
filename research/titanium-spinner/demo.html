@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-theme="titanium" data-cat-theme="titanium" data-cat-theme-fixed data-review="titanium-spinner" data-review-themes="titanium">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a spinner for titanium</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" data-kp-register="titanium" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="ts-page">
+            <header class="ts-intro">
+                <h1>A spinner for titanium</h1>
+                <p>
+                    Kenny, 2026-10-07 00:54: "ik wil ook een paar nieuwe ontwerpen voor de spinner (die ook in andere componenten terugkomt)". Six new
+                    spinners from a machine shop that works titanium, and the drill as it is today, last. Each is drawn on the package's own
+                    <code>.kp-spinner</code> (one element, its size knob, its role), so it lands everywhere the spinner already appears: a busy
+                    button, the data table's busy panel and status line, a calendar day that is being read. Every option shows exactly those, beside
+                    the anodising bath that titanium's loading pictures follow. The first option is the recommendation.
+                </p>
+                <p class="ts-motion" data-ts-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page turns: every spinner shows its still pose, which has to read
+                    as "busy" on its own. Turn it off in the system settings to judge the motion.
+                </p>
+            </header>
+
+            <section class="ts-lineup-sec" aria-labelledby="h-lineup">
+                <h2 id="h-lineup">The seven side by side</h2>
+                <p>Each at the busy panel's size, the default size and a status line's size, on the page and on a card.</p>
+                <div class="ts-lineup" data-ts-lineup></div>
+            </section>
+
+            <section
+                class="ts-sec"
+                data-review-item="titanium"
+                data-review-mode="aspects"
+                data-review-rows="data-ts-aspect"
+                data-review-components="titanium-spinner"
+                data-review-title="A spinner for titanium"
+                aria-labelledby="h-ts"
+            >
+                <div class="ts-sec__head">
+                    <h2 id="h-ts">Where the spinner appears</h2>
+                    <p>
+                        Seven options, the recommended one first. Each shows the spinner alone at three sizes, inside a busy button, in the data
+                        table's busy panel and its status line, in a calendar day that is being read, and beside an anodising-bath tile. In the review
+                        dialog one option is shown at a time; the arrow keys flip between them.
+                    </p>
+                </div>
+                <div class="ts-controls" data-review-controls>
+                    <div class="ts-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ts-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ts-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ts-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <section class="ts-aspect" id="ts-spinner" data-ts-aspect="spinner" aria-labelledby="h-ts-spinner">
+                    <div class="ts-aspect__head">
+                        <h3 id="h-ts-spinner">The spinner</h3>
+                        <p class="ts-aspect__q" data-ts-question></p>
+                    </div>
+                    <div class="ts-grid" data-ts-options></div>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -1,0 +1,223 @@
+/* research/titanium-spinner: the page only. A centred column; the line-up of
+   the seven at the top, then the one review row with its seven options, each
+   option a scene of the places the spinner appears. Every spinner's own
+   drawing is in options.css. */
+.ts-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 110rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.ts-intro,
+.ts-lineup-sec,
+.ts-sec__head,
+.ts-aspect__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+:is(.ts-intro, .ts-lineup-sec, .ts-sec__head, .ts-aspect__head) :is(h1, h2, h3, p) {
+    max-inline-size: 84ch;
+    margin: 0;
+}
+
+.ts-motion,
+.ts-sec__head p,
+.ts-lineup-sec > p {
+    color: var(--muted-foreground);
+}
+
+.ts-aspect__q {
+    font-weight: 600;
+}
+
+/* The line-up: seven equal cells, each the three sizes on the page's ground
+   and on a card's. */
+.ts-lineup {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ts-lineup__cell {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border: 1px solid var(--border);
+}
+
+.ts-lineup__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--kp-space-md, 1rem);
+    min-block-size: 4rem;
+    padding: var(--kp-space-sm, 0.5rem);
+    background: var(--background);
+}
+
+.ts-lineup__row--card {
+    background: var(--card);
+}
+
+.ts-lineup__cell figcaption {
+    padding: 0.4rem var(--kp-space-sm, 0.5rem);
+    border-block-start: 1px solid var(--border);
+    font-size: var(--kp-text-sm, 0.875rem);
+    font-weight: 600;
+}
+
+.ts-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ts-actions,
+.ts-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ts-actions {
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-ts-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.ts-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* Seven options in a subgrid, so names, words and scenes line up across a
+   line of options whatever their length. */
+.ts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ts-col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* In the review dialog one option is shown alone and large. */
+[data-rv-flip-trio] .ts-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+.ts-label {
+    margin: 0;
+    font-weight: 700;
+}
+
+.ts-label__no {
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+}
+
+.ts-label__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ts-see,
+.ts-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ts-verdict {
+    color: var(--muted-foreground);
+}
+
+.ts-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.ts-scene {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.ts-part {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.ts-part--wide {
+    grid-column: 1 / -1;
+}
+
+.ts-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+.ts-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ts-scene .kp-button {
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ts-cal .kp-calendar__grid {
+    inline-size: 100%;
+}
+
+.ts-with-bath {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.ts-bath {
+    min-block-size: 6rem;
+}
+
+.ts-beside {
+    display: grid;
+    place-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-md, 1rem);
+}

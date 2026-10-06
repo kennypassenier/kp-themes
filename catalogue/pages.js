@@ -77,6 +77,8 @@ export const PAGES = [
             { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
             { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
+            // Kenny, 2026-10-07 00:54: six new titanium spinners and the drill as today, each shown where the spinner appears, the recommendation first.
+            { href: 'research/titanium-spinner/demo.html', label: 'A spinner for titanium' },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
             { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
             // Kenny, 2026-10-06 20:59 (form v39): every titanium loading element twice, as today and in the key figure's anodising bath (r2-ti-load-1).
