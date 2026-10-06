@@ -1676,7 +1676,32 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 // back the demo's controls, not those three, and could not judge the
 // arrival and the phone without a Draw button).
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
-const KEPT = { formal: { shape: '1', loading: '3', failure: '3' } };
+// Kenny's verdicts so far (2026-10-06 22:41): what he picked is settled; the
+// rest, busy's new shapes and the phone where he gave none, stays open.
+const KEPT = {
+    formal: { shape: '1', loading: '3', failure: '3', arrival: '3', phone: '1' },
+    light: { shape: '2', loading: '1', arrival: '2', failure: '1', phone: '1' },
+    dark: { shape: '1', loading: '1', arrival: '1', failure: '2', phone: '1' },
+    cyberpunk: { loading: '1', arrival: '1', failure: '1', phone: '1' },
+    synthwave: { loading: '3', arrival: '1', failure: '1' },
+    pastel: { loading: '2', arrival: '2', failure: '3' },
+    terminal: { loading: '1', arrival: '1', failure: '1' },
+    forest: { loading: '1', arrival: '2' },
+    'high-contrast': { loading: '1', arrival: '1', failure: '1' },
+    sepia: { loading: '3', arrival: '2', failure: '1' },
+    blueprint: { loading: '2', arrival: '3', failure: '1' },
+    solstice: { loading: '3', arrival: '3', failure: '1' },
+    brutalism: { loading: '2', arrival: '2', failure: '2' },
+    deco: { loading: '2', arrival: '2', failure: '1' },
+    phantom: { loading: '3', arrival: '2', failure: '1' },
+    'shade-light': { loading: '3', arrival: '1', failure: '1' },
+    'shade-dark': { loading: '3', arrival: '1', failure: '2' },
+    retro: { loading: '1', arrival: '1', failure: '1' },
+    grotesk: { loading: '2', arrival: '2', failure: '1' },
+    lapis: { loading: '1', arrival: '1', failure: '3' },
+    nostromo: { loading: '1', arrival: '2', failure: '1' },
+    titanium: { loading: '2', arrival: '2', failure: '1' },
+};
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => KEPT[t]?.[id] ?? '';
 // Round 2 (Kenny, 2026-10-06 22:30: "wat evalueren we bij shape? ik zie enkel
 // dezelfde vorm"): new shape options per theme replace round 1's, which

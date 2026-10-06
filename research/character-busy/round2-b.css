@@ -1,4 +1,221 @@
-/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shapes of group b. */
-
+/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shapes of
+   group b (high-contrast, sepia, blueprint, solstice, brutalism). See
+   round2-b.js for what each echoes and how it differs from its two
+   siblings. Follows busy.css / busy-b.css's shared contract: tokens only
+   for colour, one rule block per option, no motion here (shape carries
+   none), the panel stays readable over the veil. */
 @layer kp.signature {
+    /* ── high-contrast: the hazard board, the inverse plate, the signal corners ── */
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 94%, transparent);
+        background-image: repeating-linear-gradient(45deg, var(--foreground) 0 16px, transparent 16px 32px);
+    }
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 4px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+        --bo-ring: 0 0 0 3px var(--primary);
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--foreground) 92%, transparent);
+    }
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-bg: var(--foreground);
+        --bo-panel-ink: var(--background);
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 3px var(--background), 0 0 0 5px var(--border-strong);
+        --bo-font: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 12%, transparent);
+    }
+
+    [data-theme='high-contrast'] [data-bo-shape='r2-hc-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+        border-block: 5px solid var(--border-strong);
+        font-weight: 700;
+    }
+
+    /* ── sepia: the tipped-in plate, the wax seal plate, the galley proof ── */
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 94%, transparent);
+        background-image: repeating-linear-gradient(100deg, var(--foreground) 0 20px, transparent 20px 40px);
+    }
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0.2rem;
+        --bo-panel-shadow: 0 0.3rem 0.6rem -0.2rem color-mix(in oklab, var(--foreground) 35%, transparent);
+        --bo-font: var(--theme-font-body);
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 88%, var(--background) 12%);
+    }
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-bg: var(--card);
+        --bo-panel-ink: var(--card-foreground);
+        --bo-panel-border: 2px solid var(--primary);
+        --bo-panel-radius: 1.4rem;
+        --bo-panel-shadow: inset 0 0 1.4rem color-mix(in oklab, var(--foreground) 12%, transparent);
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: transparent;
+    }
+
+    [data-theme='sepia'] [data-bo-shape='r2-se-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 0 0 1rem color-mix(in oklab, var(--foreground) 18%, transparent);
+        --bo-font: var(--theme-font-body);
+        border-block-start: 5px solid var(--border-strong);
+        font-variant-caps: small-caps;
+    }
+
+    /* ── blueprint: the title block, the dimension chain, the section view ── */
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 92%, transparent);
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 16px, transparent 16px 32px);
+    }
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        --bo-ring: 0 0 0 1px var(--primary);
+        border-block-end: 3px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--border-strong) 85%, var(--background) 15%);
+    }
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        border-inline: 2px dashed var(--border-strong);
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: transparent;
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--border-strong) 35%, transparent) 0 2px, transparent 2px 10px);
+    }
+
+    [data-theme='blueprint'] [data-bo-shape='r2-bp-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--border-strong) 16%, transparent) 0 2px, transparent 2px 10px);
+    }
+
+    /* ── solstice: the halo, the lanterns, the red sky ─────────────────── */
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 60%, transparent);
+        background-image: radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--primary) 60%, transparent) 0%, transparent 72%);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 2rem;
+        --bo-panel-shadow: 0 0 1.6rem 0.2rem color-mix(in oklab, var(--primary) 40%, transparent), 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 86%, transparent);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 0 -0.6rem 1rem -0.3rem color-mix(in oklab, var(--primary) 55%, transparent), 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 58%, transparent);
+        background-image: linear-gradient(to bottom, color-mix(in oklab, var(--primary) 45%, transparent) 0%, transparent 65%);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='solstice'] [data-bo-shape='r2-so-shape-3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 40%;
+        block-size: 3px;
+        background-color: var(--primary);
+    }
+
+    /* ── brutalism: the warning poster, the stacked blocks, the sticker sheet ── */
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 92%, transparent);
+        background-image: repeating-linear-gradient(45deg, var(--border-strong) 0 16px, transparent 16px 32px);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 3px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: var(--fx-shadow-offset, 6px) var(--fx-shadow-offset, 6px) 0 0 var(--border-strong);
+        --bo-font: var(--theme-font-display);
+        --bo-ring: 0 0 0 2px var(--border-strong);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 82%, transparent);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-bg: var(--foreground);
+        --bo-panel-ink: var(--background);
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 4px 4px 0 0 var(--border-strong), 8px 8px 0 0 var(--primary);
+        --bo-font: var(--theme-font-display);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 30%, transparent);
+    }
+
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 2px dashed var(--border-strong);
+        --bo-panel-radius: 1rem;
+        --bo-panel-shadow: 3px 3px 0 0 color-mix(in oklab, var(--border-strong) 60%, transparent);
+        --bo-font: var(--theme-font-display);
+        rotate: -2deg;
+    }
 }

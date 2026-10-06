@@ -1,4 +1,236 @@
-/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shapes of group d. */
-
+/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shape
+   options for group d (grotesk, lapis, nostromo, titanium), replacing
+   round 1's near-identical three (busy-d.css keeps those rules; round 1's
+   `data-bo-shape="1|2|3"` is no longer reachable from demo.js once this
+   file's keys take their place, but the rules stay there for the record).
+   Each option here is a clearly different silhouette — a cut corner, a
+   bar, a ring, a medallion, a pill — carried over the whole veil as well
+   as the panel's own chrome, never a palette or type change on the same
+   rectangle. Tokens only; no animation (the shape aspect is static
+   chrome); see busy.css's header for the shared contract. */
 @layer kp.signature {
+    /* ── grotesk: the timetable board, the punch card, the platform sign ── */
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to bottom, color-mix(in oklab, var(--primary) 42%, transparent) 0 1.1rem, transparent 1.1rem 2.2rem),
+            color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border)), inset 0 0.35rem 0 0 var(--primary), inset 0 -0.35rem 0 0 var(--primary);
+        --bo-font: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 700;
+        padding-block: 1.1rem;
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(
+                to right,
+                color-mix(in oklab, var(--border-strong, var(--border)) 42%, transparent) 0 1.1rem,
+                transparent 1.1rem 2.2rem
+            ),
+            color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-panel-bg: color-mix(in oklab, var(--foreground) 88%, var(--card) 12%);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: var(--background);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        clip-path: polygon(1rem 0, 100% 0, 100% 100%, 0 100%, 0 1rem);
+        background-image: repeating-linear-gradient(to right, color-mix(in oklab, var(--background) 30%, transparent) 0 1px, transparent 1px 0.6rem);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(135deg, color-mix(in oklab, var(--primary) 40%, transparent) 0 1.4rem, transparent 1.4rem 2.8rem),
+            color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='grotesk'] [data-bo-shape='r2-gr-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 999px;
+        --bo-panel-shadow: none;
+        --bo-panel-bg: var(--primary);
+        --bo-panel-ink: var(--primary-foreground);
+        --bo-clock-ink: var(--primary-foreground);
+        --bo-font: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 700;
+        padding-inline: 1.5rem;
+    }
+
+    /* ── lapis: the illuminated initial, the rubricated ledger, the gold medallion ── */
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-radial-gradient(circle at 20% 20%, color-mix(in oklab, var(--primary) 40%, transparent) 0 0.5rem, transparent 0.5rem 1.6rem),
+            color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0 1.75rem 0 1.75rem;
+        --bo-panel-shadow: 0 0 0 1px var(--primary);
+        --bo-font: var(--theme-font-display);
+        background-image: radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--primary) 32%, transparent) 0 1.3rem, transparent 1.3rem);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to right, color-mix(in oklab, var(--primary) 42%, transparent) 0 0.9rem, transparent 0.9rem 2rem),
+            color-mix(in oklab, var(--background) 78%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: inset 0.4rem 0 0 0 var(--primary), 0 0 0 1px var(--border);
+        --bo-panel-bg: color-mix(in oklab, var(--foreground) 82%, var(--card) 18%);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: var(--background);
+        --bo-font: var(--theme-font-display);
+        padding-inline-start: 1.4rem;
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary) 40%, transparent) 0 1.2rem, transparent 1.2rem 2.4rem),
+            color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='lapis'] [data-bo-shape='r2-la-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 2.25rem;
+        --bo-panel-shadow:
+            0 0 0 2px var(--background), 0 0 0 3px var(--primary), 0 0 0 4px var(--background),
+            0 0 0 5px color-mix(in oklab, var(--primary) 55%, transparent);
+        --bo-panel-bg: color-mix(in oklab, var(--primary) 50%, var(--card) 50%);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: var(--background);
+        --bo-font: var(--theme-font-display);
+        background-image: radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--primary) 18%, transparent) 0, transparent 72%);
+    }
+
+    /* ── nostromo: the warning lamp bank, the CRT bezel, the readout bank ── */
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(45deg, color-mix(in oklab, var(--accent) 44%, transparent) 0 1.1rem, transparent 1.1rem 2.2rem),
+            color-mix(in oklab, var(--background) 76%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-shadow: 0 0 0 2px var(--accent);
+        --bo-font: var(--theme-font-mono);
+        text-transform: uppercase;
+        clip-path: polygon(0.8rem 0, 100% 0, 100% calc(100% - 0.8rem), calc(100% - 0.8rem) 100%, 0 100%);
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--accent) 16%, transparent) 0 0.5rem, transparent 0.5rem 1rem);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 38%, transparent) 0 0.5rem, transparent 0.5rem 1.4rem),
+            color-mix(in oklab, var(--background) 80%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 2.5rem;
+        --bo-panel-shadow:
+            inset 0 0 0 3px color-mix(in oklab, var(--foreground) 22%, transparent), 0 0 0 1px var(--accent),
+            0 3px 10px color-mix(in oklab, var(--foreground) 25%, transparent);
+        --bo-panel-bg: color-mix(in oklab, var(--foreground) 88%, var(--card) 12%);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: var(--accent);
+        --bo-font: var(--theme-font-mono);
+        background-image: repeating-linear-gradient(to bottom, color-mix(in oklab, var(--background) 16%, transparent) 0 1px, transparent 1px 3px);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(to right, color-mix(in oklab, var(--accent) 40%, transparent) 0 0.9rem, transparent 0.9rem 2.4rem),
+            color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='nostromo'] [data-bo-shape='r2-no-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--accent), inset 0 0.3rem 0 0 var(--accent), inset 0 -0.3rem 0 0 var(--accent);
+        --bo-panel-bg: color-mix(in oklab, var(--border-strong, var(--border)) 55%, var(--card) 45%);
+        --bo-font: var(--theme-font-mono);
+        text-transform: uppercase;
+        padding-block: 1.1rem;
+    }
+
+    /* ── titanium: the engraved dial face, the anodised plate, the milled bezel ── */
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--foreground) 40%, transparent) 0 0.6rem, transparent 0.6rem 1.8rem),
+            color-mix(in oklab, var(--background) 70%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong, var(--border));
+        --bo-panel-radius: 50%;
+        --bo-panel-shadow: 0 1px 2px 0 color-mix(in oklab, var(--foreground) 18%, transparent);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        padding: 1.4rem;
+        background-image: repeating-conic-gradient(
+            from 0deg,
+            color-mix(in oklab, var(--foreground) 14%, transparent) 0deg 2deg,
+            transparent 2deg 12deg
+        );
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(135deg, color-mix(in oklab, var(--primary) 42%, transparent) 0 1.2rem, transparent 1.2rem 2.6rem),
+            color-mix(in oklab, var(--background) 74%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-panel-bg: color-mix(in oklab, var(--foreground) 55%, var(--card) 45%);
+        --bo-panel-ink: var(--background);
+        --bo-clock-ink: var(--background);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        background-image:
+            linear-gradient(135deg, color-mix(in oklab, var(--primary) 26%, transparent), transparent 60%),
+            radial-gradient(circle at 0.65rem 0.65rem, color-mix(in oklab, var(--background) 40%, transparent) 0 2px, transparent 2px);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil:
+            repeating-linear-gradient(
+                to bottom,
+                color-mix(in oklab, var(--border-strong, var(--border)) 42%, transparent) 0 0.6rem,
+                transparent 0.6rem 1.6rem
+            ),
+            color-mix(in oklab, var(--background) 68%, transparent);
+    }
+
+    [data-theme='titanium'] [data-bo-shape='r2-ti-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 2rem;
+        --bo-panel-shadow: 0 0 0 2px var(--background), 0 0 0 3px var(--border-strong, var(--border));
+        --bo-panel-bg: color-mix(in oklab, var(--border-strong, var(--border)) 60%, var(--card) 40%);
+        --bo-clock-ink: var(--background);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        background-image: repeating-linear-gradient(60deg, color-mix(in oklab, var(--background) 35%, transparent) 0 1px, transparent 1px 4px);
+    }
 }

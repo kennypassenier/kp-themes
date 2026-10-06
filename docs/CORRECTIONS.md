@@ -6692,3 +6692,38 @@ pages after Ready was picked elsewhere. Queued as fix-116-M1.
 outlined target is visible and says so.
 
 **9 · When we review the measure.** With fix-115.
+
+## fix-117 · Busy's three shapes were near-identical in 18 of 19 themes (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 22:15 and 22:30, on character-busy:
+"ik zie enkel dezelfde vorm en dezelfde loading screen?" and 22:31 "ja gast,
+als ge het zelf nog moet nameten? gij hebt de demo toch opgezet?". Measured:
+round 1's three shape options per theme differed by 0-4 % of their pixels in
+18 of the 19 open themes (shade-dark 0 %), because each varied a thin frame
+detail under the same veil and the same settled loading picture.
+
+**2 · Which gate let it through.** No step had the builder look at an
+aspect's options side by side before they reached Kenny.
+
+**3 · Where else the same fault sits.** Every option set built this round.
+Searched by measuring the busy shape row in all 19 open themes (the share of
+pixels whose RGB differs by more than 60 between each pair): busy only among
+the open demos; the decided demos were judged by Kenny option by option.
+
+**4 · How we prevent a repeat.** Every helper brief requires the builder to
+compare the options side by side at the dialog's size and measure them apart
+before publishing, and Claude looks at them before telling Kenny; the rule is
+in the central memory (feedback_review_choices_ticked.md).
+
+**5 · What the remedy costs.** A screenshot pass per option set.
+
+**6 · Who enforces it.** Discipline (the brief and the memory rule).
+
+**7 · How and when we measure.** At the next option set Claude publishes, the
+reply names the measured difference per pair. Measured on the new busy
+shapes: every pair 16-56 % apart. Queued as fix-117-M1.
+
+**8 · Fallback.** If a near-identical set slips through again, the review kit
+measures the cells of an aspect on load and warns on the page.
+
+**9 · When we review the measure.** After the character round's port.

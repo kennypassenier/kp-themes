@@ -1,4 +1,326 @@
-/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shapes of group a. */
+/* research/character-busy, round 2 (Kenny, 2026-10-06 22:30): new shape
+   options of group a (cyberpunk, synthwave, pastel, terminal, forest). See
+   round2-a.js for the three names and what each echoes from
+   research/THEME_PROFILES.md. Only the shape aspect is written here; the
+   loading, arrival, failure and phone rules stay in busy.css / busy-a.css
+   / busy-b.css under their existing 1/2/3 keys and still compose over any
+   of these three (they read the same `--bo-*` knobs busy.css's shared
+   part defines). Phone rules for these five themes already exist in
+   busy-a.css / busy-b.css and are untouched; they set `border-block-end`,
+   `border-inline-start` or `box-shadow` directly after the Shape rule in
+   source order, which still holds since these rules load after both. */
 
 @layer kp.signature {
+    /* ── cyberpunk: the segment gauge, the black ice, the data shard ──── */
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--accent, var(--primary)) 8%, color-mix(in oklab, var(--background) 90%, transparent));
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        --bo-ring: 0 0 0 2px color-mix(in oklab, var(--accent, var(--primary)) 65%, transparent);
+        outline: 3px dashed color-mix(in oklab, var(--accent, var(--primary)) 85%, transparent);
+        outline-offset: -6px;
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--foreground) 48%, color-mix(in oklab, var(--background) 22%, transparent));
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.25rem;
+        --bo-panel-bg: linear-gradient(160deg, color-mix(in oklab, var(--foreground) 12%, var(--card)) 0%, var(--card) 55%);
+        --bo-panel-shadow: 0 0 0 1px color-mix(in oklab, var(--accent, var(--primary)) 45%, var(--border-strong, var(--border)));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        --bo-ring: 0 0 8px color-mix(in oklab, var(--accent, var(--primary)) 40%, transparent);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0.9rem 100%, 0 calc(100% - 0.9rem));
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 28%, color-mix(in oklab, var(--background) 55%, transparent));
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow:
+            0 0 0 1px color-mix(in oklab, var(--accent, var(--primary)) 55%, transparent), 0 0 0 3px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        clip-path: polygon(0.7rem 0, 100% 0, 100% calc(100% - 0.7rem), calc(100% - 0.7rem) 100%, 0 100%);
+    }
+
+    /* ── synthwave: chrome over the grid, the cassette counter, the grid-floor constellation ── */
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 8%, color-mix(in oklab, var(--background) 90%, transparent));
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0.2rem;
+        --bo-panel-shadow:
+            inset 0 1px 0 0 color-mix(in oklab, var(--background) 70%, white),
+            inset 0 -2px 0 0 color-mix(in oklab, var(--foreground) 20%, transparent), 0 0 0 1px var(--border-strong, var(--border));
+        --bo-panel-bg:
+            repeating-linear-gradient(0deg, color-mix(in oklab, var(--primary) 20%, transparent) 0 1px, transparent 1px 10px),
+            repeating-linear-gradient(90deg, color-mix(in oklab, var(--primary) 20%, transparent) 0 1px, transparent 1px 10px), var(--card);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--foreground) 48%, color-mix(in oklab, var(--background) 22%, transparent));
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: calc(var(--radius, 0.5rem) * 1.5);
+        --bo-panel-bg:
+            radial-gradient(
+                circle at 18% 18%,
+                transparent 0 0.3rem,
+                color-mix(in oklab, var(--foreground) 18%, transparent) 0.3rem 0.36rem,
+                transparent 0.37rem
+            ),
+            radial-gradient(
+                circle at 82% 18%,
+                transparent 0 0.3rem,
+                color-mix(in oklab, var(--foreground) 18%, transparent) 0.3rem 0.36rem,
+                transparent 0.37rem
+            ),
+            var(--card);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-2'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        block-size: 0.4rem;
+        background-color: color-mix(in oklab, var(--foreground) 12%, transparent);
+        border-radius: inherit;
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--accent, var(--primary)) 28%, color-mix(in oklab, var(--background) 55%, transparent));
+    }
+
+    [data-theme='synthwave'] [data-bo-shape='r2-sw-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-bg:
+            radial-gradient(circle at 20% 25%, var(--primary) 0 1px, transparent 1.6px),
+            radial-gradient(circle at 55% 12%, var(--primary) 0 1px, transparent 1.6px),
+            radial-gradient(circle at 78% 30%, var(--primary) 0 1px, transparent 1.6px),
+            radial-gradient(circle at 35% 42%, var(--primary) 0 1px, transparent 1.6px),
+            linear-gradient(
+                to bottom,
+                transparent 0 66%,
+                color-mix(in oklab, var(--primary) 55%, transparent) 66% calc(66% + 1px),
+                transparent calc(66% + 1px)
+            ),
+            var(--card);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+    }
+
+    /* ── pastel: washi tape, bubblegum pop, paint swatches ────────────── */
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--accent, var(--primary)) 8%, color-mix(in oklab, var(--background) 90%, transparent));
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: calc(var(--radius, 0.5rem) * 1.2);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-1'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.3rem;
+        inset-inline-end: 0.35rem;
+        inline-size: 2.6rem;
+        block-size: 0.9rem;
+        background-image: repeating-linear-gradient(
+            90deg,
+            color-mix(in oklab, var(--accent, var(--primary)) 55%, transparent) 0 5px,
+            color-mix(in oklab, var(--accent, var(--primary)) 32%, transparent) 5px 10px
+        );
+        transform: rotate(35deg);
+        border-radius: 2px;
+        z-index: 2;
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--foreground) 48%, color-mix(in oklab, var(--background) 22%, transparent));
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 3rem;
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border)), 0 6px 14px color-mix(in oklab, var(--foreground) 12%, transparent);
+        --bo-panel-bg: radial-gradient(circle at 30% 22%, color-mix(in oklab, var(--background) 65%, white) 0 18%, transparent 30%), var(--card);
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 28%, color-mix(in oklab, var(--background) 55%, transparent));
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: calc(var(--radius, 0.5rem) * 1.1);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong, var(--border));
+        --bo-font: var(--theme-font-body);
+    }
+
+    [data-theme='pastel'] [data-bo-shape='r2-pt-shape-3'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0.4rem;
+        inset-inline: 1rem;
+        block-size: 0.4rem;
+        border-radius: 999px;
+        background-image: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0 0.6rem,
+            color-mix(in oklab, var(--accent, var(--primary)) 70%, transparent) 0.6rem 1.2rem
+        );
+    }
+
+    /* ── terminal: the htop meter, the hex dump, the box-drawing map ──── */
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 8%, color-mix(in oklab, var(--background) 90%, transparent));
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        --bo-ring: 0 0 0 1px var(--primary);
+        border-block: 1px solid var(--border-strong);
+        text-transform: uppercase;
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-panel::before {
+        content: '[';
+        position: absolute;
+        inset-inline-start: 0.3rem;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        font-weight: bold;
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-panel::after {
+        content: ']';
+        position: absolute;
+        inset-inline-end: 0.3rem;
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        font-weight: bold;
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 48%, color-mix(in oklab, var(--background) 22%, transparent));
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        --bo-panel-bg:
+            repeating-linear-gradient(to right, color-mix(in oklab, var(--border-strong) 30%, transparent) 0 1px, transparent 1px 0.7rem),
+            repeating-linear-gradient(to bottom, color-mix(in oklab, var(--border-strong) 30%, transparent) 0 1px, transparent 1px 0.7rem),
+            var(--card);
+        border-inline-start: 4px solid var(--primary);
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 85%, var(--background) 15%);
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-mono);
+        border-block: 3px double var(--border-strong);
+        border-inline: 1px solid var(--border-strong);
+        --bo-panel-bg:
+            radial-gradient(circle at 0.4rem 0.4rem, var(--border-strong) 0 1.5px, transparent 1.6px),
+            radial-gradient(circle at calc(100% - 0.4rem) 0.4rem, var(--border-strong) 0 1.5px, transparent 1.6px),
+            radial-gradient(circle at 0.4rem calc(100% - 0.4rem), var(--border-strong) 0 1.5px, transparent 1.6px),
+            radial-gradient(circle at calc(100% - 0.4rem) calc(100% - 0.4rem), var(--border-strong) 0 1.5px, transparent 1.6px), var(--card);
+    }
+
+    /* ── forest: the wooden gauge, tree rings, mushroom ring ──────────── */
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-1'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 8%, color-mix(in oklab, var(--background) 90%, transparent));
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: var(--radius, 0.625rem);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-body);
+        --bo-panel-bg:
+            repeating-linear-gradient(to bottom, color-mix(in oklab, var(--border) 28%, transparent) 0 2px, transparent 2px 14px),
+            repeating-linear-gradient(to bottom, color-mix(in oklab, var(--border) 16%, transparent) 0 1px, transparent 1px 7px), var(--card);
+        border-inline-start: 0.3rem solid transparent;
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-1'] .kp-datatable__busy-panel::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0.3rem;
+        background-image: repeating-linear-gradient(to bottom, var(--primary) 0 4px, transparent 4px 10px);
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--foreground) 48%, color-mix(in oklab, var(--background) 22%, transparent));
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: calc(var(--radius, 0.625rem) * 1.4);
+        --bo-panel-shadow: 0 0 0 1px var(--border-strong);
+        --bo-font: var(--theme-font-body);
+        --bo-panel-bg:
+            repeating-radial-gradient(
+                circle at 50% 100%,
+                transparent 0 0.5rem,
+                color-mix(in oklab, var(--border) 30%, transparent) 0.5rem calc(0.5rem + 1px)
+            ),
+            var(--card);
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-3'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--primary) 28%, color-mix(in oklab, var(--background) 55%, transparent));
+    }
+
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-3'] .kp-datatable__busy-panel {
+        --bo-panel-border: 6px dotted color-mix(in oklab, var(--primary) 55%, transparent);
+        --bo-panel-radius: 1.2rem;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+    }
 }
