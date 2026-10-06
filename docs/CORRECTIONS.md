@@ -6567,3 +6567,44 @@ plain skeleton in the picked shape.
 its per-theme count to the kit explicitly.
 
 **9 · When we review the measure.** When the kit's choice format changes.
+
+## fix-114 · The menu demo's close never played (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 21:40, on cyberpunk's menu: the
+close must be the open played backwards. Measured: pressing Close hid the
+menu within 20 ms with no animation in all 22 themes. js/menu-button.js
+closes an open menu on any click outside it in a document capture listener,
+which ran before the Close button's own `closeAll()`; and where the leave did
+start, a leave that reuses its arrival's keyframes under
+`animation-direction: reverse` does not restart a finished animation, so 21
+themes' closes stood still (formal: leaving set, no animation).
+
+**2 · Which gate let it through.** Every menu check pressed Open and judged
+the arrival; none pressed Close and counted the animations.
+
+**3 · Where else the same fault sits.** Every demo with a close or a leave.
+Searched with `grep -rln "leaving\|data-dt-drawer=\"closed\"" research/character-*/demo.js`:
+the drawer's close plays (measured in formal, light, brutalism, titanium);
+the header's menu leave already clears and resets its attribute. The menu
+demo was the only one.
+
+**4 · How we prevent a repeat.** A Close press is taken in the window's
+capture phase and plays the leave; the leave restarts by clearing the
+animation for one frame. Measured: all 22 themes' closes run their arrival
+in reverse.
+
+**5 · What the remedy costs.** A few lines of demo script; the package fix is
+a finding for the port (research/PACKAGE_FINDINGS.md).
+
+**6 · Who enforces it.** Code (research/character-menu/demo.js).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs presses Open, then Close, in every theme
+of the menu demo and finds a running animation in reverse before the menu
+hides. Queued as fix-114-M1.
+
+**8 · Fallback.** If a close still stands still, the demo gives every leave
+keyframes of its own.
+
+**9 · When we review the measure.** At the port, when the package plays the
+leave itself.

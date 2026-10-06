@@ -1021,6 +1021,9 @@ const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
  * and phantom's and cyberpunk's hover; round 3 asks again cyberpunk's shape,
  * loading (six), open/close and tone ("none of these is cyberpunk") and
  * retro's hover, focus and press ("none is readable … I want the wow").
+ * Round 3's verdict (Kenny, 2026-10-06 21:40) settles them: cyberpunk
+ * shape 1, loading 3, open 1 (its close the open backwards), tone 3; retro
+ * interact 1. Decided.
  * @type {Record<string, string[]>}
  */
 const PICKED = {
@@ -1040,12 +1043,12 @@ const PICKED = {
     phantom: ['2', '3', '2', '1', '3'],
     'shade-light': ['1', '3', '1', '1', '1'],
     'shade-dark': ['3', '3', '3', '1', '1'],
-    retro: ['1', '1', '1', '1', ''],
+    retro: ['1', '1', '1', '1', '1'],
     grotesk: ['1', '2', '1', '1', '2'],
     lapis: ['2', '2', '3', '2', '3'],
     nostromo: ['1', '2', '3', '1', '2'],
     titanium: ['3', '1', '2', '1', '3'],
-    cyberpunk: ['', '', '', '', '3'],
+    cyberpunk: ['1', '3', '1', '3', '3'],
 };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an open aspect's; each carries its own key,
@@ -1250,7 +1253,15 @@ function closeAll() {
             closeMenu(wrapper);
             continue;
         }
+        // A leave that reuses its arrival's keyframes under
+        // animation-direction: reverse does not restart a finished animation
+        // by itself; clearing the animation for one frame restarts it, so
+        // every theme's close plays as its open backwards (Kenny, 2026-10-06
+        // 21:40: "de close animatie moet de omgekeerde animatie zijn van open").
+        menu.style.animation = 'none';
+        void menu.offsetWidth;
         menu.setAttribute('data-mb-leaving', '');
+        menu.style.removeProperty('animation');
         const style = getComputedStyle(menu);
         const ms = Math.max(0, parseFloat(style.animationDuration || '0') * 1000) || 260;
         const done = () => {
@@ -1266,6 +1277,23 @@ function closeAll() {
 /* ------------------------------------------------------------ controls */
 
 const controls = /** @type {HTMLElement} */ (section.querySelector('[data-review-controls]'));
+// The package closes an open menu at once on any click outside it, before the
+// Close button's own handler runs, so its leave never played (Kenny,
+// 2026-10-06 21:40: the close must be the open played backwards). A Close
+// press is taken in the window's capture phase, ahead of that listener, and
+// plays the leave itself; the review dialog's mirrored Close forwards a
+// click to this button, so it is taken here too.
+window.addEventListener(
+    'click',
+    (event) => {
+        const close = event.target instanceof Element ? event.target.closest('button[data-mb-action="close"]') : null;
+        if (!close || !section.contains(close)) return;
+        event.stopPropagation();
+        event.preventDefault();
+        closeAll();
+    },
+    true,
+);
 controls.addEventListener('click', (event) => {
     const button = /** @type {HTMLElement | null} */ (
         event.target instanceof Element ? event.target.closest('button[data-mb-action], button[data-mb-speed]') : null

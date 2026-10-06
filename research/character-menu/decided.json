@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 21:40 Brussels, Kenny: 22 of 22 approved (character-menu round 3); every close is its open played backwards",
+    "attributes": "data-mb-<aspect>=\"<key>\" on the menu wrapper, research/character-menu/ (menu.css, menu-a..d.css, round2-*, round3-*)",
+    "picks": {
+        "formal": {
+            "shape": "1",
+            "loading": "1",
+            "open": "1",
+            "tone": "1",
+            "interact": "1"
+        },
+        "light": {
+            "shape": "1",
+            "loading": "2",
+            "open": "3",
+            "tone": "1",
+            "interact": "1"
+        },
+        "dark": {
+            "shape": "2",
+            "loading": "r2-dk-load-3",
+            "open": "3",
+            "tone": "3",
+            "interact": "1"
+        },
+        "cyberpunk": {
+            "shape": "r3-cy-shape-1",
+            "loading": "r3-cy-load-3",
+            "open": "r3-cy-open-1",
+            "tone": "r3-cy-tone-3",
+            "interact": "r2-cp-interact-3"
+        },
+        "synthwave": {
+            "shape": "2",
+            "loading": "1",
+            "open": "3",
+            "tone": "1",
+            "interact": "1"
+        },
+        "pastel": {
+            "shape": "1",
+            "loading": "2",
+            "open": "3",
+            "tone": "2",
+            "interact": "2"
+        },
+        "terminal": {
+            "shape": "1",
+            "loading": "r2-tm-load-4",
+            "open": "1",
+            "tone": "1",
+            "interact": "1"
+        },
+        "forest": {
+            "shape": "2",
+            "loading": "r2-ft-load-5",
+            "open": "3",
+            "tone": "1",
+            "interact": "1"
+        },
+        "high-contrast": {
+            "shape": "1",
+            "loading": "1",
+            "open": "1",
+            "tone": "1",
+            "interact": "1"
+        },
+        "sepia": {
+            "shape": "2",
+            "loading": "3",
+            "open": "2",
+            "tone": "1",
+            "interact": "2"
+        },
+        "blueprint": {
+            "shape": "1",
+            "loading": "1",
+            "open": "1",
+            "tone": "3",
+            "interact": "2"
+        },
+        "solstice": {
+            "shape": "2",
+            "loading": "2",
+            "open": "2",
+            "tone": "1",
+            "interact": "1"
+        },
+        "brutalism": {
+            "shape": "2",
+            "loading": "r2-bru-load-5",
+            "open": "1",
+            "tone": "1",
+            "interact": "1"
+        },
+        "deco": {
+            "shape": "1",
+            "loading": "1",
+            "open": "3",
+            "tone": "1",
+            "interact": "1"
+        },
+        "phantom": {
+            "shape": "2",
+            "loading": "3",
+            "open": "2",
+            "tone": "1",
+            "interact": "3"
+        },
+        "shade-light": {
+            "shape": "1",
+            "loading": "3",
+            "open": "1",
+            "tone": "1",
+            "interact": "1"
+        },
+        "shade-dark": {
+            "shape": "3",
+            "loading": "3",
+            "open": "3",
+            "tone": "1",
+            "interact": "1"
+        },
+        "retro": {
+            "shape": "1",
+            "loading": "1",
+            "open": "1",
+            "tone": "1",
+            "interact": "r3-re-interact-1"
+        },
+        "grotesk": {
+            "shape": "1",
+            "loading": "r2-gro-load-2",
+            "open": "1",
+            "tone": "1",
+            "interact": "2"
+        },
+        "lapis": {
+            "shape": "2",
+            "loading": "2",
+            "open": "3",
+            "tone": "2",
+            "interact": "3"
+        },
+        "nostromo": {
+            "shape": "1",
+            "loading": "r2-nos-load-2",
+            "open": "3",
+            "tone": "1",
+            "interact": "2"
+        },
+        "titanium": {
+            "shape": "3",
+            "loading": "r2-tin-load-1",
+            "open": "2",
+            "tone": "1",
+            "interact": "3"
+        }
+    }
+}

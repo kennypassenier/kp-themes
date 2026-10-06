@@ -1,5 +1,7 @@
 # A menu button of its own, per theme
 
+**Decided (2026-10-06 21:40).** Kenny approved all 22 themes, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / open / tone / interact). Every close is its open played backwards (Kenny, 21:40); the package must play a leave before it hides a menu, which js/menu-button.js does not do today (PACKAGE_FINDINGS).
+
 Phase 1 of the character round for the menu button
 (`.kp-menu-button` with its `.kp-menu--rich`, `js/menu-button.js`, scope-143;
 catalogue block `menu-button` in `catalogue/overlays.html`). As the trend

@@ -80,7 +80,6 @@ export const PAGES = [
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
-            { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
             // The character round, twelfth component: the state word, shape/tone/change, one pick per aspect (formal and titanium built first).
             { href: 'research/character-state/demo.html', label: 'A state word of its own, per theme' },
             // The character round, thirteenth component: the page header, shape/menu-open-close/interactive, one pick per aspect (formal and titanium built first).
@@ -97,6 +96,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 21:40: Kenny approved the menu button in all 22 themes (research/character-menu/decided.json); it moves into the registers at the port.
+            { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
             // Decided 2026-10-06 21:37: Kenny approved the network graph in all 22 themes (research/character-graph/decided.json); it moves into the registers at the port.
             { href: 'research/character-graph/demo.html', label: 'A network graph of its own, per theme' },
             // Decided 2026-10-06 21:17: Kenny approved the key figure in all 22 themes (research/character-kpi/decided.json); it moves into the registers at the port.
