@@ -1,4 +1,540 @@
-/* research/character-graph, round 5 (Kenny, 2026-10-06 21:07): the new loading options of group b. */
+/* research/character-graph, round 5 (Kenny, 2026-10-06 21:07): the new loading options of group b, grotesk only ("niet
+   goed! sommigen bewegen zelfs niet!"). Every option moves the whole ghost network demo.js lays into the picture
+   (`.kp-graph__ghost`: `path.kp-graph__edge` with `pathLength="100"`, `g.kp-graph__node` with `.kp-graph__ring` and
+   `.kp-graph__core`, each carrying `--i`, its order round the ring clockwise from 12 o'clock, the hub 0, and the ghost's
+   `--n`) in the settled transit map. Edges and nodes move through ghost.css's `--cg-edge-anim` / `--cg-node-anim`; the
+   parts it has no consumer for (a ring, a core, the whole ghost) carry `animation` here. Each option starts mid-cycle
+   (negative delays) so it moves from the first frame. Static rules hold a readable still picture; every animation and
+   keyframe sits in the reduced-motion block at the foot. Keys `r5-gk-load-<n>`, keyframes `r5-gk-load-<n>-…`. */
 
 @layer kp.signature {
+    /* The ghost is set in full ink: the options dim and light the parts themselves. */
+    [data-theme='grotesk'] [data-cg-loading^='r5-gk-load-'] .kp-graph {
+        --cg-ghost: 1;
+        --r5gk-dim: color-mix(in oklch, var(--foreground) 16%, var(--background));
+        --r5gk-grey: color-mix(in oklch, var(--foreground) 38%, var(--background));
+    }
+
+    /* ── 1 · The station clock ── still: the grey map with black stations, the hand at rest. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--r5gk-dim);
+        stroke-width: 4;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--r5gk-grey);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__ring {
+        stroke: var(--primary);
+        stroke-width: 5;
+    }
+
+    /* ── 2 · The pocket map folds ── still: the open map. Lines and stations turn about the hub. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost,
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost .kp-graph__edge,
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost .kp-graph__node {
+        transform-box: view-box;
+        transform-origin: 50% 48%;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__ring {
+        stroke: var(--primary);
+    }
+
+    /* ── 3 · Out of register ── still: the black plate over the red one, slipped a little. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-3'] .kp-graph__ghost {
+        filter: drop-shadow(5px 4px 0 var(--primary));
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--foreground);
+        stroke-width: 4;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-3'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+    }
+
+    /* ── 4 · Musica Viva ── still: grey lines, each station with a red inner ring. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--r5gk-grey);
+        stroke-width: 4;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__core {
+        opacity: 1;
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 3.5;
+        vector-effect: non-scaling-stroke;
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    /* ── 5 · Condensed, regular, extended ── still: the regular cut. Strokes keep their screen weight while the
+       network is scaled; each station is counter-scaled so it stays round. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost {
+        transform-box: view-box;
+        transform-origin: 50% 48%;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost .kp-graph__edge {
+        vector-effect: non-scaling-stroke;
+    }
+
+    /* ── 6 · Leader dots ── still: every line rows of timetable dots in threes, each station ring in dashes. */
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 0.01 4.5 0.01 4.5 0.01 11;
+        stroke-linecap: round;
+        stroke-width: 7;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+        stroke-width: 4;
+        stroke-dasharray: 7 4;
+    }
+
+    [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__ring {
+        stroke: var(--primary);
+        stroke-width: 6;
+        stroke-dasharray: 9 4;
+    }
+
+    /* ── Motion ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* 1 · a red hand sweeps round in 2.5 s of a 3 s cycle; the map jumps a notch at the top. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r5-gk-load-1-hand 3000ms linear infinite;
+            --cg-edge-stagger: calc(2500ms / var(--n, 12));
+            --cg-edge-delay: -3000ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-gk-load-1-station 3000ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 2500ms / var(--n, 12) - 3000ms);
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__ring {
+            animation-name: r5-gk-load-1-hub;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-1'] .kp-graph__ghost {
+            transform-box: view-box;
+            transform-origin: 50% 48%;
+            animation: r5-gk-load-1-jump 3000ms cubic-bezier(0.2, 0.9, 0.3, 1.4) infinite;
+        }
+
+        /* 2 · fold onto the top route, swing round once as a bundle, open again. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r5-gk-load-2-fold 3600ms cubic-bezier(0.75, 0, 0.25, 1) infinite;
+            --cg-edge-stagger: 30ms;
+            --cg-edge-delay: -3500ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r5-gk-load-2-fold 3600ms cubic-bezier(0.75, 0, 0.25, 1) infinite;
+            --cg-node-stagger: 30ms;
+            --cg-node-delay: -3500ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-2'] .kp-graph__ghost {
+            animation: r5-gk-load-2-swing 3600ms cubic-bezier(0.65, 0, 0.35, 1) -3500ms infinite;
+        }
+
+        /* 3 · the red plate orbits the black one, snaps into register, slips off again. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-3'] .kp-graph__ghost {
+            animation: r5-gk-load-3-plate 2600ms linear infinite;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-3'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r5-gk-load-3-press 2600ms ease-out infinite;
+        }
+
+        /* 4 · every station rings out in its own tempo; its line beats with it. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__core {
+            animation: r5-gk-load-4-ripple calc(1300ms + var(--i, 0) * 97ms) cubic-bezier(0.15, 0.6, 0.3, 1) infinite;
+            animation-delay: calc(var(--i, 0) * -263ms);
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__core {
+            animation-name: r5-gk-load-4-ripple-hub;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-gk-load-4-ring calc(1300ms + var(--i, 0) * 97ms) ease-out infinite;
+            animation-delay: calc(var(--i, 0) * -263ms);
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r5-gk-load-4-beat calc(1300ms + var(--i, 0) * 97ms) cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+            --cg-node-stagger: -263ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-4'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r5-gk-load-4-line calc(1300ms + var(--i, 0) * 97ms) ease-out infinite;
+            --cg-edge-stagger: -263ms;
+        }
+
+        /* 5 · the family run: light condensed, regular, black extended, regular. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost {
+            animation: r5-gk-load-5-width 3400ms cubic-bezier(0.7, 0, 0.3, 1) -600ms infinite;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost .kp-graph__node {
+            --cg-node-anim: r5-gk-load-5-round 3400ms cubic-bezier(0.7, 0, 0.3, 1) infinite;
+            --cg-node-delay: -600ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r5-gk-load-5-weight 3400ms cubic-bezier(0.7, 0, 0.3, 1) infinite;
+            --cg-edge-delay: -600ms;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-5'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-gk-load-5-ring 3400ms cubic-bezier(0.7, 0, 0.3, 1) -600ms infinite;
+        }
+
+        /* 6 · the dots run along every line; the station counters turn, the hub's the other way. */
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__edge {
+            --cg-edge-anim: r5-gk-load-6-run 1300ms linear infinite;
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-gk-load-6-count 1100ms steps(4) infinite;
+            animation-delay: calc(var(--i, 0) * -90ms);
+        }
+
+        [data-theme='grotesk'] [data-cg-loading='r5-gk-load-6'] .kp-graph__ghost .kp-graph__node--hub .kp-graph__ring {
+            animation: r5-gk-load-6-hub 700ms linear infinite;
+        }
+
+        @keyframes r5-gk-load-1-hand {
+            0%,
+            4% {
+                stroke: var(--primary);
+                stroke-width: 10;
+            }
+            24% {
+                stroke: var(--foreground);
+                stroke-width: 6;
+            }
+            55%,
+            100% {
+                stroke: var(--r5gk-dim);
+                stroke-width: 4;
+            }
+        }
+
+        @keyframes r5-gk-load-1-station {
+            0%,
+            5% {
+                fill: var(--primary);
+                stroke: var(--primary);
+                scale: 1.45;
+            }
+            22% {
+                fill: var(--background);
+                stroke: var(--foreground);
+                scale: 1;
+            }
+            60%,
+            100% {
+                fill: var(--background);
+                stroke: var(--r5gk-grey);
+                scale: 1;
+            }
+        }
+
+        @keyframes r5-gk-load-1-hub {
+            0% {
+                fill: var(--primary);
+                scale: 1.6;
+            }
+            12%,
+            100% {
+                fill: var(--background);
+                scale: 1;
+            }
+        }
+
+        @keyframes r5-gk-load-1-jump {
+            0% {
+                rotate: -4deg;
+            }
+            10%,
+            100% {
+                rotate: 0deg;
+            }
+        }
+
+        @keyframes r5-gk-load-2-fold {
+            0%,
+            4% {
+                rotate: 0deg;
+            }
+            30%,
+            70% {
+                rotate: calc((var(--i, 1) - 1) * -360deg / (var(--n, 12) - 1));
+            }
+            96%,
+            100% {
+                rotate: 0deg;
+            }
+        }
+
+        @keyframes r5-gk-load-2-swing {
+            0%,
+            30% {
+                rotate: 0deg;
+            }
+            70%,
+            100% {
+                rotate: 360deg;
+            }
+        }
+
+        @keyframes r5-gk-load-3-plate {
+            0% {
+                filter: drop-shadow(16px 0 0 var(--primary));
+            }
+            10% {
+                filter: drop-shadow(11px 11px 0 var(--primary));
+            }
+            20% {
+                filter: drop-shadow(0 16px 0 var(--primary));
+            }
+            30% {
+                filter: drop-shadow(-11px 11px 0 var(--primary));
+            }
+            40% {
+                filter: drop-shadow(-16px 0 0 var(--primary));
+            }
+            50% {
+                filter: drop-shadow(-11px -11px 0 var(--primary));
+            }
+            60% {
+                filter: drop-shadow(0 -16px 0 var(--primary));
+            }
+            70% {
+                filter: drop-shadow(11px -11px 0 var(--primary));
+            }
+            78% {
+                filter: drop-shadow(16px 0 0 var(--primary));
+            }
+            84%,
+            92% {
+                filter: drop-shadow(0 0 0 var(--primary));
+            }
+            100% {
+                filter: drop-shadow(16px 0 0 var(--primary));
+            }
+        }
+
+        @keyframes r5-gk-load-3-press {
+            0%,
+            82% {
+                scale: 1;
+            }
+            85% {
+                scale: 1.25;
+            }
+            92%,
+            100% {
+                scale: 1;
+            }
+        }
+
+        @keyframes r5-gk-load-4-ripple {
+            0% {
+                scale: 0.5;
+                opacity: 1;
+            }
+            55% {
+                opacity: 0.85;
+            }
+            100% {
+                scale: 4.2;
+                opacity: 0;
+            }
+        }
+
+        @keyframes r5-gk-load-4-ripple-hub {
+            0% {
+                scale: 0.5;
+                opacity: 1;
+            }
+            55% {
+                opacity: 0.7;
+            }
+            100% {
+                scale: 9;
+                opacity: 0;
+            }
+        }
+
+        @keyframes r5-gk-load-4-beat {
+            0% {
+                scale: 1.22;
+            }
+            30%,
+            100% {
+                scale: 1;
+            }
+        }
+
+        @keyframes r5-gk-load-4-ring {
+            0% {
+                stroke: var(--primary);
+                stroke-width: 5;
+            }
+            35%,
+            100% {
+                stroke: var(--foreground);
+                stroke-width: 3;
+            }
+        }
+
+        @keyframes r5-gk-load-4-line {
+            0% {
+                stroke: var(--primary);
+                stroke-width: 7;
+            }
+            40%,
+            100% {
+                stroke: var(--r5gk-grey);
+                stroke-width: 4;
+            }
+        }
+
+        @keyframes r5-gk-load-5-width {
+            0%,
+            5% {
+                scale: 1 1;
+            }
+            22%,
+            30% {
+                scale: 0.45 1.1;
+            }
+            47%,
+            52% {
+                scale: 1 1;
+            }
+            70%,
+            78% {
+                scale: 1.45 0.86;
+            }
+            95%,
+            100% {
+                scale: 1 1;
+            }
+        }
+
+        @keyframes r5-gk-load-5-round {
+            0%,
+            5% {
+                scale: 1 1;
+            }
+            22%,
+            30% {
+                scale: 2.2222 0.9091;
+            }
+            47%,
+            52% {
+                scale: 1 1;
+            }
+            70%,
+            78% {
+                scale: 0.6897 1.1628;
+            }
+            95%,
+            100% {
+                scale: 1 1;
+            }
+        }
+
+        @keyframes r5-gk-load-5-weight {
+            0%,
+            5% {
+                stroke-width: 5;
+            }
+            22%,
+            30% {
+                stroke-width: 1.5;
+            }
+            47%,
+            52% {
+                stroke-width: 5;
+            }
+            70%,
+            78% {
+                stroke-width: 11;
+            }
+            95%,
+            100% {
+                stroke-width: 5;
+            }
+        }
+
+        @keyframes r5-gk-load-5-ring {
+            0%,
+            5% {
+                stroke-width: 3;
+            }
+            22%,
+            30% {
+                stroke-width: 1.5;
+            }
+            47%,
+            52% {
+                stroke-width: 3;
+            }
+            70%,
+            78% {
+                stroke-width: 6;
+                stroke: var(--primary);
+            }
+            95%,
+            100% {
+                stroke-width: 3;
+            }
+        }
+
+        @keyframes r5-gk-load-6-run {
+            from {
+                stroke-dashoffset: 0;
+            }
+            to {
+                stroke-dashoffset: -20.03;
+            }
+        }
+
+        @keyframes r5-gk-load-6-count {
+            from {
+                stroke-dashoffset: 0;
+            }
+            to {
+                stroke-dashoffset: 44;
+            }
+        }
+
+        @keyframes r5-gk-load-6-hub {
+            from {
+                stroke-dashoffset: 0;
+            }
+            to {
+                stroke-dashoffset: -26;
+            }
+        }
+    }
 }

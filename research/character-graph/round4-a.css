@@ -1,4 +1,571 @@
-/* research/character-graph, round 5 (Kenny, 2026-10-06 21:07): the new loading options of group a. */
+/* research/character-graph, round 5 (Kenny, 2026-10-06 21:07): the new loading options of group a, brutalism only ("none fits
+   brutalism … be creative"). Every option moves the whole ghost network demo.js lays into the picture (`.kp-graph__ghost`:
+   `path.kp-graph__edge` with `pathLength="100"`, `g.kp-graph__node` with `.kp-graph__ring` and `.kp-graph__core`, each
+   carrying `--i`, its order from the hub round the ring) in the theme's own material: poured concrete, the hard offset shadow,
+   hazard tape, the slammed sheet, rivets and a pasted poster. The edges and nodes go through ghost.css's
+   `--cg-edge-anim` / `--cg-node-anim`; the parts it has no consumer for (a ring, a core, the whole ghost, the svg, the box's
+   ::after) are animated here, inside this file's own reduced-motion block, which also holds every keyframe. Standing still,
+   each option is a readable frame of its own picture. Keys `r5-br-load-<n>`, keyframes `r5-br-…`. */
 
 @layer kp.signature {
+    /* Brutalism has no half-tones: the ghost is set in full ink in every option. */
+    [data-theme='brutalism'] [data-cg-loading^='r5-br-load-'] .kp-graph__ghost {
+        --cg-ghost: 1;
+    }
+
+    /* ── 1 · Cast in one pour ── concrete runs from the hub down every pipe and fills each node like a mould from the
+       floor up; the full mould cures into its sticker colour, is struck, and is poured again. Still: half-poured moulds. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke: color-mix(in oklch, var(--foreground) 62%, var(--background));
+        stroke-width: 9;
+        stroke-linecap: butt;
+        stroke-dasharray: 100 100;
+        stroke-dashoffset: 0;
+        --cg-edge-anim: r5-br-pipe 3200ms linear infinite;
+        --cg-edge-stagger: 140ms;
+        --cg-edge-delay: -3200ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-1'] .kp-graph__ghost .kp-graph__ring {
+        fill: var(--background);
+        stroke: var(--foreground);
+        stroke-width: 4;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-1'] .kp-graph__ghost .kp-graph__core {
+        opacity: 1;
+        fill: color-mix(in oklch, var(--foreground) 62%, var(--background));
+        clip-path: inset(48% 0 0 0);
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        scale: 1.5;
+    }
+
+    /* ── 2 · The keys are pressed ── every node is a neo-brutalist button standing on its hard black shadow; a press runs
+       out from the hub round the ring, each key driven flat into its shadow and lit yellow, its link jabbed thick. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-2'] .kp-graph__ghost .kp-graph__node {
+        translate: -6px -6px;
+        filter: drop-shadow(6px 6px 0 var(--foreground));
+        --cg-node-anim: r5-br-press 1800ms linear infinite;
+        --cg-node-stagger: 150ms;
+        --cg-node-delay: -1800ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-2'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+        stroke-width: 3;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-2'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--foreground);
+        stroke-width: 3;
+        stroke-dasharray: none;
+        --cg-edge-anim: r5-br-jab 1800ms linear infinite;
+        --cg-edge-stagger: 150ms;
+        --cg-edge-delay: -1800ms;
+    }
+
+    /* ── 3 · The site is taped off ── the box goes black like a closed site at night; every link is yellow-and-black
+       hazard tape that jerks taut along its run, every node a warning lamp whose dashed yellow ring turns in hard ticks and
+       whose light flashes round the ring. Still: the taped-off site. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph[data-kp-state='loading'] {
+        --gr-paper: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--secondary);
+        stroke-width: 11;
+        stroke-linecap: butt;
+        stroke-dasharray: 4 4;
+        --cg-edge-anim: r5-br-tape 640ms linear infinite;
+        --cg-edge-stagger: 0ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph__ghost .kp-graph__ring {
+        fill: var(--foreground);
+        stroke: var(--secondary);
+        stroke-width: 6;
+        stroke-dasharray: 7 5;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph__ghost .kp-graph__core {
+        opacity: 1;
+        fill: var(--warning);
+    }
+
+    /* ── 4 · The sheet is slammed down ── the whole network is one sheet, lifted high and askew on a huge hard shadow, then
+       slammed flat onto the board, the links squeezed fat by the blow; it is lifted again and slammed at the other tilt. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-4'] .kp-graph__ghost {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-4'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--foreground);
+        stroke-width: 4;
+        --cg-edge-anim: r5-br-squeeze 2400ms linear infinite;
+    }
+
+    /* ── 5 · The rivet gun runs the ring ── every link is a row of square rivets driven outward one rivet per beat; a
+       yellow strike jumps from node to node round the ring, each one punched down big and black-edged as it is hit. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--foreground);
+        stroke-width: 8;
+        stroke-linecap: butt;
+        stroke-dasharray: 3 5;
+        --cg-edge-anim: r5-br-rivet 1200ms steps(3) infinite;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-5'] .kp-graph__ghost .kp-graph__node {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        --cg-node-anim: r5-br-strike 2640ms linear infinite;
+        --cg-node-stagger: 220ms;
+        --cg-node-delay: -2640ms;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-5'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+        stroke-width: 4;
+    }
+
+    /* ── 6 · The poster is pasted up ── a black squeegee pastes the whole network onto the board in four hard strokes, left
+       to right; then the poster is ripped off in three jerks and pasted again. Still: the pasted poster, the squeegee off the board. */
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] .kp-graph {
+        --gr-load-over: var(--foreground);
+        --gr-load-over-inset: 0 auto 0 -24px;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+        inline-size: 16px;
+        box-shadow: 5px 0 0 var(--secondary);
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] .kp-graph__ghost .kp-graph__ring {
+        stroke: var(--foreground);
+        stroke-width: 4;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] .kp-graph__ghost .kp-graph__edge {
+        stroke: var(--foreground);
+        stroke-width: 5;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* 1 · the mould fills and cures, in step with its pipe (same --i, same stagger). */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-1'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__core {
+            animation: r5-br-mould 3200ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 140ms - 3200ms);
+        }
+
+        /* 2 · a pressed key lights yellow. */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-2'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-br-key-lit 1800ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 150ms - 1800ms);
+        }
+
+        /* 3 · the lamps turn and flash round the ring. */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-br-beacon 480ms steps(3) infinite;
+        }
+
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__core {
+            animation: r5-br-lamp 960ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 120ms - 960ms);
+        }
+
+        /* 4 · the whole sheet is lifted and slammed. */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-4'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost {
+            animation: r5-br-slam 2400ms linear infinite;
+        }
+
+        /* 5 · the struck node flashes yellow. */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-5'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__ring {
+            animation: r5-br-strike-lit 2640ms linear infinite;
+            animation-delay: calc(var(--i, 0) * 220ms - 2640ms);
+        }
+
+        /* 6 · the poster is pasted with the squeegee and ripped off. */
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] .kp-graph[data-kp-state='loading'] .kp-graph__svg {
+            animation: r5-br-paste 3200ms linear infinite;
+        }
+
+        [data-theme='brutalism'] [data-cg-loading='r5-br-load-6'] {
+            --gr-load-over-anim: r5-br-squeegee 3200ms linear infinite;
+        }
+
+        @keyframes r5-br-pipe {
+            0% {
+                stroke-dashoffset: 100;
+                animation-timing-function: steps(4, end);
+            }
+            16%,
+            88% {
+                stroke-dashoffset: 0;
+                animation-timing-function: steps(1, end);
+            }
+            100% {
+                stroke-dashoffset: 100;
+            }
+        }
+
+        @keyframes r5-br-mould {
+            0%,
+            14% {
+                clip-path: inset(100% 0 0 0);
+                fill: color-mix(in oklch, var(--foreground) 62%, var(--background));
+                animation-timing-function: steps(5, end);
+            }
+            44% {
+                clip-path: inset(0 0 0 0);
+                fill: color-mix(in oklch, var(--foreground) 62%, var(--background));
+                animation-timing-function: steps(1, end);
+            }
+            62%,
+            88% {
+                clip-path: inset(0 0 0 0);
+                fill: var(--kp-graph-node-colour);
+                animation-timing-function: steps(1, end);
+            }
+            100% {
+                clip-path: inset(100% 0 0 0);
+                fill: var(--kp-graph-node-colour);
+            }
+        }
+
+        @keyframes r5-br-press {
+            0%,
+            100% {
+                translate: -6px -6px;
+                filter: drop-shadow(6px 6px 0 var(--foreground));
+            }
+            8% {
+                translate: -6px -6px;
+                filter: drop-shadow(6px 6px 0 var(--foreground));
+                animation-timing-function: cubic-bezier(0.7, 0, 1, 1);
+            }
+            13%,
+            30% {
+                translate: 0 0;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(2, end);
+            }
+            38% {
+                translate: -6px -6px;
+                filter: drop-shadow(6px 6px 0 var(--foreground));
+            }
+        }
+
+        @keyframes r5-br-key-lit {
+            0%,
+            12% {
+                fill: var(--kp-graph-node-colour);
+                animation-timing-function: steps(1, end);
+            }
+            13%,
+            30% {
+                fill: var(--secondary);
+                stroke-width: 5;
+                animation-timing-function: steps(1, end);
+            }
+            31%,
+            100% {
+                fill: var(--kp-graph-node-colour);
+            }
+        }
+
+        @keyframes r5-br-jab {
+            0%,
+            12% {
+                stroke-width: 3;
+                animation-timing-function: steps(1, end);
+            }
+            13%,
+            30% {
+                stroke-width: 9;
+                animation-timing-function: steps(1, end);
+            }
+            31%,
+            100% {
+                stroke-width: 3;
+            }
+        }
+
+        @keyframes r5-br-tape {
+            0% {
+                stroke-dashoffset: 0;
+                stroke-width: 11;
+                animation-timing-function: steps(4, end);
+            }
+            50% {
+                stroke-dashoffset: -8;
+                stroke-width: 11;
+                animation-timing-function: steps(1, end);
+            }
+            62% {
+                stroke-width: 15;
+                stroke-dashoffset: -8;
+                animation-timing-function: steps(1, end);
+            }
+            75%,
+            100% {
+                stroke-width: 11;
+                stroke-dashoffset: -8;
+            }
+        }
+
+        @keyframes r5-br-beacon {
+            to {
+                stroke-dashoffset: -24;
+            }
+        }
+
+        @keyframes r5-br-lamp {
+            0%,
+            49% {
+                fill: var(--warning);
+                animation-timing-function: steps(1, end);
+            }
+            50%,
+            100% {
+                fill: var(--destructive);
+            }
+        }
+
+        @keyframes r5-br-slam {
+            /* slam A: lifted high, tilted left, on a deep hard shadow */
+            0% {
+                scale: 1.12;
+                rotate: -3deg;
+                translate: -10px -14px;
+                filter: drop-shadow(16px 18px 0 var(--foreground));
+                animation-timing-function: steps(3, end);
+            }
+            22% {
+                scale: 1.15;
+                rotate: -3.5deg;
+                translate: -14px -18px;
+                filter: drop-shadow(20px 22px 0 var(--foreground));
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            30% {
+                scale: 0.97;
+                rotate: 0deg;
+                translate: 0 0;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(1, end);
+            }
+            33%,
+            38% {
+                scale: 1;
+                rotate: 0deg;
+                translate: 0 0;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(3, end);
+            }
+            /* slam B: lifted again, tilted right */
+            50% {
+                scale: 1.12;
+                rotate: 2.5deg;
+                translate: 12px -14px;
+                filter: drop-shadow(-14px 18px 0 var(--foreground));
+                animation-timing-function: steps(3, end);
+            }
+            72% {
+                scale: 1.15;
+                rotate: 3deg;
+                translate: 16px -18px;
+                filter: drop-shadow(-18px 22px 0 var(--foreground));
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            80% {
+                scale: 0.97;
+                rotate: 0deg;
+                translate: 0 0;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(1, end);
+            }
+            83%,
+            88% {
+                scale: 1;
+                rotate: 0deg;
+                translate: 0 0;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(3, end);
+            }
+            100% {
+                scale: 1.12;
+                rotate: -3deg;
+                translate: -10px -14px;
+                filter: drop-shadow(16px 18px 0 var(--foreground));
+            }
+        }
+
+        @keyframes r5-br-squeeze {
+            0%,
+            29% {
+                stroke-width: 4;
+                animation-timing-function: steps(1, end);
+            }
+            30%,
+            36% {
+                stroke-width: 10;
+                animation-timing-function: steps(1, end);
+            }
+            37%,
+            79% {
+                stroke-width: 4;
+                animation-timing-function: steps(1, end);
+            }
+            80%,
+            86% {
+                stroke-width: 10;
+                animation-timing-function: steps(1, end);
+            }
+            87%,
+            100% {
+                stroke-width: 4;
+            }
+        }
+
+        @keyframes r5-br-rivet {
+            to {
+                stroke-dashoffset: -8;
+            }
+        }
+
+        @keyframes r5-br-strike {
+            0%,
+            7% {
+                scale: 1;
+                filter: none;
+                animation-timing-function: steps(1, end);
+            }
+            8% {
+                scale: 1.45;
+                filter: drop-shadow(6px 6px 0 var(--foreground));
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            12% {
+                scale: 0.9;
+                filter: drop-shadow(0 0 0 var(--foreground));
+                animation-timing-function: steps(1, end);
+            }
+            14%,
+            100% {
+                scale: 1;
+                filter: none;
+            }
+        }
+
+        @keyframes r5-br-strike-lit {
+            0%,
+            7% {
+                fill: var(--kp-graph-node-colour);
+                animation-timing-function: steps(1, end);
+            }
+            8%,
+            22% {
+                fill: var(--secondary);
+                stroke-width: 7;
+                animation-timing-function: steps(1, end);
+            }
+            23%,
+            100% {
+                fill: var(--kp-graph-node-colour);
+            }
+        }
+
+        /* the paste: four squeegee strokes (each a fast pull, then a pause), then three rips from the right, then bare
+           board for a beat; r5-br-squeegee moves the bar on the very same stops. */
+        @keyframes r5-br-paste {
+            0% {
+                clip-path: inset(0 100% 0 0);
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            6%,
+            12% {
+                clip-path: inset(0 75% 0 0);
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            18%,
+            24% {
+                clip-path: inset(0 50% 0 0);
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            30%,
+            36% {
+                clip-path: inset(0 25% 0 0);
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            42%,
+            54% {
+                clip-path: inset(0 0 0 0);
+                animation-timing-function: steps(1, end);
+            }
+            55%,
+            66% {
+                clip-path: polygon(0 0, 72% 0, 64% 40%, 70% 70%, 60% 100%, 0 100%);
+                animation-timing-function: steps(1, end);
+            }
+            67%,
+            78% {
+                clip-path: polygon(0 0, 40% 0, 46% 30%, 34% 62%, 42% 100%, 0 100%);
+                animation-timing-function: steps(1, end);
+            }
+            79%,
+            90% {
+                clip-path: polygon(0 0, 12% 0, 6% 35%, 14% 66%, 4% 100%, 0 100%);
+                animation-timing-function: steps(1, end);
+            }
+            91%,
+            100% {
+                clip-path: polygon(0 0, 0 0, 0 35%, 0 66%, 0 100%, 0 100%);
+            }
+        }
+
+        @keyframes r5-br-squeegee {
+            0% {
+                left: 0%;
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            6%,
+            12% {
+                left: 25%;
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            18%,
+            24% {
+                left: 50%;
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            30%,
+            36% {
+                left: 75%;
+                animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+            }
+            42% {
+                left: calc(100% - 16px);
+                animation-timing-function: steps(1, end);
+            }
+            43%,
+            100% {
+                left: -24px;
+            }
+        }
+    }
 }
