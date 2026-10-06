@@ -15,6 +15,42 @@ or keyframe and its values. `research/titanium-loading` did not exist yet.
 
 ---
 
+## 0. Decided (Kenny, 2026-10-07 00:51, research/titanium-character)
+
+Kenny judged the 17 questions that define titanium. Every recommendation was
+taken except one: **the motion curve is eased, slowing as it lands**
+(`cubic-bezier(0.2, 0.8, 0.2, 1)`, no overshoot) instead of linear. G1 below
+is amended accordingly; everything else stands as written.
+
+| Question                  | Pick                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| Motion curve              | Eased, slows as it lands: `cubic-bezier(0.2, 0.8, 0.2, 1)`, never an overshoot |
+| Direction                 | Start → end, like a feed                                                       |
+| Opening from a trigger    | Cut open from the top                                                          |
+| Durations                 | Contact 60 · cut 240 · loop 1800 ms                                            |
+| Colour                    | Oxide only as a cause                                                          |
+| Corners                   | Square with the chamfer                                                        |
+| Chamfer diagonal          | Top-left and bottom-right                                                      |
+| Surface                   | Brushed grain, tool edge, engraving                                            |
+| Live update               | The heat tint on every carrier                                                 |
+| Loading                   | The cutter leaving heat                                                        |
+| Leaving and arriving      | Cool-away, start → end, 400 ms                                                 |
+| Buttons inside composites | Exactly like titanium's own button                                             |
+| Focus ring                | The register's ring, inside the chamfer                                        |
+| Press                     | Drops 1 px into its seat                                                       |
+| Monospace                 | Figures, labels and counts                                                     |
+| Screws and knurling       | Only where a real part would have them                                         |
+| Bronze                    | Only inside the heat ramp                                                      |
+
+**How the eased curve applies.** Every one-shot motion (opening, closing,
+arrival, leave, update, press, a cut) uses the decelerating curve. A loop
+(loading, the spinner's drill) keeps a constant feed: an eased loop would
+stall at the end of every pass, which is not "slowing as it lands" but a
+stutter. This reading is Claude's (2026-10-07 00:52) and is Kenny's to
+overturn.
+
+---
+
 ## 1. The titanium grammar
 
 The theme is a **material**, not a place: bare machined titanium over a carbon
@@ -24,7 +60,7 @@ stamped, heat-tinted**. Nothing breathes, bounces, swells or spins.
 
 | #   | Rule                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| G1  | **Metal does not ease.** Every motion is `linear`; a discrete count may index with `steps()`; no `ease`, `ease-in/out`, `cubic-bezier` and never an overshoot (no value past 1 in a bezier, no keyframe past the rest pose).                                                                                                                                                                                              |
+| G1  | **Motion slows as it lands** (amended 2026-10-07, see §0). Every one-shot motion uses `cubic-bezier(0.2, 0.8, 0.2, 1)`; loops keep a constant feed (`linear`); a discrete count may index with `steps()`; never an overshoot (no value past 1 in a bezier, no keyframe past the rest pose).                                                                                                                               |
 | G2  | **The tool feeds from inline-start to inline-end.** Arrivals, loading passes and heat-tint sweeps travel start→end in logical terms (`inset-inline-start`, `clip-path: inset(0 100% 0 0)` mirrored by `dir`), never end→start and never physical `left`/`translateX` alone.                                                                                                                                               |
 | G3  | **What drops from a trigger is cut top-down.** Menus, dialogs and popovers open by a `clip-path` cut from the top edge (the dialog's `kp-sig-titanium-ti-cut`) and close as that cut reversed; what lives at an edge (drawer, toast) slides in from its own edge, linear.                                                                                                                                                 |
 | G4  | **Durations come from three bands.** Contact (hover, press, focus, toggle): 0–60 ms. Cuts (open, close, arrival, leave, update): 160–400 ms, longer only for a line drawn across a whole chart (≤ 900 ms at a constant feed). Loops (loading): one full-width pass per 1800 ms; the spinner's drill 480 ms.                                                                                                               |
