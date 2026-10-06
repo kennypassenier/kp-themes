@@ -1,4 +1,67 @@
-/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new options of group b. */
+/* research/character-kpi round 2, group b: retro only, port 8786. Three new
+   shapes (round2-b.js), everything else retro's round-1 three options
+   (kpi-d.css), carried onto each new shape unchanged — loading, tone,
+   interactive and live are written against `.kp-kpi` and the shared
+   `[data-kf]` base there, not against the old shape's bevel, so they need
+   no extra rules here. Tokens only (DI9); one rule names one aspect. */
 
 @layer kp.signature {
+    /* ════════════════════════════════════════════════════════════════
+       retro · round 2 — three new shapes: the title bar card, the
+       status bar segment, the floppy label.
+       ════════════════════════════════════════════════════════════════ */
+
+    /* ── shape 1: the title bar card ────────────────────────────────── */
+
+    [data-theme='retro'] [data-kf-shape='r2-rt-shape-1'] .kp-kpi {
+        --kf-radius: 0rem;
+        --kf-frame: 1px solid var(--foreground);
+        box-shadow:
+            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent),
+            inset 1px 1px 0 var(--popover),
+            2px 2px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
+        --kf-num-font: var(--theme-font-display, monospace);
+        --kf-num-size: 1.55rem;
+        --kf-label-case: none;
+        --kf-label-track: 0.02em;
+    }
+
+    /* The caption strip: a real navy title bar, white text — direct
+       properties, not --kf-label-bg/--kf-mute, so the trend words below
+       (which also read --kf-mute) stay on the plain plate and legible. */
+    [data-theme='retro'] [data-kf-shape='r2-rt-shape-1'] .kp-kpi > .kp-kpi__label {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--foreground) 35%, transparent);
+    }
+
+    /* ── shape 2: the status bar segment ────────────────────────────── */
+
+    [data-theme='retro'] [data-kf-shape='r2-rt-shape-2'] .kp-kpi {
+        --kf-radius: 0rem;
+        --kf-frame: 1px solid var(--border-strong);
+        box-shadow:
+            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 45%, transparent),
+            inset -1px -1px 0 var(--popover);
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-label-case: none;
+        --kf-label-track: 0;
+    }
+
+    [data-theme='retro'] [data-kf-shape='r2-rt-shape-2'] .kp-kpi > .kp-kpi__label {
+        border-inline-end: 1px solid color-mix(in oklch, var(--border-strong) 80%, transparent);
+    }
+
+    /* ── shape 3: the floppy label ──────────────────────────────────── */
+
+    [data-theme='retro'] [data-kf-shape='r2-rt-shape-3'] .kp-kpi {
+        --kf-radius: 0.2rem;
+        --kf-frame: 1px solid var(--foreground);
+        --kf-pat: repeating-linear-gradient(0deg, color-mix(in oklch, var(--foreground) 9%, transparent) 0 1px, transparent 1px 22%);
+        box-shadow: 1px 1px 0 color-mix(in oklch, var(--foreground) 30%, transparent);
+        --kf-num-font: var(--theme-font-display, monospace);
+        --kf-num-size: 1.5rem;
+        --kf-label-case: uppercase;
+        --kf-label-track: 0.03em;
+    }
 }

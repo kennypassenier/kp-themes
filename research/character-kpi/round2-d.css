@@ -1,4 +1,365 @@
-/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new options of group d. */
+/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): group d, only
+   titanium is open (shape, loading, interactive). Tone (1) and live (3) are
+   settled and keep kpi.css's rules unchanged; this file never touches
+   [data-kf-tone] or [data-kf-live]. Every selector names one aspect only
+   and composes with any shape (old 1/2/3 or the new r2-ti-shape-*), so
+   nothing here is scoped to a particular shape unless noted. Tokens only
+   (DI9); the heat-tint oxide band reuses the meter's own gradient recipe
+   (warning-foreground → chart-4 → chart-2 → chart-1 → chart-3). */
 
 @layer kp.signature {
+    /* ══ Shape (data-kf-shape): the heat-tint rim, the counterbored plate,
+       the chamfered boss — past the milled plate / instrument dial /
+       anodised tag of round 1. ══ */
+
+    /* The heat-tint rim: a thin ring in the meter's own oxide band, drawn
+       on ::after (the shared overlay slot), with the knurl of the trend
+       tile under the label. */
+    [data-theme='titanium'] [data-kf-shape='r2-ti-shape-1'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-radius: 0.375rem;
+        --kf-num-font: var(--font-mono, monospace);
+        --kf-label-rule: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] [data-kf-shape='r2-ti-shape-1'] .kp-kpi::after {
+        box-sizing: border-box;
+        padding: 2px;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--warning-foreground), var(--chart-4) 28%, var(--chart-2) 52%, var(--chart-1) 76%, var(--chart-3));
+        mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        /* Standard properties only: a -webkit-mask after them resets the
+           composite to add in Firefox, which filled the whole tile. */
+        mask-composite: exclude;
+    }
+
+    /* The counterbored plate: two machined rivets at the top corners (as
+       the chart's anodised rivets), a knurled band under the label. */
+    [data-theme='titanium'] [data-kf-shape='r2-ti-shape-2'] .kp-kpi {
+        --kf-radius: 0.25rem;
+        --kf-frame: 1px solid color-mix(in oklab, var(--border-strong) 85%, var(--foreground) 15%);
+        --kf-num-font: var(--font-mono, monospace);
+        --kf-label-weight: 600;
+        --kf-pat:
+            radial-gradient(circle 3px at 12px 11px, var(--border-strong) 55%, transparent 58%),
+            radial-gradient(circle 3px at calc(100% - 12px) 11px, var(--border-strong) 55%, transparent 58%),
+            repeating-linear-gradient(45deg, color-mix(in oklab, var(--foreground) 10%, transparent) 0 1px, transparent 1px 4px) 0 0 / 100% 1.6rem
+                no-repeat;
+    }
+
+    /* The chamfered boss: a milled bevel catches the light at two opposing
+       edges, a diagonal machined sheen across the face. */
+    [data-theme='titanium'] [data-kf-shape='r2-ti-shape-3'] .kp-kpi {
+        --kf-radius: 0.1875rem;
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-num-font: var(--font-mono, monospace);
+        --kf-label-rule: 2px solid var(--border-strong);
+        --kf-pat: linear-gradient(135deg, color-mix(in oklab, var(--foreground) 7%, transparent), transparent 46%);
+        --kf-shadow:
+            inset 0 1px 0 color-mix(in oklab, var(--background) 65%, transparent),
+            inset 1px 0 0 color-mix(in oklab, var(--background) 45%, transparent),
+            inset 0 -1px 0 color-mix(in oklab, var(--foreground) 16%, transparent),
+            inset -1px 0 0 color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+
+    /* ══ While loading (data-kf-loading): six fresh pictures, each using
+       the whole tile, built from titanium's world (machining, anodising,
+       a gauge, a knurling wheel, an inspection lamp, passivation). ══ */
+
+    /* 1 · The anodising bath: the whole plate washes through the oxide
+       heat-tint spectrum, left to right. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-1'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+                100deg,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--kf-plate)),
+                color-mix(in oklab, var(--chart-4) 32%, var(--kf-plate)) 25%,
+                color-mix(in oklab, var(--chart-2) 32%, var(--kf-plate)) 50%,
+                color-mix(in oklab, var(--chart-1) 32%, var(--kf-plate)) 72%,
+                color-mix(in oklab, var(--chart-3) 32%, var(--kf-plate)) 90%,
+                color-mix(in oklab, var(--warning-foreground) 32%, var(--kf-plate))
+            )
+            0 0 / 260% 100%;
+    }
+
+    /* 2 · The facing pass: a cutter the full height of the tile travels
+       its width, squaring the face as a facing pass does. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-2'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+                90deg,
+                transparent 0 46%,
+                color-mix(in oklab, var(--primary) 85%, transparent) 49%,
+                color-mix(in oklab, var(--primary) 85%, transparent) 51%,
+                transparent 54% 100%
+            )
+            0 0 / 240% 100%;
+    }
+
+    /* 3 · The gauge sweep: a short needle under the number pivots through
+       its arc and back, as a gauge searching for its reading. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-3'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: 50%;
+        inset-block-end: 0;
+        inline-size: 3px;
+        block-size: calc(100% - var(--kp-space-sm, 0.5rem));
+        border-radius: 2px;
+        background: linear-gradient(to top, var(--primary), color-mix(in oklab, var(--primary) 30%, transparent));
+        box-shadow: 0 0 6px color-mix(in oklab, var(--primary) 60%, transparent);
+        translate: -50% 0;
+        transform-origin: bottom center;
+        rotate: 0deg;
+    }
+
+    /* 4 · The knurl scroll: the knurled band under the label scrolls
+       sideways, as a knurling wheel rolling along a part. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-4'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background:
+            repeating-linear-gradient(45deg, color-mix(in oklab, var(--foreground) 16%, transparent) 0 1.5px, transparent 1.5px 7px) 0 0 / 20px 20px,
+            repeating-linear-gradient(-45deg, color-mix(in oklab, var(--foreground) 16%, transparent) 0 1.5px, transparent 1.5px 7px) 0 0 / 20px 20px;
+        pointer-events: none;
+    }
+
+    /* 5 · The witness lamp: a bright tick travels the whole perimeter of
+       the frame, as an inspection lamp run around a part's edge. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-5'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: 0;
+        inset-block-start: 0;
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow:
+            0 0 10px 3px color-mix(in oklab, var(--primary) 70%, transparent),
+            0 0 28px 10px color-mix(in oklab, var(--primary) 30%, transparent);
+        offset-path: inset(0 round var(--kf-radius, 0.5rem));
+        offset-distance: 0%;
+    }
+
+    /* 6 · The passivation sheen: a diagonal specular band sweeps the
+       whole tile corner to corner, as pass light catching a passivated
+       part. */
+    [data-theme='titanium'] [data-kf-loading='r2-ti-load-6'] .kp-kpi[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+                115deg,
+                transparent 32%,
+                color-mix(in oklab, var(--primary) 45%, transparent) 47%,
+                color-mix(in oklab, var(--primary) 65%, transparent) 50%,
+                color-mix(in oklab, var(--primary) 45%, transparent) 53%,
+                transparent 68%
+            ) -60% -60% /
+            220% 220% no-repeat;
+    }
+
+    /* ══ Hover, focus, press (data-kf-interactive): the detent click, the
+       anodising flash, the witness bracket — past the plain edge/knurl/
+       badge of round 1. ══ */
+
+    /* 1 · The detent click: the frame brightens and warms on hover, the
+       tile seats one notch down on press, as a torque wrench finding its
+       detent; focus draws a bold double ring. */
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-1'] a.kp-kpi,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-1'] .kp-kpi--toggle {
+        --kf-hover-border: var(--primary);
+        --kf-hover-plate: color-mix(in oklab, var(--primary) 8%, var(--card));
+        --kf-press-plate: color-mix(in oklab, var(--primary) 18%, var(--card));
+        --kf-focus-outline: 3px double var(--primary);
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-1'] a.kp-kpi:active,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-1'] .kp-kpi--toggle:active {
+        translate: 0 1px;
+        box-shadow: inset 0 2px 3px color-mix(in oklab, var(--foreground) 22%, transparent);
+    }
+
+    /* 2 · The anodising flash: hover lays the oxide heat-tint band across
+       the plate, a press deepens it toward gold, focus draws one heavy
+       ring offset clear of the plate. */
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle {
+        --kf-hover-border: var(--chart-1);
+        --kf-focus-outline: 3px solid var(--chart-3);
+        --kf-focus-offset: 4px;
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi:hover,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle:hover {
+        background-image: linear-gradient(
+            100deg,
+            color-mix(in oklab, var(--warning-foreground) 20%, transparent),
+            color-mix(in oklab, var(--chart-2) 20%, transparent) 55%,
+            color-mix(in oklab, var(--chart-3) 20%, transparent)
+        );
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] a.kp-kpi:active,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-2'] .kp-kpi--toggle:active {
+        background-image: linear-gradient(
+            100deg,
+            color-mix(in oklab, var(--warning-foreground) 36%, transparent),
+            color-mix(in oklab, var(--chart-3) 36%, transparent)
+        );
+    }
+
+    /* 3 · The witness bracket: four corner marks light on hover, draw in
+       tight on press, thicken and tint on focus — a machinist's witness
+       marks. */
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] a.kp-kpi:hover,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] .kp-kpi--toggle:hover {
+        background:
+            linear-gradient(to right, var(--border-strong) 0 7px, transparent 7px) top 4px left 4px / 9px 2px no-repeat,
+            linear-gradient(to bottom, var(--border-strong) 0 7px, transparent 7px) top 4px left 4px / 2px 9px no-repeat,
+            linear-gradient(to left, var(--border-strong) 0 7px, transparent 7px) top 4px right 4px / 9px 2px no-repeat,
+            linear-gradient(to bottom, var(--border-strong) 0 7px, transparent 7px) top 4px right 4px / 2px 9px no-repeat,
+            linear-gradient(to right, var(--border-strong) 0 7px, transparent 7px) bottom 4px left 4px / 9px 2px no-repeat,
+            linear-gradient(to top, var(--border-strong) 0 7px, transparent 7px) bottom 4px left 4px / 2px 9px no-repeat,
+            linear-gradient(to left, var(--border-strong) 0 7px, transparent 7px) bottom 4px right 4px / 9px 2px no-repeat,
+            linear-gradient(to top, var(--border-strong) 0 7px, transparent 7px) bottom 4px right 4px / 2px 9px no-repeat;
+        background-color: var(--kf-plate);
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] a.kp-kpi:active,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] .kp-kpi--toggle:active {
+        background:
+            linear-gradient(to right, var(--primary) 0 6px, transparent 6px) top 2px left 2px / 8px 2px no-repeat,
+            linear-gradient(to bottom, var(--primary) 0 6px, transparent 6px) top 2px left 2px / 2px 8px no-repeat,
+            linear-gradient(to left, var(--primary) 0 6px, transparent 6px) top 2px right 2px / 8px 2px no-repeat,
+            linear-gradient(to bottom, var(--primary) 0 6px, transparent 6px) top 2px right 2px / 2px 8px no-repeat,
+            linear-gradient(to right, var(--primary) 0 6px, transparent 6px) bottom 2px left 2px / 8px 2px no-repeat,
+            linear-gradient(to top, var(--primary) 0 6px, transparent 6px) bottom 2px left 2px / 2px 8px no-repeat,
+            linear-gradient(to left, var(--primary) 0 6px, transparent 6px) bottom 2px right 2px / 8px 2px no-repeat,
+            linear-gradient(to top, var(--primary) 0 6px, transparent 6px) bottom 2px right 2px / 2px 8px no-repeat;
+        background-color: var(--kf-plate);
+    }
+
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] a.kp-kpi:focus-visible,
+    [data-theme='titanium'] [data-kf-interactive='r2-ti-int-3'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--primary);
+        --kf-focus-offset: 3px;
+        background:
+            linear-gradient(to right, var(--primary) 0 8px, transparent 8px) top 3px left 3px / 11px 3px no-repeat,
+            linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px) top 3px left 3px / 3px 11px no-repeat,
+            linear-gradient(to left, var(--primary) 0 8px, transparent 8px) top 3px right 3px / 11px 3px no-repeat,
+            linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px) top 3px right 3px / 3px 11px no-repeat,
+            linear-gradient(to right, var(--primary) 0 8px, transparent 8px) bottom 3px left 3px / 11px 3px no-repeat,
+            linear-gradient(to top, var(--primary) 0 8px, transparent 8px) bottom 3px left 3px / 3px 11px no-repeat,
+            linear-gradient(to left, var(--primary) 0 8px, transparent 8px) bottom 3px right 3px / 11px 3px no-repeat,
+            linear-gradient(to top, var(--primary) 0 8px, transparent 8px) bottom 3px right 3px / 3px 11px no-repeat;
+        background-color: var(--kf-plate);
+    }
+
+    /* ══ Motion: one block, at the end, as kpi.css does. Each keyframe is
+       namespaced to its option; the still frame above remains the base,
+       unanimated declaration. ══ */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-1'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-bath calc(2200ms / var(--kf-speed, 1)) linear infinite;
+        }
+
+        @keyframes r2-ti-bath {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -160% 0;
+            }
+        }
+
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-2'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-face calc(1500ms / var(--kf-speed, 1)) linear infinite;
+        }
+
+        @keyframes r2-ti-face {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -140% 0;
+            }
+        }
+
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-3'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-gauge calc(1300ms / var(--kf-speed, 1)) ease-in-out infinite;
+        }
+
+        @keyframes r2-ti-gauge {
+            0% {
+                rotate: -62deg;
+            }
+            50% {
+                rotate: 62deg;
+            }
+            100% {
+                rotate: -62deg;
+            }
+        }
+
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-4'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-knurl calc(900ms / var(--kf-speed, 1)) linear infinite;
+        }
+
+        @keyframes r2-ti-knurl {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position:
+                    -40px 0,
+                    40px 0;
+            }
+        }
+
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-5'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-lamp calc(2000ms / var(--kf-speed, 1)) linear infinite;
+        }
+
+        @keyframes r2-ti-lamp {
+            from {
+                offset-distance: 0%;
+            }
+            to {
+                offset-distance: 100%;
+            }
+        }
+
+        [data-theme='titanium'] [data-kf-loading='r2-ti-load-6'] .kp-kpi[data-kp-loading]::before {
+            animation: r2-ti-sheen calc(1700ms / var(--kf-speed, 1)) ease-in-out infinite;
+        }
+
+        @keyframes r2-ti-sheen {
+            from {
+                background-position: -60% -60%;
+            }
+            to {
+                background-position: 160% 160%;
+            }
+        }
+    }
 }

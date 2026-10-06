@@ -1,4 +1,84 @@
-/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new options of group c. */
+/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new
+   options of group c — grotesk's key figure shape ("none of these" to
+   kpi-d.css's three). Three new shapes, Swiss/International Typographic
+   (THEME_PROFILES.md): big grotesque type, a strict grid, red and black
+   on white, rules and blocks, nothing decorative. Loading, tone,
+   interactive and live stay open with round 1's three options
+   (kpi-d.css, keyed '1'|'2'|'3', untouched) and must read on every shape
+   below; only `[data-kf-interactive='1']`'s hover border needed a rule
+   here, because it only changes `--kf-hover-border`'s colour and shape 1
+   and shape 3 below carry no frame at rest (a 1px transparent border
+   gives it something to colour in). Tokens only (DI9). */
 
 @layer kp.signature {
+    /* ── shape ───────────────────────────────────────────────────────
+       1: the ruled grid — the chart's Swiss grid and the meter's rule
+          and its cursor, drawn into the tile itself.
+       2: the index block — the graph's red pick and the columns' big
+          numerals, as a catalogue card's cut corner.
+       3: the punch stub — the chart tooltip's punch card, carried onto
+          the tile's own edge.
+       ─────────────────────────────────────────────────────────────── */
+
+    [data-theme='grotesk'] [data-kf-shape='r2-gr-shape-1'] .kp-kpi {
+        --kf-frame: 1px solid transparent;
+        --kf-radius: 0rem;
+        --kf-label-rule: 1px solid var(--border-strong);
+        --kf-label-case: uppercase;
+        --kf-label-track: 0.05em;
+        --kf-num-weight: 800;
+        background-image:
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0 1px, transparent 1px calc(100% / 5)),
+            linear-gradient(var(--primary), var(--primary));
+        background-repeat: repeat, no-repeat;
+        background-position:
+            0 0,
+            0 100%;
+        background-size:
+            100% 100%,
+            100% 3px;
+    }
+
+    [data-theme='grotesk'] [data-kf-shape='r2-gr-shape-2'] .kp-kpi {
+        --kf-frame: 2px solid var(--border-strong);
+        --kf-radius: 0rem;
+        --kf-num-weight: 800;
+        --kf-num-size: 2.2rem;
+        background-image: conic-gradient(from 225deg at 100% 0%, var(--destructive) 0deg 90deg, transparent 90deg 360deg);
+        background-repeat: no-repeat;
+        background-position: top right;
+        background-size: 1.1rem 1.1rem;
+    }
+
+    [data-theme='grotesk'] [data-kf-shape='r2-gr-shape-3'] .kp-kpi {
+        --kf-frame: 1px solid transparent;
+        --kf-radius: 0rem;
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-label-rule: 1px solid var(--border-strong);
+        background-image: repeating-radial-gradient(
+            circle at 4px 4px,
+            color-mix(in oklch, var(--foreground) 40%, transparent) 0 1.5px,
+            transparent 1.5px 10px
+        );
+        background-repeat: repeat-y;
+        background-position: left top;
+        background-size: 8px 10px;
+    }
+
+    /* Carrying round 1's loading, tone, interactive and live rules
+       (kpi-d.css) onto each new shape: everything there keys off
+       `[data-kf-loading]`, `[data-kf-tone]`, `[data-kf-interactive]` and
+       `[data-kf-live]` alone, independent of the shape's own structure
+       (fixed-position loading marks, colour-only tone plates, colour and
+       plate-only interactive states, transform-only live updates), so it
+       already reads on all three shapes above. The one exception: hover
+       for interactive 1 only recolours `--kf-hover-border`, which needs a
+       border to colour — shapes 1 and 3 carry none at rest, so give them
+       a transparent 1px frame above and this fixes the width in place. */
+
+    [data-theme='grotesk'] [data-kf-shape^='r2-gr-shape'][data-kf-interactive='1'] a.kp-kpi:hover,
+    [data-theme='grotesk'] [data-kf-shape^='r2-gr-shape'][data-kf-interactive='1'] .kp-kpi--toggle:hover {
+        border-width: 1px;
+        border-style: solid;
+    }
 }

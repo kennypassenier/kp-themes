@@ -1,4 +1,109 @@
-/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new options of group a. */
+/* research/character-kpi, round 2 (Kenny, 2026-10-06 19:24): the new
+   options of group a (phantom, nostromo). Only `shape` gets new options
+   for either theme; `tone` and `interactive` keep round 1's three
+   options (kpi-c.css, kpi-d.css), which are not scoped to a shape key
+   and so already compose with every shape below. `loading` and `live`
+   are settled for both themes and likewise untouched here. */
 
 @layer kp.signature {
+    /* ════════════════════════════════════════════════════════════════
+       phantom — a pulp-noir dossier: the calling card, the red string,
+       the stamp, the torn edge. Round 2 asks for new shapes only.
+       ════════════════════════════════════════════════════════════════ */
+
+    /* r2-ph-shape-1 · the dossier folder: a case-file tab, a steep kraft
+       hatch, a stamped number — echoes "The redacted dossier" (columns)
+       and "The ransom note" (trend). */
+    [data-theme='phantom'] [data-kf-shape='r2-ph-shape-1'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-pat: repeating-linear-gradient(115deg, color-mix(in oklch, var(--border-strong) 10%, transparent) 0 1px, transparent 1px 6px);
+        --kf-shadow: inset 0 0 0 1px color-mix(in oklch, var(--border-strong) 35%, transparent);
+        --kf-label-case: uppercase;
+        --kf-label-style: italic;
+        --kf-label-track: 0.08em;
+        --kf-num-shadow: 1px 1px 0 color-mix(in oklch, var(--primary) 65%, transparent);
+        clip-path: polygon(0 0, 2.4rem 0, 2.9rem 0.5rem, 100% 0.5rem, 100% 100%, 0 100%);
+    }
+
+    /* r2-ph-shape-2 · the target file: a faint bullseye behind the
+       number, a primary ring all round — echoes the network graph's
+       "The target." */
+    [data-theme='phantom'] [data-kf-shape='r2-ph-shape-2'] .kp-kpi {
+        --kf-frame: 2px solid var(--primary);
+        --kf-pat: radial-gradient(
+            circle at calc(100% - 1.6rem) calc(100% - 1.4rem),
+            transparent 0 0.55rem,
+            color-mix(in oklch, var(--primary) 22%, transparent) 0.55rem 0.62rem,
+            transparent 0.62rem 0.95rem,
+            color-mix(in oklch, var(--primary) 16%, transparent) 0.95rem 1.02rem,
+            transparent 1.02rem 100%
+        );
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-num-weight: 700;
+    }
+
+    /* r2-ph-shape-3 · the string-tied card: a cut tag corner, a red
+       grommet with a thread running down — echoes "Stamped tags and
+       string" and "The staple tag." */
+    [data-theme='phantom'] [data-kf-shape='r2-ph-shape-3'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-shadow: 1px 2px 0 0 color-mix(in oklch, var(--border-strong) 55%, transparent);
+        --kf-pat:
+            linear-gradient(
+                166deg,
+                transparent calc(100% - 1.9rem),
+                color-mix(in oklch, var(--primary) 55%, transparent) calc(100% - 1.9rem) calc(100% - 1.86rem),
+                transparent calc(100% - 1.86rem)
+            ),
+            radial-gradient(
+                circle at calc(100% - 0.75rem) 0.6rem,
+                var(--primary) 0 0.08rem,
+                color-mix(in oklch, var(--primary) 50%, transparent) 0.08rem 0.16rem,
+                transparent 0.16rem 100%
+            );
+        clip-path: polygon(0 0, calc(100% - 0.7rem) 0, 100% 0.7rem, 100% 100%, 0 100%);
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       nostromo — MU/TH/UR cassette futurism: the amber CRT, the
+       backlit vents, the readout bank, the bridge klaxon. Round 2 asks
+       for new shapes only, read at the level of the theme's other
+       approved character demos.
+       ════════════════════════════════════════════════════════════════ */
+
+    /* r2-ns-shape-1 · the backlit vents: lit vent slats, a riveted tape
+       label — echoes the meter's own "The backlit vents." */
+    [data-theme='nostromo'] [data-kf-shape='r2-ns-shape-1'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-pat: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0 2px, transparent 2px 7px);
+        --kf-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--primary) 20%, transparent);
+        --kf-label-bg: var(--secondary);
+        --kf-label-shadow: inset 0 0 0 1px color-mix(in oklch, var(--foreground) 22%, transparent);
+        --kf-label-case: uppercase;
+        --kf-label-track: 0.1em;
+        --kf-num-font: var(--theme-font-mono, monospace);
+    }
+
+    /* r2-ns-shape-2 · the readout bank: a bank of stacked readouts
+       between two heavy panel rules — echoes the action columns'
+       "The readout bank." */
+    [data-theme='nostromo'] [data-kf-shape='r2-ns-shape-2'] .kp-kpi {
+        --kf-frame: 1px solid var(--border-strong);
+        --kf-pat: repeating-linear-gradient(0deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 1px, transparent 1px 7px);
+        --kf-shadow: inset 0 3px 0 0 var(--border-strong), inset 0 -3px 0 0 var(--border-strong);
+        --kf-num-font: var(--theme-font-mono, monospace);
+        --kf-num-weight: 700;
+        --kf-num-shadow: 0 0 6px color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    /* r2-ns-shape-3 · the vent grille: a punched grille over a sealed
+       housing ring — echoes the trend tile's "The vent grille." */
+    [data-theme='nostromo'] [data-kf-shape='r2-ns-shape-3'] .kp-kpi {
+        --kf-frame: 2px solid var(--primary);
+        --kf-radius: 0.15rem;
+        --kf-pat:
+            repeating-linear-gradient(0deg, color-mix(in oklch, var(--foreground) 7%, transparent) 0 1px, transparent 1px 5px),
+            repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent) 0 1px, transparent 1px 5px);
+        --kf-num-font: var(--theme-font-mono, monospace);
+    }
 }
