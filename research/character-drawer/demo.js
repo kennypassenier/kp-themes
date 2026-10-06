@@ -17,6 +17,8 @@
 // attributes above, so any combination composes.
 
 import { THEMES } from '../../js/theme-registry.js';
+import R2A from './round2-a.js';
+import R2B from './round2-b.js';
 
 /** @typedef {{ name: string, text: string }} Option */
 /** @typedef {'shape' | 'openclose' | 'highlight' | 'card' | 'next'} Aspect */
@@ -1609,6 +1611,46 @@ const IDEAS = {
     },
 };
 
+/**
+ * Round 1's verdicts (Kenny, 2026-10-06 20:45), in the order of ASPECTS:
+ * shape, openclose, highlight, card, next. A number is settled and not asked
+ * again; '' is open in round 2: light's open/close ("all three seem the
+ * same"), terminal's shape ("too dark or unreadable"), and the shape,
+ * open/close and highlight of high-contrast and brutalism ("not readable").
+ * @type {Record<string, string[]>}
+ */
+const PICKED = {
+    formal: ['1', '3', '1', '1', '2'],
+    light: ['1', '', '1', '1', '1'],
+    dark: ['1', '1', '1', '2', '2'],
+    cyberpunk: ['2', '2', '1', '1', '3'],
+    synthwave: ['2', '2', '1', '1', '2'],
+    pastel: ['3', '2', '3', '3', '2'],
+    terminal: ['', '3', '3', '3', '1'],
+    forest: ['2', '1', '1', '2', '1'],
+    'high-contrast': ['', '', '', '1', '2'],
+    sepia: ['3', '1', '1', '2', '3'],
+    blueprint: ['1', '2', '1', '1', '3'],
+    solstice: ['1', '2', '1', '1', '3'],
+    brutalism: ['', '', '', '1', '3'],
+    deco: ['3', '2', '3', '1', '2'],
+    phantom: ['1', '1', '1', '3', '2'],
+    'shade-light': ['1', '1', '1', '1', '1'],
+    'shade-dark': ['1', '1', '1', '3', '3'],
+    retro: ['2', '1', '1', '1', '3'],
+    grotesk: ['2', '2', '1', '1', '1'],
+    lapis: ['3', '2', '1', '1', '1'],
+    nostromo: ['2', '2', '2', '1', '3'],
+    titanium: ['3', '1', '1', '1', '2'],
+};
+const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
+// Round 2's new options replace an aspect's (each carries its own key, the
+// attribute value its CSS answers to; round 1's are 1, 2, 3).
+for (const file of [R2A, R2B])
+    for (const [t, aspects] of Object.entries(file))
+        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
+const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
+
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="drawer-tour"]'));
 
@@ -1635,6 +1677,16 @@ section.setAttribute(
             // you are targeting for evaluation").
             ...TARGETS[id],
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+            default: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, keptOf(t, id)]),
+            ),
+            fixed: Object.fromEntries(
+                Object.keys(PICKED)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, true]),
+            ),
         })),
     ),
 );
@@ -1642,9 +1694,10 @@ const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-loo
 for (const [theme] of Object.entries(IDEAS)) {
     const p = document.createElement('p');
     p.setAttribute('data-for', theme);
-    p.textContent =
-        'Five picks, each on its own. Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
-        'Press Open and Closed, then walk the tour with Back, Skip and Next at full speed and at ¼; the drawer and the card keep their shape.';
+    const open = ASPECTS.filter(({ id }) => !keptOf(theme, id));
+    p.textContent = open.length
+        ? `Round 2: new options for ${open.map(({ label }) => label.toLowerCase()).join(', ')}; everything else is settled as you picked it.`
+        : 'Approved: every aspect is settled as you picked it.';
     look.append(p);
 }
 
@@ -1730,26 +1783,31 @@ for (const host of section.querySelectorAll('[data-dt]')) if (!host.firstElement
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const ticked = {};
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+const picks = () =>
+    /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? (keptOf(theme(), id) || '1')])));
 
 /** Writes the five aspects on every stage: the preview takes the picks, each row's cell its own option in its own aspect. */
 function compose() {
     const now = picks();
     const preview = section.querySelector('[data-dt-preview]');
-    for (const { id } of ASPECTS) if (preview?.getAttribute(`data-dt-${id}`) !== now[id]) preview?.setAttribute(`data-dt-${id}`, now[id]);
+    for (const { id } of ASPECTS) {
+        const key = keyOf(theme(), id, now[id]);
+        if (preview?.getAttribute(`data-dt-${id}`) !== key) preview?.setAttribute(`data-dt-${id}`, key);
+    }
     for (const cell of section.querySelectorAll('[data-dt-vary]')) {
         const vary = cell.getAttribute('data-dt-vary');
         const option = cell.getAttribute('data-dt-option') ?? '1';
         const stage = cell.querySelector('[data-dt]');
         for (const { id } of ASPECTS) {
-            const value = id === vary ? option : now[id];
+            const value = keyOf(theme(), id, id === vary ? option : now[id]);
             if (stage?.getAttribute(`data-dt-${id}`) !== value) stage?.setAttribute(`data-dt-${id}`, value);
         }
         cell.classList.toggle('dt-picked', ticked[theme()]?.[/** @type {Aspect} */ (vary)] === option);
     }
     const words = section.querySelector('[data-dt-picks]');
     const idea = IDEAS[theme()];
-    if (words && idea) words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1].name}`).join(' · ');
+    if (words && idea)
+        words.textContent = ASPECTS.map(({ id, label }) => `${label}: ${now[id]}, ${idea[id][Number(now[id]) - 1]?.name ?? ''}`).join(' · ');
 }
 
 section.addEventListener('review:choice', (event) => {
@@ -1872,6 +1930,9 @@ function showTheme() {
     for (const el of document.querySelectorAll('[data-dt-theme-name]')) el.textContent = LABEL[now] ?? now;
     for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== now;
     const idea = IDEAS[now];
+    // A settled aspect has no row.
+    for (const box of section.querySelectorAll('[data-dt-aspect]'))
+        /** @type {HTMLElement} */ (box).hidden = Boolean(keptOf(now, /** @type {Aspect} */ (box.getAttribute('data-dt-aspect'))));
     for (const cell of section.querySelectorAll('[data-dt-vary]')) {
         const option = idea?.[/** @type {Aspect} */ (cell.getAttribute('data-dt-vary'))]?.[Number(cell.getAttribute('data-dt-option')) - 1];
         const name = cell.querySelector('[data-dt-name]');
