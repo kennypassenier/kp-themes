@@ -6659,7 +6659,7 @@ Kenny, form v42 (2026-10-06): approved ("Klopt").
 
 Amended by Kenny, 2026-10-06 22:20: "ik sta bij cyberpunk shape, sta op ready en elke keer dat ik naar de volgende optie ga staat die weer op loading vanzelf, ik had toch gezegd van altijd de state te onthouden?" The reviewer's state wins on every page, busy's included: `data-review-forces` is gone from busy, the page's own state applies only until the reviewer picks one. fix-116-M1 now checks that a picked Ready stays on every busy page.
 
-Kenny, 22:24: "ja enkel als de evaluatie een bepaalde state nodig heeft zoals loading, dan mag het dus wel": only the pages whose subject is a state show it (While loading shows Loading, The failed state shows Failed); the reviewer's own state comes back on the next page.
+Kenny, 22:24: "ja enkel als de evaluatie een bepaalde state nodig heeft zoals loading, dan mag het dus wel": only the pages whose judging needs a state show it: Shape, While loading and On a phone show Loading (the panel exists only while loading), The failed state shows Failed; the arrival page and every other demo keep the reviewer's own state.
 
 **1 · What went wrong.** Kenny, 2026-10-06 22:15: "bij cyberpunk krijg ik een
 beoordeling voor shape, maar de drie opties zien er exact hetzelfde uit".
