@@ -6608,3 +6608,43 @@ keyframes of its own.
 
 **9 · When we review the measure.** At the port, when the package plays the
 leave itself.
+
+## fix-115 · On busy the state still jumped back to Loading (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 21:53, on character-busy: "te pas
+en te onpas staat die weer op loading als ik het niet wil, of in een andere
+state, state moet onthouden worden". The third report of fix-112's fault.
+Busy's Draw button (autoplayed on the arrival page and by every Replay) set
+the state to Loading itself; and Q/S walked through Draw, which sits in the
+state group, so a press there changed nothing.
+
+**2 · Which gate let it through.** fix-112's check walked the header, where
+no action sits beside the states; it never walked busy, and never by
+keyboard on the published site.
+
+**3 · Where else the same fault sits.** Every demo action that sets a state
+in its own handler, and every action button inside a state group. Searched
+with `grep -rn "previewState = 'loading'\|data-review-plays" research/character-*/demo.{js,html}`:
+busy's Draw only.
+
+**4 · How we prevent a repeat.** Draw plays the arrival and returns to the
+reviewer's state; an aspect that is a state (the loading picture, the failed
+state) shows it on its own page via `data-review-forces`, and nowhere else;
+Q/S walk only buttons that hold a state.
+
+**5 · What the remedy costs.** On the loading and failed pages the reviewer's
+own state gives way to the state judged there.
+
+**6 · Who enforces it.** Code (research/_review/review.js,
+research/character-busy/demo.js).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs walks busy by keyboard from dark on, picks
+Ready with S, and reads Ready on Shape, arrival and phone after a Replay,
+Loading on the loading page and Failed on the failed page. Measured on the
+published site: exactly that, through cyberpunk. Queued as fix-115-M1.
+
+**8 · Fallback.** If a state still jumps, the dialog shows the kept states
+under the controls with a button to clear them.
+
+**9 · When we review the measure.** With fix-112.
