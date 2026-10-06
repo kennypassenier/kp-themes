@@ -1194,7 +1194,7 @@ dialog.addEventListener('keydown', (event) => {
     // The home-row letters never mean anything to a demo, so they act even when
     // the focus sits in the demo or its controls (after a click there); the
     // arrows, Space and Enter stay the demo's own there [fix-103].
-    const letter = /^Key[A-Z]$/.test(event.code);
+    const letter = /^Key[A-Z]$/.test(event.code) || (event.code === 'Space' && Boolean(steps[index]?.aspect) && !stage.contains(from));
     if (!letter && (event.defaultPrevented || stage.contains(from) || controlsBox.contains(from))) return;
     const step = steps[index];
     // ←/→ flip the option shown on an aspect page; on a page without aspects
@@ -1234,7 +1234,10 @@ dialog.addEventListener('keydown', (event) => {
             Space: () => togglePause(), // the thumb: pause
             KeyP: () => togglePause(),
         }[event.code];
-        if (act && !(event.code === 'Space' && from.matches('button, a, summary'))) {
+        // Space always pauses on an aspect page, also when a button has the
+        // focus: the approve button holds the focus after every page change,
+        // and Space on it picked and moved on (Kenny, 2026-10-06 17:27).
+        if (act) {
             event.preventDefault();
             act();
         }

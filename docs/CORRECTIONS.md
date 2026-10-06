@@ -6284,3 +6284,38 @@ Measured on the fix: 11 demos, every own button mirrored and visible.
 toggle altogether.
 
 **9 · When we review the measure.** When the dialog's layout changes.
+
+## fix-107 · Space sometimes picked and moved on instead of pausing (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 17:27: "soms als ik op spatie druk,
+gaat die toch naar de volgende". Since 8b01f824 Space pauses, but the key
+handler let a focused button keep its own Space; the approve button holds
+the focus after every page change, so Space clicked it: picked, next page.
+
+**2 · Which gate let it through.** My key check pressed Space only after
+clicking the stage, never with the approve button focused as it is after a
+page change.
+
+**3 · Where else the same fault sits.** Every dialog key that a focused
+button also answers to. Searched with
+`grep -n "from.matches('button, a, summary')" research/_review/review.js`:
+Enter still goes to a focused button on purpose (it picks there too); Space
+was the only key with two meanings.
+
+**4 · How we prevent a repeat.** Space always pauses on an aspect page,
+whatever has the focus outside the demo itself.
+
+**5 · What the remedy costs.** Space no longer presses a focused dialog
+button; Enter and a click still do.
+
+**6 · Who enforces it.** Code (the key handler).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs presses Space with the approve button
+focused, after a mirror click and after Replay, and the page stays. Measured
+on the fix: all three stay and toggle the pause. Queued as fix-107-M1.
+
+**8 · Fallback.** If it recurs, the approve button stops taking the focus
+after a page change.
+
+**9 · When we review the measure.** When the dialog's keys change.
