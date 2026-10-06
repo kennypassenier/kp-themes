@@ -1511,6 +1511,7 @@ const IDEAS = {
  * loading, which he approved so much he wants a loading demo of its own.
  * Retro's and grotesk's loading '6' is the plain package loading, the empty
  * cell the dialog flipped to (fixed in the kit since).
+ * Form v39 (2026-10-06 21:17): titanium's loading is The anodising bath (1).
  * @type {Record<string, string[]>}
  */
 const PICKED = {
@@ -1535,7 +1536,7 @@ const PICKED = {
     grotesk: ['1', '6', '1', '2', '2'],
     lapis: ['3', '1', '1', '2', '2'],
     nostromo: ['2', '2', '1', '2', '2'],
-    titanium: ['1', '', '1', '2', '3'],
+    titanium: ['1', '1', '1', '2', '3'],
 };
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an aspect's, per aspect (each carries its

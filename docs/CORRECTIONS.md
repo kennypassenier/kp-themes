@@ -6530,6 +6530,8 @@ as a line under the controls with a button to clear them.
 
 ## fix-113 · The dialog flipped to options a theme does not have (2026-10-06)
 
+Kenny, form v39 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny picked "6" for the key figures' loading in
 retro and grotesk (2026-10-06 20:59), themes with three loading options. A
 choice lists as many options as the theme with the most (titanium's six),

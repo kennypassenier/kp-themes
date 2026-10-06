@@ -83,8 +83,6 @@ export const PAGES = [
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
             { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
-            // The character round, eleventh component: the plain key figure tile, shape/loading/tone/interactive/live, one pick per aspect (formal and titanium built first).
-            { href: 'research/character-kpi/demo.html', label: 'A key figure of its own, per theme' },
             // The character round, twelfth component: the state word, shape/tone/change, one pick per aspect (formal and titanium built first).
             { href: 'research/character-state/demo.html', label: 'A state word of its own, per theme' },
             // The character round, thirteenth component: the page header, shape/menu-open-close/interactive, one pick per aspect (formal and titanium built first).
@@ -101,6 +99,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-06 21:17: Kenny approved the key figure in all 22 themes (research/character-kpi/decided.json); it moves into the registers at the port.
+            { href: 'research/character-kpi/demo.html', label: 'A key figure of its own, per theme' },
             // Decided 2026-10-06 21:02: Kenny approved the time chart in all 22 themes, one pick per aspect (research/character-chart/decided.json); it moves into the registers at the character round's port.
             { href: 'research/character-chart/demo.html', label: 'A time chart of its own, per theme' },
             // Decided 2026-10-06 21:03: Kenny approved the month heatmap in all 22 themes (research/character-calendar/decided.json); it moves into the registers at the port.

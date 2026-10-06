@@ -1,0 +1,160 @@
+{
+    "decided": "2026-10-06 21:17 Brussels, Kenny: 22 of 22 approved (character-kpi; titanium loading The anodising bath, form v39)",
+    "attributes": "data-kf-<aspect>=\"<key>\" on the strip wrapper [data-kf], research/character-kpi/ (kpi.css, kpi-a..d.css, round2-a..d)",
+    "picks": {
+        "formal": {
+            "shape": "2",
+            "loading": "3",
+            "tone": "3",
+            "interactive": "2",
+            "live": "3"
+        },
+        "light": {
+            "shape": "3",
+            "loading": "2",
+            "tone": "3",
+            "interactive": "2",
+            "live": "2"
+        },
+        "dark": {
+            "shape": "3",
+            "loading": "1",
+            "tone": "3",
+            "interactive": "1",
+            "live": "3"
+        },
+        "cyberpunk": {
+            "shape": "3",
+            "loading": "3",
+            "tone": "2",
+            "interactive": "1",
+            "live": "3"
+        },
+        "synthwave": {
+            "shape": "3",
+            "loading": "1",
+            "tone": "1",
+            "interactive": "2",
+            "live": "3"
+        },
+        "pastel": {
+            "shape": "3",
+            "loading": "3",
+            "tone": "1",
+            "interactive": "1",
+            "live": "3"
+        },
+        "terminal": {
+            "shape": "2",
+            "loading": "2",
+            "tone": "2",
+            "interactive": "2",
+            "live": "1"
+        },
+        "forest": {
+            "shape": "2",
+            "loading": "2",
+            "tone": "3",
+            "interactive": "2",
+            "live": "3"
+        },
+        "high-contrast": {
+            "shape": "1",
+            "loading": "1",
+            "tone": "3",
+            "interactive": "2",
+            "live": "1"
+        },
+        "sepia": {
+            "shape": "2",
+            "loading": "3",
+            "tone": "3",
+            "interactive": "2",
+            "live": "3"
+        },
+        "blueprint": {
+            "shape": "3",
+            "loading": "3",
+            "tone": "3",
+            "interactive": "3",
+            "live": "3"
+        },
+        "solstice": {
+            "shape": "2",
+            "loading": "3",
+            "tone": "1",
+            "interactive": "1",
+            "live": "2"
+        },
+        "brutalism": {
+            "shape": "2",
+            "loading": "3",
+            "tone": "2",
+            "interactive": "3",
+            "live": "1"
+        },
+        "deco": {
+            "shape": "1",
+            "loading": "3",
+            "tone": "1",
+            "interactive": "1",
+            "live": "3"
+        },
+        "phantom": {
+            "shape": "r2-ph-shape-2",
+            "loading": "2",
+            "tone": "1",
+            "interactive": "1",
+            "live": "3"
+        },
+        "shade-light": {
+            "shape": "3",
+            "loading": "3",
+            "tone": "1",
+            "interactive": "2",
+            "live": "3"
+        },
+        "shade-dark": {
+            "shape": "2",
+            "loading": "3",
+            "tone": "1",
+            "interactive": "2",
+            "live": "2"
+        },
+        "retro": {
+            "shape": "r2-rt-shape-1",
+            "loading": "6",
+            "tone": "1",
+            "interactive": "1",
+            "live": "2"
+        },
+        "grotesk": {
+            "shape": "r2-gr-shape-1",
+            "loading": "6",
+            "tone": "1",
+            "interactive": "2",
+            "live": "2"
+        },
+        "lapis": {
+            "shape": "3",
+            "loading": "1",
+            "tone": "1",
+            "interactive": "2",
+            "live": "2"
+        },
+        "nostromo": {
+            "shape": "r2-ns-shape-2",
+            "loading": "2",
+            "tone": "1",
+            "interactive": "2",
+            "live": "2"
+        },
+        "titanium": {
+            "shape": "r2-ti-shape-1",
+            "loading": "r2-ti-load-1",
+            "tone": "1",
+            "interactive": "r2-ti-int-2",
+            "live": "3"
+        }
+    }
+}

@@ -1,5 +1,7 @@
 # A key figure of its own, per theme
 
+**Decided (2026-10-06 21:17).** Kenny approved all 22 themes, one pick per aspect; the picks, as the attribute keys the demo sets, are in [decided.json](decided.json) (shape / loading / tone / interactive / live). Retro's and grotesk's loading `6` is the plain package skeleton in the picked shape (fix-113). Titanium's loading, The anodising bath, is also the start of a titanium-only demo of every loading element, built once every demo is approved (Kenny, 2026-10-06 20:59 and 21:20).
+
 Kenny, phase 1 brief (2026-10-05): the character round, one component at a
 time, all 22 themes in one demo. This is the eleventh component: the plain
 key figure tile (`.kp-kpi`, css/components.css, "A row of key figures";
