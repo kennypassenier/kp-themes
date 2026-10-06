@@ -1,4 +1,186 @@
-/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new options of group b. */
+/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new
+   options of group b. The tone of a tile only, synthwave and sepia.
+   Selectors follow tiles.css: one attribute, one rule; the shared
+   `[data-ti] .kp-card` scaffolding (content, position, isolation) set
+   there is reused, never repeated — nothing here re-sets `position` on
+   `.kp-card` or `[data-tl-mark]`, both already positioned by tiles.css.
+   The tone aspect is static (tiles.css carries no tone keyframes either);
+   nothing here animates. Colour: tokens only, one tone's colour per
+   coloured part — a generic `[data-kp-tone]` rule exists only as a
+   harmless fallback, always overridden by the `ok` / `warning` /
+   `destructive` rule that follows it. */
 
 @layer kp.signature {
+    /* ═══════════════════════════ SYNTHWAVE · tone (round 2) ═══════════ */
+
+    /* The neon pill: the mark swells into a near-white core (Synthwave
+       '84's own rule — the glow lives in the shadow, the core never
+       dims) wrapped in a bloom of the tone's colour, full strength. */
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        inline-size: 1.4rem;
+        block-size: 0.7rem;
+        border-radius: 999px;
+        background: var(--kp-core, var(--foreground));
+        box-shadow:
+            0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--warning-foreground) 75%, transparent),
+            0 0 16px color-mix(in oklch, var(--warning-foreground) 45%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow:
+            0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--success-foreground) 75%, transparent),
+            0 0 16px color-mix(in oklch, var(--success-foreground) 45%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        box-shadow:
+            0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--warning-foreground) 75%, transparent),
+            0 0 16px color-mix(in oklch, var(--warning-foreground) 45%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow:
+            0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--destructive) 75%, transparent),
+            0 0 16px color-mix(in oklch, var(--destructive) 45%, transparent);
+    }
+
+    /* The grid-floor band: a band at the card's own foot, a hairline
+       white scanline on its top edge, filled solid in the tone's colour —
+       never a dim wash of it. */
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-2'] .kp-card[data-kp-tone]::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 0.4rem;
+        border-radius: 0 0 var(--ti-radius, var(--radius, 0.5rem)) var(--ti-radius, var(--radius, 0.5rem));
+        background-image: linear-gradient(to bottom, var(--kp-core, var(--foreground)) 0 1px, var(--warning-foreground) 1px 100%);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-2'] .kp-card[data-kp-tone='ok']::before {
+        background-image: linear-gradient(to bottom, var(--kp-core, var(--foreground)) 0 1px, var(--success-foreground) 1px 100%);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-2'] .kp-card[data-kp-tone='warning']::before {
+        background-image: linear-gradient(to bottom, var(--kp-core, var(--foreground)) 0 1px, var(--warning-foreground) 1px 100%);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-2'] .kp-card[data-kp-tone='destructive']::before {
+        background-image: linear-gradient(to bottom, var(--kp-core, var(--foreground)) 0 1px, var(--destructive) 1px 100%);
+    }
+
+    /* The neon spotlight ring: the mark hollows into a lit ring and the
+       title takes the same glow, so the tone reads twice over, always in
+       the one colour. */
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone] [data-tl-mark] {
+        background: transparent;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--warning-foreground) 70%, transparent),
+            0 0 14px color-mix(in oklch, var(--warning-foreground) 40%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone] .kp-card__title {
+        color: var(--warning-foreground);
+        text-shadow: 0 0 8px color-mix(in oklch, var(--warning-foreground) 55%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        box-shadow:
+            inset 0 0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--success-foreground) 70%, transparent),
+            0 0 14px color-mix(in oklch, var(--success-foreground) 40%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='ok'] .kp-card__title {
+        color: var(--success-foreground);
+        text-shadow: 0 0 8px color-mix(in oklch, var(--success-foreground) 55%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        box-shadow:
+            inset 0 0 0 2px var(--kp-core, var(--foreground)),
+            0 0 8px color-mix(in oklch, var(--destructive) 70%, transparent),
+            0 0 14px color-mix(in oklch, var(--destructive) 40%, transparent);
+    }
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='destructive'] .kp-card__title {
+        color: var(--destructive);
+        text-shadow: 0 0 8px color-mix(in oklch, var(--destructive) 55%, transparent);
+    }
+
+    /* ═══════════════════════════ SEPIA · tone (round 2) ════════════════ */
+
+    /* The wax seal: a pressed wax medallion by the mark, glossy and
+       embossed, cast in the tone's own ink. */
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        inline-size: 0.95rem;
+        block-size: 0.95rem;
+        border-radius: 50%;
+        background-image: radial-gradient(
+            circle at 35% 30%,
+            color-mix(in oklch, var(--warning-foreground) 55%, white) 0%,
+            var(--warning-foreground) 55%,
+            color-mix(in oklch, var(--warning-foreground) 70%, var(--foreground) 30%) 100%
+        );
+        box-shadow:
+            inset 0 1px 1px color-mix(in oklch, var(--card) 45%, transparent),
+            0 1px 2px color-mix(in oklch, var(--foreground) 35%, transparent);
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background-image: radial-gradient(
+            circle at 35% 30%,
+            color-mix(in oklch, var(--success-foreground) 55%, white) 0%,
+            var(--success-foreground) 55%,
+            color-mix(in oklch, var(--success-foreground) 70%, var(--foreground) 30%) 100%
+        );
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background-image: radial-gradient(
+            circle at 35% 30%,
+            color-mix(in oklch, var(--destructive) 55%, white) 0%,
+            var(--destructive) 55%,
+            color-mix(in oklch, var(--destructive) 70%, var(--foreground) 30%) 100%
+        );
+    }
+
+    /* Circled in ink: a hand-drawn, tilted ring circles the title in the
+       tone's own ink. */
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-2'] .kp-card[data-kp-tone] .tl-head {
+        position: relative;
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-2'] .kp-card[data-kp-tone] .tl-head::after {
+        content: '';
+        position: absolute;
+        inset: -0.3rem -0.5rem;
+        border: 2px solid var(--warning-foreground);
+        border-radius: 50%;
+        transform: rotate(-3deg);
+        pointer-events: none;
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-2'] .kp-card[data-kp-tone='ok'] .tl-head::after {
+        border-color: var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-2'] .kp-card[data-kp-tone='destructive'] .tl-head::after {
+        border-color: var(--destructive);
+    }
+
+    /* The tipped-in plate: a small plate tipped in at an angle over the
+       corner, washed in the tone's own colour. */
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-3'] .kp-card[data-kp-tone] .tl-head {
+        position: relative;
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-3'] .kp-card[data-kp-tone] .tl-head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.4rem;
+        inset-inline-end: -0.3rem;
+        inline-size: 1.4rem;
+        block-size: 1rem;
+        background: var(--warning-foreground);
+        box-shadow:
+            inset 0 0 0 1px color-mix(in oklch, var(--foreground) 50%, transparent),
+            0 1px 2px color-mix(in oklch, var(--foreground) 30%, transparent);
+        transform: rotate(-6deg);
+        pointer-events: none;
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-3'] .kp-card[data-kp-tone='ok'] .tl-head::before {
+        background: var(--success-foreground);
+    }
+    [data-theme='sepia'] [data-ti-tone='r2-se-tone-3'] .kp-card[data-kp-tone='destructive'] .tl-head::before {
+        background: var(--destructive);
+    }
 }

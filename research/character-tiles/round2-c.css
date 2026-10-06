@@ -1,4 +1,150 @@
-/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new options of group c. */
+/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new options of group c.
+   Phantom only: hover (r2-ph-hover-1..3) and live (r2-ph-live-1..3).
+   Phantom's tone fix lives in tiles-e.css, where phantom's tone rules
+   already sit — not here. */
 
 @layer kp.signature {
+    /* ───────────────────────────────── phantom ────────────────────────── */
+
+    /* 5 · Hover and focus (round 2: the round 1 options were not visible) */
+
+    /* r2-ph-hover-1 · Snatched off the board. translate/rotate, not
+       transform: phantom's "how the tiles arrive" (arrival='2', "the
+       card is thrown", tiles-e.css) plays a one-shot animation with
+       `animation-fill-mode: both` on .kp-card's own `transform`, and
+       every demo board carries that settled arrival attribute — a
+       running or finished-and-held CSS Animation always outranks a
+       normal declaration on the same property, specificity or not. The
+       standalone translate/rotate properties are untouched by it. */
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card.tl-hover-sim,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card:has([data-tl-link]:focus-visible) {
+        translate: 0 -6px;
+        rotate: -1.2deg;
+        box-shadow: 6px 6px 0 0 var(--primary);
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link]:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link]:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-decoration: none;
+        border-radius: 0;
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link]:focus-visible {
+        outline: 3px dashed var(--primary);
+        outline-offset: 4px;
+    }
+
+    /* r2-ph-hover-2 · Stamped again */
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] .kp-card:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] .kp-card.tl-hover-sim,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] .kp-card:has([data-tl-link]:focus-visible) {
+        rotate: -2deg;
+        box-shadow:
+            0 0 0 3px var(--primary),
+            0 0 0 6px color-mix(in oklch, var(--primary) 40%, transparent);
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] [data-tl-link]:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] [data-tl-link]:focus-visible {
+        color: var(--primary);
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-2'] [data-tl-link]:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 3px;
+    }
+
+    /* r2-ph-hover-3 · The string snaps taut */
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] .kp-card:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] .kp-card.tl-hover-sim,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow: inset 0 3px 0 0 var(--primary);
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] [data-tl-link]:hover,
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] [data-tl-link]:focus-visible {
+        color: var(--primary);
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='phantom'] [data-ti-hover='r2-ph-hover-3'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 0;
+    }
+
+    /* 6 · Live update (round 2: "need better options") */
+
+    /* r2-ph-live-1 · Punched through */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-live='r2-ph-live-1'] [data-tl-flash] [data-tl-mark] {
+            animation: tl-c-r2-ph-live-hole 0.5s steps(3) both;
+        }
+    }
+    @keyframes tl-c-r2-ph-live-hole {
+        0%,
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 transparent;
+        }
+        40% {
+            transform: scale(1.9);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 65%, transparent);
+        }
+        70% {
+            transform: scale(0.85);
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }
+
+    /* r2-ph-live-2 · The dossier is refiled. translate/rotate, same
+       reason as r2-ph-hover-1: a running Animation on `transform` always
+       wins over a normal declaration, and phantom's arrival='2' holds
+       one on every card via `animation-fill-mode: both`. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-live='r2-ph-live-2'] [data-tl-flash] {
+            animation: tl-c-r2-ph-live-shiver 0.45s steps(5) both;
+        }
+    }
+    @keyframes tl-c-r2-ph-live-shiver {
+        0%,
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+        15% {
+            translate: -0.5rem 0;
+            rotate: -1.5deg;
+        }
+        35% {
+            translate: 0.4rem 0;
+            rotate: 1deg;
+        }
+        55% {
+            translate: -0.25rem 0;
+            rotate: -0.6deg;
+        }
+        80% {
+            translate: 0.15rem 0;
+            rotate: 0.3deg;
+        }
+    }
+
+    /* r2-ph-live-3 · The red cut flashes */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-ti-live='r2-ph-live-3'] [data-tl-flash]::after {
+            content: '';
+            position: absolute;
+            inset-block: 10%;
+            inset-inline-start: 0;
+            inline-size: 12%;
+            background: var(--primary);
+            transform: translateX(-200%) rotate(10deg);
+            animation: tl-c-r2-ph-live-cut 0.5s ease-in both;
+        }
+    }
+    @keyframes tl-c-r2-ph-live-cut {
+        to {
+            transform: translateX(950%) rotate(10deg);
+        }
+    }
 }

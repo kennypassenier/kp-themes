@@ -1,4 +1,395 @@
-/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new options of group a. */
+/* research/character-tiles, round 2 (Kenny, 2026-10-06 18:04): the new options of group a.
+   Cyberpunk only (loading, arrival, tone, live). Shape and hover are
+   settled and keep their rules in tiles-a.css; nothing here touches them.
+   Selectors follow tiles.css: one attribute, one rule, the shared
+   `[data-ti-loading] [data-kp-busy]::after` and `[data-ti] .kp-card`
+   scaffolding (content, position, isolation) already set there is reused,
+   never repeated. Colour: tokens only, one tone's colour per coloured
+   part. Every keyframe sits inside its own `prefers-reduced-motion:
+   no-preference` block and is named after its key. */
 
 @layer kp.signature {
+    /* ── cyberpunk · while loading (round 2) ───────────────────────────── */
+
+    /* The lock-on reticle: a corner bracket sweeps across the body and
+       dwells at each end, as the graph's target lock and the meter's
+       scanline already do. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-1'] [data-kp-busy]::after {
+        inset-block-start: 32%;
+        inset-inline-start: 10%;
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-block-start: 2px solid var(--primary);
+        border-inline-start: 2px solid var(--primary);
+        box-shadow: -1px -1px 6px color-mix(in oklch, var(--primary) 70%, transparent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-1'] [data-kp-busy]::after {
+            animation: r2-cy-load-1 1.2s ease-in-out infinite;
+        }
+    }
+    @keyframes r2-cy-load-1 {
+        0%,
+        100% {
+            inset-inline-start: 10%;
+        }
+        45%,
+        55% {
+            inset-inline-start: calc(100% - 1.75rem);
+        }
+    }
+
+    /* Data shard flicker: a cluster of shards jumps and breaks apart
+       across the body, as the data shard calendar and the data-shard
+       strip columns already stand. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-2'] [data-kp-busy]::after {
+        inset-inline-start: 14%;
+        inset-block-start: 42%;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-2'] [data-kp-busy]::after {
+            animation: r2-cy-load-2 0.8s steps(1) infinite;
+        }
+    }
+    @keyframes r2-cy-load-2 {
+        0%,
+        24% {
+            inset-inline-start: 14%;
+            box-shadow:
+                1.2rem -0.3rem 0 var(--primary),
+                2.4rem 0.4rem 0 var(--primary);
+        }
+        25%,
+        49% {
+            inset-inline-start: 34%;
+            box-shadow: 1.6rem 0.2rem 0 var(--primary);
+        }
+        50%,
+        74% {
+            inset-inline-start: 54%;
+            box-shadow:
+                1.1rem -0.35rem 0 var(--primary),
+                2.2rem 0.3rem 0 var(--primary);
+        }
+        75%,
+        100% {
+            inset-inline-start: 74%;
+            box-shadow: none;
+        }
+    }
+
+    /* Hazard roster strobe: the hazard band along the footer strobes hard
+       between bright and dim, as the hazard roster's own loading does. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-3'] [data-kp-busy]::after {
+        inset-inline: 0.75rem;
+        inset-block-end: 0.6rem;
+        block-size: 0.4rem;
+        background-image: repeating-linear-gradient(135deg, var(--warning) 0 6px, color-mix(in oklch, var(--warning) 70%, black) 6px 12px);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-3'] [data-kp-busy]::after {
+            animation: r2-cy-load-3 0.6s steps(1) infinite;
+        }
+    }
+    @keyframes r2-cy-load-3 {
+        0%,
+        49% {
+            filter: brightness(1);
+        }
+        50%,
+        100% {
+            filter: brightness(0.35);
+        }
+    }
+
+    /* Signal burst ping: a ring pings outward from the mark and dies
+       away, as the meter's own data burst arrives. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-4'] [data-kp-busy]::after {
+        inset-inline-start: 1.1rem;
+        inset-block-end: 0.5rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-4'] [data-kp-busy]::after {
+            animation: r2-cy-load-4 1.2s ease-out infinite;
+        }
+    }
+    @keyframes r2-cy-load-4 {
+        0% {
+            box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 70%, transparent);
+        }
+        70% {
+            box-shadow: 0 0 0 1.1rem color-mix(in oklch, var(--primary) 0%, transparent);
+        }
+        100% {
+            box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent);
+        }
+    }
+
+    /* Black ice breach: a jagged ice-blue crack creeps across the body in
+       hard steps, breaching the chart's own black ice. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-5'] [data-kp-busy]::after {
+        inset-block-start: 20%;
+        inset-inline-start: -8%;
+        inline-size: 0.4rem;
+        block-size: 60%;
+        background: linear-gradient(
+            180deg,
+            transparent,
+            color-mix(in oklch, var(--primary) 70%, white) 40%,
+            transparent 60%,
+            color-mix(in oklch, var(--primary) 70%, white) 100%
+        );
+        clip-path: polygon(40% 0, 100% 10%, 60% 30%, 100% 55%, 50% 75%, 100% 100%, 0 100%, 0 0);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-5'] [data-kp-busy]::after {
+            animation: r2-cy-load-5 1.4s steps(6) infinite;
+        }
+    }
+    @keyframes r2-cy-load-5 {
+        from {
+            inset-inline-start: -8%;
+        }
+        to {
+            inset-inline-start: 100%;
+        }
+    }
+
+    /* Chrome wipe gloss: a diagonal chrome gloss wipes across the whole
+       plate and back, as the chart's own chrome wipe already does. */
+    [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-6'] [data-kp-busy]::after {
+        inset: 0;
+        background-image: linear-gradient(115deg, transparent 30%, color-mix(in oklch, var(--primary) 55%, white) 48%, transparent 66%);
+        background-size: 220% 100%;
+        background-repeat: no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-loading='r2-cy-load-6'] [data-kp-busy]::after {
+            animation: r2-cy-load-6 1.3s ease-in-out infinite;
+        }
+    }
+    @keyframes r2-cy-load-6 {
+        0% {
+            background-position: -120% 0;
+        }
+        100% {
+            background-position: 120% 0;
+        }
+    }
+
+    /* ── cyberpunk · how the tiles arrive (round 2) ─────────────────────── */
+
+    /* Glitch in: the tile tears through a few torn, over-bright frames
+       before it locks still, as the calendar's own month glitches in. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:not([data-kp-busy]) {
+            animation: r2-cy-arrive-2 0.4s steps(4) both;
+        }
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.08s;
+        }
+    }
+    @keyframes r2-cy-arrive-2 {
+        0% {
+            clip-path: inset(0 0 0 0);
+            filter: brightness(2) saturate(0);
+            transform: translateX(0.4rem);
+        }
+        40% {
+            clip-path: inset(0 40% 0 0);
+            filter: brightness(0.3);
+            transform: translateX(-0.3rem);
+        }
+        70% {
+            clip-path: inset(0 0 0 20%);
+            filter: brightness(1.6);
+            transform: translateX(0.15rem);
+        }
+        100% {
+            clip-path: inset(0 0 0 0);
+            filter: brightness(1);
+            transform: translateX(0);
+        }
+    }
+
+    /* Packet race: a bright trace races once around the tile's edge
+       before it holds, as the graph's own packet race already runs. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:not([data-kp-busy]) {
+            animation: r2-cy-arrive-3 0.5s steps(1) both;
+        }
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+            animation-delay: 0.12s;
+        }
+    }
+    @keyframes r2-cy-arrive-3 {
+        0% {
+            box-shadow: inset 0 2px 0 var(--primary);
+        }
+        33% {
+            box-shadow: inset 2px 0 0 var(--primary);
+        }
+        66% {
+            box-shadow: inset 0 -2px 0 var(--primary);
+        }
+        100% {
+            box-shadow: none;
+        }
+    }
+
+    /* ── cyberpunk · tone (round 2) ──────────────────────────────────────── */
+
+    /* Packet sync tag: a top band plus a cut-corner tag with a faint
+       duplicate a hair off to the side, as if two packets had not yet
+       synced, as the meter's own packet sync already reads. */
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone] {
+        border-block-start: 3px solid var(--primary);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='ok'] {
+        border-block-start-color: var(--success);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='warning'] {
+        border-block-start-color: var(--warning);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='destructive'] {
+        border-block-start-color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        border-radius: 0;
+        clip-path: polygon(20% 0, 100% 0, 80% 100%, 0 100%);
+        background: var(--primary);
+        box-shadow: 3px 0 0 color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+        box-shadow: 3px 0 0 color-mix(in oklch, var(--success) 45%, transparent);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
+        box-shadow: 3px 0 0 color-mix(in oklch, var(--warning) 45%, transparent);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
+        box-shadow: 3px 0 0 color-mix(in oklch, var(--destructive) 45%, transparent);
+    }
+
+    /* Glitch-slice frame: boxed all round, the box torn by one skewed
+       slice through a corner, as a glitch tears the trend tile's own
+       hazard frame. */
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone] {
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone]::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -2px;
+        inset-inline-end: 12%;
+        inline-size: 2px;
+        block-size: calc(100% + 4px);
+        background: var(--primary);
+        transform: skewX(-20deg);
+        pointer-events: none;
+        z-index: 1;
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='ok'] {
+        box-shadow: 0 0 0 2px var(--success);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='ok']::before {
+        background: var(--success);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='warning'] {
+        box-shadow: 0 0 0 2px var(--warning);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='warning']::before {
+        background: var(--warning);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='destructive'] {
+        box-shadow: 0 0 0 2px var(--destructive);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-2'] .kp-card[data-kp-tone='destructive']::before {
+        background: var(--destructive);
+    }
+
+    /* Lock-on corners: outlined in its own colour with two opposite
+       corners notched off, reticle-style, as the graph's own target lock
+       already marks a node. */
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-3'] .kp-card[data-kp-tone] {
+        box-shadow: 0 0 0 2px var(--primary);
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-3'] .kp-card[data-kp-tone='ok'] {
+        box-shadow: 0 0 0 2px var(--success);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-3'] .kp-card[data-kp-tone='warning'] {
+        box-shadow: 0 0 0 2px var(--warning);
+    }
+    [data-theme='cyberpunk'] [data-ti-tone='r2-cy-tone-3'] .kp-card[data-kp-tone='destructive'] {
+        box-shadow: 0 0 0 2px var(--destructive);
+    }
+
+    /* ── cyberpunk · live update (round 2) ──────────────────────────────── */
+
+    /* Shaken loose: the tile jitters on the spot in hard steps, as the
+       strip columns' own shaken update already does. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-live='r2-cy-live-2'] [data-tl-flash] {
+            animation: r2-cy-live-2 0.4s steps(6);
+        }
+    }
+    @keyframes r2-cy-live-2 {
+        0%,
+        100% {
+            transform: translate(0, 0);
+        }
+        16% {
+            transform: translate(0.2rem, -0.15rem);
+        }
+        33% {
+            transform: translate(-0.2rem, 0.1rem);
+        }
+        50% {
+            transform: translate(0.15rem, 0.15rem);
+        }
+        66% {
+            transform: translate(-0.15rem, -0.1rem);
+        }
+        83% {
+            transform: translate(0.1rem, 0);
+        }
+    }
+
+    /* Scanline surge: a bright scanline streaks once from top to bottom
+       of the plate and dies away, as the graph's own neon surge runs
+       through it. */
+    [data-theme='cyberpunk'] [data-ti-live='r2-cy-live-3'] [data-tl-flash]::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+        z-index: 2;
+        inset-inline: 0;
+        inset-block-start: -10%;
+        block-size: 3px;
+        background: var(--primary);
+        box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 80%, transparent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ti-live='r2-cy-live-3'] [data-tl-flash]::after {
+            animation: r2-cy-live-3 0.5s ease-out;
+        }
+    }
+    @keyframes r2-cy-live-3 {
+        from {
+            inset-block-start: -10%;
+        }
+        to {
+            inset-block-start: 110%;
+        }
+    }
 }

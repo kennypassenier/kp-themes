@@ -803,38 +803,60 @@
 
     /* ── phantom · tone ──────────────────────────────────────────────── */
 
-    /* The stamped ring: the note on a stamped ring set askew. */
+    /* The stamped ring: the note on a stamped ring set askew. Fixed
+       (Kenny, 2026-10-06 18:04: "when it's 'ok' it still shows red") —
+       the shape option's own mark keeps `background: var(--primary)`
+       (tiles-c.css, [data-ti-shape='2'] [data-tl-mark]) and this rule
+       only overrode the ring's border-color, never the fill, so the
+       dot stayed red under every tone. The ring now also carries its
+       tone's own colour as the fill: the dot is entirely that colour,
+       border and all. */
     [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
         border: 2px solid var(--primary);
         border-radius: 50%;
-        background: transparent;
+        background: var(--primary);
         transform: rotate(-12deg) scale(1.4);
     }
     [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
         border-color: var(--success);
+        background: var(--success);
     }
     [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
         border-color: var(--warning);
+        background: var(--warning);
     }
     [data-theme='phantom'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
         border-color: var(--destructive);
+        background: var(--destructive);
     }
 
-    /* The status plate: the note on its own status plate. */
+    /* The status plate: the note on its own status plate. Same fix: the
+       plate's border took the tone, but the mark/dot (still the shape's
+       own red) did not — now overridden here too. */
     [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
         border: 2px solid var(--primary);
     }
     [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
         border-color: var(--success);
     }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+    }
     [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
         border-color: var(--warning);
+    }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
     }
     [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
         border-color: var(--destructive);
     }
+    [data-theme='phantom'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
+    }
 
-    /* The askew card: stamped askew on the label, in a ruled border. */
+    /* The askew card: stamped askew on the label, in a ruled border. Same
+       fix: the mark/dot now also takes the tone's colour entirely. */
     [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
         border-inline-start: 4px solid var(--primary);
         transform: rotate(-0.6deg);
@@ -842,11 +864,20 @@
     [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
         border-inline-start-color: var(--success);
     }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        background: var(--success);
+    }
     [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
         border-inline-start-color: var(--warning);
     }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--warning);
+    }
     [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
         border-inline-start-color: var(--destructive);
+    }
+    [data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        background: var(--destructive);
     }
 
     /* ── shade-light · how the tiles arrive ─────────────────────────── */
