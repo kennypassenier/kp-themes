@@ -6245,3 +6245,40 @@ package test for the menu's anchor.
 
 **9 · When we review the measure.** When js/menu-button.js changes how it
 places the menu.
+
+## fix-106 · The review dialog folded the demo's controls away (2026-10-06)
+
+**1 · What went wrong.** Kenny, 2026-10-06 14:53, judging the tiles: "Ik heb
+toch al gezegd dat alle knoppen die helpen om de demo te beoordelen ook in
+de dialog moeten zijn, ik gebruik enkel de dialog om te beoordelen! fix
+het". The one-aspect-per-page mode (12:15, research/_review/review.js)
+closed the controls panel on every aspect page; every button was mirrored
+but out of sight behind its summary line.
+
+**2 · Which gate let it through.** No check asked whether the mirrored
+controls were visible; the walk-through counted the rows on each page only.
+
+**3 · Where else the same fault sits.** Every place the kit hides or folds
+what Kenny needs to judge. Searched with
+`grep -n "open = false\|hidden = true\|data-review-off" research/_review/review.js`:
+the fold was the only one touching the controls; data-review-off sets aside
+other aspects' rows only, which is what he asked for.
+
+**4 · How we prevent a repeat.** The controls panel always stands open in
+the dialog; memory carries "never fold or hide the demo's controls in the
+dialog".
+
+**5 · What the remedy costs.** The panel takes its height on every page.
+
+**6 · Who enforces it.** Code (controlsBox.open = true on every page) and
+discipline (memory).
+
+**7 · How and when we measure.** At the 9.3.0 release suite,
+tests/review-kit-dialog.spec.mjs counts in one demo that every own control
+has a visible mirror in the dialog on every aspect page. Queued as fix-106-M1.
+Measured on the fix: 11 demos, every own button mirrored and visible.
+
+**8 · Fallback.** If a page still hides one, the panel loses its summary
+toggle altogether.
+
+**9 · When we review the measure.** When the dialog's layout changes.

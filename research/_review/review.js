@@ -729,9 +729,10 @@ async function show(at) {
         stage.scrollTop = 0;
         mirrorControls(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section));
         list.replaceChildren(...shownPairs.map((pair) => rowFor(pair, step.aspect ?? null)));
-        // One aspect per page: its motion plays by itself, so the controls fold
-        // away (still one click to open) and the intro says what to do here.
-        if (step.aspect) controlsBox.open = false;
+        // The demo's controls always stand open in the dialog: Kenny judges
+        // only there (2026-10-06 14:53: "alle knoppen die helpen om de demo te
+        // beoordelen ook in de dialog ... fix het"), never folded away.
+        controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.aspect
             ? 'One aspect per page, its motion already playing. Pick the option you want, or tick None of these and say what should change.'
             : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
