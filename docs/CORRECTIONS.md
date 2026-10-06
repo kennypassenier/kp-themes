@@ -6248,6 +6248,8 @@ places the menu.
 
 ## fix-106 · The review dialog folded the demo's controls away (2026-10-06)
 
+Approved by Kenny in form v31 (2026-10-06, "fix-106: Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 14:53, judging the tiles: "Ik heb
 toch al gezegd dat alle knoppen die helpen om de demo te beoordelen ook in
 de dialog moeten zijn, ik gebruik enkel de dialog om te beoordelen! fix
