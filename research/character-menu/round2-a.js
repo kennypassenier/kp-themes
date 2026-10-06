@@ -1,0 +1,2 @@
+/* research/character-menu, round 2 (Kenny, 2026-10-06 12:59): the new options of group a; filled by its helper. */
+export default {};
