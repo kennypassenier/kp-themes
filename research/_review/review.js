@@ -1180,7 +1180,12 @@ dialog.addEventListener('keydown', (event) => {
     // the step keys stay off, so a key meant for the demo never approves or
     // switches the theme [fix-103].
     const from = /** @type {HTMLElement} */ (event.target);
-    if (event.defaultPrevented || from.matches('textarea, input') || stage.contains(from) || controlsBox.contains(from)) return;
+    if (from.matches('textarea, input')) return;
+    // The home-row letters never mean anything to a demo, so they act even when
+    // the focus sits in the demo or its controls (after a click there); the
+    // arrows, Space and Enter stay the demo's own there [fix-103].
+    const letter = /^Key[A-Z]$/.test(event.code);
+    if (!letter && (event.defaultPrevented || stage.contains(from) || controlsBox.contains(from))) return;
     const step = steps[index];
     // ←/→ flip the option shown on an aspect page; on a page without aspects
     // they still move between steps, as before. Moving between pages always
