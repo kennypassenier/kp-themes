@@ -88,7 +88,6 @@ export const PAGES = [
             { href: 'research/character-tiles/demo.html', label: 'Dashboard tiles of their own, per theme' },
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
-            { href: 'research/character-actions/demo.html', label: 'Action columns of their own, per theme' },
             { href: 'research/character-menu/demo.html', label: 'A menu button of its own, per theme' },
             // The character round, eleventh component: the plain key figure tile, shape/loading/tone/interactive/live, one pick per aspect (formal and titanium built first).
             { href: 'research/character-kpi/demo.html', label: 'A key figure of its own, per theme' },
