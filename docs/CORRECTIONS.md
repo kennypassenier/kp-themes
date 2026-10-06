@@ -6449,6 +6449,8 @@ overflow rules altogether.
 
 ## fix-111 · In the narrow width the header's menu left its More button (2026-10-06)
 
+Kenny, form v37 (2026-10-06): approved ("Klopt").
+
 **1 · What went wrong.** Kenny, 2026-10-06 20:12: "bij de eerste optie als ik
 narrow pak, dan staat het menu al niet meer aan de "more" knop geplakt". The
 panel hung under the right end of the actions row
