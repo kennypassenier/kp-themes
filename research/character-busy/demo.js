@@ -1667,7 +1667,13 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 
 // Read by ../_review/review.js when it loads, which is after this module:
 // five choices per theme, each option's name and what it does as its hint.
-// Nothing is ticked for the reviewer.
+// What Kenny picked and did not send back is settled and not asked again
+// (formal, 2026-10-06 12:04: shape 1, loading 3, failed state 3; he sent
+// back the demo's controls, not those three, and could not judge the
+// arrival and the phone without a Draw button).
+/** @type {Record<string, Partial<Record<Aspect, string>>>} */
+const KEPT = { formal: { shape: '1', loading: '3', failure: '3' } };
+const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => KEPT[t]?.[id] ?? '';
 const hints = (/** @type {Aspect} */ aspect, /** @type {number} */ at) =>
     Object.fromEntries(Object.entries(IDEAS).map(([theme, idea]) => [theme, `${idea[aspect][at].name}. ${idea[aspect][at].text}`]));
 section.setAttribute(
@@ -1677,6 +1683,16 @@ section.setAttribute(
             id,
             label,
             options: [0, 1, 2].map((at) => ({ value: String(at + 1), label: String(at + 1), hints: hints(id, at) })),
+            default: Object.fromEntries(
+                Object.keys(KEPT)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, keptOf(t, id)]),
+            ),
+            fixed: Object.fromEntries(
+                Object.keys(KEPT)
+                    .filter((t) => keptOf(t, id))
+                    .map((t) => [t, true]),
+            ),
         })),
     ),
 );
@@ -1687,7 +1703,7 @@ for (const [theme, idea] of Object.entries(IDEAS)) {
     p.textContent =
         `Five picks, each on its own. Shapes 1, 2 and 3: ${idea.shape[0].name.replace(/^The /, 'the ')}, ${idea.shape[1].name.replace(/^The /, 'the ')}, ${idea.shape[2].name.replace(/^The /, 'the ')}. ` +
         'Each row changes one thing only; the preview at the top shows what you ticked so far. ' +
-        'Press Loading to replay the arrival, Failed for the alert, Long reason for a longer sentence, and try ¼ speed; the overlay keeps the table’s own rows underneath it.';
+        'Press Draw to replay the arrival, Ready, Loading and Failed to put every table in that state, Failed for the alert, Long reason for a longer sentence, and try ¼ speed; the overlay keeps the table’s own rows underneath it.';
     look.append(p);
 }
 
@@ -1748,7 +1764,8 @@ for (const { id, label, about } of ASPECTS) {
 /** @type {Record<string, Partial<Record<Aspect, string>>>} */
 const ticked = {};
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const picks = () => /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? '1'])));
+const picks = () =>
+    /** @type {Record<Aspect, string>} */ (Object.fromEntries(ASPECTS.map(({ id }) => [id, ticked[theme()]?.[id] ?? (keptOf(theme(), id) || '1')])));
 
 /** Writes the five aspects on the preview and on every row's cell. */
 function compose() {
@@ -1838,18 +1855,34 @@ const pressed = (/** @type {string} */ attr, /** @type {string} */ value) => {
     for (const b of section.querySelectorAll(`[${attr}]`)) b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value));
 };
 
+// The State buttons drive every table on the page, the rows and the phone
+// pane included (Kenny, 2026-10-06: "bij on the phone zie ik enkel loading
+// dat vastzit? ... verander dit voor de hele demo"); the reference stays busy.
+const driveAll = () => {
+    drive(previewTable(), previewState);
+    for (const { id } of ASPECTS) for (const el of rowCell(id)) drive(el, previewState);
+};
 for (const b of section.querySelectorAll('[data-bo-state]'))
     b.addEventListener('click', () => {
         previewState = /** @type {typeof previewState} */ (b.getAttribute('data-bo-state') ?? 'ready');
         pressed('data-bo-state', previewState);
-        drive(previewTable(), previewState);
+        driveAll();
     });
+
+// Draw replays the panel's arrival everywhere: every table turns busy anew
+// (Kenny, 2026-10-06: "geef een draw knop om te zien hoe het element arrives").
+section.querySelector('[data-bo-draw]')?.addEventListener('click', () => {
+    previewState = 'loading';
+    pressed('data-bo-state', previewState);
+    driveAll();
+    drive(referenceTable(), 'loading');
+});
 
 for (const b of section.querySelectorAll('[data-bo-words]'))
     b.addEventListener('click', () => {
         words.length = /** @type {typeof words.length} */ (b.getAttribute('data-bo-words') ?? 'short');
         pressed('data-bo-words', words.length);
-        drive(previewTable(), previewState);
+        driveAll();
     });
 
 compose();
@@ -1863,6 +1896,9 @@ function showTheme() {
     // On the page, only this theme's look-at line; the dialog reads them all.
     for (const p of look.querySelectorAll('[data-for]')) /** @type {HTMLElement} */ (p).hidden = p.getAttribute('data-for') !== now;
     const idea = IDEAS[now];
+    // A settled aspect has no row.
+    for (const box of section.querySelectorAll('[data-bo-aspect]'))
+        /** @type {HTMLElement} */ (box).hidden = Boolean(keptOf(now, /** @type {Aspect} */ (box.getAttribute('data-bo-aspect'))));
     for (const cell of section.querySelectorAll('[data-bo-vary]')) {
         const option = idea?.[/** @type {Aspect} */ (cell.getAttribute('data-bo-vary'))]?.[Number(cell.getAttribute('data-bo-option')) - 1];
         const name = cell.querySelector('[data-bo-name]');

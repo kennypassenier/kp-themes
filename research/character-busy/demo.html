@@ -79,6 +79,7 @@
                         <button type="button" class="kp-button kp-button--sm" data-bo-state="ready" aria-pressed="false">Ready</button>
                         <button type="button" class="kp-button kp-button--sm" data-bo-state="loading" aria-pressed="true">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-bo-state="failed" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-bo-draw>Draw (replay the arrival)</button>
                     </div>
                     <div class="bo-actions" role="group" aria-label="The app's words">
                         <b>Words:</b>
@@ -199,7 +200,7 @@
         <!-- Phase 1: no theme has been judged yet; this round's full reopen
              list is written once every theme has its CSS (phase 2+). -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-05-busy-r1", "reopen": [] }
+            { "round": "2026-10-06-busy-r2", "reopen": ["formal|busy"] }
         </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
