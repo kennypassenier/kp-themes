@@ -52,6 +52,8 @@ import R2A from './round2-a.js';
 import R2B from './round2-b.js';
 import R2C from './round2-c.js';
 import R2D from './round2-d.js';
+import R3A from './round3-a.js';
+import R3B from './round3-b.js';
 
 /** @typedef {{ name: string, text: string }} Option */
 /** @typedef {'shape' | 'loading' | 'arrival' | 'failure' | 'phone'} Aspect */
@@ -1682,22 +1684,22 @@ const KEPT = {
     formal: { shape: '1', loading: '3', failure: '3', arrival: '3', phone: '1' },
     light: { shape: '2', loading: '1', arrival: '2', failure: '1', phone: '1' },
     dark: { shape: '1', loading: '1', arrival: '1', failure: '2', phone: '1' },
-    cyberpunk: { loading: '1', arrival: '1', failure: '1', phone: '1' },
-    synthwave: { loading: '3', arrival: '1', failure: '1' },
-    pastel: { loading: '2', arrival: '2', failure: '3' },
-    terminal: { loading: '1', arrival: '1', failure: '1' },
-    forest: { loading: '1', arrival: '2' },
-    'high-contrast': { loading: '1', arrival: '1', failure: '1' },
-    sepia: { loading: '3', arrival: '2', failure: '1' },
-    blueprint: { loading: '2', arrival: '3', failure: '1' },
-    solstice: { loading: '3', arrival: '3', failure: '1' },
-    brutalism: { loading: '2', arrival: '2', failure: '2' },
-    deco: { loading: '2', arrival: '2', failure: '1' },
-    phantom: { loading: '3', arrival: '2', failure: '1' },
-    'shade-light': { loading: '3', arrival: '1', failure: '1' },
-    'shade-dark': { loading: '3', arrival: '1', failure: '2' },
-    retro: { loading: '1', arrival: '1', failure: '1' },
-    grotesk: { loading: '2', arrival: '2', failure: '1' },
+    cyberpunk: { loading: '1', arrival: '1', failure: '1', phone: '1', shape: '2' },
+    synthwave: { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },
+    pastel: { loading: '2', arrival: '2', failure: '3', shape: '1', phone: '1' },
+    terminal: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
+    forest: { loading: '1', arrival: '2', shape: '2', phone: '3' },
+    'high-contrast': { loading: '1', arrival: '1', failure: '1', shape: '2', phone: '1' },
+    sepia: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
+    blueprint: { loading: '2', arrival: '3', failure: '1', shape: '3', phone: '1' },
+    solstice: { loading: '3', arrival: '3', failure: '1', shape: '2', phone: '1' },
+    brutalism: { loading: '2', arrival: '2', failure: '2', shape: '2', phone: '1' },
+    deco: { loading: '2', arrival: '2', failure: '1', shape: '1', phone: '1' },
+    phantom: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
+    'shade-light': { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },
+    'shade-dark': { loading: '3', arrival: '1', failure: '2', shape: '1', phone: '1' },
+    retro: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
+    grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1' },
     lapis: { loading: '1', arrival: '1', failure: '3' },
     nostromo: { loading: '1', arrival: '2', failure: '1' },
     titanium: { loading: '2', arrival: '2', failure: '1' },
@@ -1706,7 +1708,7 @@ const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => KEPT[t]?.[
 // Round 2 (Kenny, 2026-10-06 22:30: "wat evalueren we bij shape? ik zie enkel
 // dezelfde vorm"): new shape options per theme replace round 1's, which
 // differed by 0-4 % of their pixels; each carries its own key.
-for (const file of [R2A, R2B, R2C, R2D])
+for (const file of [R2A, R2B, R2C, R2D, R3A, R3B])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

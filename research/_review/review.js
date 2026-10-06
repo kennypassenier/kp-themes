@@ -1203,13 +1203,9 @@ function approveStep() {
     const current = steps[index];
     if (current?.aspect) return answerAspect(current);
     const rows = [...list.querySelectorAll('.rv-row')];
-    const missing = rows.filter((row) => row.querySelector('[data-rv-reject]').checked && !row.querySelector('[data-rv-row-note]').value.trim());
-    if (missing.length) {
-        refused.textContent = `Not approved needs a note: ${missing.map((row) => row.querySelector('[data-rv-jump]').textContent).join(', ')}.`;
-        refused.hidden = false;
-        missing[0].querySelector('[data-rv-row-note]').focus();
-        return;
-    }
+    // A rejection needs no note (Kenny, 2026-10-06 23:09: "ik wil de eis dat
+    // een afkeuring een text heeft ook afschaffen … je moet zelf weten dat je
+    // veel beter moet doen"); a note stays welcome.
     const unpicked = shownPairs.filter(
         (pair, i) => !rows[i].querySelector('[data-rv-reject]').checked && (pair.item?.choices || []).some((c) => !choiceOf(pair, c)),
     );
@@ -1251,12 +1247,6 @@ function answerAspect(step) {
     // shown at a time, large, and ←/→ (or the on-screen arrows) choose it.
     const choice = flipChoice || pair.item.choices.find((c) => c.id === step.aspect);
     const value = choice?.options[flipAt]?.value || '';
-    if (none && !note) {
-        refused.textContent = 'None of these needs a note: what should change?';
-        refused.hidden = false;
-        row.querySelector('[data-rv-row-note]').focus();
-        return;
-    }
     if (!none && !value) {
         refused.textContent = `Pick one of the options, or tick None of these.`;
         refused.hidden = false;
@@ -1266,7 +1256,7 @@ function answerAspect(step) {
     entry.choices = { ...entry.choices };
     entry.redo = { ...entry.redo };
     if (none) {
-        entry.redo[step.aspect] = note;
+        entry.redo[step.aspect] = note || 'not approved';
         delete entry.choices[step.aspect];
     } else {
         entry.choices[step.aspect] = value;
