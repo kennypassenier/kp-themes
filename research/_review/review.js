@@ -756,7 +756,15 @@ function controlGroups() {
                 !/speed/i.test(g.getAttribute('aria-label') || '') &&
                 !g.querySelector('[data-cc-speed], [data-ct-speed], [data-tl-speed]'),
         )
-        .map((g) => /** @type {HTMLElement[]} */ ([...g.querySelectorAll('button')].filter((b) => !/speed/i.test(Object.keys(b.dataset).join(' ')))))
+        .map((g) => {
+            const all = /** @type {HTMLElement[]} */ (
+                [...g.querySelectorAll('button')].filter((b) => !/speed/i.test(Object.keys(b.dataset).join(' ')))
+            );
+            // Q/S walk the states only: an action in the same group (busy's
+            // Draw) is not a state and would stall the walk on it.
+            const states = all.filter((b) => b.hasAttribute('aria-pressed'));
+            return states.length > 1 ? states : all;
+        })
         .filter((buttons) => buttons.length);
 }
 /** Presses the next (or previous) button of control group n, as the demo's own click would. */
