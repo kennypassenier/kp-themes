@@ -1,4 +1,572 @@
-/* research/character-graph, round 4 (Kenny, 2026-10-06 12:31): the new options of group a. */
+/* research/character-graph, round 4 (Kenny, 2026-10-06 12:31): the new
+   options of group a — high-contrast and deco, loading only. Loaded after
+   graphs.css and ghost.css in the same `@layer kp.signature`, so these
+   rules (new, namespaced `data-cg-loading='r4-hc-load-*'` /
+   `'r4-dec-load-*'` values) simply add to it; round 3's loading rules for
+   these two themes (`r3-hc-load-*` in round2-c.css, `r3-d-dec-load-*` in
+   round2-d.css) are never matched again because nothing still carries
+   those values here, and round 2's plain `'1'`/`'2'`/`'3'` values are
+   gone from both themes' loading row the same way.
+
+   Every option moves demo.js's ghost (`.kp-graph__ghost`, built from the
+   package's own `.kp-graph__edge` and `.kp-graph__node` with
+   `.kp-graph__ring`/`.kp-graph__core`, each carrying `--i` — its order
+   from the hub round the ring — and the ghost carrying `--n`, the count).
+   The theme's settled shape already draws these parts in its own colours
+   and dashes; nothing here repaints them, only moves them, and nothing
+   here sets a colour — only dash patterns, widths, a clip reveal and
+   `filter: brightness()`, which multiplies whatever ink is already there.
+
+   `.kp-graph__node` and `.kp-graph__edge` already carry
+   `transform-box: fill-box; transform-origin: center` from graphs.css, so
+   every scale/rotate below turns a site about its own centre, never about
+   the picture's.
+
+   ghost.css's own consumer (`[data-cg] .kp-graph[data-kp-state='loading']
+   .kp-graph__ghost .kp-graph__edge`/`.kp-graph__node { animation: var(
+   --cg-edge-anim|--cg-node-anim, none); … }`) is the ONE place that turns
+   `--cg-edge-anim`/`--cg-node-anim` into a running animation, and it is
+   itself scoped inside `@media (prefers-reduced-motion: no-preference)`,
+   so setting those two custom properties unconditionally below is safe —
+   reduced motion never reads them. A ring, a core or the ghost group
+   itself has no such shared consumer, so the few options that move one of
+   those three directly wrap their own `animation` in that same media
+   query here. Every still (reduced-motion) frame instead comes from a
+   plain, fixed dash pattern or clip set outside any media query — reading
+   on its own as "the network is still being read", never from a `calc()`
+   on `--i` for a length-typed property (plain `<number>` arithmetic
+   cannot produce one; Firefox drops it silently). Each option holds its
+   matching value at both the start and the end of its loop so the
+   infinite repeat never jumps, and none moves by opacity alone. */
 
 @layer kp.signature {
+    /* ══ high-contrast — the signage board / departure board / hazard
+       world: no fades, hard beats, pattern over colour. The ghost reads
+       boldly enough on its own, so every option below holds `--cg-ghost`
+       higher than the default 0.45. ══ */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-1'] .kp-graph__ghost,
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-2'] .kp-graph__ghost,
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-3'] .kp-graph__ghost,
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-4'] .kp-graph__ghost,
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-5'] .kp-graph__ghost,
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-6'] .kp-graph__ghost {
+        --cg-ghost: 0.6;
+    }
+
+    /* high-contrast · loading r4-hc-load-1 · The flap board turns */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 7 6;
+        --cg-edge-anim: r4-hc-flap-line 2400ms ease-in-out infinite;
+        --cg-edge-stagger: 200ms;
+    }
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-hc-flap 2400ms ease-in-out infinite;
+        --cg-node-stagger: 200ms;
+    }
+
+    /* high-contrast · loading r4-hc-load-2 · The hazard tape marches. All
+       at once, not staggered: the tape marches the same instant along
+       every link and every ring, the way a length of tape is pulled
+       taut all at once rather than site by site. */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-2'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 14 10;
+        --cg-edge-anim: r4-hc-tape 900ms linear infinite;
+    }
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-2'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+        stroke-dasharray: 10 6;
+    }
+
+    /* high-contrast · loading r4-hc-load-3 · The odometer rolls in */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-3'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-hc-drop 2000ms cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
+        --cg-node-stagger: 190ms;
+    }
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-3'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r4-hc-thicken 2000ms cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
+        --cg-edge-stagger: 190ms;
+    }
+
+    /* high-contrast · loading r4-hc-load-4 · The dial fills round */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-4'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-hc-dial 2600ms ease-in-out infinite;
+        --cg-node-stagger: 210ms;
+    }
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-4'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        --cg-edge-anim: r4-hc-taut 2600ms ease-in-out infinite;
+        --cg-edge-stagger: 210ms;
+    }
+
+    /* high-contrast · loading r4-hc-load-5 · The torque wrench snaps round */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-hc-torque 1800ms ease-out infinite;
+        --cg-node-stagger: 220ms;
+    }
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 6;
+        --cg-edge-anim: r4-hc-ratchet 1800ms ease-out infinite;
+        --cg-edge-stagger: 220ms;
+    }
+
+    /* high-contrast · loading r4-hc-load-6 · The whole board racks into
+       focus. The ghost group and the rings have no shared consumer, so
+       both carry a plain `animation` directly, inside the media query
+       below. */
+
+    [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-6'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+        stroke-dasharray: 2 6;
+    }
+
+    /* ══ deco — gold rules, sunbursts, stepped geometry, jewelled lamps,
+       the Chrysler Building's own grandeur; the network lit like a
+       marquee or engraved in gilt. ══ */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-1'] .kp-graph__ghost,
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-2'] .kp-graph__ghost,
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-3'] .kp-graph__ghost,
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-4'] .kp-graph__ghost,
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-5'] .kp-graph__ghost,
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-6'] .kp-graph__ghost {
+        --cg-ghost: 0.55;
+    }
+
+    /* deco · loading r4-dec-load-1 · The ziggurat steps up */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-1'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-dec-step 2200ms ease-in-out infinite;
+        --cg-node-stagger: 200ms;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 5 8;
+        --cg-edge-anim: r4-dec-step-line 2200ms ease-in-out infinite;
+        --cg-edge-stagger: 200ms;
+    }
+
+    /* deco · loading r4-dec-load-2 · The jewel catches its facets. The
+       links stay still on purpose: nothing travels along the wires, only
+       the gem itself turns. */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-dec-facet 2800ms ease-in-out infinite;
+        --cg-node-stagger: 230ms;
+    }
+
+    /* deco · loading r4-dec-load-3 · The engraving is cut */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 3 7;
+        --cg-edge-anim: r4-dec-engrave 2600ms ease-in infinite;
+        --cg-edge-stagger: 210ms;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-3'] .kp-graph__ghost .kp-graph__node {
+        clip-path: inset(18%);
+        --cg-node-anim: r4-dec-bevel 2600ms ease-in infinite;
+        --cg-node-stagger: 210ms;
+    }
+
+    /* deco · loading r4-dec-load-4 · The tower sets back, tier by tier.
+       The ghost group and the rings have no shared consumer, so both
+       carry a plain `animation` directly, inside the media query below. */
+
+    /* deco · loading r4-dec-load-5 · Lamps are lit along the colonnade */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-5'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-dec-lamp 2400ms ease-in-out infinite;
+        --cg-node-stagger: 180ms;
+    }
+
+    /* deco · loading r4-dec-load-6 · The gold rule is plucked taut */
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-6'] .kp-graph__ghost .kp-graph__edge {
+        --cg-edge-anim: r4-dec-pluck 1600ms ease-out infinite;
+        --cg-edge-stagger: 240ms;
+    }
+
+    [data-theme='deco'] [data-cg-loading='r4-dec-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-dec-clang 1600ms ease-out infinite;
+        --cg-node-stagger: 240ms;
+    }
+
+    /* ── The two options above that move a ring or the ghost group
+       itself directly (high-contrast's r4-hc-load-6, deco's
+       r4-dec-load-4) have no shared consumer to rely on, so they carry
+       `animation` here, inside the one media query that keeps every
+       moving part of this file still under reduced motion. ──────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-6'] .kp-graph__ghost {
+            animation: r4-hc-rack 2600ms ease-out infinite;
+            transform-box: fill-box;
+            transform-origin: 50% 46%;
+        }
+
+        [data-theme='high-contrast'] [data-cg-loading='r4-hc-load-6'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: r4-hc-tighten 2600ms ease-out infinite;
+            animation-delay: calc(var(--i, 0) * 140ms);
+        }
+
+        [data-theme='deco'] [data-cg-loading='r4-dec-load-4'] .kp-graph__ghost {
+            animation: r4-dec-tower 2800ms ease-out infinite;
+            transform-box: fill-box;
+            transform-origin: 50% 46%;
+        }
+
+        [data-theme='deco'] [data-cg-loading='r4-dec-load-4'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: r4-dec-lock 2800ms ease-out infinite;
+            animation-delay: calc(var(--i, 0) * 170ms);
+        }
+    }
+}
+
+/* Loading pictures: the shared motion vocabulary this group's options
+   above play, each timed and staggered differently by theme and option.
+   Every one holds its matching value at both 0% and 100% so the infinite
+   loop never jumps, and none touches opacity alone. Kept unlayered, like
+   this group's sibling files (round2-c.css, round2-d.css): a `@keyframes`
+   name is not a style declaration a cascade layer needs to arbitrate —
+   it only runs once something sets `animation-name` to it, and every
+   such place in this file is already gated the way the file comment
+   above describes. */
+
+@keyframes r4-hc-flap-line {
+    0%,
+    40% {
+        stroke-dasharray: 100;
+    }
+    44%,
+    100% {
+        stroke-dasharray: 7 6;
+    }
+}
+
+@keyframes r4-hc-flap {
+    0%,
+    40% {
+        transform: scaleY(1);
+    }
+    44% {
+        transform: scaleY(0.05);
+    }
+    48%,
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+@keyframes r4-hc-tape {
+    0% {
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dashoffset: -24;
+    }
+}
+
+@keyframes r4-hc-drop {
+    0% {
+        transform: translateY(-18px) scaleY(0.55);
+    }
+    55% {
+        transform: translateY(2px) scaleY(1.08);
+    }
+    75% {
+        transform: translateY(-1px) scaleY(0.97);
+    }
+    100% {
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+@keyframes r4-hc-thicken {
+    0%,
+    54% {
+        stroke-width: 1.5;
+        opacity: 0.55;
+    }
+    55%,
+    100% {
+        stroke-width: 4.5;
+        opacity: 1;
+    }
+}
+
+@keyframes r4-hc-dial {
+    0% {
+        transform: scale(0.15);
+        filter: brightness(0.7);
+    }
+    50%,
+    54% {
+        transform: scale(1.15);
+        filter: brightness(1.5);
+    }
+    55%,
+    100% {
+        transform: scale(0.15);
+        filter: brightness(0.7);
+    }
+}
+
+@keyframes r4-hc-taut {
+    0% {
+        stroke-dashoffset: 100;
+    }
+    50%,
+    54% {
+        stroke-dashoffset: 0;
+    }
+    55%,
+    100% {
+        stroke-dashoffset: 100;
+    }
+}
+
+@keyframes r4-hc-torque {
+    0%,
+    40% {
+        transform: rotate(0deg);
+    }
+    46% {
+        transform: rotate(-22deg);
+    }
+    52% {
+        transform: rotate(4deg);
+    }
+    58%,
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes r4-hc-ratchet {
+    0%,
+    44% {
+        stroke-dashoffset: 0;
+    }
+    50%,
+    100% {
+        stroke-dashoffset: -12;
+    }
+}
+
+@keyframes r4-hc-rack {
+    0% {
+        transform: scale(1.12);
+        filter: blur(3px);
+        opacity: 0.7;
+    }
+    55% {
+        transform: scale(0.98);
+        filter: blur(0px);
+        opacity: 1;
+    }
+    70%,
+    100% {
+        transform: scale(1);
+        filter: blur(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes r4-hc-tighten {
+    0% {
+        stroke-dasharray: 2 6;
+    }
+    60%,
+    100% {
+        stroke-dasharray: 999 0;
+    }
+}
+
+@keyframes r4-dec-step {
+    0%,
+    36% {
+        transform: scale(0.3);
+    }
+    40% {
+        transform: scale(0.55);
+    }
+    50% {
+        transform: scale(0.8);
+    }
+    60%,
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes r4-dec-step-line {
+    0%,
+    36% {
+        stroke-dasharray: 2 10;
+    }
+    40% {
+        stroke-dasharray: 5 8;
+    }
+    50% {
+        stroke-dasharray: 9 6;
+    }
+    60%,
+    100% {
+        stroke-dasharray: 100;
+    }
+}
+
+@keyframes r4-dec-facet {
+    0%,
+    30% {
+        transform: rotate(0deg);
+        filter: brightness(1);
+    }
+    34% {
+        transform: rotate(35deg);
+        filter: brightness(1.6);
+    }
+    40% {
+        transform: rotate(70deg);
+        filter: brightness(1.1);
+    }
+    46%,
+    100% {
+        transform: rotate(0deg);
+        filter: brightness(1);
+    }
+}
+
+@keyframes r4-dec-engrave {
+    0%,
+    30% {
+        stroke-dasharray: 2 14;
+    }
+    50% {
+        stroke-dasharray: 3 7;
+    }
+    70%,
+    100% {
+        stroke-dasharray: 100;
+    }
+}
+
+@keyframes r4-dec-bevel {
+    0%,
+    68% {
+        clip-path: inset(18%);
+        filter: brightness(1);
+    }
+    72% {
+        clip-path: inset(4%);
+        filter: brightness(1.5);
+    }
+    80%,
+    100% {
+        clip-path: inset(18%);
+        filter: brightness(1);
+    }
+}
+
+@keyframes r4-dec-tower {
+    0% {
+        transform: scaleY(0.82);
+        opacity: 0.75;
+    }
+    35% {
+        transform: scaleY(0.9);
+        opacity: 0.85;
+    }
+    65% {
+        transform: scaleY(0.97);
+        opacity: 0.95;
+    }
+    85%,
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+@keyframes r4-dec-lock {
+    0%,
+    70% {
+        filter: brightness(1);
+    }
+    74% {
+        filter: brightness(1.7);
+    }
+    80%,
+    100% {
+        filter: brightness(1);
+    }
+}
+
+@keyframes r4-dec-lamp {
+    0%,
+    30% {
+        transform: rotate(0deg) scale(1);
+        filter: brightness(1);
+    }
+    36% {
+        transform: rotate(-6deg) scale(1.12);
+        filter: brightness(1.5);
+    }
+    42% {
+        transform: rotate(4deg) scale(1);
+        filter: brightness(1.1);
+    }
+    48% {
+        transform: rotate(-3deg) scale(1.18);
+        filter: brightness(1.7);
+    }
+    56%,
+    100% {
+        transform: rotate(0deg) scale(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes r4-dec-pluck {
+    0%,
+    30% {
+        stroke-width: 2;
+    }
+    34% {
+        stroke-width: 5;
+    }
+    38% {
+        stroke-width: 1.5;
+    }
+    42% {
+        stroke-width: 4;
+    }
+    46%,
+    50%,
+    100% {
+        stroke-width: 2;
+    }
+}
+
+@keyframes r4-dec-clang {
+    0%,
+    33% {
+        transform: scale(1);
+    }
+    37% {
+        transform: scale(1.3);
+    }
+    43%,
+    100% {
+        transform: scale(1);
+    }
 }

@@ -1,4 +1,354 @@
-/* research/character-graph, round 4 (Kenny, 2026-10-06 12:31): the new options of group c. */
+/* research/character-graph, round 4 (Kenny, 2026-10-06 12:31): the new
+   options of group c — brutalism only. Shape stays settled at 2; loading,
+   arrival, focus and live all go round again. Loaded after graphs.css and
+   ghost.css in the same `@layer kp.signature`, so these rules (new,
+   namespaced `data-cg-<aspect>='r4-c-bru-…'` values) only add to it.
+
+   Loading moves the ghost network (`.kp-graph__ghost`, the package's own
+   `.kp-graph__edge` with `pathLength="100"` and `.kp-graph__node` holding
+   `.kp-graph__ring`/`.kp-graph__core`) through the two custom properties
+   `ghost.css` reads (`--cg-edge-anim`/`--cg-node-anim`, each with its own
+   `-stagger`/`-delay`), or through graphs.css's own `--gr-load-over` /
+   `--gr-load-over-anim` overlay knobs on `.kp-graph__box::after` (already
+   consumed, media-gated, in graphs.css) — both already wired, so this
+   file only ever sets the properties, never the bare `animation`. The one
+   exception is the hub-centred shockwave ring, which has no shared
+   consumer for `.kp-graph__box::before` and so sets `animation` directly
+   on it, inside this file's own `prefers-reduced-motion: no-preference`
+   block, exactly as `graphs.css`'s nostromo sweep already does.
+
+   Arrival and live update read graphs.css's own `--gr-arr-*` / `--gr-live-*`
+   knobs, already consumed there; focus reads its `--gr-pick*` /
+   `--gr-node-dim` / `--gr-dim-filter` / `--gr-off-*` / `--gr-chip-off-bg`
+   knobs plus two static, unanimated overrides (the picked node's tilt, a
+   hidden kind's chip colour) — none of this needs its own media block. */
 
 @layer kp.signature {
+    /* ══ brutalism · While loading (data-cg-loading) ═══════════════════ */
+
+    /* brutalism · loading r4-c-bru-load-1 · The plot line is struck */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-1'] .kp-graph__ghost {
+        --cg-ghost: 0.55;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-1'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        stroke-width: 5;
+        --cg-edge-anim: r4-c-bru-plot 950ms steps(5) infinite;
+        --cg-edge-stagger: 180ms;
+    }
+
+    /* brutalism · loading r4-c-bru-load-2 · The gantry scan sweeps */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-2'] .kp-graph {
+        --gr-load-over: repeating-linear-gradient(
+            100deg,
+            transparent 0 38%,
+            color-mix(in oklch, var(--warning) 65%, var(--accent) 35%) 38% 44%,
+            transparent 44% 100%
+        );
+        --gr-load-over-size: 260% 260%;
+        --gr-load-over-anim: r4-c-bru-scan-pos 1400ms steps(7) infinite;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-2'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-c-bru-flash 1400ms steps(7) infinite;
+        --cg-node-stagger: 200ms;
+    }
+
+    /* brutalism · loading r4-c-bru-load-3 · The shockwave rings out */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+        background: radial-gradient(circle at 50% 46%, transparent 0 29%, var(--foreground) 29% 33%, transparent 33% 100%);
+        background-repeat: no-repeat;
+        background-position: 50% 46%;
+        background-size: 14% 14%;
+        z-index: 0;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-3'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        stroke-width: 4;
+        --cg-edge-anim: r4-c-bru-flash 1600ms steps(8) infinite;
+        --cg-edge-stagger: 170ms;
+    }
+
+    /* brutalism · loading r4-c-bru-load-4 · The tack gun fires round */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-4'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-c-bru-tack 700ms steps(3) infinite;
+        --cg-node-stagger: 190ms;
+    }
+
+    /* brutalism · loading r4-c-bru-load-5 · The rebar is chalked in */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-5'] .kp-graph {
+        --gr-load-over: repeating-linear-gradient(45deg, color-mix(in oklch, var(--foreground) 22%, transparent) 0 10px, transparent 10px 22px);
+        --gr-load-over-size: 160% 160%;
+        --gr-load-over-anim: r4-c-bru-chalk-pos 2600ms steps(16) infinite;
+    }
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-5'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 100;
+        stroke-width: 5;
+        --cg-edge-anim: r4-c-bru-plot 1300ms steps(6) infinite;
+        --cg-edge-stagger: 150ms;
+    }
+
+    /* brutalism · loading r4-c-bru-load-6 · The tally clicks round */
+
+    [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-6'] .kp-graph__ghost .kp-graph__node {
+        --cg-node-anim: r4-c-bru-tally 220ms steps(1) infinite;
+        --cg-node-stagger: 230ms;
+    }
+
+    /* ══ brutalism · How the network arrives (data-cg-arrival) ═════════ */
+
+    /* brutalism · arrival r4-c-bru-arr-1 · Cast in one pour */
+
+    [data-theme='brutalism'] [data-cg-arrival='r4-c-bru-arr-1'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 500ms steps(5) both;
+        --gr-arr-node: r4-c-bru-cast 260ms steps(1) both;
+        --gr-estagger: 55ms;
+        --gr-stagger: 55ms;
+        --gr-node-at: 280ms;
+    }
+
+    /* brutalism · arrival r4-c-bru-arr-2 · Sheared flush */
+
+    [data-theme='brutalism'] [data-cg-arrival='r4-c-bru-arr-2'] .kp-graph {
+        --gr-arr-edge: r4-c-bru-shear 320ms steps(3) both;
+        --gr-arr-node: r4-c-bru-flush 280ms steps(2) both;
+        --gr-estagger: 50ms;
+        --gr-stagger: 50ms;
+        --gr-node-at: 220ms;
+    }
+
+    /* brutalism · arrival r4-c-bru-arr-3 · Printed through the screen */
+
+    [data-theme='brutalism'] [data-cg-arrival='r4-c-bru-arr-3'] .kp-graph {
+        --gr-arr-edge: gr-draw-in 600ms steps(4) both;
+        --gr-arr-node: r4-c-bru-screen 240ms steps(1) both;
+        --gr-estagger: 60ms;
+        --gr-stagger: 60ms;
+        --gr-node-at: 320ms;
+    }
+
+    /* ══ brutalism · The picked node and the hidden kind (data-cg-focus) ══ */
+
+    /* brutalism · focus r4-c-bru-focus-1 · Boxed in black ink */
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-1'] .kp-graph {
+        --gr-pick: var(--foreground);
+        --gr-pick-w: 8;
+        --gr-pick-dash: 5 4;
+        --gr-node-dim: 0.3;
+        --gr-dim-filter: saturate(1.6) contrast(0.65);
+        --gr-chip-off-bg: var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-1'] .kp-graph__kind[aria-pressed='false'] {
+        color: transparent;
+    }
+
+    /* brutalism · focus r4-c-bru-focus-2 · The rubber stamp, askew */
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-2'] .kp-graph {
+        --gr-pick: var(--warning);
+        --gr-pick-w: 7;
+        --gr-node-dim: 0.2;
+        --gr-dim-filter: contrast(1.3) brightness(0.72);
+        --gr-off-outline: 4px dashed var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-2'] .kp-graph__node.is-picked {
+        transform: rotate(-4deg);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    /* brutalism · focus r4-c-bru-focus-3 · Framed and bleached */
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-3'] .kp-graph {
+        --gr-pick: var(--destructive);
+        --gr-pick-w: 6;
+        --gr-pick-glow: drop-shadow(2px 2px 0 var(--foreground)) drop-shadow(5px 5px 0 var(--destructive));
+        --gr-node-dim: 0.35;
+        --gr-dim-filter: grayscale(0.5) brightness(1.25);
+    }
+
+    [data-theme='brutalism'] [data-cg-focus='r4-c-bru-focus-3'] .kp-graph__kind[aria-pressed='false'] {
+        opacity: 0.18;
+    }
+
+    /* ══ brutalism · Live update (data-cg-live) ═════════════════════════ */
+
+    /* brutalism · live r4-c-bru-live-1 · Re-struck */
+
+    [data-theme='brutalism'] [data-cg-live='r4-c-bru-live-1'] .kp-graph {
+        --gr-live-node: gr-bump 450ms steps(3);
+        --gr-live-edge: gr-surge 500ms steps(4);
+        --gr-live-c: var(--accent);
+    }
+
+    /* brutalism · live r4-c-bru-live-2 · The gauge clicks over */
+
+    [data-theme='brutalism'] [data-cg-live='r4-c-bru-live-2'] .kp-graph {
+        --gr-live-node: gr-turn-once 500ms steps(4);
+        --gr-live-edge: gr-draw-in 450ms steps(5);
+        --gr-live-c: var(--warning);
+    }
+
+    /* brutalism · live r4-c-bru-live-3 · Re-cast */
+
+    [data-theme='brutalism'] [data-cg-live='r4-c-bru-live-3'] .kp-graph {
+        --gr-live-node: r4-c-bru-recast 550ms steps(3);
+        --gr-live-edge: r4-c-bru-redash 600ms steps(3);
+        --gr-live-c: var(--destructive);
+    }
+}
+
+/* ── Motion: the hub-centred shockwave ring only, which has no shared
+   consumer the way `--cg-edge-anim`/`--cg-node-anim` (ghost.css) and
+   `--gr-load-over-anim` (graphs.css) already have, so it sets `animation`
+   directly here, inside its own reduced-motion block — exactly as
+   graphs.css's nostromo sweep already does for its own `::before`. ───── */
+
+@media (prefers-reduced-motion: no-preference) {
+    @layer kp.signature {
+        [data-theme='brutalism'] [data-cg-loading='r4-c-bru-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__box::before {
+            animation: r4-c-bru-shockwave 1600ms steps(8) infinite;
+        }
+    }
+}
+
+/* ── Motion: the keyframes every option above draws on. ────────────── */
+
+@keyframes r4-c-bru-plot {
+    from {
+        stroke-dashoffset: 100;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes r4-c-bru-scan-pos {
+    from {
+        background-position: -60% 10%;
+    }
+    to {
+        background-position: 160% 10%;
+    }
+}
+
+@keyframes r4-c-bru-chalk-pos {
+    from {
+        background-position: 0% 0%;
+    }
+    to {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes r4-c-bru-flash {
+    0%,
+    100% {
+        filter: brightness(1) contrast(1);
+    }
+    40% {
+        filter: brightness(1.6) contrast(1.3);
+    }
+}
+
+@keyframes r4-c-bru-shockwave {
+    0% {
+        background-size: 4% 4%;
+        opacity: 0.9;
+    }
+    100% {
+        background-size: 230% 230%;
+        opacity: 0;
+    }
+}
+
+@keyframes r4-c-bru-tack {
+    0% {
+        transform: translateY(-16px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes r4-c-bru-tally {
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    45% {
+        transform: scale(1.22);
+        filter: brightness(1.5);
+    }
+}
+
+@keyframes r4-c-bru-cast {
+    from {
+        transform: scale(1.4);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes r4-c-bru-shear {
+    from {
+        transform: skewX(-18deg) translateX(-10px);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes r4-c-bru-flush {
+    from {
+        transform: scale(0.5);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes r4-c-bru-screen {
+    from {
+        transform: scale(0.88);
+        filter: contrast(0) brightness(1.4);
+    }
+    to {
+        transform: scale(1);
+        filter: contrast(1) brightness(1);
+    }
+}
+
+@keyframes r4-c-bru-recast {
+    0%,
+    100% {
+        transform: scaleY(1);
+    }
+    35% {
+        transform: scaleY(0.55);
+    }
+}
+
+@keyframes r4-c-bru-redash {
+    0%,
+    100% {
+        stroke-width: 3;
+    }
+    40% {
+        stroke: var(--gr-live-c, currentColor);
+        stroke-width: 9;
+    }
 }
