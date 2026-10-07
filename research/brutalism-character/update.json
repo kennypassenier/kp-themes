@@ -1,0 +1,41 @@
+{
+    "update": 1,
+    "picks": {
+        "brutalism": {
+            "curve": "gravity",
+            "direction": "diagonal",
+            "opening": "footprint",
+            "durations": "units",
+            "colour": "roles",
+            "corners": "square",
+            "surface": "slab",
+            "tone": "taped",
+            "live": "slam",
+            "spinner": "tip",
+            "leave": "lift",
+            "composites": "own",
+            "focus": "ring",
+            "press": "ground"
+        }
+    },
+    "questions": {
+        "brutalism": {
+            "loading": {
+                "comment": "I like pour best, but feel like we can do much better, give ten examples",
+                "reply": "The pour stays as the reference, second in the list. Ten new pictures, each a different mechanism built from the hard slab: Carried, Dropped, Stacked, Hoisted, Scaffolded, Quarried, Tallied, Bolted, Staked out and Parted. All run on the same 1200 ms loop and stagger as the pour, so they compare directly; my pick is first, the one made only of the slab itself."
+            },
+            "hover": {
+                "comment": "I think I prefer lifted off, but it's hard to tell because the demo doesn't seem to be interactive?",
+                "reply": "The scene was frozen: only marked parts showed a state. Every part now answers a real pointer (and the dialog loops the lift on its own), with a line telling you to point at the parts. Lifted off moves the button 2 px up-left while its shadow stays put."
+            },
+            "voice": {
+                "comment": "I sort of like it, but some text is too thin, like the date and 412 t in the example, not sure if it's the font or thickness of the font that bothers me, give more exampels",
+                "reply": "It was both the weight and the colour: the date was mono at weight 400 and the figure Space Grotesk 400, 13.6 px, in grey. Every figure, date, unit and label is now weight 700 or heavier, at least 12 px, in ink, and dates read dd/mm/yyyy HH:MM. Six new voices join the three: plated, stamped, one family, capitals, ledger and poster figures."
+            },
+            "motifs": {
+                "comment": "it's not showing anything for any of the three examples, so fix that?",
+                "reply": "That was broken: the today bar merged into the day's border, the bolts were too small and the dialog shrank the tall scene too far. The scene is rebuilt as six named, larger specimens, and all three options now visibly show their motifs."
+            }
+        }
+    }
+}
