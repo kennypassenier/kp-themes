@@ -1,0 +1,294 @@
+/* research/synthwave-anchor: the page only. A centred column; the story at
+   the top, then one section with one question and six boards, each board a
+   stage, a loading pair and three chips on a 12-column grid. Every
+   candidate's own drawing is in options.css. */
+.sa-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sa-intro,
+.sa-story,
+.sa-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sa-intro :is(h1, p),
+.sa-story :is(h2, p),
+.sa-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.sa-intro p,
+.sa-story__text p,
+.sa-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.sa-motion {
+    color: var(--muted-foreground);
+}
+
+.sa-story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.sa-story__text {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sa-story__parts {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.sa-story__bar {
+    flex: 1 1 10rem;
+}
+
+.sa-sec {
+    /* A full-width component: the dialog shows the option at the stage's width. */
+    --rv-flip-max: 100%;
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sa-sec__head p,
+.sa-verdict,
+.sa-cap {
+    color: var(--muted-foreground);
+}
+
+.sa-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.sa-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sa-actions,
+.sa-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-sa-mode][aria-pressed='true'],
+[data-sa-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.sa-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.sa-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.sa-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.sa-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.sa-aspect__q {
+    font-weight: 600;
+}
+
+.sa-aspect__why {
+    color: var(--muted-foreground);
+}
+
+/* The six options: two boards across on a wide page, one under the other
+   below that. In the review dialog one option is shown alone and large. */
+.sa-six {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 88rem) {
+    .sa-story__grid,
+    .sa-six {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sa-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sa-col[hidden] {
+    display: none;
+}
+
+[data-rv-flip-trio] .sa-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+/* The dialog's bar already says the option's name and what it shows. */
+[data-rv-flip-trio] :is(.sa-label-row, .sa-see, .sa-verdict) {
+    display: none;
+}
+
+.sa-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.sa-label-row__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.sa-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sa-see,
+.sa-verdict {
+    margin: 0;
+    max-inline-size: 110ch;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sa-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The board: stage and loading pair on one row, the three chips under
+   them, all on 12 columns (UI principles 1 and 3). */
+.sa-scene {
+    container-type: inline-size;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.sa-board {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+.sa-part {
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sa-part--stage {
+    grid-column: span 7;
+}
+
+.sa-part--loads {
+    grid-column: span 5;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.sa-part--chip {
+    grid-column: span 4;
+}
+
+.sa-load {
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sa-cap {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.sa-cap b {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+@container (max-width: 46rem) {
+    .sa-part--stage,
+    .sa-part--loads {
+        grid-column: 1 / -1;
+    }
+
+    .sa-part--loads {
+        grid-template-rows: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sa-part--chip {
+        grid-column: span 4;
+    }
+}
+
+@container (max-width: 30rem) {
+    .sa-part--loads {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sa-part--chip {
+        grid-column: 1 / -1;
+    }
+}
+
+/* In the review dialog the stage is the card already. */
+.rv-dialog__stage .sa-sec {
+    padding: 0;
+    border: 0;
+    background: none;
+}

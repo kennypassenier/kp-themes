@@ -84,6 +84,8 @@ export const PAGES = [
             { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
             // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
             { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave' },
+            // Kenny, 2026-10-07 18:13: synthwave's anchor element (the one part every decision about the theme is made from), six bold candidates with the neon horizon as one of them, each a live scene with the busy, progress and three chips under it.
+            { href: 'research/synthwave-anchor/demo.html', label: "Synthwave's anchor element" },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.

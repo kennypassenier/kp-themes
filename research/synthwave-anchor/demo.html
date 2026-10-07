@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-theme="synthwave" data-cat-theme="synthwave" data-cat-theme-fixed data-review="synthwave-anchor" data-review-themes="synthwave">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — synthwave's anchor element</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" data-kp-register="synthwave" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="sa-page">
+            <header class="sa-intro" id="sa-intro">
+                <h1>Synthwave's anchor element</h1>
+                <p>
+                    Kenny, 2026-10-07: "ik wil voor synthwave meer opties voor het ankerelement". An anchor is the one recognisable element from which
+                    every decision about the whole theme is made: forest's is the tree progress bar, titanium's the loading animation, cyberpunk's the
+                    glitch, solstice's the sun on its arc, nostromo's the LED bank, brutalism's the hard slab, blueprint's the dimension line,
+                    terminal's the blinking block cursor. The colours are already right in every theme and are the shared base, so they are not what
+                    is chosen here: the anchor is a shape and a motion.
+                </p>
+                <p>
+                    One question: <b>which element is synthwave's anchor?</b> Six candidates, the recommendation first. Each board shows the element
+                    alone in the middle of its stage, playing by itself (away, arriving, standing, leaving), then the same element as a loading
+                    indicator (busy with no end known, and a progress from 0 to 100 %), and under them three tiny chips: how the same element would
+                    shape a button press, a card arriving and a toast leaving. Pick one in the review dialog (the arrow keys flip between the six).
+                </p>
+                <p class="sa-motion" data-sa-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every board shows its finished pose. Turn it off in the
+                    system settings to judge the candidates.
+                </p>
+            </header>
+
+            <section class="sa-story" aria-labelledby="h-story">
+                <h2 id="h-story">What the anchor has to carry</h2>
+                <div class="sa-story__grid">
+                    <div class="sa-story__text">
+                        <p>
+                            Synthwave is <b>the drive into the sunset, 1984</b>: a neon horizon on the night, the grid floor running to it, the
+                            striped sun sinking behind it, an arcade marquee and a VCR's on-screen display. Pink signals, cyan labels, laser yellow
+                            warns; the light is neon tubes, a near-white core with the colour in its glow; every cut is horizontal, nothing is
+                            notched, radius 2 px, and nothing flickers. "Cyberpunk is diagonal and day; synthwave is horizontal and night."
+                        </p>
+                        <p>
+                            Already decided: the progress bar is the sun's ramp with a glowing head and the busy road, the spinner the striped sun
+                            setting, the toast has its stripe, the link its stripe, the band its neon rule, and the loading family is the marquee. The
+                            anchor is the element that makes those parts one family. It must therefore be able to carry a progress and a busy state,
+                            and it must not be another theme's anchor.
+                        </p>
+                        <p>
+                            Kept out on purpose, because another theme owns them: a glitch or chromatic split (cyberpunk), a sun on an arc (solstice),
+                            an LED lamp bank (nostromo), a hard offset slab (brutalism), dimension lines (blueprint), a blinking block cursor
+                            (terminal), growth (forest) and mis-registered print plates (grotesk). Where a candidate still sits close to one of them,
+                            its note says so. The network graph is in no board and changes in no theme.
+                        </p>
+                    </div>
+                    <div class="sa-story__parts" aria-label="Synthwave's own parts, as the package draws them">
+                        <div class="sa-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar sa-story__bar" role="progressbar" aria-label="Waiting for the sync" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar sa-story__bar"
+                            role="progressbar"
+                            aria-label="Sync, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="sa-row">
+                            <button type="button" class="kp-button">Export</button>
+                            <button type="button" class="kp-button kp-button--primary">Drive</button>
+                            <span class="kp-badge">Draft</span>
+                        </div>
+                        <p class="sa-cap">Synthwave's decided parts today: the spinner, the busy road, the sun's ramp, the buttons.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="sa-sec"
+                data-review-item="synthwave-anchor"
+                data-review-mode="aspects"
+                data-review-rows="data-sa-aspect"
+                data-review-components="synthwave-anchor"
+                data-review-title="Synthwave's anchor element"
+                data-sa-state="auto"
+                aria-labelledby="h-sa"
+            >
+                <div class="sa-sec__head">
+                    <h2 id="h-sa">Which element is synthwave's anchor?</h2>
+                    <p>
+                        Each board is one candidate. Top left: the element alone in the middle of its stage, away, arriving, standing and leaving by
+                        itself. Top right: the same element as a loading indicator, busy (no end known) and as a progress that runs from 0 to 100 %.
+                        Bottom: three tiny chips, a button press, a card arriving and a toast leaving, all shaped by that one element.
+                    </p>
+                    <ol class="sa-toc" data-sa-toc></ol>
+                </div>
+                <div class="sa-controls" data-review-controls>
+                    <div class="sa-actions" role="group" aria-label="State of the element">
+                        <b>State of the element:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-mode="auto" aria-pressed="true">Cycle by itself</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-mode="rest" aria-pressed="false">At rest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-mode="arrive" aria-pressed="false">Arriving only</button>
+                    </div>
+                    <div class="sa-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-sa-replay data-review-plays="anchor">Replay</button>
+                    </div>
+                    <div class="sa-actions" role="group" aria-label="Animation speed">
+                        <b>Slow every animation down:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-speed="1" aria-pressed="true">x1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-speed="0.5" aria-pressed="false">x2</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sa-speed="0.25" aria-pressed="false">x4</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="sa-aspects" data-sa-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-anchor-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

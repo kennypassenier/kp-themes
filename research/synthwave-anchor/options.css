@@ -1,0 +1,1273 @@
+/* research/synthwave-anchor: every candidate's own drawing, in the theme's
+   signature layer, scoped by the board's attribute (`data-sa-anchor`). Colours
+   come from the theme's tokens only; every motion sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the finished
+   element (the progress shown at 62 %). Durations are multiplied by --sa-slow
+   (1, 2 or 4: the page's speed buttons).
+
+   How the motion is built: each part that arrives carries `.sa-arr` and one
+   kind (`.sa-k-draw`, `.sa-k-clipx` …); the kind names its keyframes
+   (`--kf`), its own `--d` (delay) and `--t` (duration), and its pose while
+   away (the `gap` rules). The clock's `data-sa-phase` plays them at `in` and
+   `hold`; at `out` the same keyframes, curve and duration run with the
+   direction reversed and the delay mirrored (`--T - --d - --t`, `--T` being the
+   board's span), so every leave is its arrival played backwards, what arrived
+   last leaving first. Light switches (the bulbs, the typed blocks) in hard
+   steps; bodies glide on the sunrise curve; nothing flickers. */
+
+/* The one progress every candidate reads (0 to 1) and the tape counter. */
+@property --sa-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --sa-n {
+    syntax: '<integer>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    :is(.sa-page, .rv-dialog__stage) {
+        /* The review dialog moves the sections out of the page into its
+           stage, so the tokens must be defined there too. */
+        --sy-sun: cubic-bezier(0.65, 0, 0.35, 1);
+        /* The neon rule: a near-white core, the colour in the bloom. */
+        --sy-tube: 0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.6), 0 0 14px hsl(from var(--primary) h s l / 0.3);
+        --sy-tube-up:
+            0 0 2px var(--sidebar-background), 0 0 7px hsl(from var(--primary) h s l / 0.95), 0 0 18px hsl(from var(--primary) h s l / 0.65),
+            0 0 34px hsl(from var(--primary) h s l / 0.4);
+        --sa-pink-dim: hsl(from var(--primary) h s l / 0.26);
+        --sa-pink-line: hsl(from var(--primary) h s l / 0.7);
+    }
+
+    /* ── The stage: a container, so every drawing is in its own units ── */
+
+    .sa-stage {
+        position: relative;
+        container-type: size;
+        overflow: hidden;
+        inline-size: 100%;
+        aspect-ratio: 2.1;
+        border: 1px solid var(--border);
+        background: var(--background);
+    }
+
+    .sa-stage--mini {
+        aspect-ratio: auto;
+        block-size: 8.5rem;
+    }
+
+    .sa-stage--chip {
+        aspect-ratio: auto;
+        block-size: 6.5rem;
+    }
+
+    @container (max-width: 30rem) {
+        .sa-stage:not(.sa-stage--mini, .sa-stage--chip) {
+            aspect-ratio: 1.55;
+        }
+    }
+
+    .sa-anchor {
+        position: absolute;
+        inset: 0;
+        --sa-p: 1;
+    }
+
+    .sa-anchor > * {
+        position: absolute;
+    }
+
+    /* A progress that is not finished reads 62 % when nothing moves. */
+    .sa-anchor[data-sa-view='progress'] {
+        --sa-p: 0.62;
+    }
+
+    /* ── The object in the middle: a tape plate with its stripe ──────── */
+
+    .sa-obj {
+        position: relative;
+        box-sizing: border-box;
+        display: grid;
+        justify-items: center;
+        gap: 0.1em;
+        inline-size: min(58cqw, 24rem);
+        padding: 0.6em 0.8em 0.5em;
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 -2px 0 hsl(from var(--sidebar-background) h s l / 0.7);
+        color: var(--card-foreground);
+        font-size: clamp(0.68rem, 6cqh, 1.2rem);
+        line-height: 1.15;
+        text-align: center;
+    }
+
+    .sa-obj::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        block-size: 2px;
+        background: var(--kp-stripe);
+    }
+
+    .sa-obj--toast {
+        inline-size: min(70cqw, 18rem);
+    }
+
+    .sa-obj__title {
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 0.95em;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-shadow: var(--sy-tube);
+        text-transform: uppercase;
+    }
+
+    .sa-obj__body {
+        color: var(--accent);
+        font-family: var(--theme-font-mono);
+        font-size: 1.2em;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .sa-btn {
+        position: relative;
+    }
+
+    .sa-pct::after {
+        counter-reset: sa-pct round(calc(var(--sa-p) * 100), 1);
+        content: counter(sa-pct) ' %';
+    }
+
+    /* ── The floor, shared by the horizon and the ridge ──────────────── */
+
+    .sa-floor {
+        inset: 60% 0 0;
+        overflow: hidden;
+        perspective: 26cqw;
+        perspective-origin: 50% 0;
+        clip-path: inset(0 calc((1 - var(--sa-p)) * 50%));
+        mask-image: linear-gradient(to bottom, transparent, #000 62%);
+    }
+
+    .sa-floor b {
+        position: absolute;
+        inset-inline: -60%;
+        inset-block-start: 0;
+        block-size: 90cqw;
+        transform-origin: 50% 0;
+        transform: rotateX(76deg);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.85) 0 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.85) 0 1px, transparent 1px);
+        background-size: 3.4cqw 3.4cqw;
+    }
+
+    /* ═══ 1 · THE NEON HORIZON ═════════════════════════════════════════
+       One tube across the stage, the floor converging on it. The tube's
+       lit length is the progress; the object rises over it. */
+
+    .sa-h-haze {
+        inset: 0;
+        background: radial-gradient(ellipse 58% 30% at 50% 60%, hsl(from var(--primary) h s l / 0.3), transparent 74%);
+    }
+
+    .sa-h-tube {
+        inset-inline: 6%;
+        inset-block-start: 60%;
+        block-size: 3px;
+        margin-block-start: -1.5px;
+        border-radius: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube-up);
+        transform: scaleX(var(--sa-p));
+    }
+
+    /* The cyan far glow of the horizon, one hairline just under the tube. */
+    .sa-h-far {
+        inset-inline: 14%;
+        inset-block-start: calc(60% + 8px);
+        block-size: 1px;
+        background: hsl(from var(--accent) h s l / 0.7);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.5);
+        transform: scaleX(var(--sa-p));
+    }
+
+    .sa-h-gate {
+        inset-inline: 0;
+        inset-block-end: 40%;
+        block-size: 58%;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    /* ═══ 2 · THE WIREFRAME RIDGE ══════════════════════════════════════
+       A neon polyline on the horizon, its valleys filled with the grid. */
+
+    .sa-scene[data-sa-anchor='ridge'] .sa-floor {
+        clip-path: none;
+    }
+
+    .sa-r-box {
+        inset-inline-start: 50%;
+        inset-block-end: 40%;
+        block-size: min(46cqh, 23cqw);
+        aspect-ratio: 4;
+        translate: -50% 0;
+        --sw: 0.55;
+    }
+
+    .sa-r-box > * {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .sa-anchor[data-sa-view='busy'] .sa-r-box,
+    .sa-anchor[data-sa-view='progress'] .sa-r-box,
+    .sa-anchor[data-sa-view='chip'] .sa-r-box {
+        --sw: 1.5;
+    }
+
+    .sa-r-valley,
+    .sa-r-ribs {
+        clip-path: inset(0 calc((1 - var(--sa-p)) * 100%) 0 0);
+    }
+
+    .sa-r-valley b {
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(
+            0% 100%,
+            7% 84%,
+            13% 96%,
+            22% 60%,
+            28% 76%,
+            35% 44%,
+            42% 68%,
+            47% 24%,
+            50% 8%,
+            53% 24%,
+            59% 68%,
+            66% 48%,
+            73% 76%,
+            80% 56%,
+            88% 84%,
+            94% 72%,
+            100% 100%
+        );
+        background:
+            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.4) 0 1px, transparent 1px 14%),
+            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 3.5%);
+    }
+
+    .sa-r-ribs path {
+        stroke: hsl(from var(--primary) h s l / 0.55);
+        stroke-width: calc(var(--sw) * 0.45);
+    }
+
+    .sa-r-ghost {
+        stroke: var(--sa-pink-dim);
+        stroke-width: var(--sw);
+        stroke-linejoin: round;
+    }
+
+    .sa-r-line {
+        stroke: var(--kp-core);
+        stroke-width: var(--sw);
+        stroke-linejoin: round;
+        stroke-dasharray: 1;
+        stroke-dashoffset: calc(1 - var(--sa-p));
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.9)) drop-shadow(0 0 7px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    .sa-r-pulse {
+        display: none;
+        stroke: var(--kp-core);
+        stroke-width: calc(var(--sw) * 1.2);
+        stroke-linejoin: round;
+        stroke-dasharray: 0.14 0.86;
+        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sa-r-slot {
+        inset-inline: 0;
+        inset-block-end: 9%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* ═══ 3 · THE VCR ON-SCREEN DISPLAY ════════════════════════════════
+       Chunky pixel type on the dark: PLAY, a segmented counter, a blocky
+       SP/LP bar. The tracking bar is the progress, in whole blocks. */
+
+    .sa-scene[data-sa-anchor='vcr'] .sa-anchor:is([data-sa-view='stage'], [data-sa-view='chip']) {
+        --sa-p: 0.75;
+    }
+
+    .sa-v-play,
+    .sa-v-count,
+    .sa-v-bar em {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .sa-v-play {
+        inset-inline-start: 6%;
+        inset-block-start: 6%;
+        color: var(--kp-core);
+        font-size: clamp(1.1rem, 14cqh, 2.8rem);
+        line-height: 1;
+        text-shadow: 0 0 0.3em hsl(from var(--primary) h s l / 0.7);
+        white-space: nowrap;
+    }
+
+    .sa-v-play b {
+        color: var(--primary);
+        font-weight: 400;
+    }
+
+    .sa-v-count {
+        inset-inline-end: 6%;
+        inset-block-start: 6%;
+        display: inline-grid;
+        font-size: clamp(1rem, 12cqh, 2.4rem);
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .sa-v-count > * {
+        grid-area: 1 / 1;
+        font-style: normal;
+        text-decoration: none;
+    }
+
+    .sa-v-count s {
+        color: hsl(from var(--accent) h s l / 0.16);
+    }
+
+    .sa-v-count i {
+        color: var(--accent);
+        text-shadow: 0 0 0.4em hsl(from var(--accent) h s l / 0.6);
+    }
+
+    .sa-anchor[data-sa-view='progress'] .sa-v-count i::after {
+        counter-reset: sa-s round(calc(var(--sa-p) * 48), 1);
+        content: '00:00:' counter(sa-s, decimal-leading-zero);
+    }
+
+    .sa-anchor[data-sa-view='busy'] .sa-v-count i::after {
+        counter-reset: sa-s var(--sa-n);
+        content: '00:00:' counter(sa-s, decimal-leading-zero);
+    }
+
+    .sa-anchor[data-sa-view='chip'] .sa-v-count {
+        display: none;
+    }
+
+    .sa-v-slot {
+        inset-inline: 0;
+        inset-block: 25% 27%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sa-v-bar {
+        inset-inline: 6%;
+        inset-block-end: 8%;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.7em;
+        --sa-q: round(down, calc(var(--sa-p) * 16), 1);
+    }
+
+    .sa-v-bar em {
+        color: var(--accent);
+        font-size: clamp(0.8rem, 8cqh, 1.4rem);
+        font-style: normal;
+        line-height: 1;
+    }
+
+    .sa-v-blocks {
+        position: relative;
+        block-size: clamp(0.5rem, 7cqh, 1rem);
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.24) 0 calc(6.25% - 3px), transparent calc(6.25% - 3px) 6.25%);
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sa-v-blocks u {
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 calc(6.25% - 3px), transparent calc(6.25% - 3px) 6.25%);
+        clip-path: inset(0 calc(100% - var(--sa-q) * 6.25%) 0 0);
+        text-decoration: none;
+    }
+
+    /* ═══ 4 · THE CHROME PLATE ═════════════════════════════════════════
+       A chrome wordmark split by a hard horizon line: the sky half above,
+       its mirror below. The line rising through the plate is the progress. */
+
+    .sa-c-slot {
+        inset: 0;
+        display: grid;
+        place-items: center;
+    }
+
+    .sa-obj.sa-obj--chrome {
+        inline-size: auto;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        gap: 0.5em;
+        font-size: clamp(0.68rem, 6cqh, 1.2rem);
+    }
+
+    .sa-obj--chrome::before {
+        display: none;
+    }
+
+    .sa-c-word {
+        position: relative;
+        display: grid;
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.3rem, min(32cqh, 13cqw), 6.5rem);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        line-height: 1;
+    }
+
+    .sa-c-sky,
+    .sa-c-mir > span {
+        display: block;
+        padding-inline: 0.2em;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* Above the line: near-white to cyan, a hard edge at the horizon. */
+    .sa-c-sky {
+        background-image: linear-gradient(
+            to bottom,
+            var(--kp-core) 4%,
+            hsl(from var(--accent) h 100% 88%) 28%,
+            hsl(from var(--accent) h 90% 62%) 49%,
+            hsl(from var(--primary) h 100% 78%) 50%,
+            hsl(from var(--primary) h 100% 60%) 74%,
+            hsl(from var(--primary) h 80% 34%) 100%
+        );
+        filter: drop-shadow(0 0 0.12em hsl(from var(--accent) h s l / 0.45));
+    }
+
+    /* Below the line: the water, opaque, and the word's lower half in the sky's
+       colours mirrored (bright at the line, darker toward the foot). */
+    .sa-c-mir {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: var(--background);
+        clip-path: inset(calc(100% - var(--sa-p) * 50%) 0 0 0);
+    }
+
+    .sa-c-mir > span {
+        background-image: linear-gradient(
+            to bottom,
+            hsl(from var(--primary) h 100% 80%) 50%,
+            hsl(from var(--primary) h 100% 64%) 66%,
+            hsl(from var(--primary) h 85% 30%) 100%
+        );
+    }
+
+    .sa-c-linebox {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        transform: translateY(calc((1 - var(--sa-p)) * 50%));
+    }
+
+    .sa-c-line {
+        position: absolute;
+        inset-inline: -8%;
+        inset-block-start: 50%;
+        block-size: 2px;
+        margin-block-start: -1px;
+        border-radius: 1px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube-up);
+    }
+
+    /* The glint is a horizontal streak on the line, never a diagonal sweep. */
+    .sa-c-glint {
+        position: absolute;
+        inset-inline-start: -8%;
+        inset-block-start: calc(50% - 3px);
+        inline-size: 20%;
+        block-size: 6px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, transparent, var(--kp-core) 50%, transparent);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.7);
+        opacity: 0;
+    }
+
+    /* ═══ 5 · THE SLAT CUT ═════════════════════════════════════════════
+       Ten slats cover the object and open like blinds; the lower the slat,
+       the thinner it ends, the way the sun's stripes widen. */
+
+    .sa-s-wrap {
+        inset-inline-start: 50%;
+        inset-block-start: 50%;
+        translate: -50% -50%;
+        padding: 0;
+    }
+
+    /* The blind is taller than the object: the slats above and below it stay
+       as the visible stripes when the blind is open. */
+    .sa-s-slats {
+        position: absolute;
+        inset: -16% -4% -22%;
+        display: grid;
+        grid-template-rows: repeat(10, minmax(0, 1fr));
+    }
+
+    .sa-s-slat {
+        display: block;
+        --rest: calc(0.34 - 0.03 * var(--i));
+        --now: calc(1 - clamp(0, calc(var(--sa-p) * 10 - var(--i)), 1) * (1 - var(--rest)));
+        border-block-start: 1px solid var(--sa-pink-line);
+        background: var(--popover);
+        box-shadow: inset 0 -2px 0 hsl(from var(--sidebar-background) h s l / 0.8);
+        transform: scaleY(var(--now));
+    }
+
+    .sa-s-rail {
+        position: absolute;
+        inset-inline: -6%;
+        block-size: 2px;
+        border-radius: 1px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube);
+        transform: scaleX(1);
+    }
+
+    .sa-s-rail--top {
+        inset-block-start: calc(-16% - 4px);
+    }
+
+    .sa-s-rail--bottom {
+        inset-block-end: calc(-22% - 4px);
+    }
+
+    .sa-s-wrap .sa-s-lift {
+        position: relative;
+        z-index: 2;
+        display: block;
+        margin: 0.35rem;
+    }
+
+    .sa-s-wrap :is(.sa-obj__title, .sa-obj__body, .sa-s-lift) {
+        --d: 450ms;
+        --t: 350ms;
+    }
+
+    .sa-s-wrap :is(.sa-obj__title, .sa-obj__body) {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ═══ 6 · THE MARQUEE FRAME ════════════════════════════════════════
+       32 bulbs round a sign frame, numbered clockwise from the top start. */
+
+    .sa-m-sign {
+        inset-inline-start: 50%;
+        inset-block-start: 50%;
+        inline-size: min(66cqw, 30rem);
+        block-size: 74cqh;
+        translate: -50% -50%;
+    }
+
+    .sa-m-frame {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-template-rows: repeat(6, minmax(0, 1fr));
+    }
+
+    .sa-m-frame::before {
+        content: '';
+        position: absolute;
+        inset: 8.333% 4.167%;
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+    }
+
+    .sa-m-bulb {
+        position: relative;
+        place-self: center;
+        inline-size: clamp(0.3rem, 3.6cqh, 0.6rem);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--sa-pink-dim);
+    }
+
+    .sa-m-bulb b {
+        position: absolute;
+        inset: -1px;
+        border-radius: 50%;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 0.2em 0.04em var(--primary),
+            0 0 0.9em hsl(from var(--primary) h s l / 0.7);
+        opacity: round(down, clamp(0, calc(var(--sa-p) * 32 - var(--k)), 1), 1);
+    }
+
+    .sa-m-slot {
+        position: absolute;
+        inset: 17% 8%;
+        display: grid;
+        place-items: center;
+    }
+
+    .sa-m-slot > .sa-obj {
+        inline-size: 100%;
+    }
+
+    /* ── Timing of every candidate's arrival (--d delay, --t duration) ── */
+
+    .sa-arr {
+        --t: 500ms;
+        --d: 0ms;
+    }
+
+    /* The button's dip lands as the element completes, so the chip's span is the board's. */
+    .sa-btn {
+        --t: 350ms;
+        --d: calc(var(--T) - 350ms);
+    }
+
+    /* Present only so a cell that arrives is told from one that was there all along. */
+    .sa-mark {
+        inset: 0 auto auto 0;
+        inline-size: 0;
+        block-size: 0;
+    }
+
+    .sa-scene[data-sa-anchor='horizon'] {
+        --T: 1100ms;
+    }
+    .sa-scene[data-sa-anchor='horizon'] .sa-h-haze {
+        --t: 600ms;
+    }
+    .sa-scene[data-sa-anchor='horizon'] .sa-h-far {
+        --d: 100ms;
+    }
+    .sa-scene[data-sa-anchor='horizon'] .sa-obj {
+        --t: 800ms;
+        --d: 300ms;
+    }
+
+    .sa-scene[data-sa-anchor='ridge'] {
+        --T: 1200ms;
+    }
+    .sa-scene[data-sa-anchor='ridge'] :is(.sa-r-line, .sa-r-valley, .sa-r-ribs, .sa-floor) {
+        --t: 700ms;
+    }
+    .sa-scene[data-sa-anchor='ridge'] .sa-r-ribs {
+        --d: 200ms;
+    }
+    .sa-scene[data-sa-anchor='ridge'] .sa-r-valley {
+        --d: 350ms;
+    }
+    .sa-scene[data-sa-anchor='ridge'] .sa-obj {
+        --t: 600ms;
+        --d: 600ms;
+    }
+
+    .sa-scene[data-sa-anchor='vcr'] {
+        --T: 1200ms;
+    }
+    .sa-scene[data-sa-anchor='vcr'] .sa-v-play {
+        --t: 450ms;
+        --ease: steps(6, end);
+    }
+    .sa-scene[data-sa-anchor='vcr'] .sa-v-count {
+        --t: 600ms;
+        --d: 150ms;
+        --ease: steps(8, end);
+    }
+    .sa-scene[data-sa-anchor='vcr'] .sa-v-bar {
+        --t: 700ms;
+        --d: 300ms;
+        --ease: steps(16, end);
+    }
+    .sa-scene[data-sa-anchor='vcr'] .sa-obj {
+        --t: 700ms;
+        --d: 500ms;
+        --ease: steps(12, end);
+    }
+
+    .sa-scene[data-sa-anchor='chrome'] {
+        --T: 1200ms;
+    }
+    .sa-scene[data-sa-anchor='chrome'] .sa-c-sky {
+        --d: 200ms;
+        --t: 600ms;
+    }
+    .sa-scene[data-sa-anchor='chrome'] .sa-c-glint {
+        --d: 600ms;
+        --t: 600ms;
+        --ease: linear;
+    }
+    .sa-scene[data-sa-anchor='chrome'] .sa-obj__body {
+        --d: 600ms;
+        --t: 400ms;
+    }
+
+    .sa-scene[data-sa-anchor='slat'] {
+        --T: 1100ms;
+    }
+    .sa-scene[data-sa-anchor='slat'] .sa-s-slat {
+        --t: 650ms;
+        --d: calc(var(--i) * 50ms);
+    }
+
+    .sa-scene[data-sa-anchor='marquee'] {
+        --T: 900ms;
+    }
+    .sa-scene[data-sa-anchor='marquee'] .sa-m-bulb b {
+        --t: 140ms;
+        --ease: linear;
+    }
+    .sa-scene[data-sa-anchor='marquee'] .sa-obj {
+        --t: 600ms;
+        --d: 300ms;
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    .sa-k-fade {
+        --kf: sa-fade;
+        --kfo: sa-fade-r;
+    }
+    .sa-k-draw {
+        --kf: sa-draw;
+        --kfo: sa-draw-r;
+    }
+    .sa-k-clipc {
+        --kf: sa-clipc;
+        --kfo: sa-clipc-r;
+    }
+    .sa-k-clipx {
+        --kf: sa-clipx;
+        --kfo: sa-clipx-r;
+    }
+    .sa-k-clipv {
+        --kf: sa-clipv;
+        --kfo: sa-clipv-r;
+    }
+    .sa-k-clipup {
+        --kf: sa-clipup;
+        --kfo: sa-clipup-r;
+    }
+    .sa-k-rise {
+        --kf: sa-rise;
+        --kfo: sa-rise-r;
+    }
+    .sa-k-dash {
+        --kf: sa-dash;
+        --kfo: sa-dash-r;
+    }
+    .sa-k-lift {
+        --kf: sa-lift;
+        --kfo: sa-lift-r;
+    }
+    .sa-k-glint {
+        --kf: sa-glint;
+        --kfo: sa-glint-r;
+    }
+    .sa-k-slat {
+        --kf: sa-slat;
+        --kfo: sa-slat-r;
+    }
+    .sa-k-dip {
+        --kf: sa-dip;
+        --kfo: sa-dip-r;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Away during `gap`: the pose each kind's keyframes start from. */
+        .sa-scene[data-sa-phase='gap'] :is([data-sa-view='stage'], [data-sa-view='chip']) .sa-mark {
+            visibility: hidden;
+        }
+
+        .sa-scene[data-sa-phase='gap'] :is([data-sa-view='stage'], [data-sa-view='chip']) {
+            & .sa-k-fade {
+                opacity: 0;
+            }
+            & .sa-k-draw {
+                transform: scaleX(0);
+            }
+            & .sa-k-clipc {
+                clip-path: inset(0 50% 0 50%);
+            }
+            & .sa-k-clipx {
+                clip-path: inset(0 100% 0 0);
+            }
+            & .sa-k-clipv {
+                clip-path: inset(50% 0 50% 0);
+            }
+            & .sa-k-clipup {
+                clip-path: inset(100% 0 0 0);
+            }
+            & .sa-k-rise {
+                transform: translateY(101%);
+            }
+            & .sa-k-dash {
+                stroke-dashoffset: 1;
+            }
+            & .sa-k-lift {
+                transform: translateY(50%);
+                opacity: 0;
+            }
+            & .sa-k-glint {
+                transform: translateX(0);
+                opacity: 0;
+            }
+            & .sa-k-slat {
+                transform: scaleY(1);
+            }
+        }
+
+        /* Arriving (`in`) and standing (`hold`): the keyframes forwards. */
+        .sa-scene:is([data-sa-phase='in'], [data-sa-phase='hold']) :is([data-sa-view='stage'], [data-sa-view='chip']) .sa-arr {
+            animation: var(--kf) calc(var(--t) * var(--sa-slow, 1)) var(--ease, var(--sy-sun)) calc(var(--d) * var(--sa-slow, 1)) both;
+        }
+
+        /* Leaving (`out`): the same keyframes (a copy named -r, because an animation of
+           the same name would carry on from where `hold` left it instead of starting), the
+           same curve and duration backwards, the delay mirrored. */
+        .sa-scene[data-sa-phase='out'] :is([data-sa-view='stage'], [data-sa-view='chip']) .sa-arr {
+            animation: var(--kfo) calc(var(--t) * var(--sa-slow, 1)) var(--ease, var(--sy-sun))
+                calc((var(--T) - var(--d) - var(--t)) * var(--sa-slow, 1)) both reverse;
+        }
+
+        @keyframes sa-fade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes sa-fade-r {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes sa-draw {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(var(--sa-p));
+            }
+        }
+
+        @keyframes sa-draw-r {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(var(--sa-p));
+            }
+        }
+
+        @keyframes sa-clipc {
+            from {
+                clip-path: inset(0 50% 0 50%);
+            }
+            to {
+                clip-path: inset(0 calc((1 - var(--sa-p)) * 50%));
+            }
+        }
+
+        @keyframes sa-clipc-r {
+            from {
+                clip-path: inset(0 50% 0 50%);
+            }
+            to {
+                clip-path: inset(0 calc((1 - var(--sa-p)) * 50%));
+            }
+        }
+
+        @keyframes sa-clipx {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes sa-clipx-r {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes sa-clipv {
+            from {
+                clip-path: inset(50% 0 50% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes sa-clipv-r {
+            from {
+                clip-path: inset(50% 0 50% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes sa-clipup {
+            from {
+                clip-path: inset(100% 0 0 0);
+            }
+            to {
+                clip-path: inset(calc(100% - var(--sa-p) * 50%) 0 0 0);
+            }
+        }
+
+        @keyframes sa-clipup-r {
+            from {
+                clip-path: inset(100% 0 0 0);
+            }
+            to {
+                clip-path: inset(calc(100% - var(--sa-p) * 50%) 0 0 0);
+            }
+        }
+
+        @keyframes sa-rise {
+            from {
+                transform: translateY(101%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes sa-rise-r {
+            from {
+                transform: translateY(101%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes sa-dash {
+            from {
+                stroke-dashoffset: 1;
+            }
+            to {
+                stroke-dashoffset: calc(1 - var(--sa-p));
+            }
+        }
+
+        @keyframes sa-dash-r {
+            from {
+                stroke-dashoffset: 1;
+            }
+            to {
+                stroke-dashoffset: calc(1 - var(--sa-p));
+            }
+        }
+
+        @keyframes sa-lift {
+            from {
+                transform: translateY(50%);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes sa-lift-r {
+            from {
+                transform: translateY(50%);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes sa-glint {
+            from {
+                transform: translateX(0);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            to {
+                transform: translateX(480%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sa-glint-r {
+            from {
+                transform: translateX(0);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            to {
+                transform: translateX(480%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sa-slat {
+            from {
+                transform: scaleY(1);
+            }
+            to {
+                transform: scaleY(var(--now));
+            }
+        }
+
+        @keyframes sa-slat-r {
+            from {
+                transform: scaleY(1);
+            }
+            to {
+                transform: scaleY(var(--now));
+            }
+        }
+
+        /* The press: the button's bloom drops and stays down. */
+        @keyframes sa-dip {
+            to {
+                filter: brightness(0.78) saturate(0.85);
+            }
+        }
+
+        @keyframes sa-dip-r {
+            to {
+                filter: brightness(0.78) saturate(0.85);
+            }
+        }
+
+        /* ── Loading: busy (no end known) and progress, looping in CSS ── */
+
+        .sa-anchor[data-sa-view='progress'] {
+            animation: sa-prog calc(5600ms * var(--sa-slow, 1)) linear infinite;
+        }
+
+        @keyframes sa-prog {
+            0% {
+                --sa-p: 0;
+            }
+            82%,
+            100% {
+                --sa-p: 1;
+            }
+        }
+
+        /* The VCR's tracking bar and the marquee's arc go in whole steps. */
+        .sa-scene[data-sa-anchor='vcr'] .sa-anchor[data-sa-view='progress'] {
+            animation-timing-function: steps(16, end);
+        }
+
+        .sa-scene[data-sa-anchor='marquee'] .sa-anchor[data-sa-view='progress'] {
+            animation-timing-function: steps(32, end);
+        }
+
+        /* 1 · the floor runs toward the horizon; the tube is struck outward and recedes. */
+        .sa-anchor:is([data-sa-view='busy'], [data-sa-view='progress']) .sa-floor b {
+            animation: sa-floor-run calc(1200ms * var(--sa-slow, 1)) linear infinite;
+        }
+
+        @keyframes sa-floor-run {
+            to {
+                background-position: 0 -3.4cqw;
+            }
+        }
+
+        .sa-scene[data-sa-anchor='horizon'] .sa-anchor[data-sa-view='busy'] {
+            animation: sa-breathe calc(1800ms * var(--sa-slow, 1)) var(--sy-sun) infinite alternate;
+        }
+
+        @keyframes sa-breathe {
+            from {
+                --sa-p: 0.14;
+            }
+            to {
+                --sa-p: 1;
+            }
+        }
+
+        /* 2 · a bright run travels the ridge, the valleys' grid runs. */
+        .sa-anchor[data-sa-view='busy'] .sa-r-line {
+            display: none;
+        }
+
+        .sa-anchor[data-sa-view='busy'] .sa-r-pulse {
+            display: inline;
+            animation: sa-pulse calc(2200ms * var(--sa-slow, 1)) linear infinite;
+        }
+
+        @keyframes sa-pulse {
+            from {
+                stroke-dashoffset: 0;
+            }
+            to {
+                stroke-dashoffset: -1;
+            }
+        }
+
+        .sa-anchor:is([data-sa-view='busy'], [data-sa-view='progress']) .sa-r-valley b {
+            animation: sa-valley-run calc(1600ms * var(--sa-slow, 1)) linear infinite;
+        }
+
+        @keyframes sa-valley-run {
+            to {
+                background-position:
+                    0 -14%,
+                    3.5% 0;
+            }
+        }
+
+        /* 3 · the counter ticks, a window of four blocks searches the bar. */
+        .sa-anchor[data-sa-view='busy'] {
+            --sa-p: 1;
+        }
+
+        .sa-scene[data-sa-anchor='vcr'] .sa-anchor[data-sa-view='busy'] {
+            animation: sa-tick calc(59000ms * var(--sa-slow, 1)) steps(59, end) infinite;
+        }
+
+        @keyframes sa-tick {
+            from {
+                --sa-n: 0;
+            }
+            to {
+                --sa-n: 59;
+            }
+        }
+
+        .sa-scene[data-sa-anchor='vcr'] .sa-anchor[data-sa-view='busy'] .sa-v-blocks u {
+            clip-path: inset(0 75% 0 0);
+            animation: sa-search calc(2400ms * var(--sa-slow, 1)) steps(12, end) infinite alternate;
+        }
+
+        @keyframes sa-search {
+            from {
+                clip-path: inset(0 75% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 75%);
+            }
+        }
+
+        /* 4 · the glint runs along the horizon line, then rests. */
+        .sa-anchor:is([data-sa-view='busy'], [data-sa-view='progress']) .sa-c-glint {
+            animation: sa-glint-run calc(2400ms * var(--sa-slow, 1)) linear infinite;
+        }
+
+        @keyframes sa-glint-run {
+            0% {
+                transform: translateX(0);
+                opacity: 0;
+            }
+            8% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            58%,
+            100% {
+                transform: translateX(480%);
+                opacity: 0;
+            }
+        }
+
+        /* 5 · a rolling wave through the slats. */
+        .sa-anchor[data-sa-view='busy'] .sa-s-slat {
+            animation: sa-wave calc(1800ms * var(--sa-slow, 1)) var(--sy-sun) infinite alternate;
+            animation-delay: calc(var(--i) * 80ms * var(--sa-slow, 1));
+        }
+
+        @keyframes sa-wave {
+            from {
+                transform: scaleY(1);
+            }
+            to {
+                transform: scaleY(var(--rest));
+            }
+        }
+
+        /* 6 · one bulb in four lit, the light stepping a bulb per beat (225 ms). */
+        .sa-anchor[data-sa-view='busy'] .sa-m-bulb b {
+            opacity: 0;
+            animation: sa-chase calc(900ms * var(--sa-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc((var(--ph) * 225ms - 675ms) * var(--sa-slow, 1));
+        }
+
+        @keyframes sa-chase {
+            0%,
+            74.99% {
+                opacity: 0;
+            }
+            75%,
+            100% {
+                opacity: 1;
+            }
+        }
+    }
+}
