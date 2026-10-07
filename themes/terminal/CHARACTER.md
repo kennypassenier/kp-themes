@@ -167,6 +167,8 @@ glows a rim: a cell is lit or it is not.
   a non-colour cue rather than by hue … warning and info face the same wall").
   G13 gives it a word.
 
+**Anchor (Kenny, 07/10/2026 18:13): the blinking block cursor.** The one block of a character cell is the element every terminal decision departs from (loading, arrival, leave, hover, focus): does it type, erase or show something with that cursor.
+
 What Kenny has **not** decided, and what `research/terminal-character` asks:
 the grammar's parameters (the step, the arrival's cursor, the opening, the
 durations, the colour, the surface beyond the family, the type, the motifs),
