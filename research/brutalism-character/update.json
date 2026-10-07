@@ -34,7 +34,7 @@
             },
             "motifs": {
                 "comment": "it's not showing anything for any of the three examples, so fix that?",
-                "reply": "That was broken: the today bar merged into the day's border, the bolts were too small and the dialog shrank the tall scene too far. The scene is rebuilt as six named, larger specimens, and all three options now visibly show their motifs."
+                "reply": "That was broken: the review dialog shrank the tall scene to about half its size, so the motifs vanished, and the today bar merged into the day's border while the bolts were too small. The dialog now stops shrinking at 0.75 and scrolls the stage, and the scene is rebuilt as six named, larger specimens. Checked in Firefox in the dialog at 1280x720: the weight, the tape and the bolts show at once, the rest below."
             }
         }
     }
