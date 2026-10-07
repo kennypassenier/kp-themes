@@ -1461,7 +1461,7 @@ const PICKED = {
     pastel: ['1', '1', '3', '2', '1'],
     terminal: ['3', '2', '3', '1', '2'],
     forest: ['3', '1', '3', '2', '3'],
-    'high-contrast': ['3', '3', '3', '1', '2'],
+    'high-contrast': ['3', '1', '3', '1', '2'],
     sepia: ['3', '1', '2', '1', '1'],
     blueprint: ['2', '2', '1', '2', '1'],
     solstice: ['2', '2', '2', '2', '3'],
@@ -1476,9 +1476,14 @@ const PICKED = {
 /** The settled pick of one aspect, or '' when it is open in round 2. */
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
 // Round 2's new options replace an open aspect's (each carries its own key,
-// the attribute value its CSS answers to; round 1's are keyed 1, 2, 3).
+// the attribute value its CSS answers to; round 1's are keyed 1, 2, 3). Kept
+// unconditional, not gated on `!keptOf`: a round 2 aspect that is since
+// decided (PICKED filled in) still renders from round 2's options — the
+// decided pick IS one of them [fix: a filled PICKED used to block this
+// merge, so decided.json's round-2 picks resolved against round 1's
+// options instead].
 for (const [t, aspects] of Object.entries({ ...R2A, ...R2B }))
-    for (const [id, options] of Object.entries(aspects)) if (!keptOf(t, /** @type {Aspect} */ (id)) && options.length >= 3) IDEAS[t][id] = options;
+    for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 /** The attribute value of option n of an aspect in a theme. */
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
 /** The most options any row shows. */

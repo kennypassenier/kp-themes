@@ -60,7 +60,7 @@
         },
         "high-contrast": {
             "shape": "3",
-            "loading": "3",
+            "loading": "r2-hc-load-1",
             "arrival": "3",
             "tone": "1",
             "select": "2"
@@ -105,7 +105,7 @@
             "loading": "3",
             "arrival": "3",
             "tone": "2",
-            "select": "1"
+            "select": "r2-ph-sel-1"
         },
         "retro": {
             "shape": "3",

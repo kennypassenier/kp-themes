@@ -87,15 +87,15 @@
             "live": "2"
         },
         "brutalism": {
-            "shape": "2",
-            "loading": "1",
-            "arrival": "3",
+            "shape": "r3-br-shape-1",
+            "loading": "r3-br-load-1",
+            "arrival": "r3-br-arr-1",
             "tone": "3",
             "live": "1"
         },
         "deco": {
             "shape": "3",
-            "loading": "3",
+            "loading": "r3-dc-load-1",
             "arrival": "2",
             "tone": "3",
             "live": "3"
@@ -108,7 +108,7 @@
             "live": "1"
         },
         "retro": {
-            "shape": "2",
+            "shape": "r3-br-shape-1",
             "loading": "1",
             "arrival": "1",
             "tone": "3",
@@ -122,7 +122,7 @@
             "live": "1"
         },
         "nostromo": {
-            "shape": "1",
+            "shape": "r3-br-shape-1",
             "loading": "1",
             "arrival": "2",
             "tone": "3",

@@ -1447,10 +1447,10 @@ const PICKED = {
     sepia: ['2', '3', '2', '3', '1'],
     blueprint: ['1', '1', '2', '3', '1'],
     solstice: ['2', '2', '2', '3', '2'],
-    brutalism: ['2', '1', '3', '3', '1'],
-    deco: ['3', '3', '2', '3', '3'],
+    brutalism: ['1', '1', '1', '3', '1'],
+    deco: ['3', '1', '2', '3', '3'],
     phantom: ['3', '1', '3', '3', '1'],
-    retro: ['2', '1', '1', '3', '2'],
+    retro: ['1', '1', '1', '3', '2'],
     grotesk: ['1', '1', '2', '3', '1'],
     nostromo: ['1', '1', '2', '3', '2'],
     titanium: ['2', '3', '2', '3', '3'],
@@ -1459,11 +1459,15 @@ const PICKED = {
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
 // Round 3's new options replace an open aspect's (each carries its own key,
 // the attribute value its CSS answers to; round 2's are keyed 1, 2, 3),
-// merged per aspect.
+// merged per aspect. Kept unconditional, not gated on `!keptOf`: a round 3
+// aspect that is since decided (PICKED filled in) still renders from round
+// 3's options — the decided pick IS one of them [fix: a filled PICKED used
+// to block this merge, so decided.json's round-3 picks resolved against
+// round 2's options instead, e.g. nostromo's shape rendering "The CRT
+// trace" for a pick of "The vent grille"].
 for (const file of [R3A, R3B])
     for (const [t, aspects] of Object.entries(file))
-        for (const [id, options] of Object.entries(aspects))
-            if (!keptOf(t, /** @type {Aspect} */ (id)) && options.length >= 3) IDEAS[t][id] = options;
+        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 /** The attribute value of option n of an aspect in a theme. */
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
 /** The most options any row shows. */
