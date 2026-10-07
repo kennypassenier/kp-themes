@@ -1,0 +1,48 @@
+/* research/character-calendar, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change
+   (shape 3 stays the round logs, a day is round in a wood; loading 1, arrival
+   3, select 3; tone 2 stays the trail map).
+
+   - loading: a day has no room for a row, so it plants one tree on its
+     mound in three whole stages (seedling, sapling, tree), the days of a
+     week 150 ms apart, in place of the falling leaf;
+   - arrival: every day grows up out of its own line (20 ms apart in reading
+     order, 1000 ms on the growth curve), in place of the swing from 60 %;
+   - select: the pick is the person's act, so it is forest green (colour
+     rule G5), not clay; the brackets stay the field note's voice. */
+@layer kp.signature {
+    /* The date stands faint over the planting, as the strip's waiting parts do. */
+    [data-theme='forest'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading'] {
+        --cl-fg: hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    [data-theme='forest'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        inset: 14% 36% 10%;
+        inline-size: auto;
+        block-size: auto;
+        rotate: none;
+        border-radius: 0;
+        background: var(--primary);
+        mask:
+            var(--fog-pine) 50% 100% / 100% 100% no-repeat,
+            var(--fog-mound) 50% 100% / 100% 100% no-repeat;
+    }
+
+    [data-theme='forest'] [data-cl-select='3'] .kp-calendar {
+        --cl-pick: 2px solid var(--primary);
+        --cl-pick-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: fog-plant 1600ms step-end calc(var(--cl-col, 0) * -150ms) infinite;
+        }
+
+        [data-theme='forest'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            --cl-step: 20ms;
+            animation: fog-grow var(--fog-time) var(--fog-curve) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
+        }
+    }
+}

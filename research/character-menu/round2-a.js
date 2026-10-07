@@ -98,8 +98,8 @@ export default {
             },
             {
                 key: 'r2-ft-load-5',
-                name: 'The post sways',
-                text: 'The whole row rocks a few degrees like a trail marker post in the wind and settles back, as the columns’ post sways.',
+                name: 'The row is planted',
+                text: 'The loading entry stands still over the bar’s planted row: seedlings on cleared ground and a grove of whole trees filling it start to end.',
             },
             {
                 key: 'r2-ft-load-6',

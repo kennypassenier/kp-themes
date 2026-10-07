@@ -1,0 +1,115 @@
+/* research/character-kpi, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 2 (the canopy), loading 2, tone 3, interactive 2, live 3.
+
+   - corner: the leaf corner on the tile and on the field note;
+   - loading: the patch of daylight is retired; the tile's skeleton lines are
+     the package's planted rows (css/forest-register.css);
+   - tone: the change is a field note (italic, leaf-cornered, the tone's own
+     plate and ink); a warning or failed tile keeps a 3 px start edge in the
+     tone's ink, never the light plate (G5);
+   - interactive: a tile that is a link or a toggle is blazed on hover (the
+     plate no longer tints), focused with the two-channel ring, and a press
+     closes the blaze in (G12, proposal-21);
+   - live: a growth ring is drawn once round the changed figure; it no
+     longer swells. */
+@layer kp.signature {
+    [data-theme='forest'] [data-kf-shape='2'] .kp-kpi {
+        --kf-radius: var(--fog-leaf-plate);
+    }
+
+    /* Tone 3 · the field note. */
+    [data-theme='forest'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: var(--secondary);
+        --kf-delta-ink: var(--secondary-foreground);
+        --kf-delta-radius: var(--fog-leaf-small);
+        border-inline-start: 0;
+        font-style: italic;
+    }
+
+    [data-theme='forest'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta[data-kp-tone='good'] {
+        --kf-delta-bg: var(--success);
+        --kf-delta-ink: var(--success-foreground);
+    }
+
+    [data-theme='forest'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        --kf-delta-bg: var(--destructive);
+        --kf-delta-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='forest'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        border-inline-start: 3px solid var(--warning-foreground);
+    }
+
+    [data-theme='forest'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    /* Loading 2 · the canopy's daylight is retired. The tile's skeleton lines
+       are the package's planted rows (css/forest-register.css), so nothing
+       is drawn over them. */
+    [data-theme='forest'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: none;
+        animation: none;
+    }
+
+    /* Interactive 2 · the tag settles → blaze, two-channel ring, closed blaze. */
+    [data-theme='forest'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        --kf-hover-plate: var(--kf-plate);
+        outline-color: var(--primary);
+    }
+
+    [data-theme='forest'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        --kf-focus-outline: 2px solid var(--focus-ring-contrast);
+        --kf-focus-offset: 2px;
+        outline: var(--kf-focus-outline);
+        outline-offset: var(--kf-focus-offset);
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-theme='forest'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        --kf-press-plate: var(--kf-plate);
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+
+    /* Live 3 · the growth ring round the changed figure. */
+    [data-theme='forest'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        position: relative;
+        justify-self: start;
+        inline-size: fit-content;
+        animation: none;
+    }
+
+    [data-theme='forest'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::after {
+        content: '';
+        position: absolute;
+        inset: -4px -8px;
+        border: 1.5px solid var(--primary);
+        border-radius: 999px;
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                outline-color var(--fog-contact) var(--fog-curve),
+                outline-offset var(--fog-contact) var(--fog-curve),
+                outline-style var(--fog-contact) allow-discrete,
+                border-color var(--fog-contact) var(--fog-curve);
+        }
+
+        [data-theme='forest'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::after {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+    }
+}

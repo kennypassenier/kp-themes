@@ -1,5 +1,7 @@
 # What makes forest forest
 
+**Decided (Kenny, 07/10/2026 17:47): all seventeen questions approved, every recommendation except The corners = the leaf corner** (research/forest-character/decided.json; applied in css/forest-register.css; see themes/forest/CHARACTER.md §0).
+
 **Why.** Kenny, 2026-10-07 02:54, after rejecting research/families-applied as a way to choose: "Dit werkt helemaal niet voor mij.
 Kunnen we het op dezelfde manier aanpakken als we met titanium gedaan hebben? waar jij eerst uitzoekt wat bij mekaar past, wat niet
 past en dan zo voorstellen doet? begin met 1 thema en we zullen dat één voor één afwerken zo." Forest is the first theme of that

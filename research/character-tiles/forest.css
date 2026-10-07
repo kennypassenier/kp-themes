@@ -1,0 +1,135 @@
+/* research/character-tiles, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 3 (the herbarium sheet), loading 2, arrival 3, tone 3, hover 3,
+   live 2.
+
+   - corner and type: the leaf corner on the sheet, its leaf mark turned the
+     same way (top-right and bottom-left rounded); the title is the
+     field-note voice (Instrument Sans italic), no Georgia (G13);
+   - loading: the canopy's sway is retired; a waiting tile's skeleton lines
+     and foot are the package's planted rows (css/forest-register.css);
+   - arrival: "the trail is walked" is growth: each tile grows up out of its
+     own line, 1000 ms on the growth curve, the second tile 80 ms later;
+   - tone: the blaze keeps its place, a 3 px start edge, but in the tone's
+     ink (never the light plate) and without the glow (G5);
+   - hover: the light is retired; pointing at the sheet blazes it (the dashed
+     trail ring), the Open link is forest's own ghost button (the blaze, the
+     two-channel ring on focus, the press closes the blaze in; G11, G12);
+   - live: the dip is a growth ring drawn once round the tile that changed
+     (G8). */
+@layer kp.signature {
+    [data-theme='forest'] [data-ti-shape='3'] .kp-card {
+        border-radius: var(--fog-leaf-plate);
+    }
+
+    [data-theme='forest'] [data-ti-shape='3'] .kp-card__title {
+        font-family: var(--theme-font-body);
+        font-style: italic;
+    }
+
+    [data-theme='forest'] [data-ti-shape='3'] [data-tl-mark] {
+        border-radius: 10% 50% 10% 50%;
+    }
+
+    /* Loading 2 · the canopy sways → retired. */
+    [data-theme='forest'] [data-ti-loading='2'] [data-kp-busy]::after {
+        background-image: none;
+        transform: none;
+    }
+
+    /* Tone 3 · the trail blaze, in the tone's ink. */
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        border-inline-start-width: 3px;
+        box-shadow: none;
+    }
+
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
+        border-inline-start-color: var(--success-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--warning-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='forest'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
+        border-inline-start-color: var(--destructive);
+        box-shadow: none;
+    }
+
+    /* Hover 3 · the light breaks through → the blaze. */
+    [data-theme='forest'] [data-ti-hover='3'] .kp-card {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] [data-ti-hover='3'] .kp-card:hover:not(:has([data-tl-link]:hover)),
+    [data-theme='forest'] [data-ti-hover='3'] .kp-card.tl-hover-sim {
+        outline-color: var(--primary);
+        box-shadow: none;
+    }
+
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link] {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+        text-shadow: none;
+        box-shadow: none;
+    }
+
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:hover {
+        outline-color: var(--primary);
+    }
+
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-theme='forest'] [data-ti-hover='3'] [data-tl-link]:active {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+
+    /* Live 2 · the branch sways → the growth ring. */
+    [data-theme='forest'] [data-ti-live='2'] [data-tl-flash] {
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='forest'] [data-ti-live='2'] [data-tl-flash]::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(1.25rem + 5px);
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+            animation: fog-grow var(--fog-time) var(--fog-curve) both;
+        }
+
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: var(--fog-stagger);
+        }
+
+        [data-theme='forest'] [data-ti-hover='3'] .kp-card,
+        [data-theme='forest'] [data-ti-hover='3'] [data-tl-link] {
+            transition:
+                outline-color var(--fog-contact) var(--fog-curve),
+                outline-offset var(--fog-contact) var(--fog-curve),
+                outline-style var(--fog-contact) allow-discrete;
+        }
+
+        [data-theme='forest'] [data-ti-live='2'] [data-tl-flash]::after {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+    }
+}

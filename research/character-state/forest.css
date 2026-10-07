@@ -1,0 +1,39 @@
+/* research/character-state, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided change changes:
+   change 3 ("the tag swings"; shape 1, the trail marker, and tone 1, the
+   blaze colour, fit as they stand).
+
+   - change: the word no longer swings on a spring (a word with no tag to
+     swing, in shape 1); a growth ring is drawn once round the state's blaze
+     dot, clockwise from the top, 1000 ms; the word never moves (G8). */
+@layer kp.signature {
+    [data-theme='forest'] [data-sw-change='3'] {
+        position: relative;
+    }
+
+    [data-theme='forest'] [data-sw-change='3']::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: -5px;
+        inset-block-start: 50%;
+        inline-size: calc(var(--sw-dot-size, 0.55em) + 10px);
+        block-size: calc(var(--sw-dot-size, 0.55em) + 10px);
+        translate: 0 -50%;
+        border: 1.5px solid var(--primary);
+        border-radius: 50%;
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+            animation: none;
+        }
+
+        [data-theme='forest'] [data-sw-change='3'][data-sw-playing]::after {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+    }
+}

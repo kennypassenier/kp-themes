@@ -1,0 +1,86 @@
+/* research/character-menu, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 2 (the canopy), loading r2-ft-load-5, open 3, interact 1 (tone 1,
+   the trail blaze, stays: its reason tag is already a leaf corner).
+
+   - corner: the leaf corner on the menu panel (a menu takes the smaller
+     leaf) and on the wooden reason tag;
+   - loading: "the post sways" is the planted row under the loading entry
+     (the package's, css/forest-register.css); the entry stands still, its
+     words no longer tilt;
+   - open: "unfurled" is the opening that grows out of its anchor (G3): the
+     panel grows down out of its button, far end first, clipped at the
+     button's line, 1000 ms on the growth curve, and closes as that growth
+     reversed (a second keyframe name, so the close restarts);
+   - interact: "the branch sways" is the trail blaze on hover, the
+     two-channel ring on focus, the blaze closed in on a press; entries never
+     tilt (G11, proposal-19). */
+@layer kp.signature {
+    [data-theme='forest'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
+        border-radius: var(--fog-leaf-menu);
+    }
+
+    [data-theme='forest'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        border-radius: var(--fog-leaf-small);
+    }
+
+    /* Loading r2-ft-load-5 · the post sways → the row is planted. The package
+       draws the planted row at the foot of the loading entry
+       (css/forest-register.css); the entry stands still, and makes room. */
+    [data-theme='forest'] [data-mb-loading='r2-ft-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        transform: none;
+        padding-block-end: 1.5rem;
+    }
+
+    /* Interact 1 → blaze, two-channel ring, closed blaze. */
+    [data-theme='forest'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item {
+        outline: 2px dashed transparent;
+        outline-offset: -3px;
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:hover {
+        outline-color: var(--primary);
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:focus-visible, [data-mb-force-focus]) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: -3px;
+        box-shadow: inset 0 0 0 2px var(--focus-ring);
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: -2px;
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The sway's animation outranks the package's breath on the entry
+           (it is keyed more specifically); the entry takes the breath back. */
+        [data-theme='forest'] [data-mb-loading='r2-ft-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: kp-progressbar-forest-breath 6600ms linear infinite;
+        }
+
+        [data-theme='forest'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: top center;
+            animation: fog-root calc(var(--fog-time) / var(--mb-speed, 1)) var(--fog-curve) both;
+        }
+
+        [data-theme='forest'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: fog-root-back;
+            animation-direction: reverse;
+        }
+
+        [data-theme='forest'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item {
+            transition:
+                outline-color var(--fog-contact) var(--fog-curve),
+                outline-offset var(--fog-contact) var(--fog-curve),
+                outline-style var(--fog-contact) allow-discrete;
+        }
+    }
+}

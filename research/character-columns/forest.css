@@ -1,0 +1,63 @@
+/* research/character-columns, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 3 (tree rings), loading 1, arrival 1, tone 2, live 1.
+
+   - corner: the leaf corner on the column plate and on the field note;
+   - loading: the light that walked the trail is retired; a waiting column's
+     skeleton lines are the package's planted rows (css/forest-register.css);
+   - arrival: Growing keeps its picture (out of its own line, 80 ms apart)
+     and moves onto forest's curve and growth time, 1000 ms;
+   - live: the post no longer sways; a growth ring is drawn once round the
+     column that changed (the figure never moves). */
+@layer kp.signature {
+    [data-theme='forest'] [data-cs-shape='3'] .kp-kpis {
+        --cl-radius: var(--fog-leaf-plate);
+    }
+
+    [data-theme='forest'] [data-cs-tone='2'] .kp-kpis {
+        --cl-delta-radius: var(--fog-leaf-small);
+    }
+
+    /* Loading 1 · light walks the trail → the row is planted. The package
+       turns every skeleton line of a waiting column into a planted row
+       (css/forest-register.css), so the sweep of light is retired and nothing
+       is drawn on top. */
+    [data-theme='forest'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+    }
+
+    /* Arrival 1 · Growing, on forest's curve. */
+    [data-theme='forest'] [data-cs-arrival='1'] .kp-kpis {
+        --cl-arrive-num: cl-a-rise var(--fog-time) var(--fog-curve);
+        --cl-arrive-stagger: var(--fog-stagger);
+    }
+
+    /* Live 1 · the post sways → a growth ring round the column that changed. */
+    [data-theme='forest'] [data-cs-live='1'] .kp-kpis {
+        --cl-live-tile: none;
+        --cl-live-num: none;
+    }
+
+    [data-theme='forest'] [data-cs-live='1'] .kp-kpis > .kp-kpi::before {
+        --fog-arc: 0deg;
+    }
+
+    [data-theme='forest'] [data-cs-live='1'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed]::before {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(1.25rem + 5px);
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-cs-live='1'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed]::before {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+    }
+}

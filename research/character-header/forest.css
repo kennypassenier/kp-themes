@@ -1,0 +1,102 @@
+/* research/character-header, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 1 (the logbook), menu 3, interactive 3.
+
+   - composite = the theme's own element (G11, proposal-18): the header's
+     buttons stop being wooden tags; their ground, frame, corner, shadow and
+     transition revert to forest's own `.kp-button` (the register's layer),
+     and they hover, focus and press as forest does (G12): the dashed trail
+     blaze, the two-channel ring, the blaze closed in. The menu's entries are
+     forest's `.kp-menu__item`, the same;
+   - corner: the leaf corner on the header plate and on the menu panel;
+   - menu: "a branch sways" is the opening that grows out of its anchor: the
+     panel grows down out of the More button, far end first, clipped at the
+     button's line, 1000 ms on the growth curve, and closes as that growth
+     reversed (no drop, no twist, no overshoot). */
+@layer kp.signature {
+    [data-theme='forest'] [data-ph-shape='1'] .kp-page-header {
+        --ph-radius: var(--fog-leaf-plate);
+    }
+
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] {
+        --ph-menu-radius: var(--fog-leaf-menu);
+        --ph-menu-origin: top center;
+    }
+
+    /* The button is forest's own: nothing of the wooden tag stays. */
+    [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button,
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item {
+        outline-offset: -3px;
+    }
+
+    /* Hover: the trail blaze, nothing lifts. */
+    [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled),
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item:hover {
+        outline-color: var(--primary);
+        box-shadow: none;
+        transform: none;
+    }
+
+    /* Focus: the two-channel ring (DI2). */
+    [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible,
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item:focus-visible {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item:focus-visible {
+        outline-offset: -3px;
+        box-shadow: inset 0 0 0 2px var(--focus-ring);
+    }
+
+    /* Press: the blaze closes in to 1 px and turns solid; the part stays. */
+    [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled),
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item:active {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+        box-shadow: none;
+        transform: none;
+    }
+
+    [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item:active {
+        outline-offset: -2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button,
+        [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel] .kp-menu__item {
+            transition:
+                outline-color var(--fog-contact) var(--fog-curve),
+                outline-offset var(--fog-contact) var(--fog-curve),
+                outline-style var(--fog-contact) allow-discrete,
+                background-color var(--fog-contact) var(--fog-curve);
+        }
+
+        [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='open'] {
+            animation: fog-root var(--fog-time) var(--fog-curve) both;
+        }
+
+        [data-theme='forest'] [data-ph-menu='3'] [data-ph-panel][data-ph-anim='close'] {
+            animation: fog-root-back var(--fog-time) var(--fog-curve) both reverse;
+        }
+    }
+}

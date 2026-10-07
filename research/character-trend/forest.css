@@ -1,0 +1,108 @@
+/* research/character-trend, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   loading 3, arrival 3, tone 3, live 3 (shape 1, the ranger's logbook, fits).
+
+   - loading: the amber fireflies are retired (a light plate as an ink, and a
+     light picture in a theme whose loading is planting); the tile's skeleton
+     lines are the package's planted rows (css/forest-register.css) and the
+     plot's placeholder plants the same row at its foot;
+   - arrival: "the trail is walked" stays walked, start to end, but on forest's
+     curve in 1000 ms (it was ease-in-out, 1600 ms);
+   - tone: the change is a field note, the italic tag in the tone's own plate
+     and ink, in forest's leaf corner (top-right and bottom-left rounded, the
+     frame in the ink); the blaze along the tile's start edge is 3 px (G5);
+   - live: the stroke no longer swells to 2.5 times; a growth ring is drawn
+     once round the end of the line (the newest reading), clockwise from the
+     top, 1000 ms (forest.js appends the circle). */
+@layer kp.signature {
+    /* Loading 3 · fireflies → the plot is planted too: its placeholder takes
+       the bar's row at its foot, whole trees only (::before the cleared
+       ground and its seedlings, ::after the grove). */
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend {
+        --tr-load: none;
+        --tr-load-anim: none;
+    }
+
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before,
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::after {
+        inset: auto 0 0.5rem;
+        margin-inline: auto;
+        inline-size: round(down, calc(100% - 1.5rem), var(--fog-pitch));
+        block-size: var(--fog-strip);
+        border-radius: 0;
+    }
+
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        background: var(--border-strong);
+        mask: var(--fog-ground-mask);
+    }
+
+    [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::after {
+        background: var(--primary);
+        mask: var(--fog-grove-mask);
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--fog-breath) * (100% + var(--fog-pitch)), var(--fog-pitch)))) 0 0);
+    }
+
+    /* Tone 3 · the field note. */
+    [data-theme='forest'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: var(--fog-leaf-small);
+        --tr-delta-style: italic;
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat;
+    }
+
+    /* Live 3 · the growth ring, at the end of the line. */
+    [data-theme='forest'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: none;
+        --tr-live-area: none;
+    }
+
+    [data-theme='forest'] [data-ct-live='3'] .kp-kpi--trend .kp-kpi__spark {
+        overflow: visible;
+    }
+
+    [data-theme='forest'] [data-ct-live='3'] .kp-kpi--trend .kp-kpi__spark .fog-ring {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 1.5;
+        pointer-events: none;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        opacity: 0;
+        transform: rotate(-90deg);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-ct-loading='3'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::after {
+            animation: fog-breath 6600ms linear infinite;
+        }
+
+        [data-theme='forest'] [data-ct-arrival='3'] .kp-kpi--trend {
+            --tr-arr-line: tr-a-wipe var(--fog-time) var(--fog-curve) both;
+            --tr-arr-num: tr-n-wipe var(--fog-time) var(--fog-curve) both;
+        }
+
+        [data-theme='forest'] [data-ct-live='3'] .kp-kpi--trend .kp-kpi__spark .fog-ring {
+            animation: fog-ring-draw var(--fog-time) linear both;
+        }
+
+        @keyframes fog-ring-draw {
+            0% {
+                stroke-dashoffset: 1;
+                opacity: 1;
+                animation-timing-function: var(--fog-curve);
+            }
+            55% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+                animation-timing-function: ease-in-out;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                opacity: 0;
+            }
+        }
+    }
+}

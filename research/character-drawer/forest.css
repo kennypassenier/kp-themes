@@ -1,0 +1,75 @@
+/* research/character-drawer, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape 2, openclose 1, card 2, next 1 (highlight 1, the lichen ring, fits).
+
+   - corner: the leaf corner on the tray and on the tour's plaque;
+   - openclose: the drawer grows out of its edge (the trunk), far side first,
+     clipped at the edge, 1000 ms on the growth curve, and closes as that
+     growth reversed; no more squashing of its words by `scale`, no 6 %
+     sliver, mirrored on a right-to-left page;
+   - next: "the ring widens" is a growth ring drawn once round the card
+     (clockwise from the top), the card itself no longer swells. */
+@layer kp.signature {
+    [data-theme='forest'] [data-dt-shape='2'] .dt-drawer,
+    [data-theme='forest'] [data-dt-card='2'] .dt-tour {
+        border-radius: var(--fog-leaf-plate);
+    }
+
+    /* Closed: out of sight behind its own edge. */
+    [data-theme='forest'] [data-dt-openclose='1'] .dt-drawer,
+    [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        scale: 1 1;
+    }
+
+    [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 100% 0;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closed']:dir(rtl) .dt-drawer,
+    [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer:dir(rtl) {
+        translate: -100% 0;
+        clip-path: inset(0 0 0 100%);
+    }
+
+    /* Next 1: the ring is drawn round the card. */
+    [data-theme='forest'] [data-dt-next='1'] .dt-tour::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(1.25rem + 5px);
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation: fog-edge var(--fog-time) var(--fog-curve) both;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation: fog-edge-back var(--fog-time) var(--fog-curve) both reverse;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='opening']:dir(rtl) .dt-drawer,
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer:dir(rtl) {
+            animation-name: fog-edge-rtl;
+        }
+
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closing']:dir(rtl) .dt-drawer,
+        [data-theme='forest'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer:dir(rtl) {
+            animation-name: fog-edge-rtl-back;
+        }
+
+        [data-theme='forest'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: none;
+        }
+
+        [data-theme='forest'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour::after {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+    }
+}

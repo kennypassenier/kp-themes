@@ -1,0 +1,25 @@
+{
+    "decided": "2026-10-07 17:47 Brussels, Kenny: 17 of 17 approved in the review dialog (research/forest-character/README.md): every recommendation except The corners = the leaf corner",
+    "attributes": "data-fc-<question>=\"<key>\" on the .fc-scene, research/forest-character/options.css",
+    "picks": {
+        "forest": {
+            "curve": "tree",
+            "direction": "grow",
+            "opening": "anchor",
+            "durations": "seen",
+            "colour": "trail",
+            "corners": "leaf",
+            "surface": "kit",
+            "live": "ring",
+            "loading": "strip",
+            "spinner": "tree",
+            "leave": "wither",
+            "composites": "own",
+            "hover": "blaze",
+            "focus": "di2",
+            "press": "close",
+            "type": "notes",
+            "motifs": "place"
+        }
+    }
+}

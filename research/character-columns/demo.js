@@ -572,8 +572,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Light walks the trail',
-                text: 'A band of light walks slowly along every column.',
+                name: 'The row is planted',
+                text: 'The waiting column’s skeleton lines are the bar’s planted row: seedlings, then whole trees filling it start to end.',
             },
             {
                 name: 'A seed rolls',
@@ -614,8 +614,8 @@ const IDEAS = {
         ],
         live: [
             {
-                name: 'The post sways',
-                text: 'A column whose figure changed sways once, like a post in the wind.',
+                name: 'A growth ring',
+                text: 'A thin ring is drawn once round a column whose figure changed, clockwise from the top, then fades; the figure never moves.',
             },
             {
                 name: 'Grown in',

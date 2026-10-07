@@ -47,8 +47,8 @@ export default {
             },
             {
                 key: 'r4-fo-map',
-                name: 'The map is inked as you walk',
-                text: "Contour rings are inked in across the whole page from left to right in hard steps, over a field of small survey dots, as a ranger's map fills in while the trail is walked.",
+                name: 'The row is planted',
+                text: 'The waiting plot is the bar’s planted row at its foot: seedlings on cleared ground and a grove of whole trees filling it start to end, holding, then leaving end to start.',
                 ink: '--foreground',
                 ink2: '--accent',
             },

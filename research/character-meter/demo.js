@@ -577,8 +577,8 @@ const IDEAS = {
                 text: 'The grain of the wood runs through the groove.',
             },
             {
-                name: 'Blazed trail',
-                text: 'A clay blaze hops from tree to tree along the groove.',
+                name: 'The groove is planted',
+                text: 'While it measures, the groove is the bar’s planted row: seedlings, then whole trees filling it start to end.',
             },
         ],
         arrival: [
@@ -605,8 +605,8 @@ const IDEAS = {
                 text: 'A new tone knocks the meter up and back once, slowing as it lands.',
             },
             {
-                name: 'Blazed trail',
-                text: 'A new tone swells the meter once, slowing as it lands.',
+                name: 'A growth ring',
+                text: 'A new tone draws a thin ring once round the meter, clockwise from the top, then it fades; the share never swells.',
             },
         ],
         mark: [

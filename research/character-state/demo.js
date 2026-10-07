@@ -176,7 +176,10 @@ const IDEAS = {
         change: [
             { name: 'A rustle', text: 'The leaf dot turns over once, as in a breeze, easing in and out.' },
             { name: 'Blazed again', text: 'The trail-blaze marker is painted on once, slowing as it lands.' },
-            { name: 'The tag swings', text: 'The wooden tag swings once on its loop and settles, overshooting once.' },
+            {
+                name: 'A growth ring',
+                text: 'A thin ring is drawn once round the blaze dot, clockwise from the top, then fades; the word never moves.',
+            },
         ],
     },
     'high-contrast': {

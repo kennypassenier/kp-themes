@@ -546,8 +546,8 @@ const IDEAS = {
                 text: "While the figure loads, a small lit trail-marker walks the full width under the label at an easy, continuous pace and loops back to start, as a ranger's torch passing on its round; it keeps walking until the reading is drawn.",
             },
             {
-                name: 'The canopy',
-                text: 'While the figure loads, a soft patch of daylight drifts and sways across the whole card, leaning left then right as the canopy above moves in the wind; it keeps swaying until the reading is drawn.',
+                name: 'The row is planted',
+                text: 'While the figure loads, its skeleton lines are the bar’s planted row: seedlings on cleared ground and a grove of whole trees filling it start to end, until the reading is drawn.',
             },
             {
                 name: 'Fireflies',
@@ -565,7 +565,7 @@ const IDEAS = {
             },
             {
                 name: 'The trail blaze',
-                text: 'The change on a carved tag; a warning or destructive figure is blazed in its colour along the left edge, as a trail marker on a trunk.',
+                text: 'The change on a field note (italic, leaf-cornered, in the tone’s own plate and ink); a warning or destructive figure is blazed in the tone’s ink along the left edge, 3 px, as a trail marker on a trunk.',
             },
         ],
         interactive: [
@@ -574,8 +574,8 @@ const IDEAS = {
                 text: 'As a link or a filter: the frame deepens toward bark-green on hover, a moss-green ring lands on focus, and the whole tile settles down one pixel when pressed, as a wooden tag dropping back against its string.',
             },
             {
-                name: 'Leaves rustle',
-                text: 'As a link or a filter: the canopy wash behind the number warms a shade on hover, a wide moss-green ring with extra breathing room appears on focus, and the plate flattens back to plain card when pressed, as the wind dropping.',
+                name: 'The blaze settles',
+                text: 'As a link or a filter: hover lays the dashed trail blaze round the tile, focus is the two-channel ring, a press closes the blaze in; the tile never moves.',
             },
             {
                 name: 'The trail marks',

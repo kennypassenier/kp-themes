@@ -1,0 +1,42 @@
+/* research/character-busy, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f: only
+   forest's decided options change (shape r2-fo-shape-2, loading 1, arrival 2,
+   failure r3-fo-failure-1), nothing else. Linked after every other busy
+   stylesheet, so each rule here replaces the option's own at equal
+   specificity.
+
+   - corner: the leaf corner on the panel and the failed alert (a plate);
+   - loading: the bar's planted row at the panel's foot (CHARACTER.md §6) is
+     the package's (css/forest-register.css draws it on every busy panel); the
+     footprints are retired and the panel makes room for the row;
+   - arrival: the overlay grows up out of its own base line on the growth
+     curve, 1000 ms, in place of the squashing scaleY. */
+@layer kp.signature {
+    [data-theme='forest'] [data-bo-shape='r2-fo-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-radius: var(--fog-leaf-plate);
+    }
+
+    [data-theme='forest'] [data-bo-failure='r3-fo-failure-1'] [data-kp-datatable-failed] {
+        --bo-fail-radius: var(--fog-leaf-plate);
+    }
+
+    /* Loading 1 · the trail is walked → the row is planted. The package draws
+       the planted row at every busy panel's foot (css/forest-register.css,
+       "planting"); this option only retires the footprints and leaves the row
+       its room: the overlay is as tall as three rows, so the panel gives its
+       padding and gaps to it. */
+    [data-theme='forest'] [data-bo-loading='1'] .kp-datatable__busy-panel {
+        --bo-pic: none;
+        gap: 0.25rem;
+        padding-block: 0.4rem 1rem;
+    }
+
+    /* Arrival 2 · grows: out of the base line, clipped there, never squashed. */
+    [data-theme='forest'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: fog-grow;
+        --bo-arrival-dur: var(--fog-time);
+        --bo-arrival-ease: var(--fog-curve);
+        transform-origin: 50% 50%;
+    }
+}

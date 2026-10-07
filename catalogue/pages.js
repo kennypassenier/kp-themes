@@ -76,8 +76,6 @@ export const PAGES = [
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
-            // Kenny, 2026-10-07 02:54: what makes forest forest, the titanium way (the analysis in themes/forest/CHARACTER.md), seventeen rules of its grammar as questions, each option a live scene, the recommendation first; the first theme of the one-by-one series.
-            { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
             { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
@@ -113,6 +111,9 @@ export const PAGES = [
             { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
             { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
+            // Kenny, 2026-10-07 02:54: what makes forest forest, the titanium way (the analysis in themes/forest/CHARACTER.md), seventeen rules of its grammar as questions, each option a live scene, the recommendation first; the first theme of the one-by-one series.
+            { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
+            // Decided 2026-10-07 17:47: Kenny approved forest's grammar, every recommendation except the corners = the leaf corner (research/forest-character/decided.json); applied in css/forest-register.css.
             // Kenny, 2026-10-06 20:59 (form v39): every titanium loading element twice, as today and in the key figure's anodising bath (r2-ti-load-1).
             { href: 'research/titanium-loading/demo.html', label: 'Titanium loading: today and the anodising bath' },
             // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.

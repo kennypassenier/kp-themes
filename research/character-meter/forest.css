@@ -1,0 +1,51 @@
+/* research/character-meter, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   loading 3, arrival 1, tone 3, mark 3 (shape 1, the wooden gauge, is the
+   reference and stays; its 3 px corners are forest's small-part radius).
+
+   - loading: the planted row takes the groove's place while the meter
+     measures; the package draws it (css/forest-register.css) and retires the
+     hopping blaze, nothing here repeats it;
+   - arrival: the share is walked in start to end, on forest's curve in
+     1000 ms (it was linear, 1200 ms);
+   - tone: the bump (a scale that squashed the share) is a growth ring drawn
+     once round the gauge, clockwise from the top, 1000 ms; a gauge that is
+     past its end keeps its blaze on `::after`, so there the ring is left out;
+   - mark: the mark and its lean move on forest's curve in 1000 ms. */
+@layer kp.signature {
+    /* Tone 3 · the bump → the growth ring. */
+    [data-theme='forest'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-over])::after {
+        content: '';
+        position: absolute;
+        inset: -4px -6px;
+        border: 1.5px solid var(--primary);
+        border-radius: 999px;
+        mask: conic-gradient(#000 var(--fog-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-cm-arrival='1'] .kp-meter::before {
+            animation: var(--cm-arr-o) var(--fog-time) var(--fog-curve) backwards;
+            transition: inline-size var(--fog-time) var(--fog-curve);
+        }
+
+        [data-theme='forest'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading]),
+        [data-theme='forest'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]),
+        [data-theme='forest'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: none;
+        }
+
+        [data-theme='forest'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-over])::after {
+            animation: fog-ring var(--fog-time) linear both;
+        }
+
+        [data-theme='forest'] [data-cm-mark='3'] .kp-meter__mark {
+            transition:
+                inset-inline-start var(--fog-time) var(--fog-curve),
+                rotate var(--fog-time) var(--fog-curve);
+        }
+    }
+}

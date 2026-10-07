@@ -594,8 +594,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: "The ranger's wall calendar: its loading",
-                text: 'Loading lets a leaf drift down through every square.',
+                name: 'A tree is planted in every day',
+                text: 'Every waiting day plants one tree on its mound in three whole stages (seedling, sapling, tree), the days of a week 150 ms apart.',
             },
             {
                 name: 'The trail map: its loading',
@@ -616,8 +616,8 @@ const IDEAS = {
                 text: 'The days grow up from the ground, week by week.',
             },
             {
-                name: 'Falling leaves',
-                text: 'Each day drifts down and settles with a sway.',
+                name: 'Every day grows',
+                text: 'Each day grows up out of its own line on forest’s growth curve, 1000 ms, 20 ms after the one before it.',
             },
         ],
         tone: [
@@ -644,8 +644,8 @@ const IDEAS = {
                 text: 'Today carries a map pin; the picked day a dashed trail around it. New: a dashed ring on hover, the picked count on an inverted label.',
             },
             {
-                name: 'The flagging tape',
-                text: 'Dotted flagging tape round the picked day; the figure underlined on hover; the count in brackets.',
+                name: 'The green ring',
+                text: 'A forest-green ring round the picked day (green acts, clay only marks the trail); the figure underlined on hover; the count in brackets.',
             },
         ],
     },

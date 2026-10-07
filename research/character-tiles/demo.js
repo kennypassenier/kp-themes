@@ -282,13 +282,16 @@ const IDEAS = {
         ],
         loading: [
             { name: 'The ranger’s logbook', text: 'A trail of light walks across the body.' },
-            { name: 'The canopy', text: 'The canopy sways.' },
+            {
+                name: 'The row is planted',
+                text: 'A waiting tile’s skeleton lines and foot are the bar’s planted row: seedlings, then whole trees filling it start to end.',
+            },
             { name: 'Fireflies', text: 'Two fireflies drift to and fro over the plate.' },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
             { name: 'Grows', text: 'The tile rises from the ground, slowing as it lands.' },
-            { name: 'The trail is walked', text: 'Tile after tile is drawn in from the left, easing in and out.' },
+            { name: 'Every tile grows', text: 'Tile after tile grows up out of its own line on forest’s growth curve, 1000 ms, 80 ms apart.' },
         ],
         tone: [
             { name: 'The wooden tag', text: 'A warning or destructive tile shows the note on a wooden tag.' },
@@ -298,11 +301,17 @@ const IDEAS = {
         hover: [
             { name: 'The leaves rustle', text: 'The canopy wash deepens; Open underlines in moss; focus traces a bark-brown ring.' },
             { name: 'The tag swings', text: 'The wooden tag tilts a little; Open gains a leaf dot; focus adds a dashed vine outline.' },
-            { name: 'The light breaks through', text: 'A soft glow of light crosses the plate; Open glows; focus adds a leaf-green halo.' },
+            {
+                name: 'The trail blaze',
+                text: 'Pointing at a tile lays the dashed trail blaze round it; Open is forest’s own ghost button (blaze, two-channel focus ring, press closes the blaze in).',
+            },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'A branch sways', text: 'The tile dips once and comes back, slowing as it lands.' },
+            {
+                name: 'A growth ring',
+                text: 'A thin ring is drawn once round the tile that changed, clockwise from the top, then fades; the tile never moves.',
+            },
             { name: 'Growth ring', text: 'The tile swells once and settles, easing in and out.' },
         ],
     },

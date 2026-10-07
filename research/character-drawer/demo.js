@@ -580,7 +580,7 @@ const IDEAS = {
         openclose: [
             {
                 name: 'It grows out from the trunk',
-                text: 'The panel grows in width from a narrow trunk-like strip at the hinge edge to full width, as a branch extending; closing withdraws back into that strip, reversed.',
+                text: 'The panel grows out of its edge, far side first, clipped at the edge, on forest’s growth curve in 1000 ms (never squashed); closing is that growth reversed.',
             },
             {
                 name: 'It unfurls like a leaf',
@@ -621,8 +621,8 @@ const IDEAS = {
         ],
         next: [
             {
-                name: 'The ring widens',
-                text: 'The lichen ring grows outward and fades its reach (via scale, not opacity) before shrinking onto the new target; the card’s text changes while the ring is largest.',
+                name: 'The ring is drawn',
+                text: 'A thin growth ring is drawn once round the card, clockwise from the top, then fades, while the card’s text changes; the card itself never swells.',
             },
             {
                 name: 'The leaf turns',

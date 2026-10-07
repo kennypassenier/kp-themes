@@ -387,7 +387,10 @@ const IDEAS = {
         open: [
             { name: 'Grows', text: 'The menu grows up from the button like a sapling, slowing as it lands, and withers back down to close.' },
             { name: 'The trail is walked', text: 'The menu draws in from the left, easing in and out, and draws back out the same way to close.' },
-            { name: 'Unfurled', text: 'The menu unfurls from its top edge like a fern, and curls back up the same way to close.' },
+            {
+                name: 'Grown out of its button',
+                text: 'The menu grows down out of its button, far end first, clipped at the button’s line, 1000 ms on the growth curve; closing is that growth reversed.',
+            },
         ],
         tone: [
             {
@@ -404,7 +407,10 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'The branch sways', text: 'A hovered or focused entry sways a touch like a branch; a press settles it back still.' },
+            {
+                name: 'The trail blaze',
+                text: 'A hovered entry is blazed (the dashed trail ring), a focused one takes the two-channel ring, a press closes the blaze in; entries never tilt.',
+            },
             { name: 'The leaf tag lifts', text: 'A hovered or focused entry’s tag lifts a hair with a soft shadow; a press presses it flat again.' },
             { name: 'The dew glints', text: 'A hovered or focused entry gets a soft glint at its edge; a press dims the glint for a moment.' },
         ],

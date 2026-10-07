@@ -1,0 +1,288 @@
+/* research/forest-character/grammar.css: forest's decided grammar as the
+   per-component demos use it (Kenny, 2026-10-07; themes/forest/CHARACTER.md
+   G1-G16, the picks of research/forest-character/decided.json). One file of
+   tokens and keyframes, linked by every research/character-* demo except the
+   network graph (which changes in no theme); each component's `forest.css`
+   applies it to that component's decided forest options, as titanium's
+   grammar was applied in f637569f.
+
+   - the growth curve is a tree's (Gompertz), every growth lasts 1000 ms,
+     contact 200 ms, a loop 3200 ms; a close is its open reversed (the same
+     keyframes under a second name, `-back`, played `reverse`: a CSS animation
+     whose name stays the same is not restarted when only its direction
+     changes);
+   - what arrives grows up out of its own base line, top first, clipped at
+     that line (never scaled); what hangs from a trigger grows down out of it;
+   - loading is planting: the bar's own planted row at the foot of a waiting
+     part, whole trees only;
+   - a live change is a growth ring drawn once round it;
+   - a leaf corner: top-right and bottom-left rounded, the others square.
+
+   Colours come from the theme's tokens only; every animation sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the finished
+   picture. The tree drawings are the register's `--kp-fo-*` (css/forest-
+   register.css declares them on the bar only). */
+
+@property --fog-breath {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.5;
+}
+
+@property --fog-arc {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+@layer kp.signature {
+    [data-theme='forest'] {
+        --fog-curve: linear(
+            0,
+            0.01 5%,
+            0.032 10%,
+            0.072 15%,
+            0.133 20%,
+            0.211 25%,
+            0.302 30%,
+            0.398 35%,
+            0.493 40%,
+            0.582 45%,
+            0.662 50%,
+            0.732 55%,
+            0.791 60%,
+            0.84 65%,
+            0.881 70%,
+            0.913 75%,
+            0.939 80%,
+            0.96 85%,
+            0.977 90%,
+            0.99 95%,
+            1
+        );
+        --fog-contact: 200ms;
+        --fog-time: 1000ms;
+        --fog-stagger: 80ms;
+        --fog-loop: 3200ms;
+        /* The leaf corner: top-right and bottom-left rounded, the others
+           square; three sizes by what it is (a plate, a menu, a small part). */
+        --fog-leaf-plate: 0 1.25rem;
+        --fog-leaf-menu: 0 1rem;
+        --fog-leaf-small: 0 0.6em;
+        /* One planting slot, half the strip's height (1 rem strip: 8 px). */
+        --fog-pitch: 0.5rem;
+        --fog-strip: calc(var(--fog-pitch) * 2);
+        --fog-ground-mask: var(--fog-seedling) 0 0 / var(--fog-pitch) 100% repeat-x, linear-gradient(#000 0 0) 0 100% / 100% 1px no-repeat;
+        --fog-grove-mask: var(--fog-trees) 0 0 / calc(var(--fog-pitch) * 7) 100% repeat-x;
+        --fog-trees: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='15' cy='10.4' rx='4.5' ry='5.2'/%3E%3Crect x='14.3' y='10.4' width='1.4' height='9.6'/%3E%3Cpolygon points='25.0,4.4 27.5,8.5 26.4,8.5 28.3,12.7 26.8,12.7 29.0,16.8 21.0,16.8 23.2,12.7 21.7,12.7 23.6,8.5 22.5,8.5'/%3E%3Crect x='24.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='35.0,1.2 37.5,5.1 36.4,5.1 38.0,9.0 36.7,9.0 38.6,12.9 37.0,12.9 39.2,16.8 30.8,16.8 33.0,12.9 31.4,12.9 33.3,9.0 32.0,9.0 33.6,5.1 32.5,5.1'/%3E%3Crect x='34.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='45.0,2.6 48.1,7.3 46.7,7.3 49.0,12.1 47.2,12.1 49.9,16.8 40.1,16.8 42.8,12.1 41.0,12.1 43.3,7.3 41.9,7.3'/%3E%3Crect x='44.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='55' cy='11.1' rx='3.9' ry='4.5'/%3E%3Crect x='54.3' y='11.1' width='1.4' height='8.9'/%3E%3Cpolygon points='65.0,0.6 67.5,4.6 66.4,4.6 68.1,8.7 66.7,8.7 68.7,12.7 67.0,12.7 69.3,16.8 60.7,16.8 63.0,12.7 61.3,12.7 63.3,8.7 61.9,8.7 63.6,4.6 62.5,4.6'/%3E%3Crect x='64.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+        --fog-seedling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3C/svg%3E");
+        --fog-sapling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5,5.2 7.2,9.2 6.1,9.2 8.0,13.2 6.7,13.2 8.8,17.4 1.2,17.4 3.3,13.2 2.0,13.2 3.9,9.2 2.8,9.2'/%3E%3Crect x='4.45' y='17' width='1.1' height='3'/%3E%3C/svg%3E");
+        --fog-pine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+        --fog-mound: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cellipse cx='5' cy='20' rx='4.2' ry='1.7'/%3E%3C/svg%3E");
+    }
+
+    /* ── Growth: out of the base line, top first, clipped at that line ── */
+    @keyframes fog-grow {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-grow-back {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    /* Out of an anchor above it (a menu under its button), far end first. */
+    @keyframes fog-root {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% -1rem 0 -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-root-back {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% -1rem 0 -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    /* What is walked (a drawn line, a share) goes start to end. */
+    @keyframes fog-walk {
+        from {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+        to {
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-walk-back {
+        from {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+        to {
+            clip-path: inset(-1rem);
+        }
+    }
+
+    /* The growth ring: drawn once round what changed, clockwise from the
+       top, then it fades (the figure never moves). */
+    @keyframes fog-ring {
+        0% {
+            --fog-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: var(--fog-curve);
+        }
+        55% {
+            --fog-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+        100% {
+            --fog-arc: 360deg;
+            opacity: 0;
+        }
+    }
+
+    /* The planted row's breath: the grown edge walks whole slots, start to
+       end, holds, and the trees leave end to start (the bar's own, copied
+       from css/forest-register.css). */
+    @keyframes fog-breath {
+        0% {
+            --fog-breath: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        45.4545% {
+            --fog-breath: 1;
+            animation-timing-function: linear;
+        }
+        54.5455% {
+            --fog-breath: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        100% {
+            --fog-breath: 0;
+        }
+    }
+
+    /* One tree planted in three whole stages (a day, a spinner). */
+    @keyframes fog-stage-1 {
+        0% {
+            visibility: visible;
+        }
+        22%,
+        100% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes fog-stage-2 {
+        0% {
+            visibility: hidden;
+        }
+        22% {
+            visibility: visible;
+        }
+        45%,
+        100% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes fog-stage-3 {
+        0%,
+        22% {
+            visibility: hidden;
+        }
+        45%,
+        100% {
+            visibility: visible;
+        }
+    }
+
+    /* Where there is no room for a row (a day in the month): one tree on its
+       mound, planted in three whole stages by swapping the drawing; the loop
+       is 1600 ms, half the grove's period. */
+    @keyframes fog-plant {
+        0% {
+            mask-image: var(--fog-seedling), var(--fog-mound);
+            opacity: 0.7;
+        }
+        22% {
+            mask-image: var(--fog-sapling), var(--fog-mound);
+            opacity: 0.85;
+        }
+        45%,
+        100% {
+            mask-image: var(--fog-pine), var(--fog-mound);
+            opacity: 1;
+        }
+    }
+
+    /* What lives at an edge grows out of that edge, its far side first: the
+       right edge here, mirrored for a right-to-left page. */
+    @keyframes fog-edge {
+        from {
+            translate: 100% 0;
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-edge-back {
+        from {
+            translate: 100% 0;
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-edge-rtl {
+        from {
+            translate: -100% 0;
+            clip-path: inset(-1rem -1rem -1rem 100%);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fog-edge-rtl-back {
+        from {
+            translate: -100% 0;
+            clip-path: inset(-1rem -1rem -1rem 100%);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+}

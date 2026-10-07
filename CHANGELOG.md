@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- **Changed: forest's grammar, as Kenny decided it on research/forest-character**
+  [2026-10-07 17:47, themes/forest/CHARACTER.md "Applied 2026-10-07"].
+  Growth: forest's `--fx-ease` is the Gompertz growth curve (a `linear()` list,
+  `--kp-sig-fo-grow`) and `--fx-lift` is 0; contact stays 200 ms, a growth,
+  opening, arrival and leave is 1000 ms (`--kp-sig-fo-time`), a loop 3200 ms,
+  a stagger 80 ms; the root says `--kp-close-max` and `--kp-size-max` 1000 ms
+  so `themeMotion()` closes and resizes in one growth. The dialog grows up
+  out of its base line (a `translate` clipped at that line, never scaled; its
+  unopened probe runs 1500 ms, the open dialog 1000 ms, so open and close are
+  both one growth), the toast grows from its base as its leave reversed, the
+  tooltip grows down out of its trigger like a root; the leave withers into
+  its line from green to sepia on the growth curve turned around
+  (`--kp-sig-fo-wither`), which makes its arrival the growth, frame for
+  frame. Pointing is blazing: a 2 px dashed `--primary` ring 2 px out on a
+  button, icon button, menu entry or key-figure link (no lift, no shadow), a
+  press closes it in to 1 px and solid; focus is DI2's ring. Live: forest
+  declares `--kp-update: ring`, a growth ring drawn once round what changed
+  (`kp-sig-forest-update-ring`, 1000 ms); a meter's tone to warning or
+  destructive lays the same ring. Loading: the planting strip, the bar's busy
+  breath, on skeleton lines (400 ms apart), a loading meter's groove, the data
+  table's busy panel, a loading menu entry, a busy button, a busy card, the
+  busy calendar and the chart's loading state; the spinner plants a tree in
+  three whole stages, 1600 ms a tree. The leaf corner (top-right and
+  bottom-left rounded) is one rule and one token (`--kp-sig-fo-leaf`) on every
+  plate and small part; tags and plain badges are light wood; notes (tags,
+  the change on a tile with ↑ ↓, labels, help text) are italic. The progress
+  bar and the network graph are unchanged. The key-figure link and the other
+  composites keep the package's own markup and take these rules through their
+  buttons.
+
 - **Changed: forest's progress bar breathes and loses its sapling** [Kenny,
   2026-10-07]. The light-green sapling head (and its sway, mound and the
   travelling grove keyframes) is gone, determinate and busy alike. A busy bar

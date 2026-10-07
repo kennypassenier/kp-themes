@@ -601,8 +601,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The trail is walked',
-                text: 'A footprint mark steps along the foot of the panel and loops back to the start.',
+                name: 'The row is planted',
+                text: 'The bar’s planted row at the foot of the panel: seedlings on cleared ground and a grove of whole trees that fills it start to end, holds, and leaves end to start.',
             },
             {
                 name: 'The canopy sways',
@@ -620,7 +620,7 @@ const IDEAS = {
             },
             {
                 name: 'Grows',
-                text: 'The panel grows up from the foot like a seedling, slowing as it reaches full height.',
+                text: 'The panel grows up out of its own foot line on forest’s growth curve, 1000 ms, clipped there, never squashed.',
             },
             {
                 name: 'The trail is walked in',

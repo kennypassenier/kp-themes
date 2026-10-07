@@ -340,7 +340,10 @@ const IDEAS = {
                 name: 'The trail is walked',
                 text: 'The menu’s rows are walked in one by one, left to right then down; they are walked back the same way to close.',
             },
-            { name: 'A branch sways', text: 'The menu drops with a single sway, settling like a branch; it sways back up the same way to close.' },
+            {
+                name: 'A branch grows',
+                text: 'The menu grows down out of its button, far end first, clipped at the button’s line, 1000 ms on the growth curve; closing is that growth reversed.',
+            },
         ],
         interactive: [
             {
@@ -348,7 +351,10 @@ const IDEAS = {
                 text: 'Hover lifts a button’s wooden tag a hair, focus rings it in bark, press presses the tag flat for a moment.',
             },
             { name: 'A branch dips', text: 'Hover dips a button once like a branch, focus outlines it in moss, press settles it down.' },
-            { name: 'The trail blaze', text: 'Hover brightens a button’s blaze mark, focus rings it, press carves the mark in for the moment held.' },
+            {
+                name: 'The trail blaze',
+                text: 'The header’s buttons are forest’s own: hover lays the dashed blaze ring, focus is the two-channel ring, press closes the blaze in.',
+            },
         ],
     },
     'high-contrast': {

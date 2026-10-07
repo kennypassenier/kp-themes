@@ -584,8 +584,8 @@ const IDEAS = {
                 text: 'The canopy sways.',
             },
             {
-                name: 'Fireflies',
-                text: 'Two fireflies drift to and fro over the plot.',
+                name: 'The row is planted',
+                text: 'While it loads, the skeleton lines and the plot’s foot are the bar’s planted row: seedlings, then whole trees filling it start to end.',
             },
         ],
         arrival: [
@@ -599,7 +599,7 @@ const IDEAS = {
             },
             {
                 name: 'The trail is walked',
-                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+                text: 'The line is drawn in from the left on forest’s growth curve, 1000 ms; the number is written in from the left.',
             },
         ],
         tone: [

@@ -1,0 +1,72 @@
+/* research/character-chart, forest: the decided picks on forest's grammar
+   (themes/forest/CHARACTER.md G1-G16; research/forest-character/grammar.css
+   holds the tokens and keyframes). Only forest's decided options change:
+   shape a, loading r4-fo-map, arrival rise, update none, tip a (events
+   r3-fo-ev-trig stays as it is).
+
+   - corner: the leaf corner on the logbook page, the luggage tag and the
+     legend keys (top-right and bottom-left rounded, the others square);
+   - loading: the planted row at the plot's foot is the package's
+     (css/forest-register.css draws it on every chart's loading state); the
+     map's ink and survey dots are retired by it, nothing here repeats it;
+   - arrival: the series still rise out of the baseline, on the growth curve
+     in 1000 ms and no longer on the spring that overshot their values;
+   - update: the newest point gets a growth ring (forest.js draws it); a new
+     reading no longer just appears. */
+@layer kp.signature {
+    [data-theme='forest'] [data-cc-shape='a'] .kp-chart {
+        --cc-radius: var(--fog-leaf-plate);
+    }
+
+    [data-theme='forest'] [data-cc-tip='a'] .kp-chart__tip {
+        border-radius: var(--fog-leaf-small);
+    }
+
+    [data-theme='forest'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: var(--fog-leaf-small);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Arrival rise → forest's curve, 1000 ms (a close would be this reversed). */
+        [data-theme='forest'] [data-cc-arrival='rise'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k var(--fog-time) var(--fog-curve) both;
+        }
+    }
+
+    /* The growth ring of an update (forest.js appends the circle). */
+    [data-theme='forest'] .kp-chart__plot .fog-ring {
+        fill: none;
+        stroke: var(--primary);
+        stroke-width: 1.5;
+        pointer-events: none;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        opacity: 0;
+        transform: rotate(-90deg);
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-chart__plot .fog-ring {
+            animation: fog-ring-draw var(--fog-time) linear both;
+        }
+
+        @keyframes fog-ring-draw {
+            0% {
+                stroke-dashoffset: 1;
+                opacity: 1;
+                animation-timing-function: var(--fog-curve);
+            }
+            55% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+                animation-timing-function: ease-in-out;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                opacity: 0;
+            }
+        }
+    }
+}
