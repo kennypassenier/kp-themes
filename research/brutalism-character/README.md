@@ -1,5 +1,7 @@
 # What makes brutalism brutalism
 
+**Round 1 verdict (Kenny, 07/10/2026 21:03): fourteen of eighteen questions approved as recommended (curve = gravity, direction = diagonal, opening = footprint, durations = units, colour = roles, corners = square, surface = slab, warning = taped, live = slam, spinner = tip, leave = lift, composites = own, focus = ring, press = ground); the other four (loading, pointing, voice, motifs) come back in round 2**; the machine-readable decided.json follows once all eighteen are settled (the gate treats a decided.json as a finished topic).
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk, blueprint;
 brutalism fourth in that order, the same way as titanium, forest, nostromo, cyberpunk, synthwave and solstice (02:54: "waar jij eerst
 uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet"). The analysis is
