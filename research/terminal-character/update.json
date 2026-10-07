@@ -23,7 +23,7 @@
         "terminal": {
             "loading": {
                 "comment": "I feel like we can do better, I like 2 most but give me more options",
-                "reply": "Five new loading options built on your favourite, the row of cells along the foot, now written and erased by the block cursor itself; writing and erasing both take 560 ms, the erase being the write played backwards."
+                "reply": "Five options now, four of them new, built on your favourite, the row of cells along the foot, which the block cursor itself writes and erases: it writes the cells and backspaces them, walks leaving a decaying trail, heads an htop row, or types a prompt's dots. Every loop leaves as it arrives, reversed (writing and erasing both 560 ms, the htop row 1000 ms each way, the prompt four beats in and four out), except the walking trail, which walks off the part. The approved waiting cursor stays as the fifth."
             }
         }
     }
