@@ -1,5 +1,90 @@
 # What makes blueprint blueprint
 
+## Round two (2026-10-07 21:19, after the anchor)
+
+**Why.** Kenny picked **the tracing pen** as blueprint's anchor ([research/blueprint-anchor](../blueprint-anchor/README.md), decided 21:19): the
+visible plotter pen following one curve across a graticule, amber witness lines dropping from its nib to both axes and a pointer on each, so its
+place is read on both scales. It is the one element every other decision of the theme departs from (forest: the tree bar; titanium: the loading
+animation). The colours (cyan pen, amber annotation, Prussian ground) are the settled base. He loved the pen and the measuring, but not the
+dimension line's bar form: **arrowheads, a hatched fill and a chain line do not come back**. Nothing in round one had been judged yet, so this round
+reworks the sixteen questions around the anchor, in place (same demo id, same section and item keys, round marker `2026-10-07-r2`): where an option
+drew another idiom (a sliding edge, a rise, a frame, a hatched plate, a cloud on its own, a line along the foot) it is replaced by one built from the
+pen; where a question is about something the pen cannot draw (time, colour, type, consistency, the focus ring, where marks may stand) its options
+stay and the recommended one agrees with the anchor. Every question keeps exactly three options, the recommendation first, and every option's text
+says how it comes from the pen.
+
+**The pen is one piece.** [pen.js](pen.js) and [pen.css](pen.css) hold the anchor's carriage (a 16 unit square in the steel line, a crosshair, a
+nib that is down or up) on its gantry rail, the anchor's curve and its readings, and every pen route; the carriage and the curve are copied from
+`research/blueprint-anchor/art.js` (the decided record is never read at run time). The pen is away at rest and while a part is away, shows only while
+it works, and ends hidden, so every finished pose is the finished picture without a pen. A route is two fractions of the part's box (`--bw-px`,
+`--bw-py`), two lengths (`--bw-ox`, `--bw-oy`: a witness line's overhang) and the nib (`--bw-nib`), all registered properties; the ink that follows
+the nib ([options.css](options.css)) is written from the **same keyframe offsets**, so the ink and the pen cannot drift apart. The tracer reads the
+one number `--bw-p` (0 to 1): the ink is uncovered to the pen's place, the nib's height is computed from the curve's own formula (`1 - e^(-5x)
+cos(10x)`, scaled to 80 %), the two witness lines run from the nib to the foot and to the start edge, a pointer rests on each axis. One ramp for
+the whole stroke, as in the anchor (a single interval of `--bw-p`); the corner-to-corner routes ramp on every stroke, as G1 says.
+
+| #   | Question                        | Kept                                                                           | Replaced                                                                                                                                                            | Why                                                                                                                                                         |
+| --- | ------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The motion curve (G1)           | all three: the plotter's feed (rec.), plain even pace, hard steps              | none                                                                                                                                                                | the feed is the anchor's own; the scene now shows it as the pen's speed on every stroke                                                                     |
+| 2   | How a part arrives (G2)         | "constructed, then drawn", now the visible pen tracing the outline (rec.)      | "uncovered from the start" (titanium's feed) by **the pen sets it out on a diagonal**; "risen in steps" by **the pen marks it off with witness lines**              | a sliding edge and a rise are not a pen; the line in time is the anchor itself in every option (traced, read against both axes)                             |
+| 3   | Opening a menu or a dialog (G3) | "drawn: traced from its corner", now the visible pen (rec.)                    | "drafted from the top" (titanium's cut) by **two axes first**; "unrolled from the tube" by **led in: a leader from the trigger, then traced**                       | the cut and the unroll are not a pen; the leader is the tooltip's approved way; a trigger now stands above the panel in the scene                           |
+| 4   | How long things take (G4)       | all three: units of 160 ms (rec.), as the picks, at once                       | none                                                                                                                                                                | time is not drawn; the recommended one is the anchor's own timeline (18 units of 160 ms = 2880 ms)                                                          |
+| 5   | Where the colour goes (G5)      | all three: cyan draws, amber annotates (rec.), cyan only, amber as main line   | none                                                                                                                                                                | colour meaning is not drawn; the scene adds the pen's trace and readings, so the split is seen on the anchor (cyan trace, amber witness lines and pointers) |
+| 6   | The surface (G7)                | "four corner brackets" (your scope-18 instrument, now 2nd), "the section view" | "millimetre paper on every plate" (synthwave's grid) by **the graticule's axes** (rec.): a ruler along the start edge and the foot, paper only under data           | the anchor is framed by two ticked axes, not by a box or brackets; the decided brackets stay as the honest second choice                                    |
+| 7   | A warning (G13)                 | "flagged: △ ▲ and the word" (now 2nd)                                          | "framed all round" (nostromo's klaxon) by **pointed out on a scale** (rec.); "hatched" (brutalism's tape) by **underscored by the pen**                             | frames and hatches are not the pen; the tone's pointer is the anchor's pointer, so the reading is placed on a scale                                         |
+| 8   | A live update (G9)              | "revised: the amber cloud" (now 2nd), drawn by a visible pen                   | "retraced" (rise, solstice's) by **read again: the pointer slides** (rec.); "turned over" (grotesk's flap) by **gone over once more: a rule**                       | the pointer and its witness line are the anchor's reading; the cloud alone is a shape that says only "changed"                                              |
+| 9   | Loading (G10)                   | "a section being hatched" (now 2nd), with a pen on its edge                    | "the pen along the foot" by **the pen traces its curve across the waiting place** (rec.); "marching outline" by **the pen keeps tracing the outline**               | the anchor is itself a loading picture; a line along the foot is forest's, solstice's and nostromo's, and marching dashes are high-contrast's               |
+| 10  | Leaving and arriving (G12)      | "hatched out and lifted off" (your leave, now drawn by a pen), "untraced"      | "erased from the start" (titanium's cut) by **crossed out: two diagonals**                                                                                          | a sliding edge is not a pen; the cross is the drawing's sign for removed                                                                                    |
+| 11  | Buttons inside composites (G17) | all three                                                                      | none                                                                                                                                                                | consistency is not drawn; the press dimension is now drawn with slash ticks (no arrowheads)                                                                 |
+| 12  | Pointing at something (G8)      | "the witness lines alone" (your gap-4, now 3rd)                                | "the grid lights" (cyberpunk's) by **read on a scale: witness lines and a pointer on a ruler** (rec.); "a dashed ring" (forest's) by **a leader**                   | the pointers on a scale are the anchor's other half; a lit grid and a ring are other themes' ideas                                                          |
+| 13  | The focus ring (DI2)            | all three                                                                      | none                                                                                                                                                                | an accessibility constant, not a drawing; the recommended ring already carries the witness lines                                                            |
+| 14  | The press (G14)                 | "the darker ground alone"                                                      | "the dimension is taken" (arrowheads) by **the pen takes the dimension** (rec., slash ticks, drawn by a pen); "the line pressed in" by **the pen pricks the datum** | arrowheads must not come back; an inset line is a frame                                                                                                     |
+| 15  | The voice (G15)                 | all three                                                                      | none                                                                                                                                                                | type is not drawn; the recommended lettering is the anchor's own (mono capitals sloped 15°)                                                                 |
+| 16  | Motifs (G16)                    | all three                                                                      | none                                                                                                                                                                | where marks may stand is not drawn; the pen joins the motifs (shown only while something is drawn), parked on every plate in "on everything"                |
+
+**The sixteen questions, the three options each (recommendation first; new = built from the pen in round two, kept = round one's idea).**
+
+1. The motion curve: the plotter's feed (kept) · a plain even pace (kept) · hard steps (kept)
+2. How a part arrives: the pen traces its outline, then inks it (kept, pen visible) · the pen sets it out on a diagonal (new) · the pen marks it off with witness lines (new)
+3. Opening: the pen traces the panel from its corner (kept, pen visible) · two axes first (new) · led in: a leader from the trigger, then traced (new)
+4. Durations: units of 160 ms (kept) · as the picks (kept) · at once (kept)
+5. Colour: cyan draws, amber annotates (kept) · cyan only (kept) · amber as the main line (kept)
+6. Surface: the graticule's axes, two ticked scales (new) · four corner brackets (kept) · the section view (kept)
+7. A warning: pointed out on the reading's scale (new) · flagged △ ▲ and the word (kept) · underscored by the pen (new)
+8. A live update: read again, the pointer slides (new) · revised, the pen draws the cloud (kept, pen visible) · gone over once more, a rule (new)
+9. Loading: the pen traces its curve across the waiting place (new) · the pen hatches the section (kept, pen visible) · the pen keeps tracing the outline (new)
+10. Leave: the pen hatches it out, then lifted off (kept, pen visible) · untraced (kept) · crossed out (new)
+11. Composites: exactly blueprint's own · as today · own but quiet (all kept)
+12. Hover: read on a scale (new) · a leader (new) · the witness lines alone (kept)
+13. Focus ring: the two-channel ring · one dashed outline · one thin cyan outline (all kept)
+14. Press: the pen takes the dimension (new, slash ticks) · the pen pricks the datum (new) · the darker ground alone (kept)
+15. Voice: the draughtsman's lettering · upright mono capitals · the sans in sentence case (all kept)
+16. Motifs: every motif means one thing · only the line · on everything (all kept, the pen added)
+
+**Measured in Firefox** (`research/_review/measure-motion.mjs`, full speed, 1600 px; it matches the scene class `bw-scene`, so it runs unchanged).
+Every part that arrives, opens, leaves or is pressed was driven `gap → in` and `hold → out` and seeked in 10 ms steps. The part is inked at three
+quarters of its construction on purpose (t50 = t90 = 360 of 480 ms; 600 of 800 ms for a panel), the pen and its construction line run from the first
+to the last frame of that time (a pen goes out and comes back, so the tool calls it a pulse), and the tracer is one ramp (t50 400, t90 670 of 800 ms:
+the feed's own 50 % and 83.75 %). The close of every part is its arrival played backwards: the tool reports `mirror` for every one of them
+(curve 1 to 3, arrival 1 to 3, opening 1 to 3, durations 1 to 2, leave 1 to 3), and no `FRONT`, `BLINK` or cut-off. A separate per-frame check (every part that arrives: the leave at t against the arrival at T − t, every animated component incl. the pen's registered
+properties, 10 ms steps, ±1 frame, the two boundary frames apart) compared 20 651 frames in the 14 option scenes that have a part arriving
+(234 to 3 734 frames each) and found 0 % deviation; run with the mirror deliberately wrong it fails at 100 %, so it does measure. The tool's own
+report (247 parts, all `mirror`, no `FRONT`, `BLINK` or cut-off) agrees. Live updates and presses are not arrivals (they stay in place), so they have no close; their own timings: the reading 960 ms, the dimension
+320 ms (drawn in 70 % of it), the leave 1120 ms (the hatch done at 60 %).
+
+**Checked in the review dialog itself** (`demo.html?next=…&review=open`, Firefox, 1600 px and 390 px): every question and every option was shown in
+`[data-rv-stage]` (flip with `[data-rv-flip-next]`, step with `[data-rv-go="1"]`); in all of them the scene's custom properties resolve (`--bw-feed`,
+the pen's registered `--bw-px` and the others), every motion question's animations run inside the stage (arrival: ink, outline, pen, tracer; opening;
+live; loading; leave; press: dimension, datum), and there are no console errors. No horizontal scroll of the page or the dialog at 390 px (the
+stage's own inner width is 34 px wider than its box, in round one too; nothing inside it overflows).
+
+**Scope.** `css/blueprint-register.css`, every package CSS and JS, `research/blueprint-anchor/`, other themes' files and `js/motion.js` are untouched;
+the register changes only after Kenny's character verdict. The network graph is in no scene.
+
+---
+
+# Round one (history)
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk, blueprint;
 blueprint last in that order, the same way as titanium, forest, nostromo, cyberpunk, synthwave, solstice, brutalism and grotesk (02:54:
 "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet"). The analysis is

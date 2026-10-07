@@ -15,37 +15,56 @@
 // the clock only writes attributes and text, it never reads layout. The
 // network graph is in no scene: it changes in no theme (Kenny, 02:54), so it
 // is a source of the grammar here, never a target.
+//
+// Round two (2026-10-07, after the anchor): Kenny picked the tracing pen as
+// blueprint's anchor (research/blueprint-anchor, 21:19), the one element
+// every other decision of the theme departs from. The questions are reworked
+// around it: the pen (pen.js, one shared piece taken from the anchor's art)
+// is what arrives, opens, leaves, waits, is pressed and marks a change; its
+// witness lines and pointers are how a place or a value is read; the
+// graticule is the surface; the plotter's feed is the curve. Where a
+// question is about something the pen cannot draw (time, colour, type,
+// consistency, the focus ring, where marks may stand) its options stay and
+// the recommended one agrees with the anchor.
+
+import { pen, tracer } from './pen.js';
 
 /* ----------------------------------------------------------- the parts */
 
 /** The four corner brackets a part stands in (G7, scope-18). */
 const FRAME = `<span class="bw-frame" aria-hidden="true"></span>`;
-/** The construction line the pen traces round a part before it is inked (G2, G3). */
-const TRACE = `<span class="bw-trace" aria-hidden="true"></span>`;
+/**
+ * What the pen draws on a part before it is inked (G2, G3): the outline it
+ * traces, the diagonal it sets out, the two witness lines it marks off, and
+ * the pen itself. The option of the question picks which of them works.
+ */
+const TRACE = `<span class="bw-trace" aria-hidden="true"></span><span class="bw-diag" aria-hidden="true"></span><span class="bw-mk bw-mk--s" aria-hidden="true"></span><span class="bw-mk bw-mk--e" aria-hidden="true"></span>${pen()}`;
+/** The amber leader a panel is led in by from its trigger, ending in a node (G3). */
+const LEAD = `<span class="bw-lead" aria-hidden="true"></span>`;
 /** The two amber witness lines at a part's ends, under the hand (G8, gap-4). */
 const WIT = `<span class="bw-wit" aria-hidden="true"></span>`;
-/** The amber dimension a press draws between the witness lines (G14). */
-const DIM = `<span class="bw-dim" aria-hidden="true"></span>`;
-/** The demolition hatch a leaving part is hatched out with (G12). */
-const HATCH = `<span class="bw-x" aria-hidden="true"></span>`;
-/** The revision cloud and its letter, drawn round a changed value (G9). */
-const CLOUD = `<span class="bw-cloud" aria-hidden="true"><span class="bw-cloud__rev" data-bw-rev>△B</span></span>`;
+/** What the pen draws on a held control: the dimension across its foot (slash ticks, no arrowheads) or the datum cross at its centre (G14). */
+const PRESS_INKS = `<span class="bw-dim" aria-hidden="true"></span><span class="bw-datum" aria-hidden="true"></span>${pen(true)}`;
+/** What a leaving part is struck out with (G12): the demolition hatch, the second diagonal of a cross, and the pen that draws them. */
+const HATCH = `<span class="bw-x" aria-hidden="true"></span><span class="bw-diag bw-diag--back" aria-hidden="true"></span>${pen(true, 'bw-pen--leave')}`;
+/** The pen's mark on a changed value (G9): the reading's pointer and scale, the revision cloud and its letter, or a rule, by option. */
+const CLOUD = `<span class="bw-cloud" aria-hidden="true"><span class="bw-cloud__rev" data-bw-rev>△B</span>${pen(true)}</span>`;
 
-/** A package button with its label span; `press` adds the dimension it draws when held. */
-const button = (label, modifier = '', extra = '', press = false) =>
-    `<button type="button" class="kp-button ${modifier}" ${extra}><span class="kp-button__label">${label}</span>${press ? DIM : ''}</button>`;
+/** A package button with its label span; `press` adds what the pen draws when it is held, `wit` the witness lines under the hand. */
+const button = (label, modifier = '', extra = '', press = false, wit = false) =>
+    `<button type="button" class="kp-button ${modifier}" ${extra}><span class="kp-button__label">${label}</span>${wit ? WIT : ''}${press ? PRESS_INKS : ''}</button>`;
 
 /** The flag note a tone is marked with (G13); options.css shows it where the option asks. */
 const flag = (kind, word) => `<span class="bw-flag" data-bw-kind="${kind}"><span class="bw-flag__mark" aria-hidden="true"></span>${word}</span>`;
 
 /**
  * The place a waiting reading will stand (G10), with every loading picture an
- * option may draw in it: the section (`.bw-section`: two rules, two ticks, the
- * hatch), the pen running along the foot (`.bw-run`) and the marching outline
- * (`.bw-ants`). options.css shows one.
+ * option may draw in it, each worked by the pen: the curve it traces across
+ * the place (`.bw-tracer`), the section it hatches (`.bw-section`) and the
+ * outline it keeps tracing (`.bw-outline`). options.css shows one.
  */
 const wait = (kind, i = 0) =>
-    `<span class="bw-wait bw-wait--${kind}" style="--i: ${i}" aria-hidden="true"><span class="bw-section"></span><span class="bw-run"></span><span class="bw-ants"></span></span>`;
+    `<span class="bw-wait bw-wait--${kind}" style="--i: ${i}" aria-hidden="true"><span class="bw-section">${pen(true)}</span>${tracer()}<span class="bw-outline"><span class="bw-trace"></span>${pen(true)}</span></span>`;
 
 /** The change, set in the lettering with its sign (G13, the columns' tolerance). */
 const change = (text, dir = 'up') => `<span class="bw-change" data-bw-dir="${dir}">${dir === 'up' ? '+' : '−'}${text}</span>`;
@@ -55,9 +74,8 @@ const meter = (value = 0.62, mark = 0.8, extra = '') =>
         value * 100,
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}; --kp-mark: ${mark}" ${extra}><span class="kp-meter__mark"></span></div>`;
 
-/** A plotted line on the millimetre paper. */
-const plot = (cls = '', extra = '') => `<div class="bw-plot ${cls}" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none">
-        <polyline class="bw-plot__line" points="0,36 20,30 40,32 60,20 80,24 100,12 120,16 140,8 160,10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"/></svg>${extra}</div>`;
+/** The anchor's tracing on the millimetre paper: the pen's curve, read against both axes. */
+const plot = (cls = '', label = '') => `<div class="bw-plot ${cls}" aria-hidden="true">${tracer(label)}</div>`;
 
 const PART = {
     /** A plate: a measured part on the sheet. */
@@ -88,19 +106,22 @@ const PART = {
                     `<div class="bw-strip__col bw-arrives" style="--i: ${i}">${TRACE}<span class="bw-label">${l}</span><span class="bw-figure">${v}</span></div>`,
             )
             .join('')}</div>`,
+    /** A trigger and the menu it opens: the panel is traced, drawn along its axes or led in from the trigger by option. */
     menu: () => `<div class="bw-menu-wrap">
         ${button('Sheet ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}
-        <div class="bw-pop-wrap"><div class="kp-popover bw-pop bw-float bw-opens">${TRACE}<ul class="kp-menu" role="menu">
+        <div class="bw-pop-wrap"><div class="kp-popover bw-pop bw-float bw-opens">${TRACE}${LEAD}<ul class="kp-menu" role="menu">
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the drawing</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Issue a revision…</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Void the sheet</button></li>
         </ul></div></div>
     </div>`,
-    dialog: () => `<div class="kp-dialog bw-dialog bw-float bw-opens" role="group" aria-label="A dialog opening">${TRACE}
+    dialog: () => `<div class="bw-menu-wrap">
+        ${button('Issue revision…', 'kp-button--sm', 'aria-haspopup="dialog" aria-expanded="true"')}
+        <div class="bw-pop-wrap"><div class="kp-dialog bw-dialog bw-float bw-opens" role="group" aria-label="A dialog opening">${TRACE}${LEAD}
         <p class="kp-dialog__title bw-title">Issue revision C?</p>
         <p class="kp-dialog__description">Sheet A-201 goes to the site as revision C.</p>
         <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Issue it', 'kp-button--sm kp-button--primary')}</div>
-    </div>`,
+    </div></div></div>`,
     state: (word = 'Issued', kind = 'good') =>
         `<span class="bw-state" data-bw-kind="${kind}"><span class="bw-carrier bw-carrier--mark"><span class="bw-state__dot" aria-hidden="true"></span>${CLOUD}</span><span class="bw-state__word" data-bw-word>${word}</span></span>`,
     alert: (text = 'Sheet A-201 is issued for construction.') =>
@@ -135,9 +156,9 @@ const ARRIVAL = () =>
     cell('A list of sheets', PART.rows()) +
     cell('A tile arrives', PART.tile()) +
     cell('A strip of columns', PART.strip()) +
-    cell('A line in time is plotted', plot('bw-plot--paper bw-plot--draws'));
+    cell('A line in time is traced', plot('bw-plot--paper bw-plot--draws', '412'));
 
-const OPENING = () => cell('A menu opens from its button', PART.menu()) + cell('A dialog opens', PART.dialog());
+const OPENING = () => cell('A menu opens from its button', PART.menu()) + cell('A dialog opens from its button', PART.dialog());
 
 const waitingTile = () =>
     `<div class="kp-card bw-plate bw-tile bw-waits" aria-busy="true">${FRAME}<p class="kp-card__title bw-title">Sheet A-202</p>${wait('body')}${wait('body', 1)}</div>`;
@@ -154,8 +175,9 @@ const DURATION = () =>
 const COLOUR = () =>
     cell('Buttons, one pointed at', `<div class="bw-row">${button('Plot', 'bw-pointed')}${button('Issue sheet', 'kp-button--primary')}</div>`) +
     cell('A meter', meter(0.62, 0.8)) +
+    cell('The pen’s trace and its readings', `<div class="bw-plate bw-plot-plate">${FRAME}${plot('bw-plot--paper', '412')}</div>`) +
     cell(
-        'Key figures, one revised',
+        'Key figures, one read again',
         `<div class="kp-kpis bw-kpi-row">${PART.kpi('Sheets issued', '412', change('6 %'), 'bw-revised')}${PART.kpi('Held', '4', change('1', 'down'))}</div>`,
         'bw-part--wide',
     ) +
@@ -176,7 +198,7 @@ const COLOUR = () =>
 const SURFACE = () =>
     cell('Card', PART.tile('Sheet A-201', 'Ground floor plan · rev C', '')) +
     cell('Key figure', `<div class="kp-kpis">${PART.kpi('Sheets issued', '18 240', change('6 %'))}</div>`) +
-    cell('A plot of data', `<div class="bw-plate bw-plot-plate">${FRAME}${plot('bw-plot--paper')}</div>`) +
+    cell('A plot of data', `<div class="bw-plate bw-plot-plate">${FRAME}${plot('bw-plot--paper', '412')}</div>`) +
     cell('A state', `<div class="bw-plate bw-state-plate">${FRAME}${PART.state('Issued')}</div>`) +
     cell(
         'A menu over the page',
@@ -193,7 +215,7 @@ const TONE = () =>
     steady(
         cell(
             'Key figures: normal and warning',
-            `<div class="kp-kpis bw-kpi-row">${PART.kpi('Sheets issued', '412', change('6 %'))}<div class="kp-kpi bw-plate bw-kpi bw-toned" data-bw-kind="warn">${FRAME}<span class="kp-kpi__label bw-label">Days late</span><span class="bw-toned__line">${flag(
+            `<div class="kp-kpis bw-kpi-row">${PART.kpi('Sheets issued', '412', change('6 %'))}<div class="kp-kpi bw-plate bw-kpi bw-toned" data-bw-kind="warn" style="--bw-at: 0.8">${FRAME}<span class="kp-kpi__label bw-label">Days late</span><span class="bw-toned__line">${flag(
                 'warn',
                 'Check',
             )}<span class="kp-kpi__value bw-figure bw-toned__figure">14</span></span><span class="kp-kpi__trend">${change('9', 'up')} <span class="bw-faint">on last week</span></span></div></div>`,
@@ -201,25 +223,25 @@ const TONE = () =>
         ) +
             cell(
                 'A failed tile',
-                `<div class="kp-card bw-plate bw-tile bw-toned" data-bw-kind="bad">${FRAME}<p class="kp-card__title bw-title bw-toned__line">${flag(
+                `<div class="kp-card bw-plate bw-tile bw-toned" data-bw-kind="bad" style="--bw-at: 1">${FRAME}<p class="kp-card__title bw-title bw-toned__line">${flag(
                     'bad',
                     'Failed',
                 )}<span class="bw-toned__figure">S-110</span></p><p class="kp-card__body">No plot since 16:40</p></div>`,
             ) +
             cell(
                 'A failed state',
-                `<div class="bw-plate bw-state-plate bw-toned" data-bw-kind="bad">${FRAME}<span class="bw-toned__line">${flag('bad', 'Failed')}${PART.state(
+                `<div class="bw-plate bw-state-plate bw-toned" data-bw-kind="bad" style="--bw-at: 1">${FRAME}<span class="bw-toned__line">${flag('bad', 'Failed')}${PART.state(
                     'Not plotted',
                     'bad',
                 )}</span></div>`,
             ) +
             cell(
                 'A menu with a destructive entry',
-                `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the drawing</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive bw-toned" data-bw-kind="bad"><span class="bw-toned__line">${flag('bad', '')}<span class="bw-toned__figure">Void the sheet</span></span></button></li></ul></div>`,
+                `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the drawing</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive bw-toned" data-bw-kind="bad" style="--bw-at: 1"><span class="bw-toned__line">${flag('bad', '')}<span class="bw-toned__figure">Void the sheet</span></span></button></li></ul></div>`,
             ) +
             cell(
                 'A meter turning to warning',
-                `<div class="bw-plate bw-meter-plate bw-toned" data-bw-kind="warn">${FRAME}<span class="bw-cap bw-toned__line">${flag(
+                `<div class="bw-plate bw-meter-plate bw-toned" data-bw-kind="warn" style="--bw-at: 0.88">${FRAME}<span class="bw-cap bw-toned__line">${flag(
                     'warn',
                     'Check',
                 )}<span class="bw-toned__figure">Beam near its load</span></span>${meter(0.88, 0.8, 'data-kp-tone="warning"')}</div>`,
@@ -290,11 +312,11 @@ const COMPOSITES = () =>
     ) +
     cell(
         'Menu: its entries',
-        `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bw-in-entry">${WIT}${DIM}Open the drawing</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Issue a revision…</button></li></ul></div>`,
+        `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bw-in-entry">${WIT}<span class="bw-dim" aria-hidden="true"></span>Open the drawing</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Issue a revision…</button></li></ul></div>`,
     ) +
     cell(
         'Tile: its Open link',
-        `<div class="kp-card bw-plate bw-tile">${FRAME}<p class="kp-card__title bw-title">Sheet A-201</p><a class="kp-button kp-button--ghost kp-button--sm bw-tile-link" href="#bw-intro"><span class="kp-button__label">Open</span>${DIM}</a></div>`,
+        `<div class="kp-card bw-plate bw-tile">${FRAME}<p class="kp-card__title bw-title">Sheet A-201</p><a class="kp-button kp-button--ghost kp-button--sm bw-tile-link" href="#bw-intro"><span class="kp-button__label">Open</span>${PRESS_INKS}</a></div>`,
     ) +
     cell(
         'Drawer: its tour buttons',
@@ -307,18 +329,21 @@ const COMPOSITES = () =>
     ) +
     cell(
         'Key figure as a link',
-        `<div class="kp-kpis"><a class="kp-kpi bw-plate bw-kpi bw-in-kpi" href="#bw-intro">${FRAME}${WIT}${DIM}<span class="kp-kpi__label bw-label">Sheets issued</span><span class="kp-kpi__value bw-figure">412</span><span class="kp-kpi__trend bw-faint">since Monday</span></a></div>`,
+        `<div class="kp-kpis"><a class="kp-kpi bw-plate bw-kpi bw-in-kpi" href="#bw-intro">${FRAME}${WIT}<span class="bw-dim" aria-hidden="true"></span><span class="kp-kpi__label bw-label">Sheets issued</span><span class="kp-kpi__value bw-figure">412</span><span class="kp-kpi__trend bw-faint">since Monday</span></a></div>`,
     );
 
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="bw-row">${button('Plot the sheet', 'bw-pointed')}${button('Issue sheet', 'kp-button--primary')}</div>`) +
+    cell(
+        'Button, pointed at',
+        `<div class="bw-row">${button('Plot the sheet', 'bw-pointed', '', false, true)}${button('Issue sheet', 'kp-button--primary', '', false, true)}</div>`,
+    ) +
     cell(
         'Menu entries, the first pointed at',
         `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bw-pointed">${WIT}Open the drawing</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">${WIT}Issue a revision…</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">${WIT}Rename</button></li></ul></div>`,
     ) +
     cell(
         'Tile with its Open link pointed at',
-        `<div class="kp-card bw-plate bw-tile">${FRAME}<p class="kp-card__title bw-title">Sheet A-201</p><p class="kp-card__body">Ground floor plan · rev C</p><a class="kp-button kp-button--ghost kp-button--sm bw-tile-link bw-pointed" href="#bw-intro"><span class="kp-button__label">Open</span></a></div>`,
+        `<div class="kp-card bw-plate bw-tile">${FRAME}<p class="kp-card__title bw-title">Sheet A-201</p><p class="kp-card__body">Ground floor plan · rev C</p><a class="kp-button kp-button--ghost kp-button--sm bw-tile-link bw-pointed" href="#bw-intro"><span class="kp-button__label">Open</span>${WIT}</a></div>`,
     ) +
     cell(
         'Key figures, the first pointed at',
@@ -359,12 +384,15 @@ const PRESS = () =>
     cell('Primary button', `<div class="bw-row">${button('Issue sheet', 'kp-button--primary bw-press', '', true)}</div>`) +
     cell(
         'Menu entry',
-        `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bw-press">${WIT}${DIM}Issue a revision…</button></li></ul></div>`,
+        `<div class="kp-popover bw-pop bw-pop--static bw-float"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bw-press">${WIT}${PRESS_INKS}Issue a revision…</button></li></ul></div>`,
     ) +
-    cell('Calendar day', `<div class="bw-days"><span class="bw-day bw-press">${FRAME}${WIT}${DIM}<span class="bw-day__num">14</span></span></div>`) +
+    cell(
+        'Calendar day',
+        `<div class="bw-days"><span class="bw-day bw-press">${FRAME}${WIT}${PRESS_INKS}<span class="bw-day__num">14</span></span></div>`,
+    ) +
     cell(
         'Key figure as a filter',
-        `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle bw-plate bw-kpi bw-press" aria-pressed="false">${FRAME}${WIT}${DIM}<span class="kp-kpi__label bw-label">Held sheets</span><span class="kp-kpi__value bw-figure">4</span></button></div>`,
+        `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle bw-plate bw-kpi bw-press" aria-pressed="false">${FRAME}${WIT}${PRESS_INKS}<span class="kp-kpi__label bw-label">Held sheets</span><span class="kp-kpi__value bw-figure">4</span></button></div>`,
     );
 
 const TYPE = () =>
@@ -387,7 +415,7 @@ const TYPE = () =>
 
 const MOTIFS = () =>
     cell('Meter with its mark', meter(0.62, 0.8)) +
-    cell('A plot of data', `<div class="bw-plate bw-plot-plate">${FRAME}${plot('bw-plot--paper')}</div>`) +
+    cell('A plot of data, read by the pen', `<div class="bw-plate bw-plot-plate">${FRAME}${plot('bw-plot--paper', '412')}</div>`) +
     cell(
         'A card and a warning card',
         `<div class="bw-motif-pair">${PART.tile('Sheet A-201', 'Ground floor plan · rev C', 'bw-motif-card')}<div class="kp-card bw-plate bw-tile bw-motif-warn bw-toned" data-bw-kind="warn">${FRAME}<span class="bw-cloud bw-cloud--still" aria-hidden="true"></span><p class="kp-card__title bw-title bw-toned__line">${flag(
@@ -410,6 +438,10 @@ const MOTIFS = () =>
         `<div class="kp-empty bw-plate bw-motif-empty">${FRAME}<p class="kp-empty__title">No sheets yet</p><p class="kp-empty__body">The first is plotted on Monday.</p></div>`,
     ) +
     cell(
+        'The pen: shown while something is drawn',
+        `<div class="bw-plate bw-pen-motif">${FRAME}${pen(false, 'bw-pen--still')}<p class="bw-cap">Parked on its rail between two jobs.</p></div>`,
+    ) +
+    cell(
         'A divider between two sections',
         `<p class="bw-cap">Architecture</p><div class="bw-divider" data-kp-divider></div><p class="bw-cap">Structure</p>`,
     );
@@ -422,7 +454,10 @@ const not = (why) => `Not recommended, because ${why}`;
 /**
  * One question each. `kind`: 'cycle' scenes are replayed by the page's clock
  * (arrive, open, press, update, leave), 'loop' scenes loop in CSS, 'still'
- * scenes do not move. `options[0]` is the recommendation.
+ * scenes do not move. `options[0]` is the recommendation: in round two
+ * (2026-10-07 21:19, the tracing pen decided as the anchor) it is always the
+ * option that most visibly comes from the pen; where a question is about
+ * something the pen cannot draw, the recommended option agrees with it.
  * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: () => string,
  *   options: { key: string, name: string, see: string, verdict: string }[] }[]}
  */
@@ -432,28 +467,28 @@ const ASPECTS = [
         label: 'The motion curve',
         rule: 'G1',
         question: 'How does blueprint’s pen move: with the plotter’s ramp, at a plain even pace, or in hard steps?',
-        why: 'A theme exists to be distinct (your rule of 03:37). Blueprint’s register moves on linear, and twenty-two of your picks do too; but linear is now grotesk’s even pace (with its station-clock dwell) and high-contrast’s register. A pen plotter does not start at full speed: its stepper motor ramps up, feeds the pen at one speed, and ramps down at the end of every stroke. No theme moves like that yet.',
+        why: 'The anchor you picked is a pen, and a pen has a feed. In the tracing the pen ramps softly up and down at the ends of its one stroke; a stepper plotter does that on every stroke. Blueprint’s register moves on linear and twenty-two of your picks do too, but linear is grotesk’s even pace (with its station-clock dwell) and high-contrast’s register. No other theme ramps around an even feed.',
         kind: 'cycle',
         scene: MOVING,
         options: [
             {
                 key: 'feed',
                 name: 'The plotter’s feed: a short ramp, a long even feed, a short ramp',
-                see: 'Every stroke starts softly, runs at one speed for most of its length and stops softly: the week is constructed day by day (each side of each day its own stroke), the menu is drawn, the tile is drawn, the cloud is drawn round the changed figure. The loop hatches, stands, and goes again.',
+                see: 'The anchor’s own feed on every pen stroke: the pen constructs the week day by day (each side of each day its own stroke), draws the menu and the tile, and reads the changed figure on its scale; the waiting part’s pen traces its curve in one stroke with one ramp. Every stroke starts softly, runs at one speed for most of its length and stops softly.',
                 verdict: rec(
-                    'it is how a pen plotter actually moves, it keeps the even line of your linear picks without their hard start and stop, and no other theme ramps around an even feed.',
+                    'it is the anchor’s feed (the tracing pen ramps at the ends of its stroke), it keeps the even line of your linear picks without their hard start and stop, and no other theme ramps around an even feed.',
                 ),
             },
             {
                 key: 'linear',
                 name: 'A plain even pace, a dead stop (your picks; grotesk’s and high-contrast’s)',
-                see: 'Everything moves at one speed from the first frame to the last and stops dead.',
+                see: 'The pen moves at one speed from the first frame to the last and stops dead.',
                 verdict: not('it is your register’s curve, but grotesk now uses the even pace and high-contrast’s register is linear too.'),
             },
             {
                 key: 'steps',
                 name: 'Hard steps (your Plotted and Lettered; near terminal’s, nostromo’s, cyberpunk’s)',
-                see: 'Every stroke moves in four hard jumps.',
+                see: 'The pen jumps along every stroke in four hard steps.',
                 verdict: not(
                     'it reads mechanical, but a drawn line is continuous (the anatomy), and stepping is terminal’s, nostromo’s and cyberpunk’s.',
                 ),
@@ -464,30 +499,32 @@ const ASPECTS = [
         id: 'arrival',
         label: 'How a part arrives',
         rule: 'G2',
-        question: 'When a part arrives on the sheet, how is it drawn?',
-        why: 'Eleven of your arrival picks uncover the part from the start with a moving edge (the calendar’s Plotted, the tiles’ and the trend’s Drafted, the meter, the toast): that is exactly titanium’s feed and formal’s ledger pen. Your signature already draws differently in two places: the tooltip draws its leader line first, the dialog its top edge first. A draughtsman constructs a part before he inks it.',
+        question: 'When a part arrives on the sheet, what does the pen do?',
+        why: 'With the tracing pen as the anchor a part cannot simply appear: the pen brings it. Eleven of your arrival picks uncover the part from the start with a moving edge, which is titanium’s feed and formal’s ledger pen; they are left out here because the pen draws, it does not wipe. The pen can bring a part three ways of its own: it runs round the outline, it sets the part out on a diagonal, or it marks the two ends with witness lines.',
         kind: 'cycle',
         scene: ARRIVAL,
         options: [
             {
-                key: 'construct',
-                name: 'Constructed, then drawn',
-                see: 'The pen traces each part’s outline as a thin cyan construction line, round from its top-left corner; when the line closes, the part is inked at once (its words, figures and corner brackets) and the construction line is lifted. The days, the rows and the columns one after another; the line in time is plotted along itself.',
+                key: 'trace',
+                name: 'The pen traces its outline, then inks it',
+                see: 'The pen enters at the part’s top-start corner and runs round it, along the top, down the end, back along the foot and up the start, a thin cyan construction line behind its nib; when the line closes the part is inked at once and the pen parks at the top-end corner. The days, the rows and the columns one after another (a small pen each). The line in time is the anchor itself: the pen traces the curve in one stroke and its amber witness lines and pointers read it against both axes.',
                 verdict: rec(
-                    'it is the drawing office itself, it grows out of your tooltip and dialog, and no other theme draws a part’s outline before the part.',
+                    'it is the anchor drawn on every part, the same pen and feed, the outline traced before the part is inked, and no other theme draws a part’s outline before the part.',
                 ),
             },
             {
-                key: 'uncover',
-                name: 'Uncovered from the start (your picks; titanium’s feed)',
-                see: 'Each part is uncovered from left to right by a moving edge, at an even pace.',
-                verdict: not('it is your pick eleven times, but a sliding edge is titanium’s arrival and formal’s ledger pen.'),
+                key: 'diag',
+                name: 'The pen sets it out on a diagonal',
+                see: 'The pen draws one diagonal from the part’s top-start corner to its foot-end corner, the way a draughtsman sets out a rectangle; the part is inked on that line and the line is lifted. One stroke, one ramp.',
+                verdict: not('it is quick and one stroke, but a single diagonal says little about where the part’s edges are; the outline does.'),
             },
             {
-                key: 'rise',
-                name: 'Risen in steps (your busy panel’s Plotted; near solstice’s and synthwave’s rise)',
-                see: 'Each part rises 0.8 rem into place in four hard steps.',
-                verdict: not('it is plotted, but rising is solstice’s and synthwave’s, and a drawing does not move on the sheet.'),
+                key: 'marks',
+                name: 'The pen marks it off with witness lines',
+                see: 'The pen draws an amber witness line down the part’s start, lifts, crosses to its end and draws the second line upward; the part is inked between them and the lines are lifted. It borrows the hover’s witness lines (gap-4): a part arrives measured.',
+                verdict: not(
+                    'it is the most measured arrival, but it uses the hand’s mark for arriving too, so a hovered part and a new part would look alike.',
+                ),
             },
         ],
     },
@@ -496,29 +533,33 @@ const ASPECTS = [
         label: 'Opening a menu or a dialog',
         rule: 'G3',
         question: 'How does a menu, a popover or the dialog open?',
-        why: 'Your menus and the header’s menu are Drafted: cut open from the top edge down, which is titanium’s opening exactly; your drawer unrolls from the tube; your dialog draws its top edge first and then the sheet. The recommendation draws every panel the way a part arrives, so opening and arriving are one picture.',
+        why: 'The same pen opens what floats over the drawing. Your menus and the header’s menu are Drafted: cut open from the top edge down, which is titanium’s opening exactly; your drawer unrolls from the tube. Neither is a pen. Your tooltip already draws its leader first and your dialog its top edge first; the options below are three ways the pen can open a panel from its button.',
         kind: 'cycle',
         scene: OPENING,
         options: [
             {
-                key: 'draw',
-                name: 'Drawn: traced from its corner, then inked',
-                see: 'The pen traces the panel’s outline from the corner at its button (along the top, down, back along the foot, up), then the panel is inked at once; 800 ms. Closing is the same played backwards: the ink lifted at once, then the outline run back to the corner at its button.',
+                key: 'trace',
+                name: 'The pen traces the panel from its corner, then inks it',
+                see: 'The pen enters at the panel’s top-start corner (the corner at its button) and runs the outline, along the top, down, back along the foot, up, a thin cyan line behind its nib; then the panel is inked at once and the pen parks; 800 ms. Closing is the same played backwards: the pen comes back, the ink is lifted at once, the outline is run back to the corner.',
                 verdict: rec(
-                    'it is one picture with the arrival, it keeps your dialog’s first stroke along the top, and it is no other theme’s opening.',
+                    'it is one picture with the arrival, the anchor’s pen again, it keeps your dialog’s first stroke along the top, and it is no other theme’s opening.',
                 ),
             },
             {
-                key: 'top',
-                name: 'Drafted from the top (your menus’ pick; titanium’s cut)',
-                see: 'The panel is cut open from its top edge down, at an even pace, 300 ms.',
-                verdict: not('it is your pick, but a top-down cut is titanium’s opening to the letter.'),
+                key: 'axes',
+                name: 'Two axes first: the pen draws the start edge and the foot, then inks the panel',
+                see: 'The pen draws the panel’s two axes, down its start edge and along its foot, the graticule’s own frame, then the panel is inked at once and the pen parks; the axes are lifted at the end. Closing plays it backwards.',
+                verdict: not(
+                    'it is the anchor’s graticule, but two edges say less than the whole outline about where the panel will stand and how big it is.',
+                ),
             },
             {
-                key: 'unroll',
-                name: 'Unrolled from the tube (your drawer’s pick, everywhere)',
-                see: 'The panel unrolls from a thin roll at its left edge to its full width, slowing as it lands, 300 ms; closing rolls it back up the same way.',
-                verdict: not('it is a lovely drawing-office image, but the panel is squashed while it unrolls, and nothing is drawn.'),
+                key: 'led',
+                name: 'Led in: the pen draws a leader from the trigger, then traces the panel',
+                see: 'The pen draws an amber leader from the button down to the panel’s top edge, ending in a node (your tooltip’s approved way), lifts, and traces the outline from the corner; the panel is inked. Closing plays it backwards.',
+                verdict: not(
+                    'it ties the panel to the button that opened it, but it costs a leader’s length of time and room, and a dialog that covers the page has no button left to point back to.',
+                ),
             },
         ],
     },
@@ -527,15 +568,15 @@ const ASPECTS = [
         label: 'How long things take',
         rule: 'G4',
         question: 'How long does each kind of motion take?',
-        why: 'Your picks run one-shots at sixteen durations (160 ms to 1.4 s) and loops at nine (0.7 to 3 s, the chart’s grid 6 s there and back). The register’s own contact time is 160 ms; counting everything in that unit gives the theme one rhythm.',
+        why: 'Your picks run one-shots at sixteen durations (160 ms to 1.4 s) and loops at nine (0.7 to 3 s, the chart’s grid 6 s there and back). The anchor itself runs on one timeline of 18 units of the register’s own 160 ms (2880 ms); counting everything in that unit gives the theme one rhythm. This is about time, which the pen cannot draw, so the options stay; the recommended one agrees with the anchor.',
         kind: 'cycle',
         scene: DURATION,
         options: [
             {
                 key: 'units',
                 name: 'Counted in units of 160 ms',
-                see: 'Contact 160 ms and the press’s dimension 320 ms; a part constructed in 480; a panel in 800; a revision 960; the leave 1120; a loop 2880. The numbers under each part say which.',
-                verdict: rec('one unit makes every motion belong together, and the set is no other theme’s.'),
+                see: 'Contact 160 ms and the press’s dimension 320 ms; a part constructed in 480; a panel in 800; a revision 960; the leave 1120; a loop 2880, the anchor’s own timeline. The numbers under each part say which.',
+                verdict: rec('one unit makes every pen stroke belong together, it is the anchor’s own timeline, and the set is no other theme’s.'),
             },
             {
                 key: 'picks',
@@ -547,7 +588,7 @@ const ASPECTS = [
                 key: 'instant',
                 name: 'At once (retro’s 0 ms)',
                 see: 'Everything appears and changes at once; only the loop still moves.',
-                verdict: not('it is the quietest, but the drawing you see being made is the theme.'),
+                verdict: not('it is the quietest, but the pen you see drawing is the theme.'),
             },
         ],
     },
@@ -556,26 +597,28 @@ const ASPECTS = [
         label: 'Where the colour goes',
         rule: 'G5',
         question: 'What do cyan and amber each mean?',
-        why: 'The anatomy: cyan is the drawing line, amber is for annotation, "where a drawing would use a red pencil". Your picks also use amber for the picked day, the current step and the tooltip’s frame, and the warning colour has amber’s very hue, so a note, a pick and a warning can look the same.',
+        why: 'The colours are the settled base of the anchor: the cyan pen draws, amber annotates, the Prussian blue is the sheet. Your picks also use amber for the picked day, the current step and the tooltip’s frame, and the warning colour has amber’s very hue, so a note, a pick and a warning can look the same. This is about colour meaning, which the pen cannot draw, so the options stay; the recommended one is the anchor’s own: its trace is cyan and its witness lines and pointers are amber.',
         kind: 'still',
         scene: COLOUR,
         options: [
             {
                 key: 'pen',
                 name: 'Cyan draws, amber annotates',
-                see: 'Cyan for what is drawn and what you do (the primary action, the picked day, a link); white ink for words; steel blue for finished lines and brackets; amber only for notes: the witness lines under the hand, the revision cloud on the changed figure, the meter’s leader. The warning is told by its △ and its word.',
-                verdict: rec('each colour has one job, as on a real drawing, and amber stays a note instead of a highlight.'),
+                see: 'Cyan for what the pen draws and what you do (the trace, the primary action, the picked day, a link); white ink for words; steel blue for finished lines and the pen’s carriage; amber only for notes: the witness lines and pointers that read the pen’s place, the meter’s leader. The warning is told by its flag and its word.',
+                verdict: rec(
+                    'it is the anchor’s palette, each colour has one job, as on a real drawing, and amber stays a note instead of a highlight.',
+                ),
             },
             {
                 key: 'cyan',
                 name: 'Cyan only',
-                see: 'Amber is gone: the witness lines, the cloud and the meter’s leader are cyan too.',
-                verdict: not('it is calm, but the checker’s notes and the drawing become one, and you lose the anatomy’s red pencil.'),
+                see: 'Amber is gone: the witness lines, the pointers and the meter’s leader are cyan too.',
+                verdict: not('it is calm, but the checker’s notes and the drawing become one, and the pointers no longer stand out from the trace.'),
             },
             {
                 key: 'amber',
                 name: 'Amber as the main line (near solstice’s amber and deco’s gold)',
-                see: 'The primary action, the picked day, the brackets and the link in amber; cyan only for the plotted line.',
+                see: 'The pen, the primary action, the picked day and the link in amber; cyan only for the plotted line.',
                 verdict: not('it is warm, but amber that acts is solstice’s, gold on dark blue is deco’s, and the warning disappears in it.'),
             },
         ],
@@ -585,29 +628,30 @@ const ASPECTS = [
         label: 'The surface',
         rule: 'G7',
         question: 'What does a plate (card, key figure, tile, the plot, a state) look like?',
-        why: 'Four of your shape picks hatch the whole plate (the section view: busy, header, key figure, tiles), four lay a grid on it (the chart recorder: menu, drawer, trend, chart), and the register frames every card in a closed box. The anatomy says this theme may not draw a closed frame around content, and names the corner bracket (your measurement frame, scope-18) as its instrument. A hatched plate is also what cyberpunk’s holo card is: scan lines at 135° on every plate.',
+        why: 'The tracing anchor stands on a graticule: millimetre paper framed by two ticked axes, no box. Four of your shape picks hatch the whole plate (the section view: busy, header, key figure, tiles; cyberpunk’s holo card is the same scan-lined plate), four lay a grid on it, and the register frames every card in a closed box. The anatomy says this theme may not draw a closed frame around content; your measurement frame (scope-18) is four corner brackets. The graticule’s axes are the same idea drawn by the pen.',
         kind: 'still',
         scene: SURFACE,
         options: [
             {
+                key: 'axes',
+                name: 'The graticule’s axes: two ticked scales',
+                see: 'No fill and no closed frame: a plate stands where two ticked axes meet, a ruler along its start edge and another along its foot, the way the tracing pen’s graticule is framed; millimetre paper only under data, where the pen’s curve and its readings stand. The menu, which floats, keeps one thin frame and no shadow.',
+                verdict: rec(
+                    'it is the anchor’s own frame, the scales the pen reads its place against; there is still no box round content, and it leaves the hatch free to mean a section.',
+                ),
+            },
+            {
                 key: 'measured',
-                name: 'A measured part on the sheet: four corner brackets',
-                see: 'No fill and no closed frame: the ruled sheet shows through, and four corner brackets say where the plate stands (your measurement frame and laurels). The plot stands on millimetre paper; the menu, which floats, keeps one thin frame and no shadow.',
-                verdict: rec('it is your own instrument, it keeps the anatomy’s rule against boxes, and it leaves the hatch free to mean a section.'),
+                name: 'A measured part: four corner brackets (your measurement frame)',
+                see: 'No fill and no closed frame: the ruled sheet shows through, and four corner brackets say where the plate stands (your measurement frame and laurels, scope-18). The plot stands on millimetre paper.',
+                verdict:
+                    'Your decided instrument and the safe choice: it keeps the anatomy’s rule against boxes, but it is not the pen’s; the anchor reads its place on two scales, not at four corners.',
             },
             {
                 key: 'section',
                 name: 'The section view (your picks four times; near cyberpunk’s scan lines)',
                 see: 'Every plate hatched at 45° inside a dashed frame.',
                 verdict: not('it is your pick, but hatched plates on a dark blue ground read as cyberpunk’s scan-lined holo cards.'),
-            },
-            {
-                key: 'paper',
-                name: 'Millimetre paper on every plate (near synthwave’s grid console)',
-                see: 'Every plate ruled with a fine grid inside a thin frame.',
-                verdict: not(
-                    'it is technical, but a grid on every plate is synthwave’s approved shape, and the data’s own paper no longer stands out.',
-                ),
             },
         ],
     },
@@ -616,28 +660,32 @@ const ASPECTS = [
         label: 'A warning',
         rule: 'G13',
         question: 'How is a warning or a failure shown?',
-        why: 'Your tone picks draw six different things: a frame all round in the tone (key figure, trend: nostromo’s klaxon), the figure on the tone’s plate (high-contrast’s), a hatch in the tone (the menu: near brutalism’s hazard tape), a dashed border (the busy failure), a toned frame (the state), and the calendar’s △ and ▲, the flag notes of a drawing.',
+        why: 'Your tone picks draw six different things: a frame all round in the tone (key figure, trend: nostromo’s klaxon), the figure on the tone’s plate (high-contrast’s), a hatch in the tone (the menu: near brutalism’s hazard tape), a dashed border (the busy failure), a toned frame (the state), and the calendar’s △ and ▲, the flag notes of a drawing. The frames and the hatch are left out here; the tracing pen has a pointer, a small triangle it rests on a scale, and a pen has a second ink.',
         kind: 'still',
         scene: TONE,
         options: [
             {
+                key: 'pointed',
+                name: 'Pointed out: the tone’s pointer on the reading’s scale',
+                see: 'The figure stands on a short ruler and the tone’s pointer ▲ rests on it where the reading is (the warning high on the scale, the failure at its end), the same pointer the tracing pen rests on its axes, with the word in the lettering beside the figure; the plate’s frame stays steel. Nothing is framed all round, filled or hatched.',
+                verdict: rec(
+                    'it is the anchor’s pointer in the tone’s ink: the reading is placed on a scale, so the warning says how far, and the word and the shape carry it where colour cannot (the warning has amber’s hue).',
+                ),
+            },
+            {
                 key: 'flag',
-                name: 'Flagged: △ or ▲ and the word',
-                see: 'A drafting flag before the title or figure, an outlined △ for a warning and a filled ▲ for a failure, in the tone’s light ink, the word in the lettering after it (CHECK, FAILED), and the plate’s corner brackets in the tone. Nothing is framed, filled or hatched.',
-                verdict: rec('it is your calendar’s own mark, it says the tone in shape and word as well as colour, and no other theme flags.'),
-            },
-            {
-                key: 'frame',
-                name: 'Framed all round (your key figure and trend; nostromo’s klaxon)',
-                see: 'A 2 px frame all round in the tone, the figure on the tone’s plate.',
-                verdict: not('it is loud, but a frame all round is nostromo’s klaxon and a closed box the anatomy forbids.'),
-            },
-            {
-                key: 'hatch',
-                name: 'Hatched in its colour (your menu; near brutalism’s hazard tape)',
-                see: 'The part hatched at 45° in the tone inside a dashed tone border.',
+                name: 'Flagged: △ or ▲ and the word (your calendar’s title block)',
+                see: 'A drafting flag before the title or figure, an outlined △ for a warning and a filled ▲ for a failure, in the tone’s light ink, the word in the lettering after it (CHECK, FAILED), and the plate’s frame (its two axes) in the tone. Nothing is framed all round, filled or hatched.',
                 verdict: not(
-                    'it is a section in red, but diagonal stripes in a warning colour are brutalism’s tape, and the hatch would mean two things.',
+                    'it is your calendar’s own mark and says the tone in shape and word as well as colour, but it says only that, not how far: the pointer is the same triangle on a scale.',
+                ),
+            },
+            {
+                key: 'rule',
+                name: 'Underscored by the pen in the tone’s ink',
+                see: 'The figure is ruled under by the pen in the tone’s own ink, one stroke for a warning and two for a failure, the word in the lettering beside it; the plate’s frame stays steel. Nothing is framed all round, filled or hatched.',
+                verdict: not(
+                    'it is how a checker marks a figure on a print, but a rule under text reads as a link or an emphasis before it reads as a warning.',
                 ),
             },
         ],
@@ -647,29 +695,31 @@ const ASPECTS = [
         label: 'A live update',
         rule: 'G9',
         question: 'What happens when a value changes in place?',
-        why: 'Your live picks draw five things: the figure flips (the columns: grotesk’s flap board), rises from below (the key figure: solstice’s rise), a ring that swells and shrinks round the tile (the tiles; it never played until 2026-10-07), a swell (the state: dark’s and light’s), and nothing at all (trend, chart: formal’s). Your graph’s pick is Revised, an amber mark on what changed; on a drawing a change is marked with a revision cloud and its letter.',
+        why: 'Your live picks draw five things: the figure flips (the columns: grotesk’s flap board), rises from below (the key figure: solstice’s rise), a ring that swells and shrinks round the tile (the tiles), a swell (the state: dark’s and light’s), and nothing at all (trend, chart: formal’s). The flips, rises and swells are left out here. Your graph’s pick is Revised, an amber mark on what changed. The tracing pen reads a value against a scale and drops witness lines to it; a change is the pen reading again.',
         kind: 'cycle',
         scene: LIVE,
         options: [
             {
-                key: 'revise',
-                name: 'Revised: the amber cloud and its letter',
-                see: 'The new value is written at once; the checker’s amber cloud is drawn round it, clockwise, with △B (then △C …) at its corner; it stands, then is lifted. 960 ms, once. Nothing moves.',
+                key: 'read',
+                name: 'Read again: the pointer slides to the new reading',
+                see: 'The new value is written at once and never moves. A short ruler is drawn under it, an amber pointer rests on the old reading with a witness line up to the value, slides along the ruler to the new reading on the feed and stands; then the ruler, the line and the pointer are lifted; 960 ms, once.',
                 verdict: rec(
-                    'it is how a drawing marks a change, it is your graph’s Revised carried to every value, and the value stays readable the whole time.',
+                    'it is the anchor’s reading drawn on every value (witness line and pointer on a scale), the value stays readable the whole time, and it also says whether the reading went up or down.',
                 ),
             },
             {
-                key: 'retrace',
-                name: 'Retraced in ink (your key figure; near solstice’s rise)',
-                see: 'The new value rises into place from a little below, at an even pace.',
-                verdict: not('it is your pick, but a value rising into its line is solstice’s live update.'),
+                key: 'cloud',
+                name: 'Revised: the pen draws the amber cloud and its letter (your graph’s pick)',
+                see: 'The new value is written at once; a small pen runs round it clockwise and the checker’s amber scalloped cloud follows its nib, with △B (then △C …) beside it; it stands, then is lifted. 960 ms, once. Nothing moves.',
+                verdict: not(
+                    'it is how a drawing marks a change and your graph’s pick, but a cloud is a shape round the value and says only that something changed, not by how much.',
+                ),
             },
             {
-                key: 'turn',
-                name: 'Turned over (your columns’ pick)',
-                see: 'The value flips about its middle and shows the new one.',
-                verdict: not('it is lively, but a flipping figure is grotesk’s departure board, and the value cannot be read mid-flip.'),
+                key: 'rule',
+                name: 'Gone over once more: the pen rules a line under the new value',
+                see: 'The new value is written at once; a small pen rules an amber line under it, start to end, on the feed, the line stands and is lifted; 960 ms, once. Nothing moves.',
+                verdict: not('it is plain and quick, but a rule under a figure is the emphasis of a link and says nothing about the change.'),
             },
         ],
     },
@@ -678,29 +728,33 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does a part look like while its reading is on its way?',
-        why: 'Your picks draw nine loading pictures (a cell stepping, a marching outline, the grid breathing, a scan, a dimension line, a pen, a plotter, dashes, a recorder); six run along the foot, which is forest’s, solstice’s and nostromo’s loading, and the marching outline is high-contrast’s. Your signature skeleton is blueprint’s own: a section hatched between two dimension ticks.',
+        why: 'The anchor is itself a loading picture: a pen tracing a curve across a graticule, its witness lines reading both axes. Your picks draw nine loading pictures (a cell stepping, a marching outline, the grid breathing, a scan, a dimension line, a pen, a plotter, dashes, a recorder); the ones running along the foot are forest’s, solstice’s and nostromo’s loading and the marching outline is high-contrast’s, so none of them is kept. Your signature skeleton is blueprint’s own: a section hatched between two dimension ticks.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
-                key: 'section',
-                name: 'A section being hatched (your skeleton, everywhere)',
-                see: 'Where the reading will stand, a section between two ticks; the pen hatches it from left to right, it stands, and it is lifted, then hatched again (2.9 s). Several sections a moment apart. Labels stay readable above it; the compass and the chain line stay as approved.',
+                key: 'trace',
+                name: 'The pen traces its curve across the waiting place',
+                see: 'Where the reading will stand is a strip of millimetre paper; the pen traces the anchor’s curve across it in one stroke, an amber witness line dropping from its nib to the foot and to the start edge, a pointer on each; the curve and its readings stand, then they are lifted and the pen goes back (2.9 s). Several places a moment apart. Labels stay readable above; the compass and the chain line stay as approved.',
                 verdict: rec(
-                    'it is your approved skeleton carried to every waiting part, it says “material goes here”, and no other theme waits like it.',
+                    'it is the anchor as the loading picture, the pen and its readings in every waiting place, and a reading that is still being plotted is what a waiting part is.',
                 ),
             },
             {
-                key: 'run',
-                name: 'The pen runs along the foot (your picks; forest’s, solstice’s and nostromo’s way)',
-                see: 'A short cyan pen line runs along the foot of each waiting part, again and again.',
-                verdict: not('it is your pick five times, but something running along the foot is how forest, solstice and nostromo wait.'),
+                key: 'hatch',
+                name: 'The pen hatches the section (your skeleton, everywhere)',
+                see: 'Where the reading will stand, a section between two ticks; a small pen hatches it from left to right in 45° strokes, the hatch stands, and it is lifted, then hatched again (2.9 s). Several sections a moment apart.',
+                verdict: not(
+                    'it is your approved skeleton with the pen in view and it says “material goes here”, but a hatch is a texture for an area and does not show the pen’s readings.',
+                ),
             },
             {
-                key: 'ants',
-                name: 'A marching outline (your calendar’s pick; high-contrast’s tape)',
-                see: 'A dashed cyan outline marches round each waiting part.',
-                verdict: not('it is busy and clear, but a dashed outline running round the part is high-contrast’s approved loading.'),
+                key: 'outline',
+                name: 'The pen keeps tracing the outline of the place',
+                see: 'A small pen runs round the waiting place again and again, drawing its outline and lifting it, the construction line of the arrival on a loop (2.9 s).',
+                verdict: not(
+                    'it makes waiting and arriving one picture, but an outline drawn and lifted again and again reads as a dashed outline marching, which is high-contrast’s loading.',
+                ),
             },
         ],
     },
@@ -709,27 +763,29 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does a part leave the sheet, and come back?',
-        why: 'Your leave (2026-10-04): hatched out like a wall marked for demolition, then lifted off the sheet; what arrives plays it backwards (your reverse-close). The recommendation keeps it and puts it on the plotter’s feed in 1120 ms.',
+        why: 'Your leave (2026-10-04): hatched out like a wall marked for demolition, then lifted off the sheet; what arrives plays it backwards (your reverse-close). With the pen as the anchor the pen does the marking: it hatches the part out, or crosses it out, or runs its outline back. The erase that slides from the start (titanium’s cut) is left out.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
                 key: 'hatch',
-                name: 'Hatched out and lifted off (your leave)',
-                see: 'A cyan hatch is drawn over the part from left to right, then the part is lifted toward the top right and gone; coming back, it is set down and its hatch is taken away right to left. 1120 ms.',
-                verdict: rec('it is your own leave, a drawing’s demolition mark, and no other theme’s.'),
+                name: 'The pen hatches it out, then it is lifted off (your leave)',
+                see: 'A small pen draws the cyan demolition hatch over the part from left to right in 60 % of the time, then the part is lifted toward the top right and gone; coming back, it is set down and the hatch is taken away by the pen, right to left. 1120 ms.',
+                verdict: rec('it is your own leave with the anchor’s pen doing the marking, a drawing’s demolition mark, and no other theme’s.'),
             },
             {
                 key: 'untrace',
-                name: 'Untraced (the construction backwards)',
-                see: 'The construction played backwards: the ink is lifted at once and the construction line runs back round the part until it is gone; coming back, it is constructed.',
+                name: 'Untraced: the pen runs the outline back',
+                see: 'The construction played backwards: the pen returns to the top-start corner, the ink is lifted at once and the pen runs the outline back until it is gone; coming back, it is constructed.',
                 verdict: not('it makes arriving, opening and leaving one picture, but it replaces the leave you picked.'),
             },
             {
-                key: 'erase',
-                name: 'Erased from the start (your round-six option; near titanium’s cut)',
-                see: 'The part is rubbed out from left to right at an even pace; coming back, it is drawn in the other way.',
-                verdict: not('it is plain, but a sliding edge across the part is titanium’s cut.'),
+                key: 'cross',
+                name: 'Crossed out: the pen draws two diagonals, then it is lifted off',
+                see: 'The pen draws one diagonal across the part, lifts, crosses to the other corner and draws the second, the cross of a part to be removed, in 60 % of the time; then the part is lifted toward the top right and gone. Coming back, the cross is taken away backwards.',
+                verdict: not(
+                    'it is the clearest sign for removed, but it crosses the words out so the part cannot be read while it goes, and the hatch is your pick.',
+                ),
             },
         ],
     },
@@ -738,7 +794,7 @@ const ASPECTS = [
         label: 'Buttons inside composites',
         rule: 'G17',
         question: 'Does a button inside a header, menu, tile, drawer or key figure behave like blueprint’s own button?',
-        why: 'Your header’s actions have a 2 px line on no plate and lift 1 px on hover; the menu’s entries take a 14 % cyan tint; the tile’s Open link only underlines; the key figure as a link hatches. The theme’s own button sets its witness lines on hover, shows the ring on focus and takes the dimension when pressed. Use the State buttons to see every button hovered, focused or pressed.',
+        why: 'Your header’s actions have a 2 px line on no plate and lift 1 px on hover; the menu’s entries take a 14 % cyan tint; the tile’s Open link only underlines; the key figure as a link hatches. The theme’s own button sets its witness lines on hover, shows the ring on focus and takes the dimension when pressed. This is about consistency, which the pen cannot draw, so the options stay. Use the State buttons to see every button hovered, focused or pressed.',
         kind: 'still',
         scene: COMPOSITES,
         options: [
@@ -746,7 +802,9 @@ const ASPECTS = [
                 key: 'own',
                 name: 'Exactly blueprint’s own',
                 see: 'Every inner button, entry and link: the witness lines on hover, the two-channel ring on focus, the dimension while pressed, the 1 px line, as the button standing alone.',
-                verdict: rec('a control looks and answers the same wherever it is, so you learn it once.'),
+                verdict: rec(
+                    'a control looks and answers the same wherever it is, so you learn it once, and the pen’s readings (the witness lines) are the same everywhere.',
+                ),
             },
             {
                 key: 'today',
@@ -769,27 +827,31 @@ const ASPECTS = [
         label: 'Pointing at something',
         rule: 'G8',
         question: 'What happens to a part under the pointer?',
-        why: 'Your approved hover (gap-4, 2026-09-12): the dimension witness, two amber lines at a control’s ends, “the control becomes a measured length for as long as you are on it”. Your picks add a lit grid (the tiles: cyberpunk’s circuit), a dashed ring (a day: forest’s blaze), a tint (the menu), a hatch (the key figure) and a 1 px lift (the header).',
+        why: 'Your approved hover (gap-4, 2026-09-12): the dimension witness, two amber lines at a control’s ends, “the control becomes a measured length for as long as you are on it”. The tracing pen reads its place by dropping witness lines to a scale and resting a pointer on it. Your picks add a lit grid (the tiles: cyberpunk’s circuit), a dashed ring (a day: forest’s blaze), a tint (the menu), a hatch (the key figure) and a 1 px lift (the header); those are left out here.',
         kind: 'still',
         scene: HOVER,
         options: [
             {
+                key: 'read',
+                name: 'Read on a scale: witness lines and a pointer on a ruler under the part',
+                see: 'Two amber witness lines at the start and the end of the part, overhanging its top and foot, and under it a short ruler between them with a pointer on each end, the pen’s reading of the part’s length; a button’s line turns cyan. Nothing moves and nothing beside it changes.',
+                verdict: rec(
+                    'it is your approved witness lines with the anchor’s other half, the pointers on a scale, so the part is not only marked but measured, and no other theme measures what is under the pointer.',
+                ),
+            },
+            {
+                key: 'leader',
+                name: 'A leader: the pen calls the part out',
+                see: 'A short amber leader leaves the part’s top-end corner at 45° and ends in a node, a call-out as on a drawing (your tooltip’s approved leader and node); a button’s line turns cyan. Nothing moves.',
+                verdict: not('it points at the part clearly, but a leader is a call-out for a label and a hovered part has none to carry.'),
+            },
+            {
                 key: 'witness',
-                name: 'The witness lines (your gap-4)',
+                name: 'The witness lines alone (your gap-4)',
                 see: 'Two amber witness lines at the start and the end of the part, overhanging its top and foot; a button’s line turns cyan. Nothing moves and nothing beside it changes.',
-                verdict: rec('it is your approved hover, the same on every part, and no other theme marks a part’s two ends.'),
-            },
-            {
-                key: 'grid',
-                name: 'The grid lights (your tiles’ pick; cyberpunk’s circuit)',
-                see: 'A fine grid lights on the part under the pointer.',
-                verdict: not('it is technical, but a grid lit under the pointer is cyberpunk’s circuit.'),
-            },
-            {
-                key: 'ring',
-                name: 'A dashed ring (your calendar’s pick; forest’s blaze)',
-                see: 'A dashed ring inside the part’s edge.',
-                verdict: not('it is drafting-like, but a dashed ring under the pointer is forest’s trail blaze.'),
+                verdict: not(
+                    'it is your approved hover and the same on every part, but it leaves out the pointers, the half of the anchor that reads the length.',
+                ),
             },
         ],
     },
@@ -798,7 +860,7 @@ const ASPECTS = [
         label: 'The focus ring',
         rule: 'DI2',
         question: 'How is the part that has keyboard focus marked?',
-        why: 'The package’s two-channel ring (DI2) shows on any ground, and the register sets the witness lines on focus as well. Your header’s, key figure’s and tile link’s picks replace it with one thin outline.',
+        why: 'The package’s two-channel ring (DI2) shows on any ground, and the register sets the witness lines on focus as well. Your header’s, key figure’s and tile link’s picks replace it with one thin outline. This is an accessibility constant across every theme, which the pen cannot draw, so the options stay.',
         kind: 'still',
         scene: FOCUS,
         options: [
@@ -806,7 +868,9 @@ const ASPECTS = [
                 key: 'ring',
                 name: 'The two-channel ring, with the witness lines',
                 see: 'The cyan ring with its dark inner channel round the focused part, the witness lines at its ends.',
-                verdict: rec('it is visible on the cyan primary and on the sheet alike, and it is the same everywhere.'),
+                verdict: rec(
+                    'it is visible on the cyan primary and on the sheet alike, it is the same everywhere, and the witness lines are the anchor’s.',
+                ),
             },
             {
                 key: 'dashed',
@@ -827,27 +891,29 @@ const ASPECTS = [
         label: 'The press',
         rule: 'G14',
         question: 'What happens to a part while it is pressed?',
-        why: 'The register presses with the darker ground alone; your header’s pick presses an inset line, your key figure’s scales the plate down 1 %. Hover already sets the witness lines; a drawing completes a measurement by drawing the dimension between them.',
+        why: 'The register presses with the darker ground alone; your header’s pick presses an inset line, your key figure’s scales the plate down 1 %. Hover already sets the witness lines; a drawing completes a measurement by drawing the dimension between them. The dimension line of round one had arrowheads; the pen draws it with slash ticks, as an architect does, and no arrowheads, no hatched fill and no chain line.',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
                 key: 'dimension',
-                name: 'The dimension is taken',
-                see: 'While held, an amber dimension line with an arrowhead at each end is drawn across the part’s foot between its witness lines; the ground turns the darker step. Nothing moves.',
-                verdict: rec('it finishes what the hover began (witness lines, then the dimension), and no other theme draws a dimension.'),
+                name: 'The pen takes the dimension',
+                see: 'While held, a small pen draws an amber dimension line across the part’s foot between its witness lines, a slash tick at each end, from start to end in 2 units, and lifts away; the ground turns the darker step. Nothing moves.',
+                verdict: rec(
+                    'it finishes what the hover began (witness lines, then the pen takes the dimension), and no other theme draws a dimension.',
+                ),
+            },
+            {
+                key: 'datum',
+                name: 'The pen pricks the datum',
+                see: 'While held, a small pen draws a short amber cross at the part’s centre, across and then down, and lifts away; the ground turns the darker step. Nothing moves.',
+                verdict: not('it marks the exact point of the press, but a cross at the centre of a button reads as a target, and nothing measures.'),
             },
             {
                 key: 'grey',
                 name: 'The darker ground alone (the register’s press)',
                 see: 'The ground turns the darker step; nothing is drawn.',
                 verdict: not('it is plain, but a press then says nothing a drawing would say.'),
-            },
-            {
-                key: 'inset',
-                name: 'The line pressed in (your header’s pick)',
-                see: 'A 2 px line pressed inside the part’s edge while held.',
-                verdict: not('it is your pick, but a thicker inner edge reads as a frame, which the anatomy keeps out.'),
             },
         ],
     },
@@ -856,16 +922,16 @@ const ASPECTS = [
         label: 'The voice',
         rule: 'G15',
         question: 'Which lettering names things, and which speaks?',
-        why: 'The register names in upright mono capitals tracked wide (the microlabel, the toast, the tooltip, the dialog title, the wizard); that is nostromo’s, cyberpunk’s, synthwave’s and titanium’s label voice. A draughtsman letters in capitals sloped 15° (ISO 3098 type B), which no theme does.',
+        why: 'The register names in upright mono capitals tracked wide (the microlabel, the toast, the tooltip, the dialog title, the wizard); that is nostromo’s, cyberpunk’s, synthwave’s and titanium’s label voice. The anchor letters its readings as a draughtsman does, capitals sloped 15° (ISO 3098 type B), which no theme does. This is about type, which the pen cannot draw, so the options stay.',
         kind: 'still',
         scene: TYPE,
         options: [
             {
                 key: 'lettering',
                 name: 'The draughtsman’s lettering: mono capitals sloped 15°',
-                see: 'Labels, table heads, tags and the change in Geist Mono capitals at a 15° slope, barely tracked; titles and figures in Instrument Sans 600 upright; prose in Instrument Sans; the timestamp in upright mono.',
+                see: 'Labels, table heads, tags and the change in Geist Mono capitals at a 15° slope, barely tracked, as the anchor letters its readings; titles and figures in Instrument Sans 600 upright; prose in Instrument Sans; the timestamp in upright mono.',
                 verdict: rec(
-                    'it is technical lettering as on a drawing, every face has one job, and it is told apart from the dark themes’ upright tape.',
+                    'it is the anchor’s lettering, as on a drawing, every face has one job, and it is told apart from the dark themes’ upright tape.',
                 ),
             },
             {
@@ -888,28 +954,32 @@ const ASPECTS = [
         id: 'motifs',
         label: 'Motifs',
         rule: 'G16',
-        question: 'Where do blueprint’s motifs (brackets, hatch, grid, cloud, flag, compass) appear?',
-        why: 'Your picks put a hatch on four plates, a grid on menus, the drawer and the tile’s hover, call three frames a revision cloud, and use amber for picks. A drawing gives each mark one meaning.',
+        question: 'Where do blueprint’s motifs (the pen, the witness lines and pointers, brackets, hatch, grid, cloud, flag, compass) appear?',
+        why: 'Your picks put a hatch on four plates, a grid on menus, the drawer and the tile’s hover, call three frames a revision cloud, and use amber for picks. The anchor adds the pen: it is shown only while something is drawn, loaded, measured or changed, and parked away otherwise. A drawing gives each mark one meaning. This is about where marks may stand, so the options stay; the recommended one agrees with the anchor.',
         kind: 'still',
         scene: MOTIFS,
         options: [
             {
                 key: 'one',
                 name: 'Every motif means one thing',
-                see: 'Brackets where a part stands; millimetre paper under data only; the flag △ for a tone; + and − for a change; the compass circle for the empty state; today in cyan brackets, the pick in cyan; the dashed fold line as the divider.',
-                verdict: rec('each mark says one thing, so a glance reads the drawing, and none of them is another theme’s.'),
+                see: 'The pen only while it draws, parked otherwise; its witness lines and pointers read a place on a scale; brackets where a part stands; millimetre paper under data only; the flag △ for a tone; + and − for a change; the compass circle for the empty state; today in cyan brackets, the pick in cyan; the dashed fold line as the divider.',
+                verdict: rec(
+                    'each mark says one thing, so a glance reads the drawing, the pen is never furniture, and none of them is another theme’s.',
+                ),
             },
             {
                 key: 'line',
                 name: 'Only the line',
-                see: 'No brackets, no paper, no flag, no compass: thin closed frames, the warning by its word, today in bold.',
-                verdict: not('it is pure, but it throws away the brackets, the compass and the flag that make it a drawing, and boxes come back.'),
+                see: 'No brackets, no paper, no flag, no compass, no pen: thin closed frames, the warning by its word, today in bold.',
+                verdict: not(
+                    'it is pure, but it throws away the pen’s readings, the brackets, the compass and the flag that make it a drawing, and boxes come back.',
+                ),
             },
             {
                 key: 'all',
                 name: 'On everything (as the picks spread them)',
-                see: 'A hatch on every plate, a grid behind it, amber frames on today and the pick, a revision cloud round the warning card.',
-                verdict: not('it is rich, but the hatch, the grid and the cloud stop meaning anything when they are everywhere.'),
+                see: 'A hatch on every plate, a grid behind it, amber frames on today and the pick, a revision cloud round the warning card, and the pen parked on every plate.',
+                verdict: not('it is rich, but the hatch, the grid, the cloud and the pen stop meaning anything when they are everywhere.'),
             },
         ],
     },
@@ -1024,6 +1094,9 @@ const cycleScenes = [...section.querySelectorAll('.bw-scene[data-bw-kind="cycle"
 const numbers = [...section.querySelectorAll('.bw-scene[data-bw-kind="cycle"] [data-bw-num]')];
 const wordsToSwap = [...section.querySelectorAll('.bw-scene[data-bw-kind="cycle"] [data-bw-word]')];
 const revs = [...section.querySelectorAll('.bw-scene[data-bw-kind="cycle"] [data-bw-rev]')];
+const readers = [...section.querySelectorAll('.bw-scene[data-bw-kind="cycle"] .bw-cloud')];
+/** Where on its ruler the reading stood and stands (0 to 1): the pointer slides from one to the next. */
+const reads = [0.18, 0.72, 0.42, 0.9, 0.3, 0.6];
 
 /** Whether the review dialog's Pause (Space) is on: then the clock stands still too. */
 const dialogPaused = () => Boolean(document.getElementById('rv-flip-pause')?.textContent);
@@ -1041,6 +1114,10 @@ function setPhase(/** @type {string} */ phase) {
     }
     for (const word of wordsToSwap) word.textContent = tick % 2 ? 'Held' : 'Issued';
     for (const rev of revs) rev.textContent = `△${letters[tick % letters.length]}`;
+    readers.forEach((reader, i) => {
+        reader.style.setProperty('--bw-from', String(reads[(tick + i) % reads.length]));
+        reader.style.setProperty('--bw-to', String(reads[(tick + i + 1) % reads.length]));
+    });
 }
 
 /* ------------------------------------------ every close is its open reversed */

@@ -1,0 +1,993 @@
+/* research/blueprint-character: the tracing pen as one shared piece (Kenny,
+   2026-10-07 21:19: blueprint's anchor is the tracing pen). Its look, the
+   tracer (the anchor's curve read against both axes) and every pen route the
+   options use; options.css decides which question uses which route and
+   draws the ink that follows the pen.
+
+   The pen is away at rest and while a part is away (`visibility: hidden`);
+   a route shows it only while it works, and ends with it hidden again, so
+   the finished pose of every scene is the finished picture without a pen.
+   Every route is written in the part's own box: the pen's place is two
+   fractions of that box, `--bw-px` and `--bw-py`, plus two lengths,
+   `--bw-ox` and `--bw-oy` (a witness line's overhang), and the nib is down
+   (`--bw-nib` 1) or up (0). The rail follows the pen's height; the
+   carriage follows both. Because a route only animates these four numbers
+   and the nib, the ink and the pen can be written from the same keyframe
+   offsets and cannot drift apart.
+
+   The tracer reads the one number `--bw-p` (how far along the curve the
+   pen is, 0 to 1): the ink is uncovered to the pen's place, the nib's
+   height is computed from the same formula as the curve's points
+   (pen.js, `curve`), the amber witness lines run from the nib to the foot
+   and to the start edge and a pointer rests on each axis. One ramp for the
+   whole stroke, as in the anchor: `--bw-p` is a single interval.
+
+   Everything hangs on `.bw-scene` (the review dialog moves a section out of
+   the page), in `@layer kp.signature`, tokens only; every animation sits
+   under `prefers-reduced-motion: no-preference`. */
+
+@layer kp.signature {
+    @property --bw-px {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @property --bw-py {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @property --bw-ox {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 0px;
+    }
+
+    @property --bw-oy {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 0px;
+    }
+
+    @property --bw-nib {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @property --bw-p {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 1;
+    }
+
+    /* ── The pen ─────────────────────────────────────────────────────── */
+
+    .bw-scene .bw-pen {
+        --bw-pen-size: 16px;
+        /* Parked at the top-end corner: where every route ends, so the pen's
+           pose after a route is its last frame. */
+        --bw-px: 1;
+        --bw-py: 0;
+
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        container-type: size;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .bw-scene .bw-pen--bare {
+        --bw-pen-size: 9px;
+    }
+
+    .bw-scene .bw-pen--bare .bw-pen__rail {
+        display: none;
+    }
+
+    /* Small parts (a day, a row, a column) take the small pen. */
+    .bw-scene :is(.bw-day, .bw-row-line, .bw-strip__col) > .bw-pen {
+        --bw-pen-size: 9px;
+    }
+
+    .bw-scene :is(.bw-day, .bw-row-line, .bw-strip__col) > .bw-pen .bw-pen__rail {
+        display: none;
+    }
+
+    /* The gantry rail: two thin lines that follow the pen's height. */
+    .bw-scene .bw-pen__rail {
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline: -0.9rem;
+        block-size: 5px;
+        border-block: 1px solid var(--bw-line);
+        translate: 0 calc(var(--bw-py) * 100cqh + var(--bw-oy));
+    }
+
+    .bw-scene .bw-pen__car {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        block-size: 0;
+        translate: calc(var(--bw-px) * 100cqw + var(--bw-ox)) calc(var(--bw-py) * 100cqh + var(--bw-oy));
+    }
+
+    /* The nib's own travel while it hatches (a stroke up, a stroke down). */
+    .bw-scene .bw-pen__sway {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        block-size: 0;
+    }
+
+    .bw-scene .bw-pen__svg {
+        position: absolute;
+        inset-block-start: calc(var(--bw-pen-size) * -0.8125);
+        inset-inline-start: calc(var(--bw-pen-size) * -0.8125);
+        inline-size: calc(var(--bw-pen-size) * 1.625);
+        block-size: calc(var(--bw-pen-size) * 1.625);
+        overflow: visible;
+    }
+
+    .bw-scene .bw-pen__ground {
+        fill: var(--background);
+    }
+
+    .bw-scene :is(.bw-pen__box, .bw-pen__sight) {
+        fill: none;
+        stroke: var(--bw-line);
+        stroke-width: 1.2;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .bw-scene .bw-pen__nib {
+        fill: var(--bw-pen);
+        fill-opacity: var(--bw-nib);
+        stroke: var(--bw-pen);
+        stroke-width: 1.2;
+        vector-effect: non-scaling-stroke;
+    }
+
+    /* A pen standing on its rail, for the scenes that only show the motif. */
+    .bw-scene .bw-pen--still {
+        visibility: visible;
+    }
+
+    /* ── The tracer: the anchor's curve, read against both axes ──────── */
+
+    .bw-scene .bw-tracer {
+        --bw-p: 1;
+        /* The nib's height from the top, from the curve's own formula. */
+        --bw-y: calc((1 - (1 - exp(-5 * var(--bw-p)) * cos(calc(10 * var(--bw-p) * 1rad))) / 1.25) * 100cqh);
+
+        position: absolute;
+        inset: 0;
+        container-type: size;
+        pointer-events: none;
+    }
+
+    .bw-scene .bw-tracer__line {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+        color: var(--bw-pen);
+        clip-path: inset(-3px calc((1 - var(--bw-p)) * 100%) -3px 0);
+    }
+
+    /* The two witness lines drop from the nib to the foot and to the start edge. */
+    .bw-scene :is(.bw-tracer__wv, .bw-tracer__wh, .bw-tracer__px, .bw-tracer__py, .bw-tracer__label) {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+    }
+
+    .bw-scene .bw-tracer__wv {
+        inline-size: 1px;
+        block-size: calc(100cqh - var(--bw-y));
+        background: var(--bw-note);
+        translate: calc(var(--bw-p) * 100cqw) var(--bw-y);
+    }
+
+    .bw-scene .bw-tracer__wh {
+        inline-size: calc(var(--bw-p) * 100cqw);
+        block-size: 1px;
+        background: var(--bw-note);
+        translate: 0 var(--bw-y);
+    }
+
+    /* A pointer rests on each axis, pointing at it. */
+    .bw-scene .bw-tracer__px {
+        inline-size: 9px;
+        block-size: 5px;
+        background: conic-gradient(from -45deg at 50% 100%, var(--bw-note) 90deg, transparent 0);
+        translate: calc(var(--bw-p) * 100cqw - 4.5px) calc(100cqh - 6px);
+    }
+
+    .bw-scene .bw-tracer__py {
+        inline-size: 5px;
+        block-size: 9px;
+        background: conic-gradient(from 45deg at 0% 50%, var(--bw-note) 90deg, transparent 0);
+        translate: 1px calc(var(--bw-y) - 4.5px);
+    }
+
+    /* The reading is lettered once the curve is drawn (the plots only). */
+    .bw-scene .bw-tracer__label {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        color: var(--bw-note);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        opacity: clamp(0, calc((var(--bw-p) - 0.97) * 40), 1);
+        translate: 0 calc(var(--bw-y) - 1.3rem);
+        white-space: nowrap;
+    }
+
+    .bw-scene .bw-tracer:not(.bw-tracer--label) .bw-tracer__label {
+        display: none;
+    }
+
+    /* The pen of the tracer sits on the curve; its box is the tracer. */
+    .bw-scene .bw-tracer .bw-pen {
+        --bw-nib: clamp(0, calc((0.999 - var(--bw-p)) * 1000), 1);
+
+        container-type: normal;
+    }
+
+    .bw-scene .bw-tracer .bw-pen__car {
+        translate: calc(var(--bw-p) * 100cqw) var(--bw-y);
+    }
+
+    /* The waiting places are small: the pen is a sight, the pointers shrink. */
+    .bw-scene .bw-wait .bw-tracer__px {
+        inline-size: 7px;
+        block-size: 4px;
+        translate: calc(var(--bw-p) * 100cqw - 3.5px) calc(100cqh - 5px);
+    }
+
+    .bw-scene .bw-wait .bw-tracer__py {
+        inline-size: 4px;
+        block-size: 7px;
+        translate: 1px calc(var(--bw-y) - 3.5px);
+    }
+
+    /* ── The routes (motion only) ────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The outline traced from the top-start corner: along the top (35 %
+           of the drawing), down the end (15 %), back along the foot, up the
+           start; the drawing takes three quarters, the pen then parks at the
+           top-end corner. Offsets are the construction line's own. */
+        @keyframes bw-pen-trace {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            26.25% {
+                --bw-px: 1;
+                --bw-py: 0;
+            }
+
+            37.5% {
+                --bw-px: 1;
+                --bw-py: 1;
+            }
+
+            63.75% {
+                --bw-px: 0;
+                --bw-py: 1;
+            }
+
+            75% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            76.5% {
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* One diagonal, start corner to end corner, then away. */
+        @keyframes bw-pen-diag {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            62.5% {
+                --bw-px: 1;
+                --bw-py: 1;
+            }
+
+            64% {
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Two witness lines: down at the start, across the foot with the pen
+           up, up at the end, then away. */
+        @keyframes bw-pen-marks {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-ox: 0.35rem;
+                --bw-py: 0;
+                --bw-oy: -0.4rem;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            30% {
+                --bw-px: 0;
+                --bw-ox: 0.35rem;
+                --bw-py: 1;
+                --bw-oy: 0.4rem;
+            }
+
+            31.5% {
+                --bw-nib: 0;
+            }
+
+            42% {
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 1;
+                --bw-oy: 0.4rem;
+            }
+
+            43.5% {
+                --bw-nib: 1;
+            }
+
+            72% {
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 0;
+                --bw-oy: -0.4rem;
+            }
+
+            73.5% {
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: 0px;
+                --bw-py: 0;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Two axes: down the start edge, along the foot, then away. */
+        @keyframes bw-pen-axes {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            37.5% {
+                --bw-px: 0;
+                --bw-py: 1;
+            }
+
+            75% {
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-nib: 1;
+            }
+
+            76.5% {
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* A leader from the trigger down to the panel, the pen up along the
+           top edge to the start corner, then the outline as the trace. */
+        @keyframes bw-pen-led {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-ox: var(--bw-lead-x);
+                --bw-py: 0;
+                --bw-oy: calc(-1 * var(--bw-lead-gap));
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            12% {
+                --bw-px: 0;
+                --bw-ox: var(--bw-lead-x);
+                --bw-py: 0;
+                --bw-oy: 0px;
+            }
+
+            13.5% {
+                --bw-nib: 0;
+            }
+
+            20% {
+                --bw-px: 0;
+                --bw-ox: 0px;
+                --bw-py: 0;
+                --bw-oy: 0px;
+            }
+
+            21.5% {
+                --bw-nib: 1;
+            }
+
+            39.25% {
+                --bw-px: 1;
+                --bw-py: 0;
+            }
+
+            47.5% {
+                --bw-px: 1;
+                --bw-py: 1;
+            }
+
+            66.75% {
+                --bw-px: 0;
+                --bw-py: 1;
+            }
+
+            75% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            76.5% {
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The pen round a revision cloud, with the cloud's own offsets and
+           feed (options.css, bw-cloud). */
+        @keyframes bw-pen-cloud {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            15% {
+                --bw-px: 1;
+                --bw-py: 0;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            22.5% {
+                --bw-px: 1;
+                --bw-py: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            37.5% {
+                --bw-px: 0;
+                --bw-py: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            45% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            47% {
+                --bw-nib: 0;
+            }
+
+            55% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* A rule drawn under a value, start to end, then the pen away. */
+        @keyframes bw-pen-rule {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-oy: 2px;
+                --bw-nib: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            55% {
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-oy: 2px;
+            }
+
+            57% {
+                --bw-nib: 0;
+            }
+
+            62% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-oy: 2px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Hatching a part out: the pen follows the hatch's edge, start to end
+           in 60 % of the leave. */
+        @keyframes bw-pen-hatchout {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            60% {
+                --bw-px: 1;
+                --bw-py: 0;
+            }
+
+            61.5% {
+                --bw-nib: 0;
+            }
+
+            64% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Crossing a part out: one diagonal down, the pen up the end edge, the
+           other diagonal back (the cross is done in 60 % of the leave). */
+        @keyframes bw-pen-cross {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            25% {
+                --bw-px: 1;
+                --bw-py: 1;
+            }
+
+            26.5% {
+                --bw-nib: 0;
+            }
+
+            36% {
+                --bw-px: 1;
+                --bw-py: 0;
+            }
+
+            37.5% {
+                --bw-nib: 1;
+            }
+
+            60% {
+                --bw-px: 0;
+                --bw-py: 1;
+            }
+
+            61.5% {
+                --bw-nib: 0;
+            }
+
+            64% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The dimension across the foot of a held control, end to end, then up and away. */
+        @keyframes bw-pen-dim {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-ox: 0.35rem;
+                --bw-py: 1;
+                --bw-oy: -6.5px;
+                --bw-nib: 1;
+            }
+
+            70% {
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 1;
+                --bw-oy: -6.5px;
+            }
+
+            72% {
+                --bw-nib: 0;
+            }
+
+            90% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 1;
+                --bw-oy: -1.2rem;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The datum cross at a control's centre: across, the pen up, down. */
+        @keyframes bw-pen-datum {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0.5;
+                --bw-ox: -0.45rem;
+                --bw-py: 0.5;
+                --bw-oy: 0px;
+                --bw-nib: 1;
+            }
+
+            35% {
+                --bw-px: 0.5;
+                --bw-ox: 0.45rem;
+                --bw-py: 0.5;
+                --bw-oy: 0px;
+            }
+
+            36.5% {
+                --bw-nib: 0;
+            }
+
+            50% {
+                --bw-px: 0.5;
+                --bw-ox: 0px;
+                --bw-py: 0.5;
+                --bw-oy: -0.45rem;
+            }
+
+            51.5% {
+                --bw-nib: 1;
+            }
+
+            85% {
+                --bw-px: 0.5;
+                --bw-ox: 0px;
+                --bw-py: 0.5;
+                --bw-oy: 0.45rem;
+            }
+
+            86.5% {
+                --bw-nib: 0;
+            }
+
+            92% {
+                visibility: hidden;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The waiting section: the pen follows the hatch's edge, lifts, and the
+           next cycle begins (the hatch's own offsets, 18 units). */
+        @keyframes bw-pen-hatch {
+            0% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            38.9% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            40.4% {
+                --bw-nib: 0;
+            }
+
+            41% {
+                visibility: hidden;
+                --bw-px: 1;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+            }
+        }
+
+        /* The waiting outline: four strokes in 7 units, then away (18 units). */
+        @keyframes bw-pen-loop {
+            0% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            13.6% {
+                --bw-px: 1;
+                --bw-py: 0;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            19.4% {
+                --bw-px: 1;
+                --bw-py: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            33.1% {
+                --bw-px: 0;
+                --bw-py: 1;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            38.9% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 1;
+            }
+
+            40.4% {
+                --bw-nib: 0;
+            }
+
+            41% {
+                visibility: hidden;
+            }
+
+            100% {
+                visibility: hidden;
+            }
+        }
+
+        @keyframes bw-sway {
+            from {
+                translate: 0 0;
+            }
+
+            to {
+                translate: 0 100cqh;
+            }
+        }
+
+        /* The tracer: one stroke, one ramp (a single interval of --bw-p). */
+        @keyframes bw-p-run {
+            from {
+                --bw-p: 0;
+            }
+
+            to {
+                --bw-p: 1;
+            }
+        }
+
+        @keyframes bw-p-loop {
+            0% {
+                visibility: visible;
+                --bw-p: 0;
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            38.9% {
+                --bw-p: 1;
+            }
+
+            77.8% {
+                visibility: visible;
+                --bw-p: 1;
+            }
+
+            77.9% {
+                visibility: hidden;
+                --bw-p: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-p: 0;
+            }
+        }
+
+        @keyframes bw-tracer-pen {
+            0% {
+                visibility: hidden;
+            }
+
+            0.1% {
+                visibility: visible;
+            }
+
+            100% {
+                visibility: hidden;
+            }
+        }
+
+        @keyframes bw-tracer-pen-loop {
+            0%,
+            38.9% {
+                visibility: visible;
+            }
+
+            39%,
+            100% {
+                visibility: hidden;
+            }
+        }
+    }
+}
