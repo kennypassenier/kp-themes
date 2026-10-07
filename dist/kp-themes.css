@@ -24742,6 +24742,19 @@
         box-shadow: none;
     }
 
+    /* A list inside one of those surfaces is part of it, not a second one:
+       the theme menu's popover holds a .kp-menu, and both took the 4 px
+       edge, so the bar on the left stood twice (Kenny, 2026-10-08: "die
+       balk links staat er twee keer?"). The outer surface keeps the edge
+       and the paperclip; the list inside is bare. */
+    [data-theme='phantom']
+        :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
+        :is(.kp-menu, .kp-combobox__list, .kp-theme-menu__list) {
+        background: transparent;
+        border-left: 0;
+        clip-path: none;
+    }
+
     /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
        2026-09-16, on the React theme menu: "niet veel te zien? Ook het
        vorige item heb ik te snel approved" — both theme-menu blocks in the

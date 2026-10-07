@@ -65,7 +65,8 @@ export function shapeOf(doc) {
     const listed = (root.getAttribute('data-review-themes') ?? '')
         .split(',')
         .map((s) => s.trim())
-        .filter(Boolean);
+        // A theme dropped since the demo was made is never asked for.
+        .filter((name) => THEMES.some((t) => t.name === name));
     /** @type {{ page: string, block: string, theme: string, engine?: string }[]} */
     const extras = parseJson(doc.querySelector('script[data-review-extra]')?.textContent, []);
     return {

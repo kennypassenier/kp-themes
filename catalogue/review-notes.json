@@ -1,1 +1,18 @@
-{}
+{
+    "page--theme-menu": {
+        "phantom": {
+            "rejected": "dat ziet er niet goed uit, die balk links staat er twee keer?",
+            "change": "The popover and the menu list inside it both took phantom's 4 px red edge, so the bar stood twice. Now only the popover carries the edge and the paperclip; the list inside it is bare (css/phantom-register.css).",
+            "commit": "f1eebdf5",
+            "given": "2026-10-08"
+        }
+    },
+    "page--theme-menu-react": {
+        "phantom": {
+            "rejected": "zelfde reden",
+            "change": "Same cause and fix as Theme menu: the popover keeps phantom's red edge, the menu list inside it no longer draws a second one.",
+            "commit": "f1eebdf5",
+            "given": "2026-10-08"
+        }
+    }
+}

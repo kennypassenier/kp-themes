@@ -457,7 +457,8 @@ const ORDER = root.dataset.reviewThemes
     ? root.dataset.reviewThemes
           .split(',')
           .map((s) => s.trim())
-          .filter(Boolean)
+          // A theme dropped since the demo was made is never walked.
+          .filter((name) => LABEL[name])
     : THEMES.map((t) => t.name);
 
 /**
