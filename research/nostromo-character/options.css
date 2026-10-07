@@ -1,0 +1,2385 @@
+/* research/nostromo-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.nc-scene[data-nc-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --nc-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the ones measured in
+   themes/nostromo/CHARACTER.md §2. The LED window is the signature progress
+   bar's own (css/nostromo-register.css, `--kp-np-*`), drawn again here as
+   the lamp bank because the register declares it on the bar only. */
+
+@property --nc-a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    .nc-page {
+        /* The frame clock (G1): the register's curve cubic-bezier(0.2, 0, 0,
+           1) sampled in whole frames, one held value per frame; the number
+           is the count of 80 ms frames in the motion (f4 = 320 ms). Each
+           frame holds the curve's value at its start, so the first frame
+           shows the part switched on (a line, a lamp) and the last lands. */
+        --nc-f1: linear(0 0%, 0 99.99%, 1 100%);
+        --nc-f2: linear(0 0%, 0 50%, 0.878 50%, 0.878 99.99%, 1 100%);
+        --nc-f3: linear(0 0%, 0 33.33%, 0.732 33.33%, 0.732 66.67%, 0.953 66.67%, 0.953 99.99%, 1 100%);
+        --nc-f4: linear(0 0%, 0 25%, 0.607 25%, 0.607 50%, 0.878 50%, 0.878 75%, 0.975 75%, 0.975 99.99%, 1 100%);
+        --nc-f6: linear(
+            0 0%,
+            0 16.67%,
+            0.406 16.67%,
+            0.406 33.33%,
+            0.732 33.33%,
+            0.732 50%,
+            0.878 50%,
+            0.878 66.67%,
+            0.953 66.67%,
+            0.953 83.33%,
+            0.99 83.33%,
+            0.99 99.99%,
+            1 100%
+        );
+        --nc-f8: linear(
+            0 0%,
+            0 12.5%,
+            0.256 12.5%,
+            0.256 25%,
+            0.607 25%,
+            0.607 37.5%,
+            0.778 37.5%,
+            0.778 50%,
+            0.878 50%,
+            0.878 62.5%,
+            0.939 62.5%,
+            0.939 75%,
+            0.975 75%,
+            0.975 87.5%,
+            0.994 87.5%,
+            0.994 99.99%,
+            1 100%
+        );
+        --nc-f12: linear(
+            0 0%,
+            0 8.33%,
+            0.1 8.33%,
+            0.1 16.67%,
+            0.406 16.67%,
+            0.406 25%,
+            0.607 25%,
+            0.607 33.33%,
+            0.732 33.33%,
+            0.732 41.67%,
+            0.817 41.67%,
+            0.817 50%,
+            0.878 50%,
+            0.878 58.33%,
+            0.922 58.33%,
+            0.922 66.67%,
+            0.953 66.67%,
+            0.953 75%,
+            0.975 75%,
+            0.975 83.33%,
+            0.99 83.33%,
+            0.99 91.67%,
+            0.998 91.67%,
+            0.998 99.99%,
+            1 100%
+        );
+        /* The register's smooth curve, shared with formal, light, brutalism
+           and grotesk; titanium's quick one for the calendar as decided. */
+        --nc-smooth: cubic-bezier(0.2, 0, 0, 1);
+        --nc-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
+        /* One LED: a rounded-off lens in its pitch, as the progress bar's. */
+        --nc-pitch: 6px;
+        --nc-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+        --nc-lit: var(--sidebar-primary);
+        --nc-glow: hsl(from var(--sidebar-primary) h s l / 0.6);
+        /* Five lit LEDs in sixteen, unordered: the bank's pattern tile. */
+        --nc-pattern: linear-gradient(
+            90deg,
+            transparent 0 calc(var(--nc-pitch) * 1),
+            var(--nc-lit) 0 calc(var(--nc-pitch) * 2),
+            transparent 0 calc(var(--nc-pitch) * 4),
+            var(--nc-lit) 0 calc(var(--nc-pitch) * 6),
+            transparent 0 calc(var(--nc-pitch) * 9),
+            var(--nc-lit) 0 calc(var(--nc-pitch) * 10),
+            transparent 0 calc(var(--nc-pitch) * 12),
+            var(--nc-lit) 0 calc(var(--nc-pitch) * 13),
+            transparent 0 calc(var(--nc-pitch) * 14),
+            var(--nc-lit) 0 calc(var(--nc-pitch) * 15),
+            transparent 0
+        );
+        /* The screen's scanlines: 1 px every 3 px. */
+        --nc-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .nc-scene .nc-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+    }
+
+    .nc-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .nc-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .nc-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .nc-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .nc-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nc-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .nc-scene .nc-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .nc-scene .nc-pop--static {
+        position: relative;
+        inset: auto;
+    }
+
+    .nc-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .nc-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .nc-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .nc-scene .nc-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .nc-scene .kp-kpi {
+        position: relative;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .nc-carrier {
+        position: relative;
+        display: inline-block;
+    }
+
+    .nc-scene .kp-kpi__value.nc-carrier {
+        justify-self: start;
+    }
+
+    .nc-faint {
+        opacity: 0.45;
+    }
+
+    .nc-prose {
+        margin: 0;
+    }
+
+    /* The change on label tape (Kenny's klaxon family keeps its tape): the
+       system mono in capitals, cut square, with ▲ ▼. */
+    .nc-scene .nc-tape {
+        border-radius: 2px;
+        padding-inline: 0.35em;
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .nc-scene .nc-tape[data-kp-direction='up']::before {
+        content: '‹▲\00a0';
+    }
+
+    .nc-scene .nc-tape[data-kp-direction='down']::before {
+        content: '‹▼\00a0';
+    }
+
+    .nc-scene .nc-tape::after {
+        content: '›';
+    }
+
+    /* ── The lamp (scope-12): every switch and every reading carries one.
+       Unlit it is the ink at 25 %; lit under the pointer 70 %; full when
+       pressed; the LED (orange, the register's lens) is the ship
+       indicating: a change, the loading bank. ─────────────────────────── */
+
+    .nc-lamp {
+        --nc-lamp: 25%;
+        position: relative;
+        display: inline-block;
+        flex: none;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-inline-end: 0.4rem;
+        vertical-align: 0.08em;
+        border-radius: 50%;
+        background: color-mix(in oklab, currentColor var(--nc-lamp), transparent);
+    }
+
+    .nc-lamp::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px var(--nc-glow);
+        opacity: 0;
+    }
+
+    /* Options that do not use a lamp on these parts show none, as today. */
+    .nc-scene:is(
+            [data-nc-curve='mix'],
+            [data-nc-direction],
+            [data-nc-live='blip'],
+            [data-nc-live='mix'],
+            [data-nc-loading='mix'],
+            [data-nc-tone='mix'],
+            [data-nc-hover='sweep'],
+            [data-nc-hover='mix'],
+            [data-nc-focus='mix'],
+            [data-nc-press='mix'],
+            [data-nc-composites='today'],
+            [data-nc-motifs='none']
+        )
+        .nc-lamp:not(.nc-lamp--state) {
+        display: none;
+    }
+
+    .nc-scene :is(.kp-menu__item, .nc-day) > .nc-lamp {
+        margin-inline-end: 0.5rem;
+    }
+
+    /* The state word: its dot is its lamp, in the state's colour. */
+    .nc-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.1rem 0.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .nc-state .nc-lamp--state {
+        --nc-lamp: 100%;
+        margin: 0;
+        color: var(--success);
+    }
+
+    .nc-state[data-nc-kind='bad'] .nc-lamp--state {
+        color: var(--destructive);
+    }
+
+    /* A day of the month: a moulded key with its lamp in the corner. */
+    .nc-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .nc-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+        font-family: var(--theme-font-mono);
+        font-size: 0.85rem;
+    }
+
+    .nc-day > .nc-lamp {
+        position: absolute;
+        inset-block-start: 0.25rem;
+        inset-inline-start: 0.25rem;
+        inline-size: 0.35rem;
+        block-size: 0.35rem;
+        margin: 0;
+    }
+
+    .nc-days--pick .nc-picked {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* The strip column. */
+    .nc-column {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .nc-column__num {
+        justify-self: start;
+        font-size: 1.6rem;
+        font-weight: 600;
+        line-height: 1.1;
+    }
+
+    /* The trend line on the case, the stroke in the signal. */
+    .nc-spark-wrap {
+        display: grid;
+        gap: 0.25rem;
+    }
+
+    .nc-spark {
+        display: block;
+        block-size: 2.25rem;
+        color: var(--selected);
+    }
+
+    .nc-spark svg,
+    .nc-screen svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    /* A screen set into the case: dark glass in a thick beige bezel, the
+       amber phosphor with its glow, scanlines over the glass. */
+    .nc-screen {
+        position: relative;
+        display: block;
+        block-size: 5rem;
+        padding: 0.6rem 0.5rem 0.4rem;
+        overflow: hidden;
+        border: 4px solid var(--secondary);
+        border-radius: 0.875rem;
+        background: radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.08), transparent 70%), var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 18px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--sidebar-primary);
+    }
+
+    .nc-screen::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--nc-scan);
+        pointer-events: none;
+    }
+
+    .nc-screen svg {
+        block-size: calc(100% - 1rem);
+        margin-block-start: 1rem;
+        filter: drop-shadow(0 0 2px hsl(from currentColor h s l / 0.7));
+    }
+
+    .nc-screen__read {
+        position: absolute;
+        inset-block-start: 0.35rem;
+        inset-inline-start: 0.55rem;
+        color: var(--sidebar-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-shadow: 0 0 5px hsl(from var(--sidebar-foreground) h s l / 0.5);
+    }
+
+    /* The three readouts of question 1: a lit block in an LED window. */
+    .nc-tracks {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .nc-tracks__groove {
+        position: relative;
+        display: block;
+        block-size: 1rem;
+        border: 3px solid var(--secondary);
+        border-radius: 0.3rem;
+        background: var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    .nc-track {
+        position: absolute;
+        inset-block: 2px;
+        inset-inline-start: calc(100% - 1.2rem - 2px);
+        inline-size: 1.2rem;
+        border-radius: 1px;
+        background: var(--nc-lit);
+        box-shadow: 0 0 5px var(--nc-glow);
+    }
+
+    /* The legend key of a chart. */
+    .nc-key {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--secondary);
+        box-shadow: var(--kp-sig-no-raised);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .nc-key__led {
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--chart-1);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    /* A list printed row by row (question 2). */
+    .nc-rows {
+        display: grid;
+        gap: 2px;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+    }
+
+    .nc-row-line {
+        display: block;
+    }
+
+    /* The table, the plot, the meter that wait (question 10). */
+    .nc-table {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.35rem 1rem;
+        padding: 0.6rem 0.75rem 1.4rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--card);
+        font-size: 0.85rem;
+    }
+
+    .nc-table > span:nth-child(-n + 2) {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .nc-meter-wait {
+        position: relative;
+        padding-block: 0.5rem 1.4rem;
+    }
+
+    /* A waiting screen keeps its glass: the package dims what is busy. */
+    .nc-scene .nc-screen--wait {
+        block-size: 5rem;
+        opacity: 1;
+    }
+
+    /* The progress bar inside its own wrapper; the bank beside it. */
+    .nc-bar-wrap {
+        display: grid;
+    }
+
+    .nc-bar-wrap > * {
+        grid-area: 1 / 1;
+    }
+
+    /* ── The lamp bank: the progress bar's LED window, computing. ─────── */
+
+    .nc-bank {
+        position: relative;
+        display: block;
+        block-size: 0.6rem;
+        padding: 2px;
+        border-radius: 0.2rem;
+        background: var(--secondary);
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
+    }
+
+    .nc-bank__window {
+        position: relative;
+        display: block;
+        block-size: 100%;
+        overflow: hidden;
+        border-radius: 1px;
+        background: var(--sidebar-background);
+    }
+
+    .nc-bank__window::before,
+    .nc-bank__lit {
+        content: '';
+        position: absolute;
+        inset: 1px 0;
+        mask: var(--nc-led) 0 0 / var(--nc-pitch) 100% repeat-x;
+    }
+
+    .nc-bank__window::before {
+        background: var(--sidebar-accent);
+    }
+
+    .nc-bank__lit {
+        background: var(--nc-pattern) 0 0 / calc(var(--nc-pitch) * 16) 100% repeat-x;
+    }
+
+    .nc-bar-wrap > .nc-bank {
+        block-size: 1rem;
+        padding: 3px;
+        border-radius: 0.3rem;
+    }
+
+    .nc-bar-wrap > .nc-bank .nc-bank__lit,
+    .nc-bar-wrap > .nc-bank .nc-bank__window::before {
+        inset: 2px 0;
+    }
+
+    /* The scanning lamps (option 2): one block of three lit LEDs. */
+    .nc-scene[data-nc-loading='scan'] .nc-bank__lit {
+        background: linear-gradient(var(--nc-lit), var(--nc-lit)) calc(var(--nc-pitch) * -3) 0 / calc(var(--nc-pitch) * 3) 100% no-repeat;
+    }
+
+    /* Where the loading picture sits: at the foot of the waiting part. */
+    .nc-waits {
+        position: relative;
+    }
+
+    .nc-scene .kp-kpi.nc-waits,
+    .nc-scene .kp-card.nc-waits {
+        padding-block-end: 1.5rem;
+    }
+
+    .nc-scene .kp-menu__item.nc-waits {
+        padding-block-end: 1.25rem;
+    }
+
+    .nc-load {
+        position: absolute;
+        inset-inline: 0.6rem;
+        inset-block-end: 0.4rem;
+        display: block;
+        pointer-events: none;
+    }
+
+    .nc-screen .nc-load {
+        z-index: 1;
+    }
+
+    .nc-load__today {
+        display: none;
+    }
+
+    /* A day has no room for a row: its own lamp joins the bank. */
+    .nc-day > .nc-load {
+        display: none;
+    }
+
+    /* The bar: the bank stands in its place, except as today. */
+    .nc-scene:not([data-nc-loading='mix']) .nc-bar-wrap > .kp-progressbar {
+        visibility: hidden;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-bar-wrap > .nc-bank {
+        visibility: hidden;
+    }
+
+    /* Skeleton lines: three grooves of the bank, or the register's pills. */
+    .nc-skel {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .nc-skel__bank:nth-of-type(2) {
+        inline-size: 85%;
+    }
+
+    .nc-skel__bank:nth-of-type(3) {
+        inline-size: 60%;
+    }
+
+    .nc-scene:not([data-nc-loading='mix']) .nc-skel > .kp-skeleton,
+    .nc-scene[data-nc-loading='mix'] .nc-skel > .nc-skel__bank {
+        display: none;
+    }
+
+    /* ── As today, the loading pictures (question 10, option 3) ───────── */
+
+    .nc-scene[data-nc-loading='mix'] .nc-load__bank {
+        display: none;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-load__today {
+        display: block;
+        position: relative;
+        block-size: 0.6rem;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .kp-kpi .nc-load__today {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 4px hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-table .nc-load,
+    .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load,
+    .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load,
+    .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load {
+        inset: 0;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-table .nc-load__today {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        block-size: 2px;
+        background: var(--accent);
+        box-shadow: 0 0 6px var(--accent);
+    }
+
+    .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load__today {
+        position: absolute;
+        inset: 0;
+        block-size: auto;
+        background: linear-gradient(
+                90deg,
+                transparent 0,
+                var(--destructive) 40%,
+                color-mix(in oklab, var(--destructive) 35%, transparent) 70%,
+                transparent 100%
+            ) -40%
+            0 / 40% 100% no-repeat;
+        opacity: 0.55;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load__today {
+        position: absolute;
+        inset: 0;
+        block-size: auto;
+        background: radial-gradient(circle at 50% 50%, hsl(from var(--sidebar-primary) h s l / 0.4), transparent 65%);
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load__today {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0.5rem;
+        block-size: 0.625rem;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent) -40% 0 / 30% 100% no-repeat;
+        mask: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 1px 0 / 6px 100% repeat-x;
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-day {
+        border-radius: 0.5rem;
+        background: hsl(from var(--muted) h s calc(l - 8));
+    }
+
+    .nc-scene[data-nc-loading='mix'] .nc-day::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.3rem;
+        inset-inline-start: 0.3rem;
+        inline-size: 7px;
+        block-size: 7px;
+        border-radius: 50%;
+        background: hsl(from var(--accent) h s l / 0.3);
+    }
+
+    /* ── 1-4 The motion questions: what stands before it arrives ──────── */
+
+    .nc-scene[data-nc-durations] .nc-tap {
+        transition: none;
+    }
+
+    /* ── 5 Where the colour goes ─────────────────────────────────────── */
+
+    .nc-scene[data-nc-colour] .kp-button.nc-pointed {
+        background: var(--muted);
+    }
+
+    .nc-scene[data-nc-colour='indicate'] .kp-button.nc-pointed::before {
+        opacity: 0.7;
+    }
+
+    .nc-scene[data-nc-colour] .nc-kpi--warn,
+    .nc-scene[data-nc-tone='klaxon'] .nc-kpi--warn {
+        box-shadow: inset 0 0 0 3px var(--warning);
+    }
+
+    .nc-scene[data-nc-colour='green'] .nc-screen {
+        color: oklch(from var(--success) 0.82 0.2 h);
+    }
+
+    .nc-scene[data-nc-colour='green'] .nc-screen__read {
+        color: oklch(from var(--success) 0.82 0.2 h);
+        text-shadow: 0 0 5px oklch(from var(--success) 0.7 0.16 h);
+    }
+
+    .nc-scene[data-nc-colour='green'] {
+        --nc-lit: oklch(from var(--success) 0.82 0.2 h);
+        --nc-glow: oklch(from var(--success) 0.7 0.16 h);
+    }
+
+    .nc-scene[data-nc-colour='green'] .nc-prose a {
+        color: oklch(from var(--success) 0.78 0.16 h);
+        text-decoration-color: currentColor;
+    }
+
+    .nc-scene[data-nc-colour='green'] .nc-picked {
+        outline-color: oklch(from var(--success) 0.78 0.16 h);
+    }
+
+    .nc-scene[data-nc-colour='orange'] .kp-button--primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .nc-scene[data-nc-colour='orange'] .kp-button.nc-pointed {
+        box-shadow:
+            inset 0 0 0 1px var(--sidebar-primary),
+            0 0 0 1px var(--sidebar-primary);
+    }
+
+    .nc-scene[data-nc-colour='orange'] .nc-prose a {
+        color: var(--sidebar-primary);
+        text-decoration-color: currentColor;
+    }
+
+    .nc-scene[data-nc-colour='orange'] .nc-picked {
+        outline-color: var(--sidebar-primary);
+    }
+
+    .nc-scene[data-nc-colour='orange'] .nc-screen {
+        color: var(--sidebar-primary);
+    }
+
+    /* ── 6 The corners ───────────────────────────────────────────────── */
+
+    .nc-scene[data-nc-corners='moulded'] :is(.kp-card, .kp-popover, .kp-kpi) {
+        border-radius: 0.75rem;
+    }
+
+    .nc-scene[data-nc-corners='moulded'] :is(.kp-button, .nc-chip) {
+        border-radius: 0.3rem;
+    }
+
+    .nc-scene[data-nc-corners='moulded'] :is(.nc-tag, .nc-tape, .nc-tip) {
+        border-radius: 2px;
+    }
+
+    .nc-scene[data-nc-corners='moulded'] .nc-screen {
+        border-radius: 0.875rem;
+    }
+
+    .nc-scene[data-nc-corners='one'] :is(.kp-card, .kp-popover, .kp-kpi, .kp-button, .nc-chip, .nc-tag, .nc-tape, .nc-tip, .nc-screen) {
+        border-radius: 0.75rem;
+    }
+
+    .nc-scene[data-nc-corners='tape']
+        :is(.kp-card, .kp-popover, .kp-kpi, .kp-button, .nc-chip, .nc-tag, .nc-tape, .nc-tip, .nc-screen, .kp-menu__item) {
+        border-radius: 2px;
+    }
+
+    /* ── 7 The surface ───────────────────────────────────────────────── */
+
+    .nc-scene[data-nc-surface='both'] :is(.kp-card, .kp-kpi) {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    .nc-scene[data-nc-surface='screen'] :is(.kp-card, .kp-kpi, .kp-field__input) {
+        position: relative;
+        border: 4px solid var(--secondary);
+        border-radius: 0.875rem;
+        background:
+            var(--nc-scan), radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.08), transparent 70%),
+            var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        color: var(--sidebar-primary);
+        font-family: var(--theme-font-mono);
+        text-shadow: 0 0 5px hsl(from var(--sidebar-primary) h s l / 0.5);
+    }
+
+    .nc-scene[data-nc-surface='screen'] :is(.kp-card, .kp-kpi) :is(.nc-title, .kp-kpi__label, .kp-kpi__value, .kp-kpi__trend, .kp-card__body) {
+        color: inherit;
+        font-family: inherit;
+    }
+
+    .nc-scene[data-nc-surface='screen'] .kp-field__input {
+        border-width: 3px;
+        border-radius: 0.5rem;
+    }
+
+    .nc-scene[data-nc-surface='case'] .nc-screen {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.3rem;
+        background: var(--muted);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--foreground);
+    }
+
+    .nc-scene[data-nc-surface='case'] .nc-screen::after {
+        content: none;
+    }
+
+    .nc-scene[data-nc-surface='case'] .nc-screen svg {
+        filter: none;
+    }
+
+    .nc-scene[data-nc-surface='case'] .nc-screen__read {
+        color: var(--foreground);
+        text-shadow: none;
+    }
+
+    /* ── 8 A warning ─────────────────────────────────────────────────── */
+
+    /* The figure of a warning key figure stays ink on its plate; the
+       package's tone plate is kept only as today. */
+    .nc-scene:not([data-nc-tone='mix']) .nc-kpi--warn > .kp-kpi__value {
+        padding: 0;
+        background: none;
+        color: inherit;
+    }
+
+    .nc-scene[data-nc-tone] .nc-tile {
+        border-color: var(--border-strong);
+    }
+
+    .nc-scene[data-nc-tone='klaxon'] .nc-tile--bad {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='klaxon'] .nc-state[data-nc-kind='bad'] {
+        border-color: transparent;
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='klaxon'] [data-nc-bad] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='klaxon'] .kp-meter[data-kp-tone='warning'] {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--warning);
+    }
+
+    .nc-scene[data-nc-tone='lamp'] .nc-kpi--warn .nc-lamp,
+    .nc-scene[data-nc-tone='lamp'] .nc-tile--bad .nc-lamp,
+    .nc-scene[data-nc-tone='lamp'] [data-nc-bad] .nc-lamp {
+        --nc-lamp: 100%;
+        box-shadow: 0 0 6px 1px currentColor;
+    }
+
+    .nc-scene[data-nc-tone='lamp'] .nc-kpi--warn .nc-lamp {
+        color: var(--warning);
+    }
+
+    .nc-scene[data-nc-tone='lamp'] :is(.nc-tile--bad, [data-nc-bad]) .nc-lamp {
+        color: var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='mix'] .nc-kpi .nc-tape {
+        border: 1px solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .nc-scene[data-nc-tone='mix'] .nc-kpi--warn > .kp-kpi__value {
+        justify-self: start;
+        padding-inline: 0.3rem;
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .nc-scene[data-nc-tone='mix'] .nc-tile--bad {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='mix'] .nc-state[data-nc-kind='bad'] {
+        border-color: var(--destructive);
+    }
+
+    .nc-scene[data-nc-tone='mix'] [data-nc-bad] {
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    /* ── 13-16 Pointing, focus, press: the looks ─────────────────────── */
+
+    /* The lamp lit under the pointer: the switch's lamp at 70 % and its
+       ground one step lighter (the register's DI3 step). */
+    .nc-scene:is([data-nc-hover='lamp'], [data-nc-focus='di2lamp']) :is(.kp-menu__item, .kp-kpi, .nc-day):is(.nc-pointed, .nc-focused) .nc-lamp,
+    .nc-scene[data-nc-hover='lamp'] :is(.kp-menu__item, .kp-kpi, .nc-day):hover .nc-lamp {
+        --nc-lamp: 70%;
+    }
+
+    .nc-scene:is([data-nc-hover='lamp'], [data-nc-focus='di2lamp']) .kp-button:is(.nc-pointed, .nc-focused)::before {
+        opacity: 0.7;
+    }
+
+    .nc-scene[data-nc-hover='lamp'] .kp-button.nc-pointed {
+        background: var(--muted);
+    }
+
+    .nc-scene[data-nc-hover='lamp'] .kp-button--ghost.nc-pointed {
+        background: var(--card);
+    }
+
+    .nc-scene[data-nc-hover] .kp-menu__item.nc-pointed {
+        background: var(--card);
+    }
+
+    .nc-scene[data-nc-hover='lamp'] :is(.kp-kpi, .nc-day).nc-pointed {
+        background: var(--popover);
+    }
+
+    .nc-scene[data-nc-hover='sweep'] :is(.kp-button, .kp-menu__item, .kp-kpi, .nc-day).nc-pointed {
+        background: linear-gradient(90deg, transparent 0%, hsl(from var(--accent) h s l / 0.3) 50%, transparent 100%);
+    }
+
+    .nc-scene[data-nc-hover='mix'] .kp-button.nc-pointed:not(.nc-tile-link) {
+        background: var(--muted);
+    }
+
+    .nc-scene[data-nc-hover='mix'] .kp-button.nc-pointed:not(.nc-tile-link)::before {
+        opacity: 0.7;
+    }
+
+    .nc-scene[data-nc-hover='mix'] .kp-menu__item.nc-pointed {
+        background: linear-gradient(90deg, transparent 0%, hsl(from var(--accent) h s l / 0.3) 50%, transparent 100%);
+    }
+
+    .nc-scene[data-nc-hover='mix'] .nc-tile:has(.nc-pointed) {
+        background-image: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in oklch, var(--foreground) 55%, transparent) 2px 3px);
+    }
+
+    .nc-scene[data-nc-hover='mix'] .nc-tile-link.nc-pointed {
+        color: oklch(from var(--success) 0.78 0.16 h);
+        text-decoration: underline;
+    }
+
+    .nc-scene[data-nc-hover='mix'] .kp-kpi.nc-pointed {
+        background: color-mix(in oklab, var(--primary) 10%, var(--card));
+    }
+
+    .nc-scene[data-nc-hover='mix'] .nc-day.nc-pointed {
+        translate: 1px 2px;
+    }
+
+    /* Focus: the package's two channels at the part's own corner. */
+    .nc-scene:is([data-nc-focus='di2lamp'], [data-nc-focus='led']) .nc-focused {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    .nc-scene[data-nc-focus='led'] .nc-focused .nc-lamp::after {
+        opacity: 1;
+    }
+
+    .nc-scene[data-nc-focus='led'] .kp-button.nc-focused::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px var(--nc-glow);
+        opacity: 1;
+    }
+
+    .nc-scene[data-nc-focus='mix'] .nc-focused {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+        border-radius: calc(var(--radius) / 2);
+    }
+
+    .nc-scene[data-nc-focus='mix'] .nc-in-header.nc-focused {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        box-shadow: inset 3px 0 0 0 var(--accent);
+        border-radius: var(--radius);
+    }
+
+    .nc-scene[data-nc-focus='mix'] .nc-in-kpi.nc-focused {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 3px;
+        box-shadow: none;
+        border-radius: var(--radius);
+    }
+
+    .nc-scene[data-nc-focus='mix'] .nc-tile-link.nc-focused {
+        outline: 2px solid oklch(from var(--success) 0.78 0.16 h);
+        outline-offset: 3px;
+        box-shadow: none;
+        border-radius: var(--radius);
+        color: oklch(from var(--success) 0.78 0.16 h);
+        text-decoration: underline;
+    }
+
+    /* ── 13 Buttons inside composites ────────────────────────────────── */
+
+    .nc-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .nc-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .nc-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .nc-header-mini {
+        display: flex;
+        padding: 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .nc-in-tile,
+    .nc-drawer {
+        align-content: start;
+    }
+
+    .nc-scene .nc-tile-link {
+        justify-self: start;
+    }
+
+    .nc-scene[data-nc-composites='today'] .nc-in-header {
+        border-color: color-mix(in oklch, var(--border-strong) 55%, var(--foreground));
+        box-shadow: inset 3px 0 0 0 var(--accent);
+    }
+
+    .nc-scene[data-nc-composites='accent'] .nc-in-header {
+        box-shadow: inset 3px 0 0 0 var(--accent);
+    }
+
+    /* State: Hover. */
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .kp-button {
+        background: var(--muted);
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .kp-button--primary {
+        background: hsl(from var(--primary) h s calc(l + 7));
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .kp-button--ghost {
+        background: var(--card);
+    }
+
+    .nc-sec:is([data-nc-show='hover'], [data-nc-show='focus']) .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .kp-button::before {
+        opacity: 0.7;
+    }
+
+    .nc-sec:is([data-nc-show='hover'], [data-nc-show='focus']) .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .nc-lamp {
+        --nc-lamp: 70%;
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) :is(.kp-menu__item, .nc-in-kpi) {
+        background: var(--card);
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-part:first-child .kp-button {
+        background: var(--muted);
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-part:first-child .kp-button--primary {
+        background: hsl(from var(--primary) h s calc(l + 7));
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-part:first-child .kp-button::before {
+        opacity: 0.7;
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-in-header {
+        box-shadow:
+            inset 3px 0 0 0 var(--accent),
+            inset 0 0 0 1px var(--accent),
+            0 0 0 1px var(--accent);
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .kp-menu__item {
+        background: linear-gradient(90deg, transparent 0%, hsl(from var(--accent) h s l / 0.3) 50%, transparent 100%);
+    }
+
+    .nc-sec:is([data-nc-show='hover'], [data-nc-show='focus']) .nc-scene[data-nc-composites='today'] .nc-tile-link {
+        color: oklch(from var(--success) 0.78 0.16 h);
+        text-decoration: underline;
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-in-kpi {
+        background: color-mix(in oklab, var(--primary) 10%, var(--card));
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-drawer .kp-button:not(.kp-button--primary),
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-tile-link {
+        background: var(--card);
+    }
+
+    .nc-sec[data-nc-show='hover'] .nc-scene[data-nc-composites='today'] .nc-drawer .kp-button--primary {
+        background: hsl(from var(--primary) h s calc(l + 7));
+    }
+
+    /* State: Focus. */
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) :is(.kp-button, .kp-menu__item, .nc-in-kpi) {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites='accent'] .nc-in-header {
+        box-shadow:
+            inset 3px 0 0 0 var(--accent),
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites='today'] :is(.kp-button, .kp-menu__item):not(.nc-in-header, .nc-tile-link) {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+        border-radius: calc(var(--radius) / 2);
+    }
+
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites='today'] .nc-in-header {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites='today'] .nc-tile-link {
+        outline: 2px solid oklch(from var(--success) 0.78 0.16 h);
+        outline-offset: 3px;
+    }
+
+    .nc-sec[data-nc-show='focus'] .nc-scene[data-nc-composites='today'] .nc-in-kpi {
+        outline: 2px solid var(--border-strong);
+        outline-offset: 3px;
+    }
+
+    /* State: Press. */
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) :is(.kp-button, .kp-menu__item, .nc-in-kpi) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites='accent'] .nc-in-header {
+        box-shadow:
+            inset 3px 0 0 0 var(--accent),
+            var(--kp-sig-no-well);
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites] .kp-button--primary {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites] .kp-button::before {
+        opacity: 1;
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites]:not([data-nc-composites='today']) .nc-lamp {
+        --nc-lamp: 100%;
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites='today'] .nc-in-header {
+        box-shadow:
+            inset 3px 0 0 0 var(--accent),
+            inset 0 0 0 1px var(--border-strong);
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites='today'] .kp-menu__item {
+        background: hsl(from var(--accent) h s l / 0.2);
+    }
+
+    .nc-sec[data-nc-show='press'] .nc-scene[data-nc-composites='today'] .nc-in-kpi {
+        background: var(--secondary);
+    }
+
+    /* ── 16 The press: a key at rest is raised moulding (G7), so that
+       pushing it in can turn it into a well. ───────────────────────── */
+
+    .nc-scene[data-nc-press='well'] .nc-press {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    /* ── 17 The voice ────────────────────────────────────────────────── */
+
+    .nc-type {
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .nc-type :is(p, table) {
+        margin: 0;
+    }
+
+    .nc-type__label,
+    .nc-type__table th {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-align: start;
+        text-transform: uppercase;
+    }
+
+    .nc-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+    }
+
+    .nc-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        font-size: 1.9rem;
+        line-height: 1;
+    }
+
+    .nc-type__figure small {
+        font-size: 0.85rem;
+    }
+
+    .nc-type__table td {
+        padding-inline-start: 1rem;
+    }
+
+    .nc-screen--type {
+        block-size: 9rem;
+    }
+
+    .nc-scene[data-nc-type='michroma'] :is(.nc-type__figure .nc-figure, .nc-type__table td:not(:has(.kp-timestamp))) {
+        font-family: var(--theme-font-display);
+    }
+
+    .nc-scene[data-nc-type='michroma'] .nc-type__label {
+        justify-self: start;
+        padding: 0.1rem 0.45rem;
+        border-radius: 2px;
+        background: var(--foreground);
+        color: var(--primary-foreground);
+    }
+
+    .nc-scene[data-nc-type='mono'] :is(.nc-type__figure .nc-figure, .nc-type__table td) {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    .nc-scene[data-nc-type='display']
+        :is(.nc-type__label, .nc-type__table th, .nc-type__table td, .nc-type__figure .nc-figure, .kp-button, .nc-tag, .nc-tape) {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+
+    .nc-scene[data-nc-type='display'] .nc-screen__read {
+        font-family: var(--theme-font-display);
+    }
+
+    /* ── 18 The motifs ───────────────────────────────────────────────── */
+
+    .nc-events {
+        position: relative;
+    }
+
+    .nc-events__line {
+        stroke: hsl(from var(--sidebar-foreground) h s l / 0.6);
+        stroke-dasharray: 2 2;
+        stroke-width: 1;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .nc-events__mark {
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 1.1rem;
+        inset-inline-start: calc(var(--x) - 0.25rem);
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--sidebar-primary);
+        box-shadow: 0 0 6px var(--nc-glow);
+    }
+
+    .nc-scene[data-nc-motifs='place'] .nc-events__mark:last-of-type::after,
+    .nc-scene[data-nc-motifs='all'] .nc-events__mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.4rem;
+        border: 1px solid hsl(from var(--sidebar-primary) h s l / 0.6);
+        border-radius: 50%;
+    }
+
+    .nc-motif-list {
+        margin: 0.4rem 0 0;
+        padding-inline-start: 1.1rem;
+    }
+
+    .nc-divider {
+        block-size: 1px;
+        margin: 0.25rem 0;
+        border: 0;
+        background: var(--border-strong);
+    }
+
+    .nc-scene[data-nc-motifs='place'] .nc-divider {
+        block-size: 0.5rem;
+        background: linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.5) 0 3px, transparent 3px) 0 0 / 6px 100% repeat-x;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-meter {
+        background: var(--secondary);
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-meter::before {
+        background: var(--accent);
+        filter: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-meter__mark::before {
+        content: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .nc-events__mark {
+        box-shadow: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .nc-events::after {
+        content: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-button::before {
+        content: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-button {
+        padding-inline-start: 0.85rem;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-empty::before {
+        content: none;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-empty {
+        padding-block-start: 1.25rem;
+    }
+
+    .nc-scene[data-nc-motifs='none'] .kp-empty__title {
+        background: none;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .nc-scene[data-nc-motifs='all'] .nc-motif-card {
+        --nc-screw: radial-gradient(
+            circle,
+            hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
+            hsl(from var(--foreground) h s l / 0.2) 2px 3px,
+            transparent 3.5px
+        );
+        background:
+            var(--nc-screw) 6px 6px / 8px 8px no-repeat,
+            var(--nc-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
+            var(--nc-screw) 6px calc(100% - 6px) / 8px 8px no-repeat,
+            var(--nc-screw) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat,
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 3px),
+            var(--card);
+    }
+
+    .nc-scene[data-nc-motifs='all'] .nc-motif-list {
+        padding-inline-start: 0;
+        list-style: none;
+    }
+
+    .nc-scene[data-nc-motifs='all'] .nc-motif-list li::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .nc-scene[data-nc-motifs='all'] .nc-divider {
+        block-size: 0.6rem;
+        background: repeating-linear-gradient(-45deg, var(--warning) 0 6px, var(--foreground) 6px 12px);
+    }
+
+    /* ── 11 The spinner, at rest ─────────────────────────────────────── */
+
+    .nc-spins {
+        gap: 1.25rem;
+    }
+
+    .nc-spin__ring {
+        display: none;
+    }
+
+    .nc-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nc-busy-button .kp-spinner {
+        --kp-spinner-size: 1rem;
+    }
+
+    .nc-busy-panel {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='ping']) .nc-spin::before {
+        content: none;
+    }
+
+    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='ping']) .nc-spin__ring {
+        position: absolute;
+        inset: 0;
+        display: block;
+        border-radius: 50%;
+    }
+
+    /* A ring of eight lamps: unlit ring segments, the lit ones over them. */
+    .nc-scene[data-nc-spinner='lamps'] .nc-spin {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .nc-scene[data-nc-spinner='lamps'] .nc-spin::after {
+        content: none;
+    }
+
+    .nc-scene[data-nc-spinner='lamps'] .nc-spin__ring {
+        --nc-lamps: repeating-conic-gradient(from -14deg, var(--foreground) 0 28deg, transparent 0 45deg);
+        background:
+            conic-gradient(
+                from var(--nc-a),
+                var(--nc-lit) 0 45deg,
+                transparent 0 135deg,
+                var(--nc-lit) 0 180deg,
+                transparent 0 225deg,
+                var(--nc-lit) 0 270deg,
+                transparent 0
+            ),
+            var(--sidebar-accent);
+        mask: var(--nc-lamps), radial-gradient(circle, transparent 0 52%, var(--foreground) 53% 98%, transparent 99%);
+        mask-composite: intersect;
+    }
+
+    /* The tracker: a dark scope, a ring pinging out from its centre. */
+    .nc-scene[data-nc-spinner='ping'] .nc-spin__ring {
+        border: 2px solid var(--sidebar-primary);
+        box-shadow: 0 0 4px var(--nc-glow);
+        scale: 0.9;
+    }
+
+    /* ── The motion ──────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .nc-scene:is([data-nc-curve], [data-nc-direction], [data-nc-opening], [data-nc-durations])[data-nc-phase='gap'] :is(.nc-arrives, .nc-track),
+        .nc-scene[data-nc-durations][data-nc-phase='gap'] .kp-kpi__value,
+        .nc-scene[data-nc-direction][data-nc-phase='gap'] .nc-walk polyline,
+        .nc-scene[data-nc-leave][data-nc-phase='gap'] .nc-leaver {
+            visibility: hidden;
+        }
+
+        /* 1 The curve. One clock per option, the same pictures. */
+        .nc-scene[data-nc-curve='frames'] {
+            --nc-e8: var(--nc-f4);
+            --nc-e16: var(--nc-f8);
+        }
+
+        .nc-scene[data-nc-curve='smooth'] {
+            --nc-e8: var(--nc-smooth);
+            --nc-e16: var(--nc-smooth);
+        }
+
+        .nc-scene:is([data-nc-curve='frames'], [data-nc-curve='smooth']):not([data-nc-phase='gap']) .nc-track {
+            animation: nc-track calc(640ms * var(--nc-slow, 1)) var(--nc-e16) both;
+        }
+
+        .nc-scene[data-nc-curve='mix']:not([data-nc-phase='gap']) .nc-track[data-nc-r='1'] {
+            animation: nc-track calc(640ms * var(--nc-slow, 1)) linear both;
+        }
+
+        .nc-scene[data-nc-curve='mix']:not([data-nc-phase='gap']) .nc-track[data-nc-r='2'] {
+            animation: nc-track calc(640ms * var(--nc-slow, 1)) ease-in-out both;
+        }
+
+        .nc-scene[data-nc-curve='mix']:not([data-nc-phase='gap']) .nc-track[data-nc-r='3'] {
+            animation: nc-track calc(640ms * var(--nc-slow, 1)) cubic-bezier(0.3, 1.35, 0.5, 1) both;
+        }
+
+        .nc-scene:is([data-nc-curve='frames'], [data-nc-curve='smooth']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes,
+        .nc-scene:is([data-nc-curve='frames'], [data-nc-curve='smooth']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile {
+            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-e8) both;
+        }
+
+        .nc-scene[data-nc-curve='frames'][data-nc-phase='in'] .nc-kpi .nc-lamp::after {
+            animation: nc-led-on calc(640ms * var(--nc-slow, 1)) steps(1, end);
+        }
+
+        .nc-scene[data-nc-curve='smooth'][data-nc-phase='in'] .nc-kpi .nc-lamp::after {
+            animation: nc-led-fade calc(640ms * var(--nc-slow, 1)) var(--nc-smooth);
+        }
+
+        .nc-scene[data-nc-curve='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-dialog {
+            animation: nc-drop calc(260ms * var(--nc-slow, 1)) var(--nc-smooth) both;
+        }
+
+        .nc-scene[data-nc-curve='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-pop {
+            transform-origin: top left;
+            animation: nc-pinged calc(300ms * var(--nc-slow, 1)) ease-out both;
+        }
+
+        .nc-scene[data-nc-curve='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile {
+            animation: nc-warm-today calc(300ms * var(--nc-slow, 1)) steps(2) both;
+        }
+
+        .nc-scene[data-nc-curve='mix'][data-nc-phase='in'] .kp-kpi__value.nc-carrier {
+            animation: nc-blip calc(450ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        /* 2 The direction. */
+        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-day {
+            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) calc(var(--i) * 80ms * var(--nc-slow, 1)) both;
+        }
+
+        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-row-line {
+            animation: nc-print calc(320ms * var(--nc-slow, 1)) var(--nc-f4) calc(var(--i) * 320ms * var(--nc-slow, 1)) both;
+        }
+
+        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile.nc-arrives {
+            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
+        }
+
+        .nc-scene:is([data-nc-direction='raster'], [data-nc-direction='feed']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-walk polyline {
+            stroke-dasharray: 1;
+            animation: nc-draw calc(640ms * var(--nc-slow, 1)) var(--nc-f8) both;
+        }
+
+        .nc-scene[data-nc-direction='feed']:is([data-nc-phase='in'], [data-nc-phase='hold']) :is(.nc-day, .nc-row-line, .nc-tile.nc-arrives) {
+            animation: nc-print calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
+        }
+
+        .nc-scene[data-nc-direction='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-day {
+            animation: nc-crt-today calc(360ms * var(--nc-slow, 1)) var(--nc-quick) both;
+        }
+
+        .nc-scene[data-nc-direction='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-row-line {
+            animation: nc-roll-today calc(640ms * var(--nc-slow, 1)) linear calc(var(--i) * 120ms * var(--nc-slow, 1)) both;
+        }
+
+        .nc-scene[data-nc-direction='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile.nc-arrives {
+            animation: nc-warm-today calc(300ms * var(--nc-slow, 1)) steps(2) both;
+        }
+
+        .nc-scene[data-nc-direction='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-walk polyline {
+            animation: nc-flicker-today calc(900ms * var(--nc-slow, 1)) steps(1) both;
+        }
+
+        /* 3 The opening. */
+        .nc-scene[data-nc-opening='strike']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
+            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
+        }
+
+        .nc-scene[data-nc-opening='strike'][data-nc-phase='out'] .nc-strikes {
+            animation: nc-off calc(480ms * var(--nc-slow, 1)) linear both;
+        }
+
+        .nc-scene[data-nc-opening='ping']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
+            animation: nc-ping-open calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
+        }
+
+        .nc-scene[data-nc-opening='ping'][data-nc-phase='out'] .nc-strikes {
+            animation: nc-ping-open calc(320ms * var(--nc-slow, 1)) var(--nc-f4) reverse both;
+        }
+
+        .nc-scene[data-nc-opening='cut']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
+            animation: nc-cut calc(320ms * var(--nc-slow, 1)) var(--nc-smooth) both;
+        }
+
+        .nc-scene[data-nc-opening='cut'][data-nc-phase='out'] .nc-strikes {
+            animation: nc-cut calc(320ms * var(--nc-slow, 1)) var(--nc-smooth) reverse both;
+        }
+
+        .nc-scene[data-nc-opening][data-nc-phase='gap'] .nc-strikes {
+            visibility: hidden;
+        }
+
+        /* 4 The durations: contact, strike, print and loop per option. */
+        .nc-scene[data-nc-durations='frames'] {
+            --nc-contact: 160ms;
+            --nc-ec: var(--nc-f2);
+            --nc-strike: 320ms;
+            --nc-es: var(--nc-f4);
+            --nc-print: 640ms;
+            --nc-ep: var(--nc-f8);
+            --nc-loop: 1600ms;
+        }
+
+        .nc-scene[data-nc-durations='brisk'] {
+            --nc-contact: 80ms;
+            --nc-ec: var(--nc-f1);
+            --nc-strike: 160ms;
+            --nc-es: var(--nc-f2);
+            --nc-print: 320ms;
+            --nc-ep: var(--nc-f4);
+            --nc-loop: 960ms;
+        }
+
+        .nc-scene[data-nc-durations='slow'] {
+            --nc-contact: 240ms;
+            --nc-ec: var(--nc-f3);
+            --nc-strike: 480ms;
+            --nc-es: var(--nc-f6);
+            --nc-print: 960ms;
+            --nc-ep: var(--nc-f12);
+            --nc-loop: 2400ms;
+        }
+
+        .nc-scene[data-nc-durations] .nc-tap {
+            transition: box-shadow calc(var(--nc-contact) * var(--nc-slow, 1)) var(--nc-ec);
+        }
+
+        .nc-scene[data-nc-durations] .nc-tap::before {
+            transition: opacity calc(var(--nc-contact) * var(--nc-slow, 1)) var(--nc-ec);
+        }
+
+        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tap {
+            box-shadow: var(--kp-sig-no-well);
+        }
+
+        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tap::before {
+            opacity: 1;
+        }
+
+        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-dialog {
+            animation: nc-strike calc(var(--nc-strike) * var(--nc-slow, 1)) var(--nc-es) both;
+        }
+
+        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-kpi__value {
+            animation: nc-print calc(var(--nc-print) * var(--nc-slow, 1)) var(--nc-ep) both;
+        }
+
+        .nc-scene[data-nc-durations] .nc-bank__lit {
+            animation: nc-compute calc(var(--nc-loop) * var(--nc-slow, 1)) steps(1, end) infinite;
+        }
+
+        /* 5, 7, 8 and the parts of 10: the bank computes wherever it stands. */
+        .nc-scene:not([data-nc-durations], [data-nc-loading='scan']) .nc-bank__lit {
+            animation: nc-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='scan'] .nc-bank__lit {
+            animation: nc-scan calc(1600ms * var(--nc-slow, 1)) steps(63, end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='bank'] .nc-day .nc-lamp::after {
+            animation: nc-day-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * -560ms * var(--nc-slow, 1)) infinite;
+        }
+
+        .nc-scene[data-nc-loading='scan'] .nc-day .nc-lamp::after {
+            animation: nc-day-scan calc(1600ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * 320ms * var(--nc-slow, 1)) infinite;
+        }
+
+        /* 8 A warning: as today, the meter jolts when it turns. */
+        .nc-scene[data-nc-tone='mix'][data-nc-phase='in'] .kp-meter[data-kp-tone='warning'] {
+            animation: nc-jolt calc(200ms * var(--nc-slow, 1)) steps(3);
+        }
+
+        .nc-scene[data-nc-tone='klaxon'][data-nc-phase='gap'] :is(.nc-kpi--warn, .nc-tile--bad, [data-nc-bad], .kp-meter[data-kp-tone='warning']),
+        .nc-scene[data-nc-tone='klaxon'][data-nc-phase='gap'] .nc-state[data-nc-kind='bad'] {
+            box-shadow: none;
+        }
+
+        /* 9 A live update. */
+        .nc-scene[data-nc-live='lamp'][data-nc-phase='in'] .nc-lamp:not(.nc-lamp--state)::after {
+            animation: nc-led-on calc(640ms * var(--nc-slow, 1)) steps(1, end);
+        }
+
+        .nc-scene[data-nc-live='lamp'][data-nc-phase='in'] .nc-lamp--state {
+            animation: nc-state-lamp calc(640ms * var(--nc-slow, 1)) steps(1, end);
+        }
+
+        .nc-scene[data-nc-live='blip'][data-nc-phase='in']
+            :is(.kp-kpi__value.nc-carrier, .nc-column__num, .nc-live-tile .nc-carrier, .nc-state__word) {
+            animation: nc-blip calc(640ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='blip'][data-nc-phase='in'] .nc-lamp--state {
+            animation: nc-dot-flare calc(640ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='blip'][data-nc-phase='in'] .nc-spark polyline {
+            animation: nc-line-flare calc(640ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .kp-kpi__value.nc-carrier {
+            animation: nc-blip calc(450ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .nc-lamp--state {
+            animation: nc-dot-flare calc(500ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .nc-spark polyline {
+            animation: nc-line-flare calc(700ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .nc-column__num {
+            animation: nc-invert calc(700ms * var(--nc-slow, 1)) steps(1, end);
+        }
+
+        .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .nc-live-tile {
+            animation: nc-ring-today calc(500ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        /* 10 Loading, as today: each picture its own clock. */
+        .nc-scene[data-nc-loading='mix'] .kp-kpi .nc-load__today {
+            animation: nc-lamp-blink calc(1000ms * var(--nc-slow, 1)) steps(1) infinite;
+        }
+
+        .nc-scene[data-nc-loading='mix'] .nc-table .nc-load__today {
+            animation: nc-trace-roll calc(1600ms * var(--nc-slow, 1)) linear infinite;
+        }
+
+        .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load__today {
+            animation: nc-band calc(1300ms * var(--nc-slow, 1)) linear infinite;
+        }
+
+        .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load__today {
+            animation: nc-pulse calc(1800ms * var(--nc-slow, 1)) ease-in-out infinite;
+        }
+
+        .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load__today {
+            animation: nc-band calc(2000ms * var(--nc-slow, 1)) steps(16) infinite;
+        }
+
+        .nc-scene[data-nc-loading='mix'] .nc-day::before {
+            animation: nc-key-scan calc(1400ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * 200ms * var(--nc-slow, 1)) infinite;
+        }
+
+        /* 11 The spinner. */
+        .nc-scene[data-nc-spinner='reel'] .nc-spin::before {
+            animation: kp-sig-nostromo-no-reel calc(1600ms * var(--nc-slow, 1)) steps(20, end) infinite;
+        }
+
+        .nc-scene[data-nc-spinner='lamps'] .nc-spin__ring {
+            animation: nc-ring-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) infinite;
+        }
+
+        .nc-scene[data-nc-spinner='ping'] .nc-spin__ring {
+            animation: nc-ping calc(1600ms * var(--nc-slow, 1)) steps(20, end) infinite;
+        }
+
+        /* 12 Leaving and arriving. */
+        .nc-scene[data-nc-leave='off'][data-nc-phase='in'] .nc-leaver {
+            animation: nc-off calc(480ms * var(--nc-slow, 1)) linear reverse both;
+        }
+
+        .nc-scene[data-nc-leave='off'][data-nc-phase='out'] .nc-leaver {
+            animation: nc-off calc(480ms * var(--nc-slow, 1)) linear both;
+        }
+
+        .nc-scene[data-nc-leave='flare'][data-nc-phase='in'] .nc-leaver {
+            animation: nc-flare calc(480ms * var(--nc-slow, 1)) ease-in reverse both;
+        }
+
+        .nc-scene[data-nc-leave='flare'][data-nc-phase='out'] .nc-leaver {
+            animation: nc-flare calc(480ms * var(--nc-slow, 1)) ease-in both;
+        }
+
+        .nc-scene[data-nc-leave='scroll'][data-nc-phase='in'] .nc-leaver {
+            animation: nc-scroll calc(480ms * var(--nc-slow, 1)) steps(4, end) reverse both;
+        }
+
+        .nc-scene[data-nc-leave='scroll'][data-nc-phase='out'] .nc-leaver {
+            animation: nc-scroll calc(480ms * var(--nc-slow, 1)) steps(4, end) both;
+        }
+
+        /* 16 The press, by the clock. */
+        .nc-scene[data-nc-press]:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-button.nc-press::before {
+            opacity: 1;
+        }
+
+        .nc-scene[data-nc-press]:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-button--primary.nc-press {
+            border-color: var(--primary-active);
+            background: var(--primary-active);
+        }
+
+        .nc-scene[data-nc-press='well']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press {
+            box-shadow: var(--kp-sig-no-well);
+        }
+
+        .nc-scene[data-nc-press='well']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press:not(.kp-button--primary) {
+            background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        }
+
+        .nc-scene[data-nc-press='well']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press .nc-lamp,
+        .nc-scene[data-nc-press='drop']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press .nc-lamp {
+            --nc-lamp: 100%;
+        }
+
+        .nc-scene:is([data-nc-press='well'], [data-nc-press='drop']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press .nc-key__led {
+            box-shadow:
+                0 0 0 1px var(--foreground),
+                0 0 7px 1px var(--accent);
+        }
+
+        .nc-scene[data-nc-press='drop']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-press {
+            translate: 0 1px;
+        }
+
+        .nc-scene[data-nc-press='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-key.nc-press {
+            translate: 0 2px;
+            box-shadow: none;
+        }
+
+        .nc-scene[data-nc-press='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-key.nc-press .nc-key__led {
+            box-shadow:
+                0 0 0 1px var(--foreground),
+                0 0 7px 1px var(--accent);
+        }
+
+        .nc-scene[data-nc-press='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-day.nc-press {
+            translate: 1px 2px;
+        }
+
+        .nc-scene[data-nc-press='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-kpi.nc-press {
+            background: var(--secondary);
+        }
+
+        .nc-scene[data-nc-press='mix']:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-menu__item.nc-press {
+            background: hsl(from var(--accent) h s l / 0.2);
+        }
+
+        .nc-scene[data-nc-press] :is(.nc-press, .nc-press::before) {
+            transition:
+                box-shadow calc(160ms * var(--nc-slow, 1)) var(--nc-f2),
+                translate calc(160ms * var(--nc-slow, 1)) var(--nc-f2),
+                opacity calc(160ms * var(--nc-slow, 1)) var(--nc-f2);
+        }
+
+        .nc-scene[data-nc-press='mix'] :is(.nc-press, .nc-press::before) {
+            transition: opacity calc(160ms * var(--nc-slow, 1)) var(--nc-smooth);
+        }
+    }
+
+    /* ── The keyframes ───────────────────────────────────────────────── */
+
+    @keyframes nc-track {
+        from {
+            inset-inline-start: 2px;
+        }
+    }
+
+    /* The tube strikes on: a bright line through the middle opens to the
+       whole panel, overbright at first. */
+    @keyframes nc-strike {
+        from {
+            clip-path: inset(calc(50% - 1px) -2px calc(50% - 1px) -2px);
+            filter: brightness(1.7);
+        }
+
+        to {
+            clip-path: inset(-8px -8px -8px -8px);
+            filter: none;
+        }
+    }
+
+    /* Switched off: to the middle line (3 frames), the line to a dot (2),
+       the dot out (1): six frames of 80 ms, 480 ms. */
+    @keyframes nc-off {
+        0% {
+            clip-path: inset(-8px -8px -8px -8px);
+            filter: none;
+            opacity: 1;
+            animation-timing-function: steps(3, end);
+        }
+
+        50% {
+            clip-path: inset(calc(50% - 1px) -2px calc(50% - 1px) -2px);
+            filter: brightness(1.8);
+            opacity: 1;
+            animation-timing-function: steps(2, end);
+        }
+
+        83.33% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 2px) calc(50% - 1px) calc(50% - 2px));
+            filter: brightness(2);
+            opacity: 1;
+            animation-timing-function: steps(1, end);
+        }
+
+        100% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 2px) calc(50% - 1px) calc(50% - 2px));
+            filter: brightness(2);
+            opacity: 0;
+        }
+    }
+
+    @keyframes nc-print {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(-4px -4px -4px -4px);
+        }
+    }
+
+    @keyframes nc-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes nc-ping-open {
+        from {
+            clip-path: circle(0 at 0 0);
+        }
+
+        to {
+            clip-path: circle(150% at 0 0);
+        }
+    }
+
+    @keyframes nc-cut {
+        from {
+            clip-path: inset(0 0 100% 0);
+            opacity: 0;
+        }
+
+        to {
+            clip-path: inset(-8px -8px -8px -8px);
+            opacity: 1;
+        }
+    }
+
+    @keyframes nc-led-on {
+        from,
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes nc-led-fade {
+        0%,
+        100% {
+            opacity: 0;
+        }
+
+        25%,
+        75% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes nc-state-lamp {
+        from,
+        to {
+            box-shadow:
+                0 0 0 2px var(--card),
+                0 0 0 3px currentColor,
+                0 0 8px 2px currentColor;
+        }
+    }
+
+    /* The lamp bank: five patterns, one every fifth of the cycle. */
+    @keyframes nc-compute {
+        0% {
+            background-position-x: 0;
+        }
+
+        20% {
+            background-position-x: calc(var(--nc-pitch) * 6);
+        }
+
+        40% {
+            background-position-x: calc(var(--nc-pitch) * 3);
+        }
+
+        60% {
+            background-position-x: calc(var(--nc-pitch) * 13);
+        }
+
+        80%,
+        100% {
+            background-position-x: calc(var(--nc-pitch) * 9);
+        }
+    }
+
+    @keyframes nc-scan {
+        from {
+            background-position-x: calc(var(--nc-pitch) * -3);
+        }
+
+        to {
+            background-position-x: calc(var(--nc-pitch) * 60);
+        }
+    }
+
+    /* A day's lamp in the bank: on in two of the five patterns. */
+    @keyframes nc-day-compute {
+        0%,
+        19.99% {
+            opacity: 1;
+        }
+
+        20%,
+        59.99% {
+            opacity: 0;
+        }
+
+        60%,
+        79.99% {
+            opacity: 1;
+        }
+
+        80%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes nc-day-scan {
+        0%,
+        19.99% {
+            opacity: 1;
+        }
+
+        20%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes nc-ring-compute {
+        0% {
+            --nc-a: 0deg;
+        }
+
+        20% {
+            --nc-a: 135deg;
+        }
+
+        40% {
+            --nc-a: 270deg;
+        }
+
+        60% {
+            --nc-a: 45deg;
+        }
+
+        80%,
+        100% {
+            --nc-a: 180deg;
+        }
+    }
+
+    @keyframes nc-ping {
+        from {
+            opacity: 1;
+            scale: 0.1;
+        }
+
+        to {
+            opacity: 0;
+            scale: 0.9;
+        }
+    }
+
+    /* The leave as today: overbright, blurred, faded in place. */
+    @keyframes nc-flare {
+        35% {
+            filter: brightness(1.8) blur(1px);
+        }
+
+        to {
+            filter: brightness(1.2) blur(3px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes nc-scroll {
+        from {
+            clip-path: inset(-8px -8px -8px -8px);
+            translate: 0 0;
+        }
+
+        to {
+            clip-path: inset(100% -8px -8px -8px);
+            translate: 0 -100%;
+        }
+    }
+
+    /* As today. */
+    @keyframes nc-drop {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes nc-pinged {
+        from {
+            transform: scale(0.9);
+        }
+    }
+
+    @keyframes nc-warm-today {
+        0%,
+        50% {
+            transform: scaleY(0.02);
+        }
+
+        75% {
+            transform: scaleY(1.04);
+        }
+
+        100% {
+            transform: scaleY(1);
+        }
+    }
+
+    @keyframes nc-crt-today {
+        from {
+            scale: 1 0.04;
+        }
+    }
+
+    @keyframes nc-roll-today {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes nc-flicker-today {
+        0% {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        15% {
+            clip-path: inset(-30% -5%);
+        }
+
+        25% {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        45%,
+        100% {
+            clip-path: inset(-30% -5%);
+        }
+    }
+
+    @keyframes nc-blip {
+        0% {
+            text-shadow: 0 0 0 transparent;
+        }
+
+        35% {
+            text-shadow: 0 0 9px color-mix(in oklch, var(--primary) 85%, transparent);
+        }
+
+        100% {
+            text-shadow: 0 0 0 transparent;
+        }
+    }
+
+    @keyframes nc-dot-flare {
+        40% {
+            filter: brightness(1.7);
+        }
+    }
+
+    @keyframes nc-line-flare {
+        30% {
+            filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor);
+            stroke-width: 3.2;
+        }
+    }
+
+    @keyframes nc-invert {
+        from,
+        to {
+            background: var(--foreground);
+            color: var(--card);
+        }
+    }
+
+    @keyframes nc-ring-today {
+        0%,
+        100% {
+            box-shadow: none;
+        }
+
+        40% {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+    }
+
+    @keyframes nc-jolt {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+    }
+
+    @keyframes nc-lamp-blink {
+        0%,
+        49% {
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            opacity: 0.25;
+        }
+    }
+
+    @keyframes nc-trace-roll {
+        from {
+            inset-block-start: 0;
+        }
+
+        to {
+            inset-block-start: calc(100% - 2px);
+        }
+    }
+
+    @keyframes nc-band {
+        from {
+            background-position-x: -40%;
+        }
+
+        to {
+            background-position-x: 140%;
+        }
+    }
+
+    @keyframes nc-pulse {
+        0%,
+        100% {
+            opacity: 0.5;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes nc-key-scan {
+        0% {
+            background: var(--accent);
+            box-shadow: 0 0 6px 1px var(--accent);
+        }
+
+        15%,
+        100% {
+            background: hsl(from var(--accent) h s l / 0.3);
+            box-shadow: none;
+        }
+    }
+}

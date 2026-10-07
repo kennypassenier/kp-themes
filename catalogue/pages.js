@@ -78,6 +78,8 @@ export const PAGES = [
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 02:54: what makes forest forest, the titanium way (the analysis in themes/forest/CHARACTER.md), seventeen rules of its grammar as questions, each option a live scene, the recommendation first; the first theme of the one-by-one series.
             { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
+            // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
+            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
         ],
     },
     {
