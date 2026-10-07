@@ -337,7 +337,7 @@ The names of the three options of every aspect; each option's description is in 
 |               | While loading   | The stamp              | The drop                     | The hammer            |
 |               | Arrival         | At once                | Slammed                      | Shoved in             |
 |               | Tone and change | The slab               | The sticker sheet            | The warning poster    |
-|               | Live update     | Redrawn                | Kicked                       | Shoved                |
+|               | Live update     | Slammed onto its yellow offset                | Kicked                       | Shoved                |
 | deco          | Shape           | The gilt frame         | The marquee                  | The skyscraper        |
 |               | While loading   | The gilt frame         | The marquee                  | The sunburst opens    |
 |               | Arrival         | At once                | The curtain rises            | The marquee lights    |

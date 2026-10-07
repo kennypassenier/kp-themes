@@ -159,8 +159,8 @@ spec is in `demo.js` (`IDEAS`) and in the review dialog.
 |               | Failed state  | The red sky            | The cold ember          | The warning horizon       |
 |               | On a phone    | The flat sun           | The flat embers         | The flat horizon          |
 | brutalism     | Shape         | The slab               | The sticker sheet       | The poster block          |
-|               | While loading | The stamp              | The hammer              | The drop                  |
-|               | Arrival       | At once                | Slammed                 | Shoved in                 |
+|               | While loading | The stamp              | The hoisted lintel      | The drop                  |
+|               | Arrival       | At once                | Dropped onto its footprint                 | Shoved in                 |
 |               | Failed state  | The warning poster     | The hazard slab         | The stamped fault         |
 |               | On a phone    | The flat slab          | The flat sheet          | The flat poster           |
 | deco          | Shape         | The gilt frame         | The marquee             | The skyscraper            |

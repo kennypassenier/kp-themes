@@ -932,8 +932,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The bar stamps',
-                text: 'A black bar stamps down at the foot of every column, hard.',
+                name: 'The hoisted lintel',
+                text: 'At the foot of every column the reading’s place is a well with a lintel hoisted in it on two cables: four hard lifts, held, let go to fall free and left to rest.',
             },
             {
                 name: 'The accent stamps',
@@ -950,8 +950,8 @@ const IDEAS = {
                 text: 'Every figure is stamped in from larger in two hard steps, column after column.',
             },
             {
-                name: 'Slammed down',
-                text: 'Each column slams down from above in two hard steps.',
+                name: 'Dropped onto its footprint',
+                text: 'Each column falls from up-left onto its footprint, 100 ms after the one before, 300 ms on the fall curve.',
             },
             {
                 name: 'Shoved in',
@@ -965,7 +965,7 @@ const IDEAS = {
             },
             {
                 name: 'The hard shadow',
-                text: 'The change on a square plate with a hard black shadow, heavy, + or −.',
+                text: 'The change on a small square slab on a 3px hard black shadow, heavy, + or −.',
             },
             {
                 name: 'The arrow block',
@@ -978,8 +978,8 @@ const IDEAS = {
                 text: 'The new figure is stamped in from larger in two hard steps.',
             },
             {
-                name: 'Inverted',
-                text: 'A figure that changed shows reversed out of black for a moment.',
+                name: 'Slammed onto its yellow offset',
+                text: 'A figure that changed is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.',
             },
             {
                 name: 'Shaken',

@@ -18,7 +18,7 @@ fix brutalism's grammar.
 **Already decided, not asked again.** Hard Copy (2026-09-08), the thing names itself (scope-12, 2026-09-11), the alarm (scope-94), the
 signature (2026-10-03, the dialog's drop at a quarter speed), the leave Kenny picked (slammed out to the left in two hard steps,
 2026-10-04), the reverse-close pairing, and every component pick of the character round (the trend's corrected picks of 2026-10-07: _The
-hazard band_, _The pour_, _Cast_). Brutalism has **no family picks** (research/families/VERDICTS.md lists it as open), so the grammar is
+hazard band_, _The pour_ (since 2026-10-07 23:44 the lintel hoisted), _Cast_). Brutalism has **no family picks** (research/families/VERDICTS.md lists it as open), so the grammar is
 read from the component picks themselves, and from Kenny's word on the graph's loading that brutalism must be raw, not decorative. Several
 picks, drawn as they are, are another theme's picture (the sticker sheets are pastel's, two hard steps are terminal's and nostromo's way
 of moving, the slam to the left is grotesk's leave, the inversion is high-contrast's, the hammer and the stamp are formal's seal); each is
@@ -83,7 +83,7 @@ measured against titanium's decided grammar, forest's, nostromo's, cyberpunk's, 
 registers and the families' picks (CHARACTER.md §7). Seven first ideas overlapped and were replaced by a brutalism-own one: hard steps
 (terminal's, nostromo's, cyberpunk's) by gravity; drops straight down and shoves from the side by the shadow's diagonal; the two-step slam
 of a menu by the drop onto a waiting footprint; the inversion and the at-once update (high-contrast's, formal's) by the headline's slam;
-the hammer and the stamp (formal's seal) by the pour; the slam to the left (grotesk's leave) by the lift off the footprint; mono capitals
+the hammer and the stamp (formal's seal) by the pour (decided in the end: the lintel hoisted, round 2 update 1); the slam to the left (grotesk's leave) by the lift off the footprint; mono capitals
 for labels by Space Grotesk. Each overlap stays on the page as an option, named after the theme it belongs to.
 
 **Compared before it was handed over** (2026-10-07, Firefox, 1600 px wide, each row's options side by side at rest and the motion rows

@@ -268,11 +268,11 @@ const IDEAS = {
         tone: [
             { name: 'The block colour', text: 'Only the square dot takes the state’s colour at full strength; the word stays black.' },
             { name: 'The slab colour', text: 'The slab’s fill takes the state’s colour, the word kept black or white on it for contrast.' },
-            { name: 'The hazard sticker', text: 'A warning or failed state turns the sticker’s outline thicker in its colour.' },
+            { name: 'The hazard sticker', text: 'A pending or failed state is taped off: the word is printed on the state’s plate, framed in an ink line on a 3px hard shadow; a good or muted one is framed in ink.' },
         ],
         change: [
             { name: 'A hard slam', text: 'The block dot snaps larger once and back, in a single hard jump.' },
-            { name: 'The slab shifts', text: 'The slab’s shadow jumps to a new offset once, in a hard jump.' },
+            { name: 'The slab shifts', text: 'The word is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.' },
             { name: 'Restamped', text: 'The sticker tips to a new angle once, in a hard jump.' },
         ],
     },

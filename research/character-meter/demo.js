@@ -929,8 +929,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Thrown on',
-                text: 'The blocks drop in one at a time.',
+                name: 'The hoisted lintel',
+                text: 'A lintel hangs on two cables in the track’s own well: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.',
             },
             {
                 name: 'Slammed',
@@ -943,8 +943,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Thrown on',
-                text: 'The share drops in from above speeding up until it lands.',
+                name: 'Dropped onto its footprint',
+                text: 'The share falls into its groove from up-left, 300 ms on the fall curve.',
             },
             {
                 name: 'Slammed',
@@ -965,8 +965,8 @@ const IDEAS = {
                 text: 'A new tone knocks the meter up and back once, in 2 hard steps.',
             },
             {
-                name: 'Block by block',
-                text: 'A new tone swells the meter once, in 2 hard steps.',
+                name: 'Taped off',
+                text: 'A warning or a failure is taped off: the share becomes a band of 45 degree hazard stripes in the tone’s paint and the ink; it never swells.',
             },
         ],
         mark: [
@@ -980,7 +980,7 @@ const IDEAS = {
             },
             {
                 name: 'Block by block',
-                text: 'The mark moves in 2 hard steps; a mark past the end leans over the end, ■ beside it.',
+                text: 'The mark moves in three counted steps, both jumps included, so its way back is its way there turned around; a mark past the end leans over the end, ■ beside it.',
             },
         ],
     },

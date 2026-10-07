@@ -160,8 +160,8 @@ js/calendar.js is not changed.
 |               | Tones and today       | The low sun: its tones and today                | The embers: its tones and today               | The ember line        |
 |               | The picked day        | The low sun: its pick                           | The embers: its pick                          | The halo              |
 | brutalism     | Shape                 | The slab                                        | The sticker sheet                             | The concrete block    |
-|               | While loading         | The slab: its loading                           | The sticker sheet: its loading                | The jackhammer        |
-|               | How the month arrives | Slammed down                                    | Shoved in                                     | Dropped               |
+|               | While loading         | The slab: its loading (a lintel hoisted)                           | The sticker sheet: its loading                | The jackhammer        |
+|               | How the month arrives | Dropped onto its footprint                                    | Shoved in                                     | Dropped               |
 |               | Tones and today       | The slab: its tones and today                   | The sticker sheet: its tones and today        | The colour block      |
 |               | The picked day        | The slab: its pick                              | The sticker sheet: its pick                   | The fat frame         |
 | deco          | Shape                 | The gilt calendar                               | The marquee                                   | The arched window     |

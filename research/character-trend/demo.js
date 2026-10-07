@@ -978,8 +978,8 @@ const IDEAS = {
         ],
         live: [
             {
-                name: 'Redrawn',
-                text: 'A new reading redraws the line in place at once, as both characters had it.',
+                name: 'Slammed onto its yellow offset',
+                text: 'A new reading is drawn in place and slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.',
             },
             {
                 name: 'Kicked',

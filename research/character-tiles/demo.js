@@ -452,32 +452,32 @@ const IDEAS = {
     brutalism: {
         shape: [
             { name: 'The slab', text: 'A heavy black frame with a hard offset shadow, the mark a square block.' },
-            { name: 'The sticker sheet', text: 'A lavender sheet, the mark an askew sticker in a black outline.' },
+            { name: 'The sticker sheet', text: 'A white slab on a 6px hard shadow, the mark a small square slab on its lavender plate, no tilt.' },
             { name: 'The poster block', text: 'A 3px frame with a hard offset shadow, the mark a hatched block.' },
         ],
         loading: [
-            { name: 'The stamp', text: 'A black block is stamped onto the body, lifted and stamped again.' },
+            { name: 'The hoisted lintel', text: 'A lintel hangs on two cables in a well at the tile’s foot: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.' },
             { name: 'The drop', text: 'A black block drops onto the body and lands hard, again and again.' },
             { name: 'The hammer', text: 'A black block hammers on three spots along the body in turn.' },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
             { name: 'Slammed', text: 'The tile drops into place from above, in hard steps.' },
-            { name: 'Shoved in', text: 'Tile after tile slides in slanted, easing in and out.' },
+            { name: 'Dropped onto its footprint', text: 'Tile after tile falls from up-left onto its footprint, 100 ms after the one before, 300 ms on the fall curve.' },
         ],
         tone: [
-            { name: 'The hard-shadow block', text: 'A warning or destructive tile shows the note on a block with the hard shadow.' },
+            { name: 'The hard-shadow block', text: 'The mark is painted in its tone under a 2px ink line and a 3px ink shadow, never a coloured shadow; a warning or destructive tile shows the note on that block.' },
             { name: 'The sticker', text: 'A warning or destructive tile shows the note on an askew sticker in a black outline.' },
             { name: 'The warning poster', text: 'A warning or destructive tile prints its note on the tone’s block, framed in ink.' },
         ],
         hover: [
-            { name: 'The shadow grows', text: 'The offset shadow grows harder; Open becomes a solid block; focus doubles the frame to 4px.' },
+            { name: 'The shadow grows', text: 'The tile inverts, nothing moves; Open is a brutalism ghost button, inverted, with the two-channel ring lifted on focus and driven in when pressed.' },
             { name: 'The sticker peels', text: 'The sticker tilts further; Open gains a black outline; focus adds a hatched ring.' },
             { name: 'The slab tips', text: 'The whole tile tilts a degree; Open underlines heavily; focus frames it twice.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Kicked', text: 'The tile jolts once, as a needle does, in hard steps.' },
+            { name: 'Slammed onto its yellow offset', text: 'A changed tile is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.' },
             { name: 'Shoved', text: 'The footer’s timestamp steps forward, in hard steps.' },
         ],
     },

@@ -146,10 +146,10 @@ the name below is `IDEAS[theme][aspect][n].name`.
 |               | Hover, focus, press | The ember glows        | The horizon brightens        | The sun flares       |
 |               | Live update         | Redrawn                | A flare of sun               | The day moves on     |
 | brutalism     | Shape               | The slab               | The sticker sheet            | The warning poster   |
-|               | While loading       | The stamp              | The drop                     | The hammer           |
+|               | While loading       | The stamp              | The drop                     | The hoisted lintel           |
 |               | Tone and change     | The slab               | The sticker sheet            | The warning poster   |
 |               | Hover, focus, press | Slammed                | The sticker peels            | The poster shakes    |
-|               | Live update         | Redrawn                | Kicked                       | Shoved               |
+|               | Live update         | Slammed onto its yellow offset                | Kicked                       | Shoved               |
 | deco          | Shape               | The gilt frame         | The marquee                  | The gilt notice      |
 |               | While loading       | The gilt frame         | The marquee                  | The sunburst opens   |
 |               | Tone and change     | The gilt frame         | The marquee                  | The gilt notice      |

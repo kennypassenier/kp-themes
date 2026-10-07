@@ -755,7 +755,7 @@ const NEW = {
             {
                 key: 'br1',
                 name: 'The poster',
-                text: 'The plot printed on yellow stock in a 4px black frame with a hard black shadow, a heavy dotted grid, figures in Archivo Black; the first line black, the others red and violet, four pixels wide with square ends and no areas; the legend is chunky white boxes with a hard shadow that press in, black with yellow letters when pressed.',
+                text: 'The plot printed on yellow stock in a 4px black frame with a hard black shadow, a heavy dotted grid, figures in Archivo Black; the first line black, the others red and violet, four pixels wide with square ends and no areas; the legend keys are small buttons, a 2px black line on a 3px hard shadow: pointed at they invert, pressed they are driven onto their footprint on the yellow plate.',
             },
             {
                 key: 'br2',
@@ -916,6 +916,22 @@ const OPTIONS = Object.fromEntries(
         // are not written yet, round 2's stay in their place).
         // An aspect takes the newest round's options it has: round 4's (six),
         // else round 3's (three); a settled number counts in that list.
+        // Brutalism's decided arrival and update, as its grammar now draws them
+        // (themes/brutalism/CHARACTER.md, "Applied 2026-10-07").
+        if (theme === 'brutalism') {
+            for (const opt of o.arrival) {
+                if (opt.key === 'drop') {
+                    opt.name = 'Dropped onto its footprint';
+                    opt.text = 'The series falls from up-left onto its footprint along the shadow’s diagonal, 300 ms on the fall curve, no fade.';
+                }
+            }
+            for (const opt of o.update) {
+                if (opt.key === 'none') {
+                    opt.name = 'Slammed onto its yellow offset';
+                    opt.text = 'The new reading is drawn at once and slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.';
+                }
+            }
+        }
         for (const { id } of ASPECTS) {
             if ((R4[theme]?.[id]?.length ?? 0) >= 3) o[id] = /** @type {Option[]} */ (R4[theme][id]);
             else if (R3[theme]?.[id]?.length === 3) o[id] = /** @type {Option[]} */ (R3[theme][id]);

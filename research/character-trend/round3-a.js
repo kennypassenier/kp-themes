@@ -10,7 +10,7 @@ export default {
             {
                 key: 'r3-br-shape-1',
                 name: 'The hazard band',
-                text: 'A thick black frame with a hazard stripe laid along the card’s foot like warning tape over wet concrete; the number set huge and heavy, the line thick and square-cut, the plot a plain cast well.',
+                text: 'A thick black frame, its foot ruled off by the six-pixel ink bar (hazard tape only where the tile carries a tone); the number set huge and heavy, the line thick and square-cut, the plot a plain cast well.',
             },
             {
                 key: 'r3-br-shape-2',
@@ -26,8 +26,8 @@ export default {
         loading: [
             {
                 key: 'r3-br-load-1',
-                name: 'The pour',
-                text: 'Concrete fills the plot from the floor up, rising almost to the brim and settling back, again and again; standing still it shows a half-poured slab.',
+                name: 'The hoisted lintel',
+                text: 'A lintel hangs on two cables in the plot’s own well: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s; standing still the beam rests on the floor.',
             },
             {
                 key: 'r3-br-load-2',

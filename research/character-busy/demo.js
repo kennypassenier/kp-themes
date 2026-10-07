@@ -965,8 +965,8 @@ const IDEAS = {
                 text: 'A heavy mark stamps down onto the panel and lifts, hard, again and again.',
             },
             {
-                name: 'The hammer',
-                text: 'The panel’s hard shadow jumps a few pixels and snaps back, hard, looping.',
+                name: 'The hoisted lintel',
+                text: 'A beam as wide as its well hangs on two cables in a well at the panel’s foot: it is hoisted in four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.',
             },
             {
                 name: 'The drop',
@@ -979,8 +979,8 @@ const IDEAS = {
                 text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
             },
             {
-                name: 'Slammed',
-                text: 'The panel slams in from a smaller size to full size in one hard step, no easing.',
+                name: 'Dropped onto its footprint',
+                text: 'The panel falls 1.5 rem from up-left onto its footprint in 300 ms on the fall curve, its shadow on the page from the first frame; no fade, no scale.',
             },
             {
                 name: 'Shoved in',
@@ -994,7 +994,7 @@ const IDEAS = {
             },
             {
                 name: 'The hazard slab',
-                text: 'The alert’s hard shadow turns to the destructive colour, shape kept.',
+                text: 'The failed alert is a red slab in a 3px ink line on a 6px ink shadow, dropped onto its footprint from up-left and taped off along its foot with a band of 45 degree hazard stripes.',
             },
             {
                 name: 'The stamped fault',

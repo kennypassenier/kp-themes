@@ -29544,6 +29544,7 @@
         /* Nothing is translucent [G7, proposal-29]: a busy part says so with
            the lintel (G10), not with a dimmed ink. */
         --kp-busy-opacity: 1;
+        --kp-datatable-busy-opacity: 1;
     }
 
     /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
@@ -29973,6 +29974,10 @@
         border-color: transparent;
         box-shadow: none;
         color: inherit;
+        /* The cross is a label: 700, and big enough to read at a glance. */
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
     }
 
     /* A button inside a toast or an alert is brutalism's own [G17]: pointed
@@ -31613,7 +31618,7 @@
 
     /* A small part takes a small well, so its words stay readable above it. */
     [data-theme='brutalism'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
-        --kp-sig-br-well: 0.5rem;
+        --kp-sig-br-well: 0.75rem;
     }
 
     /* A button is one line high and its label fills it: its well hangs under

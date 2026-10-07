@@ -100,8 +100,8 @@ export default {
             },
             {
                 key: 'r2-br-openclose-2',
-                name: 'It is cast in one pour',
-                text: 'The panel appears at the end edge already at a short distance out, then advances the rest of the way in a single hard, fast, linear push with no overshoot, as if poured and set in one go; closing pulls it back out the same way, reversed. Echoes the graph’s pick, “cast in one pour”, and the trend’s pick, “Cast”.',
+                name: 'It is dropped onto its footprint',
+                text: 'The panel is dropped onto its footprint from up-left, 300 ms on the fall curve, its shadow on the page from the first frame, no slide from the edge, no fade; closing is the same drop played backwards and at the top it is gone in one cut.',
             },
             {
                 key: 'r2-br-openclose-3',
@@ -112,8 +112,8 @@ export default {
         highlight: [
             {
                 key: 'r2-br-highlight-1',
-                name: 'The rivet ring',
-                text: 'A thick black ring with small square tick marks at each corner (rivet heads) surrounds the target, its own small hard offset shadow; the stage behind flattens to a true dark overlay (the real foreground at high alpha, not a locked mid-grey). Echoes the graph’s picked node, “Boxed in black ink”, and the chart’s event dots, “Bolts”.',
+                name: 'The ink ring',
+                text: 'A thick black ring with a pixel outline surrounds the target, its own small hard offset shadow; the stage behind is a solid ink veil, nothing translucent. Echoes the graph’s picked node, “Boxed in black ink”.',
             },
             {
                 key: 'r2-br-highlight-2',

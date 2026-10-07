@@ -94,7 +94,7 @@ export default {
             {
                 key: 'r2-br-shape-2',
                 name: 'The stacked blocks',
-                text: 'Echoes the stacked blocks pick: a flat, heavy veil behind a square, borderless plate knocked out in the foreground and backed by two more offset slabs stacked behind it. Differs from the warning poster and the sticker sheet by stacking solid slabs instead of framing or outlining one plate.',
+                text: 'A flat, heavy veil behind a square, borderless ink plate with paper words, standing on one 6px hard shadow. Differs from the warning poster and the sticker sheet by being a single plain slab instead of a framed or tilted plate.',
             },
             {
                 key: 'r2-br-shape-3',

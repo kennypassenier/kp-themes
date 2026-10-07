@@ -501,7 +501,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The slab',
-                text: 'A heavy black frame with a hard offset shadow, the title in heavy capitals, the actions as blocks with the same hard shadow.',
+                text: 'A heavy black frame with a hard offset shadow, the title in heavy capitals, the actions brutalism’s own buttons: a 3px line on a 6px hard shadow.',
             },
             { name: 'The sticker sheet', text: 'A lavender sheet: the title huge and heavy, the actions as askew stickers in a black outline.' },
             {
@@ -511,8 +511,8 @@ const IDEAS = {
         ],
         menu: [
             {
-                name: 'Slammed',
-                text: 'The menu drops into place from above in two hard steps, slamming flat; it slams back up the same way in reverse to close.',
+                name: 'Dropped onto its footprint',
+                text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, no clip, no steps; closing is that drop played backwards.',
             },
             { name: 'The drop', text: 'The menu drops onto the page and lands hard with a jolt; it is yanked back up the same way to close.' },
             {
@@ -522,8 +522,8 @@ const IDEAS = {
         ],
         interactive: [
             {
-                name: 'Kicked',
-                text: 'Hover kicks a button’s shadow out further, focus boxes it twice, press slams the block flat for the moment held.',
+                name: 'Inverted',
+                text: 'Hover inverts a button, ink and plate swapped, nothing moves; focus lifts it under the two-channel ring; press drives the block onto its footprint for the moment held.',
             },
             {
                 name: 'Shoved',

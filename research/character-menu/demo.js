@@ -601,7 +601,7 @@ const IDEAS = {
     brutalism: {
         shape: [
             { name: 'The slab', text: 'A heavy black frame with a hard offset shadow, headings in heavy capitals, a thick rule between groups.' },
-            { name: 'The sticker sheet', text: 'A lavender plate with entries in a heavy black outline, headings huge and tight.' },
+            { name: 'The sticker sheet', text: 'A white slab with the entries flat on it, no outlines, headings in Archivo Black huge and tight.' },
             { name: 'The poster block', text: 'A 3px frame with a hard offset shadow in the accent, the plate hatched in ink behind the groups.' },
         ],
         loading: [
@@ -610,14 +610,14 @@ const IDEAS = {
             { name: 'The hammer', text: 'A black block hammers three places along the loading row in turn.' },
         ],
         open: [
-            { name: 'Slammed', text: 'The menu drops into place from above in two hard steps, and is yanked back up in two steps to close.' },
+            { name: 'Dropped onto its footprint', text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, and closes as that drop played backwards.' },
             { name: 'Shoved in', text: 'The menu is shoved in from the side in one hard step, and shoved back out the same step to close.' },
             { name: 'Stamped', text: 'The menu stamps down flat onto the button in one hard step, and is lifted off in one step to close.' },
         ],
         tone: [
             {
                 name: 'The warning poster',
-                text: 'The destructive entry prints its label on a block with a hard shadow, framed in ink; the disabled reason sits boxed plainly.',
+                text: 'The destructive entry prints its label on a block with a hard shadow, framed in ink; the disabled reason is boxed by a 2px line.',
             },
             {
                 name: 'The askew sticker',
@@ -629,7 +629,7 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'Kicked', text: 'A hovered or focused entry jolts once sideways in a hard step; a press holds it shoved over.' },
+            { name: 'Inverted', text: 'A hovered entry inverts, nothing moves; a focused one is the yellow plate under the inner ring; a pressed one takes the active plate.' },
             { name: 'The block drops', text: 'A hovered or focused entry’s shadow drops harder; a press flattens the shadow to nothing.' },
             { name: 'The stamp presses', text: 'A hovered or focused entry’s frame thickens by a hard step; a press stamps it down flat.' },
         ],

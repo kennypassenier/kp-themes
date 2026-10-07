@@ -36,8 +36,8 @@ export default {
             },
             {
                 key: 'r2-bru-load-5',
-                name: 'The poster shadow slams',
-                text: 'The loading row’s own hard offset shadow slams flat and springs back out, as the poster block’s shadow and the open row’s Slammed.',
+                name: 'The hoisted lintel',
+                text: 'A lintel hangs on two cables in a well at the loading row’s foot: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.',
             },
             {
                 key: 'r2-bru-load-6',

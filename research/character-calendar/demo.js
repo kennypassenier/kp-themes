@@ -941,7 +941,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The slab',
-                text: 'Every day a slab in the 3px black line with the hard shadow, solid candy fills, the figure in the heavy display face.',
+                text: 'Every day a small slab: a 2px black line on a 3px hard shadow, solid candy fills, the figure in the heavy display face.',
             },
             {
                 name: 'The sticker sheet',
@@ -955,7 +955,7 @@ const IDEAS = {
         loading: [
             {
                 name: 'The slab: its loading',
-                text: 'Loading runs the tape through every slab.',
+                text: 'Loading hoists a lintel in every day: the beam hangs on two cables in the day’s own figure place and rises in four hard lifts, held, let go to fall and left to rest; the days of a week start 100 ms apart.',
             },
             {
                 name: 'The sticker sheet: its loading',
@@ -968,8 +968,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Slammed down',
-                text: 'Each block is slammed down with an overshoot, row by row.',
+                name: 'Dropped onto its footprint',
+                text: 'Each day falls from up-left onto its footprint, row by row, 300 ms on the fall curve, no overshoot.',
             },
             {
                 name: 'Shoved in',
@@ -983,7 +983,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The slab: its tones and today',
-                text: 'The picked day is pressed in, its shadow gone, and framed; today carries a strip of yellow-and-black tape across its top.',
+                text: 'Today is ruled off by a six-pixel ink bar along its top; the tape is kept for danger only.',
             },
             {
                 name: 'The sticker sheet: its tones and today',
@@ -1005,7 +1005,7 @@ const IDEAS = {
             },
             {
                 name: 'The fat frame',
-                text: 'A 5px black frame round the picked block; it lifts on hover; the count in brackets.',
+                text: 'The picked day is the yellow plate in a 5px black frame; pointing at a day inverts it, nothing moves; the count in brackets.',
             },
         ],
     },

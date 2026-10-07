@@ -962,7 +962,7 @@ const IDEAS = {
         card: [
             {
                 name: 'The stencilled tag',
-                text: 'A grey card with a heavy black border and a stencil-cut notch at one corner, bold condensed title, square foot.',
+                text: 'The tour card is a slab: a 3px black line on the 6px hard shadow, square, bold condensed title; the stencil notch is gone.',
             },
             {
                 name: 'The hazard card',
@@ -984,7 +984,7 @@ const IDEAS = {
             },
             {
                 name: 'The frame re-clamps',
-                text: 'The hazard frame’s border thickens briefly then snaps back to normal on the new target, a clamp tightening; the card’s text changes on the snap.',
+                text: 'The frame is lifted off its footprint and set down again on the new target, 300 ms: up on the lifting curve, down on the fall; the card’s text changes at the top.',
             },
         ],
     },

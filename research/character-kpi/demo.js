@@ -879,7 +879,7 @@ const IDEAS = {
                 name: 'The slab',
                 text: 'A concrete slab, a heavy black frame with a hard offset shadow, heavy capitals, the change as its own status plate.',
             },
-            { name: 'The sticker sheet', text: 'A lavender sticker sheet, the number huge and heavy, the change as its own status plate.' },
+            { name: 'The sticker sheet', text: 'A white slab in the 3px line on a 6px hard shadow, flat full paint, the number huge and heavy, the change as its own status plate.' },
             {
                 name: 'The warning poster',
                 text: 'A poster block, a 3px frame with a hard offset shadow in the accent, the change as its own status plate.',
@@ -895,8 +895,8 @@ const IDEAS = {
                 text: 'While the figure loads, a lavender block drops in from above the card and lands with a hard thud, again and again; it keeps moving until the reading is drawn.',
             },
             {
-                name: 'The hammer',
-                text: 'While the figure loads, a block hammers down at three places along the card in turn, left to right, then starts over; it keeps moving until the reading is drawn.',
+                name: 'The hoisted lintel',
+                text: 'While the figure loads, the reading’s place at the card’s foot is a well with a lintel hoisted in it on two cables: four hard lifts, held, let go to fall free and left to rest; it keeps going until the reading is drawn.',
             },
         ],
         tone: [
@@ -906,7 +906,7 @@ const IDEAS = {
             },
             {
                 name: 'The sticker sheet',
-                text: 'The change as an askew sticker in a black outline; a warning or destructive figure shows the note in the label on the tone’s plate.',
+                text: 'The change as a small square slab, no tilt; a warning or destructive figure prints its number on the tone’s plate framed in ink on a 3px shadow, and the card is taped off along its foot with 45 degree hazard stripes.',
             },
             {
                 name: 'The warning poster',
@@ -924,11 +924,11 @@ const IDEAS = {
             },
             {
                 name: 'The poster shakes',
-                text: 'As a link or a filter: a hard primary-coloured shadow appears on hover, a thick primary outline marks focus, and the tile slams flat against the card the instant it is pressed.',
+                text: 'As a link or a filter: the tile stands on its shadow; pointed at it inverts, nothing moves; focus lifts it under the two-channel ring; pressed it is driven onto its footprint.',
             },
         ],
         live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
+            { name: 'Slammed onto its yellow offset', text: 'A new reading: the number is slammed onto a yellow offset, three units of fall, twelve standing, struck off in one cut.' },
             {
                 name: 'Kicked',
                 text: 'A new reading: the number jolts straight up and lands, in two hard steps with no easing, as a needle hitting its stop.',

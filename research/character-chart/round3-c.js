@@ -22,17 +22,17 @@ export default {
             },
             {
                 key: 'r3c-bru-load-3',
-                name: 'The rivet gun',
+                name: 'The hoisted lintel',
                 ink: '--foreground',
                 ink2: '--primary-foreground',
-                text: 'Four square rivets sit in a row; a yellow strike mark jumps from one to the next in hard steps, then starts over.',
+                text: 'The plot is a block skeleton: a beam on two cables is hoisted in four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.',
             },
         ],
         tip: [
             {
                 key: 'r3c-bru-tip-1',
                 name: 'The warning plate',
-                text: 'A red plate with a hazard-striped corner, black 3px frame, bold white capitals for the time.',
+                text: 'A white slab in a 2px black line on a 3px hard shadow, the time in bold black capitals; the red plate and its hazard corner are gone, tape is for danger only.',
             },
             {
                 key: 'r3c-bru-tip-2',
