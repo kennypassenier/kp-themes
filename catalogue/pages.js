@@ -78,6 +78,8 @@ export const PAGES = [
         pages: [
             // Kenny's synthwave floor depth (2026-10-08): the package draws the floor under the page tube as a 3.5 rem band inside the header; the demo drew 8.5 rem. Four options on a real page, one to pick.
             { href: 'research/synthwave-floor/demo.html', label: "Synthwave's floor depth" },
+            // Kenny, 2026-10-08 00:40: all eighteen approved; one new question, the busy progress bar, in update 3 of the same demo.
+            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
@@ -93,8 +95,6 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
-            // Decided 2026-10-08 00:05: Kenny approved all eighteen of nostromo's grammar questions (research/nostromo-character/decided.json); applied to css/nostromo-register.css.
-            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Decided 2026-10-07 23:54: Kenny settled all eighteen questions of synthwave's grammar (research/synthwave-character/decided.json); ported into css/synthwave-register.css.
             { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave' },
             // Decided 2026-10-07 23:52: Kenny approved all eighteen cyberpunk character questions after two updates; Channel split for curve, opening and leave, Split edge for hover, Bars with a glitch copy for the spinner (research/cyberpunk-character/decided.json); applied in css/cyberpunk-register.css.

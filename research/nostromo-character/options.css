@@ -118,6 +118,42 @@
         --nc-checker: repeating-conic-gradient(var(--foreground) 0 25%, transparent 0 50%);
         /* The screen's scanlines: 1 px every 3 px. */
         --nc-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
+        /* The busy bar's lamps (update 3, option led): the cells of the meter
+           in Kenny's screenshot, 3 px on a 6 px pitch, and the bank's tile:
+           the lamp bank of round 2 (`.nc-bank`) recovered, its tile made 37
+           cells long with 11 lit at no regular spacing (it was 16 with 6),
+           so a wide bar does not show the tile repeating every 96 px. */
+        --nc-pitch: 6px;
+        --nc-cell: 3px;
+        /* The tile in 37ths of its length, so it scales with the bar; each
+           lit cell is drawn half its pitch wide (3 of 6 px) in the tile
+           itself. */
+        --nc-pattern: linear-gradient(
+            90deg,
+            transparent 0 2.7027%,
+            var(--nc-lit) 0 4.0541%,
+            transparent 0 10.8108%,
+            var(--nc-lit) 0 12.1622%,
+            transparent 0 13.5135%,
+            var(--nc-lit) 0 14.8649%,
+            transparent 0 24.3243%,
+            var(--nc-lit) 0 25.6757%,
+            transparent 0 37.8378%,
+            var(--nc-lit) 0 39.1892%,
+            transparent 0 45.9459%,
+            var(--nc-lit) 0 47.2973%,
+            transparent 0 48.6486%,
+            var(--nc-lit) 0 50%,
+            transparent 0 62.1622%,
+            var(--nc-lit) 0 63.5135%,
+            transparent 0 72.973%,
+            var(--nc-lit) 0 74.3243%,
+            transparent 0 83.7838%,
+            var(--nc-lit) 0 85.1351%,
+            transparent 0 91.8919%,
+            var(--nc-lit) 0 93.2432%,
+            transparent 0
+        );
     }
 
     /* ── The parts at rest ───────────────────────────────────────────── */
@@ -905,6 +941,77 @@
         position: relative;
         display: grid;
         gap: 0.5rem;
+    }
+
+    /* ── 11 The busy progress bar (update 3) ─────────────────────────────
+       The same busy bar in both options: the Loading scene's own (the glass
+       over the package's bar), with the bar that knows its share and the
+       meter beside it at the same width. Option glass is that glass; option
+       led shows the package's bar itself and draws its LED window as the
+       lamp bank: the cells switched in an unordered pattern (below, under
+       the motion query), the glass hidden. Only the option's own picture
+       runs: the hidden one is stopped. */
+    .nc-scene[data-nc-busy] .kp-progressbar {
+        --kp-progressbar-max-width: none;
+    }
+
+    .nc-scene[data-nc-busy='glass'] .nc-bar-wrap > .kp-progressbar :is(.kp-progressbar__track, .kp-progressbar__fill)::before {
+        animation: none;
+    }
+
+    .nc-scene[data-nc-busy='led'] .nc-bar-wrap > .kp-progressbar {
+        align-self: center;
+        visibility: visible;
+    }
+
+    /* The glass is taken out (hidden, it still painted a 1 px line above
+       the bar in the dialog); the wrap keeps the glass's height, 1.5rem and
+       its 3 px bezel, so nothing below moves between the options. */
+    .nc-scene[data-nc-busy='led'] .nc-bar-wrap {
+        min-block-size: calc(1.5rem + 6px);
+    }
+
+    .nc-scene[data-nc-busy='led'] .nc-bar-wrap > .nc-bar-ras {
+        display: none;
+    }
+
+    .nc-scene[data-nc-busy='led'] .kp-progressbar[data-kp-indeterminate] {
+        --nc-bank-pitch: calc(var(--nc-pitch) * var(--kp-progressbar-scale, 1));
+        --nc-bank-cells: linear-gradient(90deg, var(--foreground) 0 calc(var(--nc-cell) * var(--kp-progressbar-scale, 1)), transparent 0) 0 0 /
+            var(--nc-bank-pitch) 100% repeat-x;
+    }
+
+    /* The unlit cells: the window's dark lenses, as the bar with a share. */
+    .nc-scene[data-nc-busy='led'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        inset: var(--kp-np-window) 1px;
+        background: var(--kp-np-unlit);
+        mask: var(--nc-bank-cells);
+        animation: none;
+    }
+
+    /* The lit cells: the bank's tile in the LED orange, its cells drawn in
+       the tile (not through the cells' mask: the two repeating layers met
+       on fractional device pixels in the dialog and a lit edge leaked into
+       its neighbour), with the lit LEDs' glow. */
+    .nc-scene[data-nc-busy='led'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: var(--kp-np-window) 1px;
+        inline-size: auto;
+        background: none;
+        filter: drop-shadow(0 0 var(--kp-np-glow-r) var(--kp-np-glow));
+        clip-path: none;
+        transform: none;
+        animation: none;
+    }
+
+    .nc-scene[data-nc-busy='led'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        inset: 0;
+        padding: 0;
+        background: var(--nc-pattern) 0 0 / calc(var(--nc-bank-pitch) * 37) 100% repeat-x;
+        text-shadow: none;
+        clip-path: none;
+        mask: none;
+        animation: none;
     }
 
     /* ── 1-4 The motion questions: what stands before it arrives ──────── */
@@ -2315,7 +2422,14 @@
             animation: nc-drum-tens var(--nc-loop) steps(2, jump-end) infinite;
         }
 
-        /* 11 The spinner. */
+        /* 11 The busy progress bar, option led: a new pattern every 4
+           frames, five patterns, 20 frames (--nc-loop); the reduced pose is
+           the first pattern, standing. */
+        .nc-scene[data-nc-busy='led'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: nc-bank-compute var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* 12 The spinner. */
         .nc-scene[data-nc-spinner='reel'] .nc-spin::before {
             animation: kp-sig-nostromo-no-reel calc(20 * var(--nc-fr)) steps(20, end) infinite;
         }
@@ -3139,6 +3253,32 @@
 
         40% {
             box-shadow: 0 0 0 2px var(--primary);
+        }
+    }
+
+    /* The lamp bank: five patterns of the tile, one every fifth of the
+       cycle, the shifts unordered (0, 14, 5, 25, 11 cells), so no lamp
+       walks. */
+    @keyframes nc-bank-compute {
+        0% {
+            background-position-x: 0;
+        }
+
+        20% {
+            background-position-x: calc(var(--nc-bank-pitch) * 14);
+        }
+
+        40% {
+            background-position-x: calc(var(--nc-bank-pitch) * 5);
+        }
+
+        60% {
+            background-position-x: calc(var(--nc-bank-pitch) * 25);
+        }
+
+        80%,
+        100% {
+            background-position-x: calc(var(--nc-bank-pitch) * 11);
         }
     }
 

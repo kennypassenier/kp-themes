@@ -1,6 +1,6 @@
 # What makes nostromo nostromo
 
-**Decided (Kenny, 08/10/2026 00:05): all eighteen approved** (decided.json); the two reopened in update 2 settled as recommended: the live update is the raster redraw with its lamp, Loading is the screen redraws.; A live update: option 1 with a fix for the cut-off glow on the key figure; Loading: option 1 liked, ten more options asked (Update 2).
+**Verdict (Kenny, 08/10/2026 00:05): all eighteen approved** (decided.json is kept back until update 3 is settled); the two reopened in update 2 settled as recommended: the live update is the raster redraw with its lamp, Loading is the screen redraws.; A live update: option 1 with a fix for the cut-off glow on the key figure; Loading: option 1 liked, ten more options asked (Update 2).
 
 **Why.** Kenny, 2026-10-07 03:50, while he judges forest: "doe terwijl nostromo al", the same way as titanium and forest (02:54:
 "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet? begin met 1 thema en we zullen dat één voor
@@ -198,6 +198,54 @@ round the glyphs), the dither's dot grid was unreadable at 0.62 rem (now a 50 % 
 middle of the glass; the day's number in `diag` the same. The scope's SVG trace does not mirror under `dir="rtl"`. The counter's drums use
 `white-space: pre` line breaks for digits (no `content: counter()`: Firefox does not re-resolve a counter from an animated custom property,
 tested). In the dialog the eight surfaces share one stage, so a glass is about 200 px wide; the page shows them two to a line at 1600 px (`.nc-trio--many`, columns of at least 26 rem).
+
+## Update 3: the busy progress bar
+
+All eighteen questions were approved on 08/10/2026 00:05 (update 2). While judging, Kenny posted a screenshot of the intro's meter (whole
+LED cells, the lit share, the ▼ mark) and asked "kan je de progressbar uit mijn screenshot terugbrengen?". The meter has not changed; what
+changed with his Loading pick (`raster`) is the busy progress bar: a bar with no known share was the LED bargraph and is now the COMPUTING
+glass (css/nostromo-register.css, d81d9892). `update.json` (update 3) locks all eighteen picks and opens one new question, `busy`
+(question 11, after Loading), with his words and the reply; the dialog walks only that question.
+
+The scene is the same in both options: the Loading scene's own busy bar (`PART.bar`), and under it, the same in both options, the bar with
+a share (62 %), the meter from his screenshot, and three waiting parts that stay the glass whichever is picked (menu entry, chart plot,
+skeleton). Every bar spans the same width (`--kp-progressbar-max-width: none` inside the scene).
+
+| #   | Key     | Name                                 | What you see (per 1.6 s loop)                                                                                                                                                                                                                                                                        |
+| --- | ------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `glass` | The COMPUTING screen, as it is now   | Loading option 1's glass over the bar: COMPUTING written in 12 frames under the beam, stands 6, blank 2; the hum band in 10 steps                                                                                                                                                                    |
+| 2   | `led`   | The LED bar stays, its lamps compute | the package's own bar shown (its register glass overridden in options.css): the LED window in its moulded bezel, unlit cells `--kp-np-unlit`, lit cells `--sidebar-primary` with the LED glow, 3 px cells on a 6 px pitch; a new unordered pattern every 4 frames, five patterns (`nc-bank-compute`) |
+
+**Recommended: `led`** (marked with `rec: true`; the options keep the order Kenny was asked in, so for this question the recommendation is
+the second, and `recOf()` puts the "Recommended" mark and the "(recommended)" label on it). Why: the bar keeps its bezel and window in both
+states, and in the package's 1 rem bar the word is 0.5 rem in a 10 px window, too small to read at a glance. The cost, said in the option:
+loading becomes two pictures, and the 3/6 cells are finer than the ten LEDs of the bar with a share.
+
+**Recovered and changed.** The drawing is round 2's lamp bank (`.nc-bank`, `git show 93ea340d~1:research/nostromo-character/options.css`)
+and the register's pre-d81d9892 LED window. Changed: the tile is 37 cells with 11 lit at no regular spacing (it was 16 with 6), because the
+16-cell tile visibly repeated every 96 px across a wide bar; the shifts are 0, 14, 5, 25, 11 cells (unordered). The lit cells are drawn
+3 px wide in the tile itself, not through the cells' mask: the two repeating layers met on fractional device pixels in the dialog and a lit
+edge leaked into its neighbour (seen at 2x). In option `led` the glass is `display: none` (hidden, it still painted a 1 px line above the
+bar in the dialog) and the wrap keeps the glass's height, so nothing moves between options; in option `glass` the hidden package bar's
+register animations are stopped, so each option runs only its own picture.
+
+**Verified in Firefox, in the review dialog:** "Step 1/1 · Nostromo · The busy progress bar", the Update 3 box with Kenny's comment and the
+reply. Both options animate (`stage.getAnimations({ subtree: true })`: 12 running in `glass`, 10 in `led`, every one 1600 ms, infinite).
+The bar's animations paused and seeked in 40 ms steps: the value at t equals the value at t + 1600 ms at every sample in both options;
+`led` shows exactly 5 distinct held states, `glass` 16 (12 writing steps, stand, blank, beam and band). Screenshots at 0, 400, 1000 and
+1360 ms of each option were looked at, and the share bar and the meter beside them. With reduced motion the `led` bar runs no animation
+and stands in its first pattern. The dialog zooms an option to fit its height, so the first `led` text (twice as long as `glass`'s) showed
+its scene at 624 px against 768 px; the text was shortened until both show at 768 px.
+
+**Distinctness.** Synthwave's loading is the marquee chasing (lamps lit in order); terminal's busy bar walks `<=>` along its cells. These
+lamps neither chase nor walk. Forest's busy bar plants whole trees start → end; none of them switches an unordered pattern.
+
+### Update 3: not solved
+
+- The bar with a share draws ten wide LEDs; the busy bank (as asked) draws the meter's 3 px cells on 6 px. If `led` is picked, whether the
+  bar with a share should take the same fine cells is a question for Kenny, not decided here.
+- The pattern is not mirrored under `dir="rtl"` (it has no direction, so it does not need to be).
+- CHARACTER.md G10 and the register are not edited; they follow Kenny's verdict.
 
 ### Not solved
 

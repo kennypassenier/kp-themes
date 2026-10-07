@@ -274,6 +274,28 @@ const LOADERS = () =>
     cell('Skeleton lines', PART.skeleton()) +
     cell('Meter, measuring', `<div class="nc-meter-wait nc-waits" aria-busy="true">${meter(0.62, 0.8)}${LOAD}</div>`);
 
+/**
+ * The busy progress bar (update 3): the Loading scene's own busy bar, the
+ * same bar with a share and the meter beside it as the reference (Kenny's
+ * screenshot, unchanged in both options), and three other waiting parts that
+ * stay the glass whichever option is picked.
+ */
+const shareBar = (value = 0.62) =>
+    `<div class="kp-progressbar nc-share-bar" role="progressbar" aria-label="Export, ${Math.round(value * 100)} %" aria-valuenow="${Math.round(
+        value * 100,
+    )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}"><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`;
+
+const BUSY = () =>
+    cell('The progress bar, busy: no share known yet', PART.bar('Export busy'), 'nc-part--wide') +
+    cell('Beside it, the same in both options: the bar with a share (62 %)', shareBar(0.62), 'nc-part--wide') +
+    cell('The meter from your screenshot, the same in both options', meter(0.62, 0.8), 'nc-part--wide') +
+    cell(
+        'Menu, loading entry: the glass in both options',
+        `<div class="kp-popover nc-pop nc-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item nc-waits" aria-busy="true">Loading stations…${LOAD}</button></li></ul></div>`,
+    ) +
+    cell('Chart plot: the glass in both options', `<div class="nc-screen nc-screen--wait nc-waits" aria-busy="true">${LOAD}</div>`) +
+    cell('Skeleton lines: the glass in both options', PART.skeleton());
+
 const spin = (size = '') =>
     `<span class="kp-spinner nc-spin" role="status" aria-label="Working…"${size ? ` style="--kp-spinner-size: ${size}"` : ''}><span class="nc-spin__ring"></span></span>`;
 
@@ -420,9 +442,11 @@ const not = (why) => `Not recommended, because ${why}`;
 /**
  * One question each. `kind`: 'cycle' scenes are replayed by the page's clock
  * (arrive, open, press, update, leave), 'loop' scenes loop in CSS, 'still'
- * scenes do not move. `options[0]` is the recommendation.
+ * scenes do not move. `options[0]` is the recommendation, unless an option
+ * says `rec: true` (update 3, the busy bar: the options keep the order Kenny
+ * was asked in, today's picture first).
  * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: () => string,
- *   options: { key: string, name: string, see: string, verdict: string, raster?: boolean }[] }[]}
+ *   options: { key: string, name: string, see: string, verdict: string, raster?: boolean, rec?: boolean }[] }[]}
  */
 const ASPECTS = [
     {
@@ -827,6 +851,34 @@ const ASPECTS = [
         ],
     },
     {
+        id: 'busy',
+        label: 'The busy progress bar',
+        rule: 'G10',
+        question: 'What does a progress bar show while it is busy and does not know its share yet?',
+        why: 'Update 3: you asked “kan je de progressbar uit mijn screenshot terugbrengen?”. Your screenshot is the meter of the page’s intro (whole lit cells, the ▼ mark), and it has not changed. What did change, with your Loading pick (the screen redraws), is the busy bar: a progress bar that does not know its share yet was the LED bargraph and is now the small amber glass with COMPUTING written on it. This question is about that one part only, on the same busy bar, in the same 20 frames of 80 ms (1.6 s a cycle). Under it, the same in both options: the bar with a share, the meter from your screenshot, and three other waiting parts that stay the glass whichever you pick.',
+        kind: 'loop',
+        scene: BUSY,
+        options: [
+            {
+                key: 'glass',
+                name: 'The COMPUTING screen, as it is now',
+                see: 'The busy bar is the amber glass of Loading option 1: COMPUTING written row by row from the top in 12 frames under a bright beam with a fading tail, standing 6 frames, blanked 2; the hum band rolls down in 10 steps; 20 frames, 1.6 s a cycle. The LED window is gone while the bar is busy and comes back the moment a share is known.',
+                verdict: not(
+                    'it is your Loading pick unchanged, so every waiting part is one picture and the word says plainly that the ship is working; but the progress bar changes material between its two states (a glass with a word while busy, the LED bargraph once its share is known), and in the package’s own bar, 1 rem high, the word is 0.5 rem in a window 10 px high, too small to read at a glance (this demo’s glass is 1.5 rem, taller than the bar it stands in for).',
+                ),
+            },
+            {
+                key: 'led',
+                name: 'The LED bar stays, its lamps compute',
+                rec: true,
+                see: 'The busy bar keeps its LED window in the moulded bezel, with the cells of your screenshot (3 px on a 6 px pitch). The lit cells, LED orange with their glow, switch in a fixed, unordered pattern: a new one every 4 frames, five patterns, 20 frames, 1.6 s a cycle. Nothing walks or sweeps; with reduced motion one pattern stands.',
+                verdict: rec(
+                    'the bar keeps its bezel and window in both states, so learning its share changes which lamps are lit, not what it is made of; it is the case on its own lamps (G7, and G10’s first wording, MU/TH/UR computing) and it reads at any size, where a word in the package’s 1 rem bar does not. The cost: loading becomes two pictures, and these cells are finer than the ten LEDs of the bar with a share. Neighbours: synthwave’s marquee chases in order and terminal walks <=>; these lamps do neither.',
+                ),
+            },
+        ],
+    },
+    {
         id: 'spinner',
         label: 'The spinner',
         rule: 'G11',
@@ -1087,6 +1139,12 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 // Each hint repeats the question and the reason, then what this option shows
 // and the recommendation line: the dialog shows only the hint of the option
 // on screen, so each hint has to stand on its own.
+/** The recommended option of a question: the one marked `rec`, else the first. */
+const recOf = (/** @type {(typeof ASPECTS)[number]} */ a) =>
+    Math.max(
+        0,
+        a.options.findIndex((o) => o.rec),
+    );
 section.setAttribute(
     'data-review-choices',
     JSON.stringify(
@@ -1095,7 +1153,7 @@ section.setAttribute(
             label: a.label,
             options: a.options.map((o, at) => ({
                 value: String(at + 1),
-                label: `${o.name}${at === 0 ? ' (recommended)' : ''}`,
+                label: `${o.name}${at === recOf(a) ? ' (recommended)' : ''}`,
                 hint: `${a.question} ${o.see} ${o.verdict}`,
             })),
         })),
@@ -1104,7 +1162,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', 'nostromo');
-lookLine.textContent = `${ASPECTS.length} questions, one rule of nostromo each; the first option of every question is the recommendation. Pick the one that is nostromo to you, or “None of these” with a note.`;
+lookLine.textContent = `${ASPECTS.length} questions, one rule of nostromo each; the recommended option is marked (the first, except for the busy bar). Pick the one that is nostromo to you, or “None of these” with a note.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the rows */
@@ -1131,14 +1189,14 @@ ASPECTS.forEach((a, n) => {
         col.className = 'nc-col';
         col.setAttribute('data-nc-option', String(at + 1));
         col.innerHTML = `<p class="nc-label"><span class="nc-label__no">${at + 1}</span> <span class="nc-label__name"></span>${
-            at === 0 ? ' <span class="nc-label__rec">Recommended</span>' : ''
+            at === recOf(a) ? ' <span class="nc-label__rec">Recommended</span>' : ''
         }</p><p class="nc-see"></p><p class="nc-verdict"></p>
         <div class="nc-scene" data-nc-kind="${a.kind}" data-nc-${a.id}="${o.key}"${o.raster ? ' data-nc-raster' : ''} data-nc-phase="in">${a.scene()}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.nc-label__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.nc-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.nc-verdict'));
         verdict.textContent = o.verdict;
-        verdict.classList.toggle('nc-verdict--rec', at === 0);
+        verdict.classList.toggle('nc-verdict--rec', at === recOf(a));
         trio.append(col);
     });
     rows.append(box);

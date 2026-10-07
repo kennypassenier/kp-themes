@@ -1,5 +1,5 @@
 {
-    "update": 2,
+    "update": 3,
     "picks": {
         "nostromo": {
             "curve": "frames",
@@ -10,6 +10,8 @@
             "corners": "moulded",
             "surface": "both",
             "tone": "klaxon",
+            "live": "raster",
+            "loading": "raster",
             "spinner": "reel",
             "leave": "raster",
             "composites": "own",
@@ -22,13 +24,9 @@
     },
     "questions": {
         "nostromo": {
-            "live": {
-                "comment": "A live update: I pick option 1, but there is a little bug, in the key figure number, the left side of the glowing button is cut off a bit, so it seems sliced, fix that",
-                "reply": "Found and fixed. The package's key-figure label (.kp-kpi__label in css/components.css) clips its overflow for its ellipsis, and the lamp sits at the label's start: the label cut the lamp's glow (6 px) and its 1 px ring flat on the start side and a little at the top and foot. The label now keeps its clip and gets the glow's room inside it (padding on every side, pulled back by the same negative margin), so nothing else moved. Checked in Firefox at four times the pixel size on the first frame, mid-hold and the last frame, on the key figure, the trend line's and the strip column's labels, in option 1 and option 2 (the same lamp). The option itself is unchanged."
-            },
-            "loading": {
-                "comment": "Loading: I like one, but I want 10 more options, this defines the theme so make sure that I ge world class options, I want it to be hard to pick the best one",
-                "reply": "Option 1 is unchanged and still first; the lamp bank and 'as today' are gone, and ten new languages follow on the same eight waiting surfaces, every one on the 80 ms clock in a 20-frame loop, amber on dark glass: the phosphor decays (struck in one frame, five held steps down), the ship runs its checklist (CHK PUMPS … TANKS, written in three frames, OK on the fourth), two fields as a 1979 tube (odd lines then even), the write lamp follows the beam (option 1 plus the case's lamp lit while the beam writes), the tube warms up (dot, line, picture, and back), the character matrix (a dot-matrix readout lit a row a frame), the oscilloscope trace, the picture resolves (a checkerboard dither, coarse to whole), the vertical hold slips (the picture rolls and locks), the frame counter (two digit drums). They are in the order I would rank them. I still recommend option 1: it is the only one drawn row by row from the top on every surface, which is the anchor's own order; the phosphor decay is my runner-up if you want something bolder, because one strike a cycle reads from across the room and no other theme fades a picture in hard steps. Named overlaps: the scope and the chart's own arrival both draw start to end (blueprint's pen and titanium's feed do too); the matrix neighbours terminal (rows lit, not cells typed); the dither neighbours cyberpunk's glitch (it only sharpens, no colour split); the roll breaks G2 on purpose."
+            "busy": {
+                "comment": "kan je de progressbar uit mijn screenshot terugbrengen?",
+                "reply": "Your screenshot shows the meter of the intro (whole LED cells, the lit share, the ▼ mark); that one has not changed. What did change, with your Loading pick (the screen redraws), is the busy progress bar: a bar that does not know its share yet was the LED bargraph and is now the small amber glass with COMPUTING written on it. This new question shows both on the same busy bar, in the same 20 frames of 80 ms (1.6 s a cycle): option 1 the COMPUTING glass as it is now, option 2 the LED window in its bezel with the cells of your screenshot (3 px on a 6 px pitch), its lamps switching in an unordered pattern every 4 frames, no sweep. I recommend option 2: the bar keeps its bezel and window whether it knows its share or not, and the word in the package's 1 rem bar is too small to read. The bar with a share, the meter and the other waiting parts (menu entry, chart plot, skeleton, days) are the same in both options. Pick one."
             }
         }
     }
