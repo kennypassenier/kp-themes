@@ -1,0 +1,256 @@
+/* research/cyberpunk-character/grammar.css: cyberpunk's approved grammar as the
+   per-component demos use it (Kenny, 2026-10-07 23:52; themes/cyberpunk/
+   CHARACTER.md section 0 and G1-G18, the picks of research/cyberpunk-character/
+   decided.json, the package's css/cyberpunk-register.css). One file of tokens
+   and keyframes, linked by every research/character-* demo except the network
+   graph (which changes in no theme); each component's `cyberpunk.css` applies
+   it to that component's decided cyberpunk options, as forest's grammar was
+   applied in b0b137d8.
+
+   - the anchor is the glitch: a part is opened, closed, arrived and left by
+     the channel split, four ticks of 120 ms (a yellow copy right and up, a
+     cyan copy right and down, 6, 4, 2 and 1 px, then the part itself); a close
+     is its open reversed, written out as its own keyframes (`cyg-split-out`)
+     because a reversed `steps()` is not the mirror of the forward one;
+   - the notch is cut at every frame: a copy that plays outside the box keeps
+     the part's own diagonal (the clip is the part's own cut, wide round it
+     while a copy plays outside the box);
+   - pointing is the split edge, focus the target brackets, a press the closed
+     circuit, a warning a lock (corner brackets in the tone's ink), loading
+     signal loss (the word deciphered, torn and sliced away), the spinner the
+     signal bars with a glitch copy; all in hard ticks, `steps()`, never an ease;
+   - the holo plate: a yellow rim glowing 10 px inward, scan lines at 135
+     degrees, the notch 14 px at its dossier corner (8 px on a control);
+   - the machine's voice: prefixed mono capitals in cyan (`/// `).
+
+   Colours come from the theme's tokens only; every animation sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the finished
+   picture. The keyframes that the register already declares (the spinner's
+   bars, the word, the lock) are used by name. */
+
+@layer kp.signature {
+    [data-theme='cyberpunk'] {
+        --cyg-tick: 60ms;
+        --cyg-time: 480ms;
+        --cyg-notch: var(--fx-notch, 14px);
+        --cyg-notch-sm: var(--fx-notch-sm, 8px);
+        /* The two copies of a plate (a box shadow), and the part's own rest. */
+        --cyg-rest: 0 0 transparent;
+        --cyg-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --cyg-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --cyg-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --cyg-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+        /* The part's own cut and the same cut with 40 px of room round it. */
+        --cyg-clip: none;
+        --cyg-wide: none;
+        --cyg-clip-plate: polygon(0 0, calc(100% - var(--cyg-notch)) 0, 100% var(--cyg-notch), 100% 100%, 0 100%);
+        --cyg-wide-plate: polygon(
+            -40px -40px,
+            calc(100% - var(--cyg-notch) - 40px) -40px,
+            calc(100% + 40px) calc(var(--cyg-notch) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --cyg-clip-ctl: polygon(0 0, 100% 0, 100% calc(100% - var(--cyg-notch-sm)), calc(100% - var(--cyg-notch-sm)) 100%, 0 100%);
+        --cyg-wide-ctl: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - var(--cyg-notch-sm) - 40px),
+            calc(100% - var(--cyg-notch-sm) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        /* The holo plate: a yellow rim glowing 10 px inward, scan lines at 135 degrees, the
+           rim running along the notch at the dossier corner (top-end). */
+        --cyg-rim: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        --cyg-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        --cyg-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--cyg-notch) var(--cyg-notch) no-repeat;
+        /* A small part's cut: the 8 px notch at its dossier corner (top-end), and the cut
+           with 40 px of room round it. */
+        --cyg-clip-tag: polygon(0 0, calc(100% - var(--cyg-notch-sm)) 0, 100% var(--cyg-notch-sm), 100% 100%, 0 100%);
+        --cyg-wide-tag: polygon(
+            -40px -40px,
+            calc(100% - var(--cyg-notch-sm) - 40px) -40px,
+            calc(100% + 40px) calc(var(--cyg-notch-sm) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        /* The pair of cuts of a large panel (a dialog, a drawer): 18 px at top-end and bottom-start, and
+           the same cut with 40 px of room round it. */
+        --cyg-notch-pair: 18px;
+        --cyg-clip-pair: polygon(
+            0 0,
+            calc(100% - var(--cyg-notch-pair)) 0,
+            100% var(--cyg-notch-pair),
+            100% 100%,
+            var(--cyg-notch-pair) 100%,
+            0 calc(100% - var(--cyg-notch-pair))
+        );
+        --cyg-wide-pair: polygon(
+            -40px -40px,
+            calc(100% - var(--cyg-notch-pair) - 40px) -40px,
+            calc(100% + 40px) calc(var(--cyg-notch-pair) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            calc(var(--cyg-notch-pair) + 40px) calc(100% + 40px),
+            -40px calc(100% - var(--cyg-notch-pair) - 40px)
+        );
+        /* The rim along both cuts of the pair. */
+        --cyg-notch-lines:
+            linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+                var(--cyg-notch-pair) var(--cyg-notch-pair) no-repeat,
+            linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 0 100% /
+                var(--cyg-notch-pair) var(--cyg-notch-pair) no-repeat;
+        /* The reticle's corners: four 9 px tiles, as a mask (6 px on a small part). */
+        --cyg-corners-sm:
+            linear-gradient(#000 0 0) 0 0 / 6px 6px no-repeat, linear-gradient(#000 0 0) 100% 0 / 6px 6px no-repeat,
+            linear-gradient(#000 0 0) 0 100% / 6px 6px no-repeat, linear-gradient(#000 0 0) 100% 100% / 6px 6px no-repeat;
+        --cyg-corners:
+            linear-gradient(#000 0 0) 0 0 / 9px 9px no-repeat, linear-gradient(#000 0 0) 100% 0 / 9px 9px no-repeat,
+            linear-gradient(#000 0 0) 0 100% / 9px 9px no-repeat, linear-gradient(#000 0 0) 100% 100% / 9px 9px no-repeat;
+    }
+
+    /* A holo plate. Add `--cyg-ground` for the plate's own ground. */
+    [data-theme='cyberpunk'] .cyg-plate {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        border: 0;
+        border-radius: 0;
+        background: var(--cyg-notch-line), var(--cyg-scan), var(--cyg-ground, var(--card));
+        box-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    /* The machine's voice: a prefixed mono label in cyan. */
+    [data-theme='cyberpunk'] .cyg-label {
+        color: var(--accent);
+        font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .cyg-label::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The channel split: four ticks of 120 ms, then the part itself (the implicit last pose:
+           the element's own clip and shadows). */
+        @keyframes cyg-split {
+            0% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b0), var(--cyg-rest);
+                text-shadow:
+                    6px 4px 0 var(--accent),
+                    6px -4px 0 var(--primary);
+            }
+
+            25% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b1), var(--cyg-rest);
+                text-shadow:
+                    4px 3px 0 var(--accent),
+                    4px -3px 0 var(--primary);
+            }
+
+            50% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b2), var(--cyg-rest);
+                text-shadow:
+                    2px 2px 0 var(--accent),
+                    2px -2px 0 var(--primary);
+            }
+
+            75% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b3), var(--cyg-rest);
+                text-shadow:
+                    1px 1px 0 var(--accent),
+                    1px -1px 0 var(--primary);
+            }
+        }
+
+        /* A close, a leave: the same four poses in the other order, the last one held until
+           the part is gone, so nothing of it outlives the rest. */
+        @keyframes cyg-split-out {
+            0% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b3), var(--cyg-rest);
+                text-shadow:
+                    1px 1px 0 var(--accent),
+                    1px -1px 0 var(--primary);
+            }
+
+            25% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b2), var(--cyg-rest);
+                text-shadow:
+                    2px 2px 0 var(--accent),
+                    2px -2px 0 var(--primary);
+            }
+
+            50% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b1), var(--cyg-rest);
+                text-shadow:
+                    4px 3px 0 var(--accent),
+                    4px -3px 0 var(--primary);
+            }
+
+            75%,
+            100% {
+                clip-path: var(--cyg-wide);
+                box-shadow: var(--cyg-b0), var(--cyg-rest);
+                text-shadow:
+                    6px 4px 0 var(--accent),
+                    6px -4px 0 var(--primary);
+            }
+        }
+
+        /* The same four poses for a drawn line or fill (an SVG path, a meter's share): two copies of its
+           own shape, as a drop shadow. */
+        @keyframes cyg-line-split {
+            0% {
+                filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            }
+
+            25% {
+                filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            }
+
+            50% {
+                filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            }
+
+            75% {
+                filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            }
+        }
+
+        /* The count-down stutter of a change in place, for a carrier that is a shape (a state
+           dot, a line, a tile): two copies of its own silhouette come home 6, 4, 2, 1 px in
+           four ticks of 120 ms. */
+        @keyframes cyg-stutter {
+            0% {
+                box-shadow: var(--cyg-b0), var(--cyg-rest);
+            }
+
+            25% {
+                box-shadow: var(--cyg-b1), var(--cyg-rest);
+            }
+
+            50% {
+                box-shadow: var(--cyg-b2), var(--cyg-rest);
+            }
+
+            75% {
+                box-shadow: var(--cyg-b3), var(--cyg-rest);
+            }
+
+            100% {
+                box-shadow: var(--cyg-rest);
+            }
+        }
+    }
+}

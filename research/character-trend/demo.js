@@ -274,8 +274,8 @@ const IDEAS = {
     cyberpunk: {
         shape: [
             {
-                name: 'The neon trace',
-                text: 'A neon trace on a black board with a faint circuit grid: the line a neon tube with its glow, the number in tech mono with a cyan halo, cut corners on the frame, the change as a cut-corner chip.',
+                name: 'The holo plate',
+                text: 'A holo plate: a yellow rim glowing inward, scan lines at 135 degrees, the 14 px notch cut at its dossier corner; the number in the display face, the line a plain data stream with no glow at rest, the change as a cut-corner chip.',
             },
             {
                 name: 'The glitch HUD',
@@ -288,8 +288,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The neon trace',
-                text: 'A packet runs along the baseline.',
+                name: 'Signal loss',
+                text: 'The tile’s waiting lines decipher the word LOADING from noise glyphs, hold it in neon with a cyan and a red copy, tear it sideways and slice it away: 1800 ms in hard ticks.',
             },
             {
                 name: 'The glitch HUD',
@@ -310,8 +310,8 @@ const IDEAS = {
                 text: 'The line jumps into place sideways, in hard jumps; the number glitches into place.',
             },
             {
-                name: 'The neon strikes',
-                text: 'The line strikes on and off like a tube, then holds, in hard jumps; the number is typed in.',
+                name: 'The channel split',
+                text: 'The tile is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick.',
             },
         ],
         tone: [
@@ -324,8 +324,8 @@ const IDEAS = {
                 text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
             },
             {
-                name: 'The hazard frame',
-                text: 'The change as a slanted chip; a warning or destructive figure is boxed in a frame of its colour all round the card.',
+                name: 'The target lock',
+                text: 'The change as a square mono chip with a 4 px cut; a warning or destructive figure is locked as a target: four corner brackets in its colour twitch twice as they lock and hold.',
             },
         ],
         live: [
@@ -338,8 +338,8 @@ const IDEAS = {
                 text: 'The line glitches sideways for a moment, in hard jumps.',
             },
             {
-                name: 'The trace burns',
-                text: 'The line flares with light once, slowing as it lands.',
+                name: 'The line stutters home',
+                text: 'The line comes home from a yellow copy and a cyan copy of its own shape, 6, 4, 2, 1 px, four ticks of 120 ms.',
             },
         ],
     },

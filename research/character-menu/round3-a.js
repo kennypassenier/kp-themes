@@ -12,8 +12,8 @@ export default {
         shape: [
             {
                 key: 'r3-cy-shape-1',
-                name: 'The netrunner deck',
-                text: 'A void deck cut at two corners like the register’s dialog, a fine yellow frame, faint cyan scanlines, every group numbered “01 //” in cyan mono with a yellow tripwire running out to the edge (the chart’s black ice grid), a lit data pad before each entry, and a solid signal-yellow status bar along the bottom: KP//NET, SECURE LINK.',
+                name: 'The holo deck',
+                text: 'A void deck that is a holo plate: a yellow rim glowing inward, scan lines at 135 degrees, the 14 px notch cut at its dossier corner; every group numbered “01 //” in cyan mono with a yellow tripwire running out to the edge, a lit data pad before each entry, and a solid signal-yellow status bar along the bottom: KP//NET, SECURE LINK.',
             },
             {
                 key: 'r3-cy-shape-2',
@@ -39,8 +39,8 @@ export default {
             },
             {
                 key: 'r3-cy-load-3',
-                name: 'The lock-on',
-                text: 'A cyan reticle hunts across the entry in hard jumps, then snaps tight around “Loading…” and blinks its lock before hunting again, as the graph’s target lock and the chart’s lock-on markers.',
+                name: 'Signal loss',
+                text: 'The waiting entry deciphers the word LOADING from noise glyphs at its end, holds it in neon with a cyan and a red copy, tears it sideways and slices it away, then deciphers it again: 1800 ms in hard ticks, like a VCR’s on-screen text.',
             },
             {
                 key: 'r3-cy-load-4',
@@ -61,8 +61,8 @@ export default {
         open: [
             {
                 key: 'r3-cy-open-1',
-                name: 'Glitch in',
-                text: 'The menu tears into place through six torn frames, horizontal slices of it flashing in sideways with a cyan and red split, then locks clean; it tears out the same way to close, as the calendar’s glitch-in month.',
+                name: 'The channel split',
+                text: 'The menu is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick; it splits shut as the same four the other way round.',
             },
             {
                 key: 'r3-cy-open-2',
@@ -89,7 +89,7 @@ export default {
             {
                 key: 'r3-cy-tone-3',
                 name: 'Target locked',
-                text: 'Red lock-on reticle corners frame the whole destructive entry and pulse as they hold, with a small TARGET tag at its end, as the chart’s lock-on markers and the graph’s target lock; the disabled reason opens with OFFLINE // over a yellow tripwire.',
+                text: 'Red lock-on reticle corners frame the whole destructive entry, twitch twice as they lock and hold (the register’s lock), with a small TARGET tag at its end; the disabled reason opens with OFFLINE // over a yellow tripwire.',
             },
         ],
     },

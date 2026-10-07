@@ -266,8 +266,8 @@ const IDEAS = {
                 text: 'A netrunner HUD, yellow brackets at the corners, the number with an RGB split, the change as its own status plate.',
             },
             {
-                name: 'The hazard frame',
-                text: 'A hologram card, a cyan rim with its glow, the number in the display face, the change as its own status plate.',
+                name: 'The holo plate',
+                text: 'A holo plate: a yellow rim glowing inward, scan lines at 135 degrees, the 14 px notch cut at its dossier corner; the label a /// prefixed cyan mono capital, the figure in the display face, the change as its own status plate.',
             },
         ],
         loading: [
@@ -280,8 +280,8 @@ const IDEAS = {
                 text: 'While the figure loads, a warning-coloured glitch bar jumps between hard-cut positions across the card in five discrete steps, looping; it keeps moving until the reading is drawn.',
             },
             {
-                name: 'Packet rain',
-                text: 'While the figure loads, a short bright packet falls straight down a fixed column on the card and loops from the top; it keeps moving until the reading is drawn.',
+                name: 'Signal loss',
+                text: 'While the figure loads, the word LOADING is deciphered from noise glyphs on its waiting lines, holds in neon with a cyan and a red copy, tears sideways and is sliced away: 1800 ms in hard ticks; it keeps going until the reading is drawn.',
             },
         ],
         tone: [
@@ -290,8 +290,8 @@ const IDEAS = {
                 text: 'The change as a cut-corner chip; a warning or destructive figure shows the note in the label on the tone’s plate.',
             },
             {
-                name: 'The glitch HUD',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+                name: 'The lock',
+                text: "The change as a square mono chip with a 4 px cut at its end corner; a warning or destructive figure is locked as a target: four corner brackets in the tone's ink twitch twice as they lock and hold.",
             },
             {
                 name: 'The hazard frame',
@@ -300,8 +300,8 @@ const IDEAS = {
         ],
         interactive: [
             {
-                name: 'Jacked in',
-                text: "As a link or a filter: the number's cyan glow flares wider on hover, a warning-coloured outline snaps in sharply on focus (no ease), the whole tile kicks sideways 2px once when pressed.",
+                name: 'Own tile: split edge, brackets, closed circuit',
+                text: "As a link or a filter the tile is cyberpunk's own: hover doubles its edge (cyan along the head and the end, red along the foot, 5, 4, 3, then 2 px), focus closes four target brackets on it, a press lights the circuit grid at 60 %; nothing glows and nothing moves.",
             },
             {
                 name: 'The HUD locks',
@@ -319,8 +319,8 @@ const IDEAS = {
                 text: 'A new reading: the number glitches sideways through four hard-cut positions in a third of a second, as a corrupted packet resolving, then settles.',
             },
             {
-                name: 'The trace burns',
-                text: "A new reading: the number's cyan glow flares to full brightness then burns back down to its resting halo over half a second.",
+                name: 'The stutter home',
+                text: 'A new reading: the number comes home from a yellow copy and a cyan copy of itself, 6, 4, 2, 1 px, four ticks of 120 ms, and never moves itself.',
             },
         ],
     },

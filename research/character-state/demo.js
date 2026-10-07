@@ -98,15 +98,24 @@ const IDEAS = {
         shape: [
             { name: 'The neon dot', text: 'A neon dot with its glow sits before the word, the word in tech mono on no plate.' },
             { name: 'The HUD bracket', text: 'Yellow brackets frame a small tag holding the word, the dot a cut-corner chip.' },
-            { name: 'The data tag', text: 'The dot is a square data light, the word in mono with a faint RGB split on a dark plate.' },
+            {
+                name: 'The data tag',
+                text: 'The dot is a square data light, the word in mono capitals on a dark plate cut by the 8 px notch; nothing is split at rest.',
+            },
         ],
         tone: [
             { name: 'The neon colour', text: 'Only the neon dot takes the state’s colour and glow; the word stays cyan.' },
-            { name: 'The hazard tag', text: 'A warning or failed state wraps the tag in hazard-striped brackets of its colour.' },
+            {
+                name: 'The target lock',
+                text: 'A pending or failed state is locked as a target: four corner brackets in its colour twitch twice as they lock and hold; a good or muted state wears none.',
+            },
             { name: 'The glitch split', text: 'Every non-running state also gives the word a one-frame RGB split in its colour.' },
         ],
         change: [
-            { name: 'The trace burns', text: 'The dot flares with light once, slowing as it lands.' },
+            {
+                name: 'The dot stutters home',
+                text: 'The dot comes home from a yellow copy and a cyan copy of itself, 6, 4, 2, 1 px, four ticks of 120 ms, once.',
+            },
             { name: 'Jacked in', text: 'The word jumps sideways into place once, in a hard jump.' },
             { name: 'A packet in', text: 'The word glitches for a moment, in two hard steps, then settles.' },
         ],

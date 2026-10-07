@@ -1,0 +1,65 @@
+/* research/character-meter, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word). Only cyberpunk's decided options change: loading 3, arrival 2, tone 3,
+   mark 3 (shape 2, the HUD segment gauge, fits: notched plates and slits).
+   Linked after the meter stylesheet.
+
+   - loading: signal loss, the word LOADING deciphered over the dimmed track,
+     torn sideways and sliced away, in place of the noise slivers;
+   - arrival: the share is a yellow copy and a cyan copy of itself until they
+     meet, 6, 4, 2, 1 px in four ticks of 120 ms, in place of the thrown ghosts;
+   - tone: nothing knocks the meter any more (a part never jolts); the tone is
+     the colour of the fill;
+   - mark: a mark past the end no longer leans: it stands upright, with the
+     `!` beside it. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: 'LOADING';
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        color: var(--foreground);
+        font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::before {
+        opacity: 0.2;
+    }
+
+    [data-theme='cyberpunk'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over] {
+        rotate: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cm-mark='3'] .kp-meter__mark[data-kp-over]::after {
+        rotate: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cm-arrival='2'] .kp-meter::before {
+            animation: cyg-line-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]),
+        [data-theme='cyberpunk'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]),
+        [data-theme='cyberpunk'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: none;
+        }
+    }
+}

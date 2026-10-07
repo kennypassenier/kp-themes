@@ -110,8 +110,8 @@ export default {
             },
             {
                 key: 'r2-cp-interact-3',
-                name: 'The surge edge',
-                text: 'A hovered or focused entry’s edge pulses once with a brief glow surge in the primary colour, as the graph’s neon surge and the trend’s trace burns picks; a press holds the surge at its brightest.',
+                name: 'The split edge',
+                text: 'Pointing at an entry doubles its edge: cyan along the head and the end, red along the foot, 5, 4, 3 px and then 2 px while the pointer rests; focus closes four target brackets on it, a press lights the circuit grid at 60 %; nothing moves and nothing glows.',
             },
         ],
     },

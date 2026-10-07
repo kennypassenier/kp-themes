@@ -184,8 +184,8 @@ const IDEAS = {
                 text: 'A netrunner HUD: yellow brackets frame the title, the description in a thin mono, hazard tape along the action row.',
             },
             {
-                name: 'The holo card',
-                text: 'A hologram strip: a cyan rim with its glow, scan lines behind the title, the actions as cyan beam buttons.',
+                name: 'The holo plate',
+                text: 'A holo plate: a yellow rim glowing inward, scan lines at 135 degrees, the 14 px notch cut at its dossier corner; the title in the condensed display capitals, the actions cyberpunk’s own notched buttons.',
             },
         ],
         menu: [
@@ -194,15 +194,15 @@ const IDEAS = {
                 text: 'The menu snaps open in a hard jump with a glitch flicker; it glitches shut the same way in reverse to close.',
             },
             {
-                name: 'Packet rain',
-                text: 'The menu’s rows drop in one after another like falling packets; they clear the same way, bottom first, to close.',
+                name: 'The channel split',
+                text: 'The panel is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick; it splits shut as the same four the other way round.',
             },
             { name: 'The HUD unfolds', text: 'Yellow brackets snap outward to frame the opening menu; they snap back inward the same way to close.' },
         ],
         interactive: [
             {
-                name: 'The neon charge',
-                text: 'Hover charges a button’s glow, focus cuts a bright corner notch, press dims the neon for the moment held.',
+                name: 'Own buttons: split edge, brackets, closed circuit',
+                text: 'The header’s buttons are cyberpunk’s own: hover doubles the edge (cyan along the head and the end, red along the foot, 5, 4, 3, then 2 px), focus closes four target brackets on the button, press lights the circuit grid at 60 %; nothing moves.',
             },
             {
                 name: 'The RGB split',

@@ -1,0 +1,85 @@
+/* research/character-drawer, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   lock). Only cyberpunk's decided options change: shape 2, openclose 2, card
+   1, next 3 (highlight 1, the accent ring, becomes the target brackets).
+   Linked after every other drawer stylesheet.
+
+   - shape: the drawer is a holo plate on the large panels' pair of cuts (18
+     px at top-end and bottom-start), a yellow rim glowing inward, scan lines;
+   - openclose: the drawer is a yellow copy and a cyan copy until they meet,
+     four ticks of 120 ms, nothing travels; it closes as the same four ticks
+     the other way round and is gone with the last (the state's own
+     `animationend` closes it), in place of the slide with the brightness flash;
+   - highlight: the part the tour talks about is held in four cyan target
+     brackets that twitch twice as they lock, in place of the ring;
+   - card: the tour's card is a holo plate cut at its dossier corner (14 px);
+   - next: a new step splits in (four ticks of 120 ms), in place of the ring
+     that thickened. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-dt-shape='2'] .dt-drawer {
+        --cyg-clip: var(--cyg-clip-pair);
+        --cyg-wide: var(--cyg-wide-pair);
+        --cyg-rest: var(--cyg-rim);
+        border: 0;
+        background: var(--cyg-notch-lines), var(--cyg-scan), var(--popover);
+        box-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    /* Open and close · the channel split; closed is out of sight. */
+    [data-theme='cyberpunk'] [data-dt-openclose='2'] .dt-drawer {
+        translate: none;
+        filter: none;
+    }
+
+    [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: none;
+        visibility: hidden;
+    }
+
+    /* Highlight 1 · the ring → the target brackets (the dim around it stays). */
+    [data-theme='cyberpunk'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        position: relative;
+        outline: none;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.85);
+    }
+
+    [data-theme='cyberpunk'] [data-dt-highlight='1'] [data-kp-tour-target]::after {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        border: 2px solid var(--accent);
+        mask: var(--cyg-corners);
+        pointer-events: none;
+    }
+
+    /* Card 1 · the holo plate. */
+    [data-theme='cyberpunk'] [data-dt-card='1'] .dt-tour {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        border: 0;
+        background: var(--cyg-notch-line), var(--cyg-scan), var(--card);
+        box-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] [data-dt-highlight='1'][data-dt-playing='next'] [data-kp-tour-target]::after {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+    }
+}

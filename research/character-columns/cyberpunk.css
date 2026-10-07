@@ -1,0 +1,79 @@
+/* research/character-columns, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word and the stutter). Only cyberpunk's decided options change: shape 2,
+   loading 3, arrival 2, tone 1, live 3. Linked after the columns stylesheet.
+
+   - shape: every column is a holo plate (the yellow rim glowing inward, scan
+     lines, the 14 px notch at its dossier corner); the pair of cuts and the
+     two corner triangles are gone; the label is a prefixed cyan mono
+     capital (`/// `), no longer a yellow tab; the figure is the display face;
+   - loading: signal loss, the package's word LOADING deciphered on the
+     skeleton lines of a waiting column (the demo's own rule that stilled them
+     is lifted), one tick (60 ms) later per column, in place of the rolling
+     lines;
+   - arrival: every column splits in (four ticks of 120 ms, one tick later
+     per column), in place of the wipe of the figure;
+   - tone: the change stays a square chip, now in mono with the 4 px cut;
+   - live: the figure that changed comes home from its two copies, 6, 4, 2,
+     1 px, four ticks of 120 ms, in place of the shake. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-cs-shape='2'] .kp-kpis {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --cl-plate: var(--card);
+        --cl-frame: 0 solid transparent;
+        --cl-radius: 0;
+        --cl-clip: var(--cyg-clip);
+        --cl-shadow: var(--cyg-rest);
+        --cl-pat: var(--cyg-notch-line), var(--cyg-scan);
+        --cl-deco: none;
+        --cl-tag: '///';
+        --cl-label-font: var(--kp-mono, var(--theme-font-mono));
+        --cl-label-bg: none;
+        --cl-label-ink: var(--accent);
+        --cl-label-pad: 0;
+        --cl-label-bleed: 0;
+        --cl-label-track: 0.14em;
+        --cl-tag-ink: var(--accent);
+        --cl-num-font: var(--theme-font-display);
+        --cl-num-weight: 700;
+    }
+
+    /* Loading 3 · the rolling lines → signal loss (the skeleton's word, css/cyberpunk-register.css). */
+    [data-theme='cyberpunk'] [data-cs-loading='3'] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+    }
+
+    /* Tone 1 · the square chip, in the machine's voice. */
+    [data-theme='cyberpunk'] [data-cs-tone='1'] .kp-kpis {
+        --cl-delta-radius: 0;
+        --cl-delta-font: var(--kp-mono, var(--theme-font-mono));
+    }
+
+    [data-theme='cyberpunk'] [data-cs-tone='1'] .kp-kpis .kp-kpi__delta {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    }
+
+    /* Arrival 2 and live 3 · the wipe and the shake are retired. */
+    [data-theme='cyberpunk'] [data-cs-arrival='2'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: cyg-split var(--cyg-time) steps(1, end) backwards;
+        --cl-arrive-stagger: var(--cyg-tick);
+    }
+
+    [data-theme='cyberpunk'] [data-cs-live='3'] .kp-kpis {
+        --cl-live-tile: none;
+        --cl-live-num: kp-sig-cyberpunk-update-stutter var(--cyg-time) steps(1, end) both;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] .kp-skeleton::before {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) calc(var(--cl-i, 0) * var(--cyg-tick)) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) calc(var(--cl-i, 0) * var(--cyg-tick)) infinite;
+        }
+    }
+}

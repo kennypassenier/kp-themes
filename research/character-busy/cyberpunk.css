@@ -1,0 +1,111 @@
+/* research/character-busy, cyberpunk: the decided picks on cyberpunk's grammar
+   (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   keyframes of the word and the lock). Same method as forest's b0b137d8: only
+   cyberpunk's decided options change (shape r2-cy-shape-2, loading 1, arrival 1,
+   failure 1), nothing else; phone 1 (the flat trace) fits and stays. Linked
+   after every other busy stylesheet, so each rule here replaces the option's
+   own at equal specificity.
+
+   - shape: the holo plate, cut at its dossier corner (14 px);
+   - loading: signal loss, the word LOADING deciphered at the panel's start
+     corner like a VCR's on-screen text, torn and sliced away, 1800 ms, in
+     place of the trace along the foot;
+   - arrival: the channel split, four ticks of 120 ms, on the panel (the
+     veil is there at once); the leave is the same four ticks the other way
+     round (cyberpunk.js puts the removed layer back for one split);
+   - failure: the alert is locked as a target: corner brackets in the
+     destructive ink twitch twice and hold, the notch 8 px kept. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-2'] .kp-datatable__busy-overlay {
+        --bo-veil: color-mix(in oklab, var(--background) 72%, transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-bo-shape='r2-cy-shape-2'] .kp-datatable__busy-panel {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-bg: var(--cyg-notch-line), var(--cyg-scan), var(--card);
+        --bo-panel-shadow: var(--cyg-rest);
+        --bo-font: var(--theme-font-mono, var(--theme-font-body));
+        --bo-ring: none;
+        clip-path: var(--cyg-clip);
+    }
+
+    /* Loading 1 · the trace sweeps → signal loss. The word stands at the panel's start
+       corner; the spinner (the package's bars) and the app's words keep the panel. */
+    [data-theme='cyberpunk'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: none;
+        --bo-pic-inset: 0.45rem auto auto 0.7rem;
+        content: 'LOADING';
+        z-index: 2;
+        inline-size: max-content;
+        block-size: auto;
+        background-size: auto;
+        color: var(--foreground);
+        font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+
+        /* Arrival 1 · at once → the channel split. */
+        [data-theme='cyberpunk'] [data-bo-arrival='1'] .kp-datatable__busy-panel {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        /* Leave · the arrival reversed, frame for frame, and held until the layer is gone. */
+        [data-theme='cyberpunk'] [data-bo-arrival='1'] .kp-datatable__busy-overlay[data-cyg-leaving] .kp-datatable__busy-panel {
+            animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden]) {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden])::after {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+    }
+
+    [data-theme='cyberpunk'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival-dur: 0s;
+    }
+
+    /* Failure 1 · the neon fault → the lock: the destructive ink in four corner brackets. */
+    [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --cyg-clip: var(--cyg-clip-ctl);
+        --cyg-wide: var(--cyg-wide-ctl);
+        --cyg-rest: inset 0 0 0 1px var(--border);
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--card-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-shadow: var(--cyg-rest);
+        --bo-fail-from: none;
+        --bo-fail-transition: none;
+        position: relative;
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset: var(--kp-cp-lk, 3px);
+        border: 2px solid var(--destructive);
+        mask: var(--cyg-corners);
+        pointer-events: none;
+    }
+}

@@ -281,8 +281,8 @@ const IDEAS = {
                 text: 'A near-black panel edged in a thin magenta-to-cyan rule, the head carries a small glitch-glyph mark, the body on a faint scanline texture.',
             },
             {
-                name: 'The HUD tray',
-                text: 'A panel with angular cut corners (clipped, not rounded) and a cyan rule along the top of the head, the foot behind a dashed data-rate style rule.',
+                name: 'The holo tray',
+                text: 'A holo plate on the large panels’ pair of cuts, 18 px at the top-end and bottom-start corners, a yellow rim glowing inward, scan lines at 135 degrees, a cyan rule along the head, the foot behind a dashed rule.',
             },
             {
                 name: 'The data slab',
@@ -295,8 +295,8 @@ const IDEAS = {
                 text: 'The panel snaps to full size in three quick jittered steps (position, not opacity) before settling; closing plays the same three steps in reverse.',
             },
             {
-                name: 'It rezzes in from static',
-                text: 'The panel slides in while a scanline sweeps once down its face; closing slides it out while the scanline sweeps back up, reversed.',
+                name: 'It splits in',
+                text: 'The panel is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the cuts kept at every tick, nothing travels; closing plays the same four ticks the other way round and is gone with the last.',
             },
             {
                 name: 'It slots home',
@@ -305,8 +305,8 @@ const IDEAS = {
         ],
         highlight: [
             {
-                name: 'The scanline ring',
-                text: 'A magenta ring with a moving scanline notch circles the target; the rest of the stage drops to near-black.',
+                name: 'The target brackets',
+                text: 'Four cyan corner brackets close on the target and twitch twice as they lock; the rest of the stage drops to near-black.',
             },
             {
                 name: 'The glitch bracket',
@@ -319,8 +319,8 @@ const IDEAS = {
         ],
         card: [
             {
-                name: 'The HUD tooltip',
-                text: 'A clipped-corner dark card with a magenta top rule, the title in a condensed bold, the foot split by a thin cyan rule.',
+                name: 'The holo card',
+                text: 'A holo plate cut at its dossier corner, 14 px at top-end: a yellow rim glowing inward, scan lines, the title in a condensed bold, the foot split by a thin cyan rule.',
             },
             {
                 name: 'The terminal popup',
@@ -341,8 +341,8 @@ const IDEAS = {
                 text: 'The card jitters sideways in three quick steps while its text swaps mid-jitter, like a signal cutting to a new feed; the ring follows on the last step.',
             },
             {
-                name: 'The chip reprints',
-                text: 'The card’s border redraws stroke-by-stroke (a dash offset sweep) as the new text appears; the reticle holds still until the redraw finishes.',
+                name: 'The step splits in',
+                text: 'The card is a yellow copy and a cyan copy until they meet with every step: four ticks of 120 ms, 6, 4, 2, 1 px, as the new text appears; the brackets lock on the new target.',
             },
         ],
     },

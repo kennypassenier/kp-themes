@@ -1,0 +1,185 @@
+/* research/character-calendar, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word and the lock). Only cyberpunk's decided options change: shape 3,
+   loading 2, arrival 1, tone 2, select 2. Linked after every other calendar
+   stylesheet.
+
+   - shape: a day is a small plate cut by the 8 px notch at its dossier
+     corner, scan lines on its face, the figure in the display face, the
+     weekdays in cyan mono capitals; the slant and the slit are gone;
+   - loading: signal loss, the word LOADING deciphered on every waiting day,
+     one tick (60 ms) later per column; the hazard band is gone (the stripes
+     mean "armed", G16); the whole-grid card is a holo plate;
+   - arrival: every day splits in (four ticks of 120 ms), one tick later per
+     row, in place of the five-step jitter;
+   - tone: a warning and a failed night are locked as targets (corner
+     brackets in the tone's ink, twitching twice as they lock) in place of the
+     hazard band; today's chip reads "> NOW" in the notched primary;
+   - select: the picked day is held in yellow target brackets, and pointing
+     doubles its edge (cyan along the head and the end, red along the foot, 5,
+     4, 3, then 2 px); a day no longer moves under the pointer. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-cl-shape='3'] .kp-calendar {
+        --cl-edge-w: 1px;
+        --cl-shadow: 0 0 transparent;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-shape='3'] .kp-calendar__day {
+        --cyg-clip: var(--cyg-clip-tag);
+        --cyg-wide: var(--cyg-wide-tag);
+        transform: none;
+        background:
+            linear-gradient(45deg, transparent calc(50% - 1px), var(--cl-edge) calc(50% - 1px) 50%, transparent 50%) 100% 0 / var(--cyg-notch-sm)
+                var(--cyg-notch-sm) no-repeat,
+            var(--cyg-scan),
+            var(--cl-pat),
+            var(--cl-bg);
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-cl-shape='3'] .kp-calendar__day > * {
+        transform: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-shape='3'] .kp-calendar__grid th {
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        font-size: 0.75em;
+        letter-spacing: 0.14em;
+    }
+
+    /* Loading 2 · the hazard roster's crawl → signal loss, the word deciphered on a waiting day. */
+    [data-theme='cyberpunk'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading'] {
+        --cl-ink: var(--foreground);
+        --cl-fg: hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    [data-theme='cyberpunk'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: 'LOADING';
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        block-size: auto;
+        background: none;
+        color: var(--foreground);
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        font-size: 0.4375rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] [data-cl-loading='2'] .kp-calendar {
+        --cl-busy-r: 0;
+        --cl-busy-bg: var(--card);
+        --cl-busy-shadow: var(--cyg-rim);
+    }
+
+    [data-theme='cyberpunk'] [data-cl-loading='2'] .kp-calendar__busy {
+        clip-path: var(--cyg-clip-plate);
+    }
+
+    /* Tone 2 · the hazard band → the lock: corner brackets in the tone's ink. */
+    [data-theme='cyberpunk'] [data-cl-tone='2'] .kp-calendar__day:is([data-kp-tone='warn'], [data-kp-tone='bad'])::after {
+        content: '';
+        inset: 3px;
+        block-size: auto;
+        border: 2px solid var(--cl-ink);
+        border-radius: 0;
+        background: none;
+        mask: var(--cyg-corners-sm);
+        z-index: 1;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-tone='2'] .kp-calendar__swatch:is([data-kp-tone='warn'], [data-kp-tone='bad']) {
+        --cl-pat: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-tone='2'] td:has(> .kp-calendar__day[data-kp-today])::after {
+        content: '> NOW';
+        padding: 1px 4px 1px 3px;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    }
+
+    /* Select 2 · the picked day is held in target brackets; pointing is the split edge. */
+    [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar {
+        --cl-pick: 0 solid transparent;
+        --cl-pick-offset: 0;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day:hover {
+        translate: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] td {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] td[aria-selected='true']::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        z-index: 3;
+        border: 2px solid var(--primary);
+        mask: var(--cyg-corners);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --cl-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day:hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day:focus-visible {
+        outline-offset: -3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s 180ms;
+        }
+
+        [data-theme='cyberpunk'] [data-cl-select='2'] .kp-calendar__day:hover {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s;
+        }
+
+        [data-theme='cyberpunk'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) calc(var(--cl-col, 0) * 60ms) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) calc(var(--cl-col, 0) * 60ms) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-cl-tone='2'] .kp-calendar__day:is([data-kp-tone='warn'], [data-kp-tone='bad'])::after {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-cl-select='2'] td[aria-selected='true']::before {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            --cl-step: 0ms;
+            animation: cyg-split var(--cyg-time) steps(1, end) calc(var(--cl-row, 0) * var(--cyg-tick)) backwards;
+        }
+    }
+}

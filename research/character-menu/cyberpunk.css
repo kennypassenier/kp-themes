@@ -1,0 +1,115 @@
+/* research/character-menu, cyberpunk: the decided picks on cyberpunk's grammar
+   (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word, the lock, the split edge, the brackets and the closed circuit). Only
+   cyberpunk's decided options change: shape r3-cy-shape-1, loading
+   r3-cy-load-3, open r3-cy-open-1, tone r3-cy-tone-3 (it already is the
+   lock), interact r2-cp-interact-3. Linked after every other menu stylesheet.
+
+   - shape: the deck is a holo plate (the yellow rim glowing inward, scan
+     lines, the 14 px notch at its dossier corner); the pair of cuts is gone;
+     the numbered groups, the lit pads and the KP//NET bar stay;
+   - loading: signal loss, the word LOADING deciphered at the end of the
+     waiting entry, in place of the hunting reticle and TARGET ACQUIRED;
+   - open: the deck splits open (four ticks of 120 ms) and splits shut as the
+     same four the other way round, in place of the seven-step glitch;
+   - tone: the destructive entry's brackets are the register's lock (twitching
+     twice and holding, once), not the demo's own looping pair; its TARGET tag
+     and the OFFLINE reason stay;
+   - interact: the entry is cyberpunk's own (composite = own element): hover
+     doubles its edge, focus closes target brackets, a press lights the
+     circuit; the yellow side line, the glow and the surge are gone. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-mb-shape='r3-cy-shape-1'] .kp-menu-button > .kp-menu {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --r3cy-clip: var(--cyg-clip);
+        --r3cy-plate: var(--cyg-scan);
+        border: 0;
+        background-color: var(--popover);
+        background-image: var(--cyg-notch-line), var(--cyg-scan);
+        box-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-mb-shape='r3-cy-shape-1'] .kp-menu-button > .kp-menu::before {
+        content: none;
+    }
+
+    /* Loading r3-cy-load-3 · the lock-on → signal loss at the end of the waiting entry. */
+    [data-theme='cyberpunk'] [data-mb-loading='r3-cy-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::before {
+        content: none;
+    }
+
+    [data-theme='cyberpunk'] [data-mb-loading='r3-cy-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+        content: 'LOADING';
+        inset: 0 0.75rem 0 auto;
+        inline-size: auto;
+        display: grid;
+        place-items: center;
+        border: 0;
+        mask: none;
+        background: none;
+        color: var(--foreground);
+        font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+        font-size: 0.5625rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] [data-mb-loading='r3-cy-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] .kp-menu__hint::after {
+        content: none;
+        animation: none;
+    }
+
+    /* Tone r3-cy-tone-3 · the lock is the register's; the demo's own brackets and their loop are retired,
+       and the entry's ::after is the focus brackets again. */
+    [data-theme='cyberpunk'] [data-mb-tone='r3-cy-tone-3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive::after {
+        inset: calc(var(--kp-cp-ft) * 3px);
+        border: calc(var(--kp-cp-fp) * 2px) solid var(--focus-ring);
+        box-shadow: inset 0 0 0 calc(var(--kp-cp-fp) * 2px) var(--focus-ring-contrast);
+        mask: var(--cyg-corners);
+        animation: none;
+    }
+
+    /* Interact r2-cp-interact-3 · the surge → the register's split edge and closed circuit. */
+    [data-theme='cyberpunk']
+        [data-mb-interact='r2-cp-interact-3']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus], :active) {
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-mb-loading='r3-cy-load-3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading]::after {
+            animation:
+                kp-sig-cyberpunk-word calc(1800ms / var(--mb-speed, 1)) steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear calc(1800ms / var(--mb-speed, 1)) steps(1, end) infinite;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='r3-cy-open-1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: cyg-split calc(var(--cyg-time) / var(--mb-speed, 1)) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-mb-open='r3-cy-open-1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation: cyg-split-out calc(var(--cyg-time) / var(--mb-speed, 1)) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk']
+            [data-mb-interact='r2-cp-interact-3']
+            .kp-menu-button
+            > .kp-menu
+            .kp-menu__item--destructive:is(:hover, :focus-visible, [data-mb-force-focus]) {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+    }
+}

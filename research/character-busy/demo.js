@@ -313,8 +313,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The neon trace sweeps',
-                text: 'A neon rule sweeps along the panel’s foot, looping, with its own glow.',
+                name: 'Signal loss',
+                text: 'The word LOADING is deciphered from noise glyphs at the panel’s start corner like a VCR’s on-screen text, holds in neon with a cyan and a red copy, tears sideways and is sliced away: 1800 ms, hard ticks, looping.',
             },
             {
                 name: 'The glitch flickers',
@@ -327,8 +327,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
+                name: 'The channel split',
+                text: 'The panel is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, notch cut at every tick; it leaves as the same four ticks the other way round.',
             },
             {
                 name: 'Jacked in',
@@ -341,8 +341,8 @@ const IDEAS = {
         ],
         failure: [
             {
-                name: 'The neon fault',
-                text: 'The failed alert’s frame glows in the destructive colour, cut corners kept.',
+                name: 'The target lock',
+                text: 'The failed alert splits in, then four destructive corner brackets close on it in two twitches and hold; the 8 px notch is kept.',
             },
             {
                 name: 'The glitch alarm',

@@ -1,0 +1,132 @@
+/* research/character-chart, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word). Only cyberpunk's decided options change: shape r3-cy-ice, loading
+   r3-cy-ld-rain, arrival r3-cy-ar-chrome, update none, tip a (events target
+   stays: the lock-on marker is the reticle, G16). Linked after every other
+   chart stylesheet.
+
+   - shape: the plot is a holo plate (yellow rim glowing inward, scan lines,
+     the 14 px notch at its dossier corner); the split glow of every line is
+     gone, because a signal is split only while it changes (G16); the title
+     and the legend speak in prefixed cyan mono capitals, notched at 8 px;
+   - loading: signal loss, the word LOADING deciphered over the empty plot,
+     torn sideways and sliced away, in place of the rain;
+   - arrival: the plot and its lines split in (four ticks of 120 ms), in
+     place of the chrome wipe;
+   - update: the new reading is drawn at once and the lines come home 6, 4, 2,
+     1 px from a yellow and a cyan copy of their own shape, four ticks;
+   - tip: the tooltip is a notched plate (8 px, bottom-end) with a cyan rim; it
+     splits in, and cyberpunk.js lets it split out. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart {
+        --cc-paper: var(--cyg-notch-line), var(--cyg-scan), var(--card);
+        --cc-frame: 0 solid transparent;
+        --cc-paper-shadow: var(--cyg-rim);
+        --cc-line-filter: none;
+        --cc-line-cap: square;
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --cc-grid: hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__plot:not(.kp-chart__spark-plot) {
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__title {
+        letter-spacing: 0.14em;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__title::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 0;
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: var(--cyg-clip-ctl);
+        text-shadow: none;
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__source[aria-pressed='true'] {
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-shape='r3-cy-ice'] .kp-chart__swatch {
+        box-shadow: none;
+    }
+
+    /* Loading · the rain → signal loss. */
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::before {
+        content: 'LOADING';
+        display: grid;
+        place-items: center;
+        background: none;
+        color: var(--foreground);
+        font-family: var(--kp-mono, var(--theme-font-mono, monospace));
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::after {
+        background: none;
+        animation: none;
+    }
+
+    /* Tip a · the tooltip is a notched plate with a cyan rim. */
+    [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip {
+        --cyg-clip: var(--cyg-clip-ctl);
+        --cyg-wide: var(--cyg-wide-ctl);
+        --cyg-rest: inset 0 0 0 1px var(--accent);
+        border: 0;
+        border-radius: 0;
+        box-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-cc-loading='r3-cy-ld-rain'] .kp-chart__state[data-kp-state='loading']::before {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+
+        /* Arrival · the plot splits in, and so do its lines. */
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-chrome'][data-cc-arriving] .kp-chart__plot {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-cc-arrival='r3-cy-ar-chrome'][data-cc-arriving] .kp-chart__series {
+            clip-path: none;
+            filter: none;
+            animation: cyg-line-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        /* Update · the lines come home from their two copies. */
+        [data-theme='cyberpunk'] [data-cc-update='none'][data-cc-updating] .kp-chart__series {
+            animation: cyg-line-split var(--cyg-time) steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip:not([hidden]) {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        /* The tooltip's close is its open reversed: cyberpunk.js keeps it for one split. */
+        [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip[hidden][data-cyg-leaving] {
+            display: grid;
+            animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
+        }
+    }
+}

@@ -22,17 +22,17 @@ export default {
             },
             {
                 key: 'r3-cy-ice',
-                name: 'The black ice',
-                text: 'A void plot behind a thin cyan rule, the grid in long yellow dashes like a tripwire. Every line throws a split glow, cyan to one side and yellow to the other, like a screen with its colours pulled apart. The legend is glitched labels with a cyan-and-yellow shadow, lit solid cyan when pressed; the crosshair a fine yellow dash.',
+                name: 'The holo plot',
+                text: 'The plot is a holo plate: a void plate with a yellow rim glowing 10 px inward, scan lines at 135 degrees and the 14 px notch cut at its dossier corner, the grid in long yellow tripwire dashes. The lines are drawn square and sharp with no glow at rest. The title and the legend are prefixed cyan mono capitals, the legend keys notched at 8 px, lit cyan when pressed; the crosshair a fine yellow dash.',
             },
         ],
         loading: [
             {
                 key: 'r3-cy-ld-rain',
-                name: 'The data rain',
+                name: 'Signal loss',
                 ink: '--primary',
                 ink2: '--accent',
-                text: 'Dim cyan columns stand behind the plot while bright glyph rows pour straight down through them, like code raining down a screen.',
+                text: "The word LOADING is deciphered from noise glyphs over the empty plot, holds in neon with a cyan and a red copy, tears sideways and is sliced away, again: 1800 ms in hard ticks, like a VCR's on-screen text.",
             },
             {
                 key: 'r3-cy-ld-ice',
@@ -57,8 +57,8 @@ export default {
             },
             {
                 key: 'r3-cy-ar-chrome',
-                name: 'The chrome wipe',
-                text: 'A brushed-chrome wipe sweeps in at an angle, the lines brightening and glowing as the polish passes over them and settles.',
+                name: 'The channel split',
+                text: 'The plot and its lines are a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick.',
             },
             {
                 key: 'r3-cy-ar-lock',

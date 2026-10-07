@@ -1,0 +1,52 @@
+/* research/character-state, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   lock). Only cyberpunk's decided options change: shape 3, tone 2, change 1.
+   Linked after every other state stylesheet.
+
+   - shape: the dot is a square data light, the word mono capitals on a plate
+     cut by the 8 px notch; the RGB fringe at rest is gone (a signal is split
+     only while it changes, G16);
+   - tone: a pending or failed state is locked as a target: four corner
+     brackets in the tone's ink (twitching twice as they lock) in place of the
+     dashed frame; a good or muted state wears none;
+   - change: the dot comes home from a yellow copy and a cyan copy of its own
+     shape, 6, 4, 2, 1 px in four ticks of 120 ms, in place of the flare. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-sw-shape='3'] {
+        --sw-dot-radius: 0;
+        --sw-pad: 0.08em 0.6em 0.08em 0.4em;
+        --cyg-rest: 0 0 transparent;
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] [data-sw-shape='3'] .kp-state-word {
+        text-shadow: none;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        clip-path: var(--cyg-clip-ctl);
+    }
+
+    [data-theme='cyberpunk'] [data-sw-tone='2'] {
+        --sw-frame: none;
+    }
+
+    [data-theme='cyberpunk'] [data-sw-tone='2']:is([data-sw-kind='pending'], [data-sw-kind='bad'])::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border: 2px solid var(--sw-dot);
+        mask: var(--cyg-corners-sm);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-sw-tone='2']:is([data-sw-kind='pending'], [data-sw-kind='bad'])::after {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-sw-change='1'][data-sw-playing]::before {
+            animation: cyg-stutter var(--cyg-time) steps(1, end);
+        }
+    }
+}

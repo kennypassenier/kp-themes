@@ -300,8 +300,8 @@ const IDEAS = {
                 text: 'A duty roster on a hazard terminal: plates with a cut corner, the number in the condensed display face, a band of hazard stripes along the top of every night that went wrong (amber for some missing, red for none).',
             },
             {
-                name: 'The data shard',
-                text: 'Each day a slanted shard: the plate skewed a few degrees, the figure in the display face, a magenta slit along the foot; the weekdays in tight caps.',
+                name: 'The holo shard',
+                text: 'Each day a small holo plate: the 8 px notch cut at its top-end corner, scan lines on its face, the figure in the display face, the weekdays in cyan mono capitals; nothing slants.',
             },
         ],
         loading: [
@@ -310,8 +310,8 @@ const IDEAS = {
                 text: "Loading sends a cyan packet running along each cell's foot.",
             },
             {
-                name: 'The hazard roster: its loading',
-                text: 'Loading crawls the hazard stripes along every band.',
+                name: 'Signal loss',
+                text: 'Every waiting day deciphers the word LOADING from noise glyphs, holds it in neon with a cyan and a red copy, tears it sideways and slices it away, one tick (60 ms) later per column: 1800 ms, hard ticks.',
             },
             {
                 name: 'The glitch slice',
@@ -320,8 +320,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Glitch in',
-                text: 'Each shard jitters sideways in hard steps and locks in place.',
+                name: 'The channel split',
+                text: 'Each day is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick, one tick later per row.',
             },
             {
                 name: 'Data rain',
@@ -338,8 +338,8 @@ const IDEAS = {
                 text: 'Today sits between yellow HUD brackets; the picked day in a yellow tube.',
             },
             {
-                name: 'The hazard roster: its tones and today',
-                text: 'A duty roster on a hazard terminal: plates with a cut corner, the number in the condensed display face, a band of hazard stripes along the top of every night that went wrong (amber for some missing, red for none). Today wears a yellow frame and a NOW tag; the picked day a cyan frame.',
+                name: 'Target lock',
+                text: 'A night with some services missing, or none, is locked as a target: four corner brackets in the tone\'s ink twitch twice as they lock and hold; today wears a yellow frame and a notched "> NOW" tag.',
             },
             {
                 name: 'The corner tag',
@@ -352,8 +352,8 @@ const IDEAS = {
                 text: 'Today sits between yellow HUD brackets; the picked day in a yellow tube. New: a ring of light on hover, the picked count in brackets.',
             },
             {
-                name: 'The hazard roster: its pick',
-                text: 'Today wears a yellow frame and a NOW tag; the picked day a cyan frame. New: the day nudged aside on hover, the picked count on an inverted label.',
+                name: 'Brackets and split edge',
+                text: 'The picked day is held in four yellow target brackets that twitch twice as they lock; the day under the pointer gets a doubled edge, cyan along the head and the end, red along the foot, 5, 4, 3, then 2 px; nothing moves; the picked count on an inverted label.',
             },
             {
                 name: 'The target lock',

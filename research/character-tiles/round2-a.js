@@ -44,8 +44,8 @@ export default {
             },
             {
                 key: 'r2-cy-load-6',
-                name: 'Chrome wipe gloss',
-                text: 'A diagonal chrome gloss wipes across the whole plate and back, as the chart’s own chrome wipe already does.',
+                name: 'Signal loss',
+                text: 'The word LOADING is deciphered from noise glyphs over the waiting tile, holds in neon with a cyan and a red copy, tears sideways and is sliced away: 1800 ms in hard ticks.',
             },
         ],
         arrival: [
@@ -57,8 +57,8 @@ export default {
             },
             {
                 key: 'r2-cy-arrive-3',
-                name: 'Packet race',
-                text: 'A bright trace races once along the top edge, down the side and along the foot before it holds, as the graph’s own packet race already runs.',
+                name: 'The channel split',
+                text: 'Each tile is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick, one tick of 60 ms later per tile.',
             },
         ],
         tone: [
@@ -69,8 +69,8 @@ export default {
             },
             {
                 key: 'r2-cy-tone-2',
-                name: 'Glitch-slice frame',
-                text: 'A warning or destructive tile is boxed all round in its own colour, the box torn by one skewed slice through a corner, as a glitch tears the trend tile’s own hazard frame.',
+                name: 'The target lock',
+                text: 'A warning or destructive tile is locked as a target: four corner brackets in its colour twitch twice as they lock and hold.',
             },
             {
                 key: 'r2-cy-tone-3',
@@ -87,8 +87,8 @@ export default {
             },
             {
                 key: 'r2-cy-live-3',
-                name: 'Scanline surge',
-                text: 'A bright scanline streaks once from top to bottom of the plate and dies away, as the graph’s own neon surge already runs through it.',
+                name: 'The tile stutters home',
+                text: 'The tile that changed comes home from a yellow copy and a cyan copy of its own shape, 6, 4, 2, 1 px, four ticks of 120 ms.',
             },
         ],
     },

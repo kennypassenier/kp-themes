@@ -1,0 +1,103 @@
+/* research/character-header, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   notch, the split edge, the brackets and the closed circuit of a button).
+   Only cyberpunk's decided options change: shape 3, menu 2, interactive 1.
+   Linked after every other header stylesheet.
+
+   - composite = the theme's own element (G17): the header's buttons stop being
+     cyan chips of the demo; their frame, notch, charge and ticks revert to
+     cyberpunk's own `.kp-button` (the demo's shared rule paints a border, a
+     radius, a flat ground and no transition on every header button, and
+     `revert-layer` would also roll back the register's own signature layer,
+     so the register's background layers are written back here), and they
+     hover (the split edge), focus (the target brackets) and press (the closed
+     circuit) exactly as the register draws them;
+   - shape: the header is a holo plate (the yellow rim glowing inward, scan
+     lines, the 14 px notch at its dossier corner) in place of the cyan
+     scanlined rim;
+   - menu: the panel splits open (four ticks of 120 ms) and splits shut as the
+     same four the other way round, in place of the four-step reveal; the
+     panel is the register's popover, a holo plate. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-ph-shape='3'] .kp-page-header {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --ph-plate: var(--card);
+        --ph-frame: 0 solid transparent;
+        --ph-radius: 0;
+        --ph-pat: var(--cyg-notch-line), var(--cyg-scan);
+        --ph-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-ph-shape='3'] .kp-page-header__title {
+        --ph-title-font: var(--theme-font-display);
+        --ph-title-case: uppercase;
+    }
+
+    /* Interactive 1 · the button is cyberpunk's own. The register's three layers of the notched
+       frame and the grid of a press are written back as the button's pattern. */
+    [data-theme='cyberpunk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 0 solid transparent;
+        --ph-btn-radius: 0;
+        --ph-btn-ink: var(--kp-btn-fg);
+        --ph-btn-bg: var(--kp-btn-frame);
+        --ph-btn-primary-ink: var(--kp-btn-fg);
+        --ph-btn-primary-bg: var(--kp-btn-frame);
+        --ph-btn-shadow: none;
+        --ph-btn-primary-frame: transparent;
+        --ph-btn-pat:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        --ph-btn-primary-pat: var(--ph-btn-pat);
+        background-size:
+            calc(100% - 8px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 8px),
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            right bottom,
+            2px 2px;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:is(:hover, :active, :focus-visible):not(:disabled) {
+        box-shadow: none;
+        background-color: var(--kp-btn-frame);
+    }
+
+    /* Menu 2 · the panel is a holo plate; it splits open and shut. */
+    [data-theme='cyberpunk'] [data-ph-menu='2'] [data-ph-panel] {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --ph-menu-frame: 0 solid transparent;
+        --ph-menu-radius: 0;
+        --ph-menu-pat: var(--cyg-notch-line), var(--cyg-scan);
+        --ph-menu-shadow: var(--cyg-rest);
+        clip-path: var(--cyg-clip);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button {
+            --ph-btn-transition: --kp-cp-t 180ms steps(4, jump-end), --kp-cp-p 0s 180ms, --kp-cp-ft 180ms steps(4, jump-end), --kp-cp-fp 0s 180ms;
+        }
+
+        [data-theme='cyberpunk'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
+        }
+    }
+}

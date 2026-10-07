@@ -1,0 +1,87 @@
+/* research/character-trend, cyberpunk: the decided picks on cyberpunk's
+   grammar (themes/cyberpunk/CHARACTER.md G1-G18; research/cyberpunk-character/
+   grammar.css holds the tokens and keyframes, css/cyberpunk-register.css the
+   word, the lock and the stutter). Only cyberpunk's decided options change:
+   shape 1, loading 1, arrival 3, tone 3, live 3. Linked after the trend
+   stylesheet.
+
+   - shape: the tile is the holo plate (the yellow rim glowing inward, scan
+     lines, the 14 px notch at its dossier corner) with no glow at rest on the
+     figure or the line; the figure in the display face;
+   - loading: the packet along the baseline is retired; the tile's skeleton
+     lines carry the package's word LOADING (signal loss);
+   - arrival: the tile splits in (four ticks of 120 ms) in place of the
+     flicker and the typed figure;
+   - tone: a warning or failed tile is locked as a target (four corner
+     brackets in the tone's ink twitching twice) in place of the full frame, and
+     the change is a square mono chip with the 4 px cut, no skew;
+   - live: the line comes home from a yellow copy and a cyan copy of its own
+     shape, 6, 4, 2, 1 px in four ticks of 120 ms, in place of the flare. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] [data-ct-shape='1'] .kp-kpi--trend {
+        --cyg-clip: var(--cyg-clip-plate);
+        --cyg-wide: var(--cyg-wide-plate);
+        --cyg-rest: var(--cyg-rim);
+        --tr-plate: var(--card);
+        --tr-frame: 0 solid transparent;
+        --tr-radius: 0;
+        --tr-pat: var(--cyg-notch-line), var(--cyg-scan);
+        --tr-shadow: var(--cyg-rest);
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-shadow: none;
+        --tr-glow: none;
+        clip-path: var(--cyg-clip);
+    }
+
+    [data-theme='cyberpunk'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: none;
+        --tr-load-anim: none;
+    }
+
+    [data-theme='cyberpunk'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-turn: none;
+        --tr-tone-over:
+            linear-gradient(var(--tr-tc), var(--tr-tc)) var(--kp-cp-lk) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--tr-tc), var(--tr-tc)) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] [data-ct-tone='3'] .kp-kpi--trend .kp-kpi__delta {
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    }
+
+    [data-theme='cyberpunk'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    [data-theme='cyberpunk'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: cyg-line-split var(--cyg-time) steps(1, end);
+        --tr-live-area: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-ct-arrival='3'] .kp-kpi--trend:not([aria-busy='true']) {
+            animation: cyg-split var(--cyg-time) steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone]:not([aria-busy='true']) {
+            animation:
+                cyg-split var(--cyg-time) steps(1, end) backwards,
+                kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] [data-ct-loading='1'] .kp-kpi--trend[aria-busy='true'] .kp-skeleton::before {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
+        }
+    }
+}

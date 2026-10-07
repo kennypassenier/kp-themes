@@ -150,7 +150,10 @@ const IDEAS = {
         shape: [
             { name: 'The neon trace', text: 'A black board with a faint circuit grid, the mark a neon tube, cut corners.' },
             { name: 'The glitch HUD', text: 'Yellow brackets at the corners, hazard tape along the top, the mark an RGB-split dot.' },
-            { name: 'The holo card', text: 'A cyan rim with glow, diagonal scan lines, the mark a cyan diamond.' },
+            {
+                name: 'The holo plate',
+                text: 'A holo plate: a yellow rim glowing inward, scan lines at 135 degrees, the 14 px notch cut at its dossier corner, the mark a square.',
+            },
         ],
         loading: [
             { name: 'The neon trace', text: 'A packet of light runs along the baseline.' },
@@ -168,7 +171,10 @@ const IDEAS = {
             { name: 'The glitch mark', text: 'A warning or destructive tile’s mark glitches between two positions.' },
         ],
         hover: [
-            { name: 'The circuit lights', text: 'The grid lines brighten; Open gains a neon underline; focus draws a glitch-cut ring.' },
+            {
+                name: 'The split edge',
+                text: 'The pointed tile doubles its edge: cyan along the head and the end, red along the foot, 5, 4, 3 px and then 2 px while the pointer rests, and back in the same four ticks; Open gains a neon underline and, focused, four target brackets; nothing moves.',
+            },
             { name: 'The HUD locks on', text: 'The corner brackets snap tighter; Open flashes once; focus adds yellow brackets.' },
             { name: 'The hologram flickers', text: 'The rim flickers brighter; Open underlines in cyan; focus adds a scan-line sweep.' },
         ],

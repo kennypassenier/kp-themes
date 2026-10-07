@@ -274,8 +274,8 @@ const IDEAS = {
                 text: 'A neon ticker: a glowing magenta rail above and below the strip, the columns parted by a `//` before each head, the figures in tech mono with a cyan halo.',
             },
             {
-                name: 'The data shards',
-                text: 'Each figure a shard with two cut corners and a neon edge, its head on a magenta tab.',
+                name: 'The holo plates',
+                text: 'Each column is a holo plate: a yellow rim glowing inward, scan lines, the 14 px notch cut at its dossier corner; its head a cyan mono capital behind a /// prefix, the figure in the display face.',
             },
             {
                 name: 'The HUD brackets',
@@ -292,8 +292,8 @@ const IDEAS = {
                 text: 'A glitch line jumps across every column in hard steps.',
             },
             {
-                name: 'Data rain',
-                text: 'A band of thin cyan streaks falls through every column.',
+                name: 'Signal loss',
+                text: 'The word LOADING is deciphered from noise glyphs over every waiting column, one tick later per column, holds in neon with a cyan and a red copy, tears sideways and is sliced away: 1800 ms, hard ticks.',
             },
         ],
         arrival: [
@@ -302,8 +302,8 @@ const IDEAS = {
                 text: 'Each figure glitches into place, torn and shifted in four hard steps, one column after the other.',
             },
             {
-                name: 'Decoded',
-                text: 'Every figure is decoded from the left, character by character, all at once.',
+                name: 'The channel split',
+                text: 'Each column is a yellow copy and a cyan copy until they meet: four ticks of 120 ms, 6, 4, 2, 1 px, the notch cut at every tick, one column after the other.',
             },
             {
                 name: 'Jacked in',
@@ -313,7 +313,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The square chip',
-                text: 'The change on a square chip in its status colour, with the package’s arrows.',
+                text: 'The change on a square chip in its status colour, in mono, with the package’s arrows and a 4 px cut at its end corner.',
             },
             {
                 name: 'The chevrons',
@@ -334,8 +334,8 @@ const IDEAS = {
                 text: 'A figure that changed shows inverted for a moment.',
             },
             {
-                name: 'Shaken',
-                text: 'A figure that changed jitters sideways in hard steps.',
+                name: 'The stutter home',
+                text: 'A figure that changed comes home from a yellow copy and a cyan copy of itself, 6, 4, 2, 1 px, four ticks of 120 ms, and never moves itself.',
             },
         ],
     },

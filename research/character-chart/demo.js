@@ -869,7 +869,14 @@ const OPTIONS = Object.fromEntries(
                 plain,
             ],
             tip: NEW[theme]?.tip ?? [
-                { key: pick, name: `The tooltip of ${lower(IDEAS[theme][pick].name)}`, text: 'Approved in round 1, with the shape you picked.' },
+                {
+                    key: pick,
+                    name: theme === 'cyberpunk' ? 'The notched tooltip' : `The tooltip of ${lower(IDEAS[theme][pick].name)}`,
+                    text:
+                        theme === 'cyberpunk'
+                            ? 'The tooltip is a plate with a cyan rim, the 8 px notch cut at its bottom-end corner, in mono; it splits in as four ticks of 120 ms and splits out as the same four the other way round.'
+                            : 'Approved in round 1, with the shape you picked.',
+                },
                 { key: other, name: `The tooltip of ${lower(IDEAS[theme][other].name)}`, text: "Round 1's other character's tooltip." },
                 { key: 'plain', name: 'The plain tooltip', text: "The package's popover, as today." },
             ],
@@ -887,13 +894,17 @@ const OPTIONS = Object.fromEntries(
                         ? 'A growth ring on the newest point'
                         : theme === 'grotesk' && key === 'none'
                           ? 'Re-registered'
-                          : name,
+                          : theme === 'cyberpunk' && key === 'none'
+                            ? 'The lines stutter home'
+                            : name,
                 text:
                     theme === 'forest' && key === 'none'
                         ? 'The new reading is drawn at once; a thin ring is drawn once round its newest point, clockwise from the top, then fades.'
                         : theme === 'grotesk' && key === 'none'
                           ? 'The new reading is drawn at once and the plot’s red plate falls back into register on it, clockwise, in 8 units.'
-                          : KIND.update[key],
+                          : theme === 'cyberpunk' && key === 'none'
+                            ? 'The new reading is drawn at once; the lines come home from a yellow copy and a cyan copy of their own shape, 6, 4, 2, 1 px, four ticks of 120 ms, and never move themselves.'
+                            : KIND.update[key],
             })),
             events: [...(r2.events.length < 3 ? [['shape', 'As the shape draws them']] : []), ...r2.events].map(([key, name]) => ({
                 key,

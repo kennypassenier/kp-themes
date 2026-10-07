@@ -19,8 +19,8 @@ export default {
             },
             {
                 key: 'r2-cy-shape-2',
-                name: 'The black ice',
-                text: "Echoes the chart's black ice: a dark glass slab, a soft diagonal sheen across its face, one corner sheared off low on the leading edge. Unlike the segment gauge's dashed outline or the data shard's two cuts, this plate has a single shard taken from one corner only.",
+                name: 'The holo plate',
+                text: "The panel is a void plate with a yellow rim glowing 10 px inward and scan lines at 135 degrees, cut by the 14 px notch at its dossier corner (top-end). Unlike the segment gauge's dashes or the data shard's two cuts, one notch and one rim.",
             },
             {
                 key: 'r2-cy-shape-3',

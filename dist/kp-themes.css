@@ -14845,6 +14845,468 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* ── The approved grammar [scope-143; Kenny, 2026-10-07 23:52, 18 of 18 on
+       research/cyberpunk-character; the anchor is the glitch] ─────────────
+       What this block draws, once, for every part below it and for the exits:
+       the notch in two sizes (14 px on a plate at its dossier corner, 8 px on a
+       control, 18 px on the dialog's pair), the holo plate (a yellow rim glowing
+       inward, scan lines at 135 degrees), the channel split that opens, closes,
+       arrives and leaves a part (four ticks of 120 ms: a yellow copy right and
+       up, a cyan copy right and down, 6, 4, 2, 1 px, then the part itself), the
+       split edge under the pointer, the target brackets of focus, the closed
+       circuit of a press. Hard ticks everywhere: `steps()`, never an ease.
+       Colours are tokens only; every copy is the part's own silhouette (a box
+       shadow) and the part's own text (a text shadow), so the copies need no
+       SVG filter. The clip is the part's own cut, wide around it while a copy
+       plays outside its box, so the notch is cut at every frame. */
+
+    /* The clocks. A hover or a focus is four ticks (3, 2, 1, 0 left of the entrance), and its
+       leave is the same four the other way round: `t` counts the ticks left, `p` says
+       whether the part is pointed, so a pose is a function of the two. */
+    @property --kp-cp-t {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 4;
+    }
+
+    @property --kp-cp-p {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @property --kp-cp-ft {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 4;
+    }
+
+    @property --kp-cp-fp {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+    }
+
+    /* The lock-on of a target brackets: the inset the brackets close to. */
+    @property --kp-cp-lk {
+        syntax: '<length>';
+        inherits: true;
+        initial-value: 3px;
+    }
+
+    /* The four bars of the spinner, one height each (a share of its box). */
+    @property --kp-cp-h1 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 56.5%;
+    }
+
+    @property --kp-cp-h2 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    @property --kp-cp-h3 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 30.4%;
+    }
+
+    @property --kp-cp-h4 {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 82.6%;
+    }
+
+    [data-theme='cyberpunk'] {
+        --kp-cp-notch: var(--fx-notch, 14px);
+        --kp-cp-notch-sm: var(--fx-notch-sm, 8px);
+        --kp-cp-notch-pair: 18px;
+        /* The part's own cut, and the same cut with 40 px of room round it: a copy that
+           plays outside the box keeps the notch's diagonal and nothing else. */
+        --kp-cp-clip-plate: polygon(0 0, calc(100% - var(--kp-cp-notch)) 0, 100% var(--kp-cp-notch), 100% 100%, 0 100%);
+        --kp-cp-wide-plate: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --kp-cp-clip-ctl: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-cp-notch-sm)), calc(100% - var(--kp-cp-notch-sm)) 100%, 0 100%);
+        --kp-cp-wide-ctl: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - var(--kp-cp-notch-sm) - 40px),
+            calc(100% - var(--kp-cp-notch-sm) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --kp-cp-clip-pair: polygon(
+            0 0,
+            calc(100% - var(--kp-cp-notch-pair)) 0,
+            100% var(--kp-cp-notch-pair),
+            100% 100%,
+            var(--kp-cp-notch-pair) 100%,
+            0 calc(100% - var(--kp-cp-notch-pair))
+        );
+        --kp-cp-wide-pair: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch-pair) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch-pair) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            calc(var(--kp-cp-notch-pair) + 40px) calc(100% + 40px),
+            -40px calc(100% - var(--kp-cp-notch-pair) - 40px)
+        );
+        /* The reticle's corners: four 9 px tiles. */
+        --kp-cp-corners:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 9px 9px no-repeat, linear-gradient(var(--foreground) 0 0) 100% 0 / 9px 9px no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 9px 9px no-repeat, linear-gradient(var(--foreground) 0 0) 100% 100% / 9px 9px no-repeat;
+        /* A box that changes size takes it in whole ticks: eight of 60 ms. */
+        --kp-size-ease: steps(8, end);
+    }
+
+    /* The two copies, as the part's own silhouette: yellow right and up, cyan right and
+       down (the live stutter's 6, 4, 2, 1 px). Every part that is a plate carries them;
+       a part without a plate has none and only its text splits. */
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-dialog, .kp-toast, .kp-alert, .kp-tooltip) {
+        --kp-cp-rest: 0 0 transparent;
+        --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+    }
+
+    /* Each part's own cut. */
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover) {
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+    }
+
+    [data-theme='cyberpunk'] .kp-dialog {
+        --kp-cp-clip: var(--kp-cp-clip-pair);
+        --kp-cp-wide: var(--kp-cp-wide-pair);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-toast, .kp-alert, .kp-tooltip, .kp-field__input, .kp-badge, .kp-tag) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-clip: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-button-notch)), calc(100% - var(--kp-button-notch)) 100%, 0 100%);
+        --kp-cp-wide: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - var(--kp-button-notch) - 40px),
+            calc(100% - var(--kp-button-notch) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+    }
+
+    /* The holo plate [G7]: a card, a key figure and the menu's popover are void plates with
+       a yellow rim glowing 10 px inward, scan lines at 135 degrees, the rim running along the
+       notch, cut at the dossier corner. A press lights the circuit grid on it. */
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover) {
+        --kp-cp-ground: var(--card);
+        --kp-cp-grid-a: 0;
+        --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        --kp-cp-grid:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px) 0 0 / 100% 100%
+                no-repeat,
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px) 0 0 / 100% 100%
+                no-repeat;
+        --kp-cp-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-cp-grid), var(--kp-cp-notch-line), var(--kp-cp-scan), var(--kp-cp-ground);
+        box-shadow: var(--kp-cp-rest);
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-popover {
+        --kp-cp-ground: var(--popover);
+    }
+
+    /* A key figure that is a toggle and is on: the rim and a primary wash. */
+    [data-theme='cyberpunk'] .kp-kpi--toggle[aria-pressed='true'] {
+        --kp-cp-ground: color-mix(in oklab, var(--primary) 9%, var(--card));
+        box-shadow: var(--kp-cp-rest);
+    }
+
+    /* The machine's voice [G15]: the label is prefixed mono capitals in cyan, the figure the
+       condensed display. */
+    [data-theme='cyberpunk'] .kp-kpi__label {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        letter-spacing: 0.14em;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi__label::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    /* A warning is locked as a target [Kenny: tone = lock, G13]: four corner brackets, 2 px, in the
+       tone's ink (a warning's ink, never its plate; the destructive red) frame a key figure whose
+       `data-kp-tone` says so, and a destructive menu entry. They close on it in two twitches (360 ms,
+       `steps(1)`) and hold; there is no frame and no hazard band. Drawn as background layers, so
+       the part's four pseudo-elements stay for pointing and focus. */
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'],
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'],
+    [data-theme='cyberpunk'] .kp-menu__item--destructive {
+        --kp-cp-tone: var(--destructive);
+        --kp-cp-lock:
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
+            linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-cp-tone: var(--warning-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        background: var(--kp-cp-lock), var(--kp-cp-grid), var(--kp-cp-notch-line), var(--kp-cp-scan), var(--kp-cp-ground);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item--destructive {
+        background-image: var(--kp-cp-lock);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-kpi[data-kp-tone='warning'], .kp-kpi[data-kp-tone='destructive'], .kp-menu__item--destructive) {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+    }
+
+    /* Pointing, focus and press never move a part [G8, G14]: the lift of the register and the
+       kick of the key figure are gone. */
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
+        transform: none;
+    }
+
+    /* ── The split edge: hover [Kenny: hover = split] ─────────────────────────
+       The edge of the pointed part is doubled: cyan along the head and the end, red
+       along the foot, 5, 4, 3 px and then 2 px while the pointer rests, drawn on the part's
+       own cut (a ring between the cut and the cut moved in), open at the start edge.
+       A square part (a menu entry) takes the same two lines as inset shadows. */
+    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: 0px;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        isolation: isolate;
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-cb: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        --kp-cp-ct: var(--kp-cp-notch);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible,
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border: 0;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        transform: none;
+        animation: none;
+        pointer-events: none;
+    }
+
+    /* A menu entry is square: the same edge as two inset shadows (red under cyan). */
+    [data-theme='cyberpunk'] .kp-menu__item {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:hover:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    /* ── Target brackets: focus [Kenny: focus = brackets] ─────────────────────
+       Four corners close on the part from 9 px in: the focus ring colour outside, the
+       contrast colour inside it (DI2's two channels), so the ring reads on any ground. */
+    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle)::before,
+    [data-theme='cyberpunk'] .kp-menu__item::after {
+        content: '';
+        position: absolute;
+        inset: calc(var(--kp-cp-ft) * 3px);
+        z-index: 2;
+        border: calc(var(--kp-cp-fp) * 2px) solid var(--focus-ring);
+        background: none;
+        box-shadow: inset 0 0 0 calc(var(--kp-cp-fp) * 2px) var(--focus-ring-contrast);
+        mask: var(--kp-cp-corners);
+        transform: none;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible {
+        box-shadow: none;
+    }
+
+    /* ── The closed circuit: press [Kenny: press = closed] ────────────────────
+       While the part is held down its circuit grid lights at 60 % and its ground takes the
+       pressed shade; the part does not move. */
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-grid-a: 0;
+        --kp-cp-grid-ink: hsl(from var(--kp-btn-fg) h s l / var(--kp-cp-grid-a));
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size:
+            calc(100% - 8px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 8px),
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            right bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(225deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            left bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
+        --kp-cp-grid-a: 0.6;
+        --kp-btn-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        --kp-cp-grid-a: 0.6;
+        --kp-cp-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:active:not(:is(:disabled, [aria-disabled='true'])) {
+        background:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px), var(--secondary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* In: the pose arrives in four ticks (3, 2, 1, 0 left); out: the same four the
+           other way round, and only then does the part count as at rest. */
+        [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-menu__item) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+        [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):hover {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s 180ms;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s;
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled):focus-visible,
+        [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):hover:focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s;
+        }
+    }
+
     /* The link signature is for links in running text; a link in a navigation,
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
@@ -15048,79 +15510,126 @@
         }
     }
 
+    /* The spinner: signal bars with a glitch copy [Kenny: spinner = glitch]. Four yellow bars
+       under a cyan cap stand on one base line and move one step at a time, 300 ms a step; twice
+       in the 3 s loop the whole spinner tears: a cyan copy right and up, a red copy right and
+       down, and it snaps back. The bars are four gradient layers of the one element, their
+       heights four registered properties on four phases of the same loop. In a busy button every
+       ink is the button's own. */
     [data-theme='cyberpunk'] .kp-spinner {
-        --kp-sig-dur: 1200ms;
+        --kp-sig-dur: 3000ms;
+        --kp-cp-sp-cap: var(--accent);
+        --kp-cp-sp-body: var(--primary);
+        --kp-cp-sp-c1: var(--accent);
+        --kp-cp-sp-c3: var(--destructive);
+        --kp-cp-bar: linear-gradient(var(--kp-cp-sp-cap) 0 2px, var(--kp-cp-sp-body) 2px);
         position: relative;
-        overflow: hidden;
+        box-sizing: border-box;
+        overflow: visible;
         border: 0;
         border-radius: 0;
-        background: hsl(from var(--primary) h s l / 0.1);
-        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.6);
-        clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+        padding-block-end: calc(var(--kp-spinner-size, 1.25rem) * 0.08);
+        background:
+            var(--kp-cp-bar) 4.88% 100% / 18% var(--kp-cp-h1) no-repeat,
+            var(--kp-cp-bar) 34.15% 100% / 18% var(--kp-cp-h2) no-repeat,
+            var(--kp-cp-bar) 63.41% 100% / 18% var(--kp-cp-h3) no-repeat,
+            var(--kp-cp-bar) 92.68% 100% / 18% var(--kp-cp-h4) no-repeat;
+        background-origin: content-box;
+        box-shadow: none;
+        clip-path: none;
         animation: none;
     }
 
-    [data-theme='cyberpunk'] .kp-spinner::before {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: 0;
-        block-size: 45%;
-        background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.35) calc(100% - 2px), var(--primary) calc(100% - 2px));
-        transform: translateY(-100%);
+    [data-theme='cyberpunk'] .kp-button .kp-spinner {
+        --kp-cp-sp-cap: currentColor;
+        --kp-cp-sp-body: currentColor;
+        --kp-cp-sp-c1: currentColor;
+        --kp-cp-sp-c3: currentColor;
     }
 
+    [data-theme='cyberpunk'] .kp-spinner::before,
     [data-theme='cyberpunk'] .kp-spinner::after {
-        content: '';
-        position: absolute;
-        inset: 36%;
-        background: var(--accent);
-        transform: scale(0.6);
+        content: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] .kp-spinner::before {
-            animation: kp-sig-cyberpunk-scan-down 1200ms linear infinite;
-        }
-
-        [data-theme='cyberpunk'] .kp-spinner::after {
-            animation: kp-sig-cyberpunk-core 600ms ease-in-out infinite alternate;
+        [data-theme='cyberpunk'] .kp-spinner {
+            animation:
+                kp-sig-cyberpunk-bars-1 3000ms steps(1, end) infinite,
+                kp-sig-cyberpunk-bars-2 3000ms steps(1, end) -975ms infinite,
+                kp-sig-cyberpunk-bars-3 3000ms steps(1, end) -1950ms infinite,
+                kp-sig-cyberpunk-bars-4 3000ms steps(1, end) -2625ms infinite,
+                kp-sig-cyberpunk-tear 3000ms steps(1, end) infinite;
         }
     }
 
+    /* Waiting: signal loss [Kenny: loading = osd]. The waiting part dims and the word LOADING is
+       deciphered over it from noise glyphs, start to end, holds in neon (a cyan copy right and up,
+       a red copy right and down), tears sideways in a few ticks and is sliced away before it is
+       deciphered again: 1800 ms, thirty ticks of 60 ms, `steps(1)`. The word is the page's
+       machine voice and lives in the keyframes below (a CSS keyframe cannot read it from
+       js/strings.js); the reduced pose is the word standing. The progress bar and the
+       divider keep nothing of their own here: the bar's stream stands dim under the word. */
     [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
         --kp-sig-dur: 1800ms;
         position: relative;
         overflow: hidden;
         block-size: 1.1rem;
         border-radius: 0;
-        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.08) 0 3px, transparent 3px 7px), var(--card);
-        box-shadow: inset 2px 0 0 hsl(from var(--accent) h s l / 0.7);
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
         animation: none;
     }
 
     [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        content: '';
+        content: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: 'LOADING';
         position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: 35%;
-        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.28) 93%, var(--primary) 93%);
-        transform: translateX(-100%);
+        inset: 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        overflow: visible;
+        background: none;
+        clip-path: none;
+        color: var(--foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+        pointer-events: none;
+    }
+
+    /* The waiting part stands dim under its word. */
+    [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track {
+        opacity: 0.2;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-cyberpunk-sweep 1800ms cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+        [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation:
+                kp-sig-cyberpunk-word 1800ms steps(1, end) infinite,
+                kp-sig-cyberpunk-word-tear 1800ms steps(1, end) infinite;
         }
 
-        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 160ms;
+        /* Lines of a skeleton are read one after the other, 6 ticks apart. */
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: 360ms;
         }
 
-        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 320ms;
+        [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: 720ms;
         }
     }
 
@@ -15195,34 +15704,28 @@
         }
     }
 
+    /* The toast, the dialog and the tooltip open by the channel split [Kenny: opening = split]:
+       the part is its yellow and cyan copy until they meet, four ticks of 120 ms. The close
+       is the same four ticks the other way round (js/motion.js plays the entrance backwards,
+       and a leave plays `kp-sig-cyberpunk-split-out`, which is that entrance reversed). The
+       dialog is declared at 720 ms: js/motion.js opens and closes it in two thirds of its
+       entrance, 480 ms, the four ticks of the stutter. */
     [data-theme='cyberpunk'] .kp-toast {
-        --kp-sig-dur: 360ms;
+        --kp-sig-dur: 480ms;
+        clip-path: var(--kp-cp-clip);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-toast {
-            animation: kp-sig-cyberpunk-slice 360ms step-end backwards;
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
         }
     }
 
     [data-theme='cyberpunk'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
-        /* The dialog entrance at a quarter of its first speed (Kenny, 2026-10-03:
-           "I prefer this at 1/4 speed"); durations are written in each animation
-           as literals, so the flash gate can compute their rate [DI5]. */
-        --kp-sig-dur: 1520ms;
-        box-shadow: inset 0 3px 0 var(--primary);
-    }
-
-    [data-theme='cyberpunk'] .kp-dialog::after {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: calc(50% - 1px);
-        block-size: 2px;
-        background: var(--primary);
-        opacity: 0;
-        pointer-events: none;
+        /* Durations are written in each animation as literals, so the flash gate can compute their rate [DI5]. */
+        --kp-sig-dur: 720ms;
+        --kp-cp-rest: inset 0 3px 0 var(--primary);
+        box-shadow: var(--kp-cp-rest);
     }
 
     [data-theme='cyberpunk'] .kp-dialog::backdrop {
@@ -15233,19 +15736,15 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-dialog {
-            animation: kp-sig-cyberpunk-crt 1520ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
-        }
-
-        [data-theme='cyberpunk'] .kp-dialog::after {
-            animation: kp-sig-cyberpunk-crt-line 1520ms cubic-bezier(0.3, 0, 0.2, 1);
+            animation: kp-sig-cyberpunk-split 720ms steps(1, end) backwards;
         }
     }
 
     [data-theme='cyberpunk'] .kp-tooltip {
-        --kp-sig-dur: 220ms;
+        --kp-sig-dur: 480ms;
         padding: 0.35rem 0.75rem 0.35rem 0.6rem;
         text-transform: uppercase;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+        clip-path: var(--kp-cp-clip);
     }
 
     [data-theme='cyberpunk'] .kp-tooltip::before {
@@ -15256,7 +15755,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-tooltip {
-            animation: kp-sig-cyberpunk-wipe 220ms steps(4, jump-end) backwards;
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
         }
     }
 
@@ -15376,26 +15875,319 @@
         }
     }
 
-    @keyframes kp-sig-cyberpunk-scan-down {
-        to {
-            transform: translateY(225%);
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-core {
-        to {
-            transform: scale(1);
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-sweep {
+    @keyframes kp-sig-cyberpunk-bars-1 {
         0% {
-            transform: translateX(-100%);
+            --kp-cp-h1: 56.5%;
         }
 
-        70%,
+        10% {
+            --kp-cp-h1: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h1: 100%;
+        }
+
+        30% {
+            --kp-cp-h1: 100%;
+        }
+
+        40% {
+            --kp-cp-h1: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h1: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h1: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h1: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h1: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h1: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-2 {
+        0% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h2: 100%;
+        }
+
+        30% {
+            --kp-cp-h2: 100%;
+        }
+
+        40% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h2: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-3 {
+        0% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h3: 100%;
+        }
+
+        30% {
+            --kp-cp-h3: 100%;
+        }
+
+        40% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h3: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-4 {
+        0% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h4: 100%;
+        }
+
+        30% {
+            --kp-cp-h4: 100%;
+        }
+
+        40% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h4: 30.4%;
+        }
+    }
+
+    /* The tear: a cyan copy right and up, a red one right and down, 10 % of the spinner at the
+       first tear (1800 ms), 6 % at the second (2100 ms), and home. */
+    @keyframes kp-sig-cyberpunk-tear {
+        60% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * -0.08) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * 0.08) 0 var(--kp-cp-sp-c3));
+        }
+
+        64% {
+            filter: none;
+        }
+
+        70% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * -0.05) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * 0.05) 0 var(--kp-cp-sp-c3));
+        }
+
+        72% {
+            filter: none;
+        }
+    }
+
+    /* The word: deciphered start to end in seven ticks, held, gone at 90 % of the loop. */
+    @keyframes kp-sig-cyberpunk-word {
+        0% {
+            content: '#&$?%@/';
+        }
+
+        3.33% {
+            content: 'L@/#&$?';
+        }
+
+        6.67% {
+            content: 'LO?%@/#';
+        }
+
+        10% {
+            content: 'LOA&$?%';
+        }
+
+        13.33% {
+            content: 'LOAD/#&';
+        }
+
+        16.67% {
+            content: 'LOADI%@';
+        }
+
+        20% {
+            content: 'LOADIN$';
+        }
+
+        23.33% {
+            content: 'LOADING';
+        }
+
+        90% {
+            content: '';
+        }
+    }
+
+    /* The tear before it goes: bands of the word jump sideways with a wider split. */
+    @keyframes kp-sig-cyberpunk-word-tear {
+        0% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        66.67% {
+            translate: -6px 0;
+            clip-path: inset(30% 0 40% 0);
+            text-shadow:
+                6px -2px 0 var(--accent),
+                6px 2px 0 var(--destructive);
+        }
+
+        70% {
+            translate: 6px 0;
+            clip-path: inset(0 0 60% 0);
+            text-shadow:
+                -5px -2px 0 var(--accent),
+                -5px 2px 0 var(--destructive);
+        }
+
+        73.33% {
+            translate: -3px 0;
+            clip-path: inset(55% 0 5% 0);
+            text-shadow:
+                4px -1px 0 var(--accent),
+                4px 1px 0 var(--destructive);
+        }
+
+        76.67% {
+            translate: 4px 0;
+            clip-path: inset(10% 0 50% 0);
+            text-shadow:
+                -3px -1px 0 var(--accent),
+                -3px 1px 0 var(--destructive);
+        }
+
+        80% {
+            translate: -2px 0;
+            clip-path: inset(40% 0 20% 0);
+            text-shadow:
+                3px -1px 0 var(--accent),
+                3px 1px 0 var(--destructive);
+        }
+
+        83.33% {
+            translate: 2px 0;
+            clip-path: inset(0);
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        86.67% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+    }
+
+    /* The target lock: the brackets close twice, then hold. */
+    @keyframes kp-sig-cyberpunk-lock {
+        0% {
+            --kp-cp-lk: 8px;
+        }
+
+        16.67% {
+            --kp-cp-lk: 3px;
+        }
+
+        33.33% {
+            --kp-cp-lk: 6px;
+        }
+
+        50%,
         100% {
-            transform: translateX(290%);
+            --kp-cp-lk: 3px;
         }
     }
 
@@ -15415,75 +16207,82 @@
         }
     }
 
-    @keyframes kp-sig-cyberpunk-slice {
+    /* The channel split [Kenny: curve, opening and leave = split]. Four ticks of 120 ms: the part
+       stands with a yellow copy right and up and a cyan copy right and down, 6, 4, 2 and 1 px, then
+       it is the part itself (the implicit last pose: the element's own clip and shadows). The copies
+       are the silhouette (`--kp-cp-b0` to `-b3`, set on a plate; none elsewhere) and the text
+       (`text-shadow`, which the part's words inherit). The clip is the part's own cut, wide
+       around it while a copy plays outside the box (`--kp-cp-wide`), so the notch is cut at
+       every tick and no frame draws a square corner. Opening is this; closing is this played
+       backwards (js/motion.js), which is `kp-sig-cyberpunk-split-out` where a leave plays it. */
+    @keyframes kp-sig-cyberpunk-split {
         0% {
-            opacity: 0;
-            transform: translateX(10px);
-            clip-path: inset(0 0 100% 0);
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
         }
 
-        15% {
-            opacity: 1;
-            transform: translateX(-6px);
-            clip-path: inset(0 0 55% 0);
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
         }
 
-        35% {
-            transform: translateX(5px);
-            clip-path: inset(40% 0 15% 0);
-        }
-
-        55% {
-            transform: translateX(-3px);
-            clip-path: inset(60% 0 0 0);
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
         }
 
         75% {
-            transform: translateX(1px);
-            clip-path: inset(0);
-        }
-
-        100% {
-            transform: none;
-            clip-path: inset(0);
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
         }
     }
 
-    @keyframes kp-sig-cyberpunk-crt {
-        0%,
-        45% {
-            clip-path: inset(calc(50% - 1px) 0);
-        }
-
-        100% {
-            clip-path: inset(0);
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-crt-line {
+    /* A leave: the entrance's four poses in the other order, and the last one held until the
+       part is gone, so nothing of it outlives the rest. */
+    @keyframes kp-sig-cyberpunk-split-out {
         0% {
-            opacity: 1;
-            transform: scaleX(0.1);
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
         }
 
-        45% {
-            opacity: 1;
-            transform: scaleX(1);
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
         }
 
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        75%,
         100% {
-            opacity: 0;
-            transform: scaleX(1);
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-wipe {
-        from {
-            clip-path: polygon(0 0, 0 0, 0 calc(100% - 7px), 0 100%, 0 100%);
-        }
-
-        to {
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
         }
     }
 
@@ -15514,11 +16313,13 @@
         }
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    /* Leaving, this theme's way [scope-142; Kenny: leave = split, 2026-10-07]. js/motion.js
+       marks what leaves `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. The leave is the channel split of an
+       arrival, played the other way round: the part stands with its two copies 1, 2, 4 and then
+       6 px out, four ticks of 120 ms, and is gone with the last (a part never outlives its own
+       leave: the last pose is held until it is removed). */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── cyberpunk: the classic glitch: the text turns neon blue, a cyan copy jumps right and up, a magenta copy right and down, and it is sliced away ── */
         /* Opening is closing turned around (Kenny's pick on research/open-reverse,
            2026-10-05): js/motion.js opens the dialog as its close played backwards,
            in the close's time, and lets what arrives play this leave backwards. */
@@ -15527,68 +16328,7 @@
         }
 
         [data-theme='cyberpunk'] [data-kp-leaving] {
-            animation: kp-sig-cyberpunk-leave 650ms linear forwards;
-        }
-
-        [data-theme='cyberpunk'] [data-kp-leaving] * {
-            color: inherit !important;
-            text-shadow: inherit;
-        }
-
-        @keyframes kp-sig-cyberpunk-leave {
-            0% {
-                color: inherit;
-                text-shadow: none;
-            }
-
-            12% {
-                color: var(--accent-hover);
-                text-shadow:
-                    4px -3px 0 hsl(from var(--accent) h s l / 0.85),
-                    4px 3px 0 hsl(from var(--chart-3) h s l / 0.85);
-                transform: translateX(2px);
-            }
-
-            24% {
-                text-shadow:
-                    7px -5px 0 hsl(from var(--accent) h s l / 0.85),
-                    7px 5px 0 hsl(from var(--chart-3) h s l / 0.85);
-                transform: translateX(-2px);
-            }
-
-            36% {
-                text-shadow:
-                    3px -2px 0 hsl(from var(--accent) h s l / 0.85),
-                    3px 2px 0 hsl(from var(--chart-3) h s l / 0.85);
-                transform: translateX(3px);
-                clip-path: inset(0 0 0 0);
-            }
-
-            50% {
-                color: var(--accent-hover);
-                text-shadow:
-                    10px -6px 0 hsl(from var(--accent) h s l / 0.9),
-                    10px 6px 0 hsl(from var(--chart-3) h s l / 0.9);
-                clip-path: inset(20% 0 35% 0);
-                transform: translateX(-4px);
-            }
-
-            65% {
-                clip-path: inset(55% 0 10% 0);
-                transform: translateX(6px);
-            }
-
-            80% {
-                clip-path: inset(5% 0 75% 0);
-                transform: translateX(-3px);
-            }
-
-            to {
-                color: var(--accent-hover);
-                clip-path: inset(50% 0 50% 0);
-                transform: translateX(8px);
-                opacity: 0;
-            }
+            animation: kp-sig-cyberpunk-split-out 480ms steps(1, end) forwards;
         }
     }
 
@@ -15614,12 +16354,13 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        /* 480 ms at --kp-motion-scale 1: cyberpunk's update time (750 ms,
-           themeMotion()) × 0.64, so a page's slow motion slows it too. Hard
+        /* 480 ms at --kp-motion-scale 1 (eight ticks of 60 ms), so a page's slow motion
+           slows it too. Not read from the dialog's entrance any more: that one is the
+           channel split's 720 ms, and the stutter is the same four ticks of 120 ms. Hard
            ticks, as every cyberpunk frame motion. */
         [data-theme='cyberpunk'] [data-kp-updating='stutter'] {
             animation: kp-sig-cyberpunk-update-stutter 480ms steps(1, end) both;
-            animation-duration: calc(var(--kp-update-duration, 750ms) * 0.64);
+            animation-duration: calc(480ms * var(--kp-motion-scale, 1));
         }
 
         /* The cyan copy is listed first, so it lies over the yellow where the
@@ -15805,24 +16546,14 @@
 
     /* ── while loading: option 3 ── */
 
-    /* Round 4. Signal noise: a corrupt line on the empty track, red, cyan and
-       yellow slivers jumping to a new place every beat. */
-    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-            linear-gradient(var(--destructive), var(--destructive)) 10% 0 / 18% 3px no-repeat,
-            linear-gradient(var(--accent), var(--accent)) 70% 100% / 9% 3px no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 40% 50% / 5% 2px no-repeat;
+    /* While the meter measures, the word of signal loss stands over it (see the waiting block
+       above); the track stands dim under it [Kenny: loading = osd]. */
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-meter-room: 0;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-cyberpunk-meter-noise 900ms steps(1) infinite;
-        }
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        opacity: 0.2;
     }
 
     /* ── how the share arrives: option 2 ── */
@@ -15837,21 +16568,9 @@
         }
     }
 
-    /* ── when the tone changes: option 3 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-cyberpunk-meter-knock-o 200ms steps(3);
-        }
-
-        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-cyberpunk-meter-knock-w 200ms steps(3);
-        }
-
-        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-cyberpunk-meter-knock-d 200ms steps(3);
-        }
-    }
+    /* ── when the tone changes ── the target lock draws it [Kenny: tone = lock]: the part never
+       jolts (the 3 px knock of round 4 is gone), the tone is the fill's colour and, on a
+       key figure, the brackets that lock on it. */
 
     /* ── the mark past the end: option 3 ── */
 
@@ -15878,43 +16597,6 @@
         }
     }
 
-    @keyframes kp-sig-cyberpunk-meter-noise {
-        0% {
-            background-position:
-                10% 0,
-                70% 100%,
-                40% 50%;
-        }
-
-        25% {
-            background-position:
-                62% 0,
-                18% 100%,
-                88% 50%;
-        }
-
-        50% {
-            background-position:
-                86% 0,
-                44% 100%,
-                8% 50%;
-        }
-
-        75% {
-            background-position:
-                30% 0,
-                92% 100%,
-                58% 50%;
-        }
-
-        100% {
-            background-position:
-                10% 0,
-                70% 100%,
-                40% 50%;
-        }
-    }
-
     @keyframes kp-sig-cyberpunk-meter-slip-o {
         0% {
             translate: -10px 0;
@@ -15937,61 +16619,8 @@
             filter: none;
         }
     }
-
-    @keyframes kp-sig-cyberpunk-meter-knock-d {
-        0% {
-            translate: 0 0;
-        }
-
-        30% {
-            translate: 0 -3px;
-        }
-
-        60% {
-            translate: 0 1px;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-meter-knock-o {
-        0% {
-            translate: 0 0;
-        }
-
-        30% {
-            translate: 0 -3px;
-        }
-
-        60% {
-            translate: 0 1px;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-cyberpunk-meter-knock-w {
-        0% {
-            translate: 0 0;
-        }
-
-        30% {
-            translate: 0 -3px;
-        }
-
-        60% {
-            translate: 0 1px;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
 }
+
 /* ── End of the signature ── */
 
 @layer kp.register {

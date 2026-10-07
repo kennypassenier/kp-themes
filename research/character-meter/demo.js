@@ -289,8 +289,8 @@ const IDEAS = {
                 text: 'Packets of cyan and yellow of every length run along a thin data line through the middle, one packet at a time.',
             },
             {
-                name: 'Signal noise',
-                text: 'A corrupt line on the empty track: red, cyan and yellow slivers jump to a new place every beat.',
+                name: 'Signal loss',
+                text: 'The word LOADING is deciphered from noise glyphs over the dimmed track, holds in neon with a cyan and a red copy, tears sideways and is sliced away: 1800 ms in hard ticks.',
             },
         ],
         arrival: [
@@ -299,8 +299,8 @@ const IDEAS = {
                 text: 'The share is written in eight packets, white-hot as they land, cooling to its neon in the same eight steps.',
             },
             {
-                name: 'Glitch slip',
-                text: 'The share lands torn, split into cyan and red ghosts and thrown left and right, and snaps true in three jumps.',
+                name: 'The channel split',
+                text: 'The share is a yellow copy and a cyan copy of itself until they meet: 6, 4, 2, 1 px in four ticks of 120 ms; it never moves itself.',
             },
             {
                 name: 'Neon strike',
@@ -317,8 +317,8 @@ const IDEAS = {
                 text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
             },
             {
-                name: 'Packet sync',
-                text: 'A new tone knocks the meter up and back once, in 3 hard steps.',
+                name: 'Colour only',
+                text: 'A new tone changes the colour of the fill and nothing else: the meter is never knocked.',
             },
         ],
         mark: [
@@ -331,8 +331,8 @@ const IDEAS = {
                 text: 'The mark moves in 2 hard steps; a mark past the end stands just outside the end, ▶ after it.',
             },
             {
-                name: 'Packet sync',
-                text: 'The mark moves in 2 hard steps; a mark past the end leans over the end, ! beside it.',
+                name: 'Upright',
+                text: 'The mark moves in 2 hard steps; a mark past the end stands upright at the end, ! beside it.',
             },
         ],
     },
