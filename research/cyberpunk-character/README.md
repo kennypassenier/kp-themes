@@ -1,5 +1,7 @@
 # What makes cyberpunk cyberpunk
 
+**Decided (Kenny, 07/10/2026 23:52): all eighteen questions approved after two updates; the motion curve, the opening, the leave and the hover = Channel split / Split edge, the spinner = Bars with a glitch copy, the loading = Signal loss (osd), the rest as recommended** (research/cyberpunk-character/decided.json; applied in css/cyberpunk-register.css; see themes/cyberpunk/CHARACTER.md §0).
+
 **Why.** Kenny, 2026-10-07 04:23: after nostromo, the rest one by one, cyberpunk first, the same way as titanium, forest and
 nostromo (02:54: "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet? begin met 1 thema en we
 zullen dat één voor één afwerken zo"). The analysis is [themes/cyberpunk/CHARACTER.md](../../themes/cyberpunk/CHARACTER.md): every

@@ -81,11 +81,6 @@ export const PAGES = [
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
             { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
-            // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
-            {
-                href: 'research/cyberpunk-character/demo.html',
-                label: 'What makes cyberpunk cyberpunk',
-            },
             // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
             {
                 href: 'research/synthwave-character/demo.html',
@@ -102,6 +97,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 23:52: Kenny approved all eighteen cyberpunk character questions after two updates; Channel split for curve, opening and leave, Split edge for hover, Bars with a glitch copy for the spinner (research/cyberpunk-character/decided.json); applied in css/cyberpunk-register.css.
+            { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
             // Decided 2026-10-07 23:44: Kenny approved all nineteen brutalism character questions after three updates; Loading = Hoisted as a lintel, the progress bar = Ruled and labelled a lot slower (research/brutalism-character/decided.json).
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Decided 2026-10-07 23:43: Kenny approved all nineteen grotesk character questions after three updates (research/grotesk-character/decided.json).

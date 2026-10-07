@@ -1,0 +1,26 @@
+{
+    "decided": "2026-10-07 23:52 Brussels, Kenny: 18 of 18 approved in the review dialog after two updates (research/cyberpunk-character/README.md); the anchor is the glitch",
+    "attributes": "data-cy-<question>=\"<key>\" on the .cy-scene, research/cyberpunk-character/options.css",
+    "picks": {
+        "cyberpunk": {
+            "curve": "split",
+            "direction": "sideways",
+            "opening": "split",
+            "durations": "ticks",
+            "colour": "roles",
+            "corners": "notch",
+            "surface": "holo",
+            "tone": "lock",
+            "live": "shape",
+            "loading": "osd",
+            "spinner": "glitch",
+            "leave": "split",
+            "composites": "own",
+            "hover": "split",
+            "focus": "brackets",
+            "press": "closed",
+            "type": "prefixed",
+            "motifs": "meaning"
+        }
+    }
+}
