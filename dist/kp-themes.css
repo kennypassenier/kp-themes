@@ -27663,6 +27663,87 @@
         box-shadow: none;
     }
 
+    /* Focus on an entry is the dashed box inside its width, never the
+       package's highlight plate (proposal-20): reverse video is the press. */
+    [data-theme='terminal'] .kp-menu__item:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: -4px;
+    }
+
+    [data-theme='terminal'] .kp-menu--rich .kp-menu__item:focus:not(:active) {
+        background: none;
+    }
+
+    /* A chart legend key is a small terminal button [G17, proposal-23]: the
+       ring under the pointer, the dashed box on focus (the rule above for
+       every part), reverse video while held. A key that is shown stands in
+       the dim line at rest, so the ring only ever means "pointed at". */
+    [data-theme='terminal'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='terminal'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] :is(.kp-chart__source, .kp-chart__show-all):hover {
+        border-color: var(--ring);
+        box-shadow: var(--kp-sig-tm-ring);
+    }
+
+    [data-theme='terminal'] :is(.kp-chart__source, .kp-chart__show-all):active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-chart__source:active > b {
+        color: inherit;
+    }
+
+    /* A day of the calendar [proposal-24]: pointing brings the cursor ring,
+       today is the figure in reverse video (cal(1)), and the pick is told by
+       the prompt before its figure and its count in reverse, where the
+       package drew a 3 px line. The line is focus's dashed box alone. */
+    [data-theme='terminal'] .kp-calendar__day {
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-calendar__day:hover {
+        position: relative;
+        z-index: 1;
+        box-shadow: var(--kp-sig-tm-ring);
+    }
+
+    [data-theme='terminal'] .kp-calendar__day[data-kp-today]:not(:hover) {
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] .kp-calendar__day[data-kp-today] .kp-calendar__num {
+        padding-inline: 2px;
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='terminal'] td[aria-selected='true'] > .kp-calendar__day:not(:focus-visible) {
+        outline: none;
+    }
+
+    [data-theme='terminal'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__num::before {
+        content: '>';
+        color: currentColor;
+    }
+
+    [data-theme='terminal'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        padding-inline: 2px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
     /* The plain alert only [gap-1, Kenny 2026-09-10]: the plate rule above names
        it with `:not([class*='kp-alert--'])`. A rule here used to
        repaint the ground of EVERY alert, and `kp.register` is a later layer
@@ -28900,6 +28981,21 @@
         text-shadow: var(--kp-sig-tm-bloom);
     }
 
+    /* The cursor at the line a menu or popover is printing; at rest it is not
+       drawn (nothing sits on a part that is not waiting, G16). */
+    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu):not(.kp-tooltip)::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.6rem;
+        inset-inline-start: 0.6rem;
+        inline-size: 1ch;
+        block-size: 1.2em;
+        background: var(--primary);
+        box-shadow: var(--kp-sig-tm-bloom);
+        visibility: hidden;
+        pointer-events: none;
+    }
+
     /* A tooltip is one line, typed: twelve cells at 34 ms. */
     [data-theme='terminal'] .kp-tooltip {
         --kp-sig-dur: calc(12 * var(--kp-sig-tm-cell));
@@ -29028,7 +29124,16 @@
                 kp-sig-terminal-tm-decay calc(var(--kp-sig-dur) / 8) linear infinite;
         }
 
+        /* The thumb steps across four cells. Going on it holds the first cell
+           and lands on the last (jump-end); going off it is that played
+           backwards, so it leaves the last cell at once and lands on the
+           first (jump-start). A transition runs on the curve of the state
+           it arrives at, so each state names its own. */
         [data-theme='terminal'] .kp-switch__input::before {
+            transition: transform 200ms steps(4, jump-start);
+        }
+
+        [data-theme='terminal'] .kp-switch__input:checked::before {
             transition: transform 200ms steps(4, jump-end);
         }
 
@@ -29044,8 +29149,24 @@
             animation: kp-sig-terminal-tm-feed var(--kp-sig-dur) steps(6, jump-end) backwards;
         }
 
+        [data-theme='terminal'] .kp-dialog::backdrop {
+            animation: kp-sig-terminal-tm-wash var(--kp-sig-dur) steps(6, jump-end) backwards;
+        }
+
         [data-theme='terminal'] .kp-tooltip {
             animation: kp-sig-terminal-tm-type var(--kp-sig-dur) steps(12, jump-end) backwards;
+        }
+
+        /* A menu or a popover is printed from the top, a line a step, four
+           lines at 136 ms, the block cursor at the line being printed [G3].
+           The close is the same keyframes played backwards
+           (js/motion.js playEntranceBackwards), frame for frame. */
+        [data-theme='terminal'] :is(.kp-popover[popover]:popover-open, .kp-menu-button > .kp-menu:not([hidden])):not(.kp-tooltip) {
+            animation: kp-sig-terminal-tm-menu calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] :is(.kp-popover[popover]:popover-open, .kp-menu-button > .kp-menu:not([hidden])):not(.kp-tooltip)::before {
+            animation: kp-sig-terminal-tm-menu-feed calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
         }
 
         [data-theme='terminal'] .kp-empty__title::after {
@@ -29170,6 +29291,41 @@
         to {
             inset-block-start: calc(100% - 1.25rem - 1.2em);
             visibility: visible;
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-menu {
+        from {
+            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-menu-feed {
+        from {
+            inset-block-start: 0.6rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 1.8rem);
+            visibility: visible;
+        }
+    }
+
+    /* The dim behind a dialog comes up in the dialog's own six steps, never
+       as a fade (js/motion.js plays its fallback fade when the register gives
+       the backdrop no motion of its own). */
+    @keyframes kp-sig-terminal-tm-wash {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
         }
     }
 
