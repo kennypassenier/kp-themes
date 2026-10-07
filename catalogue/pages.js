@@ -108,7 +108,6 @@ export const PAGES = [
             {
                 href: 'research/terminal-character/demo.html',
                 label: 'What makes terminal terminal',
-                rework: 'update 3 in progress: progress-bar variants of the loading option',
             },
         ],
     },

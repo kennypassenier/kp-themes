@@ -1,5 +1,5 @@
 {
-    "update": 2,
+    "update": 3,
     "picks": {
         "terminal": {
             "curve": "cells",
@@ -23,7 +23,7 @@
         "terminal": {
             "loading": {
                 "comment": "I like option 1, but I don't like the month heatmap days, or the progressbar. And in the menu, it's not aligned with the words (\"hosts:\") so it doesn't look good there either",
-                "reply": "Option 1 stays as it was in the places you did not mention. In the month heatmap days and the meter, which are already rows of cells, the waiting cursor now stands alone, so no written row can be mistaken for a meter or progress bar. In the menu entry the written cells now sit on the baseline of \"hosts:\", with the cursor aligned to the word. If you meant the approved busy bar shown at the foot of the scene instead, tell me and it goes."
+                "reply": "Option 1 now has the three fixes: in the month heatmap days and the meter, which are already rows of cells, the waiting cursor stands alone; in the menu the written cells sit on the baseline of \"hosts:\". \"The progressbar\" could mean two things, so both are shown. Option 2 reads it as the meter: it waits as its own bracketed htop row, [ ], with the cells written inside it by the cursor (option 1 keeps the lone cursor there). Option 3 reads it as the approved spinner and busy bar at the foot of the scene: the same as option 1, with that reference left out so you can judge the parts without it. Options 4 to 7 are the earlier alternatives."
             }
         }
     }

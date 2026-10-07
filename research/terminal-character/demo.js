@@ -265,6 +265,7 @@ const LOADERS = () =>
     cell(
         'The package, as approved: the braille spinner and the busy bar',
         `<div class="tc-row"><span class="kp-spinner" role="status" aria-label="Working…"></span><div class="kp-progressbar tc-bar" role="progressbar" aria-label="Copying" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div></div>`,
+        'tc-ref',
     );
 
 /** A part that leaves and arrives. */
@@ -682,6 +683,20 @@ const ASPECTS = [
                 verdict: rec(
                     'it is the run of cells you liked, but written and deleted by the block cursor, so it is the only waiting picture that shows the cursor working; at rest it is exactly your family’s cursor. It does replace the rule that nothing runs along the foot (G10).',
                 ),
+            },
+            {
+                key: 'write-meter',
+                name: 'As 1, the meter waits as a bracketed row the cursor writes',
+                see: 'The same as 1, except the meter: it waits as its own htop frame, [ ], with the cells written inside it by the cursor and backspaced again, the way a progress bar fills and empties. The heatmap days keep the lone cursor.',
+                verdict: not(
+                    'it shows the meter as a meter, but a waiting meter that fills reads as a measurement that is arriving, which is what the progress bar already says.',
+                ),
+            },
+            {
+                key: 'write-bare',
+                name: 'As 1, without the approved spinner and busy bar at the foot',
+                see: 'The same as 1, but the scene leaves out the approved braille spinner and busy bar shown below the parts, so you can judge the waiting parts without a progress bar beside them. This is a view of the scene; the spinner and busy bar stay approved in the theme.',
+                verdict: not('it changes nothing in the parts, only whether the approved progress bar is shown beside them.'),
             },
             {
                 key: 'trail',

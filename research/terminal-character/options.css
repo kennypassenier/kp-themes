@@ -1180,7 +1180,7 @@
         --tc-w: 3;
     }
 
-    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run {
+    .tc-scene:is([data-tc-loading^='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run {
         display: block;
         inset-inline-start: 0;
         inset-block-end: 0.1em;
@@ -1189,8 +1189,8 @@
         block-size: 0.55em;
     }
 
-    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::before,
-    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::after {
+    .tc-scene:is([data-tc-loading^='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::before,
+    .tc-scene:is([data-tc-loading^='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::after {
         content: '';
         position: absolute;
         inset-block: 0;
@@ -1198,11 +1198,11 @@
 
     /* A part that is already a row of cells (the heatmap days, the meter) keeps
        the waiting cursor alone: a written row there would read as a meter. */
-    .tc-scene[data-tc-loading='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__run {
+    .tc-scene[data-tc-loading^='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__run {
         display: none;
     }
 
-    .tc-scene[data-tc-loading='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__cur {
+    .tc-scene[data-tc-loading^='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__cur {
         display: block;
         inset-block-start: 0.1em;
         inset-inline-start: 0;
@@ -1212,24 +1212,60 @@
         box-shadow: var(--tc-bloom);
     }
 
-    .tc-scene[data-tc-loading='write'] .tc-wait--meter .tc-wait__cur {
+    .tc-scene[data-tc-loading^='write'] .tc-wait--meter .tc-wait__cur {
         block-size: 0.9rem;
         inset-block-start: 0;
     }
 
     /* The cursor writes: the cells in the ink, the cursor on the last one. */
-    .tc-scene[data-tc-loading='write'] .tc-wait__run::before {
+    .tc-scene[data-tc-loading^='write'] .tc-wait__run::before {
         inset-inline: 0;
         background: repeating-linear-gradient(90deg, var(--tc-ink) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch);
         clip-path: inset(0 calc((1 - var(--tc-k)) * 100%) 0 0);
     }
 
-    .tc-scene[data-tc-loading='write'] .tc-wait__run::after {
+    .tc-scene[data-tc-loading^='write'] .tc-wait__run::after {
         inset-block: -0.2em;
         inline-size: 1ch;
         inset-inline-start: max(0px, calc(var(--tc-k) * 100% - 1ch));
         background: var(--tc-bright);
         box-shadow: var(--tc-bloom);
+    }
+
+    /* The meter variant: its htop frame, the cells written inside it by the
+       cursor, as the bracket option draws them. */
+    .tc-scene[data-tc-loading='write-meter'] .tc-wait--meter .tc-wait__cur {
+        display: none;
+    }
+
+    .tc-scene[data-tc-loading='write-meter'] .tc-wait--meter .tc-wait__run {
+        display: block;
+        inline-size: calc(var(--tc-w) * 1ch + 8px);
+        block-size: 0.9rem;
+        inset-block-end: 0;
+        background:
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 100% / 3px 1px no-repeat;
+    }
+
+    .tc-scene[data-tc-loading='write-meter'] .tc-wait--meter .tc-wait__run::before {
+        inset-block: 3px;
+        inset-inline: 4px;
+    }
+
+    .tc-scene[data-tc-loading='write-meter'] .tc-wait--meter .tc-wait__run::after {
+        inset-block: 3px;
+        inline-size: calc(1ch - 2px);
+        inset-inline-start: calc(4px + max(0px, calc(var(--tc-k) * var(--tc-w) * 1ch - 1ch)));
+    }
+
+    /* The bare variant: only the parts, without the approved spinner and busy bar. */
+    .tc-scene[data-tc-loading='write-bare'] .tc-ref {
+        display: none;
     }
 
     /* The cursor walks: a three-cell window (dim, ink, bright) steps along. At
@@ -1509,7 +1545,7 @@
 
         /* The cursor writes and backspaces (one period 1600 ms, the same in
            every waiting place; the steps are the place's cells). */
-        .tc-scene[data-tc-loading='write'] .tc-wait {
+        .tc-scene[data-tc-loading^='write'] .tc-wait {
             animation: tc-wr calc(1600ms * var(--tc-slow, 1)) steps(var(--tc-w), jump-end) infinite;
         }
 
