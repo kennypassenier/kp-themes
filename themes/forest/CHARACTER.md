@@ -329,7 +329,9 @@ proposal as its first option; nothing is applied before his verdicts.
   forest's own; focus is DI2 and wins over the blaze when both apply.
 - **proposal-14 (corners): replaced by Kenny's pick**, the leaf corner on every
   plate and small part (one token, `--kp-sig-fo-leaf`; a plate takes it, a small
-  part half), the field note included. Only the instruments keep 3 px.
+  part half), the field note included. The meter and the progress bar keep
+  3 px (Kenny, 2026-10-07 18:22: they take no leaf corner); the busy overlay's
+  leave in the demos is the arrival reversed (`fog-grow-back`).
 - **proposal-13, 15, 16, 17 (pick colour, type, motifs): applied** where the
   package has the part (tags and the change in italic, wood tags); the
   calendar, tiles and chart-research parts wait for the port.

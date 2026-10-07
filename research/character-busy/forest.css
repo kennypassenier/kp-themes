@@ -11,7 +11,11 @@
      the package's (css/forest-register.css draws it on every busy panel); the
      footprints are retired and the panel makes room for the row;
    - arrival: the overlay grows up out of its own base line on the growth
-     curve, 1000 ms, in place of the squashing scaleY. */
+     curve, 1000 ms, in place of the squashing scaleY;
+   - leave: the layer withers back into its base line, the arrival's
+     keyframes played `reverse` under a second name (`fog-grow-back`), the
+     same 1000 ms and curve (forest.js keeps the removed layer for it, the
+     package drops it at once). */
 @layer kp.signature {
     [data-theme='forest'] [data-bo-shape='r2-fo-shape-2'] .kp-datatable__busy-panel {
         --bo-panel-radius: var(--fog-leaf-plate);
@@ -38,5 +42,12 @@
         --bo-arrival-dur: var(--fog-time);
         --bo-arrival-ease: var(--fog-curve);
         transform-origin: 50% 50%;
+    }
+
+    /* Leave · the arrival reversed, frame for frame. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-bo-arrival='2'] .kp-datatable__busy-overlay[data-fog-leaving] {
+            animation: fog-grow-back var(--fog-time) var(--fog-curve) both reverse;
+        }
     }
 }

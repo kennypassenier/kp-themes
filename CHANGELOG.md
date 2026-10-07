@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Changed (research demos only): the busy overlay's leave in forest's demo
+  is its arrival reversed** [2026-10-07, Kenny: every close is its open
+  reversed]. research/character-busy withers back with `fog-grow-back` (the
+  arrival's keyframes `reverse`, 1000 ms, same curve; measured identical frame
+  for frame in Firefox). The package removes the layer at once, so the demo's
+  `forest.js` only holds it for the leave. The meter and the progress bar keep
+  their 3 px corners (Kenny, 2026-10-07 18:22: they take no leaf corner).
+
 - **Changed: forest's grammar, as Kenny decided it on research/forest-character**
   [2026-10-07 17:47, themes/forest/CHARACTER.md "Applied 2026-10-07"].
   Growth: forest's `--fx-ease` is the Gompertz growth curve (a `linear()` list,
