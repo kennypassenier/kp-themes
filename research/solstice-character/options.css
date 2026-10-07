@@ -13,7 +13,9 @@
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
-    .so-page {
+    :is(.so-page, .rv-dialog__stage) {
+        /* The review dialog moves the sections into its stage, so the
+           tokens must be defined there too. */
         /* G1: the sun's sine, what comes on its last quarter, what goes on
            its first; the register's standard curve (sepia's and deco's) and
            the picks' spring, for the options. */
