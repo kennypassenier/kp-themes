@@ -78,8 +78,6 @@ export const PAGES = [
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
             { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
-            // Kenny, 2026-10-07 18:13: nostromo's anchor element (the one part every decision about the theme is made from), six bold candidates with the LED lamp bank as one of them, each a live scene with four real parts under it.
-            { href: 'research/nostromo-anchor/demo.html', label: "Nostromo's anchor element" },
             // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
             { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
             // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
@@ -110,6 +108,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 20:10: Kenny picked the raster as nostromo's anchor element (research/nostromo-anchor/decided.json).
+            { href: 'research/nostromo-anchor/demo.html', label: "Nostromo's anchor element" },
             // Decided 2026-10-07 02:49: Kenny picked the count-down stutter as cyberpunk's live update (research/cyberpunk-live/decided.json); ported into css/cyberpunk-register.css in place of the glitch and settle.
             { href: 'research/cyberpunk-live/demo.html', label: "Cyberpunk's live update: the chromatic split" },
             // Kenny, 2026-10-07 02:55: the demos still open are no longer relevant ("doe de demos die nu nog openstaan weg"); archived, files kept.

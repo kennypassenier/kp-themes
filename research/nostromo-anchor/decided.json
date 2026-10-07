@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-07 20:10 Brussels, Kenny: 1 of 1 approved in the review dialog (research/nostromo-anchor/README.md): Nostromo's anchor element = The raster",
+    "attributes": "data-na-anchor=\"<key>\" on the .na-scene, research/nostromo-anchor/options.css",
+    "picks": {
+        "nostromo": {
+            "anchor": "raster"
+        }
+    }
+}

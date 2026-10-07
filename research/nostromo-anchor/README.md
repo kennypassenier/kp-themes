@@ -1,5 +1,7 @@
 # Nostromo's anchor element
 
+**Decided (Kenny, 07/10/2026 20:10): The raster** ("nostromo-anchor · nostromo: Nostromo’s anchor element = The raster"), option 6, not the recommended LED lamp bank. Recorded in themes/nostromo/CHARACTER.md §0 and decided.json.
+
 **Why.** Kenny, 2026-10-07: "bij nostromo wil ik meer opties waaruit ik kan kiezen, maar er een demo voor." Forest's anchor is the tree
 progress bar, titanium's its loading animation, cyberpunk's the glitch: the one recognisable element every decision about the theme is
 made from. Colours are the shared base and are not asked here.
