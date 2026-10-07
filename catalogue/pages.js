@@ -85,6 +85,7 @@ export const PAGES = [
             {
                 href: 'research/cyberpunk-character/demo.html',
                 label: 'What makes cyberpunk cyberpunk',
+                rework: 'update 2 fix: the hover options are being wired to the dialog loop',
             },
             // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
             {
