@@ -1089,8 +1089,13 @@
     .tc-scene .tc-wait--entry {
         display: inline-block;
         inline-size: 6ch;
-        min-block-size: 1.1em;
-        vertical-align: middle;
+        min-block-size: 0;
+        block-size: 0.9em;
+        vertical-align: baseline;
+    }
+
+    .tc-scene .tc-wait.tc-wait--entry .tc-wait__run {
+        inset-block-end: 0;
     }
 
     .tc-scene .tc-wait--day {
@@ -1109,6 +1114,7 @@
 
     .tc-scene .tc-entry-wait {
         gap: 0.5ch;
+        align-items: baseline;
     }
 
     /* The cursor waits: one block per surface, where the reading will be
@@ -1127,6 +1133,11 @@
     .tc-scene .tc-wait--meter .tc-wait__cur {
         block-size: 0.9rem;
         inset-block-start: 0;
+    }
+
+    .tc-scene .tc-wait--entry.tc-wait--first .tc-wait__cur {
+        inset-block: auto -0.2em;
+        block-size: 1em;
     }
 
     /* The picks' dotted march (the durations question's loop). */
@@ -1183,6 +1194,27 @@
         content: '';
         position: absolute;
         inset-block: 0;
+    }
+
+    /* A part that is already a row of cells (the heatmap days, the meter) keeps
+       the waiting cursor alone: a written row there would read as a meter. */
+    .tc-scene[data-tc-loading='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__run {
+        display: none;
+    }
+
+    .tc-scene[data-tc-loading='write'] :is(.tc-wait--day, .tc-wait--meter) .tc-wait__cur {
+        display: block;
+        inset-block-start: 0.1em;
+        inset-inline-start: 0;
+        inline-size: 1ch;
+        block-size: 1.15em;
+        background: var(--tc-bright);
+        box-shadow: var(--tc-bloom);
+    }
+
+    .tc-scene[data-tc-loading='write'] .tc-wait--meter .tc-wait__cur {
+        block-size: 0.9rem;
+        inset-block-start: 0;
     }
 
     /* The cursor writes: the cells in the ink, the cursor on the last one. */

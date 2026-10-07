@@ -108,7 +108,6 @@ export const PAGES = [
             {
                 href: 'research/terminal-character/demo.html',
                 label: 'What makes terminal terminal',
-                rework: 'update 2 in progress: loading in the heatmap days, the meter and the menu entry',
             },
         ],
     },

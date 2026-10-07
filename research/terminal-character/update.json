@@ -1,5 +1,5 @@
 {
-    "update": 1,
+    "update": 2,
     "picks": {
         "terminal": {
             "curve": "cells",
@@ -22,8 +22,8 @@
     "questions": {
         "terminal": {
             "loading": {
-                "comment": "I feel like we can do better, I like 2 most but give me more options",
-                "reply": "Five options now, four of them new, built on your favourite, the row of cells along the foot, which the block cursor itself writes and erases: it writes the cells and backspaces them, walks leaving a decaying trail, heads an htop row, or types a prompt's dots. Every loop leaves as it arrives, reversed (writing and erasing both 560 ms, the htop row 1000 ms each way, the prompt four beats in and four out), except the walking trail, which walks off the part. The approved waiting cursor stays as the fifth."
+                "comment": "I like option 1, but I don't like the month heatmap days, or the progressbar. And in the menu, it's not aligned with the words (\"hosts:\") so it doesn't look good there either",
+                "reply": "Option 1 stays as it was in the places you did not mention. In the month heatmap days and the meter, which are already rows of cells, the waiting cursor now stands alone, so no written row can be mistaken for a meter or progress bar. In the menu entry the written cells now sit on the baseline of \"hosts:\", with the cursor aligned to the word. If you meant the approved busy bar shown at the foot of the scene instead, tell me and it goes."
             }
         }
     }

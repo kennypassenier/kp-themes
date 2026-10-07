@@ -678,7 +678,7 @@ const ASPECTS = [
             {
                 key: 'write',
                 name: 'The cursor writes the cells and backspaces them',
-                see: 'Along the foot of every waiting part the block cursor writes a row of cells, one hard step per cell, the cursor riding the last cell written. The row stands for a beat, then the cursor backs up and deletes the cells one step at a time, until only the waiting cursor is left. Then it writes again. Writing and deleting are the same steps in opposite order.',
+                see: 'Along the foot of every waiting part the block cursor writes a row of cells, one hard step per cell, the cursor riding the last cell written. The row stands for a beat, then the cursor backs up and deletes the cells one step at a time, until only the waiting cursor is left. Then it writes again. Writing and deleting are the same steps in opposite order. A part that is already a row of cells (the heatmap days, the meter) keeps the waiting cursor alone, so it is not mistaken for a meter, and in the menu entry the cells sit on the baseline of the word.',
                 verdict: rec(
                     'it is the run of cells you liked, but written and deleted by the block cursor, so it is the only waiting picture that shows the cursor working; at rest it is exactly your family’s cursor. It does replace the rule that nothing runs along the foot (G10).',
                 ),
