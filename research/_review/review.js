@@ -964,8 +964,49 @@ function applyPauseStyle() {
     flipPauseBtn.textContent = motionPaused ? 'Resume (Space)' : 'Pause (Space)';
 }
 
+/*
+ * The pointer, played in the dialog (Kenny, 2026-10-07: the hover question
+ * of brutalism and solstice showed nothing move). A character demo draws the
+ * part pointed at with its own `<prefix>-pointed` class (`-pointed-<part>`
+ * for a part of its own), standing still. On
+ * an aspect about the pointer (`hover`, or the ids the section lists in
+ * `data-review-point`) the dialog takes that class away and gives it back on
+ * a loop, so every option's hover plays as the pointer arrives and leaves, at
+ * the dialog's speed; Replay starts it over, Pause holds it, reduced motion
+ * keeps the still frame.
+ */
+const POINTED = /^[a-z][a-z0-9]*-pointed(-[a-z]+)?$/;
+/** @type {[Element, string][]} the parts the loop toggles, with their class */
+let pointedParts = [];
+let pointerTimer = 0;
+function stopPointer() {
+    clearTimeout(pointerTimer);
+    for (const [el, cls] of pointedParts) el.classList.add(cls);
+    pointedParts = [];
+}
+function playPointer(step, /** @type {HTMLElement | undefined} */ shown) {
+    stopPointer();
+    const aspects = (flipPair?.item?.section?.dataset.reviewPoint || 'hover').split(/\s+/);
+    if (!shown || !step?.aspect || !aspects.includes(step.aspect) || prefersReducedMotion()) return;
+    pointedParts = [...shown.querySelectorAll('[class*="-pointed"]')].flatMap((el) =>
+        [...el.classList].filter((cls) => POINTED.test(cls)).map((cls) => /** @type {[Element, string]} */ ([el, cls])),
+    );
+    if (!pointedParts.length) return;
+    let pointed = false; // the loop starts with the pointer away, then it arrives
+    const tick = () => {
+        if (!motionPaused) {
+            for (const [el, cls] of pointedParts) el.classList.toggle(cls, pointed);
+            pointed = !pointed;
+        }
+        // Pointed at long enough to read the hover, away long enough to see it go.
+        pointerTimer = setTimeout(tick, (pointed ? 900 : 1800) / (Number(motionSpeed) || 1));
+    };
+    tick();
+}
+
 /** Leaves the demo exactly as focusAspect found it: every cell shown again, no leftover sizing. */
 function teardownFlip() {
+    stopPointer();
     if (flipTrio) flipTrio.removeAttribute('data-rv-flip-trio');
     for (const cell of flipCells) {
         /** @type {HTMLElement} */ (cell).hidden = false;
@@ -1010,6 +1051,7 @@ function setupFlip(step, pair) {
 /** Shows only flipCells[flipAt], large; its number, name and one-line note once; plays and restarts its motion. */
 function paintFlip(step) {
     if (!flipRow) return;
+    stopPointer();
     flipCells.forEach((cell, i) => {
         /** @type {HTMLElement} */ (cell).hidden = i !== flipAt;
         /** @type {HTMLElement} */ (cell).style.removeProperty('--kp-kpi-spark-height');
@@ -1050,6 +1092,7 @@ function paintFlip(step) {
         playAspect(flipPair.item.section, step.aspect);
     }
     restoreKept(flipPair.item.section, step.aspect);
+    playPointer(step, shown);
     markTarget(shown);
     if (shown)
         requestAnimationFrame(() => {
@@ -1207,6 +1250,7 @@ function replay(step) {
     // to the page's default (Kenny, 2026-10-06 20:49: "als ik op r druk, dan
     // gaat die altijd terug naar loading").
     restoreKept(flipPair.item.section, step.aspect);
+    playPointer(step, shown);
     if (shown) requestAnimationFrame(() => restartMotion(shown));
 }
 

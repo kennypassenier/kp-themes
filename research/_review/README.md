@@ -114,6 +114,15 @@ Approving refuses until every choice is ticked; ticking fires `review:choice`
 (`{ id, value }`) on the section so the page can show the pick; the picks are
 in the answer under "Picked per theme" and "Picked once".
 
+## The pointer, played
+
+A character demo draws the part pointed at with a class of its own,
+`<prefix>-pointed` (or `<prefix>-pointed-<part>`). On the `hover` aspect,
+or on the aspects the section names in `data-review-point="hover …"`, the
+dialog takes that class away and gives it back on a loop, so each option's
+hover plays as the pointer arrives and leaves, at the dialog's speed. Replay
+starts it over, Pause holds it, and reduced motion keeps the still frame.
+
 ## Measuring the motion of a character demo
 
 `measure-motion.mjs` measures what the motion scenes of a character demo
