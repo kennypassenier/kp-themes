@@ -106,26 +106,16 @@
         --nc-fr: calc(80ms * var(--nc-slow, 1));
         --nc-smooth: cubic-bezier(0.2, 0, 0, 1);
         --nc-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
-        /* One LED: a rounded-off lens in its pitch, as the progress bar's. */
-        --nc-pitch: 6px;
-        --nc-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+        /* The phosphor: the LED orange as light, and its glow. */
         --nc-lit: var(--sidebar-primary);
         --nc-glow: hsl(from var(--sidebar-primary) h s l / 0.6);
-        /* Five lit LEDs in sixteen, unordered: the bank's pattern tile. */
-        --nc-pattern: linear-gradient(
-            90deg,
-            transparent 0 calc(var(--nc-pitch) * 1),
-            var(--nc-lit) 0 calc(var(--nc-pitch) * 2),
-            transparent 0 calc(var(--nc-pitch) * 4),
-            var(--nc-lit) 0 calc(var(--nc-pitch) * 6),
-            transparent 0 calc(var(--nc-pitch) * 9),
-            var(--nc-lit) 0 calc(var(--nc-pitch) * 10),
-            transparent 0 calc(var(--nc-pitch) * 12),
-            var(--nc-lit) 0 calc(var(--nc-pitch) * 13),
-            transparent 0 calc(var(--nc-pitch) * 14),
-            var(--nc-lit) 0 calc(var(--nc-pitch) * 15),
-            transparent 0
-        );
+        /* The twenty-frame loop of every waiting screen (G4), stretched by
+           the speed buttons. */
+        --nc-loop: calc(20 * var(--nc-fr));
+        /* A dot matrix (loading, option matrix) and the dither (option
+           dither): the picture seen through a grid of dots. */
+        --nc-dots: radial-gradient(circle, var(--foreground) 35%, transparent 50%);
+        --nc-checker: repeating-conic-gradient(var(--foreground) 0 25%, transparent 0 50%);
         /* The screen's scanlines: 1 px every 3 px. */
         --nc-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
     }
@@ -287,12 +277,24 @@
         opacity: 0;
     }
 
+    /* The package's key-figure label clips its overflow for its ellipsis
+       (css/components.css, `.kp-kpi__label { overflow: hidden }`), and a lamp
+       at its start has a glow 6 px wide and a ring 1 px outside its disc: the
+       label cut the glow flat on its start side, and a little at its top and
+       foot (Kenny, update 2: "the left side of the glowing button is cut off
+       a bit, so it seems sliced"). The label keeps its clip and its ellipsis,
+       and gets the glow's room inside it: padding on every side, pulled back
+       by the same negative margin, so nothing else moves. */
+    .nc-scene .kp-kpi__label:has(> .nc-lamp) {
+        margin: -0.5rem;
+        padding: 0.5rem;
+    }
+
     /* Options that do not use a lamp on these parts show none, as today. */
     .nc-scene:is(
             [data-nc-curve='mix'],
             [data-nc-direction],
             [data-nc-live='mix'],
-            [data-nc-loading='mix'],
             [data-nc-tone='mix'],
             [data-nc-hover='beam'],
             [data-nc-hover='mix'],
@@ -567,56 +569,6 @@
         grid-area: 1 / 1;
     }
 
-    /* ── The lamp bank: the progress bar's LED window, computing. ─────── */
-
-    .nc-bank {
-        position: relative;
-        display: block;
-        block-size: 0.6rem;
-        padding: 2px;
-        border-radius: 0.2rem;
-        background: var(--secondary);
-        box-shadow:
-            inset 0 0 0 1px var(--border-strong),
-            inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
-    }
-
-    .nc-bank__window {
-        position: relative;
-        display: block;
-        block-size: 100%;
-        overflow: hidden;
-        border-radius: 1px;
-        background: var(--sidebar-background);
-    }
-
-    .nc-bank__window::before,
-    .nc-bank__lit {
-        content: '';
-        position: absolute;
-        inset: 1px 0;
-        mask: var(--nc-led) 0 0 / var(--nc-pitch) 100% repeat-x;
-    }
-
-    .nc-bank__window::before {
-        background: var(--sidebar-accent);
-    }
-
-    .nc-bank__lit {
-        background: var(--nc-pattern) 0 0 / calc(var(--nc-pitch) * 16) 100% repeat-x;
-    }
-
-    .nc-bar-wrap > .nc-bank {
-        block-size: 1rem;
-        padding: 3px;
-        border-radius: 0.3rem;
-    }
-
-    .nc-bar-wrap > .nc-bank .nc-bank__lit,
-    .nc-bar-wrap > .nc-bank .nc-bank__window::before {
-        inset: 2px 0;
-    }
-
     /* Where the loading picture sits: at the foot of the waiting part. */
     .nc-waits {
         position: relative;
@@ -643,37 +595,22 @@
         z-index: 1;
     }
 
-    .nc-load__today {
-        display: none;
-    }
-
-    /* The waiting screen is taller than the bank, so the part it waits in
-       leaves more room at its foot (the default; the bank and today keep
-       their own). */
-    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) :is(.kp-kpi, .kp-card).nc-waits {
+    /* The waiting screen at the foot: the part it waits in leaves room for
+       it. */
+    .nc-scene :is(.kp-kpi, .kp-card).nc-waits {
         padding-block-end: 2.6rem;
     }
 
-    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .kp-menu__item.nc-waits {
+    .nc-scene .kp-menu__item.nc-waits {
         padding-block-end: 2.4rem;
     }
 
-    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .nc-table {
+    .nc-scene .nc-table {
         padding-block-end: 2.6rem;
     }
 
-    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .nc-meter-wait {
+    .nc-scene .nc-meter-wait {
         padding-block-end: 2.6rem;
-    }
-
-    /* Each loader shows in its own option: the screen (the default), the
-       bank, or today's pictures. */
-    .nc-scene:is([data-nc-loading='bank'], [data-nc-loading='mix']) :is(.nc-load__ras, .nc-bar-ras, .nc-skel__ras) {
-        display: none;
-    }
-
-    .nc-scene:not([data-nc-loading='bank']) :is(.nc-load__bank, .nc-bar-bank, .nc-skel__bank) {
-        display: none;
     }
 
     /* The raster's waiting screen: dark glass in a thin bezel, scanlines,
@@ -763,6 +700,141 @@
         --nc-tail: 1.1rem;
     }
 
+    /* ── The pictures a glass may show (loading, round 3) ─────────────────
+       The film holds the picture and its second copy (the even field of the
+       interlace, the next picture of the roll); the trace, the checklist and
+       the counter are shown by the option that uses them, hidden otherwise,
+       so option 1 is drawn exactly as in round 2. */
+    .nc-ras__film {
+        position: absolute;
+        inset: 0;
+    }
+
+    .nc-ras__film > .nc-pic--even,
+    :is(.nc-ras, .nc-day) .nc-ras__wave,
+    .nc-ras__list,
+    .nc-ras__count,
+    .nc-load__lamp {
+        display: none;
+    }
+
+    /* A day that waits is a cell of glass (every loading option); its
+       number is the picture on it. */
+    .nc-day__glass {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: inherit;
+    }
+
+    .nc-day__num {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* The scope's trace: a sine across the glass, in phosphor. */
+    .nc-ras__wave {
+        position: absolute;
+        inset: 3px 0.5rem;
+        inline-size: auto;
+        block-size: auto;
+        overflow: visible;
+        filter: drop-shadow(0 0 2px hsl(from var(--nc-lit) h s l / 0.7));
+    }
+
+    .nc-ras__wave polyline {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 0;
+    }
+
+    /* The checklist: one check at a time on the line, OK in the cream. */
+    .nc-ras__list {
+        position: absolute;
+        inset: 0;
+    }
+
+    .nc-ras__check {
+        position: absolute;
+        inset: 50% 0 auto;
+        display: flex;
+        block-size: 1.2em;
+        translate: 0 -50%;
+        align-items: center;
+        padding-inline: 0.55rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        line-height: 1;
+        text-shadow: 0 0 4px hsl(from var(--nc-lit) h s l / 0.7);
+        visibility: hidden;
+    }
+
+    .nc-ras__check:first-child {
+        visibility: visible;
+    }
+
+    .nc-ras__check::after {
+        content: '\00a0 OK';
+        color: var(--sidebar-foreground);
+    }
+
+    .nc-screen .nc-ras__check {
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    /* The frame counter: two digit drums, each a column of digits behind a
+       window one digit high. */
+    .nc-ras__count {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: 0.55rem;
+        block-size: 1em;
+        overflow: hidden;
+        translate: 0 -50%;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        text-shadow: 0 0 4px hsl(from var(--nc-lit) h s l / 0.7);
+    }
+
+    .nc-ras__drum {
+        display: block;
+        white-space: pre;
+    }
+
+    .nc-screen .nc-ras__count {
+        inset-inline-end: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .nc-day .nc-ras__count {
+        inset-block-start: auto;
+        inset-block-end: 0.15rem;
+        inset-inline-end: 0.2rem;
+        translate: none;
+        font-size: 0.5rem;
+    }
+
+    /* The write lamp beside the glass (option lampsync): a lens on the
+       case, where the glass's start is. */
+    .nc-load__lamp {
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: 50%;
+        margin: 0;
+        translate: 0 -50%;
+        color: var(--foreground);
+    }
+
+    .nc-bar-wrap {
+        position: relative;
+    }
+
     /* A waiting screen that is already a screen (the chart's plot) is the
        glass itself: the word is written in its middle. */
     .nc-screen .nc-load {
@@ -787,7 +859,7 @@
     }
 
     /* A day that waits is a cell of glass. */
-    .nc-scene[data-nc-loading='raster'] .nc-day {
+    .nc-scene[data-nc-loading] .nc-day {
         overflow: hidden;
         border-color: var(--secondary);
         background: var(--sidebar-background);
@@ -796,11 +868,11 @@
         text-shadow: 0 0 4px hsl(from var(--nc-lit) h s l / 0.7);
     }
 
-    .nc-scene[data-nc-loading='raster'] .nc-day .nc-lamp {
+    .nc-scene[data-nc-loading]:not([data-nc-loading='lampsync']) .nc-day .nc-lamp {
         display: none;
     }
 
-    .nc-scene[data-nc-loading='raster'] .nc-day::before {
+    .nc-scene[data-nc-loading] .nc-day::before {
         content: '';
         position: absolute;
         inset-inline: 0;
@@ -810,123 +882,29 @@
         translate: 0 -100%;
     }
 
-    .nc-scene[data-nc-loading='raster'] .nc-day::after {
+    .nc-scene[data-nc-loading] .nc-day::after {
         content: '';
         position: absolute;
         inset: 0;
+        z-index: 1;
         background: var(--nc-scan);
         pointer-events: none;
     }
 
-    /* A day has no room for a row: its own lamp joins the bank. */
-    .nc-day > .nc-load {
-        display: none;
+    .nc-scene[data-nc-loading] .nc-day::before {
+        z-index: 1;
     }
 
-    /* The bar: the bank stands in its place, except as today. */
-    .nc-scene:not([data-nc-loading='mix']) .nc-bar-wrap > .kp-progressbar {
+    /* The bar: the waiting screen stands in its place. */
+    .nc-scene .nc-bar-wrap > .kp-progressbar {
         visibility: hidden;
     }
 
-    .nc-scene[data-nc-loading='mix'] .nc-bar-wrap > :is(.nc-bank, .nc-ras) {
-        visibility: hidden;
-    }
-
-    /* Skeleton lines: three grooves of the bank, or the register's pills. */
+    /* The skeleton: a taller glass with three lines to be written. */
     .nc-skel {
+        position: relative;
         display: grid;
         gap: 0.5rem;
-    }
-
-    .nc-skel__bank:nth-of-type(2) {
-        inline-size: 85%;
-    }
-
-    .nc-skel__bank:nth-of-type(3) {
-        inline-size: 60%;
-    }
-
-    .nc-scene:not([data-nc-loading='mix']) .nc-skel > .kp-skeleton {
-        display: none;
-    }
-
-    /* ── As today, the loading pictures (question 10, option 3) ───────── */
-
-    .nc-scene[data-nc-loading='mix'] .nc-load__today {
-        display: block;
-        position: relative;
-        block-size: 0.6rem;
-    }
-
-    .nc-scene[data-nc-loading='mix'] .kp-kpi .nc-load__today {
-        inline-size: 0.5rem;
-        block-size: 0.5rem;
-        border-radius: 50%;
-        background: var(--primary);
-        box-shadow: 0 0 4px hsl(from var(--primary) h s l / 0.7);
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-table .nc-load,
-    .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load,
-    .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load,
-    .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load {
-        inset: 0;
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-table .nc-load__today {
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: 0;
-        block-size: 2px;
-        background: var(--accent);
-        box-shadow: 0 0 6px var(--accent);
-    }
-
-    .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load__today {
-        position: absolute;
-        inset: 0;
-        block-size: auto;
-        background: linear-gradient(
-                90deg,
-                transparent 0,
-                var(--destructive) 40%,
-                color-mix(in oklab, var(--destructive) 35%, transparent) 70%,
-                transparent 100%
-            ) -40%
-            0 / 40% 100% no-repeat;
-        opacity: 0.55;
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load__today {
-        position: absolute;
-        inset: 0;
-        block-size: auto;
-        background: radial-gradient(circle at 50% 50%, hsl(from var(--sidebar-primary) h s l / 0.4), transparent 65%);
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load__today {
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: 0.5rem;
-        block-size: 0.625rem;
-        background: linear-gradient(90deg, transparent, var(--accent), transparent) -40% 0 / 30% 100% no-repeat;
-        mask: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 1px 0 / 6px 100% repeat-x;
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-day {
-        border-radius: 0.5rem;
-        background: hsl(from var(--muted) h s calc(l - 8));
-    }
-
-    .nc-scene[data-nc-loading='mix'] .nc-day::before {
-        content: '';
-        position: absolute;
-        inset-block-start: 0.3rem;
-        inset-inline-start: 0.3rem;
-        inline-size: 7px;
-        block-size: 7px;
-        border-radius: 50%;
-        background: hsl(from var(--accent) h s l / 0.3);
     }
 
     /* ── 1-4 The motion questions: what stands before it arrives ──────── */
@@ -2058,15 +2036,6 @@
             --nc-loopn: var(--nc-n-loop);
         }
 
-        /* 5, 7, 8 and the parts of 10: the lamp bank computes wherever it stands. */
-        .nc-scene .nc-bank__lit {
-            animation: nc-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) infinite;
-        }
-
-        .nc-scene[data-nc-loading='bank'] .nc-day .nc-lamp::after {
-            animation: nc-day-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * -560ms * var(--nc-slow, 1)) infinite;
-        }
-
         /* 7 The surface: the screen is drawn by the generic raster draw
            above (its picture, in 8 frames), then the hum band rolls down it;
            where a screen is on everything, the cards and key figures are
@@ -2162,37 +2131,188 @@
             animation: nc-roll var(--nc-cycle) steps(10, end) infinite;
         }
 
-        .nc-scene[data-nc-loading='raster'] .nc-day::before {
+        .nc-scene:is([data-nc-loading='raster'], [data-nc-loading='lampsync']) .nc-day::before {
             animation: nc-roll var(--nc-cycle) steps(10, end) calc(var(--i) * -2 * var(--nc-fr)) infinite;
         }
 
-        .nc-scene[data-nc-loading='raster'] .nc-day {
+        .nc-scene:is([data-nc-loading='raster'], [data-nc-loading='lampsync']) .nc-day {
             --nc-cycle: calc(20 * var(--nc-fr));
         }
 
-        /* 10 Loading, as today: each picture its own clock. */
-        .nc-scene[data-nc-loading='mix'] .kp-kpi .nc-load__today {
-            animation: nc-lamp-blink calc(1000ms * var(--nc-slow, 1)) steps(1) infinite;
+        /* ── 10 Loading, round 3: ten more languages on the same glass. Each
+           one replaces the redraw (the word, the beam, the hum band) with its
+           own picture; every loop is 20 frames of 80 ms (--nc-loop), held
+           whole, steps(1, end) between keyframes unless a keyframe says
+           otherwise. The reduced pose is the default: the picture standing. */
+        :where(.nc-scene[data-nc-loading]:not([data-nc-loading='raster'], [data-nc-loading='lampsync']))
+            :is(.nc-ras::before, .nc-ras__beam, .nc-pic) {
+            animation: none;
         }
 
-        .nc-scene[data-nc-loading='mix'] .nc-table .nc-load__today {
-            animation: nc-trace-roll calc(1600ms * var(--nc-slow, 1)) linear infinite;
+        /* decay: struck on in one frame, overbright, then five held steps
+           down to a dim trace. */
+        .nc-scene[data-nc-loading='decay'] .nc-pic:not(.nc-pic--even) {
+            animation: nc-decay var(--nc-loop) steps(1, end) infinite;
         }
 
-        .nc-scene[data-nc-loading='mix'] .kp-menu__item .nc-load__today {
-            animation: nc-band calc(1300ms * var(--nc-slow, 1)) linear infinite;
+        /* diag: five checks of four frames, each written in three and
+           standing one with OK; a day's number is rewritten in the same
+           rhythm. */
+        .nc-scene[data-nc-loading='diag'] .nc-ras__pic {
+            display: none;
         }
 
-        .nc-scene[data-nc-loading='mix'] .nc-screen .nc-load__today {
-            animation: nc-pulse calc(1800ms * var(--nc-slow, 1)) ease-in-out infinite;
+        .nc-scene[data-nc-loading='diag'] .nc-ras__list {
+            display: block;
         }
 
-        .nc-scene[data-nc-loading='mix'] .nc-meter-wait .nc-load__today {
-            animation: nc-band calc(2000ms * var(--nc-slow, 1)) steps(16) infinite;
+        .nc-scene[data-nc-loading='diag'] .nc-ras__check {
+            animation: nc-check var(--nc-loop) steps(1, end) calc((var(--k) - 5) * 4 * var(--nc-fr)) infinite;
         }
 
-        .nc-scene[data-nc-loading='mix'] .nc-day::before {
-            animation: nc-key-scan calc(1400ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * 200ms * var(--nc-slow, 1)) infinite;
+        .nc-scene[data-nc-loading='diag'] .nc-ras__check::after {
+            animation: nc-check-ok var(--nc-loop) steps(1, end) calc((var(--k) - 5) * 4 * var(--nc-fr)) infinite;
+        }
+
+        .nc-scene[data-nc-loading='diag'] .nc-day__num:not(.nc-pic--even) {
+            inset: 50% 0 auto;
+            block-size: 1.2em;
+            translate: 0 -50%;
+            animation: nc-check-day calc(4 * var(--nc-fr)) steps(1, end) infinite;
+        }
+
+        /* interlace: the odd lines in six frames, the even lines in six. */
+        .nc-scene[data-nc-loading='interlace'] .nc-ras__film > .nc-pic--even {
+            display: flex;
+        }
+
+        .nc-scene[data-nc-loading='interlace'] .nc-pic {
+            mask: repeating-linear-gradient(to bottom, var(--foreground) 0 1px, transparent 1px 2px);
+            animation: nc-field var(--nc-loop) steps(1, end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='interlace'] .nc-pic--even {
+            mask-position: 0 1px;
+            animation-name: nc-field-even;
+        }
+
+        /* lampsync: the redraw of option 1, and the case's write lamp lit
+           for the frames the beam writes. */
+        .nc-scene[data-nc-loading='lampsync'] .nc-load__lamp {
+            display: inline-block;
+        }
+
+        .nc-scene[data-nc-loading='lampsync'] :is(.nc-load, .nc-bar-wrap, .nc-skel) {
+            padding-inline-start: 0.9rem;
+        }
+
+        .nc-scene[data-nc-loading='lampsync'] .nc-screen .nc-load {
+            padding-inline-start: 0;
+        }
+
+        .nc-scene[data-nc-loading='lampsync'] .nc-screen .nc-load__lamp {
+            inset: 0.45rem auto auto 0.45rem;
+            translate: none;
+        }
+
+        .nc-scene[data-nc-loading='lampsync'] :is(.nc-load__lamp, .nc-day > .nc-lamp)::after {
+            animation: nc-write-lamp var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* warmup: the dot, the line, the picture opening from its middle,
+           standing, and switched off the same way back. */
+        .nc-scene[data-nc-loading='warmup'] .nc-ras__film::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: hsl(from var(--nc-lit) h s l / 0.14);
+        }
+
+        .nc-scene[data-nc-loading='warmup'] .nc-ras__film {
+            animation: nc-warm var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* matrix: a dot-matrix readout, its rows of dots lit from the top. */
+        .nc-scene[data-nc-loading='matrix'] .nc-pic:not(.nc-pic--even) {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            mask: var(--nc-dots) 0 0 / 2px 2px;
+            animation: nc-matrix var(--nc-loop) steps(1, end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='matrix'] .nc-screen .nc-pic {
+            font-size: 1.25rem;
+            mask-size: 3px 3px;
+        }
+
+        /* scope: the trace drawn across the glass in sixteen frames. */
+        .nc-scene[data-nc-loading='scope'] :is(.nc-ras__pic, .nc-day__num) {
+            display: none;
+        }
+
+        .nc-scene[data-nc-loading='scope'] .nc-ras__wave {
+            display: block;
+        }
+
+        .nc-scene[data-nc-loading='scope'] .nc-screen .nc-ras__wave {
+            inset: 1rem 0.75rem;
+            block-size: auto;
+            margin: 0;
+        }
+
+        .nc-scene[data-nc-loading='scope'] .nc-ras__wave polyline {
+            animation: nc-sweep var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* dither: the picture through a grid of dots, coarse to whole in
+           five steps. */
+        .nc-scene[data-nc-loading='dither'] .nc-pic:not(.nc-pic--even) {
+            mask: var(--nc-checker) 0 0 / 8px 8px;
+            animation: nc-dither var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* vhold: the picture and its next copy roll down through the glass
+           with a blanking bar between, lock, and roll again. */
+        .nc-scene[data-nc-loading='vhold'] .nc-ras__film > .nc-pic--even {
+            display: flex;
+            translate: 0 -100%;
+        }
+
+        .nc-scene[data-nc-loading='vhold'] .nc-ras__film::before,
+        .nc-scene[data-nc-loading='vhold'] .nc-ras__film::after {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: -8%;
+            z-index: 1;
+            block-size: 16%;
+            background: hsl(from var(--sidebar-background) h s calc(l - 10));
+        }
+
+        .nc-scene[data-nc-loading='vhold'] .nc-ras__film::after {
+            inset-block-start: -108%;
+        }
+
+        .nc-scene[data-nc-loading='vhold'] .nc-ras__film {
+            animation: nc-vhold var(--nc-loop) steps(1, end) infinite;
+        }
+
+        /* counter: the word stands dim, the two drums count the frames. */
+        .nc-scene[data-nc-loading='counter'] .nc-ras__pic {
+            opacity: 0.35;
+        }
+
+        .nc-scene[data-nc-loading='counter'] .nc-ras__count {
+            display: flex;
+        }
+
+        .nc-scene[data-nc-loading='counter'] .nc-ras__drum--units {
+            animation: nc-drum-units calc(10 * var(--nc-fr)) steps(10, jump-end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='counter'] .nc-ras__drum--tens {
+            animation: nc-drum-tens var(--nc-loop) steps(2, jump-end) infinite;
         }
 
         /* 11 The spinner. */
@@ -2415,6 +2535,358 @@
         }
     }
 
+    /* ── Loading, round 3: one keyframe set per language; 5 % is one frame
+       of the 20-frame loop. ──────────────────────────────────────────── */
+
+    /* decay: struck (frame 0), full (1-3), 70 % (4-7), 50 % (8-11), 35 %
+       (12-15), 25 % (16-19). */
+    @keyframes nc-decay {
+        0% {
+            opacity: 1;
+            filter: brightness(1.5);
+        }
+
+        5% {
+            opacity: 1;
+            filter: none;
+        }
+
+        20% {
+            opacity: 0.7;
+        }
+
+        40% {
+            opacity: 0.5;
+        }
+
+        60% {
+            opacity: 0.35;
+        }
+
+        80%,
+        100% {
+            opacity: 0.25;
+        }
+    }
+
+    /* diag: a check written in three frames from the top, standing one. */
+    @keyframes nc-check {
+        0% {
+            visibility: visible;
+            clip-path: inset(0 0 58% 0);
+        }
+
+        5% {
+            visibility: visible;
+            clip-path: inset(0 0 47% 0);
+        }
+
+        10% {
+            visibility: visible;
+            clip-path: inset(0);
+        }
+
+        19.99% {
+            visibility: visible;
+            clip-path: inset(0);
+        }
+
+        20%,
+        100% {
+            visibility: hidden;
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes nc-check-ok {
+        0%,
+        14.99% {
+            opacity: 0;
+        }
+
+        15%,
+        19.99% {
+            opacity: 1;
+        }
+
+        20%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes nc-check-day {
+        0% {
+            clip-path: inset(0 0 58% 0);
+        }
+
+        25% {
+            clip-path: inset(0 0 46% 0);
+        }
+
+        50%,
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    /* interlace: the odd field (frames 0-5), the even field (6-11), whole
+       (12-17), blank (18-19). */
+    @keyframes nc-field {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            animation-timing-function: steps(6, jump-start);
+        }
+
+        30%,
+        89.99% {
+            clip-path: inset(0);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes nc-field-even {
+        0%,
+        29.99% {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        30% {
+            clip-path: inset(0 0 100% 0);
+            animation-timing-function: steps(6, jump-start);
+        }
+
+        60%,
+        89.99% {
+            clip-path: inset(0);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    /* lampsync: the lamp lit while the beam writes (frames 0-11). */
+    @keyframes nc-write-lamp {
+        0%,
+        59.99% {
+            opacity: 1;
+        }
+
+        60%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* warmup: dot (0), line (1-2), opens in four (3-6), settles (7-8),
+       stands (9-14), collapses in two (15-16), line (17), dot (18), out (19). */
+    @keyframes nc-warm {
+        0% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 2px));
+            filter: brightness(1.6);
+            opacity: 1;
+        }
+
+        5% {
+            clip-path: inset(calc(50% - 1px) 0);
+            filter: brightness(1.5);
+            opacity: 1;
+        }
+
+        15% {
+            clip-path: inset(calc(50% - 1px) 0);
+            filter: brightness(1.35);
+            opacity: 1;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        35% {
+            clip-path: inset(0);
+            filter: brightness(1.35);
+            opacity: 1;
+        }
+
+        45%,
+        74.99% {
+            clip-path: inset(0);
+            filter: none;
+            opacity: 1;
+        }
+
+        75% {
+            clip-path: inset(0);
+            filter: brightness(1.2);
+            opacity: 1;
+            animation-timing-function: steps(2, jump-end);
+        }
+
+        85% {
+            clip-path: inset(calc(50% - 1px) 0);
+            filter: brightness(1.5);
+            opacity: 1;
+        }
+
+        90% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 2px));
+            filter: brightness(1.6);
+            opacity: 1;
+        }
+
+        95%,
+        100% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 2px));
+            filter: brightness(1.6);
+            opacity: 0;
+        }
+    }
+
+    /* matrix: the rows of dots lit from the top in eight frames, standing
+       ten, blank two. */
+    @keyframes nc-matrix {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            animation-timing-function: steps(8, jump-start);
+        }
+
+        40%,
+        89.99% {
+            clip-path: inset(0);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    /* scope: the trace across the glass in sixteen frames, standing two,
+       wiped two. */
+    @keyframes nc-sweep {
+        0% {
+            stroke-dashoffset: 1;
+            opacity: 1;
+            animation-timing-function: steps(16, jump-start);
+        }
+
+        80%,
+        89.99% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+        }
+
+        90%,
+        100% {
+            stroke-dashoffset: 0;
+            opacity: 0;
+        }
+    }
+
+    /* dither: one dot every 6 px, 4, 3, 2, then whole; four frames each. */
+    @keyframes nc-dither {
+        0% {
+            mask-size: 8px 8px;
+            opacity: 0.7;
+        }
+
+        20% {
+            mask-size: 6px 6px;
+            opacity: 0.8;
+        }
+
+        40% {
+            mask-size: 4px 4px;
+            opacity: 0.9;
+        }
+
+        60% {
+            mask-size: 2px 2px;
+            opacity: 1;
+        }
+
+        80%,
+        100% {
+            mask-image: none;
+            mask-size: 2px 2px;
+            opacity: 1;
+        }
+    }
+
+    /* vhold: rolling a fifth of the glass a frame (two pictures in ten
+       frames, frames 18-19 and 0-7), locked (8-17). */
+    @keyframes nc-vhold {
+        0% {
+            translate: 0 60%;
+        }
+
+        5% {
+            translate: 0 80%;
+        }
+
+        10% {
+            translate: 0 0;
+        }
+
+        15% {
+            translate: 0 20%;
+        }
+
+        20% {
+            translate: 0 40%;
+        }
+
+        25% {
+            translate: 0 60%;
+        }
+
+        30% {
+            translate: 0 80%;
+        }
+
+        35%,
+        89.99% {
+            translate: 0 0;
+        }
+
+        90% {
+            translate: 0 20%;
+        }
+
+        95% {
+            translate: 0 40%;
+        }
+
+        100% {
+            translate: 0 60%;
+        }
+    }
+
+    /* counter: the units drum turns in ten frames, the tens drum in twenty. */
+    @keyframes nc-drum-units {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 -10em;
+        }
+    }
+
+    @keyframes nc-drum-tens {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 -2em;
+        }
+    }
+
     @keyframes nc-track {
         from {
             inset-inline-start: 2px;
@@ -2522,53 +2994,6 @@
                 0 0 0 2px var(--card),
                 0 0 0 3px currentColor,
                 0 0 8px 2px currentColor;
-        }
-    }
-
-    /* The lamp bank: five patterns, one every fifth of the cycle. */
-    @keyframes nc-compute {
-        0% {
-            background-position-x: 0;
-        }
-
-        20% {
-            background-position-x: calc(var(--nc-pitch) * 6);
-        }
-
-        40% {
-            background-position-x: calc(var(--nc-pitch) * 3);
-        }
-
-        60% {
-            background-position-x: calc(var(--nc-pitch) * 13);
-        }
-
-        80%,
-        100% {
-            background-position-x: calc(var(--nc-pitch) * 9);
-        }
-    }
-
-    /* A day's lamp in the bank: on in two of the five patterns. */
-    @keyframes nc-day-compute {
-        0%,
-        19.99% {
-            opacity: 1;
-        }
-
-        20%,
-        59.99% {
-            opacity: 0;
-        }
-
-        60%,
-        79.99% {
-            opacity: 1;
-        }
-
-        80%,
-        100% {
-            opacity: 0;
         }
     }
 
@@ -2737,62 +3162,6 @@
 
         80% {
             translate: 1px 0;
-        }
-    }
-
-    @keyframes nc-lamp-blink {
-        0%,
-        49% {
-            opacity: 1;
-        }
-
-        50%,
-        100% {
-            opacity: 0.25;
-        }
-    }
-
-    @keyframes nc-trace-roll {
-        from {
-            inset-block-start: 0;
-        }
-
-        to {
-            inset-block-start: calc(100% - 2px);
-        }
-    }
-
-    @keyframes nc-band {
-        from {
-            background-position-x: -40%;
-        }
-
-        to {
-            background-position-x: 140%;
-        }
-    }
-
-    @keyframes nc-pulse {
-        0%,
-        100% {
-            opacity: 0.5;
-        }
-
-        50% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes nc-key-scan {
-        0% {
-            background: var(--accent);
-            box-shadow: 0 0 6px 1px var(--accent);
-        }
-
-        15%,
-        100% {
-            background: hsl(from var(--accent) h s l / 0.3);
-            box-shadow: none;
         }
     }
 }

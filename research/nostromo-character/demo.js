@@ -33,16 +33,28 @@ const button = (label, modifier = '', extra = '') =>
 /** A switch's or a reading's lamp (scope-12): unlit at rest; the options light it. */
 const LAMP = '<span class="nc-lamp" aria-hidden="true"></span>';
 
+/**
+ * The pictures a waiting glass may show; each loading option shows one
+ * (round 3): the second field of the picture (interlace, the roll), the
+ * oscilloscope's trace, the diagnostics list, the frame counter's two digit
+ * drums. All hidden unless the option uses them.
+ */
+const WAVE = `<svg class="nc-ras__wave" viewBox="0 0 160 24" preserveAspectRatio="none"><polyline points="${[...Array(41).keys()]
+    .map((i) => `${i * 4},${(12 - 8 * Math.sin((i / 40) * Math.PI * 4)).toFixed(1)}`)
+    .join(' ')}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg>`;
+const CHECKS = ['PUMPS', 'VALVES', 'FLOW', 'PRESSURE', 'TANKS'];
+const LIST = `<span class="nc-ras__list">${CHECKS.map((c, i) => `<span class="nc-ras__check" style="--k: ${i}">CHK ${c}</span>`).join('')}</span>`;
+const DRUMS = `<span class="nc-ras__count"><span class="nc-ras__drum nc-ras__drum--tens">0\n1</span><span class="nc-ras__drum nc-ras__drum--units">0\n1\n2\n3\n4\n5\n6\n7\n8\n9</span></span>`;
+const PICS = (pic) => `<span class="nc-pic nc-pic--even nc-ras__pic${pic ? '' : ' nc-ras__pic--rows'}">${pic}</span>${WAVE}${LIST}${DRUMS}`;
+
 /** A small screen that redraws itself while something waits: dark glass, scanlines, the hum band, a line of phosphor text drawn row by row. */
 const RAS = (cls = '', pic = 'COMPUTING') =>
-    `<span class="nc-ras ${cls}" aria-hidden="true"><span class="nc-ras__pic${pic ? '' : ' nc-ras__pic--rows'}">${pic}</span><span class="nc-ras__beam"></span></span>`;
+    `<span class="nc-ras ${cls}" aria-hidden="true"><span class="nc-ras__film"><span class="nc-pic nc-ras__pic${pic ? '' : ' nc-ras__pic--rows'}">${pic}</span>${PICS(
+        pic,
+    )}</span><span class="nc-ras__beam"></span></span>`;
 
-/** The lamp bank: the progress bar's LED window, computing (the recommendation), or the lamps scanning (option 2). */
-const bank = (cls = '') =>
-    `<span class="nc-bank ${cls}" aria-hidden="true"><span class="nc-bank__window"><span class="nc-bank__lit"></span></span></span>`;
-
-/** Every loading picture an option may draw at the foot of (or over) a waiting part; options.css shows one. */
-const LOAD = `<span class="nc-load" aria-hidden="true">${RAS('nc-load__ras')}${bank('nc-load__bank')}<span class="nc-load__today"></span></span>`;
+/** The loading picture at the foot of (or over) a waiting part: the glass, and the case's write lamp beside it (one option lights it). */
+const LOAD = `<span class="nc-load" aria-hidden="true">${RAS('nc-load__ras')}<span class="nc-lamp nc-load__lamp"></span></span>`;
 
 /** The change on label tape, ‹▲ 6 %›, in its tone. */
 const tape = (text, dir = 'up', tone = 'good') =>
@@ -108,13 +120,11 @@ const PART = {
     column: (label = 'Open', value = '38') =>
         `<div class="nc-column"><span class="kp-kpi__label">${LAMP}${label}</span><span class="nc-column__num nc-figure nc-carrier" data-nc-num>${value}</span></div>`,
     skeleton: () =>
-        `<div class="nc-skel" aria-hidden="true"><span class="kp-skeleton nc-skel__line"></span><span class="kp-skeleton nc-skel__line"></span><span class="kp-skeleton nc-skel__line"></span>${bank(
-            'nc-skel__bank',
-        )}${bank('nc-skel__bank')}${bank('nc-skel__bank')}${RAS('nc-ras--skel nc-skel__ras', '')}</div>`,
+        `<div class="nc-skel" aria-hidden="true">${RAS('nc-ras--skel nc-skel__ras', '')}<span class="nc-lamp nc-load__lamp"></span></div>`,
     bar: (label = 'Export busy') =>
-        `<div class="nc-bar-wrap"><div class="kp-progressbar nc-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>${bank(
-            'nc-bar-bank',
-        )}${RAS('nc-bar-ras')}</div>`,
+        `<div class="nc-bar-wrap"><div class="kp-progressbar nc-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>${RAS(
+            'nc-bar-ras',
+        )}<span class="nc-lamp nc-load__lamp" aria-hidden="true"></span></div>`,
     field: () =>
         `<label class="kp-field nc-field"><span class="kp-field__label">Pump house</span><input class="kp-field__input" value="North 4" /></label>`,
     menuStatic: (items = ['Open incident', 'Assign to…'], cls = '') =>
@@ -253,7 +263,12 @@ const LOADERS = () =>
     ) +
     cell(
         'Month heatmap days',
-        `<div class="nc-days nc-days--wait">${[1, 2, 3, 4, 5].map((d) => `<span class="nc-day nc-waits" style="--i: ${d - 1}">${LAMP}${d}${LOAD}</span>`).join('')}</div>`,
+        `<div class="nc-days nc-days--wait">${[1, 2, 3, 4, 5]
+            .map(
+                (d) =>
+                    `<span class="nc-day nc-waits" style="--i: ${d - 1}">${LAMP}<span class="nc-day__glass"><span class="nc-ras__film"><span class="nc-pic nc-day__num">${d}</span><span class="nc-pic nc-pic--even nc-day__num">${d}</span>${WAVE}${DRUMS}</span></span></span>`,
+            )
+            .join('')}</div>`,
     ) +
     cell('Chart plot (a screen)', `<div class="nc-screen nc-screen--wait nc-waits" aria-busy="true">${LOAD}</div>`) +
     cell('Skeleton lines', PART.skeleton()) +
@@ -718,7 +733,7 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does everything that waits show?',
-        why: 'Round 2: is the loading the lamp bank or the raster redrawing? The raster is the anchor, and a waiting part is a small screen that keeps redrawing: dark glass, scanlines, the word COMPUTING written row by row under the beam, a hum band rolling down. The lamp bank (the progress bar’s LED window, first round’s recommendation) is the case-side answer and stays as an option. Today ten loading pictures run in nostromo, in three directions, three colours (green, red, orange) and nine speeds, and the busy progress bar never moves at all.',
+        why: 'Round 3 (update 2): you like option 1, the screen that redraws, and asked for ten more, because loading defines this theme. Every option here is a complete loading language on the same eight waiting surfaces (the busy bar, a key figure, a table, a menu entry, five days, the chart’s plot, a skeleton, a meter): the same dark glass set into the case, the same 80 ms frame clock, the same 20-frame cycle, amber phosphor only on the glass, the LED orange only as light. The lamp bank and “as today” of round 2 are gone to make room. Options 2 to 11 are in the order I would rank them; what each one costs is said under it.',
         kind: 'loop',
         scene: LOADERS,
         options: [
@@ -731,18 +746,83 @@ const ASPECTS = [
                 ),
             },
             {
-                key: 'bank',
-                name: 'The lamp bank computes',
-                see: 'Every waiting part gets the progress bar’s LED window along its foot, and its LEDs switch in a fixed, unordered pattern on the frame clock (a new pattern every 320 ms, 1.6 s a cycle): the ship’s computer thinking. No sweep, no direction. The busy bar itself computes; a day lights its own corner lamp with the others.',
+                key: 'decay',
+                name: 'The phosphor decays',
+                see: 'The whole picture is struck onto the glass in one frame, overbright with a bloom, and then fades the way phosphor does: five held steps of brightness, each four frames long (full, then 70, 50, 35 and 25 per cent), down to a dim trace, and is struck again. Nothing is written row by row: the anchor’s tail in time instead of in space. 20 frames, 1.6 seconds a cycle; on the days, the skeleton and the plot the same strike.',
+                verdict:
+                    'The runner-up: it is the raster’s own persistence made the whole gesture, one strike a cycle that you see from across the room, no travelling part, no text appearing letter by letter, and no other theme fades a picture in hard steps (dark’s and synthwave’s flare is a smooth glow on a value, once); it is the quietest to live with on eight surfaces at once. It loses to option 1 only because nothing in it is drawn row by row: the anchor is in its tail, not its order.',
+            },
+            {
+                key: 'diag',
+                name: 'The ship runs its checklist',
+                see: 'The glass is a diagnostics line: CHK PUMPS is written row by row in 3 frames, stands one frame with OK beside it, and is replaced by CHK VALVES, then FLOW, PRESSURE, TANKS: five checks of 4 frames, 20 frames a cycle. A day has no room for words: its number is rewritten every 4 frames in the same rhythm. The chart’s plot and the skeleton run the same line in their middle.',
                 verdict: not(
-                    'it is the theme’s own signature bar and the honest picture for the case (a key figure, a table row, a menu entry), but it is the lamps’ answer, not the raster’s: the anchor is not in it.',
+                    'it is G10 taken literally, the ship computing, and it tells a story while you wait; but it is the only option with words that change, so it asks to be read, and a reader may take the check names for real readings.',
                 ),
             },
             {
-                key: 'mix',
-                name: 'As today',
-                see: 'Each component its own picture: the key figure’s ink lamp blinks, the table’s trace rolls down, the menu’s red trace burns across, the days become beige keys whose lamps scan, the chart’s screen pulses amber, the skeleton’s glow runs, the meter’s slots power up; the busy bar stands still.',
-                verdict: not('ten pictures for one state, and the busy bar that never moves reads as a stuck share.'),
+                key: 'interlace',
+                name: 'Two fields, as a 1979 tube',
+                see: 'The picture is written as a television writes it: the odd lines first, from the top, in 6 frames, so the word stands striped at half its brightness; then the even lines fill it in, 6 more frames, and it stands whole for 6 and is blanked for 2. Two passes of the one beam, 20 frames a cycle.',
+                verdict: not(
+                    'it is the most faithful raster of all (a 1979 picture really is two fields), and the striped half-picture is a thing no other theme shows; but at the size of a waiting line the stripes are one pixel apart and the second pass reads as a slight brightening unless you look.',
+                ),
+            },
+            {
+                key: 'lampsync',
+                name: 'The write lamp follows the beam',
+                see: 'The screen redraws as in option 1 (the word written in 12 frames, standing 6, blanked 2) and the case answers it: a lamp beside the glass lights in LED orange for exactly the frames the beam is writing and goes out when the picture stands. A day lights its own corner lamp. Case and screen on one clock.',
+                verdict: not(
+                    'it is the only option where the case takes part (scope-12’s lamp finds its loading job: a tape drive’s activity lamp), and the lamp is readable from further than any glass; the cost is a second thing to look at on every waiting part, and the screen half is option 1 unchanged.',
+                ),
+            },
+            {
+                key: 'warmup',
+                name: 'The tube warms up',
+                see: 'Dark glass. A dot blooms at its centre (1 frame), stretches to a bright line across the middle (2), the line opens up and down to the full picture in 4 frames, overbright, settles in 2, stands for 6, and is switched off the same way backwards: collapses to the line in 2, the line (1), the dot (1), out (1). 20 frames a cycle.',
+                verdict: not(
+                    'it is nostromo’s own switch-on and switch-off (G3, G12) made a loop, so loading, opening and leaving would be one picture; but you chose the raster over the tube strike for opening and leaving, and the picture opens from its middle, not from the top.',
+                ),
+            },
+            {
+                key: 'matrix',
+                name: 'The character matrix',
+                see: 'The readout is a dot matrix, the 5 × 7 kind on a 1979 console: the word is made of dots, and its rows of dots light from the top, a row a frame (8 frames), so the letters grow down to their feet; it stands for 10 frames and is blanked for 2. Not typed letter by letter: every character gets its rows together.',
+                verdict: not(
+                    'it is a genuine second display of the ship (the dot-matrix readout beside the CRT), drawn in the raster’s order, and the dotted letters read as a material; but it is a new material next to the amber glass, and terminal is its neighbour (terminal types cells; this lights rows).',
+                ),
+            },
+            {
+                key: 'scope',
+                name: 'The oscilloscope trace',
+                see: 'The glass is a scope: a sine trace is drawn across it from the start to the end by the beam in 16 frames (one sixteenth a frame), with its glow, stands for 2 frames, is wiped for 2, and the sweep begins again. 20 frames a cycle; the days show a short trace of their own.',
+                verdict: not(
+                    'it is a 1979 instrument everyone recognises and it is clearly working, not waiting; but its order is start → end, the chart arrival’s (the phosphor trace), not the raster’s rows from the top, and blueprint draws its dimension line and titanium feeds start → end too.',
+                ),
+            },
+            {
+                key: 'dither',
+                name: 'The picture resolves',
+                see: 'The picture arrives as coarse dots and resolves: for 4 frames it is a sparse grid of dots at half brightness (one dot every 6 px), then every 4 px, then 3, then 2, then whole: five steps, 20 frames a cycle, and it breaks up again. A bit-plane build-up, the way a slow computer paints a picture.',
+                verdict: not(
+                    'it is the ship computing the picture, visibly, and the coarse-to-fine steps are a thing only a computer does; but it is a computer’s gesture rather than the tube’s, and cyberpunk’s glitch is a neighbour (that one splits colours and jumps; this one only sharpens).',
+                ),
+            },
+            {
+                key: 'vhold',
+                name: 'The vertical hold slips',
+                see: 'The finished picture rolls down through the glass, a blanking bar between one copy and the next, a fifth of the glass a frame (two pictures pass in 10 frames); it locks and stands for 10 frames, slips, and rolls again. 20 frames a cycle.',
+                verdict: not(
+                    'it is the most 1979 of all the pictures and it is unmistakably a CRT that has not settled; but a picture that rolls breaks G2 (nothing falls or walks back), and a rolling picture under a reading can read as a fault rather than as waiting.',
+                ),
+            },
+            {
+                key: 'counter',
+                name: 'The frame counter',
+                see: 'The word COMPUTING stands dim on the glass and beside it a two-digit counter counts the ship’s frames, 00 to 19, one a frame, on two digit drums that step (the units drum turns twice a cycle, the tens drum once), and starts over at 00. 20 frames a cycle; a day shows the counter in its corner.',
+                verdict: not(
+                    'it shows the frame clock itself, which nothing else makes visible, and a counter that runs is unambiguously “busy”; but a number that counts promises an amount, and it does not know one.',
+                ),
             },
         ],
     },
@@ -1043,6 +1123,9 @@ ASPECTS.forEach((a, n) => {
     /** @type {HTMLElement} */ (box.querySelector('.nc-aspect__q')).textContent = a.question;
     /** @type {HTMLElement} */ (box.querySelector('.nc-aspect__why')).textContent = a.why;
     const trio = /** @type {HTMLElement} */ (box.querySelector('.nc-trio'));
+    // A question with more than three options (loading, round 3) wraps its
+    // options in as many columns as fit; the dialog shows one at a time.
+    trio.classList.toggle('nc-trio--many', a.options.length > 3);
     a.options.forEach((o, at) => {
         const col = document.createElement('div');
         col.className = 'nc-col';

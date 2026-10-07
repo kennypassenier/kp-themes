@@ -1,5 +1,7 @@
 # What makes nostromo nostromo
 
+**Verdict (Kenny, 07/10/2026 23:18): sixteen of eighteen approved** (decided.json is kept back until the reopened two are settled); A live update: option 1 with a fix for the cut-off glow on the key figure; Loading: option 1 liked, ten more options asked (Update 2).
+
 **Why.** Kenny, 2026-10-07 03:50, while he judges forest: "doe terwijl nostromo al", the same way as titanium and forest (02:54:
 "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet? begin met 1 thema en we zullen dat één voor
 één afwerken zo"). Nostromo is the second theme of that series. The analysis is
@@ -140,6 +142,62 @@ frames writing, 6 standing, 2 blank) with the hum band; question 12 is question 
 Not in the tool: the loops of 10 and 11 (infinite, no arrival), and the pointer of 14 (a transition played by the review dialog's own
 pointer loop, 3 frames each way). The measured `out` run starts at 0 and ends at 250 while `in` runs 70 to 320: the same four frames, the
 close having no first blank frame.
+
+## Round 3 (update 2)
+
+**Why.** Kenny, 07/10/2026 23:18, approved sixteen of eighteen and reopened two: "A live update: I pick option 1, but there is a
+little bug, in the key figure number, the left side of the glowing button is cut off a bit, so it seems sliced, fix that · Loading: I like
+one, but I want 10 more options, this defines the theme so make sure that I ge world class options, I want it to be hard to pick the best
+one". `update.json` (update 2) locks the sixteen picks and reopens `live` and `loading` with his words and the reply; the dialog walks only
+those two (checked in Firefox: "Step 1/2 · A live update", "Step 2/2 · Loading", the update box with comment and answer on each).
+
+**The slice (live, option 1 and 2).** The package's key-figure label, `.kp-kpi__label` in `css/components.css`, has `overflow: hidden`
+with `text-overflow: ellipsis`, and the demo's lamp (`.nc-lamp`, with `::after` drawing the lens at `inset: -1px` and a glow
+`box-shadow: 0 0 6px 1px`) is the label's first child at its start: the label's clip box cut the glow flat on the start side and a little at
+the top and foot. Fixed in options.css on `.nc-scene .kp-kpi__label:has(> .nc-lamp)` with `padding: 0.5rem; margin: -0.5rem` (the clip
+keeps its ellipsis, the glow gets its room, the layout does not move). Reproduced and checked after the fix in Firefox at 4× on frames 40,
+400 and 620 ms of the 640 ms lamp, for the key figure's, the trend line's and the strip column's labels (the same `.kp-kpi__label`), in both
+options that light a lamp. **For the register:** any lamp drawn inside `.kp-kpi__label` will be clipped by that same rule (selector
+`.kp-kpi__label`, property `overflow: hidden`, components.css line 1102); the register's `.kp-kpi` lamp needs the same room, or a place
+outside the label's clip box.
+
+**Loading: option 1 kept, `bank` and `mix` dropped** (the lamp bank and "as today" of round 2, to make room; their markup, rules and
+keyframes are removed from demo.js and options.css). Ten new options follow, every one on the same eight waiting surfaces (busy bar, key
+figure, table, menu entry, five days, chart plot, skeleton, meter), the same glass (`.nc-ras`, and a day as a glass cell), all custom
+properties on `:is(.nc-page, .rv-dialog__stage)`, every loop infinite, 20 frames of 80 ms (`--nc-loop`), held whole (`steps(1, end)`
+between keyframes), amber (`--sidebar-primary`) on the dark glass and the LED orange only as light; the reduced-motion pose is the picture
+standing. The order after option 1 is the ranking; the recommendation stays option 1 (the only one drawn row by row from the top on
+every surface), the phosphor decay is the named runner-up.
+
+| #   | Key         | Name                            | What you see (per 1.6 s loop)                                                                                               | Overlap check                                                                                              |
+| --- | ----------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 1   | `raster`    | The screen redraws (unchanged)  | COMPUTING written row by row in 12 frames under the beam, stands 6, blank 2; hum band                                       | none (terminal waits on a cursor, cyberpunk hunts with a reticle)                                          |
+| 2   | `decay`     | The phosphor decays             | struck in one frame (brightness 1.5), then 1 · 0.7 · 0.5 · 0.35 · 0.25, four frames each                                    | dark's and synthwave's flare is a smooth glow once on a value; this is five hard steps on a glass, forever |
+| 3   | `diag`      | The ship runs its checklist     | CHK PUMPS / VALVES / FLOW / PRESSURE / TANKS, each written in 3 frames from the top, OK (cream) on the 4th; a day rewritten | words that change: none elsewhere; G10 literally                                                           |
+| 4   | `interlace` | Two fields, as a 1979 tube      | odd lines (1 px mask) in 6 frames from the top, even lines in 6, whole 6, blank 2                                           | none; the stripes are 1 px apart at the small sizes                                                        |
+| 5   | `lampsync`  | The write lamp follows the beam | option 1's redraw; the case's lamp beside the glass (a day's own lamp) lit LED orange for frames 0-11, out while it stands  | none; the screen half is option 1                                                                          |
+| 6   | `warmup`    | The tube warms up               | dot (1), line (2), opens from the middle in 4, settles 2, stands 6, collapses in 2, line, dot, out                          | nostromo's own G3/G12, which Kenny did not pick for opening/leaving; opens from the middle, not the top    |
+| 7   | `matrix`    | The character matrix            | the word through a 2 px dot grid (bold, 0.875 rem); rows lit from the top, a row a frame, 8 frames; stands 10, blank 2      | terminal is a neighbour (it types cells; this lights rows of dots)                                         |
+| 8   | `scope`     | The oscilloscope trace          | a sine (SVG, `pathLength` 1) drawn start → end in 16 frames, stands 2, wiped 2; days show a short trace                     | start → end is the chart arrival's order, blueprint's pen and titanium's feed; not mirrored by `dir`       |
+| 9   | `dither`    | The picture resolves            | a checkerboard mask 8 · 6 · 4 · 2 px, then whole, four frames each; opacity 0.7 → 1                                         | cyberpunk's glitch is a neighbour (it splits colours and jumps; this only sharpens)                        |
+| 10  | `vhold`     | The vertical hold slips         | the picture and its next copy roll a fifth of the glass a frame with a blanking bar (two pictures in 10 frames), lock 10    | breaks G2 on purpose (a picture that falls); no other theme rolls a picture                                |
+| 11  | `counter`   | The frame counter               | COMPUTING dim; two digit drums (`white-space: pre`, translated in 1em steps) count 00-19, the units drum twice a cycle      | none; a number that counts promises an amount                                                              |
+
+**Measured as seen** (Firefox, every animation paused and seeked in 40 ms steps over two loops, the key figure's glass): every option's
+value is the same at t and t + 1600 ms (period 1600, one `animation-duration` of 1600 ms; the checklist also 320 ms per day, the counter's
+units drum 800 ms), and the held frames count as the names say: raster 12 writing steps + stand + blank, decay 5 steps, diag 15 (5 × 3),
+interlace 6 + 6, lampsync 2 (on 0-959 ms, off 960-1599), warmup 11 distinct clips, matrix 8 + stand + blank, scope 16 steps of 1/16,
+dither 4 sizes + whole, vhold 10 positions, counter 20 digit positions. No option glides: between samples the values jump.
+
+**Compared side by side** before hand-over: a contact sheet per option (its scene at 0, 240, 640 and 1320 ms, Firefox 1600 px) was looked
+at and three were redone: the checklist first wrote the empty top of the glass for two of its three frames (the row now has a 1.2 em box
+round the glyphs), the dither's dot grid was unreadable at 0.62 rem (now a 50 % checkerboard), the counter's drums moved their own window
+(now the count is the window). The overbright frames were pulled from brightness 2.2 to 1.5 so amber stays amber.
+
+**Not solved (round 3).** The checklist's `nc-check` writes in three uneven slices (58 %, 47 %, whole) because the glyphs sit in the
+middle of the glass; the day's number in `diag` the same. The scope's SVG trace does not mirror under `dir="rtl"`. The counter's drums use
+`white-space: pre` line breaks for digits (no `content: counter()`: Firefox does not re-resolve a counter from an animated custom property,
+tested). In the dialog the eight surfaces share one stage, so a glass is about 200 px wide; the page shows them two to a line at 1600 px (`.nc-trio--many`, columns of at least 26 rem).
 
 ### Not solved
 

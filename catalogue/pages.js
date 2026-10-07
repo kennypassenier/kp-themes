@@ -80,7 +80,7 @@ export const PAGES = [
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
-            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo', rework: 'loading options and a glow fix' },
+            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
             {
                 href: 'research/cyberpunk-character/demo.html',

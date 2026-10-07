@@ -193,6 +193,12 @@
     align-items: start;
 }
 
+/* More than three options (loading, round 3): two to a line at 1600 px,
+   wrapping, each line's names, words and scenes still aligned by the subgrid. */
+.nc-trio--many {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+}
+
 .nc-col {
     display: grid;
     grid-row: span 4;
