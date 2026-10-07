@@ -1,0 +1,2007 @@
+/* research/solstice-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.so-scene[data-so-<question>='<key>']`). Colours come from the theme's
+   tokens only (a relative colour of a token where a lighter ink is needed);
+   every motion sits under prefers-reduced-motion: no-preference, and the
+   reduced pose is the finished part. Durations are multiplied by --so-slow
+   (1, 2 or 4: the page's speed buttons). The values of the "as picked"
+   options are the ones measured in themes/solstice/CHARACTER.md §2. Parts
+   at rest are drawn as the recommended grammar has them (lit from below,
+   one soft radius, the serif in sentence case, the sun crossing), so each
+   question changes only its own rule. */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    .so-page {
+        /* G1: the sun's sine, what comes on its last quarter, what goes on
+           its first; the register's standard curve (sepia's and deco's) and
+           the picks' spring, for the options. */
+        --so-sine-in: cubic-bezier(0.61, 1, 0.88, 1);
+        --so-sine-out: cubic-bezier(0.12, 0, 0.39, 0);
+        --so-std: cubic-bezier(0.4, 0, 0.2, 1);
+        --so-spring: cubic-bezier(0.3, 1.4, 0.4, 1);
+        /* G13: the failure's ink, the red lifted to 68 % (5.4:1 on the card;
+           --destructive itself reads 4.1:1), as the alarm lifts it. */
+        --so-bad-ink: hsl(from var(--destructive) h s 68%);
+        --so-warn-ink: var(--warning-foreground);
+        /* A warning's light in the sky: the warning hue lit to 50 % (the
+           --warning plate itself is 26 %, a dark ochre); its words keep the
+           plate's own ink, --warning-foreground. */
+        --so-warn-light: hsl(from var(--warning) h s 50%);
+        --so-good-ink: var(--success-foreground);
+        /* The first light: overbright and warm, cooling to the colour. */
+        --so-first-light: brightness(1.35) saturate(1.3);
+    }
+
+    .so-scene {
+        position: relative;
+        overflow: hidden;
+        /* G1, G4: every scene runs on the recommended curve and units; the
+           curve and duration questions change these. */
+        --so-in: var(--so-sine-in);
+        --so-out: var(--so-sine-out);
+        --so-contact: 240ms;
+        --so-open: 480ms;
+        --so-change: 720ms;
+        --so-loop: 2400ms;
+    }
+
+    .so-scene[data-so-curve='standard'] {
+        --so-in: var(--so-std);
+        --so-out: var(--so-std);
+    }
+
+    .so-scene[data-so-curve='spring'] {
+        --so-in: var(--so-spring);
+        --so-out: var(--so-std);
+    }
+
+    .so-scene[data-so-durations='picks'] {
+        --so-contact: 620ms;
+        --so-open: 560ms;
+        --so-change: 1000ms;
+        --so-loop: 4000ms;
+    }
+
+    .so-scene[data-so-durations='brisk'] {
+        --so-contact: 150ms;
+        --so-open: 300ms;
+        --so-change: 450ms;
+        --so-loop: 1200ms;
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .so-scene .so-title {
+        margin: 0;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.2rem;
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    /* A plate or a panel: charcoal, one soft radius, a hairline; its foot
+       light is its own element (.so-foot), so a question can switch it. */
+    .so-scene :is(.so-plate, .so-panel) {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        margin: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .so-scene .so-panel {
+        --so-foot-k: 0.12;
+        background: var(--popover);
+        box-shadow: 0 18px 40px var(--kp-shadow-soft);
+    }
+
+    /* G7: the low sun at the foot. A rust wash rising from the foot edge
+       and the foot edge itself catching the light. Every state of the part
+       (pointed, kindled, a tone) changes only these knobs. */
+    .so-scene .so-foot {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: linear-gradient(
+            to top,
+            hsl(from var(--so-foot-ink, var(--accent)) h s l / var(--so-foot-k, 0.22)),
+            transparent var(--so-foot-h, 40%)
+        );
+        box-shadow: inset 0 calc(-1 * var(--so-edge-w, 1px)) 0 var(--so-edge, hsl(from var(--primary) h s l / 0.55));
+        pointer-events: none;
+        transition:
+            background var(--so-contact) var(--so-in),
+            box-shadow var(--so-contact) var(--so-in);
+    }
+
+    /* A grid places an absolute child in its grid area; these drawings span
+       the whole part, so they take no area (the key figure is a grid). */
+    .so-scene :is(.so-foot, .so-load, .so-moon) {
+        grid-area: auto;
+    }
+
+    .so-scene .kp-card.so-plate {
+        display: grid;
+        gap: 0.25rem;
+        padding: 0.8rem 1rem 0.9rem;
+    }
+
+    .so-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .so-scene .kp-dialog {
+        position: relative;
+        inset: auto;
+        display: block;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 18px 40px var(--kp-shadow-soft);
+        animation: none;
+    }
+
+    .so-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .so-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .so-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 11.5rem;
+    }
+
+    .so-scene .so-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.45rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .so-scene .so-pop {
+        position: relative;
+        inset: auto;
+        display: block;
+        padding: 0.4rem;
+        animation: none;
+    }
+
+    .so-scene .kp-menu {
+        display: grid;
+        gap: 0.1rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        list-style: none;
+    }
+
+    /* A menu entry nests in its panel: the panel's radius less its inset. */
+    .so-scene .kp-menu__item {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        inline-size: 100%;
+        border-radius: calc(var(--radius) - 0.4rem + 2px);
+        white-space: nowrap;
+        --so-foot-k: 0;
+        --so-edge: transparent;
+    }
+
+    .so-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .so-scene .so-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .so-scene .kp-kpi.so-plate {
+        display: grid;
+        gap: 0.15rem;
+        padding: 0.75rem 1rem 0.85rem;
+        color: inherit;
+        text-decoration: none;
+        text-align: start;
+    }
+
+    .so-scene .kp-kpi__trend {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    /* G15: the serif names, in sentence case. */
+    .so-scene .so-label {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        line-height: 1.15;
+        text-transform: none;
+    }
+
+    /* G15: the serif counts, at 400. */
+    .so-scene .so-figure {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 2rem;
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.1;
+    }
+
+    /* The change on a chip at the soft radius; G13's sun for up, moon for down. */
+    .so-scene .so-chip {
+        border-radius: calc(var(--radius) - 0.25rem);
+    }
+
+    .so-scene .so-chip[data-kp-direction='up']::before {
+        content: '☀\00a0';
+    }
+
+    .so-scene .so-chip[data-kp-direction='down']::before {
+        content: '☾\00a0';
+    }
+
+    .so-scene .so-faint {
+        opacity: 0.45;
+    }
+
+    .so-scene .so-carrier {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* The state: a light and its word. */
+    .so-scene .so-state {
+        --so-tone: var(--so-good-ink);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+    }
+
+    .so-scene .so-state[data-so-kind='bad'] {
+        --so-tone: var(--so-bad-ink);
+    }
+
+    .so-scene .so-state__dot {
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--so-tone);
+    }
+
+    .so-scene .so-state-plate {
+        padding: 0.7rem 0.9rem 0.8rem;
+    }
+
+    /* Days of a month at the soft radius less a little (a small plate). */
+    .so-scene .so-days {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .so-scene .so-day {
+        position: relative;
+        isolation: isolate;
+        display: inline-grid;
+        place-items: center;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) - 0.125rem);
+        background: var(--card);
+        --so-foot-k: 0.16;
+        --so-foot-h: 60%;
+    }
+
+    .so-scene .so-day__num {
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+    }
+
+    /* The halo: today and the pick (G16), a double ring in amber. */
+    .so-scene .so-day.so-picked {
+        overflow: visible;
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+
+    .so-scene .so-rows {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .so-scene .so-row-line {
+        position: relative;
+        padding: 0.2rem 0.5rem;
+        border-radius: calc(var(--radius) - 0.25rem);
+        background: var(--card);
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+    }
+
+    /* Three readouts: wells the dusk ramp fills to its mark. */
+    .so-scene .so-tracks {
+        display: grid;
+        gap: 0.55rem;
+    }
+
+    .so-scene .so-groove {
+        position: relative;
+        display: block;
+        block-size: 0.7rem;
+        overflow: hidden;
+        border-radius: var(--radius);
+        background: var(--muted);
+    }
+
+    .so-scene .so-track {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--to);
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--primary));
+        transform-origin: left center;
+    }
+
+    /* A chart's plot: the dusk sky over a rust horizon, the line in amber,
+       the heat under it in rust. */
+    .so-scene .so-plot {
+        position: relative;
+        isolation: isolate;
+        block-size: 6.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: linear-gradient(to top, hsl(from var(--accent) h s 22%) 0%, var(--background) 70%);
+        color: var(--primary);
+    }
+
+    .so-scene .so-plot svg {
+        position: absolute;
+        inset: 0.6rem 0.5rem 1.7rem;
+        inline-size: calc(100% - 1rem);
+        block-size: calc(100% - 2.3rem);
+        overflow: visible;
+    }
+
+    .so-scene .so-plot__area {
+        fill: hsl(from var(--accent) h s l / 0.3);
+    }
+
+    .so-scene .so-plot__line {
+        stroke: var(--primary);
+    }
+
+    .so-scene .so-plot__read {
+        position: absolute;
+        inset: auto auto 0.3rem 0.6rem;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+    }
+
+    .so-scene .so-spark-wrap {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .so-scene .so-spark {
+        display: block;
+        block-size: 2.2rem;
+        color: var(--primary);
+    }
+
+    .so-scene .so-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .so-scene .so-column {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        gap: 0.2rem;
+        justify-items: start;
+        padding: 0.6rem 0.9rem 0.75rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .so-scene .so-meter,
+    .so-scene .so-bar {
+        inline-size: 100%;
+    }
+
+    /* G5: the meter's sun is amber, never the warning plate's ochre. */
+    .so-scene .kp-meter__mark::before {
+        background: var(--primary);
+    }
+
+    /* The register's own loading dot on a meter: each option draws its own. */
+    .so-scene .kp-meter[data-kp-loading]::after {
+        display: none;
+    }
+
+    .so-scene .so-meter-plate {
+        display: grid;
+        gap: 0.6rem;
+        padding: 0.8rem 1rem 1rem;
+    }
+
+    .so-scene .so-meter-wait {
+        position: relative;
+        isolation: isolate;
+        padding: 0.7rem 0.75rem 1.1rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .so-scene .so-skel {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        gap: 0.55rem;
+        padding: 0.7rem 0.75rem 1.1rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .so-scene .so-skel__line {
+        position: relative;
+        display: block;
+        block-size: 0.8rem;
+        overflow: hidden;
+        border-radius: calc(var(--radius) - 0.25rem);
+        background: var(--muted);
+    }
+
+    .so-scene .so-skel__line::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0.8rem;
+        background: hsl(from var(--accent) h s l / 0.55);
+    }
+
+    .so-scene .so-skel__line:nth-child(2) {
+        inline-size: 82%;
+    }
+
+    .so-scene .so-skel__line:nth-child(3) {
+        inline-size: 64%;
+    }
+
+    .so-scene .so-table {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.3rem 1rem;
+        padding: 0.9rem 1rem 1.2rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+    }
+
+    .so-scene .so-table > span:nth-of-type(-n + 2) {
+        color: var(--muted-foreground);
+    }
+
+    .so-scene .so-prose,
+    .so-scene .so-heading {
+        margin: 0;
+    }
+
+    .so-scene .so-heading {
+        font-family: var(--theme-font-display);
+        font-size: 1.35rem;
+    }
+
+    .so-scene .so-rule {
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.4rem;
+        border-radius: 2px;
+        background: var(--primary);
+    }
+
+    .so-scene .so-header {
+        padding: 0.8rem 1rem 0.9rem;
+    }
+
+    .so-scene .so-header .kp-page-header__title,
+    .so-scene .so-header .kp-page-header__description {
+        margin: 0;
+    }
+
+    .so-scene .so-header .kp-page-header__inner {
+        display: grid;
+        gap: 0.6rem;
+    }
+
+    .so-scene .so-header .kp-page-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-start;
+    }
+
+    .so-scene .so-header-mini {
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .so-scene .so-tile-link {
+        position: relative;
+        isolation: isolate;
+        justify-self: start;
+        --so-foot-k: 0;
+        --so-edge: transparent;
+    }
+
+    .so-scene .so-key {
+        position: relative;
+        isolation: isolate;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.3rem 0.7rem;
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--secondary);
+        color: var(--foreground);
+        font: inherit;
+        font-size: 0.9rem;
+        --so-foot-k: 0;
+        --so-edge: transparent;
+    }
+
+    .so-scene .so-key__swatch {
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    .so-scene .so-entry {
+        position: relative;
+    }
+
+    .so-scene .so-alert {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .so-scene .so-tip {
+        position: relative;
+        inset: auto;
+        justify-self: start;
+        margin: 0;
+        border-radius: var(--radius);
+        opacity: 1;
+        animation: none;
+    }
+
+    .so-scene .so-mark {
+        display: none;
+    }
+
+    .so-scene .so-leaver {
+        position: relative;
+        container-type: inline-size;
+        overflow: hidden;
+        border-radius: var(--radius);
+    }
+
+    .so-scene .so-leaver__body {
+        position: relative;
+    }
+
+    /* The moon of the eclipse: a disc in the ground's own charcoal with an
+       amber corona, resting off the part's start; hidden unless the leave
+       question's eclipse draws it. */
+    .so-scene .so-moon {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        z-index: 3;
+        inline-size: 115cqi;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--background);
+        box-shadow:
+            0 0 0 1px hsl(from var(--primary) h s l / 0.7),
+            0 0 10px 2px hsl(from var(--primary) h s l / 0.55),
+            0 0 26px 8px hsl(from var(--primary) h s l / 0.22);
+        translate: calc(-100% - 50cqi - 1rem) -50%;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .so-scene[data-so-leave='eclipse'] .so-moon {
+        visibility: visible;
+    }
+
+    .so-scene .so-spins {
+        gap: 1.25rem;
+    }
+
+    .so-scene .so-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-self: start;
+    }
+
+    .so-scene .so-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .so-scene .so-divider {
+        margin-block: 0.25rem;
+    }
+
+    /* ── Loading (G10) at rest: one drawing shown per option ─────────── */
+
+    .so-scene .so-waits {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+    }
+
+    .so-scene .so-load {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    .so-scene .so-load > * {
+        display: none;
+    }
+
+    /* The sun crosses: a runner as wide as the sun's travel moves its own
+       width start → end (a transform only); the sun on it rises out of the
+       foot and sets into it. */
+    .so-scene[data-so-loading='sun'] .so-path,
+    .so-scene:not([data-so-loading]) .so-path {
+        position: absolute;
+        display: block;
+        inset-inline: 0.4rem calc(100% - 0.95rem);
+        inset-block-end: 0;
+        block-size: 0.55rem;
+        translate: calc((100cqi - 1.35rem) / 2) 0;
+    }
+
+    .so-scene .so-waits:not(.so-day--wait) {
+        container-type: inline-size;
+    }
+
+    .so-scene .so-sun {
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-end: 0.2rem;
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow:
+            0 0 0 2px hsl(from var(--primary) h s l / 0.22),
+            0 0 0.45rem hsl(from var(--primary) h s l / 0.55);
+    }
+
+    /* A day has no room for a crossing: its sun stands at its foot's middle. */
+    .so-scene .so-day--wait .so-path {
+        inset-inline: calc(50% - 0.25rem) auto;
+        inline-size: 0.5rem;
+        translate: none;
+    }
+
+    .so-scene .so-day--wait .so-sun {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        inset-block-end: 0.2rem;
+    }
+
+    .so-scene .so-days--wait .so-day__num {
+        opacity: 0.45;
+    }
+
+    .so-scene[data-so-loading='breathe'] .so-breath {
+        position: absolute;
+        display: block;
+        inset: auto 0 0;
+        block-size: 70%;
+        background: radial-gradient(ellipse 70% 100% at 50% 100%, hsl(from var(--accent) h s l / 0.55), transparent 70%);
+        transform-origin: 50% 100%;
+    }
+
+    .so-scene[data-so-loading='sparks'] .so-sparks {
+        position: absolute;
+        display: block;
+        inset: 0;
+        background:
+            radial-gradient(circle, var(--accent) 1.5px, transparent 2px) 0 0 / 37px 41px,
+            radial-gradient(circle, var(--primary) 1.2px, transparent 1.7px) 13px 19px / 29px 33px,
+            linear-gradient(to top, hsl(from var(--primary) h s l / 0.35), transparent 22%);
+    }
+
+    /* The skeleton's lines stand still; one sun crosses along the block's foot. */
+    .so-scene .so-skel .so-load {
+        border-radius: inherit;
+    }
+
+    /* ── The spinner (G11): one of three drawings per option ─────────── */
+
+    .so-scene .so-spin {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        inline-size: var(--so-spin, 1.25rem);
+        block-size: var(--so-spin, 1.25rem);
+    }
+
+    .so-scene .so-spin > * {
+        grid-area: 1 / 1;
+    }
+
+    .so-scene .so-spin .kp-spinner {
+        --kp-spinner-size: var(--so-spin, 1.25rem);
+    }
+
+    .so-scene .so-spin__ember,
+    .so-scene .so-spin__ring {
+        display: none;
+    }
+
+    .so-scene[data-so-spinner='ember'] .so-spin .kp-spinner,
+    .so-scene[data-so-spinner='ring'] .so-spin .kp-spinner {
+        display: none;
+    }
+
+    .so-scene[data-so-spinner='ember'] .so-spin__ember {
+        display: block;
+        inline-size: 45%;
+        block-size: 45%;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0.5em hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .so-scene[data-so-spinner='ring'] .so-spin__ring {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        box-sizing: border-box;
+        border: 2px solid hsl(from var(--primary) h s l / 0.25);
+        border-block-start-color: var(--primary);
+        border-radius: 50%;
+    }
+
+    .so-scene .so-busy-button .so-spin {
+        --so-spin: 1rem;
+    }
+
+    /* On an amber face the sun, the ember and the ring take the face's ink
+       (proposal-28): amber on amber is invisible. */
+    .so-scene .so-busy-button .kp-spinner {
+        background: linear-gradient(hsl(from var(--primary-foreground) h s l / 0.6), hsl(from var(--primary-foreground) h s l / 0.6)) 50% 80% / 100%
+            1.5px no-repeat;
+    }
+
+    .so-scene .so-busy-button .kp-spinner::after,
+    .so-scene .so-busy-button .so-spin__ember {
+        background: var(--primary-foreground);
+        box-shadow: none;
+    }
+
+    .so-scene .so-busy-button .so-spin__ring {
+        border-color: hsl(from var(--primary-foreground) h s l / 0.25);
+        border-block-start-color: var(--primary-foreground);
+    }
+
+    /* ── Tone (G13) at rest ──────────────────────────────────────────── */
+
+    .so-scene [data-so-kind='warn'] {
+        --so-tone-ink: var(--so-warn-ink);
+        --so-tone-light: var(--so-warn-light);
+        --so-tone-plate: var(--warning);
+    }
+
+    .so-scene [data-so-kind='bad'] {
+        --so-tone-ink: var(--so-bad-ink);
+        --so-tone-light: var(--destructive);
+        --so-tone-plate: var(--destructive);
+        --so-tone-plate-ink: var(--destructive-foreground);
+    }
+
+    /* The red sky (recommended): the foot light in the tone's ink, the words in it. */
+    .so-scene:not([data-so-tone]) :is([data-so-kind='warn'], [data-so-kind='bad']),
+    .so-scene[data-so-tone='sky'] :is([data-so-kind='warn'], [data-so-kind='bad']) {
+        --so-foot-ink: var(--so-tone-light);
+        --so-foot-k: 0.34;
+        --so-foot-h: 65%;
+        --so-edge-w: 2px;
+        --so-edge: var(--so-tone-light);
+    }
+
+    .so-scene:not([data-so-tone]) :is([data-so-kind='warn'], [data-so-kind='bad']) :is(.so-toned, .kp-kpi__value),
+    .so-scene[data-so-tone='sky'] :is([data-so-kind='warn'], [data-so-kind='bad']) :is(.so-toned, .kp-kpi__value, .so-state__word) {
+        color: var(--so-tone-ink);
+    }
+
+    /* The halo: a ring of the tone's glow round a dot before the title. */
+    .so-scene[data-so-tone='halo'] .so-mark {
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background: var(--so-tone-ink);
+        box-shadow: 0 0 0 4px hsl(from var(--so-tone-ink) h s l / 0.35);
+        vertical-align: 0.1em;
+    }
+
+    .so-scene[data-so-tone='halo'] .so-warn .kp-kpi__label::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background: var(--so-tone-ink);
+        box-shadow: 0 0 0 4px hsl(from var(--so-tone-ink) h s l / 0.35);
+    }
+
+    .so-scene[data-so-tone='halo'] .so-state[data-so-kind='bad'] .so-state__dot {
+        box-shadow: 0 0 0 4px hsl(from var(--so-tone-ink) h s l / 0.35);
+    }
+
+    /* On the tone's plate (the key figure's pick). */
+    .so-scene[data-so-tone='plate'] :is([data-so-kind='warn'], [data-so-kind='bad']) :is(.so-toned, .kp-kpi__value) {
+        padding-inline: 0.3em;
+        border-radius: calc(var(--radius) - 0.25rem);
+        background: var(--so-tone-plate);
+        color: var(--so-tone-plate-ink, var(--warning-foreground));
+    }
+
+    .so-scene[data-so-tone='plate'] .so-state[data-so-kind='bad'] {
+        padding: 0.1rem 0.45rem;
+        border-radius: calc(var(--radius) - 0.25rem);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .so-scene[data-so-tone='plate'] .so-state[data-so-kind='bad'] .so-state__dot {
+        background: var(--destructive-foreground);
+    }
+
+    .so-scene:is([data-so-tone='halo'], [data-so-tone='plate']) .so-chip::before {
+        content: none;
+    }
+
+    .so-scene:is([data-so-tone='halo'], [data-so-tone='plate']) .so-chip[data-kp-direction='up']::before {
+        content: '▲\00a0';
+    }
+
+    .so-scene:is([data-so-tone='halo'], [data-so-tone='plate']) .so-chip[data-kp-direction='down']::before {
+        content: '▼\00a0';
+    }
+
+    .so-scene .so-meter-plate .so-toned {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* ── Colour (G5) ─────────────────────────────────────────────────── */
+
+    /* At rest a pointed part shows the recommended hover (G8); see below. */
+
+    .so-scene[data-so-colour='amber'] {
+        --so-foot-ink: var(--primary);
+    }
+
+    .so-scene[data-so-colour='amber'] .so-plot__area {
+        fill: hsl(from var(--primary) h s l / 0.3);
+    }
+
+    .so-scene[data-so-colour='amber'] .so-plot {
+        background: linear-gradient(to top, hsl(from var(--primary) h s 22%) 0%, var(--background) 70%);
+    }
+
+    .so-scene[data-so-colour='amber'] .so-prose a {
+        text-decoration-color: var(--primary);
+    }
+
+    .so-scene[data-so-colour='rust'] {
+        --so-foot-ink: var(--primary);
+    }
+
+    .so-scene[data-so-colour='rust'] .kp-button--primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .so-scene[data-so-colour='rust'] .so-day.so-picked {
+        outline-color: var(--accent);
+    }
+
+    .so-scene[data-so-colour='rust'] .so-rule {
+        background: var(--accent);
+    }
+
+    .so-scene[data-so-colour='rust'] .so-plot__line {
+        stroke: var(--accent);
+    }
+
+    .so-scene[data-so-colour='rust'] .so-plot__area {
+        fill: hsl(from var(--primary) h s l / 0.25);
+    }
+
+    .so-scene[data-so-colour='rust'] .so-prose a {
+        color: var(--accent);
+    }
+
+    .so-scene[data-so-colour='rust'] .kp-meter {
+        --kp-meter-fill-colour: var(--accent);
+    }
+
+    /* ── Corners (G6) ────────────────────────────────────────────────── */
+
+    .so-scene[data-so-corners='mixed'] .so-c-card {
+        border-radius: 0;
+    }
+
+    .so-scene[data-so-corners='mixed'] .so-c-dialog {
+        border-radius: 2px;
+    }
+
+    .so-scene[data-so-corners='mixed'] .so-c-button,
+    .so-scene[data-so-corners='mixed'] .so-c-tag2 {
+        border-radius: 0.25rem;
+    }
+
+    .so-scene[data-so-corners='mixed'] .so-c-kpi {
+        border-radius: 0.9rem;
+    }
+
+    .so-scene[data-so-corners='mixed'] :is(.so-chip, .so-tip, .so-c-tag) {
+        border-radius: 999px;
+    }
+
+    .so-scene[data-so-corners='mixed'] .so-c-menu .kp-menu__item {
+        border-radius: 0;
+    }
+
+    .so-scene[data-so-corners='pill'] :is(.kp-button, .kp-badge, .kp-tag, .so-chip, .so-tip, .kp-menu__item) {
+        border-radius: 999px;
+    }
+
+    .so-scene[data-so-corners='pill'] :is(.so-tip, .so-chip) {
+        padding-inline: 0.7rem;
+    }
+
+    /* ── Surface (G7) ────────────────────────────────────────────────── */
+
+    .so-scene[data-so-surface='above'] .so-foot {
+        background: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.2), transparent 45%);
+        box-shadow: inset 0 1px 0 hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .so-scene[data-so-surface='horizon'] .so-foot {
+        background:
+            linear-gradient(to top, transparent 22%, hsl(from var(--accent) h s l / 0.7) 22% calc(22% + 1px), transparent calc(22% + 1px)),
+            linear-gradient(to top, hsl(from var(--accent) h s 20%) 0%, transparent 70%);
+        box-shadow: none;
+    }
+
+    .so-scene[data-so-surface='horizon'] .so-plate:has(> .so-foot) {
+        padding-block-end: 1.6rem;
+    }
+
+    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
+
+    /* The recommended hover, at rest wherever a part is marked pointed: the
+       foot edge lights in full amber and the wash climbs and warms. */
+    .so-scene:not([data-so-hover]) .so-pointed,
+    .so-scene[data-so-hover='sun'] .so-pointed {
+        --so-foot-ink: var(--primary);
+        --so-foot-k: 0.3;
+        --so-foot-h: 72%;
+        --so-edge-w: 2px;
+        --so-edge: var(--primary);
+    }
+
+    .so-scene:not([data-so-hover]) .kp-button.so-pointed,
+    .so-scene[data-so-hover='sun'] .kp-button.so-pointed {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    .so-scene[data-so-hover='sun'] .so-day.so-pointed {
+        --so-foot-k: 0.4;
+    }
+
+    .so-scene[data-so-hover='warm'] .so-pointed {
+        --so-foot-k: 0.22;
+        --so-foot-h: 40%;
+    }
+
+    .so-scene[data-so-hover='warm'] :is(.so-pointed, .kp-button.so-pointed) {
+        border-color: var(--primary);
+        background-color: color-mix(in oklch, var(--primary) 14%, var(--card));
+    }
+
+    .so-scene[data-so-hover='warm'] .kp-menu__item.so-pointed {
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+
+    /* The rake: a warm band crosses the pointed part (it repeats here). */
+    .so-scene[data-so-hover='rake'] .so-pointed {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .so-scene[data-so-hover='rake'] .so-pointed::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -60%;
+        z-index: 2;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        pointer-events: none;
+    }
+
+    /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
+
+    .so-scene:is(:not([data-so-focus]), [data-so-focus='ring']) .so-focused {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+        --so-foot-ink: var(--primary);
+        --so-foot-k: 0.3;
+        --so-foot-h: 72%;
+        --so-edge-w: 2px;
+        --so-edge: var(--primary);
+    }
+
+    .so-scene:is(:not([data-so-focus]), [data-so-focus='ring']) .kp-button.so-focused {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            inset 0 -2px 0 var(--primary);
+    }
+
+    .so-scene[data-so-focus='one'] .so-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .so-scene[data-so-focus='halo'] .so-focused {
+        outline: 3px double var(--accent);
+        outline-offset: 3px;
+    }
+
+    /* A focused part in a clipping parent keeps its ring visible. */
+    .so-scene[data-so-focus] :is(.so-pop, .so-tile, .so-days) {
+        overflow: visible;
+    }
+
+    .so-scene[data-so-focus] .so-pop {
+        padding: 0.55rem;
+    }
+
+    /* ── Composites (G17): the State buttons ─────────────────────────── */
+
+    /* "As today": the header's actions as amber frames at 0.25 rem, the
+       menu's entries with a wash, the tile link and the key figure with one
+       outline. "Quiet": the theme's own, but every button inside a composite
+       a ghost, the primary's amber face gone. */
+    .so-scene[data-so-composites='quiet'] :is(.so-in-header, .so-in-drawer).kp-button--primary {
+        border-color: var(--border-strong);
+        background-color: transparent;
+        color: var(--primary);
+    }
+
+    .so-scene[data-so-composites='today'] .so-in-header {
+        border: 1px solid var(--primary);
+        border-radius: 0.25rem;
+        background: transparent;
+        color: var(--primary);
+    }
+
+    .so-scene[data-so-composites='today'] .so-in-header.kp-button--primary {
+        background: transparent;
+    }
+
+    .so-scene[data-so-composites='today'] .so-in-kpi {
+        border-color: var(--border-strong);
+    }
+
+    /* Hover */
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='own'] :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link),
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='quiet'] :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link) {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    .so-sec[data-so-show='hover']
+        .so-scene:is([data-so-composites='own'], [data-so-composites='quiet'])
+        :is(.so-in-kpi, .so-in-menu li:first-child .kp-menu__item) {
+        --so-foot-ink: var(--primary);
+        --so-foot-k: 0.3;
+        --so-foot-h: 72%;
+        --so-edge-w: 2px;
+        --so-edge: var(--primary);
+        background-color: var(--muted);
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='own'] .so-in-kpi,
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='quiet'] .so-in-kpi {
+        background-color: var(--card);
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-alone,
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-in-drawer {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-in-header {
+        box-shadow: 0 0 0.75rem color-mix(in oklch, var(--primary) 45%, transparent);
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-in-menu li:first-child .kp-menu__item {
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-tile-link {
+        text-decoration: underline;
+    }
+
+    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-in-kpi {
+        border-color: var(--primary);
+        background: color-mix(in oklch, var(--primary) 10%, var(--card));
+    }
+
+    /* Focus */
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites] :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link, .so-in-kpi),
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites] .so-in-menu li:first-child .kp-menu__item {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites='today'] :is(.so-in-header, .so-tile-link, .so-in-kpi) {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites='today'] .so-tile-link {
+        outline-offset: 4px;
+    }
+
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites] .so-in-menu,
+    .so-sec[data-so-show='focus'] .so-scene[data-so-composites] .so-in-tile {
+        overflow: visible;
+    }
+
+    /* Press */
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites] :is(.so-alone, .so-in-drawer, .so-tile-link, .so-in-header),
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites] .so-in-menu li:first-child .kp-menu__item {
+        background-color: var(--secondary-active);
+        box-shadow: inset 0 0 0.5rem hsl(from var(--primary) h s l / 0.45);
+    }
+
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites] :is(.so-alone, .so-in-drawer, .so-in-header).kp-button--primary {
+        background-color: var(--primary-active);
+        box-shadow: inset 0 0 0.5rem hsl(from var(--primary-foreground) h s l / 0.35);
+    }
+
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites] .so-in-kpi {
+        box-shadow: inset 0 0 0.75rem hsl(from var(--primary) h s l / 0.45);
+    }
+
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] .so-in-menu li:first-child .kp-menu__item {
+        background: hsl(from var(--primary) h s l / 0.24);
+        box-shadow: none;
+    }
+
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] .so-in-kpi {
+        background: color-mix(in oklch, var(--primary) 4%, var(--card));
+        box-shadow: none;
+    }
+
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] .so-in-header {
+        background: transparent;
+        box-shadow: inset 0 0 0.5rem color-mix(in oklch, var(--primary) 40%, transparent);
+    }
+
+    /* ── The voice (G15) ─────────────────────────────────────────────── */
+
+    .so-scene .so-type {
+        gap: 0.5rem;
+    }
+
+    .so-scene .so-type p {
+        margin: 0;
+    }
+
+    .so-scene .so-type__label {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+    }
+
+    .so-scene .so-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.5rem;
+        line-height: 1.1;
+    }
+
+    .so-scene .so-type__prose {
+        max-inline-size: 52ch;
+    }
+
+    .so-scene .so-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+    }
+
+    .so-scene .so-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .so-scene .so-type__strip > div {
+        display: grid;
+        gap: 0.15rem;
+    }
+
+    .so-scene .so-type__strip .so-figure {
+        font-size: 1.5rem;
+    }
+
+    .so-scene .so-type__table {
+        border-collapse: collapse;
+    }
+
+    .so-scene .so-type__table :is(th, td) {
+        padding: 0.2rem 1rem 0.2rem 0;
+        border-block-end: 1px solid var(--border);
+        text-align: start;
+    }
+
+    .so-scene .so-type__table th {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    .so-scene .so-stamp {
+        font-family: var(--theme-font-mono);
+        font-size: 0.85rem;
+    }
+
+    .so-scene[data-so-voice='mono'] :is(.so-type__label, .so-label, .so-type__table th) {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .so-scene[data-so-voice='sans'] :is(.so-type__label, .so-label, .so-type__table th, .so-figure) {
+        font-family: var(--theme-font-body);
+    }
+
+    .so-scene[data-so-voice='sans'] .so-figure {
+        font-weight: 600;
+    }
+
+    /* ── Motifs (G16) ────────────────────────────────────────────────── */
+
+    .so-scene .so-events__mark {
+        position: absolute;
+        inset-inline-start: var(--x);
+        inset-block-start: var(--y);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow:
+            0 0 0 2px hsl(from var(--accent) h s l / 0.6),
+            0 0 0.6rem hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .so-scene .so-today {
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    .so-scene .so-days--motif {
+        margin-block-start: 0.5rem;
+        padding: 0.3rem;
+    }
+
+    .so-scene[data-so-motifs='none'] .kp-meter__mark::before {
+        display: none;
+    }
+
+    .so-scene[data-so-motifs='none'] .so-events__mark {
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        background: var(--foreground);
+        box-shadow: none;
+    }
+
+    .so-scene[data-so-motifs='none'] .so-motif-card .so-foot {
+        display: none;
+    }
+
+    .so-scene[data-so-motifs='none'] .so-chip[data-kp-direction='up']::before {
+        content: '▲\00a0';
+    }
+
+    .so-scene[data-so-motifs='none'] .so-chip[data-kp-direction='down']::before {
+        content: '▼\00a0';
+    }
+
+    .so-scene[data-so-motifs='none'] :is(.so-today, .so-day.so-picked) {
+        outline: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    .so-scene[data-so-motifs='none'] .so-divider {
+        background: linear-gradient(var(--border), var(--border)) center / 100% 1px no-repeat;
+    }
+
+    .so-scene[data-so-motifs='all'] .so-events__mark {
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 3.5px var(--foreground);
+        outline: 1.5px dashed var(--foreground);
+        outline-offset: 3px;
+    }
+
+    .so-scene[data-so-motifs='all'] .so-motif-card {
+        background-image:
+            radial-gradient(circle at 88% 22%, var(--primary) 0 0.5rem, hsl(from var(--primary) h s l / 0.25) 0.5rem 0.7rem, transparent 0.7rem),
+            radial-gradient(circle, hsl(from var(--accent) h s l / 0.7) 1.2px, transparent 1.7px);
+        background-size:
+            auto,
+            14px 12px;
+    }
+
+    .so-scene[data-so-motifs='all'] .so-motif-card .so-title::after {
+        content: ' ☾';
+        color: var(--primary);
+    }
+
+    .so-scene[data-so-motifs='all'] .so-days--motif .so-day {
+        overflow: visible;
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+
+    .so-scene[data-so-motifs='all'] .so-motif-empty .kp-empty__title::before {
+        content: '☀ ';
+        color: var(--primary);
+    }
+
+    .so-scene .so-motif-empty {
+        margin: 0;
+    }
+
+    /* ── The press (G14): the marked parts are pressed during `in` ───── */
+
+    .so-scene[data-so-press][data-so-phase='in'] .so-press {
+        background-color: var(--secondary-active);
+    }
+
+    .so-scene[data-so-press][data-so-phase='in'] .kp-button--primary.so-press {
+        background-color: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    .so-scene[data-so-press][data-so-phase='in'] :is(.kp-menu__item, .so-day, .so-kpi).so-press {
+        background-color: var(--muted);
+    }
+
+    .so-scene[data-so-press='ember'][data-so-phase='in'] .so-press {
+        box-shadow: inset 0 0 0.55rem hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .so-scene[data-so-press='ember'][data-so-phase='in'] .kp-button--primary.so-press {
+        box-shadow: inset 0 0 0.55rem hsl(from var(--primary-foreground) h s l / 0.4);
+    }
+
+    .so-scene[data-so-press='drop'][data-so-phase='in'] .so-press {
+        translate: 0 1px;
+    }
+
+    .so-scene[data-so-press='sink'][data-so-phase='in'] .so-press {
+        --so-foot-k: 0;
+        --so-edge: transparent;
+        background-color: hsl(from var(--card) h s calc(l - 4));
+        filter: brightness(0.85);
+    }
+
+    .so-scene[data-so-press='sink'][data-so-phase='in'] .kp-button.so-press {
+        background-color: hsl(from var(--secondary) h s calc(l - 6));
+    }
+
+    .so-scene[data-so-press='sink'][data-so-phase='in'] .kp-button--primary.so-press {
+        background-color: hsl(from var(--primary) h s calc(l - 14));
+    }
+
+    .so-scene[data-so-press] .so-press {
+        transition:
+            background-color var(--so-contact) var(--so-in),
+            box-shadow var(--so-contact) var(--so-in),
+            translate var(--so-contact) var(--so-in),
+            filter var(--so-contact) var(--so-in);
+    }
+
+    /* The duration row's tap is the recommended press. */
+    .so-scene[data-so-durations][data-so-phase='in'] .so-tap {
+        background-color: var(--secondary-active);
+        box-shadow: inset 0 0 0.55rem hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .so-scene[data-so-durations] .so-tap {
+        transition:
+            background-color var(--so-contact) var(--so-in),
+            box-shadow var(--so-contact) var(--so-in);
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Away during the gap: what arrives, opens or updates. */
+        .so-scene:is([data-so-curve], [data-so-opening], [data-so-durations])[data-so-phase='gap'] .so-opens > :first-child,
+        .so-scene:is([data-so-curve], [data-so-direction])[data-so-phase='gap'] :is(.so-arrives, .so-walk svg),
+        .so-scene[data-so-leave][data-so-phase='gap'] .so-leaver__body {
+            opacity: 0;
+            /* What arrives fades away at the end of a cycle instead of
+               blinking out; it comes back at once, its entrance drawing it. */
+            transition: opacity calc(240ms * var(--so-slow, 1)) var(--so-sine-out);
+        }
+
+        .so-scene[data-so-leave][data-so-phase='gap'] .so-moon {
+            visibility: hidden;
+        }
+
+        /* ── Kindled (G3): the dome of first light, and its options ── */
+
+        .so-scene:is([data-so-curve], [data-so-opening='dome'], [data-so-durations]):is([data-so-phase='in'], [data-so-phase='hold'])
+            .so-opens
+            > :first-child,
+        .so-scene[data-so-curve]:is([data-so-phase='in'], [data-so-phase='hold']) .so-arrives,
+        .so-scene[data-so-direction='up']:is([data-so-phase='in'], [data-so-phase='hold']) .so-arrives {
+            animation: so-kindle calc(var(--so-open) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-direction='up']:is([data-so-phase='in'], [data-so-phase='hold']) .so-arrives {
+            animation-delay: calc(var(--i, 0) * 120ms * var(--so-slow, 1));
+        }
+
+        .so-scene:is([data-so-curve], [data-so-opening='dome'], [data-so-durations])[data-so-phase='out'] .so-opens > :first-child {
+            animation: so-kindle-back calc(var(--so-open) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        .so-scene[data-so-opening='cut']:is([data-so-phase='in'], [data-so-phase='hold']) .so-opens > :first-child {
+            animation: so-cut calc(var(--so-open) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-opening='cut'][data-so-phase='out'] .so-opens > :first-child {
+            animation: so-cut-back calc(var(--so-open) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        .so-scene[data-so-opening='fade']:is([data-so-phase='in'], [data-so-phase='hold']) .so-opens > :first-child {
+            animation: so-fade calc(var(--so-open) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-opening='fade'][data-so-phase='out'] .so-opens > :first-child {
+            animation: so-fade-back calc(var(--so-open) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        /* ── The direction (G2) ── */
+
+        .so-scene[data-so-direction='across']:is([data-so-phase='in'], [data-so-phase='hold']) .so-arrives {
+            animation: so-across calc(var(--so-open) * var(--so-slow, 1)) var(--so-in) calc(var(--i, 0) * 80ms * var(--so-slow, 1)) both;
+        }
+
+        .so-scene[data-so-direction='jump']:is([data-so-phase='in'], [data-so-phase='hold']) .so-arrives {
+            animation: so-jump calc(var(--so-open) * var(--so-slow, 1)) var(--so-spring) calc(var(--i, 0) * 80ms * var(--so-slow, 1)) both;
+        }
+
+        .so-scene:is([data-so-direction], [data-so-curve]):is([data-so-phase='in'], [data-so-phase='hold']) .so-walk .so-plot__line {
+            stroke-dasharray: 1;
+            animation: so-draw calc(var(--so-change) * var(--so-slow, 1)) linear both;
+        }
+
+        /* The readouts fill to their mark (G1). */
+        .so-scene[data-so-curve]:is([data-so-phase='in'], [data-so-phase='hold']) .so-track {
+            animation: so-fill calc(var(--so-change) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-curve][data-so-phase='gap'] .so-track {
+            scale: 0 1;
+        }
+
+        /* ── A live change (G9) ── */
+
+        .so-scene:is([data-so-curve], [data-so-durations], [data-so-live='risen']):is([data-so-phase='in'], [data-so-phase='hold']) .so-carrier,
+        .so-scene:is([data-so-curve], [data-so-durations], [data-so-live='risen']):is([data-so-phase='in'], [data-so-phase='hold'])
+            .so-carrier--line
+            svg {
+            animation: so-risen calc(var(--so-change) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-live='risen']:is([data-so-phase='in'], [data-so-phase='hold']) .so-carrier--line {
+            animation: none;
+        }
+
+        .so-scene[data-so-live='flare']:is([data-so-phase='in'], [data-so-phase='hold']) .so-carrier {
+            transform-origin: left center;
+            animation: so-flare calc(var(--so-change) * var(--so-slow, 1)) ease-out both;
+        }
+
+        .so-scene[data-so-live='swell']:is([data-so-phase='in'], [data-so-phase='hold']) .so-carrier {
+            transform-origin: left center;
+            animation: so-swell calc(var(--so-change) * var(--so-slow, 1)) ease-in-out both;
+        }
+
+        /* ── Leaving and arriving (G12) ── */
+
+        .so-scene[data-so-leave='eclipse']:is([data-so-phase='in'], [data-so-phase='hold']) .so-moon {
+            animation: so-moon-off calc(var(--so-change) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-leave='eclipse']:is([data-so-phase='in'], [data-so-phase='hold']) .so-leaver__body {
+            animation: so-light-returns calc(var(--so-change) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-leave='eclipse'][data-so-phase='out'] .so-moon {
+            animation: so-moon-on calc(var(--so-change) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        .so-scene[data-so-leave='eclipse'][data-so-phase='out'] .so-leaver__body {
+            animation: so-eclipsed calc(var(--so-change) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        .so-scene[data-so-leave='mist']:is([data-so-phase='in'], [data-so-phase='hold']) .so-leaver__body {
+            animation: so-mist-back calc(var(--so-change) * var(--so-slow, 1)) ease-out both;
+        }
+
+        .so-scene[data-so-leave='mist'][data-so-phase='out'] .so-leaver__body {
+            animation: so-mist calc(var(--so-change) * var(--so-slow, 1)) ease-in both;
+        }
+
+        .so-scene[data-so-leave='dusk']:is([data-so-phase='in'], [data-so-phase='hold']) .so-leaver__body {
+            animation: so-kindle calc(var(--so-change) * var(--so-slow, 1)) var(--so-in) both;
+        }
+
+        .so-scene[data-so-leave='dusk'][data-so-phase='out'] .so-leaver__body {
+            animation: so-kindle-back calc(var(--so-change) * var(--so-slow, 1)) var(--so-out) both;
+        }
+
+        /* ── Loading (G10) and the spinner (G11): loops ── */
+
+        .so-scene:is([data-so-loading='sun'], [data-so-durations]) .so-waits:not(.so-day--wait) .so-path {
+            animation: so-cross calc(var(--so-loop) * var(--so-slow, 1)) linear infinite;
+        }
+
+        .so-scene:is([data-so-loading='sun'], [data-so-durations]) .so-waits .so-sun {
+            animation: so-arc calc(var(--so-loop) * var(--so-slow, 1)) linear infinite;
+        }
+
+        .so-scene[data-so-loading='sun'] .so-day--wait .so-sun {
+            animation-delay: calc(var(--i, 0) * var(--so-loop) * 0.1 * var(--so-slow, 1));
+        }
+
+        .so-scene[data-so-loading='breathe'] .so-breath {
+            animation: so-breathe calc(1800ms * var(--so-slow, 1)) ease-in-out infinite alternate;
+        }
+
+        .so-scene[data-so-loading='sparks'] .so-sparks {
+            animation: so-sparks calc(4000ms * var(--so-slow, 1)) linear infinite;
+        }
+
+        .so-scene[data-so-spinner='ember'] .so-spin__ember {
+            animation: so-ember calc(1800ms * var(--so-slow, 1)) ease-in-out infinite alternate;
+        }
+
+        .so-scene[data-so-spinner='ring'] .so-spin__ring {
+            animation: so-turn calc(900ms * var(--so-slow, 1)) linear infinite;
+        }
+
+        /* The rake repeats on a pointed part so it can be judged standing still. */
+        .so-scene[data-so-hover='rake'] .so-pointed::after {
+            animation: so-rake calc(2400ms * var(--so-slow, 1)) ease-out infinite;
+        }
+    }
+
+    @keyframes so-kindle {
+        from {
+            clip-path: ellipse(0% 0% at 50% 100%);
+            filter: var(--so-first-light);
+        }
+
+        55% {
+            filter: brightness(1.15) saturate(1.12);
+        }
+
+        to {
+            clip-path: ellipse(150% 150% at 50% 100%);
+            filter: none;
+        }
+    }
+
+    @keyframes so-kindle-back {
+        from {
+            clip-path: ellipse(150% 150% at 50% 100%);
+            filter: none;
+        }
+
+        45% {
+            filter: brightness(0.9);
+        }
+
+        to {
+            clip-path: ellipse(0% 0% at 50% 100%);
+            filter: brightness(0.6);
+        }
+    }
+
+    @keyframes so-cut {
+        from {
+            clip-path: inset(100% 0 0 0);
+            filter: brightness(1.4) saturate(1.3);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+            filter: none;
+        }
+    }
+
+    @keyframes so-cut-back {
+        from {
+            clip-path: inset(0 0 0 0);
+            filter: none;
+        }
+
+        to {
+            clip-path: inset(100% 0 0 0);
+            filter: brightness(1.4) saturate(1.3);
+        }
+    }
+
+    @keyframes so-fade {
+        from {
+            opacity: 0;
+            translate: 0 18px;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes so-fade-back {
+        from {
+            opacity: 1;
+            translate: 0 0;
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 18px;
+        }
+    }
+
+    @keyframes so-across {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes so-jump {
+        from {
+            opacity: 0;
+            translate: 0 0.7rem;
+            scale: 0.9;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes so-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes so-fill {
+        from {
+            scale: 0 1;
+        }
+
+        to {
+            scale: 1 1;
+        }
+    }
+
+    /* G9: the value rises into its line from below its own baseline, clipped there. */
+    @keyframes so-risen {
+        from {
+            translate: 0 0.6em;
+            clip-path: inset(-0.3em -0.2em 0.6em -0.2em);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+        }
+    }
+
+    @keyframes so-flare {
+        0%,
+        100% {
+            scale: 1;
+            filter: none;
+        }
+
+        35% {
+            scale: 1.1;
+            filter: brightness(1.45) drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.8));
+        }
+    }
+
+    @keyframes so-swell {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        40% {
+            scale: 1.14;
+        }
+    }
+
+    /* G12: the moon crosses start → end and takes the light. */
+    @keyframes so-moon-on {
+        from {
+            translate: calc(-100% - 50cqi - 1rem) -50%;
+        }
+
+        to {
+            translate: -50% -50%;
+        }
+    }
+
+    @keyframes so-moon-off {
+        from {
+            translate: -50% -50%;
+        }
+
+        to {
+            translate: calc(50cqi + 1rem) -50%;
+        }
+    }
+
+    @keyframes so-eclipsed {
+        from {
+            opacity: 1;
+            filter: none;
+        }
+
+        70% {
+            opacity: 1;
+            filter: brightness(0.35);
+        }
+
+        to {
+            opacity: 0;
+            filter: brightness(0.1);
+        }
+    }
+
+    /* Arriving: out of the eclipse, overbright at the last edge (the diamond
+       ring), then its colour. */
+    @keyframes so-light-returns {
+        from {
+            opacity: 0;
+            filter: brightness(0.1);
+        }
+
+        40% {
+            opacity: 1;
+            filter: brightness(0.45);
+        }
+
+        78% {
+            filter: var(--so-first-light);
+        }
+
+        to {
+            opacity: 1;
+            filter: none;
+        }
+    }
+
+    @keyframes so-mist {
+        from {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 -14px;
+            filter: brightness(1.4) blur(3px);
+        }
+    }
+
+    @keyframes so-mist-back {
+        from {
+            opacity: 0;
+            translate: 0 -14px;
+            filter: brightness(1.4) blur(3px);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* G10: the runner moves its own width (the sun's travel), start → end. */
+    @keyframes so-cross {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: calc(100cqi - 1.35rem) 0;
+        }
+    }
+
+    /* The sun rises out of the foot, crosses low and sets into it. */
+    @keyframes so-arc {
+        0% {
+            translate: 0 0.75rem;
+            animation-timing-function: var(--so-sine-in);
+        }
+
+        50% {
+            translate: 0 -0.05rem;
+            animation-timing-function: var(--so-sine-out);
+        }
+
+        100% {
+            translate: 0 0.75rem;
+        }
+    }
+
+    @keyframes so-breathe {
+        from {
+            scale: 0.7;
+        }
+
+        to {
+            scale: 1;
+        }
+    }
+
+    @keyframes so-sparks {
+        to {
+            background-position:
+                0 -164px,
+                13px -113px,
+                0 0;
+        }
+    }
+
+    @keyframes so-ember {
+        from {
+            opacity: 0.35;
+            scale: 0.8;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes so-turn {
+        to {
+            rotate: 1turn;
+        }
+    }
+
+    @keyframes so-rake {
+        0% {
+            translate: 0 0;
+        }
+
+        30%,
+        100% {
+            translate: 340% 0;
+        }
+    }
+}
