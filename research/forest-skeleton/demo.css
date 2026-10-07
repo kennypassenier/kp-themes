@@ -1,0 +1,248 @@
+/* Forest's skeleton, five pictures: the page around them (options.css draws
+   the pictures). Tokens only; the page itself is forest's paper. */
+
+.sk-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 110rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sk-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    max-inline-size: 80ch;
+}
+
+.sk-intro h1,
+.sk-intro p,
+.sk-sec__head h2,
+.sk-sec__head p,
+[data-review-look] p {
+    margin: 0;
+}
+
+.sk-motion {
+    padding: 0.5rem 0.75rem;
+    border-inline-start: 3px solid var(--chart-2);
+    background: var(--muted);
+}
+
+.sk-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.sk-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.sk-sec__head p {
+    color: var(--muted-foreground);
+    max-inline-size: 80ch;
+}
+
+.sk-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.sk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.sk-actions [aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* One option per row on a desk, so each board is judged at the size it is
+   used; every card the same shape, so the boards line up. */
+.sk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 52rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.sk-opt {
+    container-type: inline-size;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* In the review dialog the shown option takes the stage's width. */
+[data-rv-flip-trio] .sk-opt {
+    min-inline-size: min(100%, 64rem);
+}
+
+.sk-opt__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sk-opt__head h3 {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.sk-opt__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.6em;
+    margin-inline-end: 0.25em;
+    padding: 0 0.3em;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--kp-mono);
+    border-radius: var(--kp-sig-fo-part);
+}
+
+.sk-opt__rec {
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--primary);
+    border-radius: var(--kp-sig-fo-part);
+    color: var(--primary);
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sk-opt__cur {
+    padding: 0.1rem 0.5rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--kp-sig-fo-part);
+    color: var(--muted-foreground);
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sk-opt__see,
+.sk-opt__verdict {
+    margin: 0;
+    max-inline-size: 75ch;
+}
+
+.sk-opt__verdict {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sk-opt__verdict--rec {
+    color: var(--primary);
+}
+
+.sk-spec {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sk-spec div {
+    display: flex;
+    gap: 0.4em;
+    align-items: baseline;
+}
+
+.sk-spec dt {
+    color: var(--muted-foreground);
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.sk-spec dd {
+    margin: 0;
+}
+
+/* The board: every shape the package has, on a grid that keeps each place
+   where it is. Three columns on a card wide enough, one on a phone. */
+.sk-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+@container (min-width: 38rem) {
+    .sk-board {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sk-place--full {
+        grid-column: 1 / -1;
+    }
+}
+
+.sk-place {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.sk-place__name {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-family: var(--kp-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* An avatar beside three text lines. */
+.sk-media {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--kp-space-md, 0.75rem);
+    align-items: center;
+}
+
+.sk-lines {
+    min-inline-size: 0;
+}
+
+/* The datatable's loading row: three cells under their headings. */
+.sk-table {
+    inline-size: 100%;
+    table-layout: fixed;
+}
+
+.sk-table td {
+    padding-block: 0.5rem;
+}
+
+/* The chart: its frame, its title, the legend's stubs and the plot's state. */
+.sk-chart {
+    --kp-skeleton-gap: 0;
+    margin: 0;
+}
+
+.sk-chart .kp-chart__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}

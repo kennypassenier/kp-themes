@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-theme="forest" data-cat-theme="forest" data-cat-theme-fixed data-review="forest-skeleton" data-review-themes="forest">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — forest's skeleton: five pictures</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" data-kp-register="forest" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="sk-page">
+            <header class="sk-intro">
+                <h1>Forest’s skeleton: five pictures</h1>
+                <p>
+                    Kenny, 2026-10-07: the skeleton drawn as wide light diagonal stripes in a rounded bar “does not give forest vibes”; the planted
+                    tree line above it, he likes. This page is the alternative for the part that is not a tree line. Every option below draws the same
+                    scene with the package’s own skeleton parts in forest: a block, a circle, three text lines, a chart that is loading and a row of
+                    three loading cells in a datatable. Within one option all five shapes carry one picture, the way the register does it today.
+                </p>
+                <p>
+                    Where the skeleton is used: the <b>block</b> is a chart’s loading state and its legend stubs (js/chart.js, the state box and
+                    <code>kp-chart__source-stub</code>) and an image or card placeholder; the <b>circle</b> is an avatar; the <b>lines</b> are
+                    paragraph text and every loading cell of a datatable (js/datatable.js).
+                </p>
+                <p>
+                    Four options are new, the fifth is exactly what the package draws today (a plot being planted). The first is the recommendation.
+                    Each loops in 3200 ms like the rest of forest’s loading: it arrives, stands for a moment and leaves as the arrival played
+                    backwards.
+                </p>
+                <p class="sk-motion" data-sk-motion-note hidden>
+                    <b>Your system asks for reduced motion</b>, so every option shows its finished still picture. Turn it off in the system settings
+                    to see the motion.
+                </p>
+            </header>
+
+            <section
+                class="sk-sec"
+                data-review-item="skeleton"
+                data-review-mode="aspects"
+                data-review-rows="data-sk-aspect"
+                data-review-components="forest-skeleton"
+                data-review-title="Forest's skeleton"
+                aria-labelledby="h-sk"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-sk">Five options</h2>
+                    <p>
+                        Every option plays by itself. <b>Restart</b> plays them all from the first frame, the speed slows every loop down, and
+                        <b>Reduced motion</b> shows the finished still picture a reader who asked for less motion gets.
+                    </p>
+                </div>
+                <div class="sk-controls" data-review-controls>
+                    <div class="sk-actions" role="group" aria-label="Restart">
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-sk-restart data-review-plays="skeleton">
+                            Restart
+                        </button>
+                    </div>
+                    <div class="sk-actions" role="group" aria-label="Motion">
+                        <b>Motion:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-motion="full" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-motion="reduced" aria-pressed="false">Reduced motion</button>
+                    </div>
+                    <div class="sk-actions" role="group" aria-label="Animation speed">
+                        <b>Speed:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="sk-grid" data-sk-aspect="skeleton"></div>
+            </section>
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -100,6 +100,8 @@ export const PAGES = [
             { href: 'research/blueprint-anchor/demo.html', label: 'What anchors blueprint' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
+            // Kenny, 2026-10-07: forest's skeleton drawn as wide light diagonal stripes "does not give forest vibes" (the tree line above it he likes); five pictures for the block, circle and lines, each on the same scene, the recommendation first and the current plot as one of them.
+            { href: 'research/forest-skeleton/demo.html', label: "Forest's skeleton: five pictures" },
         ],
     },
     {
