@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: a trend tile's label no longer runs under its "Charts ↗" link**: `.kp-kpi--trend > .kp-kpi__label` ends
+  before the link (`margin-inline-end` 4.5 rem, 1.5 rem in a narrow tile) and a label that is still too long ends in an
+  ellipsis (`overflow: hidden`, `text-overflow: ellipsis`), in every theme (css/components.css). Measured at 390 and
+  1280 px in formal and brutalism: no tile's label overlaps its link.
 - **Fixed: brutalism at a phone width (390 px)**: the dialog stays inside the window on every
   frame of its 2.5 rem drop (it leaves 2.5 rem of room on both sides at narrow widths:
   `max-inline-size` `min(32rem, 100vw - 2 × --kp-sig-br-h-slab)`; the drop, its curve and its 1500 ms are

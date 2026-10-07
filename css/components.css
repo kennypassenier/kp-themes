@@ -1581,8 +1581,13 @@
         white-space: nowrap;
     }
 
+    /* The link in the corner takes the label's end: the label's box stops
+ * before it and a label that is still too long ends in an ellipsis, so it
+ * never runs under the link (a 148 px tile, a phone pane). */
     .kp-kpi--trend > .kp-kpi__label {
-        padding-inline-end: 4.5rem;
+        margin-inline-end: 4.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* Every state as tall as filled: the value line keeps its height under
@@ -1648,7 +1653,7 @@
         }
 
         .kp-kpi--trend > .kp-kpi__label {
-            padding-inline-end: 1.5rem;
+            margin-inline-end: 1.5rem;
         }
 
         .kp-kpi--trend > .kp-kpi__trend {
