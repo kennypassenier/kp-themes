@@ -1,0 +1,183 @@
+/* research/nostromo-anchor: the page only. A centred column: the intro, one
+   section with one question, its six options in a grid on a desk (two
+   columns) and stacked on a phone. Every option's own drawing is in
+   options.css. */
+.na-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.na-intro,
+.na-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.na-intro :is(h1, p),
+.na-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.na-intro p,
+.na-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.na-motion,
+.na-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.na-sec {
+    /* The review dialog shows an option at 48rem unless the demo asks for the
+       whole stage: the scene wants the width (the anchor beside its parts). */
+    --rv-flip-max: 100%;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.na-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.na-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-na-state][aria-pressed='true'],
+[data-na-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.na-aspects {
+    display: grid;
+}
+
+.na-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    scroll-margin-block-start: 1rem;
+}
+
+.na-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.na-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.na-aspect__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-inline-end: 0.35rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.85rem;
+}
+
+.na-aspect__q {
+    font-weight: 600;
+}
+
+.na-aspect__why {
+    color: var(--muted-foreground);
+}
+
+/* Six options in a subgrid: the names, the words and the scenes line up
+   across each row whatever their length; one column below 64rem. */
+.na-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.na-col {
+    container: na-col / inline-size;
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+@media (max-width: 64rem) {
+    .na-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .na-col {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+}
+
+.na-label {
+    margin: 0;
+    font-weight: 700;
+}
+
+.na-label__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.na-label__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.na-see,
+.na-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.na-verdict {
+    color: var(--muted-foreground);
+}
+
+.na-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* In the review dialog one option is shown alone and large: its hint is in
+   the bar under it, so the words leave the scene all the room. */
+[data-rv-flip-trio] .na-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+.rv-dialog__stage :is(.na-see, .na-verdict) {
+    display: none;
+}

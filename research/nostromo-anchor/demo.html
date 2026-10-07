@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="nostromo" data-cat-theme="nostromo" data-cat-theme-fixed data-review="nostromo-anchor" data-review-themes="nostromo">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — nostromo's anchor element</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" data-kp-register="nostromo" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="na-page">
+            <header class="na-intro" id="na-intro">
+                <h1>Nostromo's anchor element</h1>
+                <p>
+                    Kenny, 2026-10-07: "bij nostromo wil ik meer opties waaruit ik kan kiezen, maar er een demo voor." Forest's anchor is the tree
+                    progress bar, titanium's its loading animation, cyberpunk's the glitch: the one recognisable element from which every decision
+                    about the whole theme is made. The colours are already good everywhere and are the shared base, so they are not what is chosen
+                    here.
+                </p>
+                <p>
+                    One question: <b>which element is nostromo's anchor?</b> Six candidates, the recommendation first. Each is a live scene with the
+                    element alone in the centre, playing by itself (idle, in, hold, out, idle), and under it four real package parts (a switch thrown,
+                    a menu arriving, a figure changing, something waiting) all taking their rule from that element, so you see what choosing it would
+                    mean for the rest of the theme. Pick one in the review dialog (the arrow keys flip between the six).
+                </p>
+                <p class="na-motion" data-na-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
+                    system settings to judge the candidates.
+                </p>
+            </header>
+
+            <section
+                class="na-sec"
+                data-review-item="nostromo-anchor"
+                data-review-mode="aspects"
+                data-review-rows="data-na-aspect"
+                data-review-components="nostromo-anchor"
+                data-review-title="Nostromo's anchor element"
+                data-na-show="rest"
+                aria-labelledby="h-na"
+            >
+                <div class="na-sec__head">
+                    <h2 id="h-na">Which element is nostromo's anchor?</h2>
+                    <p>
+                        Nostromo is the 1979 ship console: a moulded beige case with vent slots, label tape, screws and an indicator lamp on every
+                        switch, and set into it amber screens with scanlines, everything moving on an 80 ms frame clock (whole held frames, never a
+                        glide or a spring). Each candidate is one thing a console does; the question is which of them every other decision should come
+                        from. The network graph (the CRT radar) is in no scene and changes in no theme.
+                    </p>
+                </div>
+                <div class="na-controls" data-review-controls>
+                    <div class="na-actions" role="group" aria-label="State of the button">
+                        <b>State of the button:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-na-state="rest" aria-pressed="true">Rest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-na-state="hover" aria-pressed="false">Hover</button>
+                        <button type="button" class="kp-button kp-button--sm" data-na-state="focus" aria-pressed="false">Focus</button>
+                        <button type="button" class="kp-button kp-button--sm" data-na-state="press" aria-pressed="false">Press</button>
+                    </div>
+                    <div class="na-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-na-replay data-review-plays="anchor">Replay</button>
+                    </div>
+                    <div class="na-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-na-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-na-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-na-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="na-aspects" data-na-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-anchor-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

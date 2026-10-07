@@ -1,0 +1,1575 @@
+/* research/nostromo-anchor: the six candidates, in the theme's signature
+   layer, each scoped by `.na-scene[data-na-anchor='<key>']`. Colours come
+   from the theme's tokens only; every motion sits under
+   prefers-reduced-motion: no-preference and the reduced pose is the
+   finished picture. Every duration is a count of 80 ms frames (--na-fr,
+   stretched by the page's speed buttons through --na-slow). An arrival is
+   a finite animation on a part that is away at `gap`; the demo's script
+   plays it backwards at `out`, so a close is its open reversed. A loop is
+   infinite, runs at `hold`, and is never part of an arrival. */
+
+@property --na-open {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 10px;
+}
+
+@layer kp.signature {
+    /* The review dialog moves the section out of the page into its stage,
+       so every shared custom property is declared on both. */
+    :is(.na-page, .rv-dialog__stage) {
+        --na-fr: calc(80ms * var(--na-slow, 1));
+        --na-lit: var(--sidebar-primary);
+        --na-glow: hsl(from var(--sidebar-primary) h s l / 0.6);
+        --na-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+        --na-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
+        --na-tapeface: var(--foreground);
+        --na-tapeink: var(--background);
+    }
+
+    /* ── The scene: the anchor alone on its stage, four parts under it ── */
+
+    .na-scene {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr));
+        gap: var(--kp-space-md, 1rem);
+        align-content: start;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        background: var(--background);
+    }
+
+    /* Wide enough (the review dialog, or a phone turned sideways): the anchor
+       stands on the left, the rule and the four parts take the right. */
+    @container na-col (min-width: 44rem) {
+        .na-scene {
+            grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr));
+            align-items: stretch;
+        }
+
+        .na-scene > .na-part.na-part--stage {
+            grid-column: 1;
+            grid-row: 1 / span 3;
+        }
+
+        .na-scene > .na-rule {
+            grid-column: 2 / -1;
+            grid-row: 1;
+        }
+    }
+
+    .na-part--stage {
+        position: relative;
+        grid-column: 1 / -1;
+        display: grid;
+        place-items: center;
+        min-block-size: 17rem;
+        padding: 1.5rem 1rem;
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .na-stage__body {
+        position: relative;
+        display: grid;
+        justify-items: center;
+        gap: 1.1rem;
+        inline-size: 100%;
+    }
+
+    .na-rule {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.875rem);
+    }
+
+    .na-part {
+        position: relative;
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+        min-inline-size: 0;
+        min-block-size: 11.5rem;
+    }
+
+    .na-part.na-part--stage {
+        align-content: center;
+        min-block-size: 15rem;
+    }
+
+    .na-cap {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    /* The label tape on the case: a caption for the element. */
+    .na-plate {
+        margin: 0;
+        padding: 0.2rem 0.6rem;
+        border-radius: 2px;
+        background: var(--na-tapeface);
+        color: var(--na-tapeink);
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+    }
+
+    .na-slot {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+    }
+
+    .na-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+    }
+
+    .na-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .na-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .na-wait {
+        min-block-size: 7rem;
+        align-content: start;
+    }
+
+    .na-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .na-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .na-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .na-scene .na-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+        max-inline-size: 100%;
+    }
+
+    .na-carrier {
+        position: relative;
+        border-radius: var(--radius);
+    }
+
+    .na-scene .kp-kpi {
+        position: relative;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    /* The figure: the old and the new value stacked in one place, so the
+       part never changes size. The finished pose shows the new one. */
+    .na-fig {
+        position: relative;
+        display: grid;
+        justify-items: start;
+    }
+
+    .na-fig > span {
+        grid-area: 1 / 1;
+    }
+
+    .na-fig__old {
+        opacity: 0;
+    }
+
+    .na-scene .na-tape {
+        border-radius: 2px;
+        padding-inline: 0.35em;
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .na-scene .na-tape[data-kp-direction='up']::before {
+        content: '‹▲\00a0';
+    }
+
+    .na-scene .na-tape::after {
+        content: '›';
+    }
+
+    /* A switch's or reading's lamp (scope-12): unlit at rest, the ink at 25 %. */
+    .na-lamp {
+        position: relative;
+        display: inline-block;
+        flex: none;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-inline-end: 0.5rem;
+        vertical-align: 0.08em;
+        border-radius: 50%;
+        background: color-mix(in oklab, currentColor 25%, transparent);
+    }
+
+    .na-lamp::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px var(--na-glow);
+        opacity: 0;
+    }
+
+    /* A real LED: the dot always there, the lit lens arriving. */
+    .na-led {
+        position: relative;
+        display: inline-block;
+        flex: none;
+        inline-size: 0.95rem;
+        block-size: 0.95rem;
+        border-radius: 50%;
+        background: var(--sidebar-accent);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            inset 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
+    }
+
+    .na-led__lens {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 8px 2px var(--na-glow);
+    }
+
+    /* The switch's own button, shown in a state on request (the State
+       buttons and the dialog's tour): the theme's own button, whatever the
+       anchor. */
+    .na-btn {
+        white-space: nowrap;
+    }
+
+    [data-na-show='hover'] .na-btn {
+        background: hsl(from var(--primary) h s calc(l + 7));
+    }
+
+    [data-na-show='hover'] .na-btn::before,
+    [data-na-show='focus'] .na-btn::before {
+        opacity: 0.7;
+    }
+
+    [data-na-show='focus'] .na-btn {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    [data-na-show='focus'] .na-btn::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px var(--na-glow);
+        opacity: 1;
+    }
+
+    [data-na-show='press'] .na-btn {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-na-show='press'] .na-btn::before {
+        opacity: 1;
+    }
+
+    /* ══ 1 · The LED lamp bank ═══════════════════════════════════════════
+       The progress bar's LED window and moulded bezel drawn again: rows of
+       whole LEDs, a fixed unordered pattern per row. */
+
+    .na-bank {
+        --na-pitch: 8px;
+        --na-pattern: linear-gradient(
+            90deg,
+            transparent 0 calc(var(--na-pitch) * 1),
+            var(--na-lit) 0 calc(var(--na-pitch) * 2),
+            transparent 0 calc(var(--na-pitch) * 4),
+            var(--na-lit) 0 calc(var(--na-pitch) * 6),
+            transparent 0 calc(var(--na-pitch) * 9),
+            var(--na-lit) 0 calc(var(--na-pitch) * 10),
+            transparent 0 calc(var(--na-pitch) * 12),
+            var(--na-lit) 0 calc(var(--na-pitch) * 13),
+            transparent 0 calc(var(--na-pitch) * 14),
+            var(--na-lit) 0 calc(var(--na-pitch) * 15),
+            transparent 0
+        );
+        display: grid;
+        gap: 3px;
+        padding: 3px;
+        border-radius: 0.3rem;
+        background: var(--secondary);
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
+    }
+
+    .na-bank--big {
+        --na-pitch: 16px;
+        inline-size: min(100%, 34rem);
+        gap: 5px;
+        padding: 6px;
+        border-radius: 0.5rem;
+    }
+
+    .na-bank__window {
+        position: relative;
+        display: block;
+        block-size: calc(var(--na-pitch) * 1.6);
+        overflow: hidden;
+        border-radius: 2px;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 1px 2px hsl(from var(--sidebar-background) h s 4% / 0.9);
+    }
+
+    .na-bank__window::before,
+    .na-bank__lit {
+        content: '';
+        position: absolute;
+        inset: calc(var(--na-pitch) * 0.2) 0;
+        mask: var(--na-led) 0 0 / var(--na-pitch) 100% repeat-x;
+    }
+
+    .na-bank__window::before {
+        background: var(--sidebar-accent);
+    }
+
+    .na-bank__lit {
+        background: var(--na-pattern) calc(var(--na-pitch) * var(--r) * 5) 0 / calc(var(--na-pitch) * 16) 100% repeat-x;
+        filter: drop-shadow(0 0 3px var(--na-glow));
+    }
+
+    .na-wait__load {
+        margin-block-start: 0.6rem;
+    }
+
+    /* The finished pose of a switch whose lamp is lit by the anchor. */
+    .na-scene:is([data-na-anchor='lamps'], [data-na-anchor='tape'], [data-na-anchor='key']) .na-btn::before {
+        opacity: 1;
+    }
+
+    /* The lamps' own finished pose: the rows' lamps are lit. */
+    .na-scene[data-na-anchor='lamps'] :is(.na-item, .na-kpi .kp-kpi__label) .na-lamp::after {
+        opacity: 1;
+    }
+
+    /* ══ 2 · The label-tape embosser ═════════════════════════════════════ */
+
+    .na-emb {
+        display: grid;
+        justify-items: center;
+        gap: 0;
+    }
+
+    .na-emb__body {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        inline-size: min(100%, 22rem);
+        padding: 0.9rem 1.1rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.6rem;
+        background: var(--secondary);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    .na-emb__slot {
+        flex: 1;
+        block-size: 7px;
+        border-radius: 4px;
+        background: var(--sidebar-background);
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    .na-emb__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        color: var(--secondary-foreground);
+    }
+
+    .na-emb__tape {
+        display: block;
+        margin-block-start: -3px;
+        padding: 0.55rem 1.1rem 0.55rem 1.1rem;
+        background: var(--na-tapeface);
+        color: var(--na-tapeink);
+        clip-path: polygon(0 0, 100% 0, calc(100% - 0.7rem) 50%, 100% 100%, 0 100%);
+    }
+
+    .na-emb__text {
+        display: block;
+        inline-size: calc(var(--n) * (1ch + 0.14em));
+        font-family: var(--theme-font-mono);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        line-height: 1.1;
+        white-space: nowrap;
+        text-shadow: 0 1px 0 hsl(from var(--na-tapeink) h s l / 0.35);
+    }
+
+    .na-scene[data-na-anchor='tape'] .na-print {
+        display: inline-block;
+        inline-size: calc(var(--n) * (1ch + 0.08em));
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        vertical-align: bottom;
+    }
+
+    .na-tag,
+    .na-strip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.25rem 0.55rem;
+        border-radius: 2px;
+        background: var(--na-tapeface);
+        color: var(--na-tapeink);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .na-strip {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    .na-strip__dots {
+        display: inline-block;
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+    }
+
+    .na-scene[data-na-anchor='tape'] .na-item .na-print {
+        font-size: 0.8rem;
+    }
+
+    /* ══ 3 · The vent grille ═════════════════════════════════════════════ */
+
+    .na-vent {
+        position: relative;
+        inline-size: min(100%, 22rem);
+        block-size: 9.5rem;
+        overflow: hidden;
+        border: 6px solid var(--secondary);
+        border-radius: 0.6rem;
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 2px 6px hsl(from var(--sidebar-background) h s 4% / 0.95);
+    }
+
+    .na-vent__glow,
+    .na-mini__glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse at center,
+            var(--na-lit) 0 30%,
+            hsl(from var(--na-lit) h s l / 0.45) 75%,
+            hsl(from var(--na-lit) h s l / 0.2)
+        );
+    }
+
+    .na-vent__glow::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--sidebar-background);
+        opacity: 0;
+    }
+
+    .na-slats {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-rows: repeat(var(--rows, 8), 1fr);
+    }
+
+    .na-slats:has(> :nth-child(3):last-child) {
+        --rows: 3;
+    }
+
+    .na-slats:has(> :nth-child(14)) {
+        grid-template-rows: none;
+        grid-template-columns: repeat(14, 1fr);
+    }
+
+    .na-slat {
+        display: block;
+        border-block: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: linear-gradient(to bottom, hsl(from var(--secondary) h s calc(l + 6)) 0 45%, hsl(from var(--secondary) h s calc(l - 10)) 100%);
+        transform: scaleY(0.16);
+    }
+
+    .na-slats:has(> :nth-child(14)) .na-slat {
+        border-block: 0;
+        border-inline: 1px solid var(--border-strong);
+        transform: scaleX(0.3);
+    }
+
+    .na-mini {
+        position: relative;
+        display: inline-block;
+        inline-size: 2.8rem;
+        block-size: 1.5rem;
+        overflow: hidden;
+        border: 3px solid var(--secondary);
+        border-radius: 0.3rem;
+        background: var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    .na-vent--strip {
+        inline-size: 100%;
+        block-size: 1.6rem;
+        margin-block-start: 0.6rem;
+        border-width: 3px;
+        border-radius: 0.3rem;
+    }
+
+    /* ══ 4 · The key that pushes into its well ═══════════════════════════ */
+
+    .na-keywell {
+        display: grid;
+        place-items: center;
+        inline-size: min(100%, 17rem);
+        block-size: 9rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.8rem;
+        background: hsl(from var(--secondary) h s calc(l - 10));
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    .na-keycap {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 11rem;
+        block-size: 5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.5rem;
+        background: linear-gradient(to bottom, hsl(from var(--secondary) h s calc(l + 5)), var(--secondary));
+        box-shadow:
+            inset 0 2px 4px hsl(from var(--foreground) h s l / 0.35),
+            0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8),
+            0 0 0 hsl(from var(--secondary) h s calc(l - 18)),
+            0 1px 1px hsl(from var(--foreground) h s l / 0.1);
+        translate: 0 8px;
+    }
+
+    .na-keycap__lamp {
+        position: absolute;
+        inset-block-start: 0.55rem;
+        inset-inline-start: 0.6rem;
+    }
+
+    .na-keycap__legend {
+        padding: 0.2rem 0.7rem;
+        border-radius: 2px;
+        background: var(--na-tapeface);
+        color: var(--na-tapeink);
+        font-family: var(--theme-font-mono);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+    }
+
+    .na-pop__well {
+        position: absolute;
+        inset: -3px;
+        z-index: -1;
+        border-radius: var(--radius);
+        background: hsl(from var(--secondary) h s calc(l - 10));
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    .na-keys {
+        display: flex;
+        gap: 0.4rem;
+        margin-block-start: 0.6rem;
+        padding: 0.45rem;
+        border-radius: 0.3rem;
+        background: hsl(from var(--secondary) h s calc(l - 10));
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    .na-key {
+        display: block;
+        flex: 1;
+        block-size: 1.1rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.2rem;
+        background: var(--secondary);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+            0 3px 0 hsl(from var(--secondary) h s calc(l - 18));
+    }
+
+    /* ══ 5 · The bridge klaxon ═══════════════════════════════════════════ */
+
+    .na-frame {
+        --na-w: 3px;
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 var(--na-w) var(--warning);
+        pointer-events: none;
+    }
+
+    .na-frame--stage {
+        --na-w: 7px;
+    }
+
+    .na-frame--ring {
+        inset: -0.4rem;
+        border-radius: 0.5rem;
+    }
+
+    .na-beacon {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 5rem;
+        block-size: 5rem;
+    }
+
+    .na-beacon__lens {
+        position: relative;
+        z-index: 1;
+        inline-size: 3rem;
+        block-size: 3rem;
+        border: 3px solid var(--secondary);
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 10%, var(--warning) 35%, var(--destructive) 100%);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 14px 3px hsl(from var(--warning) h s l / 0.7);
+    }
+
+    .na-beacon__beam {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: 30rem;
+        block-size: 30rem;
+        margin: -15rem 0 0 -15rem;
+        border-radius: 50%;
+        background: conic-gradient(
+            from 0deg,
+            hsl(from var(--warning) h s l / 0.7) 0 28deg,
+            transparent 28deg 180deg,
+            hsl(from var(--warning) h s l / 0.35) 180deg 196deg,
+            transparent 196deg
+        );
+        mask: radial-gradient(circle, #000 0 8%, transparent 62%);
+    }
+
+    .na-frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 var(--na-w) var(--destructive);
+        opacity: 0;
+    }
+
+    /* ══ 6 · The raster ══════════════════════════════════════════════════ */
+
+    .na-crt {
+        position: relative;
+        inline-size: min(100%, 23rem);
+        block-size: 11rem;
+        overflow: hidden;
+        border: 5px solid var(--secondary);
+        border-radius: 0.875rem;
+        background: radial-gradient(ellipse at center, hsl(from var(--sidebar-primary) h s l / 0.08), transparent 70%), var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 22px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--sidebar-primary);
+    }
+
+    .na-crt::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: var(--na-scan);
+        pointer-events: none;
+    }
+
+    .na-crt__pic {
+        position: absolute;
+        inset: 0.7rem 0.9rem;
+        display: block;
+        filter: drop-shadow(0 0 3px hsl(from currentColor h s l / 0.75));
+    }
+
+    .na-crt__pic svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .na-crt__hum {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        z-index: 2;
+        block-size: 35%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--sidebar-primary) h s l / 0.1) 60%, transparent);
+        opacity: 0;
+    }
+
+    .na-crt__beam,
+    .na-fig__beam,
+    .na-pop::after {
+        --na-tail: 1.4rem;
+        content: '';
+        position: absolute;
+        z-index: 4;
+        inset-inline: 0;
+        block-size: var(--na-tail);
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--sidebar-primary) h s l / 0.35) 70%,
+            var(--sidebar-primary) 88%,
+            hsl(from var(--sidebar-primary) h s calc(l + 25)) 100%
+        );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .na-fig__beam {
+        --na-tail: 0.9rem;
+    }
+
+    .na-pop::after {
+        --na-tail: 1rem;
+    }
+
+    .na-fig {
+        overflow: hidden;
+    }
+
+    .na-roll {
+        position: relative;
+        display: block;
+        margin-block-start: 0.6rem;
+        padding: 0.45rem 0.7rem;
+        overflow: hidden;
+        border: 3px solid var(--secondary);
+        border-radius: 0.5rem;
+        background: var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        color: var(--sidebar-primary);
+    }
+
+    .na-roll::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--na-scan);
+    }
+
+    .na-roll__text {
+        position: relative;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-shadow: 0 0 5px hsl(from currentColor h s l / 0.6);
+    }
+
+    .na-roll__bar {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        block-size: 40%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--sidebar-primary) h s l / 0.3) 70%, transparent);
+        opacity: 0;
+    }
+
+    .na-scene[data-na-anchor='raster'] .na-fig__new {
+        background: var(--card);
+    }
+
+    /* ── The motion ──────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* What arrives is away at gap; the figure's old value is there. */
+        .na-scene[data-na-phase='gap'] .na-arrives,
+        .na-scene[data-na-anchor='lamps'][data-na-phase='gap'] .na-item {
+            opacity: 0;
+        }
+
+        .na-scene[data-na-phase='gap'] .na-fig__old {
+            opacity: 1;
+        }
+
+        .na-scene[data-na-phase='gap'] .na-lamp::after {
+            opacity: 0;
+        }
+
+        .na-scene[data-na-anchor='key'][data-na-phase='gap'] .na-keycap {
+            translate: 0 0;
+            box-shadow:
+                inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+                0 8px 0 hsl(from var(--secondary) h s calc(l - 18)),
+                0 9px 3px hsl(from var(--foreground) h s l / 0.25);
+        }
+
+        .na-scene[data-na-phase='gap'] .na-btn::before {
+            opacity: 0.25;
+        }
+
+        @keyframes na-on {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes na-lamp-lit {
+            from {
+                opacity: 0.25;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes na-off {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* ── 1 · Lamps: a lamp switches on or off in one frame ─────────── */
+
+        @keyframes na-bank-test {
+            0% {
+                opacity: 0;
+                background-position: calc(var(--na-pitch) * var(--r) * 5) 0;
+            }
+            12.5% {
+                opacity: 1;
+                background-position: calc(var(--na-pitch) * (3 + var(--r) * 5)) 0;
+            }
+            25% {
+                background-position: calc(var(--na-pitch) * (9 + var(--r) * 5)) 0;
+            }
+            37.5% {
+                background-position: calc(var(--na-pitch) * (12 + var(--r) * 5)) 0;
+            }
+            50% {
+                background-position: calc(var(--na-pitch) * (6 + var(--r) * 5)) 0;
+            }
+            62.5% {
+                background-position: calc(var(--na-pitch) * (15 + var(--r) * 5)) 0;
+            }
+            75% {
+                background-position: calc(var(--na-pitch) * (1 + var(--r) * 5)) 0;
+            }
+            87.5% {
+                background-position: calc(var(--na-pitch) * (10 + var(--r) * 5)) 0;
+            }
+            100% {
+                opacity: 1;
+                background-position: calc(var(--na-pitch) * var(--r) * 5) 0;
+            }
+        }
+
+        @keyframes na-bank-loop {
+            0%,
+            100% {
+                background-position: calc(var(--na-pitch) * var(--r) * 5) 0;
+            }
+            20% {
+                background-position: calc(var(--na-pitch) * (6 + var(--r) * 5)) 0;
+            }
+            40% {
+                background-position: calc(var(--na-pitch) * (3 + var(--r) * 5)) 0;
+            }
+            60% {
+                background-position: calc(var(--na-pitch) * (13 + var(--r) * 5)) 0;
+            }
+            80% {
+                background-position: calc(var(--na-pitch) * (9 + var(--r) * 5)) 0;
+            }
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-bank__lit {
+            animation:
+                na-bank-test calc(var(--na-fr) * 8) steps(1, end) both,
+                na-bank-loop calc(var(--na-fr) * 20) calc(var(--na-fr) * 8) steps(1, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) :is(.na-led__lens, .na-pop, .na-fig__new, .na-wait) {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation: na-off var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-item {
+            animation: na-on var(--na-fr) steps(1, end) calc((var(--k) + 1) * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-item .na-lamp::after {
+            animation: na-on var(--na-fr) steps(1, end) calc((var(--k) + 1) * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-kpi .na-lamp::after {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn::before {
+            animation: na-lamp-lit var(--na-fr) steps(1, end) both;
+        }
+
+        /* The switch thrown: its lamp full and its face in the well, in a frame. */
+        @keyframes na-switch-in {
+            0% {
+                background-color: var(--primary-active);
+                box-shadow:
+                    inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
+                    0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
+            }
+            67%,
+            100% {
+                background-color: var(--primary);
+                box-shadow:
+                    inset 0 0 0 0 transparent,
+                    0 0 0 0 transparent;
+            }
+        }
+
+        .na-scene[data-na-anchor='lamps']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn {
+            animation: na-switch-in calc(3 * var(--na-fr)) steps(1, end) both;
+        }
+
+        /* ── 2 · Tape: printed a letter a frame, cut with a notch ──────── */
+
+        @keyframes na-print {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes na-notch {
+            from {
+                clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%);
+            }
+            to {
+                clip-path: polygon(0 0, 100% 0, calc(100% - 0.7rem) 50%, 100% 100%, 0 100%);
+            }
+        }
+
+        @keyframes na-dots {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+            75%,
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        .na-scene[data-na-anchor='tape'][data-na-phase='gap'] .na-emb__tape {
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 0 100%);
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-emb__text {
+            animation: na-print calc(var(--n) * var(--na-fr)) steps(var(--n), end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-emb__tape {
+            animation: na-notch var(--na-fr) steps(1, end) calc(12 * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-emb__lamp .na-led__lens {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn::before {
+            animation: na-lamp-lit var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) :is(.na-tag, .na-strip) .na-print {
+            animation: na-print calc(var(--n) * var(--na-fr)) steps(var(--n), end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-pop,
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-wait {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-item .na-print {
+            animation: na-print calc(var(--n) * var(--na-fr)) steps(var(--n), end) calc(var(--i) * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation: na-off var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__new {
+            animation: na-print calc(3 * var(--na-fr)) steps(3, end) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-tape {
+            animation: na-print calc(7 * var(--na-fr)) steps(7, end) calc(3 * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='tape']:is([data-na-phase='in'], [data-na-phase='hold']) .na-strip__dots {
+            animation: na-dots calc(8 * var(--na-fr)) calc(9 * var(--na-fr)) steps(6, end) infinite;
+        }
+
+        /* ── 3 · Vent: a louvre opens in steps with the glow behind ────── */
+
+        @keyframes na-slat-open {
+            from {
+                transform: scaleY(1);
+            }
+            to {
+                transform: scaleY(0.16);
+            }
+        }
+
+        @keyframes na-slat-open-x {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(0.3);
+            }
+        }
+
+        @keyframes na-slat-flutter {
+            0%,
+            100% {
+                transform: scaleX(0.3);
+            }
+            50% {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes na-glow-flick {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.22;
+            }
+        }
+
+        @keyframes na-lv10-open {
+            from {
+                --na-open: 0px;
+            }
+            to {
+                --na-open: 10px;
+            }
+        }
+
+        @keyframes na-lv6-open {
+            from {
+                --na-open: 0px;
+            }
+            to {
+                --na-open: 6px;
+            }
+        }
+
+        @keyframes na-lv6-shut {
+            from {
+                --na-open: 6px;
+            }
+            to {
+                --na-open: 0px;
+            }
+        }
+
+        @keyframes na-steps4 {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .na-scene[data-na-anchor='vent'][data-na-phase='gap'] .na-slat {
+            transform: scaleY(1);
+        }
+
+        .na-scene[data-na-anchor='vent'][data-na-phase='gap'] .na-slats--flutter .na-slat {
+            transform: scaleX(1);
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-vent:not(.na-vent--strip) .na-slat,
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-mini .na-slat {
+            animation: na-slat-open calc(4 * var(--na-fr)) steps(4, end) calc(var(--k) * var(--na-fr)) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-vent:not(.na-vent--strip) .na-vent__glow {
+            animation: na-steps4 calc(12 * var(--na-fr)) steps(4, end) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-vent:not(.na-vent--strip) .na-vent__glow::after {
+            animation: na-glow-flick calc(10 * var(--na-fr)) calc(12 * var(--na-fr)) steps(1, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-mini__glow,
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-vent--strip .na-vent__glow {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-vent--strip .na-slat {
+            animation: na-slat-flutter calc(12 * var(--na-fr)) calc(var(--d) * var(--na-fr)) steps(1, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='vent'] .na-pop,
+        .na-scene[data-na-anchor='vent'] .na-fig__old,
+        .na-scene[data-na-anchor='vent'] .na-fig__new {
+            mask: repeating-linear-gradient(to bottom, #000 0 var(--na-open), transparent var(--na-open) var(--na-period, 10px));
+        }
+
+        .na-scene[data-na-anchor='vent'] .na-fig__old,
+        .na-scene[data-na-anchor='vent'] .na-fig__new {
+            --na-period: 6px;
+            --na-open: 6px;
+        }
+
+        .na-scene[data-na-anchor='vent'][data-na-phase='gap'] .na-pop {
+            --na-open: 0px;
+        }
+
+        .na-scene[data-na-anchor='vent'][data-na-phase='gap'] .na-fig__new {
+            --na-open: 0px;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-pop {
+            animation:
+                na-lv10-open calc(4 * var(--na-fr)) steps(4, end) both,
+                na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation:
+                na-lv6-shut calc(4 * var(--na-fr)) steps(4, end) both,
+                na-off calc(4 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__new {
+            animation:
+                na-lv6-open calc(4 * var(--na-fr)) calc(4 * var(--na-fr)) steps(4, end) both,
+                na-on calc(4 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='vent']:is([data-na-phase='in'], [data-na-phase='hold']) .na-wait {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        /* ── 4 · Key: pushed into its well and released ────────────────── */
+
+        @keyframes na-key-in {
+            from {
+                translate: 0 0;
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+                    0 8px 0 hsl(from var(--secondary) h s calc(l - 18)),
+                    0 9px 3px hsl(from var(--foreground) h s l / 0.25);
+            }
+            to {
+                translate: 0 8px;
+                box-shadow:
+                    inset 0 2px 4px hsl(from var(--foreground) h s l / 0.35),
+                    0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8),
+                    0 0 0 hsl(from var(--secondary) h s calc(l - 18)),
+                    0 1px 1px hsl(from var(--foreground) h s l / 0.1);
+            }
+        }
+
+        @keyframes na-btn-in {
+            0% {
+                translate: 0 0;
+                background-color: var(--primary);
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--primary) h s calc(l - 20));
+            }
+            17%,
+            67% {
+                translate: 0 3px;
+                background-color: var(--primary-active);
+                box-shadow:
+                    inset 0 2px 4px hsl(from var(--foreground) h s l / 0.35),
+                    0 0 0 hsl(from var(--primary) h s calc(l - 20));
+            }
+            83%,
+            100% {
+                translate: 0 0;
+                background-color: var(--primary);
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--primary) h s calc(l - 20));
+            }
+        }
+
+        @keyframes na-rise {
+            from {
+                translate: 0 8px;
+                clip-path: inset(100% 0 0 0);
+            }
+            to {
+                translate: 0 0;
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes na-tap {
+            0% {
+                translate: 0 0;
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+            17%,
+            67% {
+                translate: 0 3px;
+                box-shadow:
+                    inset 0 2px 4px hsl(from var(--foreground) h s l / 0.35),
+                    0 0 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+            83%,
+            100% {
+                translate: 0 0;
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+        }
+
+        @keyframes na-swap-old {
+            0%,
+            33% {
+                opacity: 1;
+            }
+            34%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes na-swap-new {
+            0%,
+            33% {
+                opacity: 0;
+            }
+            34%,
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes na-key-loop {
+            0%,
+            100% {
+                translate: 0 0;
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+            15%,
+            29% {
+                translate: 0 3px;
+                box-shadow:
+                    inset 0 2px 3px hsl(from var(--foreground) h s l / 0.35),
+                    0 0 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+            30% {
+                translate: 0 0;
+                box-shadow:
+                    inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9),
+                    0 3px 0 hsl(from var(--secondary) h s calc(l - 18));
+            }
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-keycap {
+            animation: na-key-in calc(2 * var(--na-fr)) steps(2, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-led__lens {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn {
+            animation: na-btn-in calc(6 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn::before {
+            animation: na-lamp-lit var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-pop {
+            animation: na-rise calc(3 * var(--na-fr)) steps(3, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-kpi {
+            animation: na-tap calc(6 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation: na-swap-old calc(6 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__new {
+            animation: na-swap-new calc(6 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-wait {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='key']:is([data-na-phase='in'], [data-na-phase='hold']) .na-key {
+            animation: na-key-loop calc(14 * var(--na-fr)) calc(var(--d) * 2 * var(--na-fr)) steps(1, end) infinite;
+        }
+
+        /* ── 5 · Klaxon: the frame flashes amber and red, the beacon turns ─ */
+
+        @keyframes na-flash {
+            0% {
+                box-shadow: inset 0 0 0 var(--na-w) transparent;
+            }
+            12.5% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--warning);
+            }
+            25% {
+                box-shadow: inset 0 0 0 var(--na-w) transparent;
+            }
+            37.5% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--destructive);
+            }
+            50% {
+                box-shadow: inset 0 0 0 var(--na-w) transparent;
+            }
+            62.5% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--destructive);
+            }
+            75% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--warning);
+            }
+            100% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--warning);
+            }
+        }
+
+        @keyframes na-pulse {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes na-spin {
+            from {
+                rotate: 0deg;
+            }
+            to {
+                rotate: 360deg;
+            }
+        }
+
+        @keyframes na-wait-blink {
+            0%,
+            100% {
+                box-shadow: inset 0 0 0 var(--na-w) var(--warning);
+            }
+            50% {
+                box-shadow: inset 0 0 0 var(--na-w) transparent;
+            }
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) .na-frame:not(.na-frame--wait) {
+            animation:
+                na-on var(--na-fr) steps(1, end) both,
+                na-flash calc(8 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) .na-frame--stage::after {
+            animation: na-pulse calc(12 * var(--na-fr)) calc(8 * var(--na-fr)) steps(1, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) .na-frame--wait {
+            animation:
+                na-on var(--na-fr) steps(1, end) both,
+                na-wait-blink calc(12 * var(--na-fr)) var(--na-fr) steps(1, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) .na-beacon__beam {
+            animation:
+                na-on var(--na-fr) steps(1, end) both,
+                na-spin calc(12 * var(--na-fr)) steps(12, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) :is(.na-pop, .na-fig__new, .na-wait) {
+            animation: na-on var(--na-fr) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='klaxon']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation: na-off var(--na-fr) steps(1, end) both;
+        }
+
+        /* ── 6 · Raster: drawn row by row from the top ─────────────────── */
+
+        @keyframes na-raster {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+            to {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        @keyframes na-beam {
+            from {
+                inset-block-start: calc(var(--na-tail) * -1);
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                inset-block-start: calc(100% - var(--na-tail));
+                opacity: 0;
+            }
+        }
+
+        @keyframes na-hum {
+            from {
+                translate: 0 -100%;
+            }
+            to {
+                translate: 0 300%;
+            }
+        }
+
+        @keyframes na-roll {
+            from {
+                translate: 0 -100%;
+            }
+            to {
+                translate: 0 260%;
+            }
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-crt__pic {
+            animation: na-raster calc(12 * var(--na-fr)) steps(12, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-crt__beam {
+            animation: na-beam calc(12 * var(--na-fr)) steps(12, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-crt__hum {
+            opacity: 1;
+            animation: na-hum calc(40 * var(--na-fr)) calc(12 * var(--na-fr)) steps(20, end) infinite;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-btn {
+            animation: na-raster calc(4 * var(--na-fr)) steps(4, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-pop {
+            animation: na-raster calc(6 * var(--na-fr)) steps(6, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-pop::after,
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__beam {
+            animation: na-beam calc(6 * var(--na-fr)) steps(6, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__beam {
+            animation-duration: calc(4 * var(--na-fr));
+            animation-timing-function: steps(4, end);
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__new {
+            animation: na-raster calc(4 * var(--na-fr)) steps(4, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-fig__old {
+            animation: na-off calc(4 * var(--na-fr)) steps(1, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-wait {
+            animation: na-raster calc(4 * var(--na-fr)) steps(4, end) both;
+        }
+
+        .na-scene[data-na-anchor='raster']:is([data-na-phase='in'], [data-na-phase='hold']) .na-roll__bar {
+            opacity: 1;
+            animation: na-roll calc(20 * var(--na-fr)) calc(4 * var(--na-fr)) steps(10, end) infinite;
+        }
+    }
+}
