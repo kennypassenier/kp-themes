@@ -207,6 +207,13 @@ function mountHub() {
             badge.textContent = `Judged in all ${progress.themes} themes`;
             badge.className = 'kp-badge kp-badge--success';
             open.textContent = 'Open again';
+        } else if (progress.state === 'updated') {
+            // A later round: name the themes it reopened, so Kenny sees which round he is in.
+            const names = progress.updated.map(themeLabel);
+            if (progress.extrasUpdated) names.push('its catalogue blocks');
+            badge.textContent = `Updated · ${names.join(', ')}`;
+            badge.className = 'kp-badge kp-badge--info';
+            open.textContent = 'Continue';
         } else if (progress.state === 'new') {
             badge.textContent = `Not started · ${progress.themes} themes`;
             badge.className = 'kp-badge';

@@ -90,10 +90,15 @@ export function storedFor(id) {
 
 /**
  * @typedef {object} DemoProgress
- * @property {'decided' | 'partly' | 'new'} state
+ * @property {'decided' | 'updated' | 'partly' | 'new'} state
+ *   `new` only while the demo never had a verdict in this browser; `updated`
+ *   while a later round (or redrawn sections) left pairs open that were judged
+ *   before (Kenny, 2026-10-07: "dan weet ik in welke ronde ik zit")
  * @property {number} themes       themes the demo walks
  * @property {number} themesLeft   themes with a section still open
  * @property {boolean} extrasLeft  catalogue blocks the demo carries, still open
+ * @property {string[]} updated    themes open again since an earlier verdict
+ * @property {boolean} extrasUpdated  the catalogue blocks are open again too
  * @property {number} pairs
  * @property {number} pairsLeft
  */
@@ -110,19 +115,38 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     if (shape.round?.round && stored.__round !== shape.round.round) {
         for (const [key, entry] of Object.entries(stored)) if (entry?.verdict === 'rejected') reopened.add(key);
         for (const key of shape.round.reopen ?? []) reopened.add(key);
+    } else if (Array.isArray(stored.__reopened)) {
+        // The round is open already: review.js listed what it reopened.
+        for (const key of stored.__reopened) reopened.add(key);
     }
     const open = (key) => !stored[key]?.verdict || reopened.has(key);
     const steps = shape.themes.map((theme) => shape.items.map((item) => `${theme}|${item}`));
     if (shape.extras.length) steps.push(shape.extras);
     const pairs = steps.flat();
     const pairsLeft = pairs.filter(open).length;
-    const themesLeft = steps.slice(0, shape.themes.length).filter((step) => step.some(open)).length;
+    const themeSteps = steps.slice(0, shape.themes.length);
+    const themesLeft = themeSteps.filter((step) => step.some(open)).length;
     const extrasLeft = shape.extras.length > 0 && shape.extras.some(open);
+
+    // Judged before: any verdict kept, or a round that reopened some.
+    const judgedBefore = reopened.size > 0 || Object.values(stored).some((entry) => entry?.verdict);
+    // Open again: reopened by a round, or, when the demo was redrawn under new
+    // section names and nothing it shows has a verdict, every open pair.
+    const redrawn = judgedBefore && pairsLeft === pairs.length;
+    const again = (key) => open(key) && (redrawn || reopened.has(key));
+    const updated = shape.themes.filter((_, i) => themeSteps[i].some(again));
+    const extrasUpdated = shape.extras.some(again);
+    let state = 'partly';
+    if (pairsLeft === 0) state = 'decided';
+    else if (updated.length || extrasUpdated) state = 'updated';
+    else if (pairsLeft === pairs.length) state = 'new';
     return {
-        state: pairsLeft === 0 ? 'decided' : pairsLeft === pairs.length ? 'new' : 'partly',
+        state,
         themes: shape.themes.length,
         themesLeft,
         extrasLeft,
+        updated,
+        extrasUpdated,
         pairs: pairs.length,
         pairsLeft,
     };

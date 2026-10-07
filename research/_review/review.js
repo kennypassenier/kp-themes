@@ -581,9 +581,22 @@ try {
 } catch {
     round = null;
 }
+// The pairs a round reopened stay listed under `__reopened`, so the hub
+// (progress.js) still calls the demo updated, in those themes, once its
+// verdicts are gone (Kenny, 2026-10-07: "Not started" read as a new demo).
 if (round?.round && state.__round !== round.round) {
-    for (const [key, entry] of Object.entries(state)) if (entry?.verdict === 'rejected') delete state[key];
-    for (const key of round.reopen || []) delete state[key];
+    const reopened = [];
+    for (const [key, entry] of Object.entries(state)) {
+        if (entry?.verdict === 'rejected') {
+            delete state[key];
+            reopened.push(key);
+        }
+    }
+    for (const key of round.reopen || []) {
+        delete state[key];
+        reopened.push(key);
+    }
+    state.__reopened = [...new Set(reopened)];
     state.__round = round.round;
     save();
 }
