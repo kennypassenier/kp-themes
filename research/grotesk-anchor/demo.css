@@ -1,0 +1,237 @@
+/* research/grotesk-anchor: the page only. A centred column; an intro, then
+   one section with one question: its five options side by side on a desk
+   (in a grid that wraps), one under the other on a phone. In the review
+   dialog one option is shown alone and large. Every drawing is in
+   options.css, scoped by the option's attribute on `.ga-scene`; nothing here
+   is scoped to `.ga-page`, because the dialog moves the section out of the
+   page into its stage. */
+.ga-page {
+    display: grid;
+    /* One track that never grows past the column. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.ga-intro,
+.ga-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ga-intro :is(h1, p),
+.ga-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ga-intro p,
+.ga-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.ga-motion,
+.ga-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.ga-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ga-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ga-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+button[data-ga-show][aria-pressed='true'],
+button[data-ga-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.ga-aspects {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.ga-aspect {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ga-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.ga-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.ga-aspect__q {
+    font-weight: 600;
+}
+
+.ga-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.ga-aspect__no {
+    margin-inline-end: 0.35rem;
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+}
+
+/* The options: as many columns as fit, each a plain column of its name, the
+   words and the scene. */
+.ga-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ga-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* In the review dialog one option is shown alone and large; its words are
+   in the dialog's hint, so only the scene stays. */
+[data-rv-flip-trio] .ga-col:not([hidden]) {
+    grid-column: 1 / -1;
+    --rv-flip-max: 100%;
+}
+
+[data-rv-flip-trio] .ga-col > :is(.ga-label-row, .ga-see, .ga-follows, .ga-verdict) {
+    display: none;
+}
+
+.ga-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.ga-label-row__no {
+    font-family: var(--theme-font-display);
+    color: var(--muted-foreground);
+}
+
+.ga-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ga-see,
+.ga-follows,
+.ga-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.ga-follows,
+.ga-verdict {
+    color: var(--muted-foreground);
+}
+
+.ga-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The scene: the anchor in its own scene, centred and large, and the same
+   anchor in two other places, a progress bar and a button press. */
+.ga-scene {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        'hero hero'
+        'bar button';
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    padding: 1.1rem 1.4rem 1.4rem 1.1rem;
+    border: 2px solid var(--border);
+    background: var(--background);
+}
+
+.ga-part {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.ga-part--hero {
+    grid-area: hero;
+}
+
+.ga-part--bar {
+    grid-area: bar;
+}
+
+.ga-part--button {
+    grid-area: button;
+}
+
+.ga-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+/* Show one place alone (the Show buttons). */
+[data-ga-show='hero'] .ga-part:not(.ga-part--hero),
+[data-ga-show='bar'] .ga-part:not(.ga-part--bar),
+[data-ga-show='button'] .ga-part:not(.ga-part--button) {
+    display: none;
+}
+
+[data-ga-show='bar'] .ga-part--bar,
+[data-ga-show='button'] .ga-part--button {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 40rem) {
+    .ga-scene {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'hero'
+            'bar'
+            'button';
+    }
+}

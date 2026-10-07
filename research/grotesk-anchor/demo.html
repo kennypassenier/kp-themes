@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="grotesk" data-cat-theme="grotesk" data-cat-theme-fixed data-review="grotesk-anchor" data-review-themes="grotesk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what is grotesk's anchor element</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" data-kp-register="grotesk" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="ga-page">
+            <header class="ga-intro" id="ga-intro">
+                <h1>What is grotesk's anchor element</h1>
+                <p>
+                    Kenny, 2026-10-07 18:13: every theme gets <b>one</b> recognisable anchor element, the one thing every later decision of the
+                    theme departs from (forest: the tree progress bar, titanium: the new loading animation, cyberpunk: the glitch, solstice: the
+                    sun on its arc). The colours are already right everywhere and stay the shared base. For grotesk the candidate so far is the
+                    loading <i>Out of register</i>; you asked for more options.
+                </p>
+                <p>
+                    One question, five bold candidates, each drawn only from what grotesk's world already owns (the International Typographic
+                    Style: the twelve-column grid, flush-left type on its baseline, red on paper, the rule, the register mark, the colour bands,
+                    the timetable that runs on time). Each one is shown the same three ways, on one clock: in its own scene, as a progress bar and
+                    as a button press, so you see whether it carries the theme. Pick one in the review dialog (arrow keys flip between the
+                    options); the first option is the recommendation, and each option says what follows from it and why it is or is not
+                    recommended.
+                </p>
+                <p class="ga-motion" data-ga-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in
+                    the system settings to judge the candidates.
+                </p>
+            </header>
+
+            <section
+                class="ga-sec"
+                data-review-item="grotesk-anchor"
+                data-review-mode="aspects"
+                data-review-rows="data-ga-aspect"
+                data-review-components="grotesk-anchor"
+                data-review-title="What is grotesk's anchor element"
+                aria-labelledby="h-ga"
+            >
+                <div class="ga-sec__head">
+                    <h2 id="h-ga">The anchor</h2>
+                    <p>
+                        Every scene plays by itself on the same clock: <b>drawn</b> (8 units of 120 ms), <b>dwell</b> (4 units, the station clock's
+                        stop-to-go), <b>taken off</b> (8 units, the drawing played backwards), a short rest. Replay starts them together, the speed
+                        buttons slow every motion down, and Show looks at one place alone and large.
+                    </p>
+                </div>
+                <div class="ga-controls" data-review-controls>
+                    <div class="ga-actions" role="group" aria-label="Show">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-show="all" aria-pressed="true">All three</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-show="hero" aria-pressed="false">The scene</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-show="bar" aria-pressed="false">The progress bar</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-show="button" aria-pressed="false">The button</button>
+                    </div>
+                    <div class="ga-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-ga-replay data-review-plays="anchor">Replay</button>
+                    </div>
+                    <div class="ga-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ga-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="ga-aspects" data-ga-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
