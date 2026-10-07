@@ -1,6 +1,6 @@
 # What makes solstice solstice
 
-**Update 1 (Kenny, 07/10/2026 21:11): 16 of 18 picked, every recommendation except The focus ring = a halo and Leaving and arriving = the morning mist; Pointing at something ("I don't see any animations?") and The press ("I feel like we can do better") were not approved and are redone in update 1** (research/solstice-character/update.json; applied in css/solstice-register.css).
+**Update 2 (Kenny, 07/10/2026 22:51): 17 of 18 picked (Pointing = the sun climbs its arc); The press is redone, option 1 kept and dimmer. Update 1 (21:11): 16 of 18 picked, every recommendation except The focus ring = a halo and Leaving and arriving = the morning mist; Pointing at something ("I don't see any animations?") and The press ("I feel like we can do better") were not approved and are redone in update 1** (research/solstice-character/update.json; applied in css/solstice-register.css).
 
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk,
 blueprint; solstice third in that order, the same way as titanium, forest, nostromo, cyberpunk and synthwave (02:54: "waar jij eerst

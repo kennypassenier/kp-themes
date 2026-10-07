@@ -1,5 +1,5 @@
 {
-    "update": 1,
+    "update": 2,
     "picks": {
         "solstice": {
             "curve": "sine",
@@ -17,18 +17,15 @@
             "composites": "own",
             "focus": "halo",
             "voice": "serif",
-            "motifs": "one"
+            "motifs": "one",
+            "hover": "sun"
         }
     },
     "questions": {
         "solstice": {
-            "hover": {
-                "comment": "I don't see any animations?",
-                "reply": "Hover was drawn as a still end pose, so there was nothing to see. It is now a real transition: the pointed part animates in and back out, the out exactly the in reversed in the same time. Three options: the sun climbs its arc (recommended), the low sun rakes along the foot, the sun's path is drawn."
-            },
             "press": {
-                "comment": "I feel like we can do better",
-                "reply": "The old press was a barely visible colour change. It now moves with the sun, in and back out with equal time, and its words are clearly readable. Three options: the sun swells (recommended), the day breaks, light closes in from the rim."
+                "comment": "I like option 1 best, but it' not quite right yet, especially on the buttons it's too bright",
+                "reply": "Option 1, the sun swells, stays, and is toned down: on the buttons the pressed face now lifts about 1.2 to 1.4 times the rest brightness instead of 1.5 to 1.7 (the glow at about half, the foot line softer, the face moving half-way to its pressed shade). In and out are still the same time (t50 120 ms, t90 200 ms). Options 2 and 3 follow the same lower level."
             }
         }
     }

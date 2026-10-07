@@ -1235,18 +1235,18 @@
         clip-path: inset(0 calc((1 - var(--so-p)) * 100%) 0 0);
     }
 
-    /* The ground of a pressed part takes its -active face, on the same
-       number as the light. */
+    /* The ground of a pressed part goes half-way to its -active face (the
+       whole way was a pale flash on the amber one), on the same number as the light. */
     .so-scene[data-so-press] .so-press {
         --so-rest: var(--secondary);
         --so-held: var(--secondary-active);
-        background-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q)) * 100%), var(--so-held) calc(var(--so-q) * 100%));
+        background-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q) * var(--so-share, 0.5)) * 100%), var(--so-held) calc(var(--so-q) * var(--so-share, 0.5) * 100%));
     }
 
     .so-scene[data-so-press] .kp-button--primary.so-press {
         --so-rest: var(--primary);
         --so-held: var(--primary-active);
-        border-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q)) * 100%), var(--so-held) calc(var(--so-q) * 100%));
+        border-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q) * var(--so-share, 0.5)) * 100%), var(--so-held) calc(var(--so-q) * var(--so-share, 0.5) * 100%));
     }
 
     .so-scene[data-so-press] .kp-button--ghost.so-press {
@@ -1302,10 +1302,16 @@
         opacity: min(1, calc(var(--so-q) * 3));
         background: radial-gradient(
             ellipse 70% 105% at 50% 100%,
-            hsl(from var(--so-sun) h s l / 0.3),
-            hsl(from var(--so-sun) h s l / 0.11) 42%,
+            hsl(from var(--so-sun) h s l / calc(0.16 * var(--so-warm, 1))),
+            hsl(from var(--so-sun) h s l / calc(0.055 * var(--so-warm, 1))) 42%,
             transparent 72%
         );
+    }
+
+    /* A swell, a dawn and a rim are a warm lift, not a flash: on an amber
+       face the lifted sun is paler than the face, so it is held lower. */
+    .so-scene[data-so-press] .kp-button--primary.so-press {
+        --so-warm: 0.6;
     }
 
     .so-scene[data-so-press='swell']:not([data-so-hover]) .so-l--b,
@@ -1313,7 +1319,7 @@
         inset: 0;
         border-radius: inherit;
         background: linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat;
-        opacity: var(--so-q);
+        opacity: calc(var(--so-q) * 0.6);
     }
 
     /* The day breaks: the dusk ramp rises through the part from its foot in
@@ -1323,13 +1329,13 @@
         border-radius: inherit;
         translate: 0 calc((1 - var(--so-q)) * 100%);
         background:
-            linear-gradient(var(--so-dusk-3), var(--so-dusk-3)) 0 0 / 100% 2px no-repeat,
+            linear-gradient(hsl(from var(--so-dusk-3) h s l / 0.6), hsl(from var(--so-dusk-3) h s l / 0.6)) 0 0 / 100% 2px no-repeat,
             linear-gradient(
                 to top,
-                hsl(from var(--so-dusk-1) h s l / 0.34),
-                hsl(from var(--so-dusk-2) h s l / 0.22) 45%,
-                hsl(from var(--so-dusk-3) h s l / 0.14) 92%,
-                hsl(from var(--so-dusk-3) h s l / 0.45)
+                hsl(from var(--so-dusk-1) h s l / calc(0.12 * var(--so-warm, 1))),
+                hsl(from var(--so-dusk-2) h s l / calc(0.07 * var(--so-warm, 1))) 45%,
+                hsl(from var(--so-dusk-3) h s l / calc(0.045 * var(--so-warm, 1))) 92%,
+                hsl(from var(--so-dusk-3) h s l / calc(0.2 * var(--so-warm, 1)))
             );
     }
 
@@ -1337,7 +1343,7 @@
         inset: 0;
         border-radius: inherit;
         background: linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat;
-        opacity: var(--so-q);
+        opacity: calc(var(--so-q) * 0.6);
     }
 
     /* The light closes in: a rim of dusk (rust at the edge, amber inside)
@@ -1346,9 +1352,9 @@
         inset: 0;
         border-radius: inherit;
         box-shadow:
-            inset 0 0 0 1px hsl(from var(--so-sun) h s l / calc(var(--so-q) * 0.85)),
-            inset 0 0 calc(var(--so-q) * 0.55rem) calc(var(--so-q) * 0.1rem) hsl(from var(--so-dusk-1) h s l / calc(var(--so-q) * 0.7)),
-            inset 0 0 calc(var(--so-q) * 1.3rem) hsl(from var(--so-dusk-2) h s l / calc(var(--so-q) * 0.3));
+            inset 0 0 0 1px hsl(from var(--so-sun) h s l / calc(var(--so-q) * 0.6)),
+            inset 0 0 calc(var(--so-q) * 0.55rem) calc(var(--so-q) * 0.1rem) hsl(from var(--so-dusk-1) h s l / calc(var(--so-q) * 0.4)),
+            inset 0 0 calc(var(--so-q) * 1.3rem) hsl(from var(--so-dusk-2) h s l / calc(var(--so-q) * 0.16));
     }
 
     @media (prefers-reduced-motion: no-preference) {
