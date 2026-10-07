@@ -115,7 +115,7 @@ const IDEAS = {
         live: [
             {
                 name: 'Redrawn',
-                text: 'A new reading redraws the line in place at once, as both characters had it.',
+                text: 'A new reading is read again: the line is drawn at once, and a pointer on a ruler under the figure slides from the old reading to the new one on the plotter’s feed, 6 units.',
             },
             {
                 name: 'The entry is carried forward',
@@ -793,7 +793,7 @@ const IDEAS = {
         loading: [
             {
                 name: 'The chart recorder',
-                text: 'The recorder’s pen sweeps.',
+                text: 'One pen over the whole tile: it traces the tile’s outline, then underlines every place a reading will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
             },
             {
                 name: 'The title block',
@@ -811,7 +811,7 @@ const IDEAS = {
             },
             {
                 name: 'Drafted',
-                text: 'The line is drawn in from the left, at an even pace; the number is written in from the left.',
+                text: 'The tile is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; 3 units.',
             },
             {
                 name: 'Plotted',
@@ -829,7 +829,7 @@ const IDEAS = {
             },
             {
                 name: 'The revision cloud',
-                text: 'The change in a ruled box; a warning or destructive figure is framed all round in its colour, as a revision marked on a drawing.',
+                text: 'Pointed out on the reading’s scale: a ruler under the figure with a pointer in the tone’s ink, the tone’s flag before the note (△ warning, ▲ failure); the change in the lettering with its sign, on no plate; nothing frames the tile.',
             },
         ],
         live: [

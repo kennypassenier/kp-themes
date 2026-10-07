@@ -646,6 +646,7 @@ focusable="false"
                             <tr><td><code>data-kp-measure-bracket</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-measured</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-open</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-press-size</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-every</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-reveal-state</code></td><td>written</td></tr>
@@ -702,6 +703,7 @@ focusable="false"
                             <tr><td><code>&lt;mark&gt;</code></td><td>Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.</td></tr>
                             <tr><td><code>data-kp-text</code></td><td>The copy of a headline or a navigation label that a register’s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.</td></tr>
                             <tr><td><code>data-kp-effects</code></td><td>What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.</td></tr>
+                            <tr><td><code>data-kp-press-size</code></td><td>Written on a button or icon button a press started on, for a theme that asks the module for it (blueprint): its measured width in whole pixels, which the theme letters on the dimension drawn below a pressed part. Read it, do not set it.</td></tr>
                             <tr><td><code>kp-effect-unknown</code></td><td>The event the module dispatches on an element that names a surface or a reveal it does not know, so a typo is heard rather than silently quiet.</td></tr>
                             <tr><td><code>--kp-measure: live</code></td><td>Blueprint's own device, outside the six-hook vocabulary [S48]: on the root, the module wraps every `data-kp-reveal=&quot;headline&quot;` element in `[data-kp-measured]` and builds two dimension lines beside it — never a fixed width. The horizontal one (`[data-kp-dim]`, `[data-kp-dim-line]`, two `[data-kp-dim-tick]` and a `[data-kp-measure]` label) reads the headline's own `getBoundingClientRect().width`, on load, on resize and once the page's fonts are ready, and writes the same rounded number to the line's `style.width` and the label in one breath. The vertical one (`[data-kp-elev-line]`, two `[data-kp-elev-tick]` and `[data-kp-elev-measure]`) needs no measurement of its own width to size itself — CSS containment does that — only a read to print the wrap's own height into its label.</td></tr>
                     </tbody></table></div>

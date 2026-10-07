@@ -822,7 +822,7 @@ const IDEAS = {
             },
             {
                 name: 'The cell fills',
-                text: 'One cell of the title block lights along its rule and the next follows, looping.',
+                text: 'One pen over the whole panel: it traces the panel’s outline, then underlines the places its words and its clock will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
             },
             {
                 name: 'The hatch sweeps',
@@ -840,13 +840,13 @@ const IDEAS = {
             },
             {
                 name: 'Plotted',
-                text: 'The panel rises from the grid in hard steps, as a plotter draws a frame up.',
+                text: 'The panel is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; 3 units.',
             },
         ],
         failure: [
             {
                 name: 'The revision cloud',
-                text: 'A scalloped revision-cloud outline in the destructive colour rings the alert.',
+                text: 'The failed alert carries the flag of a failure, a filled triangle in the destructive ink, and a pointer on the foot ruler where a failure reads; no cloud, no frame, nothing scales.',
             },
             {
                 name: 'The red-line fault',

@@ -137,7 +137,7 @@ export const DESCRIPTORS = [
         // what a passage IS and a theme decides what that looks like. The
         // aliases claim the attributes js/effects.js writes and the one
         // event it dispatches.
-        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text', 'open', 'measure', 'measured', 'dim', 'elev'],
+        aliases: ['effects', 'effect', 'surface', 'reveal', 'divider', 'text', 'open', 'measure', 'measured', 'dim', 'elev', 'press'],
         intro: 'A small vocabulary of attributes that say what a passage is — a hero, an app surface, a divider, a phrase that should land — and leave what that looks like to the theme. A theme that has an answer paints it; a theme that has none stays quiet, and the page reads the same either way.',
         whenToUse:
             'Mark the structure of a page you want a theme to be able to dramatise: the opening surface, the working surface, the seam between them, the words that carry the point. Do not use the attributes to ask for a particular effect — there is no attribute for a glitch or a flicker, only for the thing a theme may glitch or flicker. A theme decides, and a reader who asked for reduced motion gets the words without the drama.',
@@ -190,6 +190,7 @@ export const DESCRIPTORS = [
             { name: '<mark>', what: 'Emphasis inside running text. Themes answer it with a highlight, a glow, or a decipher — never with less contrast than the text around it.' },
             { name: 'data-kp-text', what: 'The copy of a headline or a navigation label that a register\u2019s glitch pseudo-elements read; the module writes it on a headline, the NavBar writes it on its links.' },
             { name: 'data-kp-effects', what: 'What the module writes on the document root before first paint, so a stylesheet can tell an armed page from one without the script; data-kp-effects-done follows when the reveals of a load have run.' },
+            { name: 'data-kp-press-size', what: 'Written on a button or icon button a press started on, for a theme that asks the module for it (blueprint): its measured width in whole pixels, which the theme letters on the dimension drawn below a pressed part. Read it, do not set it.' },
             { name: 'kp-effect-unknown', what: 'The event the module dispatches on an element that names a surface or a reveal it does not know, so a typo is heard rather than silently quiet.' },
             {
                 name: '--kp-measure: live',

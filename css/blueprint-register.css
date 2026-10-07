@@ -583,7 +583,7 @@
         background: var(--background);
         border: 1px solid var(--border-strong);
         border-radius: 0;
-        box-shadow: 0 6px 14px hsl(from var(--background) h s 0% / 0.35);
+        box-shadow: none;
         padding-block: 0.35rem;
         min-width: 12rem;
         counter-reset: kp-menu-item;
@@ -818,7 +818,9 @@
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
-        box-shadow: 0 12px 28px hsl(from var(--background) h s 0% / 0.45);
+        /* An overlay sheet is a drawing laid on the drawing: its one 1 px frame
+           and no shadow (CHARACTER.md G7; --fx-shadow-offset is 0). */
+        box-shadow: none;
     }
 
     /* The wrapper round the theme picker's icon button is not a card: only its
@@ -876,10 +878,6 @@
     [data-theme='blueprint'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
         border: 0;
         border-radius: 0;
-    }
-
-    [data-theme='blueprint'] .kp-menu__item:hover {
-        background: var(--kp-menu-wash);
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -2160,11 +2158,65 @@
             linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / 100% 1px no-repeat;
     }
 
-    /* The measured length, drawn flat: the pen's stroke has no arrowhead. */
+    /* The measured length, drawn flat: the pen's stroke has no arrowhead.
+       One box carries everything the reading is made of, as layers, so the
+       share, the pen that reads it and the pointers all move on one set of
+       numbers: it spans the track and 8 px past each end (the pen's carriage
+       runs inside it) and reaches from the carriage's top to 10 px below the
+       track. In it, from the front: the pen, the amber pointer the pen reads
+       with (lifted when the reading is done), the tone's pointer under the
+       track in the tone's ink, and the share (the fill, inked as far as the
+       pen has read: --kp-bp-rp). The share is --kp-value clamped to the track;
+       --kp-bp-ms is that number. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-bp-ms: clamp(0, var(--kp-value, 0), 1);
+        --kp-bp-rp: 1;
+        --kp-bp-rv: 0;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+        --kp-bp-px: calc(var(--kp-bp-rp) * var(--kp-bp-ms));
+        --kp-bp-py: 0.0714;
+    }
+
     [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before {
-        inset-block: 1px;
+        --kp-bp-c-read: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+        --kp-bp-c-tone: hsl(from var(--kp-meter-fill-colour) h s l / calc(var(--kp-bp-sv) * (1 - var(--kp-bp-rv))));
+        --kp-bp-pointer: conic-gradient(from 135deg at 50% 0, var(--kp-bp-c-read) 90deg, transparent 0);
+        inset-block: calc(var(--kp-meter-height) / 2 - 9px) auto;
+        inset-inline: -8px;
+        inline-size: auto;
+        block-size: 23px;
         border-radius: 0;
-        background: var(--kp-meter-fill-colour);
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image:
+            var(--kp-bp-pen-img), var(--kp-bp-pointer), conic-gradient(from 135deg at 50% 0, var(--kp-bp-c-tone) 90deg, transparent 0),
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour));
+        background-size:
+            var(--kp-bp-pen-size),
+            9px 6px,
+            9px 6px,
+            calc(var(--kp-bp-px) * (100% - 16px)) calc(var(--kp-meter-height) - 2px);
+        background-position:
+            var(--kp-bp-pen-pos),
+            calc(var(--kp-bp-px) * 100% + 3.5px - var(--kp-bp-px) * 7px) calc(9px + var(--kp-meter-height) / 2 + 1px),
+            calc(var(--kp-bp-ms) * 100% + 3.5px - var(--kp-bp-ms) * 7px) calc(9px + var(--kp-meter-height) / 2 + 1px),
+            8px calc(10px - var(--kp-meter-height) / 2);
+    }
+
+    /* The reading is laid out from the left; a right-to-left sheet mirrors the
+       whole box (it is symmetric about the track), so the share starts at the
+       start edge and the pen runs the way the reader does. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter):dir(rtl)::before {
+        scale: -1 1;
+    }
+
+    /* A tone is pointed out on the track's own scale: a pointer under the
+       track at the reading, in the tone's ink (a warning, a failure). It comes
+       up on the feed when the tone is set. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter):is([data-kp-tone='warning'], [data-kp-tone='destructive']),
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__meter {
+        --kp-bp-sv: 1;
     }
 
     /* An amber leader with its ring. */
@@ -2199,24 +2251,35 @@
         font: 700 0.75rem/1 var(--theme-font-mono, monospace);
     }
 
-    /* ── how the share arrives: option 1 ── */
+    /* ── how the share arrives, and a new reading [arrival, live, leave] ──
+       A share is read out (Kenny, 2026-10-07 23:41): the pen is set down at the
+       start of the track, lowered, and runs along it to the reading on one
+       feed, inking the share as it goes and carrying an amber pointer on the
+       scale under it; at the end the pen is lifted and the amber with it, and
+       the tone's pointer, if there is one, stands in its place. The same
+       keyframes and the same three units as every part (kp-sig-blueprint-read);
+       a share that leaves plays them backwards. A new reading (a changed
+       --kp-value, a changed tone) is read again: the share and its pointers
+       slide to it on the feed in two units, the pointer standing under it the
+       whole way. ── */
 
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-leaving] {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
         [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-blueprint-meter-wipe-o 1200ms linear backwards;
-            transition: inline-size 1200ms linear;
-        }
-    }
-
-    /* ── when the tone changes: option 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']::before {
-            animation-name: kp-sig-blueprint-meter-wipe-w;
+            transition:
+                background-size calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed),
+                background-position calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
         }
 
-        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']::before {
-            animation-name: kp-sig-blueprint-meter-wipe-d;
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+            transition: --kp-bp-sv calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
         }
     }
 
@@ -2245,36 +2308,6 @@
         }
     }
 
-    @keyframes kp-sig-blueprint-meter-wipe-d {
-        0% {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        100% {
-            clip-path: inset(0);
-        }
-    }
-
-    @keyframes kp-sig-blueprint-meter-wipe-o {
-        0% {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        100% {
-            clip-path: inset(0);
-        }
-    }
-
-    @keyframes kp-sig-blueprint-meter-wipe-w {
-        0% {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        100% {
-            clip-path: inset(0);
-        }
-    }
-
     /* <<character */
     /* ── The character [scope-143] ───────────────────────────────────────────
        Kenny, 2026-10-07 23:41: sixteen of sixteen approved on
@@ -2292,7 +2325,8 @@
        carriage (a square in the steel line, a sight through it, the nib down
        filled or up hollow) placed by the percent trick, so its centre runs inside
        the box with 8 px to spare on every side and nothing needs the box's size. */
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving])::after,
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before,
     [data-theme='blueprint'] .kp-dialog::after,
     [data-theme='blueprint'] .kp-popover:not(.kp-tooltip)::after,
     [data-theme='blueprint'] .kp-menu-button > .kp-menu::after,
@@ -2336,7 +2370,7 @@
         background-repeat: no-repeat;
     }
 
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving])::after {
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after {
         --kp-bp-px: var(--kp-bp-rp);
         --kp-bp-py: var(--kp-bp-rp);
         inset: 0;
@@ -2371,7 +2405,17 @@
            the one set of keyframes is both. The part's own frame stands from the
            first frame to the last; only its lines are inked: a mask, a line high
            in steps, over the content box alone. */
-        [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]) {
+        [data-theme='blueprint']
+            :is([data-kp-leaving], [data-kp-arriving]):not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
             position: relative;
             mask-image:
                 linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
@@ -2387,11 +2431,31 @@
             mask-composite: add, subtract, add;
         }
 
-        [data-theme='blueprint'] [data-kp-leaving] {
+        [data-theme='blueprint']
+            [data-kp-leaving]:not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
             animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear reverse forwards;
         }
 
-        [data-theme='blueprint'] [data-kp-arriving]:not([data-kp-leaving]) {
+        [data-theme='blueprint']
+            [data-kp-arriving]:not([data-kp-leaving]):not(
+                .kp-dialog,
+                .kp-popover:not(.kp-tooltip),
+                .kp-menu-button > .kp-menu,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-toast,
+                .kp-meter,
+                .kp-kpi__meter
+            ) {
             animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
         }
 
@@ -2503,9 +2567,16 @@
             --kp-bp-ov: visible;
         }
 
-        [data-theme='blueprint'] .kp-toast[data-kp-leaving] {
+        /* A panel that floats over the sheet opens by its own trace at once: the
+           leave turned around would start the pen only after the space it folds
+           (466 ms of nothing), which a floating list or a toast has none of. */
+        [data-theme='blueprint'] :is(.kp-combobox__list, .kp-toast) {
+            --kp-open: normal;
+        }
+
+        [data-theme='blueprint']
+            :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-toast)[data-kp-leaving] {
             animation: kp-sig-blueprint-trace-out var(--kp-sig-dur, var(--kp-sig-bp-panel)) linear reverse forwards;
-            mask: none;
         }
 
         @keyframes kp-sig-blueprint-trace {
@@ -2648,8 +2719,8 @@
        scale). Focus keeps DI2's two-channel ring and the lines. A press takes
        the dimension: the lines run on further, the scale gives way to a dimension
        with a slash at each end, drawn in two units below the part, outside it
-       (--kp-bp-dv); the part's own ground never changes. The size is not lettered
-       on it: CSS cannot print a measured length. */
+       (--kp-bp-dv); the part's own ground never changes. The size is lettered on it
+       (see the dimension's own rule below). */
     [data-theme='blueprint'] :is(.kp-button, .kp-icon-button) {
         position: relative;
         --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
@@ -2685,14 +2756,36 @@
             right bottom 0.8rem;
     }
 
+    /* The dimension: a slash at each end and a line between them, broken in the
+       middle for the size, lettered in the draughtsman's hand (mono capitals
+       sloped 15 degrees, as every label of this sheet). The size is the part's
+       measured width in whole pixels, written as data-kp-press-size by
+       js/effects.js for a theme that declares --kp-press: size (CSS cannot print
+       a measured length). The box is 13 px high so the lettering is not cut by
+       the reveal's clip; its centre stays where the 7 px dimension stood. Until
+       a press has written the size (no module, or never pressed) the line runs
+       unbroken, so nothing half-lettered ever shows. */
     [data-theme='blueprint'] :is(.kp-button, .kp-icon-button)::after {
-        content: '';
+        --kp-bp-gap: calc(4ch + 0.3rem);
+        content: attr(data-kp-press-size);
         position: absolute;
-        inset-block-end: calc(-1.1rem - 7px);
-        block-size: 7px;
+        inset-block-end: calc(-1.1rem - 10px);
+        block-size: 13px;
         inset-inline: calc(var(--kp-witness-gap, 0.35rem) - 3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         pointer-events: none;
         clip-path: inset(0 calc((1 - var(--kp-bp-dv)) * 100%) 0 0);
+        color: var(--kp-bp-n3);
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        font-style: oblique 15deg;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: none;
+        white-space: nowrap;
         background-repeat: no-repeat;
         background-image:
             linear-gradient(
@@ -2707,15 +2800,21 @@
                 var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
                 transparent calc(50% + 0.5px)
             ),
-            linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3));
+            linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3)), linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3));
         background-size:
             7px 7px,
             7px 7px,
-            calc(100% - 6px) 1px;
+            max(0px, calc(50% - 3px - var(--kp-bp-gap) / 2)) 1px,
+            max(0px, calc(50% - 3px - var(--kp-bp-gap) / 2)) 1px;
         background-position:
-            left top,
-            right top,
-            3px center;
+            left center,
+            right center,
+            3px center,
+            right 3px center;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):not([data-kp-press-size])::after {
+        --kp-bp-gap: 0px;
     }
 
     [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):dir(rtl)::after {
@@ -2746,35 +2845,66 @@
         }
     }
 
-    /* A menu entry is the theme's own entry: its wash, and the two witness lines of a control. */
+    /* A menu entry is the theme's own entry [composites, hover]: pointed at, it
+       is read on a scale exactly like a button: two amber witness lines at its
+       ends, overhanging its top and its foot, and along its foot a short ruler
+       with a pointer at each end (--kp-bp-hv the lines, --kp-bp-sv the scale).
+       No wash, no tint: the ground of an entry never changes, hovered, held or
+       focused. The keyboard's place is told by two channels: the package's focus
+       ring round the entry, which only the keyboard sets, and the amber lines
+       and ruler (which a pointer sets too). */
     [data-theme='blueprint'] .kp-menu__item {
         position: relative;
         --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
     }
 
     [data-theme='blueprint'] .kp-menu__item::before {
         content: '';
         position: absolute;
         inset-block: -0.2rem;
-        inset-inline: 0.35rem;
+        inset-inline: calc(0.35rem - 4px);
         pointer-events: none;
         background-repeat: no-repeat;
-        background-image: linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1));
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
         background-size:
             1px 100%,
-            1px 100%;
+            1px 100%,
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 3px,
+            9px 5px,
+            9px 5px;
         background-position:
-            left top,
-            right top;
+            4px top,
+            calc(100% - 4px) top,
+            left 4px bottom calc(0.2rem + 5px),
+            left 4px bottom calc(0.2rem + 6px),
+            left bottom 0.2rem,
+            right bottom 0.2rem;
+    }
+
+    /* The package lights a hovered entry, and a focused one of a rich menu, with
+       a wash of the ink; here the ground stays and the lines and the ruler (and
+       the keyboard's ring) carry it. */
+    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus):not(:disabled, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-menu--rich .kp-menu__item:focus {
+        background: none;
     }
 
     [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus-visible):not([aria-disabled='true']) {
         --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='blueprint'] .kp-menu__item {
-            transition: --kp-bp-hv var(--fx-duration) var(--fx-ease);
+            transition:
+                --kp-bp-hv var(--fx-duration) var(--fx-ease),
+                --kp-bp-sv var(--fx-duration) var(--fx-ease);
         }
     }
 
@@ -2788,6 +2918,9 @@
        three custom properties so a part the package does not name (a demo's) can
        stand on them too. */
     [data-theme='blueprint'] {
+        /* js/effects.js writes a pressed button's width as data-kp-press-size, for
+           the dimension's lettering; it stays armed under reduced motion. */
+        --kp-press: size;
         --kp-bp-axes-img:
             linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong)),
             repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px),

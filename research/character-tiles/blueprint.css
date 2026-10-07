@@ -1,27 +1,29 @@
-/* research/character-tiles, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-tiles, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 3, loading 2, arrival 2, tone 1, hover 1, live 3.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - surface: the tile stands on the graticule's two axes, no fill, no hatch and
+     no closed frame; the title in the lettering;
+   - loading: ONE pen (blueprint.js): the tile's outline first, then every
+     place its words will stand, in reading order; the marching dash is gone;
+   - arrival: the tile is read out on its scales (the register's own
+     `[data-kp-arriving]`), tile after tile, one pen; nothing slides or is
+     uncovered;
+   - tone: pointed out on the reading's scale: a ruler under the tile's words
+     with a pointer in the tone's ink, the flag in front of the title (△ a
+     warning, ▲ a failure); the footer stands on no plate;
+   - hover: the tile is read on a scale (two amber witness lines, a ruler with
+     a pointer at each end), the link keeps the package's link and its
+     two-channel ring (../character-shared/blueprint.css);
+   - live update: read again (the register's `[data-kp-updating='read']`): the
+     timestamp is written at once, a pointer slides on a ruler under it. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-ti-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    /* Shape: every tile is a plate on the graticule (themes/blueprint/CHARACTER.md G7, "surface = the
-       graticule's axes"): no fill, no closed frame, the register's three
-       axes properties. */
     [data-theme='blueprint'] [data-ti-shape] .kp-card {
         background-color: transparent;
         border-color: transparent;
@@ -30,9 +32,113 @@
         background-image: var(--kp-bp-axes-img);
         background-size: var(--kp-bp-axes-size);
         background-position: var(--kp-bp-axes-pos);
+        font-variant-numeric: tabular-nums;
     }
 
-    [data-theme='blueprint'] [data-ti-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    /* Nothing slides in: the arrival is the pen's. */
+    [data-theme='blueprint'] [data-ti-arrival] > .kp-card:not([data-kp-busy], [data-tl-flash], [data-kp-arriving]),
+    [data-theme='blueprint'] [data-ti-arrival] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash], [data-kp-arriving]) {
+        animation: none;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card__title {
+        text-transform: none;
+        letter-spacing: normal;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .tl-head {
+        justify-content: flex-start;
+    }
+
+    /* The mark carries the flag of the tile's tone, and nothing else. */
+    [data-theme='blueprint'] [data-ti-shape] .kp-card [data-tl-mark] {
+        inline-size: auto;
+        block-size: auto;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        order: -1;
+        margin-inline-end: 0.4rem;
+        font-family: var(--theme-font-mono);
+        line-height: 1;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone='warning'] [data-tl-mark]::before {
+        content: '△';
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone='destructive'] [data-tl-mark]::before {
+        content: '▲';
+    }
+
+    /* Pointed out: a ruler under the words with a pointer where the reading is. */
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] {
+        --kp-bp-tone: var(--success-foreground);
+        --kp-bp-at: 0.12;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone='warning'] {
+        --kp-bp-tone: hsl(from var(--warning) h s 62%);
+        --kp-bp-at: 0.7;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone='destructive'] {
+        --kp-bp-tone: var(--destructive);
+        --kp-bp-at: 0.92;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] [data-tl-mark] {
+        background: transparent;
+        color: var(--kp-bp-tone);
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] .kp-card__body {
+        position: relative;
+        padding-block-end: 14px;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] .kp-card__body::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: calc(var(--kp-bp-at) * 100%);
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--kp-bp-tone) 90deg, transparent 0);
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] .kp-card__body::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 6px;
+        inset-inline: 0;
+        block-size: 5px;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px) bottom / 100% 4px no-repeat;
+    }
+
+    /* The footer stands on no plate. */
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-tone] .kp-card__footer {
+        padding-inline: 0;
+        background: transparent;
+        color: inherit;
+    }
+
+    /* One pen: the places are drawn by blueprint.js, not by the skeletons' bars. */
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-busy] .kp-skeleton {
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-busy] .kp-skeleton::before,
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-busy] .kp-skeleton::after,
+    [data-theme='blueprint'] [data-ti-shape] .kp-card[data-kp-busy]::after {
+        display: none;
+    }
+
+    /* The link is the theme's link: the ring is the package's, nothing dashed. */
+    [data-theme='blueprint'] [data-ti-shape] [data-tl-link]:focus-visible {
+        outline-style: solid;
     }
 }

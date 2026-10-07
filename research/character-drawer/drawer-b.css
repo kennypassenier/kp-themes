@@ -1118,39 +1118,6 @@
         }
     }
 
-    /* ══════════════════════════════ blueprint: the drafting panel ═════ */
-
-    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer {
-        --dt-plate: var(--card);
-        --dt-ink: var(--card-foreground);
-        border: 1px solid var(--primary);
-        border-radius: 0;
-        background: var(--dt-plate);
-        background-image:
-            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 1.5rem),
-            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.08) 0 1px, transparent 1px 1.5rem);
-        background-repeat: repeat;
-        color: var(--dt-ink);
-    }
-
-    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
-        border-block-end: 1px solid var(--primary);
-    }
-
-    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
-        border-block-start: 2px solid var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot::before {
-        content: '';
-        position: absolute;
-        inset-block-start: -3px;
-        inset-inline: var(--kp-space-md, 1rem);
-        block-size: 6px;
-        background-image: repeating-linear-gradient(90deg, var(--primary) 0 2px, transparent 2px 6px);
-        background-repeat: repeat;
-    }
-
     [data-theme='blueprint'] [data-dt-shape='2'] .dt-drawer {
         border: 1px solid var(--primary);
         border-radius: 0;
@@ -1233,39 +1200,6 @@
         }
     }
 
-    /* openclose 2: it unrolls from the tube */
-    [data-theme='blueprint'] [data-dt-openclose='2'] .dt-drawer {
-        transform-origin: 100% 50%;
-        scale: 1 1;
-    }
-
-    [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
-        transform-origin: 100% 50%;
-        scale: 0.04 1;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
-            animation: kp-sig-drawer-blueprint-2 300ms ease-out both;
-        }
-
-        [data-theme='blueprint'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
-            animation: kp-sig-drawer-blueprint-2 280ms ease-in both reverse;
-        }
-    }
-
-    @keyframes kp-sig-drawer-blueprint-2 {
-        0% {
-            transform-origin: 100% 50%;
-            scale: 0.04 1;
-        }
-
-        100% {
-            transform-origin: 100% 50%;
-            scale: 1 1;
-        }
-    }
-
     /* openclose 3: it is pinned open, dropped from above with a settle-bounce */
     [data-theme='blueprint'] [data-dt-openclose='3'] .dt-drawer {
         translate: 0 0;
@@ -1295,13 +1229,6 @@
         }
     }
 
-    /* highlight: the dimension ring / the compass circle / the crosshair bracket */
-    [data-theme='blueprint'] [data-dt-highlight='1'] [data-kp-tour-target] {
-        outline: 2px solid var(--primary);
-        outline-offset: 6px;
-        box-shadow: 0 0 0 100vmax hsl(from var(--card) h s l / 0.7);
-    }
-
     [data-theme='blueprint'] [data-dt-highlight='2'] [data-kp-tour-target] {
         outline: 1px solid var(--primary);
         outline-offset: 5px;
@@ -1313,19 +1240,6 @@
         outline: 2px solid var(--primary);
         outline-offset: 4px;
         box-shadow: 0 0 0 100vmax hsl(from var(--card) h s l / 0.75);
-    }
-
-    /* card: the callout tag / the title-block card / the detail bubble */
-    [data-theme='blueprint'] [data-dt-card='1'] .dt-tour {
-        border: 1px solid var(--primary);
-        border-radius: 0;
-        background: var(--card);
-        color: var(--card-foreground);
-    }
-
-    [data-theme='blueprint'] [data-dt-card='1'] .dt-tour .kp-tour__title {
-        border-inline-start: 3px solid var(--primary);
-        padding-inline-start: var(--kp-space-xs, 0.25rem);
     }
 
     [data-theme='blueprint'] [data-dt-card='2'] .dt-tour {
@@ -1362,10 +1276,6 @@
             transform-origin: 0% 0%;
             animation: kp-sig-drawer-next-blueprint-2 360ms ease-in-out;
         }
-
-        [data-theme='blueprint'] [data-dt-next='3'][data-dt-playing='next'] .dt-tour {
-            animation: kp-sig-drawer-next-blueprint-3 320ms ease-in-out;
-        }
     }
 
     @keyframes kp-sig-drawer-next-blueprint-1 {
@@ -1386,17 +1296,6 @@
 
         50% {
             rotate: -6deg;
-        }
-    }
-
-    @keyframes kp-sig-drawer-next-blueprint-3 {
-        0%,
-        100% {
-            translate: 0 0;
-        }
-
-        50% {
-            translate: 0.5rem 0;
         }
     }
 }

@@ -1,38 +1,92 @@
-/* research/character-busy, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-busy, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape r2-bp-shape-3, loading 2, arrival 3, failure 1, phone 1.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - shape: the panel is an overlay sheet over the table (a floating part: the
+     popover's ground in one 1 px steel frame, no shadow, no hatch); the veil is
+     clear, nothing is hatched; its words in the draughtsman's lettering; the
+     spinner is the approved compass;
+   - loading: ONE pen (blueprint.js) over the panel: its outline first, then the
+     places its words and its clock will stand, in reading order; the cell that
+     filled along the foot is gone;
+   - arrival: the panel is read out on its scales (the register's own
+     `[data-kp-arriving]`: the pen's diagonal, witness lines and pointers, each
+     line inked as the pen passes), nothing rises in steps;
+   - failure: the failed alert carries the flag of a failure (a filled triangle
+     in the tone's ink) and a pointer on a ruler at its foot, pointed out on the
+     scale where a failure reads; no dashed cloud, no scaling, and it arrives
+     read out as the panel does. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-bo-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    /* Shape: the busy panel is a plate on the graticule (themes/blueprint/CHARACTER.md G7, "surface = the
-       graticule's axes"): no fill, no closed frame, the register's three
-       axes properties. */
+    [data-theme='blueprint'] [data-bo-shape] .kp-datatable__busy-overlay {
+        --bo-veil: transparent;
+        --bo-arrival: none;
+        background-image: none;
+    }
+
     [data-theme='blueprint'] [data-bo-shape] .kp-datatable__busy-panel {
-        background-color: transparent;
-        border-color: transparent;
-        box-shadow: none;
+        --bo-panel-border: 1px solid var(--border-strong);
+        --bo-panel-radius: 0.125rem;
+        --bo-panel-shadow: none;
+        --bo-panel-bg: var(--popover);
+        --bo-panel-ink: var(--popover-foreground);
+        --bo-font: var(--theme-font-mono);
+        --bo-pic: none;
+
+        background-image: none;
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* One pen: the places are drawn by blueprint.js, not by a cell filling. */
+    [data-theme='blueprint'] [data-bo-shape] .kp-datatable__busy-panel::before {
+        display: none;
+    }
+
+    /* The failed alert: flagged, pointed out, no cloud. */
+    [data-theme='blueprint'] [data-bo-shape] [data-kp-datatable-failed] {
+        --bo-fail-bg: transparent;
+        --bo-fail-ink: var(--card-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-radius: 0;
+        --bo-fail-from: none;
+
+        position: relative;
+        padding-block-end: 1.1rem;
         background-repeat: no-repeat;
         background-image: var(--kp-bp-axes-img);
         background-size: var(--kp-bp-axes-size);
         background-position: var(--kp-bp-axes-pos);
     }
 
-    [data-theme='blueprint'] [data-bo-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    [data-theme='blueprint'] [data-bo-shape] [data-kp-datatable-failed] {
+        padding-inline-start: 2.4rem;
+    }
+
+    [data-theme='blueprint'] [data-bo-shape] [data-kp-datatable-failed]::before {
+        content: '▲';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0.9rem;
+        translate: 0 -50%;
+        color: var(--destructive);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The pointer stands on the foot ruler (the axes), where a failure reads. */
+    [data-theme='blueprint'] [data-bo-shape] [data-kp-datatable-failed]::after {
+        content: '';
+        position: absolute;
+        inset-block-end: -6px;
+        inset-inline: 0;
+        block-size: 6px;
+        pointer-events: none;
+        background: conic-gradient(from 135deg at 50% 0, var(--destructive) 90deg, transparent 0) 92% 0 / 9px 6px no-repeat;
     }
 }

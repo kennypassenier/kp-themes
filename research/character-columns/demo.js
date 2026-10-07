@@ -775,7 +775,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The dimension chain',
-                text: 'A chain of dimension lines with end ticks over the columns, each tile a drawn box, the heads in technical mono capitals.',
+                text: 'A dimension line with end ticks and a slash over every column, chained across the strip; every column stands on the graticule’s two axes, no fill and no frame; the labels in the draughtsman’s lettering.',
             },
             {
                 name: 'The bill of materials',
@@ -793,7 +793,7 @@ const IDEAS = {
             },
             {
                 name: 'The scan',
-                text: 'A scan crosses every column.',
+                text: 'One pen over the whole strip: it traces the strip’s outline, then underlines every place a figure and its words will stand, column after column, the pen up between them; 18 units (2880 ms) a loop.',
             },
             {
                 name: 'The construction line',
@@ -811,7 +811,7 @@ const IDEAS = {
             },
             {
                 name: 'Lettered',
-                text: 'Every figure is lettered in from the left in six steps, all at once.',
+                text: 'Each column is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; column after column, 2 units each.',
             },
         ],
         tone: [
@@ -821,7 +821,7 @@ const IDEAS = {
             },
             {
                 name: 'The tolerance',
-                text: 'The change written as a tolerance: + or − in the mono, on a square tag.',
+                text: 'The tolerance: the change set in the lettering with its sign, + or the minus sign, in the tone’s ink, on no plate.',
             },
             {
                 name: 'The revision triangle',
@@ -839,7 +839,7 @@ const IDEAS = {
             },
             {
                 name: 'Turned over',
-                text: 'A figure that changed turns over once, like a sheet flipped on the table.',
+                text: 'A figure that changed is read again: it is written at once and a pointer on a ruler under it slides from the old reading to the new one on the plotter’s feed, 6 units.',
             },
         ],
     },

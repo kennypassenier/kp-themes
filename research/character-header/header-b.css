@@ -640,31 +640,9 @@
         --ph-btn-shadow: inset 0 -2px 0 0 color-mix(in oklch, var(--border-strong) 60%, transparent);
     }
 
-    [data-theme='blueprint'] [data-ph-shape='3'] .kp-page-header {
-        --ph-pat: repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 20%, transparent) 0 1px, transparent 1px 9px);
-        --ph-frame: 1px dashed var(--border-strong);
-        --ph-radius: 0.125rem;
-    }
-    [data-theme='blueprint'] [data-ph-shape='3'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-mono);
-    }
-    [data-theme='blueprint'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
-        --ph-btn-frame: 2px solid var(--border-strong);
-        --ph-btn-radius: 0.125rem;
-        --ph-btn-bg: transparent;
-    }
-
     /* --- The overflow menu's open and its mirrored close ---------------- */
 
     @media (prefers-reduced-motion: no-preference) {
-        @keyframes ph-blueprint-menu-1 {
-            from {
-                clip-path: inset(0 0 100% 0);
-            }
-            to {
-                clip-path: inset(0 0 0% 0);
-            }
-        }
         @keyframes ph-blueprint-menu-2 {
             from {
                 clip-path: inset(0 0 100% 0);
@@ -683,13 +661,6 @@
                 clip-path: inset(0 0 0% 0);
                 transform: scaleY(1);
             }
-        }
-
-        [data-theme='blueprint'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
-            animation: ph-blueprint-menu-1 360ms linear;
-        }
-        [data-theme='blueprint'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
-            animation: ph-blueprint-menu-1 360ms linear reverse;
         }
         [data-theme='blueprint'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
             animation: ph-blueprint-menu-2 400ms steps(8, end);
@@ -727,19 +698,6 @@
         outline-offset: 1px;
     }
     [data-theme='blueprint'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        box-shadow: inset 0 0 0 2px var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        box-shadow: inset 0 0 0 1px var(--border-strong);
-        transform: translateY(-1px);
-    }
-    [data-theme='blueprint'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 1px dashed var(--ring);
-        outline-offset: 3px;
-    }
-    [data-theme='blueprint'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        transform: translateY(0);
         box-shadow: inset 0 0 0 2px var(--border-strong);
     }
 }

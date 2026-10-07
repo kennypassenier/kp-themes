@@ -652,14 +652,6 @@
         animation: bo-blueprint-pen var(--kp-busy-loading-dur, 1.6s) steps(6, end) infinite;
     }
 
-    [data-theme='blueprint'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
-        --bo-pic: linear-gradient(var(--primary), var(--primary));
-        --bo-pic-inset: auto auto 0 0;
-        inline-size: 20%;
-        block-size: 3px;
-        animation: bo-blueprint-cell var(--kp-busy-loading-dur, 1.8s) steps(5, end) infinite;
-    }
-
     [data-theme='blueprint'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
         --bo-pic: repeating-linear-gradient(45deg, var(--border-strong) 0 3px, transparent 3px 9px);
         --bo-pic-inset: 0 0 auto 0;
@@ -675,20 +667,6 @@
         --bo-arrival: bo-blueprint-draft;
         --bo-arrival-dur: 0.45s;
         --bo-arrival-ease: steps(5, end);
-    }
-
-    [data-theme='blueprint'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
-        --bo-arrival: bo-blueprint-plot;
-        --bo-arrival-dur: 0.4s;
-        --bo-arrival-ease: steps(4, end);
-    }
-
-    [data-theme='blueprint'] [data-bo-failure='1'] [data-kp-datatable-failed] {
-        --bo-fail-bg: var(--card);
-        --bo-fail-ink: var(--card-foreground);
-        --bo-fail-border: 2px dashed var(--destructive);
-        --bo-fail-shadow: none;
-        --bo-fail-from: scale(0.95);
     }
 
     [data-theme='blueprint'] [data-bo-failure='2'] [data-kp-datatable-failed] {
@@ -924,15 +902,6 @@
             }
         }
 
-        @keyframes bo-blueprint-cell {
-            from {
-                inset-inline-start: 0%;
-            }
-            to {
-                inset-inline-start: 80%;
-            }
-        }
-
         @keyframes bo-blueprint-hatch {
             to {
                 background-position: 12px 0;
@@ -945,15 +914,6 @@
             }
             to {
                 clip-path: inset(0 0 0 0);
-            }
-        }
-
-        @keyframes bo-blueprint-plot {
-            from {
-                transform: translateY(0.8rem);
-            }
-            to {
-                transform: translateY(0);
             }
         }
     }

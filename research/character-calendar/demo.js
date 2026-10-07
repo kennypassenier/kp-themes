@@ -801,7 +801,7 @@ const IDEAS = {
             },
             {
                 name: 'The title block',
-                text: 'Every day a small title block: the figure in its own boxed field at the top left, the count in a strip along the foot, a revision triangle △ on a night with some missing, ▲ on one with none.',
+                text: 'The calendar stands on the graticule’s two axes; each day is a part on the sheet with a hairline, its figure in a boxed field and its count under a drawn rule, the title and heads in the draughtsman’s lettering; no fills.',
             },
             {
                 name: 'The stencil grid',
@@ -815,7 +815,7 @@ const IDEAS = {
             },
             {
                 name: 'The title block: its loading',
-                text: "Loading marches a dash around every block's frame.",
+                text: 'One pen over the whole month: it traces the grid’s outline, then underlines the place of every day’s reading in reading order, the pen up between them; 18 units (2880 ms) a loop.',
             },
             {
                 name: 'The compass',
@@ -825,7 +825,7 @@ const IDEAS = {
         arrival: [
             {
                 name: 'Plotted',
-                text: 'The plotter draws each box in reading order, left to right.',
+                text: 'The month is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; 3 units.',
             },
             {
                 name: 'Projected',
@@ -843,7 +843,7 @@ const IDEAS = {
             },
             {
                 name: 'The title block: its tones and today',
-                text: 'Every day a small title block: the figure in its own boxed field at the top left, the count in a strip along the foot, a revision triangle △ on a night with some missing, ▲ on one with none. Today is framed in the double border; the picked day in a heavy line.',
+                text: 'Pointed out on the reading’s scale: every day has a short ruler along its foot and a pointer in the tone’s ink where its reading stands; the flag before a warning (△), a failure (▲) and no data (?); no day is filled; today’s figure is boxed in amber.',
             },
             {
                 name: 'The revision cloud',
@@ -853,7 +853,7 @@ const IDEAS = {
         select: [
             {
                 name: 'The drafting schedule: its pick',
-                text: 'Today is marked by amber dimension ticks at its corners; the picked day by an amber chain line. New: a dashed ring on hover, the picked count boxed.',
+                text: 'The picked day and the day under the pointer are read on a scale: two amber witness lines at its ends and a ruler with a pointer at each end; the picked figure is boxed in cyan.',
             },
             {
                 name: 'The title block: its pick',

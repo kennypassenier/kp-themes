@@ -315,6 +315,17 @@ export const PRESS_KNOB = '--kp-press';
 
 /** The properties `PRESS_KNOB` drives: the press point inside the button's box. */
 export const PRESS = Object.freeze({ x: '--kp-press-x', y: '--kp-press-y' });
+
+/**
+ * The second thing a theme can ask a press for: `--kp-press: size`. The
+ * button's measured width, in whole pixels, is written to the element a press
+ * started on as this attribute, for a theme that letters the size of what is
+ * held (blueprint's dimension below the part prints it with
+ * `content: attr(data-kp-press-size)`). CSS cannot print a measured length.
+ * Written on a pointer press and on Space or Enter; left on the element after
+ * the press so a dimension that fades out keeps its numerals.
+ */
+export const PRESS_SIZE = 'data-kp-press-size';
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -1123,7 +1134,7 @@ export function attachEffects(root = document, options = {}) {
     let pressArmed = false;
     const armThemeBuses = () => {
         const wantPointer = !pointerArmed && asked(POINTER_KNOB) === 'track';
-        const wantPress = !pressArmed && asked(PRESS_KNOB) === 'point';
+        const wantPress = !pressArmed && ['point', 'size'].includes(asked(PRESS_KNOB));
         if (!wantPointer && !wantPress) return;
         pointerArmed ||= wantPointer;
         pressArmed ||= wantPress;

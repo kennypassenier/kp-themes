@@ -1274,17 +1274,6 @@
         background: var(--border-strong);
     }
 
-    /* the section view: a hatched plate at forty-five degrees, a dashed frame */
-    [data-theme='blueprint'] [data-ti-shape='3'] .kp-card {
-        border: 1px dashed var(--border-strong);
-        background-image: repeating-linear-gradient(45deg, color-mix(in oklch, var(--border-strong) 10%, transparent) 0 1px, transparent 1px 8px);
-    }
-    [data-theme='blueprint'] [data-ti-shape='3'] [data-tl-mark] {
-        border-radius: 50%;
-        background: transparent;
-        border: 2px dashed var(--border-strong);
-    }
-
     /* ── 2 · While loading ───────────────────────────────────────────── */
 
     /* the recorder's pen sweeps */
@@ -1307,27 +1296,6 @@
         }
         50% {
             inset-inline-start: 80%;
-        }
-    }
-
-    /* a dash marches along the baseline */
-    [data-theme='blueprint'] [data-ti-loading='2'] [data-kp-busy]::after {
-        inset-inline: 0.75rem;
-        inset-block-end: 0.6rem;
-        block-size: 1px;
-        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-ti-loading='2'] [data-kp-busy]::after {
-            animation: tl-blue-dash 1s steps(4) infinite;
-        }
-    }
-    @keyframes tl-blue-dash {
-        from {
-            background-position: 0 0;
-        }
-        to {
-            background-position: 16px 0;
         }
     }
 
@@ -1358,24 +1326,12 @@
     /* ── 3 · How the tiles arrive ────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        /* drafted: the body is drawn in from the left, at an even pace */
-        [data-theme='blueprint'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
-            animation: tl-blue-draft 0.5s linear both;
-        }
         /* plotted: tile after tile is drawn in from the left, in hard steps */
         [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-blue-plot 0.45s steps(6) both;
         }
         [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
-        }
-    }
-    @keyframes tl-blue-draft {
-        from {
-            clip-path: inset(0 100% 0 0);
-        }
-        to {
-            clip-path: inset(0 0 0 0);
         }
     }
     @keyframes tl-blue-plot {
@@ -1385,23 +1341,6 @@
         to {
             clip-path: inset(0 0 0 0);
         }
-    }
-
-    /* ── 4 · Tone of a tile ──────────────────────────────────────────── */
-
-    /* the status plate */
-    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__footer {
-        background: var(--warning);
-        color: var(--warning-foreground);
-        padding-inline: 0.3rem;
-    }
-    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__footer {
-        background: var(--success);
-        color: var(--success-foreground);
-    }
-    [data-theme='blueprint'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__footer {
-        background: var(--destructive);
-        color: var(--destructive-foreground);
     }
 
     /* the ruled box */
@@ -1425,25 +1364,6 @@
     }
     [data-theme='blueprint'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
         border-color: color-mix(in oklch, var(--destructive) 75%, var(--card-foreground) 25%);
-    }
-
-    /* ── 5 · Hover and focus, the tile's link ───────────────────────── */
-
-    /* the pen hovers: the grid lines brighten faintly */
-    [data-theme='blueprint'] [data-ti-hover='1'] .kp-card:hover,
-    [data-theme='blueprint'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
-        background-image:
-            linear-gradient(color-mix(in oklch, var(--border-strong) 22%, transparent) 1px, transparent 1px),
-            linear-gradient(90deg, color-mix(in oklch, var(--border-strong) 22%, transparent) 1px, transparent 1px);
-        background-size: 8px 8px;
-    }
-    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:hover,
-    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-    }
-    [data-theme='blueprint'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        outline: 2px dashed var(--border-strong);
-        outline-offset: 3px;
     }
 
     /* the cell highlights: the title-block cell fills faintly */
@@ -1489,10 +1409,6 @@
         [data-theme='blueprint'] [data-ti-live='2'] [data-tl-flash] [data-tl-time] {
             animation: tl-blue-tick 0.4s steps(3);
         }
-        /* retraced in ink: the tile is traced again from its edge, at an even pace */
-        [data-theme='blueprint'] [data-ti-live='3'] [data-tl-flash] {
-            animation: tl-blue-retrace 0.5s linear;
-        }
     }
     @keyframes tl-blue-tick {
         from {
@@ -1500,15 +1416,6 @@
         }
         to {
             transform: translateX(0);
-        }
-    }
-    @keyframes tl-blue-retrace {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 var(--border-strong);
-        }
-        50% {
-            box-shadow: 0 0 0 2px var(--border-strong);
         }
     }
 }

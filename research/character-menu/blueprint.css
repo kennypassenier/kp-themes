@@ -1,25 +1,71 @@
-/* research/character-menu, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-menu, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 1, loading 1, open 1, tone 3, interact 2.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - shape: the menu is an overlay sheet (the register's: one steel frame, no
+     shadow); the millimetre grid behind its groups is gone; headings in the
+     draughtsman's lettering over a rule between groups;
+   - loading: ONE pen (blueprint.js) over the menu: its outline first, then the
+     place of every entry's words, in reading order; the sweeping dashes are
+     gone;
+   - open: the menu is drawn: the pen traces its outline from its corner, then
+     the panel is inked (the register's own, on the package's menu); closing is
+     that played backwards, here on the demo's own leave (`data-mb-leaving`);
+   - tone: the destructive entry is pointed out with the flag of a failure, a
+     filled triangle in the tone's ink before its label; nothing is hatched;
+   - interact: an entry under the pointer or the keyboard is read on a scale
+     (the register's two amber witness lines); no tint lights, nothing dims. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-mb-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    [data-theme='blueprint'] [data-mb-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu {
+        background-image: none;
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-style: oblique 15deg;
+    }
+
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group {
+        border-block-start: 1px solid var(--border-strong);
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Closing is the opening played backwards (the register does this for [data-kp-leaving]). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-mb-open] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
+        }
+    }
+
+    /* Pointed out: the destructive entry carries the flag of a failure. */
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label::before {
+        content: '▲ ';
+        color: var(--destructive);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+    }
+
+    /* Read on a scale: the lines only; the entry is not tinted, and a forced focus is read the same. */
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu .kp-menu__item:hover {
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu .kp-menu__item[data-mb-force-focus] {
+        --kp-bp-hv: 1;
+    }
+
+    /* One pen: the places are drawn by blueprint.js, not by sweeping dashes. */
+    [data-theme='blueprint'] [data-mb-shape] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: none;
     }
 }

@@ -64,16 +64,6 @@
         box-shadow: inset 0 0 0 1px hsl(from var(--ccl-j) h s l / 0.5);
     }
 
-    /* r4-bp-ld-5: the millimetre grid is ruled across the whole sheet */
-    [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-5'] .kp-chart__state[data-kp-state='loading']::before {
-        background:
-            repeating-linear-gradient(90deg, hsl(from var(--ccl-i) h s l / 0.6) 0 2px, transparent 2px 100%),
-            repeating-linear-gradient(0deg, hsl(from var(--ccl-i) h s l / 0.4) 0 2px, transparent 2px 100%);
-        background-size:
-            70px 70px,
-            70px 70px;
-    }
-
     /* r4-bp-ld-6: a stamp marks off the revision table, cell by cell */
     [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-6'] .kp-chart__state[data-kp-state='loading']::before {
         background:
@@ -112,10 +102,6 @@
 
         [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-4'] .kp-chart__state[data-kp-state='loading']::before {
             animation: r4bp4-spin 3.2s linear infinite;
-        }
-
-        [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-5'] .kp-chart__state[data-kp-state='loading']::before {
-            animation: r4bp5-size 3s ease-in-out infinite alternate;
         }
 
         [data-theme='blueprint'] [data-cc-loading='r4-bp-ld-6'] .kp-chart__state[data-kp-state='loading']::after {
@@ -180,20 +166,6 @@
 @keyframes r4bp4-spin {
     to {
         --ccl-a: 360deg;
-    }
-}
-
-@keyframes r4bp5-size {
-    from {
-        background-size:
-            70px 70px,
-            70px 70px;
-    }
-
-    to {
-        background-size:
-            14px 14px,
-            14px 14px;
     }
 }
 

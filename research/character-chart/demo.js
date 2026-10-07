@@ -143,7 +143,7 @@ const IDEAS = {
     blueprint: {
         a: {
             name: 'The millimetre paper',
-            text: "Drafting film over millimetre paper: a fine line every millimetre and a heavier one every centimetre, the tick labels in the drafting mono. The pen draws the lines crisp, the areas are section-hatched, the crosshair is an amber chain line. The tooltip is the drawing's title block; the legend ruled cells. Loading runs a plotter dash across the sheet.",
+            text: "Drafting film over millimetre paper: a fine line every millimetre and a heavier one every centimetre, the tick labels in the drafting mono, the chart on the graticule's two axes. The pen draws the lines crisp, the areas are section-hatched, the crosshair is an amber chain line. The tooltip is an overlay sheet in one frame, no shadow; the legend ruled cells. Loading is one pen over the chart.",
         },
         b: {
             name: 'The drawing frame',
@@ -883,28 +883,35 @@ const OPTIONS = Object.fromEntries(
             loading: r2.loading.map(([key, name, ink, ink2, say]) => ({ key, name, text: KIND.loading[key], ink, ink2, say })),
             arrival: [...(pick ? [['none', 'As approved: at once']] : []), ...r2.arrival].map(([key, name]) => ({
                 key,
-                name,
-                text: KIND.arrival[key],
+                name: theme === 'blueprint' && key === 'linear' ? 'Read out on its scales' : name,
+                text:
+                    theme === 'blueprint' && key === 'linear'
+                        ? 'The chart is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; the series is simply there, 3 units.'
+                        : KIND.arrival[key],
             })),
             update: [...(pick ? [['none', 'As approved: it appears']] : []), ...r2.update].map(([key, name]) => ({
                 key,
                 // Forest's decided "it appears" is its growth ring (research/character-chart/forest.js).
                 name:
-                    theme === 'forest' && key === 'none'
-                        ? 'A growth ring on the newest point'
-                        : theme === 'grotesk' && key === 'none'
-                          ? 'Re-registered'
-                          : theme === 'cyberpunk' && key === 'none'
-                            ? 'The lines stutter home'
-                            : name,
+                    theme === 'blueprint' && key === 'none'
+                        ? 'Read again'
+                        : theme === 'forest' && key === 'none'
+                          ? 'A growth ring on the newest point'
+                          : theme === 'grotesk' && key === 'none'
+                            ? 'Re-registered'
+                            : theme === 'cyberpunk' && key === 'none'
+                              ? 'The lines stutter home'
+                              : name,
                 text:
-                    theme === 'forest' && key === 'none'
-                        ? 'The new reading is drawn at once; a thin ring is drawn once round its newest point, clockwise from the top, then fades.'
-                        : theme === 'grotesk' && key === 'none'
-                          ? 'The new reading is drawn at once and the plot’s red plate falls back into register on it, clockwise, in 8 units.'
-                          : theme === 'cyberpunk' && key === 'none'
-                            ? 'The new reading is drawn at once; the lines come home from a yellow copy and a cyan copy of their own shape, 6, 4, 2, 1 px, four ticks of 120 ms, and never move themselves.'
-                            : KIND.update[key],
+                    theme === 'blueprint' && key === 'none'
+                        ? 'The new reading is drawn at once and an amber pointer on the plot’s own scale, with its witness line, slides from the old reading to the new one on the plotter’s feed, 6 units.'
+                        : theme === 'forest' && key === 'none'
+                          ? 'The new reading is drawn at once; a thin ring is drawn once round its newest point, clockwise from the top, then fades.'
+                          : theme === 'grotesk' && key === 'none'
+                            ? 'The new reading is drawn at once and the plot’s red plate falls back into register on it, clockwise, in 8 units.'
+                            : theme === 'cyberpunk' && key === 'none'
+                              ? 'The new reading is drawn at once; the lines come home from a yellow copy and a cyan copy of their own shape, 6, 4, 2, 1 px, four ticks of 120 ms, and never move themselves.'
+                              : KIND.update[key],
             })),
             events: [...(r2.events.length < 3 ? [['shape', 'As the shape draws them']] : []), ...r2.events].map(([key, name]) => ({
                 key,
@@ -928,7 +935,8 @@ const OPTIONS = Object.fromEntries(
             for (const opt of o.update) {
                 if (opt.key === 'none') {
                     opt.name = 'Slammed onto its yellow offset';
-                    opt.text = 'The new reading is drawn at once and slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.';
+                    opt.text =
+                        'The new reading is drawn at once and slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.';
                 }
             }
         }

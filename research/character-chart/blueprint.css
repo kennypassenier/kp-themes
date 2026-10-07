@@ -1,28 +1,31 @@
-/* research/character-chart, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-chart, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape a (the millimetre paper), loading r4-bp-ld-5, arrival linear,
+   update none, events r3-bp-ev-weld, tip a.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - surface: the chart stands on the graticule's two axes; its plot keeps the
+     millimetre paper (the ground under data) with no frame round it;
+   - loading: ONE pen (blueprint.js) over the chart: its outline first, then the
+     places the plot and the legend will stand, in reading order; the ruled grid
+     and the skeletons' own pens are gone;
+   - arrival: the chart is read out on its scales (the register's own
+     `[data-kp-arriving]`: the pen's diagonal, witness lines and pointers, each
+     line inked as the pen passes); the series is simply there, not uncovered;
+   - live update: read again: the new reading is drawn at once and an amber
+     pointer on the plot's own scale slides from the old reading to the new one;
+   - hover: the crosshair is the witness line (amber, a chain line); the tooltip
+     is an overlay sheet in one frame, no shadow;
+   - voice: ticks and legend in the draughtsman's lettering. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-cc-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    /* Shape: the chart is a plate on the graticule, its plot on millimetre paper (themes/blueprint/CHARACTER.md G7, "surface = the
-       graticule's axes"): no fill, no closed frame, the register's three
-       axes properties. */
     [data-theme='blueprint'] [data-cc-shape] .kp-chart {
+        --cc-frame: 1px solid transparent;
+
         background-color: transparent;
         border-color: transparent;
         box-shadow: none;
@@ -32,7 +35,44 @@
         background-position: var(--kp-bp-axes-pos);
     }
 
-    [data-theme='blueprint'] [data-cc-shape] :is(.kp-meter, .kp-kpi__meter)::before {
+    /* The series is simply there: the old uncovering of the line is off. */
+    [data-theme='blueprint'] [data-cc-arrival][data-cc-arriving] .kp-chart__plot,
+    [data-theme='blueprint'] [data-cc-update][data-cc-updating] .kp-chart__plot {
+        animation: none;
+    }
+
+    [data-theme='blueprint'] [data-cc-arrival][data-cc-arriving] :is(.kp-chart__series, .kp-chart__point),
+    [data-theme='blueprint'] [data-cc-update][data-cc-updating] .kp-chart__series {
         clip-path: none;
+        transform: none;
+    }
+
+    /* The tooltip is an overlay sheet: one frame, no shadow. */
+    [data-theme='blueprint'] [data-cc-tip] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-cc-tip] .kp-chart__tip-head {
+        border-block-end-color: var(--border-strong);
+        font-style: oblique 15deg;
+    }
+
+    [data-theme='blueprint'] [data-cc-shape] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-color: var(--border-strong);
+    }
+
+    /* One pen: the places are drawn by blueprint.js, not by the skeletons' pens. */
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart__plot[aria-busy='true'] .kp-skeleton--block,
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart:has(> .kp-chart__plot[aria-busy='true']) .kp-skeleton--block {
+        animation: none;
+        --kp-bp-r: 0;
+    }
+
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart:has(> .kp-chart__plot[aria-busy='true']) .kp-skeleton--block::before,
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart:has(> .kp-chart__plot[aria-busy='true']) .kp-skeleton--block::after,
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart__state[data-kp-state='loading']::before,
+    [data-theme='blueprint'] [data-cc-shape] .kp-chart__state[data-kp-state='loading']::after {
+        display: none;
     }
 }

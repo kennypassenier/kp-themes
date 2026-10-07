@@ -1659,13 +1659,6 @@
         --cl-load-anim: cl-march 800ms linear infinite;
     }
 
-    /* The scan. */
-    [data-theme='blueprint'] [data-cs-loading='2'] .kp-kpis {
-        --cl-load: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 14%, transparent), transparent) -50% 0 / 30% 100%
-            no-repeat;
-        --cl-load-anim: cl-slide 1500ms linear infinite;
-    }
-
     /* The construction line. */
     [data-theme='blueprint'] [data-cs-loading='3'] .kp-kpis {
         --cl-load: linear-gradient(var(--cl-rule), var(--cl-rule)) 0 -100% / 100% 1px no-repeat;
@@ -2077,13 +2070,6 @@
         --cl-arrive-num: none;
         --cl-arrive-tile: cl-a-unfold 450ms ease-out;
         --cl-arrive-stagger: 60ms;
-    }
-
-    /* Lettered. */
-    [data-theme='blueprint'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 480ms steps(6);
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 0ms;
     }
 
     /* ── solstice ── */
@@ -2870,12 +2856,6 @@
     /* Underlined. */
     [data-theme='blueprint'] [data-cs-live='2'] .kp-kpis {
         --cl-live-num: cl-l-under 900ms linear;
-        --cl-live-tile: none;
-    }
-
-    /* Turned over. */
-    [data-theme='blueprint'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-l-flip 500ms ease-in-out;
         --cl-live-tile: none;
     }
 

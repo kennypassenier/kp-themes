@@ -708,11 +708,6 @@
         --kf-radius: 0.125rem;
     }
 
-    [data-theme='blueprint'] [data-kf-shape='3'] .kp-kpi {
-        --kf-pat: repeating-linear-gradient(45deg, color-mix(in oklab, var(--border-strong) 16%, transparent) 0 1px, transparent 1px 9px);
-        --kf-frame: 1px dashed var(--border-strong);
-    }
-
     [data-theme='blueprint'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
         content: '';
         position: absolute;
@@ -734,18 +729,6 @@
         block-size: 2px;
         background: repeating-linear-gradient(90deg, var(--primary) 0 3px, transparent 3px 9px);
         background-size: 200% 100%;
-    }
-
-    [data-theme='blueprint'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        inset-inline: var(--kp-space-md, 1rem);
-        inset-block-end: var(--kp-space-sm, 0.5rem);
-        block-size: 2px;
-        background: var(--primary);
-        transform-origin: left center;
-        transform: scaleX(0);
     }
 
     [data-theme='blueprint'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
@@ -781,33 +764,6 @@
         --kf-tone-radius: 0;
     }
 
-    [data-theme='blueprint'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
-        --kf-delta-bg: transparent;
-        --kf-delta-ink: var(--kf-ink);
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-    }
-
-    [data-theme='blueprint'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
-        border: 2px solid var(--warning);
-    }
-
-    [data-theme='blueprint'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
-        --kf-tone-bg: var(--warning);
-        --kf-tone-ink: var(--warning-foreground);
-        --kf-tone-radius: 0;
-    }
-
-    [data-theme='blueprint'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
-        border: 2px solid var(--destructive);
-    }
-
-    [data-theme='blueprint'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
-        --kf-tone-bg: var(--destructive);
-        --kf-tone-ink: var(--destructive-foreground);
-        --kf-tone-radius: 0;
-    }
-
     [data-theme='blueprint'] [data-kf-interactive='1'] a.kp-kpi:hover,
     [data-theme='blueprint'] [data-kf-interactive='1'] .kp-kpi--toggle:hover {
         --kf-hover-plate: color-mix(in oklab, var(--primary) 7%, var(--card));
@@ -837,22 +793,6 @@
     [data-theme='blueprint'] [data-kf-interactive='2'] a.kp-kpi:active,
     [data-theme='blueprint'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
         border: 3px solid var(--border-strong);
-    }
-
-    [data-theme='blueprint'] [data-kf-interactive='3'] a.kp-kpi:hover,
-    [data-theme='blueprint'] [data-kf-interactive='3'] .kp-kpi--toggle:hover {
-        --kf-over: repeating-linear-gradient(45deg, color-mix(in oklab, var(--primary) 14%, transparent) 0 1px, transparent 1px 7px);
-    }
-
-    [data-theme='blueprint'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
-    [data-theme='blueprint'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
-        outline: 1px solid var(--primary);
-        outline-offset: 3px;
-    }
-
-    [data-theme='blueprint'] [data-kf-interactive='3'] a.kp-kpi:active,
-    [data-theme='blueprint'] [data-kf-interactive='3'] .kp-kpi--toggle:active {
-        transform: scale(0.99);
     }
 
     /* ── Motion: every animation lives here, nothing fades (no opacity
@@ -1199,22 +1139,6 @@
             }
         }
 
-        [data-theme='blueprint'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
-            animation: kf-bp-dimension calc(1.5s / var(--kf-speed, 1)) linear infinite;
-        }
-
-        @keyframes kf-bp-dimension {
-            0% {
-                transform: scaleX(0);
-            }
-            85% {
-                transform: scaleX(1);
-            }
-            100% {
-                transform: scaleX(0);
-            }
-        }
-
         [data-theme='blueprint'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
             animation: kf-bp-steps calc(0.4s / var(--kf-speed, 1)) steps(3, jump-none);
         }
@@ -1225,19 +1149,6 @@
             }
             100% {
                 transform: translateX(0);
-            }
-        }
-
-        [data-theme='blueprint'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
-            animation: kf-bp-retrace calc(0.5s / var(--kf-speed, 1)) linear;
-        }
-
-        @keyframes kf-bp-retrace {
-            0% {
-                transform: translateY(10%);
-            }
-            100% {
-                transform: translateY(0);
             }
         }
     }

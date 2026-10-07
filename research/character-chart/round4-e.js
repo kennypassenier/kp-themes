@@ -40,7 +40,7 @@ export default {
             {
                 key: 'r4-bp-ld-5',
                 name: 'The grid being ruled',
-                text: 'A millimetre grid is ruled across the entire sheet: the rulings multiply from a few sparse lines to a fine grid, then thin out and are ruled in again.',
+                text: 'One pen over the whole chart: it traces the chart’s outline, then underlines the places its plot and its legend will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
                 ink: '--primary',
             },
             {

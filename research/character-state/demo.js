@@ -228,16 +228,25 @@ const IDEAS = {
     blueprint: {
         shape: [
             { name: 'The pin mark', text: 'A small drafting-pin dot sits before the word, the word in technical mono on no plate.' },
-            { name: 'The title block', text: 'A cell parted by drawn rules holds the word, the dot a dimension tick at its left.' },
+            {
+                name: 'The title block',
+                text: 'The word in lettered capitals stands on the graticule’s two axes, a ruler along its start edge and its foot, no frame and no dot.',
+            },
             { name: 'The grid chip', text: 'The dot sits on a millimetre-grid tile, the word in mono capitals beside it.' },
         ],
         tone: [
             { name: 'The pin colour', text: 'Only the pin dot takes the state’s colour; the word stays white ink.' },
-            { name: 'The ruled colour', text: 'The title block’s rules take the state’s colour, the word kept in white ink.' },
+            {
+                name: 'Pointed out',
+                text: 'A pointer in the state’s own ink stands on the foot ruler where the state reads, Running near the start, Failed near the end; the word stays white ink.',
+            },
             { name: 'The hatch warning', text: 'A warning or failed state fills the grid chip with a hatch of its colour.' },
         ],
         change: [
-            { name: 'A tick redraws', text: 'The dimension tick redraws once, slowing as it lands.' },
+            {
+                name: 'Read again',
+                text: 'The word is written at once; the pointer waits a moment, then slides along the ruler to the new reading on the plotter’s feed.',
+            },
             { name: 'Ruled again', text: 'The title block’s rules redraw left to right under the new word.' },
             { name: 'Plotted', text: 'The grid chip is replotted in hard steps, line by line.' },
         ],

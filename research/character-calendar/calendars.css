@@ -1820,10 +1820,6 @@
         --cl-busy-bg: var(--background);
         --cl-busy-shadow: 0 0 0 1px var(--foreground), 0 0 0 4px var(--background), 0 0 0 5px hsl(from var(--foreground) h s l / 0.5);
     }
-    [data-theme='blueprint'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 2px dashed var(--accent);
-        --cl-pick-offset: 3px;
-    }
     /* The sheet's millimetre lines under the schedule. */
     [data-theme='blueprint'] [data-cl-shape='1'] .kp-calendar::before {
         content: '';
@@ -1896,14 +1892,6 @@
         --cl-before-edge: hsl(from var(--foreground) h s l / 0.3);
         --cl-today: 0 0 transparent;
     }
-    [data-theme='blueprint'] [data-cl-loading='2'] .kp-calendar {
-        --cl-loading-bg: var(--background);
-        --cl-loading-edge: hsl(from var(--foreground) h s l / 0.35);
-        --cl-busy-r: 0;
-        --cl-busy-bg: var(--background);
-        --cl-busy-frame: 3px double var(--foreground);
-        --cl-busy-shadow: none;
-    }
     [data-theme='blueprint'] [data-cl-select='2'] .kp-calendar {
         --cl-pick: 3px solid var(--primary);
         --cl-pick-offset: 1px;
@@ -1920,21 +1908,6 @@
         border-block-start: 1px solid hsl(from currentColor h s l / 0.45);
         text-align: end;
     }
-    [data-theme='blueprint']
-        [data-cl-loading='2']
-        .kp-calendar__day:is(
-            [data-kp-tone='future'],
-            [data-kp-tone='before'],
-            [data-kp-tone='muted'],
-            [data-kp-tone='none'],
-            [data-kp-tone='loading']
-        )
-        .kp-calendar__count {
-        border-color: transparent;
-    }
-    [data-theme='blueprint'] [data-cl-tone='2'] .kp-calendar__day[data-kp-today] {
-        border: 3px double var(--foreground);
-    }
     [data-theme='blueprint'] [data-cl-shape='2'] .kp-calendar__title,
     [data-theme='blueprint'] [data-cl-shape='2'] .kp-calendar__grid th {
         font-family: var(--theme-font-mono);
@@ -1944,17 +1917,6 @@
     }
     [data-theme='blueprint'] [data-cl-shape='2'] .kp-calendar__pad {
         font-family: var(--theme-font-mono);
-    }
-    /* Loading: a dash marching around the block's frame. */
-    [data-theme='blueprint'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        inset: 2px;
-        border-radius: 0;
-        background:
-            linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 0 / 8px 1px repeat-x,
-            linear-gradient(90deg, var(--primary) 50%, transparent 0) 0 100% / 8px 1px repeat-x,
-            linear-gradient(0deg, var(--primary) 50%, transparent 0) 0 0 / 1px 8px repeat-y,
-            linear-gradient(0deg, var(--primary) 50%, transparent 0) 100% 0 / 1px 8px repeat-y;
     }
     /* ══ solstice ═══════════════════════════════════════════════════════ */
     /* ── solstice · 1 · the low sun ───────────────────────────────────── */
@@ -3512,18 +3474,6 @@
 
             to {
                 background-position-x: 145%, 0;
-            }
-        }
-        [data-theme='blueprint'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl-bp-march 700ms linear infinite;
-        }
-        @keyframes cl-bp-march {
-            to {
-                background-position:
-                    8px 0,
-                    -8px 100%,
-                    0 -8px,
-                    100% 8px;
             }
         }
         [data-theme='solstice'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
@@ -5548,15 +5498,6 @@
         --cl-pick: 2px dashed var(--primary);
         --cl-pick-offset: 3px;
     }
-    [data-theme='blueprint'] [data-cl-select='1'] .kp-calendar__day:hover {
-        outline: 2px dashed var(--ring);
-        outline-offset: -5px;
-    }
-    [data-theme='blueprint'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        outline: 1px solid currentColor;
-        outline-offset: 0;
-        padding-inline: 0.2em;
-    }
     [data-theme='blueprint'] [data-cl-select='2'] .kp-calendar__day:hover .kp-calendar__num {
         text-decoration: underline 2px;
         text-underline-offset: 2px;
@@ -6480,10 +6421,6 @@
         [data-theme='sepia'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 14ms;
             animation: cla-wipe-right 260ms ease-out calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
-        }
-        [data-theme='blueprint'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 14ms;
-            animation: cla-wipe-right 220ms linear calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
         }
         [data-theme='blueprint'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 20ms;

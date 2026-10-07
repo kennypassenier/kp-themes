@@ -389,32 +389,50 @@ const IDEAS = {
         shape: [
             { name: 'The chart recorder', text: 'A millimetre grid, the title in technical mono capitals, the mark a white-ink dot.' },
             { name: 'The title block', text: 'The tile parted into cells by drawn rules, the mark a dimension tick.' },
-            { name: 'The section view', text: 'A hatched plate at forty-five degrees, a dashed frame, the mark a chain-line dot.' },
+            {
+                name: 'The section view',
+                text: 'The tile stands on the graticule’s two axes, a ruler along its start edge and its foot, no fill, no hatch and no closed frame; the title upright in the sans.',
+            },
         ],
         loading: [
             { name: 'The chart recorder', text: 'The recorder’s pen sweeps.' },
-            { name: 'The title block', text: 'A dash marches along the baseline.' },
+            {
+                name: 'The title block',
+                text: 'One pen over the whole tile: it traces the tile’s outline, then underlines every place its words will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
+            },
             { name: 'The dimension line', text: 'A dimension line with its ticks is drawn across the plate, again and again.' },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Drafted', text: 'The body is drawn in from the left, at an even pace.' },
+            {
+                name: 'Drafted',
+                text: 'The tile is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; tile after tile, 3 units each.',
+            },
             { name: 'Plotted', text: 'Tile after tile is drawn in from the left, in hard steps.' },
         ],
         tone: [
-            { name: 'The status plate', text: 'A warning or destructive tile shows the note on its own status plate.' },
+            {
+                name: 'The status plate',
+                text: 'Pointed out on the reading’s scale: a ruler under the tile’s words with a pointer in the tone’s ink, the flag before the title (△ a warning, ▲ a failure); the footer stands on no plate.',
+            },
             { name: 'The ruled box', text: 'A warning or destructive tile’s note sits in a ruled box.' },
             { name: 'The revision cloud', text: 'A warning or destructive tile is framed all round in its colour, as a drawing revision.' },
         ],
         hover: [
-            { name: 'The pen hovers', text: 'The grid lines brighten faintly; Open underlines in white ink; focus draws a dashed outline.' },
+            {
+                name: 'The pen hovers',
+                text: 'The tile is read on a scale: two amber witness lines at its ends and a ruler with a pointer at each end; the link keeps the theme’s link and the two-channel focus ring.',
+            },
             { name: 'The cell highlights', text: 'The title-block cell fills faintly; Open gains a tick mark; focus doubles the rule.' },
             { name: 'The hatching tightens', text: 'The hatching draws closer; Open underlines; focus adds a revision-cloud ring.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
             { name: 'The pen steps', text: 'The footer’s timestamp steps forward, in hard steps.' },
-            { name: 'Retraced in ink', text: 'The tile is traced again from its edge, at an even pace.' },
+            {
+                name: 'Retraced in ink',
+                text: 'A new reading is read again: the stamp is written at once and a pointer on a ruler under it slides from the old reading to the new one on the plotter’s feed, 6 units.',
+            },
         ],
     },
     solstice: {

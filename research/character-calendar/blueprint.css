@@ -1,38 +1,114 @@
-/* research/character-calendar, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-calendar, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 2 (the title block), loading 2, arrival 1, tone 2, select 1.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - surface: the calendar stands on the graticule's two axes; a day is a part
+     on the sheet, no fill and a hairline rule; the figure in its boxed field
+     and the count under its rule (the title block's drawn rules stay);
+   - tone: pointed out on the reading's scale: every day carries a short ruler
+     along its foot and a pointer in the tone's ink where its reading stands
+     (blueprint.js sets it from the count, 9/9 at the end), the flag in front
+     of a warning (△) and a failure (▲), no data (?); no day is filled, and the
+     legend's swatches read the same way; today's figure is boxed in amber, the
+     annotation (no double frame);
+   - loading: ONE pen (blueprint.js) over the month: the grid's outline first,
+     then the place of every day's reading, in reading order; the marching
+     dashes are gone;
+   - arrival: the month is read out on its scales (the register's own
+     `[data-kp-arriving]`: the pen's diagonal, witness lines and pointers, each
+     line inked as the pen passes); nothing is uncovered by a sliding edge;
+   - select: the picked day and the day under the pointer are read on a scale:
+     two amber witness lines at its ends and a ruler with a pointer at each end
+     (../character-shared/blueprint.css), the picked figure boxed in cyan;
+   - voice: title, heads and counts in the draughtsman's lettering. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-cl-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    /* Shape: the calendar is a plate on the graticule (themes/blueprint/CHARACTER.md G7, "surface = the
-       graticule's axes"): no fill, no closed frame, the register's three
-       axes properties. */
     [data-theme='blueprint'] [data-cl-shape] .kp-calendar {
-        background-color: transparent;
-        border-color: transparent;
-        box-shadow: none;
+        --cl-cell-h: 4rem;
+        --cl-day-pad: 0 0 12px;
+        --cl-pick: none;
+        --cl-today: 0 0 transparent;
+        --cl-ok-bg: transparent;
+        --cl-ok-fg: var(--foreground);
+        --cl-ok-ink: hsl(from var(--success) h s 62%);
+        --cl-ok-edge: var(--border);
+        --cl-warn-bg: transparent;
+        --cl-warn-fg: var(--foreground);
+        --cl-warn-ink: hsl(from var(--warning) h s 62%);
+        --cl-warn-edge: var(--border);
+        --cl-bad-bg: transparent;
+        --cl-bad-fg: var(--foreground);
+        --cl-bad-ink: var(--destructive);
+        --cl-bad-edge: var(--border);
+        --cl-muted-bg: transparent;
+        --cl-none-bg: transparent;
+        --cl-loading-bg: transparent;
+        --cl-loading-edge: var(--border);
+        --cl-busy-bg: var(--background);
+        --cl-busy-frame: 1px solid var(--border-strong);
+        --cl-busy-shadow: none;
+
         background-repeat: no-repeat;
         background-image: var(--kp-bp-axes-img);
         background-size: var(--kp-bp-axes-size);
         background-position: var(--kp-bp-axes-pos);
+        font-variant-numeric: tabular-nums;
     }
 
-    [data-theme='blueprint'] [data-cl-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    /* Pointed out: a ruler along the day's foot, a pointer where the reading stands. */
+    [data-theme='blueprint'] [data-cl-shape] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'] {
+        --bpd-at: 1;
+    }
+
+    [data-theme='blueprint'] [data-cl-shape] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+        --bpd-at: 0.7;
+    }
+
+    [data-theme='blueprint'] [data-cl-shape] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+        --bpd-at: 0.08;
+    }
+
+    [data-theme='blueprint']
+        [data-cl-shape]
+        :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+        --cl-pat:
+            conic-gradient(from 135deg at 50% 0, var(--cl-ink) 90deg, transparent 0) calc(var(--bpd-at) * 100%) calc(100% - 1px) / 9px 6px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 calc(100% - 6px) / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px) 0 calc(100% - 6px) / 100% 4px no-repeat;
+    }
+
+    [data-theme='blueprint']
+        [data-cl-shape]
+        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'])
+        .kp-calendar__count {
+        color: var(--cl-ink);
+    }
+
+    /* Today is annotated in amber, nothing frames the day. */
+    [data-theme='blueprint'] [data-cl-shape] .kp-calendar__day[data-kp-today] .kp-calendar__num {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    /* The picked day: its figure boxed in cyan, what a person did. */
+    [data-theme='blueprint'] [data-cl-shape] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__num {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] [data-cl-shape] .kp-calendar__title,
+    [data-theme='blueprint'] [data-cl-shape] .kp-calendar__grid th,
+    [data-theme='blueprint'] [data-cl-shape] .kp-calendar__count {
+        font-style: oblique 15deg;
+    }
+
+    /* One pen: the loading days are places for the pen, not filled plates. */
+    [data-theme='blueprint'] [data-cl-shape] .kp-calendar__day[data-kp-tone='loading']::after {
+        display: none;
     }
 }

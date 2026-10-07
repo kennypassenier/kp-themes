@@ -780,13 +780,13 @@ const IDEAS = {
             },
             {
                 name: 'The dimension line',
-                text: 'Extension lines at both ends and a centre line; the share is the measured length with its arrowhead; the mark is an amber leader with its ring; past the end ↦.',
+                text: 'Extension lines at both ends and a centre line; the share is the measured length, a flat pen stroke; the mark is an amber leader with its ring; past the end ↦.',
             },
         ],
         loading: [
             {
                 name: 'The plotter',
-                text: 'The plotter pen runs along the baseline.',
+                text: 'One pen strokes along the track, lifts, goes back with the pen up and strokes again, 18 units (2880 ms) a loop.',
             },
             {
                 name: 'Dimensioned',
@@ -800,7 +800,7 @@ const IDEAS = {
         arrival: [
             {
                 name: 'The plotter',
-                text: 'The share is drawn in from the left at an even pace.',
+                text: 'The row is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; 2 units.',
             },
             {
                 name: 'Dimensioned',
@@ -814,7 +814,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The plotter',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
+                text: 'A new tone is pointed out on the reading’s scale: a pointer in the tone’s ink stands under the track where the share ends; the share is not redrawn.',
             },
             {
                 name: 'Dimensioned',
@@ -836,7 +836,7 @@ const IDEAS = {
             },
             {
                 name: 'Redrawn',
-                text: 'The mark moves in 5 hard steps; a mark past the end leans over the end, ▸ beside it.',
+                text: 'The mark is read again: it waits a moment and slides to its new place on the plotter’s feed, never tilting; a mark past the end stands upright at the end, ▸ beside it.',
             },
         ],
     },

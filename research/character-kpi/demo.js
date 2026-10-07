@@ -750,7 +750,7 @@ const IDEAS = {
             },
             {
                 name: 'The revision cloud',
-                text: 'A section drawing, the card hatched at forty-five degrees, a dashed frame, the change as its own status plate.',
+                text: 'The key figure stands on the graticule’s two axes, a ruler along its start edge and its foot, no fill, no hatch and no closed frame; the label in the draughtsman’s lettering.',
             },
         ],
         loading: [
@@ -764,7 +764,7 @@ const IDEAS = {
             },
             {
                 name: 'The dimension line',
-                text: 'While the figure loads, a white dimension line draws itself from left to right at a steady pace, then snaps back to nothing and draws again, as a dimension re-ruled on every revision; it keeps drawing until the reading is drawn.',
+                text: 'One pen over the whole figure: it traces the figure’s outline, then underlines every place its reading and its words will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
             },
         ],
         tone: [
@@ -778,7 +778,7 @@ const IDEAS = {
             },
             {
                 name: 'The revision cloud',
-                text: 'The change in a ruled box; a warning or destructive figure is framed all round in its colour, as a revision marked on a drawing.',
+                text: 'Pointed out on the reading’s scale: a ruler under the figure with a pointer in the tone’s ink where the reading is; nothing frames or fills the figure; the change in the lettering with its sign, on no plate.',
             },
         ],
         interactive: [
@@ -792,7 +792,7 @@ const IDEAS = {
             },
             {
                 name: 'The revision marks',
-                text: 'As a link or a filter: a faint hatch of revision marks appears over the plate on hover, a thin cyan rule sits out from the frame on focus, and the whole tile ticks inward slightly while pressed, as a revision noted and checked.',
+                text: 'As a link or a filter: on hover two amber witness lines and a ruler with a pointer at each end read the tile on a scale; focus is the two-channel ring with the witness lines; a press draws the dimension below the tile, outside it, and the ground never changes.',
             },
         ],
         live: [
@@ -806,7 +806,7 @@ const IDEAS = {
             },
             {
                 name: 'Retraced in ink',
-                text: 'A new reading: the number settles into place from a short vertical offset at one steady, linear pace, as a figure retraced once in white ink.',
+                text: 'A new reading is read again: the figure is written at once and a pointer on a ruler under it slides from the old reading to the new one on the plotter’s feed, 6 units.',
             },
         ],
     },

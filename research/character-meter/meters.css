@@ -3799,21 +3799,6 @@
         }
     }
 
-    /* ── blueprint · loading 1 ── */
-
-    /* The plotter pen runs along the baseline at an even pace. */
-    [data-theme='blueprint'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        inset-block: auto 0;
-        block-size: 3px;
-        background: linear-gradient(var(--primary), var(--primary)) 50% 0 / 1.25rem 100% no-repeat;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-bp-plot 1800ms linear infinite alternate;
-        }
-    }
-
     /* ── blueprint · loading 2 ── */
 
     [data-theme='blueprint'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
@@ -4860,21 +4845,6 @@
         }
     }
 
-    /* ── blueprint · arrival 1 ── */
-
-    [data-theme='blueprint'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 1200ms linear backwards;
-            transition: inline-size 1200ms linear;
-        }
-    }
-
     /* ── blueprint · arrival 2 ── */
 
     [data-theme='blueprint'] [data-cm-arrival='2'] .kp-meter {
@@ -5744,18 +5714,6 @@
 
         [data-theme='sepia'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
             animation: cm-x-bump-d 300ms ease-out;
-        }
-    }
-
-    /* ── blueprint · tone 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-cm-tone='1'] .kp-meter[data-kp-tone='warning']::before {
-            animation-name: var(--cm-arr-w);
-        }
-
-        [data-theme='blueprint'] [data-cm-tone='1'] .kp-meter[data-kp-tone='destructive']::before {
-            animation-name: var(--cm-arr-d);
         }
     }
 
@@ -7448,16 +7406,6 @@
             inset 0 1px 1px hsl(from var(--foreground) h s l / 0.15),
             inset 0 -1px 0 hsl(from var(--card) h s l / 0.9),
             0 0 0 1px hsl(from var(--border-strong) h s l / 0.6);
-    }
-}
-
-@keyframes cm-bp-plot {
-    from {
-        background-position: 0 0;
-    }
-
-    to {
-        background-position: 100% 0;
     }
 }
 

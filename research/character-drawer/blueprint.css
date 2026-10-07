@@ -1,25 +1,74 @@
-/* research/character-drawer, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-drawer, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 1, openclose 2, highlight 1, card 1, next 3.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - shape: the drawer is an overlay sheet over the page (the popover's ground in
+     one steel frame, no shadow, no grid, no cyan frame), the head over a rule;
+   - openclose: the drawer is drawn: the pen traces its outline from its corner,
+     then the panel is inked; closing is that played backwards; closed it is not
+     there (../character-shared/blueprint.css, the register's own trace);
+   - highlight: what the tour talks about is pointed out, held in the hover's
+     reading: two amber witness lines and a ruler with a pointer at each end; no
+     veil over the rest, no ring;
+   - card: the step card is an overlay sheet too, one steel frame, no shadow, the
+     title upright with no coloured edge;
+   - next: read again: the step's count is written at once and a pointer on a
+     ruler under it slides from the old step to the new one on the feed
+     (blueprint.js); the card does not shove. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-dt-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    [data-theme='blueprint'] [data-dt-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    [data-theme='blueprint'] [data-dt-shape] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.125rem;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-drawer .kp-drawer__foot::before {
+        display: none;
+    }
+
+    /* No veil, no ring: the target is pointed out by the witness lines. */
+    [data-theme='blueprint'] [data-dt-shape] [data-kp-tour-target] {
+        outline: 0;
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-tour {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.125rem;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-tour .kp-tour__title {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] .dt-tour .kp-tour__count {
+        position: relative;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] [data-dt-shape] [data-dt-playing='next'] .dt-tour {
+        animation: none;
     }
 }

@@ -1,27 +1,41 @@
-/* research/character-columns, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-columns, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 1 (the dimension chain), loading 2, arrival 3, tone 2, live 3.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - surface: every column stands on the graticule's two axes, no fill and no
+     frame; the chain of dimension lines over the strip stays (it is the
+     strip's own scale);
+   - loading: ONE pen (blueprint.js) over the whole strip: its outline first,
+     then every place a figure and its words will stand, column after column;
+     the sheen that scanned the columns is gone;
+   - arrival: each column is read out on its scales (the register's own
+     `[data-kp-arriving]`), column after column, one pen; nothing is lettered
+     in steps;
+   - tone: the tolerance: the change set in the lettering with its sign, + or
+     the minus sign, in the tone's ink, on no plate;
+   - live update: read again (the register's `[data-kp-updating='read']`): a
+     figure that changed is written at once and a pointer on a ruler under it
+     slides from the old reading to the new one; nothing turns over;
+   - voice: the labels in the draughtsman's lettering, the figures upright in
+     the sans. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-cs-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
         transition-timing-function: var(--kp-sig-bp-feed);
     }
 
-    /* Shape: every column is a plate on the graticule (themes/blueprint/CHARACTER.md G7, "surface = the
-       graticule's axes"): no fill, no closed frame, the register's three
-       axes properties. */
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+        --cl-arrive-num: none;
+        --cl-arrive-tile: none;
+        --cl-live-num: none;
+        --cl-live-tile: none;
+        --cl-num-font: var(--theme-font-display);
+        --cl-label-style: oblique 15deg;
+    }
+
     [data-theme='blueprint'] [data-cs-shape] .kp-kpis > .kp-kpi {
         background-color: transparent;
         border-color: transparent;
@@ -30,9 +44,33 @@
         background-image: var(--kp-bp-axes-img);
         background-size: var(--kp-bp-axes-size);
         background-position: var(--kp-bp-axes-pos);
+        font-variant-numeric: tabular-nums;
     }
 
-    [data-theme='blueprint'] [data-cs-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis > .kp-kpi > .kp-kpi__label {
+        font-style: oblique 15deg;
+    }
+
+    /* The tolerance: the change in the lettering with its sign, on no plate. */
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis .kp-kpi__delta {
+        padding: 0;
+        background: transparent;
+        color: hsl(from var(--success) h s 62%);
+        font-style: oblique 15deg;
+    }
+
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis .kp-kpi__delta[data-kp-tone='bad'] {
+        background: transparent;
+        color: var(--destructive);
+    }
+
+    /* One pen: the places are drawn by blueprint.js, not by the skeletons' bars. */
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis[aria-busy='true'] .kp-skeleton {
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis[aria-busy='true'] .kp-skeleton::before,
+    [data-theme='blueprint'] [data-cs-shape] .kp-kpis[aria-busy='true'] .kp-skeleton::after {
+        display: none;
     }
 }

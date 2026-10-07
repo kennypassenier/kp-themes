@@ -776,7 +776,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The drafting panel',
-                text: 'A deep navy panel with cyan grid lines faint throughout, the head carries a title-block style rule, the body on fine graph lines, the foot squared with dimension ticks.',
+                text: 'The drawer is an overlay sheet over the page: the popover’s ground in one steel frame, no shadow, no grid and no cyan frame; the head over a rule.',
             },
             {
                 name: 'The vellum tray',
@@ -794,7 +794,7 @@ const IDEAS = {
             },
             {
                 name: 'It unrolls from the tube',
-                text: 'The panel unrolls in width from a tight roll at the hinge edge to full width, like a drawing unrolled from a tube; closing rolls it back up, reversed.',
+                text: 'The drawer is drawn: the pen traces its outline from its corner, along the top, down the end, back along the foot and up the start, then the panel is inked; closing is that played backwards; 5 units (800 ms).',
             },
             {
                 name: 'It is pinned open',
@@ -804,7 +804,7 @@ const IDEAS = {
         highlight: [
             {
                 name: 'The dimension ring',
-                text: 'A cyan ring with small tick marks radiating outward like a dimension line surrounds the target; the stage dims to deep navy.',
+                text: 'What the tour talks about is pointed out: two amber witness lines at its ends and a ruler with a pointer at each end; no veil over the rest, no ring.',
             },
             {
                 name: 'The compass circle',
@@ -818,7 +818,7 @@ const IDEAS = {
         card: [
             {
                 name: 'The callout tag',
-                text: 'A navy card with a cyan leader line implied by a notch on one edge, the title in a technical condensed weight, the foot squared.',
+                text: 'The step card is an overlay sheet: one steel frame, no shadow, the title upright with no coloured edge.',
             },
             {
                 name: 'The title-block card',
@@ -840,7 +840,7 @@ const IDEAS = {
             },
             {
                 name: 'The callout retargets',
-                text: 'The card’s notch edge slides to point at the new target while the text swaps at the slide’s end; the dimension ticks on the ring recount.',
+                text: 'The step count is read again: it is written at once and a pointer on a ruler under it slides from the old step to the new one on the plotter’s feed, 6 units; the card does not shove.',
             },
         ],
     },

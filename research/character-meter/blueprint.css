@@ -1,18 +1,19 @@
-/* research/character-meter, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-meter, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
+   Picks: shape 3 (the dimension line), loading 1, arrival 1, tone 1, mark 3.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - loading: one pen (the register's `[data-kp-loading]`: the pen strokes
+     along the track, lifts and goes back; the demo's own plotter is gone);
+   - arrival: the row is read out on its scales (blueprint.js sets the
+     register's `[data-kp-arriving]`: the pen's diagonal, witness lines and
+     pointers), the share is simply there; the old wipe is off;
+   - tone: pointed out on the reading's scale: a pointer in the tone's own ink
+     stands under the track where the share ends; nothing is redrawn;
+   - live update (the mark moves): read again: the mark waits a moment and
+     slides on the feed (15 % to 60 % of 6 units), it never tilts;
+   - surface: the track is the graticule's scale (ticks at both ends and a
+     centre line, no frame); voice: the lettering. */
 @layer kp.signature {
     [data-theme='blueprint'] [data-cm-shape] * {
         animation-timing-function: var(--kp-sig-bp-feed);
@@ -21,5 +22,39 @@
 
     [data-theme='blueprint'] [data-cm-shape] :is(.kp-meter, .kp-kpi__meter)::before {
         clip-path: none;
+        animation: none;
+        transition: none;
+    }
+
+    [data-theme='blueprint'] [data-cm-shape] .cm-row__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* Pointed out: a pointer under the track, at the end of the share. */
+    [data-theme='blueprint'] [data-cm-shape] .kp-meter[data-kp-tone]:not([data-kp-loading], [data-kp-over])::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(100% + 1px);
+        inset-inline: 0;
+        block-size: 6px;
+        pointer-events: none;
+        background: conic-gradient(from 135deg at 50% 0, var(--kp-meter-fill-colour) 90deg, transparent 0)
+            calc(clamp(0, var(--kp-value, 0), 1) * 100%) 0 / 9px 6px no-repeat;
+    }
+
+    /* The mark past the end stands upright. */
+    [data-theme='blueprint'] [data-cm-mark] .kp-meter__mark[data-kp-over],
+    [data-theme='blueprint'] [data-cm-mark] .kp-meter__mark[data-kp-over]::after {
+        rotate: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-cm-mark] .kp-meter__mark {
+            transition: inset-inline-start calc(2.7 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) calc(0.9 * var(--kp-sig-bp-unit));
+        }
     }
 }

@@ -714,31 +714,6 @@
         box-shadow: inset 0 0 0 1px var(--primary);
     }
 
-    /* --------------------------------------------------- blueprint ------ */
-
-    /* Shape 1, the chart recorder: a millimetre grid behind the groups,
-       headings and hints in technical mono capitals, white ink rules
-       between groups. */
-    [data-theme='blueprint'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
-        border: 1px solid var(--mb-edge, var(--border-strong));
-        background-image:
-            linear-gradient(color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px),
-            linear-gradient(90deg, color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px);
-        background-size: 12px 12px;
-        background-position: 0 0;
-    }
-
-    [data-theme='blueprint'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
-        font-family: var(--theme-font-mono);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
-
-    [data-theme='blueprint'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group {
-        border-block-start: 1px solid var(--mb-edge, var(--border-strong));
-        padding-block-start: var(--kp-space-xs, 0.25rem);
-    }
-
     /* Shape 2, the title block: the plate parted into cells by drawn
        rules, headings in mono capitals. */
     [data-theme='blueprint'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
@@ -769,15 +744,6 @@
     [data-theme='blueprint'] [data-mb-shape='3'] .kp-menu-button > .kp-menu .kp-menu__heading {
         font-family: var(--theme-font-mono);
         letter-spacing: 0.03em;
-    }
-
-    /* Loading 1, the pen sweeps: the recorder's pen sweeping across, then
-       starting again. */
-    [data-theme='blueprint'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
-        background-image: linear-gradient(90deg, var(--primary) 0 60%, transparent 60%);
-        background-size: 9px 1.5px;
-        background-repeat: repeat-x;
-        background-position: 0 calc(100% - 4px);
     }
 
     /* Loading 2, the dash marches: a dash marching along the row's
@@ -837,17 +803,6 @@
         padding-block-start: 0.1875rem;
     }
 
-    /* Tone 3, the hatched warning: the destructive entry's plate hatched
-       in its colour; the disabled reason reads in a fainter mono. */
-    [data-theme='blueprint'] [data-mb-tone='3'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
-        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--destructive) 28%, transparent) 0 2px, transparent 2px 7px);
-    }
-
-    [data-theme='blueprint'] [data-mb-tone='3'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
-        font-family: var(--theme-font-mono);
-        color: color-mix(in oklab, var(--muted-foreground) 85%, transparent);
-    }
-
     /* Tone contrast fix: the package's own destructive label reads under
        4.5:1 in all three options; the foreground token clears it. */
     [data-theme='blueprint'] [data-mb-tone] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label {
@@ -867,16 +822,6 @@
 
     [data-theme='blueprint'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active .kp-menu__label {
         box-shadow: 0 2px 0 var(--primary);
-    }
-
-    /* Interact 2, the grid highlights: a hovered or focused entry's grid
-       cell lights a shade brighter; a press dims it back. */
-    [data-theme='blueprint'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
-        background: color-mix(in oklab, var(--primary) 14%, transparent);
-    }
-
-    [data-theme='blueprint'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
-        background: color-mix(in oklab, var(--primary) 6%, transparent);
     }
 
     /* Interact 3, the dimension ticks: a hovered or focused entry gets
@@ -1016,16 +961,6 @@
             animation-direction: reverse;
         }
 
-        [data-theme='blueprint'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
-            transform-origin: top center;
-            animation: mb-blueprint-draft calc(0.3s / var(--mb-speed, 1)) linear;
-        }
-
-        [data-theme='blueprint'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
-            animation-name: mb-blueprint-draft;
-            animation-direction: reverse;
-        }
-
         [data-theme='blueprint'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
             transform-origin: top center;
             animation: mb-blueprint-plot calc(0.24s / var(--mb-speed, 1)) steps(3, end);
@@ -1093,10 +1028,6 @@
 
         [data-theme='sepia'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
             animation: mb-sepia-drum calc(1.3s / var(--mb-speed, 1)) linear infinite;
-        }
-
-        [data-theme='blueprint'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
-            animation: mb-blueprint-pen calc(1.1s / var(--mb-speed, 1)) linear infinite;
         }
 
         [data-theme='blueprint'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
@@ -1336,15 +1267,6 @@
         }
     }
 
-    @keyframes mb-blueprint-draft {
-        from {
-            clip-path: inset(0 0 100% 0);
-        }
-        to {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
     @keyframes mb-blueprint-plot {
         from {
             clip-path: inset(0 0 100% 0);
@@ -1360,15 +1282,6 @@
         }
         to {
             transform: scaleY(1);
-        }
-    }
-
-    @keyframes mb-blueprint-pen {
-        from {
-            background-position-x: 0;
-        }
-        to {
-            background-position-x: 9px;
         }
     }
 

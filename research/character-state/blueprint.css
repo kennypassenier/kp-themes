@@ -1,25 +1,90 @@
-/* research/character-state, blueprint: the decided picks on blueprint's grammar
-   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
-   css/blueprint-register.css holds the pen, the feed and the axes).
+/* research/character-state, blueprint: the decided picks on blueprint's approved
+   character (themes/blueprint/CHARACTER.md; research/blueprint-character/
+   decided.json, Kenny 2026-10-07 23:41), the tracing pen as anchor.
 
-   - curve: every animation and transition of the scene runs on the plotter's
-     feed, a ramp, an even feed and a ramp, never plain linear;
-   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
-     the pen's flat stroke;
-   - the package parts the scene is made of (buttons, tone, plates, progress,
-     skeletons, the live update) already draw the decided hover (read on a
-     scale), press (the dimension, no recolouring), tone (pointed out), loading
-     (one pen) and update (read again) from the register.
-   Not redone here: the scene's own arrival, loading and live pictures keep
-   the earlier picks' drawings on the feed curve (see the report of
-   2026-10-08). */
+   - surface: the word stands on the graticule's two axes (a ruler along its
+     start edge and its foot, ticks every 8 px, long ticks every 40) and not in a
+     closed frame; the dot is gone, the reading is the word itself;
+   - tone: pointed out on the reading's scale: a pointer in the
+     state's own ink stands on the foot ruler where the state reads (Running
+     near the start, Failed near the end), nothing frames or fills the word;
+   - change (live update): read again: the pointer slides to the new reading
+     on the feed (15 % to 60 % of 6 units, as the register's update), the word
+     is written at once and never moves, swells or flips;
+   - voice: the draughtsman's lettering, mono capitals sloped 15 degrees. */
 @layer kp.signature {
-    [data-theme='blueprint'] [data-sw-shape] * {
-        animation-timing-function: var(--kp-sig-bp-feed);
-        transition-timing-function: var(--kp-sig-bp-feed);
+    [data-theme='blueprint'] [data-sw] {
+        --sw-gap: 0;
+        --bpd-ink: var(--muted-foreground);
+        --bpd-at: 0.35;
+
+        position: relative;
     }
 
-    [data-theme='blueprint'] [data-sw-shape] :is(.kp-meter, .kp-kpi__meter)::before {
-        clip-path: none;
+    [data-theme='blueprint'] [data-sw]::before {
+        display: none;
+    }
+
+    /* The reading's scale: the axes under and beside the word. */
+    [data-theme='blueprint'] [data-sw] .kp-state-word {
+        padding: 0.15em 0.6em 0.7em;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.85em;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* The pointer, on the foot ruler, in the state's ink. */
+    [data-theme='blueprint'] [data-sw]::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -6px;
+        block-size: 7px;
+        pointer-events: none;
+        background: conic-gradient(from 135deg at 50% 0, var(--bpd-ink) 90deg, transparent 0) calc(var(--bpd-at) * 100%) 0 / 9px 6px no-repeat;
+    }
+
+    [data-theme='blueprint'] [data-sw-kind='good'] {
+        --bpd-ink: var(--success-foreground);
+        --bpd-at: 0.12;
+    }
+
+    [data-theme='blueprint'] [data-sw-kind='muted'] {
+        --bpd-ink: var(--muted-foreground);
+        --bpd-at: 0.36;
+    }
+
+    [data-theme='blueprint'] [data-sw-kind='pending'] {
+        --bpd-ink: hsl(from var(--warning) h s 62%);
+        --bpd-at: 0.64;
+    }
+
+    [data-theme='blueprint'] [data-sw-kind='bad'] {
+        --bpd-ink: var(--destructive);
+        --bpd-at: 0.92;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Read again: the pointer waits a moment, then slides on the feed. */
+        [data-theme='blueprint'] [data-sw] {
+            transition: --bpd-at calc(2.7 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) calc(0.9 * var(--kp-sig-bp-unit));
+        }
+
+        [data-theme='blueprint'] [data-sw-change][data-sw-playing],
+        [data-theme='blueprint'] [data-sw-change][data-sw-playing]::before,
+        [data-theme='blueprint'] [data-sw-change][data-sw-playing] .kp-state-word {
+            animation: none;
+        }
     }
 }

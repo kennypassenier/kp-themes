@@ -216,6 +216,16 @@ export declare const PRESS: Readonly<{
     x: "--kp-press-x";
     y: "--kp-press-y";
 }>;
+/**
+ * The second thing a theme can ask a press for: `--kp-press: size`. The
+ * button's measured width, in whole pixels, is written to the element a press
+ * started on as this attribute, for a theme that letters the size of what is
+ * held (blueprint's dimension below the part prints it with
+ * `content: attr(data-kp-press-size)`). CSS cannot print a measured length.
+ * Written on a pointer press and on Space or Enter; left on the element after
+ * the press so a dimension that fades out keeps its numerals.
+ */
+export declare const PRESS_SIZE = "data-kp-press-size";
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export declare const ROOT_ATTRIBUTE = "data-kp-effects";
 /** Set on the root once the reveals of a load have run. */

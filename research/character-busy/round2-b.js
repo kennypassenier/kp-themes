@@ -61,7 +61,7 @@ export default {
             {
                 key: 'r2-bp-shape-3',
                 name: 'The section view',
-                text: 'Echoes the chart recorder / weld-marks pick: a strong diagonal section-cut hatch covers the veil and repeats, finer, across the plate itself, inside a single thin frame. Differs from the title block and the dimension chain by hatching the plate as well as the veil, in the same angle.',
+                text: 'The panel is an overlay sheet over the table: the popover’s ground in one thin steel frame, no shadow and no hatch, the veil clear, its words in the draughtsman’s lettering; the spinner is the compass.',
             },
         ],
     },

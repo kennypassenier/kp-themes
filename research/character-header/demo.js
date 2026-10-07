@@ -439,13 +439,13 @@ const IDEAS = {
             { name: 'The title block', text: 'A drawing’s title block: the header parted into ruled cells, the actions with dimension ticks.' },
             {
                 name: 'The section view',
-                text: 'A hatched section view at forty-five degrees, a dashed frame, the actions in white-ink 2px boxes.',
+                text: 'The header stands on the graticule’s two axes, a ruler along its start edge and its foot, no hatch and no closed frame; the title upright in the sans, the actions plain buttons.',
             },
         ],
         menu: [
             {
                 name: 'Drafted',
-                text: 'The menu is drawn in from the top at an even pace, as a drafting pen moving down; it is drawn out the same way in reverse to close.',
+                text: 'The menu is drawn: the pen traces the panel’s outline from its corner, along the top, down the end, back along the foot and up the start, then the panel is inked; closing is that played backwards; 5 units (800 ms).',
             },
             {
                 name: 'Plotted',
@@ -467,7 +467,7 @@ const IDEAS = {
             },
             {
                 name: 'The chain line',
-                text: 'Hover thickens a button’s chain-line border, focus dashes round it, press presses the line into the sheet.',
+                text: 'The actions are blueprint’s own buttons: on hover two amber witness lines and a ruler with a pointer at each end, on focus the two-channel ring with the witness lines, on a press the dimension below the button; nothing lifts, thickens or recolours.',
             },
         ],
     },

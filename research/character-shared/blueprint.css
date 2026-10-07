@@ -1,0 +1,411 @@
+/* research/character-shared, blueprint: what the twelve character demos share
+   of blueprint's approved character (themes/blueprint/CHARACTER.md,
+   research/blueprint-character/decided.json). Each demo's own blueprint.css
+   keeps only its geometry and the selectors of its parts; the pen's recipes
+   (read-out, traced outline, one pen loading, read again, pointed out) are
+   written once here and take a part by a selector list, so every demo draws
+   the one pen the package's register draws (css/blueprint-register.css, "The
+   character [scope-143]": the same registered numbers --kp-bp-*, the same
+   keyframe shapes, the same feed and units).
+
+   Registered at the top level: Firefox does not register an @property inside
+   a cascade layer, and an unregistered number flips between its poses. */
+@property --bpd-at {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.5;
+}
+
+/* ── One pen over a scene that waits (blueprint.js, loading()) ─────────────
+   The layer sits over the scene, never takes a click, and draws what the
+   script generated: the outline and a stroke for each place (cyan, the pen's
+   own line), two dimension ticks at the ends of a place, and the carriage
+   (a square in the steel line, a sight through it, the nib down filled, up
+   hollow). A loop is 18 units (2880 ms); the reduced pose is the marks
+   standing and no pen. */
+@layer kp.signature {
+    [data-theme='blueprint'] .bpd-load {
+        position: absolute;
+        grid-area: auto;
+        inset: 0;
+        z-index: 3;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    [data-theme='blueprint'] .bpd-load__g {
+        position: absolute;
+        background: var(--primary);
+    }
+
+    [data-theme='blueprint'] .bpd-load__tick {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 9px;
+        background: hsl(from var(--foreground) h s l / 0.7);
+    }
+
+    [data-theme='blueprint'] .bpd-load__pen {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        block-size: 0;
+        opacity: 0;
+    }
+
+    [data-theme='blueprint'] .bpd-load__car {
+        position: absolute;
+        inset-block-start: -8.5px;
+        inset-inline-start: -8.5px;
+        inline-size: 17px;
+        block-size: 17px;
+    }
+
+    [data-theme='blueprint'] .bpd-load__nib {
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .bpd-load :is(.bpd-load__g, .bpd-load__tick, .bpd-load__pen, .bpd-load__nib) {
+            animation-duration: calc(18 * var(--kp-sig-bp-unit));
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+    }
+}
+
+/* ── A part that is pointed at, focused and pressed ────────────────────────
+   The register's own picture for a control (css/blueprint-register.css,
+   "Pointing, focus and press on a control"), taken by the parts the demos draw
+   themselves and that a hand can reach (a key figure that is a link, a tile).
+   Pointing sets two amber witness lines at the part's ends, overhanging its
+   top and running on below its foot to a ruler with a pointer at each end: the
+   part is read on a scale. Focus keeps DI2's two-channel ring (the contrast
+   outline and the inner ring) and sets the lines. A press takes the dimension:
+   the lines run on further and the scale gives way to a dimension with a slash
+   at each end, drawn in two units below the part, outside it; the part's own
+   ground and size never change, and no lighter colour is used. The numbers are
+   the register's (--kp-bp-hv, --kp-bp-sv, --kp-bp-dv). */
+@layer kp.signature {
+    [data-theme='blueprint']
+        :is(
+            [data-kf] a.kp-kpi,
+            [data-kf] .kp-kpi--toggle,
+            [data-ti] .kp-card[data-tl-tile],
+            [data-cl] td:not([data-kp-pad]),
+            [data-dt] [data-kp-tour-target]:not(.kp-button, .kp-icon-button)
+        ) {
+        position: relative;
+        overflow: visible;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+        --kp-bp-n3: hsl(from var(--accent) h s l / var(--kp-bp-dv));
+    }
+
+    [data-theme='blueprint']
+        :is(
+            [data-kf] a.kp-kpi,
+            [data-kf] .kp-kpi--toggle,
+            [data-ti] .kp-card[data-tl-tile],
+            [data-cl] td:not([data-kp-pad]),
+            [data-dt] [data-kp-tour-target]:not(.kp-button, .kp-icon-button)
+        )::before {
+        content: '';
+        position: absolute;
+        z-index: 3;
+        inset-block: -0.4rem calc(var(--bpd-foot, 1.4rem) * -1);
+        inset-inline: calc(var(--bpd-gap, 0.35rem) - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 4px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            4px calc(100% - 0.8rem - 5px),
+            4px calc(100% - 0.8rem - 6px),
+            left bottom 0.8rem,
+            right bottom 0.8rem;
+    }
+
+    [data-theme='blueprint']
+        :is(
+            [data-kf] a.kp-kpi,
+            [data-kf] .kp-kpi--toggle,
+            [data-ti] .kp-card[data-tl-tile],
+            [data-cl] td:not([data-kp-pad]),
+            [data-dt] [data-kp-tour-target]:not(.kp-button, .kp-icon-button)
+        )::after {
+        content: '';
+        position: absolute;
+        z-index: 3;
+        inset-block: auto calc(-1.1rem - 7px);
+        block-size: 7px;
+        inset-inline: calc(0.35rem - 3px);
+        pointer-events: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-dv)) * 100%) 0 0);
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3));
+        background-size:
+            7px 7px,
+            7px 7px,
+            calc(100% - 6px) 1px;
+        background-position:
+            left top,
+            right top,
+            3px center;
+    }
+
+    [data-theme='blueprint']
+        :is(
+            [data-kf] a.kp-kpi,
+            [data-kf] .kp-kpi--toggle,
+            [data-ti] .kp-card[data-tl-tile],
+            [data-cl] td:not([data-kp-pad]),
+            [data-dt] [data-kp-tour-target]:not(.kp-button, .kp-icon-button)
+        ):is(:hover, .tl-hover-sim) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    [data-theme='blueprint'] :is([data-kf] a.kp-kpi, [data-kf] .kp-kpi--toggle):focus-visible {
+        --kp-bp-hv: 1;
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    /* A tile's own link carries the ring; the tile sets the witness lines round it. */
+    [data-theme='blueprint'] [data-ti] .kp-card[data-tl-tile]:has([data-tl-link]:focus-visible) {
+        --kp-bp-hv: 1;
+    }
+
+    /* A calendar's day is read through its cell: the pointer, the keyboard and the pick set the lines. */
+    [data-theme='blueprint'] [data-cl] td:not([data-kp-pad]) {
+        --bpd-foot: 0.9rem;
+        --bpd-gap: 0.1rem;
+    }
+
+    [data-theme='blueprint']
+        [data-cl]
+        td:not([data-kp-pad]):is(:has(> .kp-calendar__day:hover), :has(> .kp-calendar__day:focus-visible), [aria-selected='true']) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    [data-theme='blueprint'] :is([data-kf] a.kp-kpi, [data-kf] .kp-kpi--toggle):active {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 0;
+        --kp-bp-dv: 1;
+        transform: none;
+    }
+
+    /* What a tour talks about is pointed out: held in the hover's reading while its step shows. */
+    [data-theme='blueprint'] [data-dt] [data-kp-tour-target] {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint']
+            :is(
+                [data-kf] a.kp-kpi,
+                [data-kf] .kp-kpi--toggle,
+                [data-ti] .kp-card[data-tl-tile],
+                [data-cl] td:not([data-kp-pad]),
+                [data-dt] [data-kp-tour-target]:not(.kp-button, .kp-icon-button)
+            ) {
+            transition:
+                --kp-bp-hv var(--fx-duration) var(--kp-sig-bp-feed),
+                --kp-bp-sv var(--fx-duration) var(--kp-sig-bp-feed),
+                --kp-bp-dv calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
+        }
+    }
+}
+
+/* ── A reading on a vertical scale, read again ─────────────────────────────
+   For a figure that has no number to put a ruler under, a chart's series: the
+   reading stands on the plot's own scale (its left edge). When a new reading
+   lands, an amber pointer on that scale waits at the old reading, slides to the
+   new one on the feed (15 % to 60 % of 6 units, as the register's update) and
+   stands; pointer and witness line are lifted at the end. The line is the
+   witness line running from the scale to the reading's place. */
+@property --bpd-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.5;
+}
+
+@property --bpd-v {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@layer kp.signature {
+    [data-theme='blueprint'] .bpd-yread {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    [data-theme='blueprint'] .bpd-yread__at {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--bpd-p) * 100%);
+        block-size: 0;
+        border-block-start: 1px solid hsl(from var(--accent) h s l / calc(var(--bpd-v) * 0.9));
+    }
+
+    [data-theme='blueprint'] .bpd-yread__at::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -4.5px;
+        inset-inline-start: -1px;
+        inline-size: 6px;
+        block-size: 9px;
+        background: conic-gradient(from 45deg at 0 50%, hsl(from var(--accent) h s l / var(--bpd-v)) 90deg, transparent 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .bpd-yread {
+            animation: bpd-yread var(--kp-sig-bp-revision) linear both;
+        }
+
+        @keyframes bpd-yread {
+            0% {
+                --bpd-p: var(--bpd-from);
+                --bpd-v: 1;
+            }
+
+            15% {
+                --bpd-p: var(--bpd-from);
+                --bpd-v: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            60%,
+            85% {
+                --bpd-p: var(--bpd-to);
+                --bpd-v: 1;
+            }
+
+            85.1%,
+            100% {
+                --bpd-p: var(--bpd-to);
+                --bpd-v: 0;
+            }
+        }
+    }
+}
+
+/* ── What opens is drawn: the traced opening ───────────────────────────────
+   The register's own picture for a panel (css/blueprint-register.css, "What
+   opens is drawn the same way"; its keyframes `kp-sig-blueprint-trace` and
+   `kp-sig-blueprint-trace-out` are used by name): the pen traces the panel's
+   outline from its corner, along the top, down the end, back along the foot and
+   up the start, each side on its own feed, and at three quarters of the time
+   the panel is inked at once and the construction line is lifted. Closing is
+   the opening played backwards. A demo's own panel that is not a package
+   popover (a drawer) takes it here, with the pen's look restated; a header's
+   menu is a package popover and gets the register's own pen, so here it is
+   only told when to open and when to close. */
+@layer kp.signature {
+    [data-theme='blueprint'] [data-dt] .dt-drawer::after {
+        --kp-bp-c-pen: hsl(from var(--primary) h s l / var(--kp-bp-pv));
+        --kp-bp-c-nib: hsl(from var(--primary) h s l / calc(var(--kp-bp-nib) * var(--kp-bp-pv)));
+        --kp-bp-c-steel: hsl(from var(--border-strong) h s l / var(--kp-bp-pv));
+        --kp-bp-c-ground: hsl(from var(--background) h s l / var(--kp-bp-pv));
+        --kp-bp-c-note: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+        --kp-bp-c-trace: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        --kp-bp-pen-img:
+            radial-gradient(circle closest-side, var(--kp-bp-c-nib) 0 1.3px, var(--kp-bp-c-pen) 1.5px 2.2px, transparent 2.5px),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-ground), var(--kp-bp-c-ground));
+        --kp-bp-pen-size: 5px 5px, 1px 5px, 1px 5px, 5px 1px, 5px 1px, 9px 1px, 9px 1px, 1px 9px, 1px 9px, 9px 9px;
+        --kp-bp-pen-pos:
+            calc(var(--kp-bp-px) * 100% + 6px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 6px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 0px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 0px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+            calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px);
+        content: '';
+        position: absolute;
+        z-index: 2;
+        pointer-events: none;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='blueprint'] [data-dt] .dt-drawer::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -9px;
+        visibility: visible;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-ph-panel][data-ph-anim='open'],
+        [data-theme='blueprint'] [data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] [data-ph-panel][data-ph-anim='close'],
+        [data-theme='blueprint'] [data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
+        }
+    }
+
+    [data-theme='blueprint'] [data-dt-state='closed'] .dt-drawer {
+        visibility: hidden;
+    }
+}

@@ -509,7 +509,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The chart recorder',
-                text: 'A millimetre grid behind the groups, headings and hints in technical mono capitals, white ink rules between groups.',
+                text: 'The menu is an overlay sheet in one steel frame, no shadow and no grid behind it; headings in the draughtsman’s lettering, a rule between groups.',
             },
             { name: 'The title block', text: 'The plate parted into cells by drawn rules like a drawing’s title block, headings in mono capitals.' },
             {
@@ -518,12 +518,18 @@ const IDEAS = {
             },
         ],
         loading: [
-            { name: 'The pen sweeps', text: 'The recorder’s pen sweeps across the loading row, then starts again.' },
+            {
+                name: 'The pen sweeps',
+                text: 'One pen over the whole menu: it traces the menu’s outline, then underlines every place an entry’s words will stand, in reading order, the pen up between them; 18 units (2880 ms) a loop.',
+            },
             { name: 'The dash marches', text: 'A dash marches along the loading row’s baseline.' },
             { name: 'The dimension line', text: 'A dimension line with its ticks is drawn across the loading row, again and again.' },
         ],
         open: [
-            { name: 'Drafted', text: 'The menu is drawn in from the top at an even pace in white ink, and erased the same way to close.' },
+            {
+                name: 'Drafted',
+                text: 'The menu is drawn: the pen traces its outline from its corner, along the top, down the end, back along the foot and up the start, then the panel is inked; closing is that played backwards; 5 units (800 ms).',
+            },
             { name: 'Plotted', text: 'The menu is drawn in from the top in hard steps like a plotter pen, and retracts the same steps to close.' },
             { name: 'Unfolded', text: 'The menu unfolds along a drawn hinge line, and folds back along it to close.' },
         ],
@@ -538,14 +544,14 @@ const IDEAS = {
             },
             {
                 name: 'The hatched warning',
-                text: 'The destructive entry’s plate is hatched in its colour; the disabled reason reads in a fainter mono weight.',
+                text: 'Pointed out: the destructive entry carries the flag of a failure, a filled triangle in the tone’s ink before its label; nothing is hatched; the disabled reason in the lettering.',
             },
         ],
         interact: [
             { name: 'The pen underlines', text: 'A hovered or focused entry gets a white-ink underline drawn in; a press deepens the line.' },
             {
                 name: 'The grid highlights',
-                text: 'A hovered or focused entry’s grid cell lights a shade brighter; a press dims it back for a moment.',
+                text: 'An entry under the pointer or the keyboard is read on a scale: two amber witness lines at its ends; nothing lights, tints or dims.',
             },
             {
                 name: 'The dimension ticks',
