@@ -1173,15 +1173,20 @@ function paintFlip(step) {
     flipSpeedBtn.textContent = `Speed: ${motionSpeed === '1' ? 'Full' : motionSpeed === '0.5' ? '½' : '¼'} (E)`;
 }
 
-/** Scales the shown option down until all of it fits the stage's height: the element whole, never cropped. */
+/** Scales the shown option down, to three quarters at most, so as much of it as can stay readable fits the stage's height. */
 function fitShown(/** @type {HTMLElement} */ shown) {
     shown.style.removeProperty('zoom');
     stage.scrollTop = 0;
     const top = shown.getBoundingClientRect().top - stage.getBoundingClientRect().top;
     const room = stage.clientHeight - top - 8;
     const need = shown.getBoundingClientRect().height;
-    if (need > room && room > 0) shown.style.setProperty('zoom', String(Math.max(0.4, room / need)));
+    // Never below three quarters: a tall scene shrunk to fit (blueprint's
+    // and brutalism's Motifs at about half size) read as an empty stage
+    // (Kenny, 2026-10-07: "nothing is showing here"); the stage scrolls for
+    // the rest.
+    if (need > room && room > 0) shown.style.setProperty('zoom', String(Math.max(MIN_ZOOM, room / need)));
 }
+const MIN_ZOOM = 0.75;
 
 /**
  * Outlines the part of the demo the aspect is about, when the demo names it

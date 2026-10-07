@@ -218,9 +218,14 @@
 
 .rv-dialog__side {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto auto auto;
+    /* The rows always show whole and the side scrolls when they do not fit:
+       a long update note once squeezed "None of these" to nothing (Kenny,
+       2026-10-07: "maak het rechterdeel scrollbaar"). */
+    grid-template-rows: auto auto minmax(min-content, 1fr) auto auto auto;
     gap: 0.75rem;
     min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
     padding: 1rem;
     border-inline-start: 1px solid var(--border);
 }
@@ -332,7 +337,7 @@
     }
 
     .rv-dialog__side {
-        grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+        grid-template-rows: auto auto minmax(min-content, 1fr) auto auto;
         max-block-size: 50dvh;
         overflow: auto;
         padding: 0.75rem 16px;
@@ -571,6 +576,15 @@
     border-inline-start-width: 4px;
     border-radius: var(--radius-sm, 4px);
     background: var(--surface-2, var(--surface));
+    /* A long comment and reply scroll inside the box, so the pick and "None
+       of these" below it stay in reach (Kenny, 2026-10-07, terminal). */
+    max-block-size: 30dvh;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.rv-update:not(:empty) {
+    min-block-size: min(7rem, max-content);
 }
 
 .rv-update:empty {
