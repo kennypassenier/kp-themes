@@ -545,3 +545,9 @@ files cover nine themes; the ten without one (formal, light, dark, pastel,
 terminal, high-contrast, sepia, deco, phantom, retro) are read from their
 registers and their approved family pictures until their own grammar is
 written, and then this table and the eight before it are read first.
+
+---
+
+## Applied 2026-10-08
+
+Kenny's sixteen picks of 2026-10-07 23:41 are built into `css/blueprint-register.css` (the block "The character [scope-143]" in `kp.signature`, the numbers registered at the top of the file). Proposals applied: 2 (the feed is `--fx-ease`), 3 and 4 (a part is read out, a panel is traced), 5 (units of 160 ms), 6 and 18 (loading is one pen; the hatch stays only on the switch's on), 7 (live update, as _read again_ instead of the cloud), 8 (tone pointed out on a scale, not flagged), 10 (plates stand on two axes, not four brackets), 11 and 15 (hover reads on a scale, a press takes the dimension and never recolours), 12 (focus keeps DI2's ring and the lines), 13 (the resize plot is gone with its closed frame), 16 (the lettering), 17 (the readout, trace and press are logical where CSS allows; the press's draw-in mirrors in RTL). Not built as CSS: the size lettered on a press's dimension; the dimension-bar form (arrowheads, hatched fill, chain line) is removed from the progress bar and the meter. Facts in §2 that are now wrong: the leave is the readout (480 ms for a part), not the hatch; the press has no ground change and a dimension; the progress bar is the pen's stroke; skeletons are underlined places; the dialog opens by a traced outline, 800 ms.

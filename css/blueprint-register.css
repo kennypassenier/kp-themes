@@ -1,3 +1,74 @@
+/* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
+   anchor of the theme]. Registered at the top level because Firefox does not
+   register an @property inside a cascade layer; with no registration every
+   keyframe below would flip between its two poses instead of moving.
+   --kp-bp-r is the route of a traced outline (0 to 4: a side per unit),
+   --kp-bp-rp the reading along a diagonal (0 to 1), --kp-bp-p one stroke
+   along a line (0 to 1); --kp-bp-nib is the pen down (1) or up (0),
+   --kp-bp-pv, --kp-bp-rv and --kp-bp-tv how much of the pen, of the reading
+   (witness lines and pointers) and of the construction line is on the sheet;
+   --kp-bp-hv, --kp-bp-dv and --kp-bp-sv how much of the scale, of the
+   dimension and of the pointer a hand has set on a control. */
+@property --kp-bp-r {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-rp {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-nib {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-pv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-rv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-tv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-hv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-dv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-bp-sv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/blueprint-register.css
    The blueprint register, 5.0.0 [S48, LIFT_PLAN row 6]: a technical
@@ -90,6 +161,25 @@
            dropdown item's hover — one colour, two jobs. */
         --kp-wash: hsl(from var(--primary) h s l / 0.28);
         --kp-menu-wash: hsl(from var(--primary) h s l / 0.08);
+        /* The plotter's feed [scope-143, curve]: a stepper plotter's
+           trapezoid, a fifth of the time to reach the feed, three fifths at
+           it, a fifth to stop; the register's `--fx-ease` is this curve, so
+           every one-shot motion is a pen stroke. Durations count the
+           register's own 160 ms (`--fx-duration`): contact 1 unit, a tooltip
+           3, a part that arrives or leaves 3, a panel 5, a revision 6, a
+           loop 18, the compass 10. */
+        --kp-sig-bp-feed: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+        --kp-sig-bp-unit: var(--fx-duration, 160ms);
+        --kp-sig-bp-part: calc(3 * var(--kp-sig-bp-unit));
+        --kp-sig-bp-panel: calc(5 * var(--kp-sig-bp-unit));
+        --kp-sig-bp-tip: calc(3 * var(--kp-sig-bp-unit));
+        --kp-sig-bp-revision: calc(6 * var(--kp-sig-bp-unit));
+        --kp-sig-bp-loop: calc(18 * var(--kp-sig-bp-unit));
+        /* js/motion.js reads its caps from the root: a close or a glide of a
+           panel's own time is not cut short (its defaults, 600 and 480 ms, are
+           other themes'). */
+        --kp-close-max: 800ms;
+        --kp-size-max: 480ms;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -582,6 +672,9 @@
         color: inherit;
     }
 
+    /* Pointing reads the control on a scale and never tints it [G8, hover]:
+       only its own line turns the pen's cyan; the witness lines, the ruler and
+       the pointers are drawn below, with the dimension. */
     [data-theme='blueprint'] .kp-button:hover,
     [data-theme='blueprint'] .kp-icon-button:hover {
         background: var(--secondary);
@@ -589,16 +682,11 @@
         border-color: var(--primary);
     }
 
-    [data-theme='blueprint'] .kp-button--primary {
+    [data-theme='blueprint'] .kp-button--primary,
+    [data-theme='blueprint'] .kp-button--primary:hover {
         background: var(--primary);
         color: var(--primary-foreground);
         border-color: var(--primary);
-    }
-
-    [data-theme='blueprint'] .kp-button--primary:hover {
-        background: var(--foreground);
-        color: var(--background);
-        border-color: var(--foreground);
     }
 
     [data-theme='blueprint'] .kp-button--ghost {
@@ -613,16 +701,11 @@
         border-color: var(--border-strong);
     }
 
-    [data-theme='blueprint'] .kp-button--destructive {
+    [data-theme='blueprint'] .kp-button--destructive,
+    [data-theme='blueprint'] .kp-button--destructive:hover {
         background: var(--destructive);
         color: var(--destructive-foreground);
         border-color: var(--destructive);
-    }
-
-    [data-theme='blueprint'] .kp-button--destructive:hover {
-        background: hsl(from var(--destructive) h s calc(l + 8));
-        color: var(--destructive-foreground);
-        border-color: hsl(from var(--destructive) h s calc(l + 8));
     }
 
     /* The mirrored corner: a single mitred-corner construction mark, kept
@@ -1326,77 +1409,27 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
+    /* A press never recolours the part [press, Kenny 2026-10-07 22:24: "I
+       don't like the lighter colour it gives the elements"]: the ground it
+       has pointed at is the ground it has pressed. The rules stay, because
+       `kp.register` sits after `kp.components` and a layer beats a state
+       [fix-12]; what they say is the rest ground. */
     [data-theme='blueprint'] .kp-button:active:not(:disabled) {
-        background: var(--secondary-active);
+        background: var(--secondary);
+    }
+
+    [data-theme='blueprint'] .kp-button--ghost:active:not(:disabled) {
+        background: transparent;
     }
 
     [data-theme='blueprint'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
+        background: var(--primary);
+        border-color: var(--primary);
     }
 
     [data-theme='blueprint'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--destructive-active);
-        border-color: var(--destructive-active);
-    }
-
-    /* ── The dimension witness [gap-4, approved 2026-09-12] ────────────
-       A technical drawing calls out a length with two witness lines at its
-       ends. Touching a control sets them beside it, in the amber this
-       theme already reserves for its call-outs — the control becomes a
-       measured length for as long as you are on it.
-
-       The same instrument as the measurement frame this register took from
-       the command table in round six: four corner brackets reporting the
-       box they hold. This is that tool on a smaller thing.
-
-       Outside the control, so the box does not move: measured in firefox
-       2026-09-12, unchanged at rest and hovered, label contrast 9.33. */
-    [data-theme='blueprint'] .kp-button::before,
-    [data-theme='blueprint'] .kp-button::after {
-        content: '';
-        position: absolute;
-        inset-block: calc(-1 * var(--kp-witness-overhang, 0.4rem));
-        inline-size: 1px;
-        background: var(--accent);
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* Phase 7, `blueprint-lines`, Kenny 2026-09-12: "De lijntjes komen
-       naar binnen". The witness lines stood at `-0.35rem` OUTSIDE the
-       control, and the right-hand one therefore added 5.6px plus its own
-       pixel to every blueprint button's scrollable area, visible or not —
-       measured `195 in 189`, `194 in 188`, `190 in 184`, `166 in 160`,
-       `114 in 108` on the concept page, the same six pixels every time.
-       `overflow: clip` with a clip margin was tried and does not help:
-       firefox counts the clip margin in `scrollWidth`.
-
-       So the gap changes sign. The lines now sit the same distance from
-       the boundary, on the inside of it, and the control no longer
-       carries six pixels nobody can reach. The vertical overhang is
-       untouched — it never contributed to the width, and it is what makes
-       them read as measurement marks rather than as a border. */
-    [data-theme='blueprint'] .kp-button::before {
-        inset-inline-start: var(--kp-witness-gap, 0.35rem);
-    }
-
-    [data-theme='blueprint'] .kp-button::after {
-        inset-inline-end: var(--kp-witness-gap, 0.35rem);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] .kp-button::before,
-        [data-theme='blueprint'] .kp-button::after {
-            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
-        }
-    }
-
-    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::before,
-    [data-theme='blueprint'] .kp-button:hover:not(:disabled)::after,
-    [data-theme='blueprint'] .kp-button:focus-visible::before,
-    [data-theme='blueprint'] .kp-button:focus-visible::after {
-        opacity: 1;
+        background: var(--destructive);
+        border-color: var(--destructive);
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */
@@ -1502,130 +1535,6 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
-    /* The link signature is for links in running text; a link in a navigation,
-       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
-       (scope-93: no link colour in a navigation). */
-    [data-theme='blueprint'] .kp-progressbar {
-        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
-        --bp-line: var(--primary);
-        --bp-scale: var(--border-strong);
-        --bp-arrow: calc(0.45rem * var(--kp-progressbar-scale, 1));
-        --bp-chain: calc(22px * var(--kp-progressbar-scale, 1));
-        --bp-hatch: calc(1.5px * var(--kp-progressbar-scale, 1));
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__track {
-        border-radius: 0;
-        background:
-            linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
-            linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
-            repeating-linear-gradient(90deg, var(--bp-scale) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
-            repeating-linear-gradient(
-                    90deg,
-                    color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px,
-                    transparent 1px calc(100% / (var(--kp-steps) * 2))
-                )
-                center / 100% 28% no-repeat,
-            linear-gradient(var(--bp-scale), var(--bp-scale)) center / 100% 1px no-repeat,
-            transparent;
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__fill {
-        inset-block: 18%;
-        background:
-            linear-gradient(var(--bp-line), var(--bp-line)) top / 100% 2px no-repeat,
-            linear-gradient(var(--bp-line), var(--bp-line)) bottom / 100% 2px no-repeat,
-            repeating-linear-gradient(
-                -45deg,
-                var(--bp-line) 0 var(--bp-hatch),
-                transparent var(--bp-hatch) calc(4.5px * var(--kp-progressbar-scale, 1))
-            ),
-            var(--background);
-        transition: clip-path var(--fx-duration, 160ms) linear;
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__head {
-        inline-size: 0;
-        transition: transform var(--fx-duration, 160ms) linear;
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__head::before {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: -1px;
-        inline-size: 2px;
-        background: var(--bp-line);
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__head::after {
-        content: '';
-        position: absolute;
-        inset-block: 4%;
-        inset-inline-end: 0;
-        inline-size: calc(var(--bp-arrow) * 1.3);
-        background: var(--bp-line);
-        clip-path: polygon(0 0, 100% 50%, 0 100%, 28% 50%);
-    }
-
-    [data-theme='blueprint'] .kp-progressbar__fill::after {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: var(--bp-arrow);
-        background: var(--bp-line);
-        clip-path: polygon(100% 0, 0 50%, 100% 100%, 72% 50%);
-    }
-
-    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: 0;
-        inline-size: auto;
-        clip-path: none;
-        animation: none;
-        background: none;
-        overflow: hidden;
-    }
-
-    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
-        content: none;
-    }
-
-    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-        content: '';
-        position: absolute;
-        inset-block-start: calc(50% - 1.5px);
-        inset-inline-start: 0;
-        block-size: 3px;
-        inline-size: calc(100% + var(--bp-chain));
-        background: repeating-linear-gradient(
-            90deg,
-            var(--bp-line) 0 calc(13px * var(--kp-progressbar-scale, 1)),
-            transparent calc(13px * var(--kp-progressbar-scale, 1)) calc(16px * var(--kp-progressbar-scale, 1)),
-            var(--bp-line) calc(16px * var(--kp-progressbar-scale, 1)) calc(19px * var(--kp-progressbar-scale, 1)),
-            transparent calc(19px * var(--kp-progressbar-scale, 1)) var(--bp-chain)
-        );
-    }
-
-    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
-        background:
-            linear-gradient(var(--bp-scale), var(--bp-scale)) left top / 1px 100% no-repeat,
-            linear-gradient(var(--bp-scale), var(--bp-scale)) right top / 1px 100% no-repeat,
-            repeating-linear-gradient(
-                    90deg,
-                    color-mix(in oklab, var(--bp-scale) 55%, transparent) 0 1px,
-                    transparent 1px calc(100% / var(--kp-steps))
-                )
-                center / 100% 56% no-repeat,
-            transparent;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-            animation: kp-progressbar-blueprint-chain 700ms linear infinite;
-        }
-    }
-
     [data-theme='blueprint'] .kp-spinner {
         --kp-sig-dur: 1600ms;
         position: relative;
@@ -1652,43 +1561,6 @@
 
     [data-theme='blueprint'] .kp-spinner::after {
         border: 1.5px solid var(--primary);
-    }
-
-    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 2800ms;
-        position: relative;
-        block-size: 0.9rem;
-        /* 1px at the start, so the dimension tick (inset -1px) stands on the box
-           edge and the line starts there (Kenny, 2026-10-03: every skeleton line
-           starts at the left edge). */
-        margin-inline: 1px 4px;
-        border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
-        border-radius: 0;
-        background: none;
-        animation: none;
-    }
-
-    [data-theme='blueprint']
-        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
-        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        margin-block-start: 0.7rem;
-    }
-
-    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 6px);
-    }
-
-    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-        content: '';
-        position: absolute;
-        inset-block: -5px;
-        inset-inline: -1px;
-        background:
-            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 100% no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 100% no-repeat;
     }
 
     [data-theme='blueprint'] .kp-switch {
@@ -1765,7 +1637,7 @@
     }
 
     [data-theme='blueprint'] .kp-toast {
-        --kp-sig-dur: 420ms;
+        --kp-sig-dur: var(--kp-sig-bp-panel);
         position: relative;
         margin-block-start: 0.5rem;
         border: 1px solid hsl(from var(--foreground) h s l / 0.6);
@@ -1806,34 +1678,37 @@
             hsl(from var(--background) h s calc(l * 0.7));
     }
 
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads a close as two thirds
+       of that; so it runs one and a half openings, and the dialog that is open
+       runs one, which is also its close (5 units, 800 ms: the pen traces the
+       outline, the sheet is inked). */
     [data-theme='blueprint'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ½ of its first speed ("I prefer this at 1/2 speed"). */
-        --kp-sig-dur: 840ms;
+        --kp-sig-dur: calc(1.5 * var(--kp-sig-bp-panel));
         border: 1px solid var(--primary);
         border-radius: 2px;
         background: var(--popover);
         box-shadow: none;
     }
 
-    [data-theme='blueprint'] .kp-dialog::before,
-    [data-theme='blueprint'] .kp-dialog::after {
+    [data-theme='blueprint'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-bp-panel);
+    }
+
+    /* The registration crosses of an overlay sheet [G16]: at its start and
+       end corners, inside its edge (the dialog scrolls inside itself, so
+       nothing outside it is ever drawn); both on ::before, so ::after is the
+       pen's. */
+    [data-theme='blueprint'] .kp-dialog::before {
         content: '';
         position: absolute;
-        inline-size: 15px;
-        block-size: 15px;
+        inset: 0;
+        pointer-events: none;
         background:
-            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
-    }
-
-    [data-theme='blueprint'] .kp-dialog::before {
-        inset-block-start: -8px;
-        inset-inline-start: -8px;
-    }
-
-    [data-theme='blueprint'] .kp-dialog::after {
-        inset-block-end: -8px;
-        inset-inline-end: -8px;
+            linear-gradient(var(--primary), var(--primary)) 6px 3px / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 3px 6px / 7px 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 6px) calc(100% - 3px) / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 3px) calc(100% - 6px) / 7px 1px no-repeat;
     }
 
     [data-theme='blueprint'] .kp-dialog__title {
@@ -1978,6 +1853,9 @@
         margin: 0;
     }
 
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
     [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         text-decoration-thickness: 1px;
         text-underline-offset: 0.3em;
@@ -2004,18 +1882,6 @@
             animation: kp-sig-blueprint-blueprint-compass var(--kp-sig-dur) linear infinite;
         }
 
-        [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-blueprint-blueprint-hatch var(--kp-sig-dur) linear infinite;
-        }
-
-        [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 250ms;
-        }
-
-        [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 500ms;
-        }
-
         [data-theme='blueprint'] .kp-switch__input::before {
             transition: transform 200ms linear;
         }
@@ -2028,24 +1894,108 @@
             animation: kp-sig-blueprint-blueprint-mark var(--kp-sig-dur) linear both;
         }
 
-        [data-theme='blueprint'] .kp-toast {
-            animation: kp-sig-blueprint-blueprint-draw var(--kp-sig-dur) linear backwards;
-        }
-
-        [data-theme='blueprint'] .kp-toast::before {
-            animation: kp-sig-blueprint-blueprint-span var(--kp-sig-dur) linear both;
-        }
-
-        [data-theme='blueprint'] .kp-dialog {
-            animation: kp-sig-blueprint-blueprint-sheet var(--kp-sig-dur) linear backwards;
-        }
-
+        /* A tooltip opens along its leader first [opening, G3]: the leader is
+           drawn from its node, then the pen traces the outline on the tooltip's
+           own ground, and at three quarters the words and the plate are inked.
+           Three units, the closing is this played backwards
+           (js/overlays.js, [data-kp-reversing]). */
         [data-theme='blueprint'] .kp-tooltip {
-            animation: kp-sig-blueprint-blueprint-callout var(--kp-sig-dur) linear backwards;
+            animation: kp-sig-blueprint-callout var(--kp-sig-dur) linear backwards;
         }
 
         [data-theme='blueprint'] .kp-tooltip::before {
-            animation: kp-sig-blueprint-blueprint-leader var(--kp-sig-dur) linear backwards;
+            animation: kp-sig-blueprint-leader var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tooltip::after {
+            animation: kp-sig-blueprint-node var(--kp-sig-dur) linear backwards;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-bp-tip);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-image:
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary)),
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary));
+        background-size:
+            calc(clamp(0, var(--kp-bp-r), 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * 100%),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * 100%);
+        background-position:
+            left top,
+            right top,
+            right bottom,
+            left bottom;
+        background-color: var(--popover);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-blueprint-callout {
+            0%,
+            28% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 0;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            43% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            53% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            68% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            74.9% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 4;
+            }
+
+            75%,
+            100% {
+                --kp-bp-r: 4;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-leader {
+            0% {
+                transform: scaleY(0);
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            28%,
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes kp-sig-blueprint-node {
+            0%,
+            27.9% {
+                opacity: 0;
+            }
+
+            28%,
+            100% {
+                opacity: 1;
+            }
         }
     }
 
@@ -2083,24 +2033,6 @@
         }
     }
 
-    @keyframes kp-sig-blueprint-blueprint-hatch {
-        0% {
-            opacity: 1;
-            clip-path: inset(0 100% 0 0);
-        }
-
-        50%,
-        80% {
-            opacity: 1;
-            clip-path: inset(0);
-        }
-
-        100% {
-            opacity: 0;
-            clip-path: inset(0);
-        }
-    }
-
     @keyframes kp-sig-blueprint-blueprint-draw {
         from {
             clip-path: inset(0 100% 0 0);
@@ -2123,142 +2055,22 @@
         }
     }
 
-    @keyframes kp-sig-blueprint-blueprint-span {
-        0%,
-        40% {
-            transform: scaleX(0);
-        }
+    /* Growing and shrinking, and leaving, this theme's way [scope-142; the
+       drawing and the hatched leave Kenny picked on 2026-10-04 are replaced by
+       the character of 2026-10-07 23:41, below: a part that arrives and leaves
+       is read out on its own scales, a box that grows or shrinks glides on the
+       plotter's feed, which is the curve the entrance js/motion.js reads it
+       from]. A box that is measured anew keeps no frame round it any more: a
+       closed dashed frame round what is inside is the one thing this sheet
+       never draws.
 
-        100% {
-            transform: none;
-        }
-    }
-
-    @keyframes kp-sig-blueprint-blueprint-sheet {
-        from {
-            clip-path: inset(-10px 100% calc(100% - 2px) -10px);
-        }
-
-        40% {
-            clip-path: inset(-10px -10px calc(100% - 2px) -10px);
-        }
-
-        to {
-            clip-path: inset(-10px);
-        }
-    }
-
-    @keyframes kp-sig-blueprint-blueprint-callout {
-        0%,
-        45% {
-            clip-path: inset(-1.5rem 100% 0 0);
-        }
-
-        100% {
-            clip-path: inset(-1.5rem 0 0 0);
-        }
-    }
-
-    @keyframes kp-sig-blueprint-blueprint-leader {
-        0% {
-            transform: scaleY(0);
-        }
-
-        45%,
-        100% {
-            transform: scaleY(1);
-        }
-    }
-
-    @keyframes kp-progressbar-blueprint-chain {
-        from {
-            transform: translateX(calc(-1 * var(--bp-chain)));
-        }
-        to {
-            transform: translateX(0);
-        }
-    }
-
-    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
-       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
-       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+       Opening is closing turned around (Kenny's pick on research/open-reverse,
+       2026-10-05): js/motion.js opens the dialog as its close played
+       backwards, in the close's time, and lets what arrives play its leave
+       backwards. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── blueprint: the drawing. A dashed dimension frame stands off the
-           box while it is measured anew, and new lines are plotted top down,
-           at the plotter's even pace. ──────────────────────────────────── */
-        [data-theme='blueprint'] [data-kp-resizing] {
-            outline: 1px dashed var(--primary);
-            outline-offset: 8px;
-        }
-
-        [data-theme='blueprint'] [data-kp-arriving] {
-            animation: kp-sig-blueprint-size-plot 420ms linear backwards;
-        }
-
-        /* An explicit end: an inset does not interpolate with the line's own
-           clip-path: none, so with only a `from` the line was hidden for half
-           the run and then whole, never plotted. */
-        @keyframes kp-sig-blueprint-size-plot {
-            from {
-                clip-path: inset(0 0 100% 0);
-                outline: 1px dashed var(--primary);
-            }
-            to {
-                clip-path: inset(0);
-            }
-        }
-    }
-
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
-    @media (prefers-reduced-motion: no-preference) {
-        /* ── blueprint: hatched out like a wall marked for demolition on a plan, then lifted off the sheet ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='blueprint'] {
             --kp-open: reverse-close;
-        }
-
-        [data-theme='blueprint'] [data-kp-leaving] {
-            position: relative;
-            overflow: clip;
-            outline: 1px dashed var(--primary);
-            animation: kp-sig-blueprint-leave 1100ms linear forwards;
-        }
-
-        [data-theme='blueprint'] [data-kp-leaving]::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 2;
-            background: repeating-linear-gradient(45deg, var(--primary) 0 1.5px, transparent 1.5px 9px);
-            animation: kp-sig-blueprint-leave-2 1100ms linear forwards;
-        }
-
-        @keyframes kp-sig-blueprint-leave {
-            0%,
-            70% {
-                opacity: 1;
-            }
-
-            to {
-                opacity: 0;
-                transform: translate(6px, -6px);
-            }
-        }
-
-        @keyframes kp-sig-blueprint-leave-2 {
-            from {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            60%,
-            to {
-                clip-path: inset(0 0 0 0);
-            }
         }
     }
 
@@ -2348,12 +2160,11 @@
             linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / 100% 1px no-repeat;
     }
 
-    /* The measured length, an arrowhead at its end. */
+    /* The measured length, drawn flat: the pen's stroke has no arrowhead. */
     [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before {
         inset-block: 1px;
         border-radius: 0;
         background: var(--kp-meter-fill-colour);
-        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 50%, calc(100% - 5px) 100%, 0 100%);
     }
 
     /* An amber leader with its ring. */
@@ -2386,21 +2197,6 @@
         translate: 0 -55%;
         color: var(--kp-meter-fill-colour);
         font: 700 0.75rem/1 var(--theme-font-mono, monospace);
-    }
-
-    /* ── while loading: option 1 ── */
-
-    /* The plotter pen runs along the baseline at an even pace. */
-    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        inset-block: auto 0;
-        block-size: 3px;
-        background: linear-gradient(var(--primary), var(--primary)) 50% 0 / 1.25rem 100% no-repeat;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-blueprint-meter-plot 1800ms linear infinite alternate;
-        }
     }
 
     /* ── how the share arrives: option 1 ── */
@@ -2449,16 +2245,6 @@
         }
     }
 
-    @keyframes kp-sig-blueprint-meter-plot {
-        0% {
-            background-position: 0 0;
-        }
-
-        100% {
-            background-position: 100% 0;
-        }
-    }
-
     @keyframes kp-sig-blueprint-meter-wipe-d {
         0% {
             clip-path: inset(0 100% 0 0);
@@ -2488,5 +2274,1208 @@
             clip-path: inset(0);
         }
     }
+
+    /* <<character */
+    /* ── The character [scope-143] ───────────────────────────────────────────
+       Kenny, 2026-10-07 23:41: sixteen of sixteen approved on
+       research/blueprint-character, with the tracing pen as the anchor
+       (research/blueprint-anchor): one visible plotter pen, one stroke, a feed
+       that ramps at its start and its end, amber witness lines and pointers
+       reading its place on both scales. It all draws on the package's own
+       components, with no element and no script of its own. The pen is away at
+       rest and while a part is away (its numbers are 0), so every finished pose
+       is the finished picture without a pen. Every number the pen moves by is a
+       registered property at the top of this file; every keyframe below writes
+       those numbers and nothing else of the pen. ── */
+
+    /* The pen's look, once, for every pseudo-element it draws on: a 17 px
+       carriage (a square in the steel line, a sight through it, the nib down
+       filled or up hollow) placed by the percent trick, so its centre runs inside
+       the box with 8 px to spare on every side and nothing needs the box's size. */
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving])::after,
+    [data-theme='blueprint'] .kp-dialog::after,
+    [data-theme='blueprint'] .kp-popover:not(.kp-tooltip)::after,
+    [data-theme='blueprint'] .kp-menu-button > .kp-menu::after,
+    [data-theme='blueprint'] .kp-combobox__list::after,
+    [data-theme='blueprint'] .kp-datepicker__panel::after,
+    [data-theme='blueprint'] .kp-toast::after,
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after,
+    [data-theme='blueprint'] .kp-skeleton--block::after,
+    [data-theme='blueprint'] .kp-skeleton--circle::before,
+    [data-theme='blueprint'] .kp-progressbar__head::before,
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        --kp-bp-c-pen: hsl(from var(--primary) h s l / var(--kp-bp-pv));
+        --kp-bp-c-nib: hsl(from var(--primary) h s l / calc(var(--kp-bp-nib) * var(--kp-bp-pv)));
+        --kp-bp-c-steel: hsl(from var(--border-strong) h s l / var(--kp-bp-pv));
+        --kp-bp-c-ground: hsl(from var(--background) h s l / var(--kp-bp-pv));
+        --kp-bp-c-note: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+        --kp-bp-c-trace: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        --kp-bp-pen-img:
+            radial-gradient(circle closest-side, var(--kp-bp-c-nib) 0 1.3px, var(--kp-bp-c-pen) 1.5px 2.2px, transparent 2.5px),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+            linear-gradient(var(--kp-bp-c-ground), var(--kp-bp-c-ground));
+        --kp-bp-pen-size: 5px 5px, 1px 5px, 1px 5px, 5px 1px, 5px 1px, 9px 1px, 9px 1px, 1px 9px, 1px 9px, 9px 9px;
+        --kp-bp-pen-pos:
+            calc(var(--kp-bp-px) * 100% + 6px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 6px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 0px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 11px),
+            calc(var(--kp-bp-px) * 100% + 0px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+            calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px);
+        content: '';
+        position: absolute;
+        z-index: 2;
+        pointer-events: none;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving])::after {
+        --kp-bp-px: var(--kp-bp-rp);
+        --kp-bp-py: var(--kp-bp-rp);
+        inset: 0;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-note), var(--kp-bp-c-note)),
+            linear-gradient(var(--kp-bp-c-note), var(--kp-bp-c-note)),
+            conic-gradient(from -45deg at 50% 100%, var(--kp-bp-c-note) 90deg, transparent 0),
+            conic-gradient(from 45deg at 0 50%, var(--kp-bp-c-note) 90deg, transparent 0);
+        background-size:
+            var(--kp-bp-pen-size),
+            1px calc((1 - var(--kp-bp-py)) * (100% - 16px) + 8px),
+            calc(9px + var(--kp-bp-px) * (100% - 16px)) 1px,
+            9px 5px,
+            5px 9px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) 100%,
+            0 calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+            calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) 100%,
+            0 calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A part arrives and leaves by being read out on its own scales (Kenny,
+           2026-10-07 23:41, arrival and leave): the pen is set down at the start
+           corner, lowered, and read along the part's diagonal on one feed, its
+           amber witness lines running from the nib to the foot and to the start
+           edge with a pointer on each scale; each line of the part is inked as the
+           pen passes it. The leave is that played backwards (the pen comes to the
+           end corner, reads back, and each line goes as it passes): js/motion.js
+           plays a leave turned around for an arrival (--kp-open: reverse-close), so
+           the one set of keyframes is both. The part's own frame stands from the
+           first frame to the last; only its lines are inked: a mask, a line high
+           in steps, over the content box alone. */
+        [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]) {
+            position: relative;
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground));
+            mask-origin: content-box, border-box, content-box;
+            mask-clip: content-box, border-box, content-box;
+            mask-size:
+                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% 100%,
+                100% 100%;
+            mask-position: 0 0;
+            mask-repeat: no-repeat;
+            mask-composite: add, subtract, add;
+        }
+
+        [data-theme='blueprint'] [data-kp-leaving] {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
+        [data-theme='blueprint'] [data-kp-arriving]:not([data-kp-leaving]) {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        @keyframes kp-sig-blueprint-read {
+            0% {
+                visibility: hidden;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 0;
+            }
+
+            10% {
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            90% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: linear;
+            }
+
+            92% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            99.9% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            100% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+        }
+    }
+
+    [data-theme='blueprint'] .kp-dialog::after,
+    [data-theme='blueprint'] .kp-popover:not(.kp-tooltip)::after,
+    [data-theme='blueprint'] .kp-menu-button > .kp-menu::after,
+    [data-theme='blueprint'] .kp-combobox__list::after,
+    [data-theme='blueprint'] .kp-datepicker__panel::after,
+    [data-theme='blueprint'] .kp-toast::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -9px;
+        visibility: visible;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* What opens is drawn the same way (Kenny, 2026-10-07 23:41, opening): the
+           pen traces the panel's outline from its corner, along the top, down the
+           end, back along the foot and up the start, each side on its own feed,
+           and at three quarters of the time the panel is inked at once and the
+           construction line is lifted. The panel is hidden meanwhile (visibility);
+           the line and the pen are its ::after, which stays visible, and the box
+           lets them reach past its edge until the ink. Closing is the opening
+           played backwards: the dialog by js/motion.js, a toast by its own leave
+           (the same keyframes under a second name, so the browser restarts
+           them). */
+        [data-theme='blueprint'] .kp-dialog,
+        [data-theme='blueprint'] .kp-popover:not(.kp-tooltip),
+        [data-theme='blueprint'] .kp-menu-button > .kp-menu,
+        [data-theme='blueprint'] .kp-combobox__list,
+        [data-theme='blueprint'] .kp-datepicker__panel,
+        [data-theme='blueprint'] .kp-toast {
+            animation: kp-sig-blueprint-trace var(--kp-sig-dur, var(--kp-sig-bp-panel)) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-toast {
+            --kp-bp-ov: visible;
+        }
+
+        [data-theme='blueprint'] .kp-toast[data-kp-leaving] {
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-dur, var(--kp-sig-bp-panel)) linear reverse forwards;
+            mask: none;
+        }
+
+        @keyframes kp-sig-blueprint-trace {
+            0% {
+                visibility: hidden;
+                overflow: visible;
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.1% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            26.25% {
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            37.5% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            63.75% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            74.9% {
+                visibility: hidden;
+                overflow: visible;
+                --kp-bp-r: 4;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            75% {
+                visibility: visible;
+                overflow: var(--kp-bp-ov, auto);
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            100% {
+                visibility: visible;
+                overflow: var(--kp-bp-ov, auto);
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-trace-out {
+            0% {
+                visibility: hidden;
+                overflow: visible;
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.1% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            26.25% {
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            37.5% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            63.75% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            74.9% {
+                visibility: hidden;
+                overflow: visible;
+                --kp-bp-r: 4;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            75% {
+                visibility: visible;
+                overflow: var(--kp-bp-ov, auto);
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            100% {
+                visibility: visible;
+                overflow: var(--kp-bp-ov, auto);
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+    }
+
+    /* Pointing, focus and press on a control [hover, focus, press, composites].
+       Pointing sets two amber witness lines at the control's ends, overhanging its
+       top and running on below its foot to a ruler with a pointer on each end:
+       the control is read on a scale (--kp-bp-hv the lines, --kp-bp-sv the
+       scale). Focus keeps DI2's two-channel ring and the lines. A press takes
+       the dimension: the lines run on further, the scale gives way to a dimension
+       with a slash at each end, drawn in two units below the part, outside it
+       (--kp-bp-dv); the part's own ground never changes. The size is not lettered
+       on it: CSS cannot print a measured length. */
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button) {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+        --kp-bp-n3: hsl(from var(--accent) h s l / var(--kp-bp-dv));
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button)::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.4rem -1.4rem;
+        inset-inline: calc(var(--kp-witness-gap, 0.35rem) - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            1px calc(100% - 0.8rem * (1 - var(--kp-bp-dv))),
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 4px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            4px calc(100% - 0.8rem - 5px),
+            4px calc(100% - 0.8rem - 6px),
+            left bottom 0.8rem,
+            right bottom 0.8rem;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button)::after {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(-1.1rem - 7px);
+        block-size: 7px;
+        inset-inline: calc(var(--kp-witness-gap, 0.35rem) - 3px);
+        pointer-events: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-dv)) * 100%) 0 0);
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-n3) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(var(--kp-bp-n3), var(--kp-bp-n3));
+        background-size:
+            7px 7px,
+            7px 7px,
+            calc(100% - 6px) 1px;
+        background-position:
+            left top,
+            right top,
+            3px center;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):dir(rtl)::after {
+        clip-path: inset(0 0 0 calc((1 - var(--kp-bp-dv)) * 100%));
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):hover:not(:disabled) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):focus-visible {
+        --kp-bp-hv: 1;
+    }
+
+    [data-theme='blueprint'] :is(.kp-button, .kp-icon-button):active:not(:disabled) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 0;
+        --kp-bp-dv: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-button, .kp-icon-button) {
+            transition:
+                --kp-bp-hv var(--fx-duration) var(--fx-ease),
+                --kp-bp-sv var(--fx-duration) var(--fx-ease),
+                --kp-bp-dv calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+    }
+
+    /* A menu entry is the theme's own entry: its wash, and the two witness lines of a control. */
+    [data-theme='blueprint'] .kp-menu__item {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+    }
+
+    [data-theme='blueprint'] .kp-menu__item::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.2rem;
+        inset-inline: 0.35rem;
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image: linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1));
+        background-size:
+            1px 100%,
+            1px 100%;
+        background-position:
+            left top,
+            right top;
+    }
+
+    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus-visible):not([aria-disabled='true']) {
+        --kp-bp-hv: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-menu__item {
+            transition: --kp-bp-hv var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* The surface [surface, G7]: a plate is a part on the sheet, not a box on
+       it. No fill and no closed frame: the sheet and its ruled grid show through,
+       and the plate stands on the graticule's two axes, a ruler along its start
+       edge and another along its foot, a short tick every 8 px and a long one every
+       40 in the line the finished lines are drawn in. The frame's 1 px stays, in
+       no colour, so no plate changes size. What floats over the sheet (a menu, a
+       dialog, a toast) is an overlay sheet and keeps its one frame. The axes are
+       three custom properties so a part the package does not name (a demo's) can
+       stand on them too. */
+    [data-theme='blueprint'] {
+        --kp-bp-axes-img:
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong)),
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--border-strong) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--border-strong) 0 1px, transparent 1px 40px);
+        --kp-bp-axes-size: 100% 1px, 1px 100%, 100% 4px, 4px 100%, 100% 7px, 7px 100%;
+        --kp-bp-axes-pos: left bottom, left top, left bottom, left top, left bottom, left top;
+    }
+
+    [data-theme='blueprint']:dir(rtl) {
+        --kp-bp-axes-pos: right bottom, right top, right bottom, right top, right bottom, right top;
+    }
+
+    [data-theme='blueprint'] .kp-card,
+    [data-theme='blueprint'] .kp-kpi,
+    [data-theme='blueprint'] .kp-grid__tile,
+    [data-theme='blueprint'] .kp-split__pane,
+    [data-theme='blueprint'] .kp-spec,
+    [data-theme='blueprint'] .kp-log,
+    [data-theme='blueprint'] .kp-diff,
+    [data-theme='blueprint'] .kp-wizard,
+    [data-theme='blueprint'] .kp-datatable,
+    [data-theme='blueprint'] .kp-form__summary,
+    [data-theme='blueprint'] .kp-reorder,
+    [data-theme='blueprint'] .kp-alert:not([class*='kp-alert--']),
+    [data-theme='blueprint'] .kp-empty {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+
+    [data-theme='blueprint'] .kp-table {
+        background: transparent;
+    }
+
+    /* A tone is pointed out [tone, G13]: the figure stands upright on no plate and a
+       short ruler runs under it with a pointer in the tone's ink where the reading
+       is (--kp-bp-at, 0 to 1; a warning 0.7, a failure 0.92 unless the page says
+       where). Nothing frames the whole part, nothing hatches it, no plate under
+       the figure. The ink is the status colour made light enough to read on the
+       sheet. A change is set in the lettering with its sign (the arrow before
+       it), on no plate. */
+    [data-theme='blueprint'] .kp-kpi {
+        --kp-bp-warn: hsl(from var(--warning) h s 62%);
+        --kp-bp-bad: var(--destructive);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        --kp-bp-tone: var(--kp-bp-warn);
+        --kp-bp-at: 0.7;
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-bp-tone: var(--kp-bp-bad);
+        --kp-bp-at: 0.92;
+        --kp-kpi-meter-fill: var(--kp-bp-bad);
+    }
+
+    [data-theme='blueprint'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-kpi-meter-fill: var(--kp-bp-warn);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        position: relative;
+        padding: 0 0 14px;
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 6px;
+        inset-inline: 0;
+        block-size: 5px;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px) bottom / 100% 4px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: calc(var(--kp-bp-at) * 100%);
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--kp-bp-tone) 90deg, transparent 0);
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone] {
+        padding: 0;
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone='good'] {
+        color: hsl(from var(--success) h s 62%);
+    }
+
+    [data-theme='blueprint'] .kp-kpi__delta[data-kp-tone='bad'] {
+        color: var(--destructive);
+    }
+
+    /* The voice [voice, G15]: the lettering names, the sans speaks. Labels, tags,
+       table heads, the change, toasts, the tooltip and the dialog's title are the
+       draughtsman's lettering: mono capitals sloped 15 degrees (ISO 3098 type B),
+       barely tracked. Titles and figures stay upright, in the sans, with tabular
+       figures. */
+    [data-theme='blueprint'] .microlabel,
+    [data-theme='blueprint'] .kp-badge,
+    [data-theme='blueprint'] .kp-tag,
+    [data-theme='blueprint'] .kp-table th,
+    [data-theme='blueprint'] .kp-kpi__label,
+    [data-theme='blueprint'] .kp-kpi__delta,
+    [data-theme='blueprint'] .kp-toast,
+    [data-theme='blueprint'] .kp-tooltip,
+    [data-theme='blueprint'] .kp-dialog__title,
+    [data-theme='blueprint'] .kp-menu__heading,
+    [data-theme='blueprint'] .kp-empty__title,
+    [data-theme='blueprint'] .kp-health,
+    [data-theme='blueprint'] .kp-wizard__steps,
+    [data-theme='blueprint'] .kp-datatable__sort {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-card__title,
+    [data-theme='blueprint'] .kp-kpi__value,
+    [data-theme='blueprint'] .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-style: normal;
+        font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A value that changes in place is read again [live]: js/update.js writes
+           the new value at once and marks the element [data-kp-updating='read'];
+           a short ruler is set under it with an amber pointer standing on the old
+           reading, which slides to the new one on the feed (15 % to 60 % of 6 units,
+           960 ms) and stands; ruler and pointer are lifted at once. The value never
+           moves, flips or swells. A page that knows the two readings says them as
+           --kp-bp-from and --kp-bp-to (0 to 1). */
+        [data-theme='blueprint'] {
+            --kp-update: read;
+        }
+
+        [data-theme='blueprint'] [data-kp-updating='read'] {
+            position: relative;
+        }
+
+        [data-theme='blueprint'] [data-kp-updating='read']:not(.kp-state-word)::after,
+        [data-theme='blueprint'] .kp-state-word[data-kp-updating='read']::before {
+            content: '';
+            position: absolute;
+            inset-block-start: calc(100% + 2px);
+            inset-inline: 0;
+            block-size: 12px;
+            pointer-events: none;
+            --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            background-repeat: no-repeat;
+            background-image:
+                conic-gradient(from 135deg at 50% 0, var(--kp-bp-n1) 90deg, transparent 0), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+                repeating-linear-gradient(90deg, var(--kp-bp-n1) 0 1px, transparent 1px 5px);
+            background-size:
+                9px 6px,
+                100% 1px,
+                100% 4px;
+            background-position:
+                calc(var(--kp-bp-p) * 100%) bottom,
+                left 5px,
+                left 1px;
+            animation: kp-sig-blueprint-update-read var(--kp-sig-bp-revision) linear both;
+        }
+
+        @keyframes kp-sig-blueprint-update-read {
+            0% {
+                --kp-bp-p: var(--kp-bp-from, 0.2);
+                --kp-bp-rv: 1;
+            }
+
+            15% {
+                --kp-bp-p: var(--kp-bp-from, 0.2);
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            60%,
+            85% {
+                --kp-bp-p: var(--kp-bp-to, 0.8);
+                --kp-bp-rv: 1;
+            }
+
+            85.1%,
+            100% {
+                --kp-bp-p: var(--kp-bp-to, 0.8);
+                --kp-bp-rv: 0;
+            }
+        }
+    }
+
+    /* Loading is one pen [loading, Kenny 2026-10-07 22:24: "always just one pen
+       that traces everything"]: the pen traces the outline of what waits, then
+       underlines every place a reading will stand, in reading order, the pen up
+       between places. A place is two dimension ticks and a baseline the pen
+       draws; places follow each other two units apart, so no two pens are ever
+       on the sheet at once; a block of places is traced round first. A loop is
+       18 units (2880 ms): the route, the marks standing, the marks lifted. The
+       reduced pose is the marks standing, drawn, and no pen. The progress bar
+       draws its value as a stroke with the pen at its end, busy it strokes along
+       the scale, lifts, goes back with the pen up and strokes again; the
+       compass of the spinner is the approved circle and stays. */
+    [data-theme='blueprint'] .kp-skeleton {
+        background: transparent;
+        border-radius: 0;
+        animation: none;
+        --kp-bp-p: 1;
+        --kp-bp-tv: 1;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 0.9rem;
+        margin-inline: 1px 4px;
+        border: 0;
+    }
+
+    [data-theme='blueprint']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset-block: -5px;
+        inset-inline: -1px;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        --kp-bp-px: var(--kp-bp-p);
+        --kp-bp-py: 1;
+        inset: -8px;
+        background-image: var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(var(--kp-bp-p) * (100% - 16px)) 1px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px calc(100% - 9px);
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--block {
+        position: relative;
+        border: 0;
+        --kp-bp-r: 4;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--block::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -8px;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle {
+        position: relative;
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        pointer-events: none;
+        mask: conic-gradient(var(--foreground) calc(var(--kp-bp-p) * 1turn), transparent 0);
+    }
+
+    [data-theme='blueprint'] .kp-skeleton--circle::before {
+        --kp-bp-px: calc(0.5 + 0.5 * sin(var(--kp-bp-p) * 1turn));
+        --kp-bp-py: calc(0.5 - 0.5 * cos(var(--kp-bp-p) * 1turn));
+        inset: -8px;
+        background-image: var(--kp-bp-pen-img);
+        background-size: var(--kp-bp-pen-size);
+        background-position: var(--kp-bp-pen-pos);
+    }
+
+    [data-theme='blueprint'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-bp-p: var(--kp-value);
+        --kp-bp-pv: 1;
+        --kp-bp-nib: 1;
+        --kp-bp-tv: 1;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-bp-p: 1;
+        --kp-bp-nib: 0;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) right top / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.55) 0 1px, transparent 1px calc(100% / (var(--kp-steps) * 2)))
+                center / 100% 28% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) center / 100% 1px no-repeat,
+            transparent;
+        overflow: visible;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__fill,
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-block: calc(50% - 1px);
+        inset-inline: 0;
+        inline-size: auto;
+        background: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        animation: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-p)) * 100%) 0 0);
+        transform: none;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(calc(var(--kp-bp-p) * 100cqi));
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head {
+        inline-size: 0;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head::before {
+        --kp-bp-px: 0.5;
+        --kp-bp-py: 0.5;
+        inset-block-start: calc(50% - 8.5px);
+        inset-inline-start: -8.5px;
+        inline-size: 17px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img);
+        background-size: var(--kp-bp-pen-size);
+        background-position: var(--kp-bp-pen-pos);
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        --kp-bp-px: var(--kp-bp-p);
+        --kp-bp-py: 0.5;
+        inset: calc(50% - 8.5px) -8px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(var(--kp-bp-p) * (100% - 16px)) 2px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 50%;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-bp-p: 1;
+        --kp-bp-tv: 1;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-progressbar__fill {
+            transition: clip-path calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+
+        [data-theme='blueprint'] .kp-progressbar__head {
+            transition: transform calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+
+        [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate],
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+            animation: kp-sig-blueprint-stroke var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+            animation: kp-sig-blueprint-place var(--kp-sig-bp-loop) linear infinite backwards;
+            animation-delay: calc(var(--kp-bp-i, 0) * 2 * var(--kp-sig-bp-unit));
+        }
+
+        [data-theme='blueprint'] .kp-skeleton--block {
+            animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton--circle {
+            animation: kp-sig-blueprint-ring var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton:nth-child(2) {
+            --kp-bp-i: 1;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(3) {
+            --kp-bp-i: 2;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(4) {
+            --kp-bp-i: 3;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(5) {
+            --kp-bp-i: 4;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(6) {
+            --kp-bp-i: 5;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(7) {
+            --kp-bp-i: 6;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(8) {
+            --kp-bp-i: 7;
+        }
+
+        @keyframes kp-sig-blueprint-stroke {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            3% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            44% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            46% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            52% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            52.1% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            94% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+            }
+
+            100% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-place {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            9.5% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            10% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            10.5%,
+            83% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-frame {
+            0% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            11% {
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            20.5% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            30% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            39.5% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            40% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            40.5%,
+            83% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-ring {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            20% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            20.5% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            21%,
+            83% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+    }
+    /* character>> */
 }
 /* ── End of the signature ── */

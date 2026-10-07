@@ -1,0 +1,38 @@
+/* research/character-header, blueprint: the decided picks on blueprint's grammar
+   (themes/blueprint/CHARACTER.md G1-G18, "Applied 2026-10-08"; the register
+   css/blueprint-register.css holds the pen, the feed and the axes).
+
+   - curve: every animation and transition of the scene runs on the plotter's
+     feed, a ramp, an even feed and a ramp, never plain linear;
+   - the dimension bar's arrowheads and hatched fills are not drawn: a share is
+     the pen's flat stroke;
+   - the package parts the scene is made of (buttons, tone, plates, progress,
+     skeletons, the live update) already draw the decided hover (read on a
+     scale), press (the dimension, no recolouring), tone (pointed out), loading
+     (one pen) and update (read again) from the register.
+   Not redone here: the scene's own arrival, loading and live pictures keep
+   the earlier picks' drawings on the feed curve (see the report of
+   2026-10-08). */
+@layer kp.signature {
+    [data-theme='blueprint'] [data-ph-shape] * {
+        animation-timing-function: var(--kp-sig-bp-feed);
+        transition-timing-function: var(--kp-sig-bp-feed);
+    }
+
+    /* Shape: the header is a plate on the graticule (themes/blueprint/CHARACTER.md G7, "surface = the
+       graticule's axes"): no fill, no closed frame, the register's three
+       axes properties. */
+    [data-theme='blueprint'] [data-ph-shape] .kp-page-header {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+
+    [data-theme='blueprint'] [data-ph-shape] :is(.kp-meter, .kp-kpi__meter)::before {
+        clip-path: none;
+    }
+}

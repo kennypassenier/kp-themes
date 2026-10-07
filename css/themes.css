@@ -1397,7 +1397,7 @@
     --fx-signal-foreground: hsl(215, 70%, 10%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: linear;
+    --fx-ease: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(190, 60%, 40%);
