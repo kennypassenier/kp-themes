@@ -57,9 +57,9 @@ const PART = {
         <span class="kp-kpi__trend">${foot} on yesterday</span>
     </div>`,
     stems: () => `<div class="fc-stems" aria-hidden="true">
-        <span class="fc-stems__ground"><span class="fc-stem" data-fc-r="1"></span></span>
-        <span class="fc-stems__ground"><span class="fc-stem" data-fc-r="2"></span></span>
-        <span class="fc-stems__ground"><span class="fc-stem" data-fc-r="3"></span></span>
+        <span class="fc-stems__ground"><span class="fc-stem"></span></span>
+        <span class="fc-stems__ground"><span class="fc-stem fc-stem--ref"></span></span>
+        <span class="fc-stems__name">this curve</span><span class="fc-stems__name">an even pace</span>
     </div>`,
     days: (n = 7, from = 12) =>
         `<div class="fc-days" aria-hidden="true">${[...Array(n).keys()]
@@ -94,13 +94,12 @@ const cell = (cap, html, cls = '') => `<div class="fc-part ${cls}">${caption(cap
 
 /* ------------------------------------------------------------ the scenes */
 
-/** The four moving parts every motion question is shown on. */
+/** The parts question 1 grows: each comes out of its own ground, the same way and for the same time in every option. */
 const MOVING = () =>
-    cell('Three stems grow, one per curve the option uses', PART.stems(), 'fc-part--wide') +
-    cell('A dialog opens', PART.dialog()) +
-    cell('A menu opens', PART.menu()) +
-    cell('A tile arrives', PART.tile()) +
-    cell('A live update', `<div class="kp-kpis">${PART.kpi()}</div>`);
+    cell('A stem on this curve, beside one at an even pace', PART.stems(), 'fc-part--wide') +
+    cell('A dialog grows up from its base', PART.dialog()) +
+    cell('A menu grows down from its button', PART.menu()) +
+    cell('A tile grows up from its base', PART.tile());
 
 const DIRECTION = () =>
     cell('A week of days arrives', PART.days(7), 'fc-part--wide') +
@@ -111,15 +110,13 @@ const DIRECTION = () =>
         `<div class="kp-card fc-tile fc-pass fc-waits" aria-hidden="true"><p class="kp-card__title fc-title">Pump house 3</p><p class="kp-card__body">Reading…</p>${LOAD}</div>`,
     );
 
-const OPENING = () => cell('A menu drops from its button', PART.menu()) + cell('A dialog opens', PART.dialog());
+const OPENING = () => cell('A menu opens from its button', PART.menu()) + cell('A dialog opens', PART.dialog());
 
 const DURATION = () =>
     cell('Contact: a press', `<div class="fc-row">${button('Export readings', 'fc-tap')}</div><p class="fc-readout" data-fc-readout="contact"></p>`) +
-    cell('A fold: a dialog opens', PART.dialog() + '<p class="fc-readout" data-fc-readout="fold"></p>') +
-    cell(
-        'Growth: a figure arrives',
-        `<div class="kp-kpis">${PART.kpi('Readings', '18 240')}</div><p class="fc-readout" data-fc-readout="grow"></p>`,
-    ) +
+    cell('A dialog opens', PART.dialog() + '<p class="fc-readout" data-fc-readout="dialog"></p>') +
+    cell('A menu opens', PART.menu() + '<p class="fc-readout" data-fc-readout="menu"></p>') +
+    cell('A figure arrives', `<div class="kp-kpis">${PART.kpi('Readings', '18 240')}</div><p class="fc-readout" data-fc-readout="figure"></p>`) +
     cell('A loop: one planting pass', PART.bar('Loading') + '<p class="fc-readout" data-fc-readout="loop"></p>');
 
 const COLOUR = () =>
@@ -352,32 +349,59 @@ const ASPECTS = [
         id: 'curve',
         label: 'The motion curve',
         rule: 'G1',
-        question: 'How does forest move: on its own slow-start curve, on the quick curve titanium uses, or as each pick does today?',
-        why: 'A theme exists to be distinct (your rule of 03:37): the quick, decelerating curve is titanium’s exactly, and cyberpunk, synthwave, dark and phantom move on near copies of it. Forest’s register already has a curve no other theme uses: slow to break the ground, then up, then a long settle. Today forest moves on six curves at once (that one, linear, ease-in-out, ease-out, ease-in and two springs).',
+        question:
+            'Forest grows: every part comes out of its own ground, slowly enough to watch it grow (your words of 15:15). On which curve does it grow?',
+        why: 'In every option every part grows for the same second and in the same way: the dialog and the tile up out of their base, the menu down out of its button (it hangs from it, like a root), so only the curve differs. Beside the green stem an outlined one rises at an even pace: where the green stem is lower the curve is behind an even pace, where it is higher it is ahead. A theme exists to be distinct (your rule of 03:37): titanium moves on the quick curve, synthwave glides on a symmetric one, solstice on the sun’s sine, grotesk and blueprint at an even feed; forest today moves on its register’s curve and its picks on six curves at once.',
         kind: 'cycle',
         scene: MOVING,
         options: [
             {
-                key: 'register',
-                name: 'Forest’s own curve: breaks the ground, then settles',
-                see: 'Every one-shot motion uses the register’s curve, cubic-bezier(0.33, 0, 0.15, 1): the three stems take a moment to break the ground, then rise and settle long; the dialog and the menu unfold, the tile grows up from its line, all the same way. A there-and-back eases in and out; a loop walks at an even pace.',
+                key: 'tree',
+                name: 'Grows like a tree',
+                see: 'The curve plants grow on (the Gompertz growth curve): for the first tenth of the second almost nothing (3 %, still under the ground), then a long, even growth (half its height at 0.4 s), then it slows and settles (90 % at 0.73 s; the last tenth takes the rest of the second). Every part is visibly growing for more than half the second; closing, it sinks back the same way.',
                 verdict: rec(
-                    'it is how a seedling comes up (a moment underground, then growth, then a long settle), it is already forest’s, and no other theme moves like it, so forest is told apart in a glance.',
+                    'it is how a tree grows, so every part reads as growing, not as sliding open, and you see it grow for most of the second, as you asked. No other theme moves on it: titanium is 90 % there at 0.4 s, synthwave’s glide is symmetric (half at 0.5 s, as slow to land as to start), the standard curve sepia and deco use is 90 % there at 0.63 s, and solstice sets off at full pace without a moment under the ground.',
                 ),
             },
             {
-                key: 'growth',
-                name: 'The quick curve (titanium’s)',
-                see: 'The same pictures on cubic-bezier(0.2, 0.8, 0.2, 1), the curve your Growing pick was built on: the stems shoot up at once and slow as they land.',
+                key: 'push',
+                name: 'Pushes, then unfurls',
+                see: 'A long, slow push through the soil at an even crawl (a fifth of its height after half the second), then it unfurls (from a fifth to 90 % in the next 0.36 s) and settles: half at 0.65 s, 90 % at 0.86 s.',
                 verdict: not(
-                    'it is lively and it is the curve your Growing pick happened to use, but it is titanium’s curve exactly and nearly cyberpunk’s, synthwave’s and dark’s: forest would move like four other themes.',
+                    'it has the most suspense, but for half the second a dialog is a sliver, so the page feels slow to answer, and the unfurl at the end is quick: the part you wanted to watch is the shortest.',
+                ),
+            },
+            {
+                key: 'spurts',
+                name: 'Grows in three spurts',
+                see: 'Three pushes of a third each, every push easing in and out with a short rest between them, like a shoot adding a section at a time (the tree’s three stages of the spinner and the progress bar): a third at 0.28 s, two thirds at 0.64 s, all of it at 1 s.',
+                verdict: not(
+                    'no other theme grows in eased stages (terminal, cyberpunk and nostromo jump in hard steps), but a dialog that stops twice on its way in reads as a stutter, not as growth.',
+                ),
+            },
+            {
+                key: 'register',
+                name: 'The register’s curve (forest today)',
+                see: 'cubic-bezier(0.33, 0, 0.15, 1), forest’s --fx-ease, on the same growth for the same second: it starts from rest but picks up at once (half its height at 0.3 s, 90 % at 0.6 s), then a long settle. The register’s dialog plays it in 520 ms in two folds, so there the first fold is across in 0.2 s and the dialog is open at about 0.4 s.',
+                verdict: not(
+                    'it does start from rest, but it is past its middle within a third of the time and then mostly settling, so a part looks grown long before it is done; beside the tree’s curve it reads as opening, not growing.',
+                ),
+            },
+            {
+                key: 'quick',
+                name: 'The quick curve (titanium’s)',
+                see: 'cubic-bezier(0.2, 0.8, 0.2, 1), the curve your Growing pick was built on: off at full speed (40 % of its height in the first tenth), 90 % at 0.4 s, then it creeps into place.',
+                verdict: not(
+                    'it is titanium’s curve exactly and nearly the register curve of cyberpunk, synthwave, dark and phantom; the growth is over before you see it.',
                 ),
             },
             {
                 key: 'mix',
                 name: 'The current mix',
-                see: 'As the picks are today: the dialog squashes open on the register’s curve, the menu unfurls with a twist (ease-out), the tile slides in (ease-in-out), the figure swells 10 % in 500 ms. The stems: linear, ease-in-out and a spring that overshoots.',
-                verdict: not('four curves on one screen; the springs and the twist are what make forest feel like several themes.'),
+                see: 'Each part on the curve its pick uses today, on the same growth and second: the stem on the chart’s spring (it shoots past its height and drops back), the dialog on the register’s curve, the menu ease-out, the tile ease-in-out.',
+                verdict: not(
+                    'four curves on one screen, one of them a spring; the parts arrive at different moments and forest feels like several themes.',
+                ),
             },
         ],
     },
@@ -386,14 +410,14 @@ const ASPECTS = [
         label: 'The direction',
         rule: 'G2',
         question: 'Which way does motion travel when something arrives, is drawn or loads?',
-        why: 'A plant grows up from the ground; a trail is walked from where you start reading to where you stop (left to right here, mirrored in right-to-left languages). Titanium feeds everything start → end, so forest walks only what is a path (a line in time, the planting) and grows the rest up from under its own line. Today the days fall and swing in, the tiles slide in, the busy table’s footprints walk back and forth.',
+        why: 'A plant grows up from the ground; a trail is walked from where you start reading to where you stop (left to right here, mirrored in right-to-left languages). Titanium feeds everything start → end, so forest walks only what is a path (a line in time, the planting) and grows the rest up out of its own line. Today the days fall and swing in, the tiles slide in, the busy table’s footprints walk back and forth.',
         kind: 'cycle',
         scene: DIRECTION,
         options: [
             {
                 key: 'grow',
                 name: 'Growth goes up, walking goes start → end',
-                see: 'Each day grows up from under its own line, one after the other in reading order; the tile grows up from its line; the line is drawn left to right; the planting walks left to right.',
+                see: 'Each day grows up out of its own line, one after the other in reading order (80 ms apart); the tile grows up out of its line; the line is drawn left to right; the planting walks left to right. All on forest’s growth curve, 1 second each; they leave the same way backwards.',
                 verdict: rec(
                     'it is your arrival pick and your loading pick at once: what arrives grows, what moves along is walked, and both read in the order you read.',
                 ),
@@ -401,13 +425,13 @@ const ASPECTS = [
             {
                 key: 'feed',
                 name: 'Everything start → end',
-                see: 'One axis for everything: each day and the tile are uncovered from their left edge, the line is drawn left to right, the planting walks left to right.',
+                see: 'One axis for everything: each day and the tile are uncovered from their left edge, the line is drawn left to right, the planting walks left to right. The same curve, time and order as option 1, so only the direction differs.',
                 verdict: not('tidy, but nothing grows any more: it is titanium’s machine feed exactly, not a wood.'),
             },
             {
                 key: 'mix',
                 name: 'As today',
-                see: 'The days fall and swing into place (the month’s Falling leaves), the tile slides in from the left (the tiles’ Trail is walked), the line is drawn left to right, the footprints walk there and back.',
+                see: 'Today’s values: the days fall and swing into place (the month’s Falling leaves, 520 ms ease-out), the tile slides 1 rem in from the left (the tiles’ Trail is walked, 450 ms ease-in-out, so it is there before the days are), the line is drawn left to right in 1.6 s, the footprints walk there and back.',
                 verdict: not('falling, sliding and walking back on one screen; the eye cannot predict where the next thing comes from.'),
             },
         ],
@@ -416,32 +440,32 @@ const ASPECTS = [
         id: 'opening',
         label: 'Opening what drops from a button',
         rule: 'G3',
-        question: 'How does a menu or a dialog open?',
-        why: 'Three openings are picked today for one gesture: the menu unfurls with a 6° twist, the header’s menu drops and sways past its place, the dialog unfolds by squashing its own words. One opening makes the theme feel like one place.',
+        question: 'How does a menu or a dialog open, and how does it close?',
+        why: 'Three openings are picked today for one gesture: the menu unfurls with a 6° twist, the header’s menu drops and sways past its place, the dialog unfolds by squashing its own words. Your rule of 15:15: what hangs from a button grows from it (a menu under its button grows down out of it, one above it up out of it); what stands free grows up out of its base. Every option closes as its opening played backwards.',
         kind: 'cycle',
         scene: OPENING,
         options: [
             {
-                key: 'unfold',
-                name: 'The map unfolds',
-                see: 'The menu and the dialog open as a folded map does: the top panel opens across, then the rest drops down; nothing is squashed, the paper is uncovered. Closing folds it back. Menu 320 ms, dialog 520 ms, on forest’s curve.',
+                key: 'anchor',
+                name: 'Grows out of its anchor',
+                see: 'The menu grows down out of its button like a root, its far end first; the dialog, which stands free, grows up out of its base, its title first. 1 second each on forest’s growth curve; closing, each sinks back into its line the way it came.',
                 verdict: rec(
-                    'it keeps the register’s own idea for the dialog (a map unfolding) and makes it work for every panel without squashing a single letter, and no other theme opens this way.',
+                    'it is your rule word for word, one picture for every panel, and the words are never squashed. Light, synthwave and solstice also rise, but into place from below; forest comes out of a line and is cut off there, like a shoot out of the ground, and no other theme opens a menu as a root.',
                 ),
             },
             {
-                key: 'grow',
-                name: 'Grows down from the button',
-                see: 'The menu and the dialog are uncovered from their top edge down in one movement, like a shoot growing out of the button, 320 ms on forest’s curve.',
+                key: 'unfold',
+                name: 'The map unfolds',
+                see: 'The menu and the dialog open as a folded map: the top panel opens across, then the rest drops down. One growth curve runs over the whole second (across in its first 40 %, down in the rest), so neither fold is a snap; closing folds it back.',
                 verdict: not(
-                    'clear and calm, but it is titanium’s opening (cut open from the top) on a softer curve; the map’s fold is what makes it forest.',
+                    'it was the first recommendation and is still very forest, but it is a map being opened, not something growing, and the menu does not come from its button.',
                 ),
             },
             {
                 key: 'mix',
                 name: 'As today',
-                see: 'The menu unfurls from 5 % with a 6° twist (300 ms ease-out); the dialog squashes open from half width and a third height (520 ms on the register’s curve).',
-                verdict: not('two openings, both of which bend or squash the words while they move.'),
+                see: 'The menu unfurls from 5 % with a 6° twist (300 ms ease-out) and closes the same way back; the dialog squashes open from half width and a third height (520 ms on the register’s curve) and closes in 347 ms.',
+                verdict: not('two openings, both of which bend or squash the words while they move, at two speeds.'),
             },
         ],
     },
@@ -449,30 +473,36 @@ const ASPECTS = [
         id: 'durations',
         label: 'How long things take',
         rule: 'G4',
-        question: 'How long does a contact, a fold, a growth and a loading pass take?',
-        why: 'The recommended times are not new: 200 ms is the register’s contact, 520 ms its dialog, 800 ms your Growing, 3200 ms the progress bar’s grove. Today one picture runs at four speeds (the growth ring at 260, 380, 500 and 1000 ms).',
+        question: 'How long do a contact, a growth and a loading pass take?',
+        why: 'Every option shows the same picture (forest’s growth on its curve, closing as the growth backwards); only the times differ. A contact must answer at once; a growth must be slow enough to watch (your words of 15:15), and one growth time for every panel keeps the dialog and the menu together (your report of 15:14: in the first proposal the dialog was much slower than the menu). Today one picture runs at four speeds (the growth ring at 260, 380, 500 and 1000 ms).',
         kind: 'cycle',
         scene: DURATION,
         options: [
             {
-                key: 'picks',
-                name: 'Calm: 200 · 320–520 · 800 · 3200 ms',
-                see: 'A press answers in 200 ms; a menu folds open in 320 ms and the dialog in 520 ms; a figure grows in 800 ms; the grove walks the row in 3200 ms.',
+                key: 'seen',
+                name: 'Seen growing: 200 · 1000 · 3200 ms',
+                see: 'A press answers in 200 ms; the dialog, the menu and the figure each grow in 1 second, together; the grove walks the row in 3.2 seconds.',
                 verdict: rec(
-                    'every number comes from something you already picked, and the pace is a field guide’s: unhurried, never slow to answer a press.',
+                    'one growth time for everything, long enough to watch it grow (each part is between 10 % and 90 % of its height for 0.55 s), while a press still answers at once.',
                 ),
             },
             {
                 key: 'brisk',
-                name: 'Brisk: 120 · 200 · 480 · 2000 ms',
-                see: 'Everything about 40 % faster: the dialog in 200 ms, a figure grows in 480 ms, the grove walks in 2 seconds.',
-                verdict: not('it reads as an app, not a wood; the growth becomes a pop and the trees race.'),
+                name: 'Brisk: 120 · 500 · 2000 ms',
+                see: 'A press in 120 ms, every growth in half a second, the grove in 2 seconds.',
+                verdict: not('quick to use, but each growth is half over before the eye is on it: it reads as a pop, not as growing.'),
             },
             {
                 key: 'slow',
-                name: 'Slow: 300 · 780 · 1200 · 4800 ms',
-                see: 'Everything about half again as slow: a press takes 300 ms to answer, the dialog 780 ms to unfold, a figure 1.2 seconds to grow, the grove 4.8 seconds a pass.',
+                name: 'Slow: 300 · 1600 · 4800 ms',
+                see: 'A press takes 300 ms to answer, every growth 1.6 seconds, the grove 4.8 seconds a pass.',
                 verdict: not('beautiful once, tiring on the tenth dialog; a press that lags 300 ms feels broken.'),
+            },
+            {
+                key: 'first',
+                name: 'The first proposal: 200 · 320 / 520 / 800 · 3200 ms',
+                see: 'The times first proposed, on the same growth: the menu in 320 ms, the dialog in 520 ms, a figure in 800 ms.',
+                verdict: not('three speeds for one picture: the menu is done while the dialog is still growing, as you saw at 15:14.'),
             },
         ],
     },
@@ -674,7 +704,7 @@ const ASPECTS = [
             {
                 key: 'wither',
                 name: 'Withers into the ground, grows out of it',
-                see: 'Leaving, the part turns autumn brown and sinks back under its own line, letting go faster at the end, 560 ms. Arriving, it plays that backwards: it grows up out of its line and greens on forest’s curve — your Growing. No other theme leaves downward into its own line',
+                see: 'Arriving, the part grows up out of its line and turns from autumn brown to green, on forest’s growth curve in 1 second (your Growing). Leaving, it plays that backwards: it browns and sinks back into its line, slowly at first, faster at the end. No other theme leaves downward into its own line.',
                 verdict: rec('one picture for both ways, and the arrival it gives is exactly the one you picked.'),
             },
             {
@@ -686,7 +716,7 @@ const ASPECTS = [
             {
                 key: 'wind',
                 name: 'Blown away by the wind',
-                see: 'Leaving, the part drifts off to the end of the line with a slight turn and fades, as the comment in the register promised; arriving, it drifts in from there.',
+                see: 'Leaving, the part drifts off to the end of the line with a slight turn and fades, as the comment in the register promised; arriving, it drifts in from there. The same second and curve as option 1, so only the picture differs.',
                 verdict: not('lively, but an arrival that drifts in sideways is the tile slide you would retire under question 2.'),
             },
         ],
@@ -792,7 +822,7 @@ const ASPECTS = [
             {
                 key: 'close',
                 name: 'The blaze closes in',
-                see: 'The trail blaze you point with pulls in to just outside the part’s edge and turns solid while it is pressed (200 ms, forest’s curve); the part itself does not move.',
+                see: 'The trail blaze closes in: a dashed ring 5 px out pulls in to just outside the part’s edge and turns solid forest green while it is pressed (200 ms, forest’s curve); let go, it opens and fades the same way back. The part itself does not move.',
                 verdict: rec(
                     'it finishes the gesture the hover started (pointing blazes, pressing marks the blaze), it never shifts the words, and no other theme presses this way.',
                 ),
@@ -800,13 +830,13 @@ const ASPECTS = [
             {
                 key: 'settle',
                 name: 'Settles 1 px (titanium’s press)',
-                see: 'The pressed part sinks 1 px onto the paper and its blaze closes solid round it, then it comes back.',
+                see: 'The pressed part sinks 1 px onto the paper and its solid blaze turns green round it; let go, it comes back the same way (200 ms each way).',
                 verdict: not('a small, exact answer, but it is titanium’s press: on a forest page it would feel borrowed.'),
             },
             {
                 key: 'shrink',
                 name: 'Shrinks 2 %',
-                see: 'The pressed part shrinks to 98 % and comes back.',
+                see: 'The pressed part shrinks to 98 % and comes back, 200 ms each way.',
                 verdict: not('the most common press on the web, and on a long button the words visibly shift.'),
             },
         ],
@@ -939,17 +969,24 @@ ASPECTS.forEach((a, n) => {
     }
 });
 
-// The durations row says its own numbers under each part.
-const BANDS = { picks: [200, 520, 800, 3200], brisk: [120, 200, 480, 2000], slow: [300, 780, 1200, 4800] };
+// The durations row says its own numbers under each part (the same numbers
+// options.css plays: contact, dialog, menu, figure, loop).
+const BANDS = {
+    seen: [200, 1000, 1000, 1000, 3200],
+    brisk: [120, 500, 500, 500, 2000],
+    slow: [300, 1600, 1600, 1600, 4800],
+    first: [200, 520, 320, 800, 3200],
+};
 for (const scene of section.querySelectorAll('[data-fc-durations]')) {
-    const [contact, fold, grow, loop] = BANDS[/** @type {keyof typeof BANDS} */ (scene.getAttribute('data-fc-durations'))];
+    const [contact, dialog, menu, figure, loop] = BANDS[/** @type {keyof typeof BANDS} */ (scene.getAttribute('data-fc-durations'))];
     const say = (/** @type {string} */ id, /** @type {string} */ text) => {
         const p = scene.querySelector(`[data-fc-readout="${id}"]`);
         if (p) p.textContent = text;
     };
     say('contact', `${contact} ms`);
-    say('fold', `${fold} ms`);
-    say('grow', `${grow} ms`);
+    say('dialog', `${dialog} ms`);
+    say('menu', `${menu} ms`);
+    say('figure', `${figure} ms`);
     say('loop', `${loop} ms a pass`);
 }
 
@@ -958,8 +995,11 @@ for (const scene of section.querySelectorAll('[data-fc-durations]')) {
 // Every scene that arrives, opens, presses, updates or leaves is replayed by
 // one clock, so the options of a row always start together and can be
 // compared. One cycle: `gap` (what arrives is away), `in` (it arrives, a
-// press lands, a value updates), `hold` (it stands), `out` (it leaves). The
-// CSS keys every motion to these phases; the clock only sets the attribute.
+// press lands, a value updates), `hold` (it stands, a press is let go),
+// `out` (it leaves, as its arrival played backwards). `in` and `hold`
+// together outlast the slowest growth (1600 ms plus the days' stagger), and
+// `out` outlasts the slowest leave, so nothing is cut off mid-motion. The CSS
+// keys every motion to these phases; the clock only sets the attribute.
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const motionNote = document.querySelector('[data-fc-motion]');
 let slow = 1;
@@ -967,7 +1007,7 @@ const PHASES = /** @type {const} */ ([
     ['gap', 500],
     ['in', 1100],
     ['hold', 1600],
-    ['out', 900],
+    ['out', 1700],
 ]);
 const values = ['412', '436', '398', '451'];
 let tick = 0;

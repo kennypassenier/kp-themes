@@ -15,31 +15,31 @@ grammar (the hover family is its pick), never a target.
 
 **What.** One page, forest only, in the review kit's aspect mode (`data-review-themes="forest"`). An intro, "What forest is" (the
 field kit's story, the package's own parts including the tree bar, and on demand six decided character demos embedded as they are
-today), then seventeen questions. Each question is one rule of the grammar and three options, each a live scene built from the
+today), then seventeen questions. Each question is one rule of the grammar and three options (six in question 1, four in question 4), each a live scene built from the
 package's components in forest (`.kp-button`, `.kp-dialog`, `.kp-popover` + `.kp-menu`, `.kp-card`, `.kp-kpi`, `.kp-meter`,
 `.kp-progressbar`, `.kp-spinner`, `.kp-badge`, `.kp-tag`, `.kp-alert`, `.kp-skeleton`, `.kp-tooltip`, `.kp-empty`, `.kp-field`,
 `.kp-page-header`). The first option is always the recommendation; every option says what you see and why it is or is not
 recommended, on the page and in its hint in the dialog.
 
-| #   | Question (rule)                       | Options, recommended first                                                                |
-| --- | ------------------------------------- | ----------------------------------------------------------------------------------------- |
-| 1   | The motion curve (G1)                 | grows and settles · the register's curve everywhere · the current mix                     |
-| 2   | The direction (G2)                    | growth up, walking start → end · everything start → end · as today                        |
-| 3   | Opening what drops from a button (G3) | the map unfolds · grows down from the button · as today                                   |
-| 4   | How long things take (G4)             | 200 · 320–520 · 800 · 3200 ms · 120 · 200 · 480 · 2000 · 300 · 780 · 1200 · 4800          |
-| 5   | Where the colour goes (G5)            | green acts, clay marks the trail · the leaf palette as decoration · forest ink only       |
-| 6   | The corners (G6)                      | paper rounded, wood cut · the gauge's 3 px on everything · the leaf corner                |
-| 7   | The surface (G7)                      | paper for plates, wood for instruments · wood on everything · plain kraft                 |
-| 8   | A live update (G8)                    | the growth ring on every carrier · a new ring laid round it · as today                    |
-| 9   | Loading (G9)                          | the planting strip on every waiting surface · a stand grows behind the content · as today |
-| 10  | The spinner (G9)                      | a tree is planted · growth rings · the compass (today)                                    |
-| 11  | Leaving and arriving (G10)            | withers into the ground, grows out of it · the autumn fade (today) · blown by the wind    |
-| 12  | Buttons inside composites (G11)       | exactly forest's own · as today · forest's own plus the header's green foot               |
-| 13  | Pointing at something (G12)           | the blaze ring · the blaze mark · the lift (today)                                        |
-| 14  | The focus ring (G12, DI2)             | the two-channel ring · the ring with a blaze round it · as today                          |
-| 15  | The press (G12)                       | settles onto its ground · pressed into the paper · shrinks 2 %                            |
-| 16  | The voice of a note (G13)             | italic for notes · monospace for tags and labels · a serif italic                         |
-| 17  | Trig points, blazes and rings (G14)   | only where the map or the wood has them · none · on everything                            |
+| #   | Question (rule)                       | Options, recommended first                                                                                                |
+| --- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The motion curve (G1)                 | grows like a tree · pushes, then unfurls · three spurts · the register's curve · titanium's quick curve · the current mix |
+| 2   | The direction (G2)                    | growth up, walking start → end · everything start → end · as today                                                        |
+| 3   | Opening what drops from a button (G3) | grows out of its anchor · the map unfolds · as today                                                                      |
+| 4   | How long things take (G4)             | 200 · 1000 · 3200 ms · 120 · 500 · 2000 · 300 · 1600 · 4800 · the first proposal 200 · 320 / 520 / 800 · 3200             |
+| 5   | Where the colour goes (G5)            | green acts, clay marks the trail · the leaf palette as decoration · forest ink only                                       |
+| 6   | The corners (G6)                      | paper rounded, wood cut · the gauge's 3 px on everything · the leaf corner                                                |
+| 7   | The surface (G7)                      | paper for plates, wood for instruments · wood on everything · plain kraft                                                 |
+| 8   | A live update (G8)                    | the growth ring on every carrier · a new ring laid round it · as today                                                    |
+| 9   | Loading (G9)                          | the planting strip on every waiting surface · a stand grows behind the content · as today                                 |
+| 10  | The spinner (G9)                      | a tree is planted · growth rings · the compass (today)                                                                    |
+| 11  | Leaving and arriving (G10)            | withers into the ground, grows out of it · the autumn fade (today) · blown by the wind                                    |
+| 12  | Buttons inside composites (G11)       | exactly forest's own · as today · forest's own plus the header's green foot                                               |
+| 13  | Pointing at something (G12)           | the blaze ring · the blaze mark · the lift (today)                                                                        |
+| 14  | The focus ring (G12, DI2)             | the two-channel ring · the ring with a blaze round it · as today                                                          |
+| 15  | The press (G12)                       | the blaze closes in · settles 1 px (titanium's) · shrinks 2 %                                                             |
+| 16  | The voice of a note (G13)             | italic for notes · monospace for tags and labels · a serif italic                                                         |
+| 17  | Trig points, blazes and rings (G14)   | only where the map or the wood has them · none · on everything                                                            |
 
 **How.**
 
@@ -73,3 +73,15 @@ the blaze closing in. Each overlap stays on the page as an option, named after t
 frames, plus the review dialog's one-option stage): the corners question first offered "one radius everywhere", which differed
 from the recommendation only on the tags; it now offers the gauge's 3 px on every plate and the leaf corner on every plate, which
 differ at a glance. The "slow" durations first shared the 520 ms dialog with the recommendation; it now unfolds in 780 ms.
+
+**Remade after Kenny's verdicts on question 1** (2026-10-07 15:13 to 15:16: the dialog "staat er toch bijna instant", it read
+"veel trager dan a menu", forest must grow "van beneden naar boven … ik wil het element zien groeien", a menu grows down from its
+button, close is open reversed). Measured per frame in Firefox (every animation paused and sought every 40 ms, the scene's pixels
+compared with its empty and its finished frame): before, the recommended dialog was open in about 0.4 s (two folds, the curve per
+fold, 520 ms) while the stems took 0.9 s, the menu in 0.32 s, and the tile showed 60 % of itself on the first frame; every close in
+questions 1 to 4 was a cut, because a CSS animation whose name stays the same is not restarted when only its direction changes. Now
+every part in question 1 grows for the same second on the option's curve only (the dialog and tile up out of their base, the menu
+down out of its button, a stem beside an even-pace stem), questions 2 to 4 and 11 grow on forest's growth curve, and every leave is a
+copy of the arrival's keyframes played `reverse`: its frames are the arrival's in reverse order (0.0 % pixel difference, measured).
+A press is let go as it was pressed (transitions both ways, 200 ms) instead of at once. The map's fold now runs one progress value
+(`--fc-p`) on one curve over the whole run.

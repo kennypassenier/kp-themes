@@ -15,6 +15,14 @@
     initial-value: 99;
 }
 
+/* The map's fold progress (question 3, option 2): one value carried by the
+   curve over the whole run, so both folds share it. */
+@property --fc-p {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
 @property --fc-arc {
     syntax: '<angle>';
     inherits: false;
@@ -25,13 +33,65 @@
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
     .fc-page {
-        /* Forest's own curve (the register's --fx-ease): slow to break the
-           ground, then up, then a long settle. The quick one is titanium's,
-           shown only in question 1. The wither is forest's curve mirrored,
-           so an arrival played as the leave reversed is forest's curve. */
+        /* Forest grows (Kenny, 2026-10-07 15:15: "iets dat van beneden naar
+           boven groeit … ik wil het element zien groeien"). The growth curve
+           is a tree's: the Gompertz curve of plant growth, y = exp(-5.57 e^(-5.05 t))
+           normalised, sampled every 5 %. Measured: 1 % at 5 % of the time,
+           half at 40 %, 90 % at 73 %, then a soft settle; the part is between
+           10 % and 90 % of its height for 55 % of the run. The push and the
+           spurts are the two other growth feelings question 1 offers; the
+           register's own curve (--fx-ease) and titanium's quick curve are
+           kept as labelled options. Every growth lasts --fc-grow-time. */
+        --fc-tree: linear(
+            0,
+            0.01 5%,
+            0.032 10%,
+            0.072 15%,
+            0.133 20%,
+            0.211 25%,
+            0.302 30%,
+            0.398 35%,
+            0.493 40%,
+            0.582 45%,
+            0.662 50%,
+            0.732 55%,
+            0.791 60%,
+            0.84 65%,
+            0.881 70%,
+            0.913 75%,
+            0.939 80%,
+            0.96 85%,
+            0.977 90%,
+            0.99 95%,
+            1
+        );
+        --fc-push: linear(0, 0.02 10%, 0.055 20%, 0.095 30%, 0.14 40%, 0.2 50%, 0.32 58%, 0.52 66%, 0.72 74%, 0.86 82%, 0.95 90%, 0.985 95%, 1);
+        --fc-spurts: linear(
+            0,
+            0.025 4.7%,
+            0.086 9.3%,
+            0.167 14%,
+            0.247 18.7%,
+            0.309 23.3%,
+            0.333 28%,
+            0.333 36%,
+            0.358 40.7%,
+            0.42 45.3%,
+            0.5 50%,
+            0.58 54.7%,
+            0.642 59.3%,
+            0.667 64%,
+            0.667 72%,
+            0.691 76.7%,
+            0.753 81.3%,
+            0.833 86%,
+            0.914 90.7%,
+            0.975 95.3%,
+            1
+        );
         --fc-forest: cubic-bezier(0.33, 0, 0.15, 1);
         --fc-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
-        --fc-wither: cubic-bezier(0.85, 0, 0.67, 1);
+        --fc-grow-time: 1000ms;
         --fc-wood: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px);
         --fc-routed:
             inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3), inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
@@ -157,18 +217,26 @@
         content: '↓\00a0';
     }
 
+    /* Question 1's stems: one on the option's curve, one beside it at an
+       even pace (outlined), so you see whether the curve is ahead or behind. */
     .fc-stems {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 1rem;
     }
 
     .fc-stems__ground {
         position: relative;
         display: block;
-        block-size: 4rem;
+        block-size: 4.5rem;
         overflow: clip;
         border-block-end: 1px solid var(--border-strong);
+    }
+
+    .fc-stems__name {
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+        text-align: center;
     }
 
     .fc-stem {
@@ -179,6 +247,11 @@
         block-size: 4rem;
         background: var(--primary);
         mask: var(--fc-pine) 50% 100% / 100% 100% no-repeat;
+    }
+
+    .fc-stem--ref {
+        background: var(--muted-foreground);
+        opacity: 0.55;
     }
 
     .fc-days {
@@ -1210,6 +1283,13 @@
 
     /* ── The motion ──────────────────────────────────────────────────── */
 
+    /* One rule for every scene the clock plays: what arrives in `in` leaves
+       in `out` as the same motion played backwards (the same keyframes, the
+       same curve, the same duration, `reverse`), so a close is its open
+       reversed frame by frame. The leave uses a copy of the keyframes under
+       another name (`-back`): a CSS animation whose name stays the same is
+       not restarted when only its direction changes, it would jump to its
+       end at once (the blink measured on 2026-10-07). */
     @media (prefers-reduced-motion: no-preference) {
         .fc-scene:is([data-fc-curve], [data-fc-direction], [data-fc-opening], [data-fc-durations])[data-fc-phase='gap'] :is(.fc-arrives, .fc-stem),
         .fc-scene[data-fc-durations][data-fc-phase='gap'] .kp-kpi__value,
@@ -1218,103 +1298,120 @@
             visibility: hidden;
         }
 
-        /* 1 The curve. One easing per option, the same pictures. */
-        .fc-scene[data-fc-curve='growth'] {
-            --fc-ease: var(--fc-quick);
-            --fc-swing: ease-in-out;
+        /* 1 The curve. Every part grows out of its own ground for the same
+           --fc-grow-time and in the same way (up from its base; the menu
+           down from its button, its anchor); only the curve differs. */
+        .fc-scene[data-fc-curve='tree'] {
+            --fc-c: var(--fc-tree);
+        }
+
+        .fc-scene[data-fc-curve='push'] {
+            --fc-c: var(--fc-push);
+        }
+
+        .fc-scene[data-fc-curve='spurts'] {
+            --fc-c: var(--fc-spurts);
         }
 
         .fc-scene[data-fc-curve='register'] {
-            --fc-ease: var(--fc-forest);
-            --fc-swing: ease-in-out;
+            --fc-c: var(--fc-forest);
         }
 
-        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):not([data-fc-phase='gap']) .fc-stem {
-            animation: fc-rise calc(900ms * var(--fc-slow, 1)) var(--fc-ease) both;
+        .fc-scene[data-fc-curve='quick'] {
+            --fc-c: var(--fc-quick);
         }
 
-        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='1'] {
-            animation: fc-rise calc(900ms * var(--fc-slow, 1)) linear both;
+        /* Today's mix: each part on the curve its pick uses today. */
+        .fc-scene[data-fc-curve='mix'] .fc-stem {
+            --fc-c: cubic-bezier(0.3, 1.35, 0.5, 1);
         }
 
-        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='2'] {
-            animation: fc-rise calc(900ms * var(--fc-slow, 1)) ease-in-out both;
+        .fc-scene[data-fc-curve='mix'] .fc-dialog {
+            --fc-c: var(--fc-forest);
         }
 
-        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='3'] {
-            animation: fc-rise calc(900ms * var(--fc-slow, 1)) cubic-bezier(0.3, 1.35, 0.5, 1) both;
+        .fc-scene[data-fc-curve='mix'] .fc-pop {
+            --fc-c: ease-out;
         }
 
-        .fc-scene[data-fc-curve='growth'] {
-            --fc-fold-name: fc-unfold-quick;
+        .fc-scene[data-fc-curve='mix'] .fc-tile {
+            --fc-c: ease-in-out;
         }
 
-        .fc-scene[data-fc-curve='register'] {
-            --fc-fold-name: fc-unfold;
+        .fc-scene[data-fc-curve]:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-stem {
+            animation: fc-rise calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-c) both;
         }
 
-        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
-            animation: var(--fc-fold-name) calc(520ms * var(--fc-slow, 1)) linear both;
+        .fc-scene[data-fc-curve][data-fc-phase='out'] .fc-stem {
+            animation: fc-rise-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-c) reverse both;
         }
 
-        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
-            animation: var(--fc-fold-name) calc(320ms * var(--fc-slow, 1)) linear both;
+        .fc-scene[data-fc-curve] .fc-stem--ref {
+            --fc-c: linear;
         }
 
-        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile {
-            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-ease) both;
+        .fc-scene:is([data-fc-curve], [data-fc-opening='anchor'], [data-fc-durations]):is([data-fc-phase='in'], [data-fc-phase='hold'])
+            :is(.fc-dialog, .fc-tile) {
+            animation: fc-sprout calc(var(--fc-g, var(--fc-grow-time)) * var(--fc-slow, 1)) var(--fc-c, var(--fc-tree)) both;
         }
 
-        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold'])
-            .kp-kpi__value.fc-carrier {
-            animation: fc-swell calc(1000ms * var(--fc-slow, 1)) var(--fc-swing) both;
+        .fc-scene:is([data-fc-curve], [data-fc-opening='anchor'], [data-fc-durations])[data-fc-phase='out'] :is(.fc-dialog, .fc-tile) {
+            animation: fc-sprout-back calc(var(--fc-g, var(--fc-grow-time)) * var(--fc-slow, 1)) var(--fc-c, var(--fc-tree)) reverse both;
         }
 
-        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
-            animation: fc-squash calc(520ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        .fc-scene:is([data-fc-curve], [data-fc-opening='anchor'], [data-fc-durations]):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
+            animation: fc-root calc(var(--fc-g, var(--fc-grow-time)) * var(--fc-slow, 1)) var(--fc-c, var(--fc-tree)) both;
         }
 
-        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
-            transform-origin: top center;
-            animation: fc-unfurl calc(300ms * var(--fc-slow, 1)) ease-out both;
+        .fc-scene:is([data-fc-curve], [data-fc-opening='anchor'], [data-fc-durations])[data-fc-phase='out'] .fc-pop {
+            animation: fc-root-back calc(var(--fc-g, var(--fc-grow-time)) * var(--fc-slow, 1)) var(--fc-c, var(--fc-tree)) reverse both;
         }
 
-        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile {
-            animation: fc-walk-in calc(450ms * var(--fc-slow, 1)) ease-in-out both;
+        /* 2 The direction: every option on forest's growth curve and time,
+           the days 80 ms apart; only the direction differs. Today's mix keeps
+           today's values. */
+        .fc-scene[data-fc-direction='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) :is(.fc-day, .fc-tile.fc-arrives) {
+            animation: fc-sprout calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) calc(var(--i, 0) * 80ms * var(--fc-slow, 1)) both;
         }
 
-        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .kp-kpi__value.fc-carrier {
-            animation: fc-swell-big calc(500ms * var(--fc-slow, 1)) ease-in-out both;
+        .fc-scene[data-fc-direction='grow'][data-fc-phase='out'] :is(.fc-day, .fc-tile.fc-arrives) {
+            animation: fc-sprout-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) calc(var(--i, 0) * 80ms * var(--fc-slow, 1))
+                reverse both;
         }
 
-        /* 2 The direction. */
-        .fc-scene[data-fc-direction='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
-            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-forest) calc(var(--i) * 80ms * var(--fc-slow, 1)) both;
+        .fc-scene[data-fc-direction='feed']:is([data-fc-phase='in'], [data-fc-phase='hold']) :is(.fc-day, .fc-tile.fc-arrives) {
+            animation: fc-wipe calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) calc(var(--i, 0) * 80ms * var(--fc-slow, 1)) both;
         }
 
-        .fc-scene[data-fc-direction='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
-            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        .fc-scene[data-fc-direction='feed'][data-fc-phase='out'] :is(.fc-day, .fc-tile.fc-arrives) {
+            animation: fc-wipe-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) calc(var(--i, 0) * 80ms * var(--fc-slow, 1)) reverse
+                both;
         }
 
         .fc-scene:is([data-fc-direction='grow'], [data-fc-direction='feed']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-walk polyline {
             stroke-dasharray: 1;
-            animation: fc-draw calc(1000ms * var(--fc-slow, 1)) var(--fc-forest) both;
+            animation: fc-draw calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) both;
         }
 
-        .fc-scene[data-fc-direction='feed']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
-            animation: fc-wipe calc(400ms * var(--fc-slow, 1)) var(--fc-forest) calc(var(--i) * 80ms * var(--fc-slow, 1)) both;
-        }
-
-        .fc-scene[data-fc-direction='feed']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
-            animation: fc-wipe calc(800ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        .fc-scene:is([data-fc-direction='grow'], [data-fc-direction='feed'])[data-fc-phase='out'] .fc-walk polyline {
+            stroke-dasharray: 1;
+            animation: fc-draw-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) reverse both;
         }
 
         .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
             animation: fc-swing-in calc(520ms * var(--fc-slow, 1)) ease-out calc(var(--i) * 40ms * var(--fc-slow, 1)) both;
         }
 
+        .fc-scene[data-fc-direction='mix'][data-fc-phase='out'] .fc-day {
+            animation: fc-swing-in-back calc(520ms * var(--fc-slow, 1)) ease-out calc(var(--i) * 40ms * var(--fc-slow, 1)) reverse both;
+        }
+
         .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
             animation: fc-walk-in calc(450ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-direction='mix'][data-fc-phase='out'] .fc-tile.fc-arrives {
+            animation: fc-walk-in-back calc(450ms * var(--fc-slow, 1)) ease-in-out reverse both;
         }
 
         .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-walk polyline {
@@ -1322,29 +1419,29 @@
             animation: fc-draw calc(1600ms * var(--fc-slow, 1)) ease-in-out both;
         }
 
+        .fc-scene[data-fc-direction='mix'][data-fc-phase='out'] .fc-walk polyline {
+            stroke-dasharray: 1;
+            animation: fc-draw-back calc(1600ms * var(--fc-slow, 1)) ease-in-out reverse both;
+        }
+
         .fc-scene[data-fc-direction='mix'] .fc-tile .fc-load__today {
             animation: fc-footsteps calc(1600ms * var(--fc-slow, 1)) steps(4, end) infinite alternate;
         }
 
-        /* 3 Opening. */
-        .fc-scene[data-fc-opening='unfold']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
-            animation: fc-unfold calc(520ms * var(--fc-slow, 1)) linear both;
+        /* 3 Opening. The recommendation is in the shared rule above. The map
+           unfolds over the whole run: one progress value (--fc-p) on the
+           growth curve drives both folds, the panel across in its first 40 %,
+           the rest down in the remaining 60 %. */
+        .fc-scene[data-fc-opening='unfold'] .fc-fold {
+            clip-path: inset(0 calc((1 - min(1, var(--fc-p) / 0.4)) * 100%) calc((1 - max(0, (var(--fc-p) - 0.4) / 0.6)) * (100% - 2.2rem)) 0);
         }
 
-        .fc-scene[data-fc-opening='unfold']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
-            animation: fc-unfold calc(320ms * var(--fc-slow, 1)) linear both;
+        .fc-scene[data-fc-opening='unfold']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-fold {
+            animation: fc-fold calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) both;
         }
 
         .fc-scene[data-fc-opening='unfold'][data-fc-phase='out'] .fc-fold {
-            animation: fc-unfold calc(320ms * var(--fc-slow, 1)) linear reverse both;
-        }
-
-        .fc-scene[data-fc-opening='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-fold {
-            animation: fc-drop calc(320ms * var(--fc-slow, 1)) var(--fc-forest) both;
-        }
-
-        .fc-scene[data-fc-opening='grow'][data-fc-phase='out'] .fc-fold {
-            animation: fc-drop calc(320ms * var(--fc-slow, 1)) var(--fc-forest) reverse both;
+            animation: fc-fold-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) reverse both;
         }
 
         .fc-scene[data-fc-opening='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
@@ -1357,59 +1454,105 @@
         }
 
         .fc-scene[data-fc-opening='mix'][data-fc-phase='out'] .fc-dialog {
-            animation: fc-squash calc(347ms * var(--fc-slow, 1)) var(--fc-forest) reverse both;
+            animation: fc-squash-back calc(347ms * var(--fc-slow, 1)) var(--fc-forest) reverse both;
         }
 
         .fc-scene[data-fc-opening='mix'][data-fc-phase='out'] .fc-pop {
             transform-origin: top center;
-            animation: fc-unfurl calc(300ms * var(--fc-slow, 1)) ease-out reverse both;
+            animation: fc-unfurl-back calc(300ms * var(--fc-slow, 1)) ease-out reverse both;
         }
 
-        /* 4 Durations: contact, fold, growth and one loop per option. */
-        .fc-scene[data-fc-durations='picks'] {
+        /* 4 Durations: one picture (forest's growth on its curve), only the
+           times differ. --fc-g is read by the shared growth rule above. */
+        .fc-scene[data-fc-durations='seen'] {
             --fc-contact: 200ms;
-            --fc-fold: 520ms;
-            --fc-growth: 800ms;
+            --fc-g: 1000ms;
             --fc-loop: 3200ms;
         }
 
         .fc-scene[data-fc-durations='brisk'] {
             --fc-contact: 120ms;
-            --fc-fold: 200ms;
-            --fc-growth: 480ms;
+            --fc-g: 500ms;
             --fc-loop: 2000ms;
         }
 
         .fc-scene[data-fc-durations='slow'] {
             --fc-contact: 300ms;
-            --fc-fold: 780ms;
-            --fc-growth: 1200ms;
+            --fc-g: 1600ms;
             --fc-loop: 4800ms;
         }
 
-        .fc-scene[data-fc-durations] .fc-tap {
-            transition:
-                translate calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest),
-                outline-color calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest);
-            outline: 2px solid transparent;
-            outline-offset: 2px;
+        /* The first proposal: a menu 320, the dialog 520, a figure 800 ms. */
+        .fc-scene[data-fc-durations='first'] {
+            --fc-contact: 200ms;
+            --fc-loop: 3200ms;
         }
 
-        .fc-scene[data-fc-durations][data-fc-phase='in'] .fc-tap {
-            animation: fc-close-in calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest) both;
+        .fc-scene[data-fc-durations='first'] .fc-dialog {
+            --fc-g: 520ms;
         }
 
-        .fc-scene[data-fc-durations]:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
-            animation: fc-unfold calc(var(--fc-fold) * var(--fc-slow, 1)) linear both;
+        .fc-scene[data-fc-durations='first'] .fc-pop {
+            --fc-g: 320ms;
+        }
+
+        .fc-scene[data-fc-durations='first'] .kp-kpi__value {
+            --fc-g: 800ms;
+        }
+
+        .fc-scene[data-fc-durations] .kp-kpi__value {
+            display: inline-block;
+            justify-self: start;
         }
 
         .fc-scene[data-fc-durations]:is([data-fc-phase='in'], [data-fc-phase='hold']) .kp-kpi__value {
-            animation: fc-grow calc(var(--fc-growth) * var(--fc-slow, 1)) var(--fc-forest) both;
+            animation: fc-sprout calc(var(--fc-g) * var(--fc-slow, 1)) var(--fc-tree) both;
+        }
+
+        .fc-scene[data-fc-durations][data-fc-phase='out'] .kp-kpi__value {
+            animation: fc-sprout-back calc(var(--fc-g) * var(--fc-slow, 1)) var(--fc-tree) reverse both;
         }
 
         .fc-scene[data-fc-durations] .fc-bar .kp-progressbar__fill,
         .fc-scene[data-fc-durations] .fc-bar .kp-progressbar__head {
             animation-duration: calc(var(--fc-loop) * var(--fc-slow, 1));
+        }
+
+        /* A contact (a press, question 4's and 15's): pressed through `in`,
+           let go at `hold`, by transitions, so the release plays the press
+           backwards at the same time. The blaze ring closes from 5 px out,
+           dashed and clear, to 1 px out, solid green; the dash turns solid
+           halfway (a discrete transition). */
+        .fc-scene:is([data-fc-durations], [data-fc-press]) :is(.fc-tap, .fc-press) {
+            --fc-t: calc(var(--fc-contact, 200ms) * var(--fc-slow, 1));
+            outline: 2px dashed transparent;
+            outline-offset: 5px;
+            transition:
+                outline-color var(--fc-t) var(--fc-tree),
+                outline-offset var(--fc-t) var(--fc-tree),
+                outline-style var(--fc-t) allow-discrete,
+                translate var(--fc-t) var(--fc-tree),
+                scale var(--fc-t) var(--fc-tree);
+        }
+
+        .fc-scene:is([data-fc-durations], [data-fc-press='close'])[data-fc-phase='in'] :is(.fc-tap, .fc-press) {
+            outline-style: solid;
+            outline-color: var(--primary);
+            outline-offset: 1px;
+        }
+
+        .fc-scene[data-fc-press='settle'] .fc-press {
+            outline-style: solid;
+            outline-offset: 1px;
+        }
+
+        .fc-scene[data-fc-press='settle'][data-fc-phase='in'] .fc-press {
+            translate: 0 1px;
+            outline-color: var(--primary);
+        }
+
+        .fc-scene[data-fc-press='shrink'][data-fc-phase='in'] .fc-press {
+            scale: 0.98;
         }
 
         /* 8 A live update. */
@@ -1551,13 +1694,19 @@
             animation: fc-arc-3 calc(2400ms * var(--fc-slow, 1)) linear infinite;
         }
 
-        /* 11 Leaving and arriving: `out` leaves, `in` arrives as its reverse. */
-        .fc-scene[data-fc-leave='wither'][data-fc-phase='out'] .fc-leaver {
-            animation: fc-wither calc(560ms * var(--fc-slow, 1)) var(--fc-wither) both;
+        /* 11 Leaving and arriving: `in` arrives, `out` leaves as the arrival
+           played backwards. Forest's arrival is its growth (out of its own
+           line, autumn brown turning green, on the growth curve, the growth
+           time); its leave is that growth backwards: it browns and sinks
+           back into its line, slowly at first. The wind takes the same time
+           and curve, so only the picture differs; today's fade keeps its
+           measured 560 ms ease-in. */
+        .fc-scene[data-fc-leave='wither'][data-fc-phase='in'] .fc-leaver {
+            animation: fc-wither calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) both;
         }
 
-        .fc-scene[data-fc-leave='wither'][data-fc-phase='in'] .fc-leaver {
-            animation: fc-wither calc(560ms * var(--fc-slow, 1)) var(--fc-wither) reverse both;
+        .fc-scene[data-fc-leave='wither'][data-fc-phase='out'] .fc-leaver {
+            animation: fc-wither-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) reverse both;
         }
 
         .fc-scene[data-fc-leave='today'][data-fc-phase='out'] .fc-leaver {
@@ -1568,36 +1717,12 @@
             animation: fc-autumn calc(560ms * var(--fc-slow, 1)) ease-in reverse both;
         }
 
-        .fc-scene[data-fc-leave='wind'][data-fc-phase='out'] .fc-leaver {
-            animation: fc-wind calc(560ms * var(--fc-slow, 1)) ease-in both;
-        }
-
         .fc-scene[data-fc-leave='wind'][data-fc-phase='in'] .fc-leaver {
-            animation: fc-wind calc(560ms * var(--fc-slow, 1)) ease-in reverse both;
+            animation: fc-wind calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) both;
         }
 
-        /* 15 The press: pressed while `in`, let go at `hold`. */
-        .fc-scene[data-fc-press] .fc-press {
-            outline: 2px solid transparent;
-            outline-offset: 2px;
-            transition:
-                translate calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
-                scale calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
-                box-shadow calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
-                outline-color calc(200ms * var(--fc-slow, 1)) var(--fc-forest);
-        }
-
-        .fc-scene[data-fc-press='close'][data-fc-phase='in'] .fc-press {
-            animation: fc-close-in calc(200ms * var(--fc-slow, 1)) var(--fc-forest) both;
-        }
-
-        .fc-scene[data-fc-press='settle'][data-fc-phase='in'] .fc-press {
-            translate: 0 1px;
-            outline-color: var(--primary);
-        }
-
-        .fc-scene[data-fc-press='shrink'][data-fc-phase='in'] .fc-press {
-            scale: 0.98;
+        .fc-scene[data-fc-leave='wind'][data-fc-phase='out'] .fc-leaver {
+            animation: fc-wind-back calc(var(--fc-grow-time) * var(--fc-slow, 1)) var(--fc-tree) reverse both;
         }
     }
 
@@ -1606,19 +1731,6 @@
     @media (prefers-reduced-motion: reduce) {
         .fc-scene[data-fc-spinner='rings'] .fc-spin > span {
             mask: none;
-        }
-    }
-
-    /* The press: the blaze closes in onto the part and turns solid. */
-    @keyframes fc-close-in {
-        from {
-            outline: 2px dashed var(--primary);
-            outline-offset: 5px;
-        }
-
-        to {
-            outline: 2px solid var(--primary);
-            outline-offset: 1px;
         }
     }
 
@@ -1632,66 +1744,110 @@
         }
     }
 
-    /* Growing (the strip's arrival 1): up from under its own line, clipped there. */
-    @keyframes fc-grow {
+    @keyframes fc-rise-back {
         from {
-            translate: 0 40%;
-            clip-path: inset(-1rem -1rem 40% -1rem);
+            translate: 0 100%;
         }
 
         to {
             translate: 0 0;
-            clip-path: inset(-1rem -1rem -1rem -1rem);
         }
     }
 
-    /* The map unfolds: the top panel across, then the rest down; the paper
-       is uncovered, never squashed. */
-    @keyframes fc-unfold {
-        0% {
-            clip-path: inset(0 100% calc(100% - 2.2rem) 0);
-            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
-        }
-
-        40% {
-            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
-            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
-        }
-
-        100% {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    /* The same fold on the quick curve, titanium's (question 1, option 2). */
-    @keyframes fc-unfold-quick {
-        0% {
-            clip-path: inset(0 100% calc(100% - 2.2rem) 0);
-            animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        40% {
-            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
-            animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        100% {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    @keyframes fc-drop {
+    /* The map's fold (question 3, option 2): the progress the clip-path reads. */
+    @keyframes fc-fold {
         from {
-            clip-path: inset(0 0 100% 0);
+            --fc-p: 0;
         }
 
         to {
-            clip-path: inset(0 0 0 0);
+            --fc-p: 1;
+        }
+    }
+
+    @keyframes fc-fold-back {
+        from {
+            --fc-p: 0;
+        }
+
+        to {
+            --fc-p: 1;
+        }
+    }
+
+    /* Forest's growth: out of its own base line, top first, clipped at the
+       line, so it comes out of the ground (never squashed). */
+    @keyframes fc-sprout {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fc-sprout-back {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    /* Anchored to a trigger above it (a menu under its button): out of the
+       anchor line downwards, its far end first, like a root. */
+    @keyframes fc-root {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% -1rem 0 -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fc-root-back {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% -1rem 0 -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
         }
     }
 
     /* Today's dialog (kp-sig-forest-forest-unfold) and menu (mb-forest-unfurl). */
     @keyframes fc-squash {
+        0% {
+            opacity: 0;
+            transform: scale(0.5, 0.34);
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1, 0.34);
+        }
+
+        100% {
+            transform: none;
+        }
+    }
+
+    @keyframes fc-squash-back {
         0% {
             opacity: 0;
             transform: scale(0.5, 0.34);
@@ -1720,6 +1876,16 @@
         }
     }
 
+    @keyframes fc-unfurl-back {
+        from {
+            transform: scaleY(0.05) rotate(-6deg);
+        }
+
+        to {
+            transform: scaleY(1) rotate(0deg);
+        }
+    }
+
     @keyframes fc-walk-in {
         from {
             transform: translateX(-1rem);
@@ -1730,7 +1896,27 @@
         }
     }
 
+    @keyframes fc-walk-in-back {
+        from {
+            transform: translateX(-1rem);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
     @keyframes fc-wipe {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes fc-wipe-back {
         from {
             clip-path: inset(0 100% 0 0);
         }
@@ -1752,7 +1938,29 @@
         }
     }
 
+    @keyframes fc-swing-in-back {
+        from {
+            rotate: -14deg;
+            scale: 0.6;
+        }
+
+        to {
+            rotate: 0deg;
+            scale: 1;
+        }
+    }
+
     @keyframes fc-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes fc-draw-back {
         from {
             stroke-dashoffset: 1;
         }
@@ -1791,7 +1999,7 @@
         0% {
             --fc-arc: 0deg;
             opacity: 1;
-            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
+            animation-timing-function: var(--fc-tree);
         }
 
         55% {
@@ -2003,18 +2211,33 @@
         }
     }
 
-    /* Leaving. */
+    /* Leaving withers, arriving grows: written as the arrival (out of its
+       line, autumn turning green); the leave plays it backwards. */
     @keyframes fc-wither {
         from {
-            translate: 0 0;
-            clip-path: inset(-1rem -1rem -1rem -1rem);
-            filter: none;
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+            filter: sepia(1) saturate(0.6);
         }
 
         to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+            filter: none;
+        }
+    }
+
+    @keyframes fc-wither-back {
+        from {
             translate: 0 100%;
-            clip-path: inset(-1rem -1rem 100% -1rem);
+            clip-path: inset(0 -1rem 100% -1rem);
             filter: sepia(1) saturate(0.6);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+            filter: none;
         }
     }
 
@@ -2026,11 +2249,33 @@
         }
     }
 
+    /* Blown by the wind, written as the arrival (drifting in from the end
+       of the line); the leave plays it backwards. */
     @keyframes fc-wind {
-        to {
+        from {
             translate: 3rem -0.4rem;
             rotate: 4deg;
             opacity: 0;
+        }
+
+        to {
+            translate: 0 0;
+            rotate: 0deg;
+            opacity: 1;
+        }
+    }
+
+    @keyframes fc-wind-back {
+        from {
+            translate: 3rem -0.4rem;
+            rotate: 4deg;
+            opacity: 0;
+        }
+
+        to {
+            translate: 0 0;
+            rotate: 0deg;
+            opacity: 1;
         }
     }
 }
