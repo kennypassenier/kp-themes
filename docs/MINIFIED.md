@@ -40,7 +40,7 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 173.8 kB | 114.4 kB | 34% |
 | `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2252.7 kB | 1148.9 kB | 49% |
+| `dist/kp-themes.css` | 2252.8 kB | 1148.9 kB | 49% |
 | `dist/kp-themes.js` | 708.0 kB | 383.2 kB | 46% |
 
 The loose stylesheets together weigh **2316.1 kB** authored and

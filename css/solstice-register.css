@@ -308,14 +308,18 @@
             inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
     }
 
-    /* The mirror's own box-shadow would otherwise replace the two-channel
-       ring outright (kp.register sits after kp.components in the cascade)
-       — the exact fault retro's own comment records for its bevel [DI2,
-       AR30 as amended 2026-09-07]. Composed in front of the highlight,
-       never instead of it. */
+    /* Focus is a halo [Kenny's pick on research/solstice-character, 2026-10-07]:
+       a 3 px double rust ring standing 3 px off the part, in place of the
+       global two-channel ring (DI2). One rule for every focusable part; the
+       mirror button keeps its highlight untouched by it. */
+    [data-theme='solstice'] :focus-visible {
+        outline: 3px double var(--accent);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
     [data-theme='solstice'] .kp-button--mirror:focus-visible {
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             inset 0 2px 0 hsl(from var(--foreground) h s l / 0.35),
             inset 0 -2px 0 hsl(from var(--primary-foreground) h s l / 0.25);
     }
@@ -1691,7 +1695,7 @@
        2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── solstice: an eclipse: a circle closes over it ── */
+        /* ── solstice: the morning mist: it lifts, brightens and thins away ── */
         /* Opening is closing turned around (Kenny's pick on research/open-reverse,
            2026-10-05): js/motion.js opens the dialog as its close played backwards,
            in the close's time, and lets what arrives play this leave backwards. */

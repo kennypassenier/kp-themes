@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Changed: solstice's focus ring is a halo** [2026-10-07, Kenny: the halo of research/solstice-character, replacing the global two-channel ring]. A 3 px double rust outline 3 px off the part on every `:focus-visible`; the mirror button keeps only its highlight. The leave comment now names the morning mist, not an eclipse (css/solstice-register.css).
+
 - **Fixed: `.kp-skeleton--block` and `.kp-skeleton--circle` have their own size again** [2026-10-07, Kenny]. The base `.kp-skeleton` rule (1rem tall) came later in components.css than the two shape rules and won at equal specificity, so in every theme a block was a flat 1rem bar and a circle a flat ellipse. The shape rules now follow the base rule: a block is `--kp-skeleton-block` (6rem) tall, a circle `--kp-skeleton-circle` (3rem) wide and as tall as wide.
 
 - **Changed: forest's skeleton block and circle are a treeline that fills in** [2026-10-07, Kenny: option 1 of research/forest-skeleton, replacing the planted plot]. Two ridges rise from the foot, then the planted tree line (the lines' own trees, whole trees only) walks across start to end; 3200 ms linear loop (`--kp-fo-grow`), the leave is the arrival reversed, the leaf corner on the block, clipped to the circle, a finished still under reduced motion. The chart's loading panel and legend stubs take it too; the text lines are unchanged (css/forest-register.css, themes/forest/CHARACTER.md).

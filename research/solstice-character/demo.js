@@ -19,8 +19,12 @@
 
 const button = (label, modifier = '', extra = '') => `<button type="button" class="kp-button ${modifier}" ${extra}>${label}</button>`;
 
-/** The low sun's light at a plate's foot (G7): its own element, so a question can switch it. */
-const FOOT = `<span class="so-foot" aria-hidden="true"></span>`;
+/**
+ * The low sun's light at a plate's foot (G7): its own element, so a question can switch it. Its three
+ * layers (`so-l`) are drawn only in the scenes of pointing and pressing (G8, G14): the sun, the lit foot
+ * and the glow, each a function of one number that runs 0 → 1 while the part is pointed at or pressed.
+ */
+const FOOT = `<span class="so-foot" aria-hidden="true"><span class="so-l so-l--a"></span><span class="so-l so-l--b"></span><span class="so-l so-l--c"></span><span class="so-l so-l--d"></span></span>`;
 
 /** Every loading picture an option may draw over a waiting part; options.css shows one. */
 const LOAD = `<span class="so-load" aria-hidden="true"><span class="so-path"><span class="so-sun"></span></span><span class="so-breath"></span><span class="so-sparks"></span></span>`;
@@ -111,7 +115,7 @@ const PART = {
         `<div class="kp-popover so-pop so-pop--static so-panel ${cls}">${FOOT}<ul class="kp-menu" role="menu">${items
             .map(
                 (t, i) =>
-                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === 0 && pointed ? ' so-pointed' : ''}">${FOOT}<span class="so-entry">${t}</span></button></li>`,
+                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item so-point${i === 0 && pointed ? ' so-pointed' : ''}">${FOOT}<span class="so-entry">${t}</span></button></li>`,
             )
             .join('')}</ul></div>`,
 };
@@ -140,7 +144,7 @@ const waitingTile = () =>
     `<div class="kp-card so-plate so-tile so-waits" aria-busy="true">${FOOT}<p class="kp-card__title so-title">Boiler 03</p><p class="kp-card__body so-faint">Reading…</p>${LOAD}</div>`;
 
 const DURATION = () =>
-    cell('Contact: a press', `<div class="so-row">${button('Export readings', 'so-tap')}</div><p class="so-readout" data-so-readout="contact"></p>`) +
+    cell('Contact: a press', `<div class="so-row">${button(`${FOOT}Export readings`, 'so-tap so-press')}</div><p class="so-readout" data-so-readout="contact"></p>`) +
     cell('Opening: a dialog is kindled', PART.dialog() + '<p class="so-readout" data-so-readout="open"></p>') +
     cell(
         'A live change: a figure rises',
@@ -285,47 +289,50 @@ const LEAVE = () =>
 const COMPOSITES = () =>
     cell(
         "Alone: the theme's own button, for reference",
-        `<div class="so-row">${button('Export readings', 'so-alone')}${button('Light it', 'kp-button--primary so-alone')}</div>`,
+        `<div class="so-row">${button(`${FOOT}Export readings`, 'so-alone so-point so-press')}${button(`${FOOT}Light it`, 'kp-button--primary so-alone so-point so-press')}</div>`,
         'so-part--wide',
     ) +
     cell(
         'Page header: its action buttons',
         `<header class="kp-page-header so-header so-plate">${FOOT}<div class="kp-page-header__inner"><div><p class="kp-page-header__title so-title">Rooms</p><p class="kp-page-header__description">Six on the ground floor.</p></div>
-        <div class="kp-page-header__actions">${button('Export', 'kp-button--sm so-in-header')}${button('Add', 'kp-button--sm kp-button--primary so-in-header')}</div></div></header>`,
+        <div class="kp-page-header__actions">${button(`${FOOT}Export`, 'kp-button--sm so-in-header so-point so-press')}${button(`${FOOT}Add`, 'kp-button--sm kp-button--primary so-in-header so-point so-press')}</div></div></header>`,
         'so-part--wide',
     ) +
     cell('Menu: its entries', PART.menuStatic(['Open the log', 'Assign to…'], 'so-in-menu', false)) +
     cell(
         'Tile: its Open link',
-        `<div class="kp-card so-plate so-tile so-in-tile">${FOOT}<p class="kp-card__title so-title">Boiler 02</p><a class="kp-button kp-button--ghost kp-button--sm so-tile-link" href="#so-intro">Open</a></div>`,
+        `<div class="kp-card so-plate so-tile so-in-tile">${FOOT}<p class="kp-card__title so-title">Boiler 02</p><a class="kp-button kp-button--ghost kp-button--sm so-tile-link so-point so-press" href="#so-intro">${FOOT}Open</a></div>`,
     ) +
     cell(
         'Drawer: its tour buttons',
         `<div class="kp-card so-plate so-drawer">${FOOT}<p class="kp-card__title so-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="so-row">${button(
-            'Skip',
-            'kp-button--sm kp-button--ghost so-in-drawer',
-        )}${button('Next', 'kp-button--sm kp-button--primary so-in-drawer')}</div></div>`,
+            `${FOOT}Skip`,
+            'kp-button--sm kp-button--ghost so-in-drawer so-point so-press',
+        )}${button(`${FOOT}Next`, 'kp-button--sm kp-button--primary so-in-drawer so-point so-press')}</div></div>`,
     ) +
     cell(
         'Key figure as a link',
-        `<div class="kp-kpis"><a class="kp-kpi so-plate so-kpi so-in-kpi" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Solar yield today</span><span class="kp-kpi__value so-figure">412</span><span class="kp-kpi__trend">since sunrise</span></a></div>`,
+        `<div class="kp-kpis"><a class="kp-kpi so-plate so-kpi so-in-kpi so-point so-press" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Solar yield today</span><span class="kp-kpi__value so-figure">412</span><span class="kp-kpi__trend">since sunrise</span></a></div>`,
     );
 
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="so-row">${button('Export readings', 'so-pointed')}${button('Light it', 'kp-button--primary')}</div>`) +
+    cell(
+        'Button, pointed at',
+        `<div class="so-row">${button(`${FOOT}Export readings`, 'so-point so-pointed')}${button(`${FOOT}Light it`, 'kp-button--primary so-point')}</div>`,
+    ) +
     cell('Menu entries, the first pointed at', PART.menuStatic(['Open the log', 'Assign to…', 'Rename'])) +
     cell(
         'Tile with its Open link pointed at',
-        `<div class="kp-card so-plate so-tile">${FOOT}<p class="kp-card__title so-title">Boiler 02</p><a class="kp-button kp-button--ghost kp-button--sm so-tile-link so-pointed" href="#so-intro">Open</a></div>`,
+        `<div class="kp-card so-plate so-tile">${FOOT}<p class="kp-card__title so-title">Boiler 02</p><a class="kp-button kp-button--ghost kp-button--sm so-tile-link so-point so-pointed" href="#so-intro">${FOOT}Open</a></div>`,
     ) +
     cell(
         'Key figures, the first pointed at',
-        `<div class="kp-kpis so-kpi-row"><a class="kp-kpi so-plate so-kpi so-pointed" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Solar yield</span><span class="kp-kpi__value so-figure">412</span></a><a class="kp-kpi so-plate so-kpi" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Flue</span><span class="kp-kpi__value so-figure">61</span></a></div>`,
+        `<div class="kp-kpis so-kpi-row"><a class="kp-kpi so-plate so-kpi so-point so-pointed" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Solar yield</span><span class="kp-kpi__value so-figure">412</span></a><a class="kp-kpi so-plate so-kpi so-point" href="#so-intro">${FOOT}<span class="kp-kpi__label so-label">Flue</span><span class="kp-kpi__value so-figure">61</span></a></div>`,
     ) +
     cell(
         'Days of a month, one pointed at',
         `<div class="so-days">${[12, 13, 14, 15]
-            .map((d) => `<span class="so-day${d === 13 ? ' so-pointed' : ''}">${FOOT}<span class="so-day__num">${d}</span></span>`)
+            .map((d) => `<span class="so-day so-point${d === 13 ? ' so-pointed' : ''}">${FOOT}<span class="so-day__num">${d}</span></span>`)
             .join('')}</div>`,
     );
 
@@ -350,8 +357,8 @@ const FOCUS = () =>
     );
 
 const PRESS = () =>
-    cell('Button', `<div class="so-row">${button('Export readings', 'so-press')}</div>`) +
-    cell('Primary button', `<div class="so-row">${button('Light it', 'kp-button--primary so-press')}</div>`) +
+    cell('Button', `<div class="so-row">${button(`${FOOT}Export readings`, 'so-press')}</div>`) +
+    cell('Primary button', `<div class="so-row">${button(`${FOOT}Light it`, 'kp-button--primary so-press')}</div>`) +
     cell(
         'Menu entry',
         `<div class="kp-popover so-pop so-pop--static so-panel">${FOOT}<ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item so-press">${FOOT}<span class="so-entry">Assign to…</span></button></li></ul></div>`,
@@ -828,29 +835,33 @@ const ASPECTS = [
         label: 'Pointing at something',
         rule: 'G8',
         question: 'What happens to the part under the pointer?',
-        why: 'Your picks point five ways: the rake across the button (your approval of 2026-09-11), an amber wash (the menu, the key figure), a glow ring (the header), the foot line thickening (the tiles’ The horizon lifts), a glow on a link’s words. The rake is cyberpunk’s charge and forest’s mirror sheen; the wash is light’s warm glow; the ring dark’s spotlight.',
-        kind: 'still',
+        why: 'Your picks point five ways today (the rake across the button, an amber wash, a glow ring, the foot line thickening, a glow on a link’s words) and none of them moves: the part just changes colour. Here every option is a short animation of the low sun itself, 240 ms (one unit), that plays when the pointer arrives and plays back when it leaves: every five seconds on the page, and under your real pointer too (point at a part). The part never moves, the siblings stay as they are.',
+        kind: 'cycle',
         scene: HOVER,
         options: [
             {
                 key: 'sun',
-                name: 'The sun rises under it',
-                see: 'The part pointed at catches more of the low light: its foot edge lights in full amber and the warm wash climbs higher and warms to amber. Nothing lifts or moves; the parts beside it stay as they are.',
+                name: 'The sun climbs its arc under it',
+                see: 'A small amber sun rises out of the part’s foot at its start, travels up its arc and stands at noon on the foot line in the middle; the foot edge lights in full amber and a dome of warm light grows round the sun as it goes. When the pointer leaves, the sun goes back the way it came and sets into the foot.',
                 verdict: rec(
-                    'it is your tiles’ The horizon lifts on every part, the same light that marks every state, and no other theme points with light from under.',
+                    'you see the sun itself do the pointing, on its sine (a quarter of its arc: slow off the horizon, level at noon), the same sun as the spinner and the bar, and no other theme points with a body that travels.',
                 ),
             },
             {
                 key: 'rake',
-                name: 'The low sun rakes across (your 2026-09-11 approval; cyberpunk’s charge)',
-                see: 'A warm band crosses the pointed part once, from its leading edge to the far one, every time it is pointed at (here it repeats so you can see it).',
-                verdict: not('it is your approved rake and it has movement, but a band crossing a button is cyberpunk’s charge and forest’s sheen.'),
+                name: 'The low sun rakes along the foot',
+                see: 'A long, slanted band of warm light hugs the part’s foot and sweeps from its start to its end once; the foot edge lights behind it, and what the band has crossed stays lit. When the pointer leaves, the light draws back to the start.',
+                verdict: not(
+                    'it is your approved rake, redrawn low and slanted so that it leaves the foot lit, but a band crossing a part is still close to cyberpunk’s charge.',
+                ),
             },
             {
-                key: 'warm',
-                name: 'It warms all over (the menu’s and the key figure’s picks; light’s warm glow)',
-                see: 'The whole part warms with a wash of amber.',
-                verdict: not('it is soft, but warming the whole part is light’s hover family.'),
+                key: 'arc',
+                name: 'The sun’s path is drawn over it',
+                see: 'A thin amber arc, the path of the sun, is drawn over the part’s lower half from its start to its end, glowing, with the foot edge lit along it. When the pointer leaves, the arc is drawn back to the start.',
+                verdict: not(
+                    'it is the quietest and the most graphic, but the line crosses the words of a small button, and a drawn line is closer to a chart than to light.',
+                ),
             },
         ],
     },
@@ -888,27 +899,33 @@ const ASPECTS = [
         label: 'The press',
         rule: 'G14',
         question: 'What does a part do while it is pressed?',
-        why: 'Your header’s pick presses with a warm glow inside the button; the register restates the package’s -active face; the button lifts 1 px under the pointer, which with a 1 px drop is titanium’s press.',
+        why: 'Today a press only turns the ground to its -active shade, with an inset glow on the header’s buttons: the part is dark for a moment and nothing happens that you can follow. Here the pressed part is lit by the sun in a way you can see land, in 240 ms (one unit), held while it is pressed and released the same way back: every five seconds on the page, and under your real pointer too (hold the mouse down on a part). The part itself never moves (titanium’s press drops it 1 px).',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
-                key: 'ember',
-                name: 'It glows inside, like an ember blown on',
-                see: 'While pressed, the part’s ground takes its -active shade and an amber glow rises inside its edges; nothing moves.',
-                verdict: rec('it is your header’s pick on every control, and an inset warm glow is no other theme’s press.'),
+                key: 'swell',
+                name: 'The sun swells inside it',
+                see: 'While pressed, the part’s ground takes its -active shade and a half-sun grows from the middle of its foot, a dome of warm light that swells to fill the part, with the foot edge lit hot. Released, the sun shrinks back into its foot.',
+                verdict: rec(
+                    'it is an ember blown on and the sun rising to noon in one picture: the light comes from the foot, it grows where the finger is, and no other theme presses with a growing light.',
+                ),
             },
             {
-                key: 'drop',
-                name: 'It drops 1 px (titanium’s)',
-                see: 'While pressed, the part moves 1 px down.',
-                verdict: not('it is tactile, but it is titanium’s press exactly.'),
+                key: 'dawn',
+                name: 'The day breaks over it',
+                see: 'While pressed, the dusk ramp (rust, amber, gold) rises through the whole part from its foot in one pass, the gold front rising to its top edge and standing there; the ground takes its -active shade. Released, the light sinks back to the foot.',
+                verdict: not(
+                    'it is the boldest and the easiest to see, but a whole part flooding for every click is loud, and it is the nearest thing here to the size change’s dawn.',
+                ),
             },
             {
-                key: 'sink',
-                name: 'Its light sinks',
-                see: 'While pressed, the light at its foot goes out and its ground darkens, as if the sun went under.',
-                verdict: not('it is a fair picture, but a press that darkens reads as disabled.'),
+                key: 'rim',
+                name: 'The light closes in from its rim',
+                see: 'While pressed, the ground takes its -active shade and a rim of amber light closes in from the part’s edge, rust at the edge and amber inside, thickening inward. Released, the glow opens back to the rim.',
+                verdict: not(
+                    'it is calm and works on every shape, but it is the old inset ember with a motion, and an inner glow without a centre is the least solar of the three.',
+                ),
             },
         ],
     },
@@ -1025,6 +1042,15 @@ ASPECTS.forEach((a, n) => {
             at === 0 ? ' <span class="so-label-row__rec">Recommended</span>' : ''
         }</p><p class="so-see"></p><p class="so-verdict"></p>
         <div class="so-scene" data-so-kind="${a.kind}" data-so-${a.id}="${o.key}" data-so-phase="in">${a.scene()}</div>`;
+        // The composites and the duration tap follow the recommended pointing and pressing (the sun, the swell);
+        // "as today" stays the baseline it is.
+        const scene = /** @type {HTMLElement} */ (col.querySelector('.so-scene'));
+        if (a.id === 'composites' && o.key !== 'today') {
+            scene.setAttribute('data-so-hover', 'sun');
+            scene.setAttribute('data-so-press', 'swell');
+            for (const item of scene.querySelectorAll('.so-in-menu .kp-menu__item')) item.classList.add('so-press');
+        }
+        if (a.id === 'durations') scene.setAttribute('data-so-press', 'swell');
         /** @type {HTMLElement} */ (col.querySelector('.so-label-row__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.so-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.so-verdict'));
@@ -1242,8 +1268,33 @@ function closeByReverse(/** @type {Element} */ scene) {
     };
 }
 
+/** Whether the review dialog is open. */
+const dialogOpen = () => Boolean(document.querySelector('.rv-dialog[open]'));
+
+/**
+ * The review kit, in the dialog, puts the `so-pointed` class of a hover scene
+ * on and off by itself (the pointer arriving and leaving). Once it has been
+ * seen to do that, the clock stops hushing the scenes, so the two never
+ * fight; until then (and on the page) the clock lets the pointer come and go.
+ */
+let kitDrives = false;
+new MutationObserver((records) => {
+    for (const r of records) {
+        const el = /** @type {Element} */ (r.target);
+        const was = /(^|\s)so-pointed(\s|$)/.test(r.oldValue || '');
+        if (dialogOpen() && el.classList.contains('so-point') && was !== el.classList.contains('so-pointed')) kitDrives = true;
+    }
+}).observe(section, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+
 new MutationObserver((records) => {
     const scenes = [...new Set(records.map((r) => /** @type {Element} */ (r.target)))];
+    if (!dialogOpen()) kitDrives = false;
+    // The hover scenes stand pointed (`so-pointed` in the markup); on the
+    // page the clock lets the pointer leave and come back by hushing them
+    // for `gap` and `out` (data-so-hush).
+    for (const scene of scenes)
+        if (scene.hasAttribute('data-so-hover'))
+            scene.toggleAttribute('data-so-hush', ['gap', 'out'].includes(scene.getAttribute('data-so-phase') || '') && !kitDrives);
     const at = (/** @type {string} */ phase) => scenes.filter((scene) => scene.getAttribute('data-so-phase') === phase);
     // Every read first, for every scene, then every write, so the styles are
     // worked out once per phase change and not once per scene.

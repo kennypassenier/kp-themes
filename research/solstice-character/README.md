@@ -1,5 +1,7 @@
 # What makes solstice solstice
 
+**Update 1 (Kenny, 07/10/2026 21:11): 16 of 18 picked, every recommendation except The focus ring = a halo and Leaving and arriving = the morning mist; Pointing at something ("I don't see any animations?") and The press ("I feel like we can do better") were not approved and are redone in update 1** (research/solstice-character/update.json; applied in css/solstice-register.css).
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk,
 blueprint; solstice third in that order, the same way as titanium, forest, nostromo, cyberpunk and synthwave (02:54: "waar jij eerst
 uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet"). The analysis is
@@ -42,11 +44,23 @@ dialog.
 | 11  | The spinner (G11)                     | the sun's arc (the signature) · an ember that breathes · the package's ring                                                             |
 | 12  | Leaving and arriving (G12)            | an eclipse, the light returning · the morning mist (Kenny's pick; light's leave) · dusk, the light sinking into the foot                |
 | 13  | Buttons inside composites (G17)       | exactly solstice's own · as today · solstice's own but quiet (ghosts inside a composite)                                                |
-| 14  | Pointing at something (G8)            | the sun rises under it · the rake (cyberpunk's charge) · it warms all over (light's warm glow)                                          |
+| 14  | Pointing at something (G8)            | the sun climbs its arc under it · the low sun rakes along the foot · the sun's path is drawn over it (all animated, 240 ms)             |
 | 15  | The focus ring (G14, DI2)             | the two-channel ring, the sun raised · one amber outline · a halo                                                                       |
-| 16  | The press (G14)                       | it glows inside, an ember blown on · drops 1 px (titanium's) · its light sinks                                                          |
+| 16  | The press (G14)                       | the sun swells inside it · the day breaks over it · the light closes in from its rim (all animated, 240 ms)                             |
 | 17  | The voice (G15)                       | the serif speaks, in sentence case · mono capitals (the dark themes' label voice) · the sans for everything but titles                  |
 | 18  | Motifs (G16)                          | every motif means one thing · only the sun · on everything                                                                              |
+
+**Pointing and pressing (questions 14 and 16, redone 2026-10-07 after Kenny's notes: "I don't see any animations?" and "we can do better").**
+The first round drew hover as a static end pose and the press as a 240 ms colour change; neither could be seen. Now each option is an
+animation of the low sun's light that plays when the pointer arrives and plays back when it leaves, on one number per part: `--so-p`
+(pointed) and `--so-q` (pressed), registered with `@property`, 0 → 1 in one unit (240 ms, `--so-in` coming, `--so-out` going), so the way
+back is exactly the way there. Every layer of a part's foot (`.so-foot > .so-l--a/b/c`) is a function of that number (the sun's
+position is `1 − cos` and `sin` of a quarter turn). It is 1 on a part carrying `so-pointed` (the review kit puts the class on and off by
+itself; on the page the clock hushes the scene with `data-so-hush` for `gap` and `out`, and stands aside once the kit toggles the class),
+on a part marked `so-press` while the clock holds the scene at `in` or `hold`, and under the real pointer (`:hover`, `:active`).
+Contrast of the words over the finished light, measured on the ink pixels: pointing 4.5 to 11:1 except the arc over a small link's amber
+underline (2.2:1) and the sun under the key figure's muted label (4.1:1); pressing 3.9 to 10:1, below AA on the secondary ground for the
+swell (4.1:1) and the day breaks (3.9:1 on the muted label, 4.1:1 on the button).
 
 **How.**
 

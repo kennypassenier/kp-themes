@@ -10,6 +10,22 @@
    one soft radius, the serif in sentence case, the sun crossing), so each
    question changes only its own rule. */
 
+/* The pointer and the press run on one number each, so every layer of a part
+   is a function of it and the way back is the way there (G1): 0 at rest,
+   1 while the part is pointed at (--so-p) or pressed (--so-q). Registered,
+   so the browser can transition them. */
+@property --so-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --so-q {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
@@ -22,6 +38,8 @@
         --so-sine-in: cubic-bezier(0.61, 1, 0.88, 1);
         --so-sine-out: cubic-bezier(0.12, 0, 0.39, 0);
         --so-std: cubic-bezier(0.4, 0, 0.2, 1);
+        /* Its own mirror: what the pointer and the press run on. */
+        --so-touch: cubic-bezier(0.37, 0, 0.63, 1);
         --so-spring: cubic-bezier(0.3, 1.4, 0.4, 1);
         /* G13: the failure's ink, the red lifted to 68 % (5.4:1 on the card;
            --destructive itself reads 4.1:1), as the alarm lifts it. */
@@ -1050,59 +1068,301 @@
         padding-block-end: 1.6rem;
     }
 
-    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
+    /* ── Pointing (G8) and pressing (G14): the sun's own light ───────── */
 
-    /* The recommended hover, at rest wherever a part is marked pointed: the
-       foot edge lights in full amber and the wash climbs and warms. */
-    .so-scene:not([data-so-hover]) .so-pointed,
-    .so-scene[data-so-hover='sun'] .so-pointed {
-        --so-foot-ink: var(--primary);
-        --so-foot-k: 0.3;
-        --so-foot-h: 72%;
-        --so-edge-w: 2px;
-        --so-edge: var(--primary);
+    /* Every part that can be pointed at or pressed answers to one number,
+       --so-p (pointed) or --so-q (pressed), 0 at rest and 1 at the end of
+       its unit (240 ms, G4). The layers of its foot are functions of that
+       number, so the way back is the way there, on the going curve (G1).
+       --so-p is 1 on a part carrying `so-pointed` (the review dialog puts
+       the class on and off by itself; on the page the clock hushes the scene
+       for `gap` and `out` with data-so-hush, off while the dialog is open)
+       and under the real pointer (:hover). --so-q is 1 on a part marked
+       `so-press` while the clock holds the scene at `in` or `hold`, and
+       under a real press (:active), so a reviewer can try both. */
+
+    .so-scene {
+        /* How far the sun stands above the foot line at noon: a small part
+           (a button, an entry, a day) keeps it under its words. */
+        --so-rise: 0.4rem;
+        --so-sun: var(--primary);
+        --so-dusk-1: var(--accent);
+        --so-dusk-2: var(--primary);
+        --so-dusk-3: var(--chart-3);
     }
 
-    .so-scene:not([data-so-hover]) .kp-button.so-pointed,
-    .so-scene[data-so-hover='sun'] .kp-button.so-pointed {
-        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
-        box-shadow: inset 0 -2px 0 var(--primary);
+    .so-scene :is(.kp-button--primary) {
+        /* On an amber face the sun is the same amber lifted to 90 % (a relative
+           colour of the token): amber on amber is not seen (outlier-17), and
+           a dark glow would darken the ground under the dark words. */
+        --so-sun: hsl(from var(--primary) h s 90%);
+        --so-dusk-1: hsl(from var(--primary) h s 90%);
+        --so-dusk-2: hsl(from var(--primary) h s 90%);
+        --so-dusk-3: hsl(from var(--primary) h s 90%);
     }
 
-    .so-scene[data-so-hover='sun'] .so-day.so-pointed {
-        --so-foot-k: 0.4;
+    .so-scene .so-kpi {
+        --so-rise: 0.9rem;
     }
 
-    .so-scene[data-so-hover='warm'] .so-pointed {
-        --so-foot-k: 0.22;
-        --so-foot-h: 40%;
+    .so-scene .kp-button--sm {
+        --so-rise: 0.28rem;
     }
 
-    .so-scene[data-so-hover='warm'] :is(.so-pointed, .kp-button.so-pointed) {
-        border-color: var(--primary);
-        background-color: color-mix(in oklch, var(--primary) 14%, var(--card));
-    }
-
-    .so-scene[data-so-hover='warm'] .kp-menu__item.so-pointed {
-        background: hsl(from var(--primary) h s l / 0.14);
-    }
-
-    /* The rake: a warm band crosses the pointed part (it repeats here). */
-    .so-scene[data-so-hover='rake'] .so-pointed {
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-    }
-
-    .so-scene[data-so-hover='rake'] .so-pointed::after {
-        content: '';
+    .so-scene:is([data-so-hover], [data-so-press]) .so-l {
         position: absolute;
-        inset-block: 0;
-        inset-inline-start: -60%;
-        z-index: 2;
-        inline-size: 45%;
-        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
+        display: block;
         pointer-events: none;
+    }
+
+    /* A button is a plate for the foot's light: its own face, no wash of its own. */
+    .so-scene:is([data-so-hover], [data-so-press]) .kp-button {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        --so-foot-k: 0;
+        --so-edge: transparent;
+    }
+
+    /* The register's own answers to the pointer (the rake, the 1 px lift, the
+       hover face) are what the question replaces: switched off here. */
+    .so-scene:is([data-so-hover], [data-so-press]) .kp-button::after {
+        animation: none;
+    }
+
+    .so-scene:is([data-so-hover], [data-so-press]) :is(.kp-button, .kp-kpi, .kp-menu__item, .so-day, .so-key):hover {
+        translate: none;
+    }
+
+    .so-scene:is([data-so-hover], [data-so-press]) .kp-button:hover:not(:disabled) {
+        background: var(--secondary);
+    }
+
+    .so-scene:is([data-so-hover], [data-so-press]) .kp-button--primary:hover:not(:disabled) {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .so-scene:is([data-so-hover], [data-so-press]) .kp-button--ghost:hover:not(:disabled) {
+        background: transparent;
+    }
+
+    .so-scene:is([data-so-hover], [data-so-press]) :is(.kp-menu__item, .kp-kpi):hover {
+        background-color: transparent;
+    }
+
+    .so-scene[data-so-hover]:not([data-so-hush]) .so-pointed,
+    .so-scene[data-so-hover] .so-point:hover {
+        --so-p: 1;
+    }
+
+    .so-scene[data-so-kind='cycle'][data-so-press]:is([data-so-phase='in'], [data-so-phase='hold']) .so-press,
+    .so-scene[data-so-press] .so-press:active {
+        --so-q: 1;
+    }
+
+    /* The sun rises under the pointer: it climbs its arc (the sun's sine: x
+       is 1 − cos and y is sin of a quarter turn), a dome of warm light grows
+       round it and the foot edge lights. */
+    .so-scene[data-so-hover='sun'] .so-l--a {
+        inset-inline-start: calc(6% + (1 - cos(var(--so-p) * 90deg)) * 44%);
+        inset-block-end: calc(-0.8rem + sin(var(--so-p) * 90deg) * var(--so-rise));
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+        margin-inline-start: -0.4rem;
+        border-radius: 50%;
+        background: var(--so-sun);
+        box-shadow: 0 0 0.5rem 0.1rem hsl(from var(--so-sun) h s l / 0.55);
+        opacity: min(1, calc(var(--so-p) * 6));
+    }
+
+    .so-scene[data-so-hover='sun'] .so-l--b {
+        inset: 0;
+        border-radius: inherit;
+        background:
+            linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat,
+            radial-gradient(
+                ellipse 80% 130% at calc(6% + (1 - cos(var(--so-p) * 90deg)) * 44%) 100%,
+                hsl(from var(--so-sun) h s l / 0.36),
+                hsl(from var(--so-sun) h s l / 0.12) 55%,
+                transparent 80%
+            ),
+            linear-gradient(hsl(from var(--so-sun) h s l / 0.06), hsl(from var(--so-sun) h s l / 0.06));
+        opacity: min(1, calc(var(--so-p) * 2));
+    }
+
+    /* The low sun rakes: a long slanted band hugs the foot and sweeps from
+       the start to the end once; the foot edge lights behind its leading
+       edge (both read the same number), so what it crossed stays lit. */
+    .so-scene[data-so-hover='rake'] .so-l--a {
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        inline-size: 40%;
+        block-size: 100%;
+        translate: calc(-100% + var(--so-p) * 350%) 0;
+        transform: skewX(24deg);
+        transform-origin: 50% 100%;
+        background: linear-gradient(to top, hsl(from var(--so-sun) h s l / 0.75), hsl(from var(--so-sun) h s l / 0.12) 70%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 45%, #000 80%, transparent);
+    }
+
+    .so-scene[data-so-hover='rake'] .so-l--b {
+        inset: 0;
+        border-radius: inherit;
+        background:
+            linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--so-sun) h s l / 0.24), transparent 58%);
+        mask-image: linear-gradient(90deg, #000 calc(var(--so-p) * 140% - 14%), transparent calc(var(--so-p) * 140%));
+    }
+
+    /* The sun's path is drawn: a thin amber arc over the part's lower half
+       from the start to the end, and the foot edge with it. */
+    .so-scene[data-so-hover='arc'] .so-l--a {
+        inset-block-end: 0;
+        inset-inline: 0;
+        block-size: var(--so-rise);
+        border-block-start: 2px solid hsl(from var(--so-sun) h s l / 0.95);
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        background: linear-gradient(to top, hsl(from var(--so-sun) h s l / 0.22), transparent 90%);
+        filter: drop-shadow(0 0 0.25rem hsl(from var(--so-sun) h s l / 0.6));
+        clip-path: inset(-0.8rem calc((1 - var(--so-p)) * 100%) 0 0);
+    }
+
+    .so-scene[data-so-hover='arc'] .so-l--b {
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat;
+        clip-path: inset(0 calc((1 - var(--so-p)) * 100%) 0 0);
+    }
+
+    /* The ground of a pressed part takes its -active face, on the same
+       number as the light. */
+    .so-scene[data-so-press] .so-press {
+        --so-rest: var(--secondary);
+        --so-held: var(--secondary-active);
+        background-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q)) * 100%), var(--so-held) calc(var(--so-q) * 100%));
+    }
+
+    .so-scene[data-so-press] .kp-button--primary.so-press {
+        --so-rest: var(--primary);
+        --so-held: var(--primary-active);
+        border-color: color-mix(in oklch, var(--so-rest) calc((1 - var(--so-q)) * 100%), var(--so-held) calc(var(--so-q) * 100%));
+    }
+
+    .so-scene[data-so-press] .kp-button--ghost.so-press {
+        --so-rest: transparent;
+        --so-held: var(--muted);
+    }
+
+    .so-scene[data-so-press] .kp-menu__item.so-press {
+        --so-rest: transparent;
+        --so-held: var(--muted);
+    }
+
+    .so-scene[data-so-press] :is(.so-day, .so-kpi).so-press {
+        --so-rest: var(--card);
+        --so-held: var(--muted);
+    }
+
+    /* The words of a pressed part are lifted to cream on the same number as
+       the light: the swell and the dawn tint the ground amber and the plain
+       ink fell to 3.9 to 4.5:1 there. The primary keeps its dark ink on its
+       amber face. */
+    .so-scene[data-so-press] .so-press:not(.kp-button--primary) {
+        --so-cream: hsl(from var(--foreground) h s 97%);
+        color: color-mix(in oklch, var(--foreground) calc((1 - var(--so-q)) * 100%), var(--so-cream));
+        /* A dusk-dark halo under the words keeps them clear of the brightest part of the light. */
+        text-shadow: 0 0 0.45rem hsl(from var(--background) h s l / calc(var(--so-q) * 0.85));
+    }
+
+    .so-scene[data-so-press] .so-press:not(.kp-button--primary) :is(.so-entry, .so-day__num, .so-figure, .so-label, .kp-kpi__label, .kp-kpi__value) {
+        color: color-mix(in oklch, var(--so-rest-ink, var(--foreground)) calc((1 - var(--so-q)) * 100%), var(--so-cream));
+    }
+
+    .so-scene[data-so-press] .so-press:not(.kp-button--primary) :is(.so-label, .kp-kpi__label) {
+        --so-rest-ink: var(--muted-foreground);
+    }
+
+    /* Quiet composites: the primary stands as a ghost with amber words, lifted to cream while pressed. */
+    .so-scene[data-so-composites='quiet'][data-so-press] :is(.so-in-header, .so-in-drawer).kp-button--primary.so-press {
+        color: color-mix(in oklch, var(--primary) calc((1 - var(--so-q)) * 100%), hsl(from var(--foreground) h s 97%));
+        text-shadow: 0 0 0.45rem hsl(from var(--background) h s l / calc(var(--so-q) * 0.85));
+    }
+
+    /* Where a scene shows both (the composites' State), the pointer draws on
+       layers a and b and the press on c and d, so neither hides the other. */
+    /* The sun swells inside it: a half-sun grows from the middle of the foot
+       and fills the part; the foot edge lights hot. */
+    .so-scene[data-so-press='swell']:not([data-so-hover]) .so-l--a,
+    .so-scene[data-so-press='swell'][data-so-hover] .so-l--c {
+        inset: 0;
+        border-radius: inherit;
+        transform-origin: 50% 100%;
+        scale: calc(0.08 + 1.1 * var(--so-q));
+        opacity: min(1, calc(var(--so-q) * 3));
+        background: radial-gradient(
+            ellipse 70% 105% at 50% 100%,
+            hsl(from var(--so-sun) h s l / 0.3),
+            hsl(from var(--so-sun) h s l / 0.11) 42%,
+            transparent 72%
+        );
+    }
+
+    .so-scene[data-so-press='swell']:not([data-so-hover]) .so-l--b,
+    .so-scene[data-so-press='swell'][data-so-hover] .so-l--d {
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat;
+        opacity: var(--so-q);
+    }
+
+    /* The day breaks: the dusk ramp rises through the part from its foot in
+       one pass, the gold front standing at its top edge. */
+    .so-scene[data-so-press='dawn'] .so-l--a {
+        inset: 0;
+        border-radius: inherit;
+        translate: 0 calc((1 - var(--so-q)) * 100%);
+        background:
+            linear-gradient(var(--so-dusk-3), var(--so-dusk-3)) 0 0 / 100% 2px no-repeat,
+            linear-gradient(
+                to top,
+                hsl(from var(--so-dusk-1) h s l / 0.34),
+                hsl(from var(--so-dusk-2) h s l / 0.22) 45%,
+                hsl(from var(--so-dusk-3) h s l / 0.14) 92%,
+                hsl(from var(--so-dusk-3) h s l / 0.45)
+            );
+    }
+
+    .so-scene[data-so-press='dawn'] .so-l--b {
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(var(--so-sun), var(--so-sun)) 0 100% / 100% 2px no-repeat;
+        opacity: var(--so-q);
+    }
+
+    /* The light closes in: a rim of dusk (rust at the edge, amber inside)
+       thickens inward from the part's edge. */
+    .so-scene[data-so-press='rim'] .so-l--a {
+        inset: 0;
+        border-radius: inherit;
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--so-sun) h s l / calc(var(--so-q) * 0.85)),
+            inset 0 0 calc(var(--so-q) * 0.55rem) calc(var(--so-q) * 0.1rem) hsl(from var(--so-dusk-1) h s l / calc(var(--so-q) * 0.7)),
+            inset 0 0 calc(var(--so-q) * 1.3rem) hsl(from var(--so-dusk-2) h s l / calc(var(--so-q) * 0.3));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G1: the way back is the way there, per frame: one curve that is
+           its own mirror (a sine in and out) for both directions, so the
+           part is half-way and nine tenths of the way at the same moment
+           going and coming, whatever the curve question picked. */
+        .so-scene[data-so-hover] .so-point {
+            transition: --so-p calc(var(--so-contact) * var(--so-slow, 1)) var(--so-touch);
+        }
+
+        .so-scene[data-so-press] .so-press {
+            transition: --so-q calc(var(--so-contact) * var(--so-slow, 1)) var(--so-touch);
+        }
     }
 
     /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
@@ -1171,27 +1431,20 @@
         border-color: var(--border-strong);
     }
 
-    /* Hover */
-    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='own'] :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link),
-    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='quiet'] :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link) {
-        background-image: linear-gradient(to top, hsl(from var(--primary) h s l / 0.32), transparent 75%);
-        box-shadow: inset 0 -2px 0 var(--primary);
+    /* Hover and press, own and quiet: the page's own pointing and pressing
+       (questions 14 and 16, the sun and the swell as recommended), forced on
+       by State through the same two numbers the real pointer drives. "As
+       today" keeps its old look below, as the baseline it is. */
+    .so-sec[data-so-show='hover'] .so-scene:is([data-so-composites='own'], [data-so-composites='quiet']) :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link, .so-in-kpi, .so-in-menu li:first-child .kp-menu__item) {
+        --so-p: 1;
     }
 
-    .so-sec[data-so-show='hover']
-        .so-scene:is([data-so-composites='own'], [data-so-composites='quiet'])
-        :is(.so-in-kpi, .so-in-menu li:first-child .kp-menu__item) {
-        --so-foot-ink: var(--primary);
-        --so-foot-k: 0.3;
-        --so-foot-h: 72%;
-        --so-edge-w: 2px;
-        --so-edge: var(--primary);
-        background-color: var(--muted);
+    .so-sec[data-so-show='press'] .so-scene:is([data-so-composites='own'], [data-so-composites='quiet']) :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link, .so-in-kpi, .so-in-menu li:first-child .kp-menu__item) {
+        --so-p: 1;
     }
 
-    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='own'] .so-in-kpi,
-    .so-sec[data-so-show='hover'] .so-scene[data-so-composites='quiet'] .so-in-kpi {
-        background-color: var(--card);
+    .so-sec[data-so-show='press'] .so-scene:is([data-so-composites='own'], [data-so-composites='quiet']) :is(.so-alone, .so-in-header, .so-in-drawer, .so-tile-link, .so-in-kpi, .so-in-menu li:first-child .kp-menu__item).so-press {
+        --so-q: 1;
     }
 
     .so-sec[data-so-show='hover'] .so-scene[data-so-composites='today'] .so-alone,
@@ -1241,18 +1494,18 @@
     }
 
     /* Press */
-    .so-sec[data-so-show='press'] .so-scene[data-so-composites] :is(.so-alone, .so-in-drawer, .so-tile-link, .so-in-header),
-    .so-sec[data-so-show='press'] .so-scene[data-so-composites] .so-in-menu li:first-child .kp-menu__item {
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] :is(.so-alone, .so-in-drawer, .so-tile-link, .so-in-header),
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] .so-in-menu li:first-child .kp-menu__item {
         background-color: var(--secondary-active);
         box-shadow: inset 0 0 0.5rem hsl(from var(--primary) h s l / 0.45);
     }
 
-    .so-sec[data-so-show='press'] .so-scene[data-so-composites] :is(.so-alone, .so-in-drawer, .so-in-header).kp-button--primary {
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] :is(.so-alone, .so-in-drawer, .so-in-header).kp-button--primary {
         background-color: var(--primary-active);
         box-shadow: inset 0 0 0.5rem hsl(from var(--primary-foreground) h s l / 0.35);
     }
 
-    .so-sec[data-so-show='press'] .so-scene[data-so-composites] .so-in-kpi {
+    .so-sec[data-so-show='press'] .so-scene[data-so-composites='today'] .so-in-kpi {
         box-shadow: inset 0 0 0.75rem hsl(from var(--primary) h s l / 0.45);
     }
 
@@ -1451,67 +1704,8 @@
         margin: 0;
     }
 
-    /* ── The press (G14): the marked parts are pressed during `in` ───── */
-
-    .so-scene[data-so-press][data-so-phase='in'] .so-press {
-        background-color: var(--secondary-active);
-    }
-
-    .so-scene[data-so-press][data-so-phase='in'] .kp-button--primary.so-press {
-        background-color: var(--primary-active);
-        border-color: var(--primary-active);
-    }
-
-    .so-scene[data-so-press][data-so-phase='in'] :is(.kp-menu__item, .so-day, .so-kpi).so-press {
-        background-color: var(--muted);
-    }
-
-    .so-scene[data-so-press='ember'][data-so-phase='in'] .so-press {
-        box-shadow: inset 0 0 0.55rem hsl(from var(--primary) h s l / 0.5);
-    }
-
-    .so-scene[data-so-press='ember'][data-so-phase='in'] .kp-button--primary.so-press {
-        box-shadow: inset 0 0 0.55rem hsl(from var(--primary-foreground) h s l / 0.4);
-    }
-
-    .so-scene[data-so-press='drop'][data-so-phase='in'] .so-press {
-        translate: 0 1px;
-    }
-
-    .so-scene[data-so-press='sink'][data-so-phase='in'] .so-press {
-        --so-foot-k: 0;
-        --so-edge: transparent;
-        background-color: hsl(from var(--card) h s calc(l - 4));
-        filter: brightness(0.85);
-    }
-
-    .so-scene[data-so-press='sink'][data-so-phase='in'] .kp-button.so-press {
-        background-color: hsl(from var(--secondary) h s calc(l - 6));
-    }
-
-    .so-scene[data-so-press='sink'][data-so-phase='in'] .kp-button--primary.so-press {
-        background-color: hsl(from var(--primary) h s calc(l - 14));
-    }
-
-    .so-scene[data-so-press] .so-press {
-        transition:
-            background-color var(--so-contact) var(--so-in),
-            box-shadow var(--so-contact) var(--so-in),
-            translate var(--so-contact) var(--so-in),
-            filter var(--so-contact) var(--so-in);
-    }
-
-    /* The duration row's tap is the recommended press. */
-    .so-scene[data-so-durations][data-so-phase='in'] .so-tap {
-        background-color: var(--secondary-active);
-        box-shadow: inset 0 0 0.55rem hsl(from var(--primary) h s l / 0.5);
-    }
-
-    .so-scene[data-so-durations] .so-tap {
-        transition:
-            background-color var(--so-contact) var(--so-in),
-            box-shadow var(--so-contact) var(--so-in);
-    }
+    /* The duration row's tap is the recommended press (the swell), played
+       by the clock at the row's own contact duration. */
 
     /* ── Motion ──────────────────────────────────────────────────────── */
 
@@ -1664,11 +1858,6 @@
 
         .so-scene[data-so-spinner='ring'] .so-spin__ring {
             animation: so-turn calc(900ms * var(--so-slow, 1)) linear infinite;
-        }
-
-        /* The rake repeats on a pointed part so it can be judged standing still. */
-        .so-scene[data-so-hover='rake'] .so-pointed::after {
-            animation: so-rake calc(2400ms * var(--so-slow, 1)) ease-out infinite;
         }
     }
 
@@ -1940,17 +2129,6 @@
     @keyframes so-turn {
         to {
             rotate: 1turn;
-        }
-    }
-
-    @keyframes so-rake {
-        0% {
-            translate: 0 0;
-        }
-
-        30%,
-        100% {
-            translate: 340% 0;
         }
     }
 }
