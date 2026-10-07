@@ -3272,43 +3272,75 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .cy-scene:is(
-                [data-cy-hover],
-                [data-cy-focus],
-                [data-cy-press='armed'],
-                [data-cy-press='sliced'],
-                [data-cy-press='ack'],
-                [data-cy-press='recoil']
-            ):is([data-cy-phase='in'], [data-cy-phase='hold'])
-            :is(.cy-aim, .cy-focused, :has(> .cy-focused), .cy-press) {
+        .cy-scene:is([data-cy-hover], [data-cy-focus]):is([data-cy-phase='in'], [data-cy-phase='hold'])
+            :is(.cy-aim, .cy-focused, :has(> .cy-focused)) {
             animation: cy-hv-in calc(180ms * var(--cy-slow, 1)) steps(1, end);
         }
 
-        .cy-scene:is([data-cy-hover], [data-cy-focus], [data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'])[data-cy-phase='out']
-            :is(.cy-aim, .cy-focused, :has(> .cy-focused), .cy-press) {
+        .cy-scene:is([data-cy-hover], [data-cy-focus])[data-cy-phase='out'] :is(.cy-aim, .cy-focused, :has(> .cy-focused)) {
             animation: cy-hv-out calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        /* The press goes down at once (its first frame is already pressed) and
+           stays pressed until the last frame of the leave: the pose that the
+           phase gives in `in` and `hold` is held by a constant animation while
+           the marks run backwards. */
+        .cy-scene:is([data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'], [data-cy-press='recoil']):is(
+                [data-cy-phase='in'],
+                [data-cy-phase='hold']
+            )
+            .cy-press {
+            animation: cy-pr-in calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene:is([data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'], [data-cy-press='recoil'])[data-cy-phase='out']
+            .cy-press {
+            animation:
+                cy-pr-out calc(180ms * var(--cy-slow, 1)) steps(1, end),
+                cy-pr-pose-item calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene:is([data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'], [data-cy-press='recoil'])[data-cy-phase='out']
+            .kp-button.cy-press {
+            animation:
+                cy-pr-out calc(180ms * var(--cy-slow, 1)) steps(1, end),
+                cy-pr-pose-button calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene:is([data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'], [data-cy-press='recoil'])[data-cy-phase='out']
+            .kp-button--primary.cy-press {
+            animation:
+                cy-pr-out calc(180ms * var(--cy-slow, 1)) steps(1, end),
+                cy-pr-pose-primary calc(180ms * var(--cy-slow, 1)) steps(1, end);
         }
     }
 
-    /* Three ticks of 60 ms, each held: 3, 2, 1 ticks of the entrance left,
-       then the pose itself (0). The leave holds 1, 2, 3 and then the part is
-       at rest: the entrance's frames in reverse. */
+    /* Five frames of 36 ms, each held: the part at rest, then 3, 2, 1 ticks of
+       the entrance left, then the pose itself (0). The leave holds the pose,
+       1, 2, 3 and then the part at rest: the entrance's frames in reverse, so
+       the mark that appears after the first frame goes before the last one. */
     @keyframes cy-hv-in {
         0% {
+            --cy-t: 0;
+            --cy-p: 0;
+        }
+
+        20% {
             --cy-t: 3;
             --cy-p: 1;
         }
 
-        33.333% {
+        40% {
             --cy-t: 2;
             --cy-p: 1;
         }
 
-        66.667% {
+        60% {
             --cy-t: 1;
             --cy-p: 1;
         }
 
+        80%,
         100% {
             --cy-t: 0;
             --cy-p: 1;
@@ -3317,23 +3349,105 @@
 
     @keyframes cy-hv-out {
         0% {
+            --cy-t: 0;
+            --cy-p: 1;
+        }
+
+        20% {
             --cy-t: 1;
             --cy-p: 1;
         }
 
-        33.333% {
+        40% {
             --cy-t: 2;
             --cy-p: 1;
         }
 
-        66.667% {
+        60% {
             --cy-t: 3;
             --cy-p: 1;
         }
 
+        80%,
+        100% {
+            --cy-t: 0;
+            --cy-p: 0;
+        }
+    }
+
+    /* The press: four frames of 45 ms, the first already pressed (3 ticks of
+       the mark left), the last the pose; the leave runs them backwards and
+       ends released. */
+    @keyframes cy-pr-in {
+        0% {
+            --cy-t: 3;
+            --cy-p: 1;
+        }
+
+        25% {
+            --cy-t: 2;
+            --cy-p: 1;
+        }
+
+        50% {
+            --cy-t: 1;
+            --cy-p: 1;
+        }
+
+        75%,
+        100% {
+            --cy-t: 0;
+            --cy-p: 1;
+        }
+    }
+
+    @keyframes cy-pr-out {
+        0% {
+            --cy-t: 0;
+            --cy-p: 1;
+        }
+
+        25% {
+            --cy-t: 1;
+            --cy-p: 1;
+        }
+
+        50% {
+            --cy-t: 2;
+            --cy-p: 1;
+        }
+
+        75%,
         100% {
             --cy-t: 3;
             --cy-p: 1;
+        }
+    }
+
+    /* What `in` and `hold` give a pressed part, held to the end of the leave. */
+    @keyframes cy-pr-pose-item {
+        0%,
+        100% {
+            --cy-grid-a: 0.6;
+            background-color: var(--secondary);
+        }
+    }
+
+    @keyframes cy-pr-pose-button {
+        0%,
+        100% {
+            --cy-grid-a: 0.6;
+            --kp-btn-ground: var(--secondary);
+        }
+    }
+
+    @keyframes cy-pr-pose-primary {
+        0%,
+        100% {
+            --cy-grid-a: 0.6;
+            --kp-btn-ground: var(--secondary);
+            --kp-btn-fill: var(--primary-active);
+            --kp-btn-frame: var(--primary-active);
         }
     }
 
