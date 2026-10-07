@@ -15,8 +15,8 @@ Sources measured (2026-10-07): every `research/character-*/decided.json` pick
 for forest resolved to its CSS (shape, loading, arrival, tone, interaction,
 live, phone …) and to the option's own words in the demo's `demo.js`,
 `css/forest-register.css` (2227 lines, layers `kp.register` and
-`kp.signature`), `css/themes.css` (forest tokens, the contour texture and its
-40 s drift), `js/motion.js` (`themeMotion()`, reverse-close opening),
+`kp.signature`), `css/themes.css` (forest tokens and the contour texture, a static
+seamless field since 2026-10-07), `js/motion.js` (`themeMotion()`, reverse-close opening),
 `research/families/VERDICTS.md` (Kenny's family picks for forest),
 `research/progress-signature` (the tree bar, scope-140),
 `research/families-applied/forest.css` (the family pictures as translated, not
@@ -118,7 +118,7 @@ past 1). Direction: S→E inline-start to end, ↑ up, ↓ down, ↔ back and fo
 | Leave                     | `kp-sig-forest-leave 560ms ease-in`: `sepia(1) saturate(0.6)`, `scale(0.94)`, fade (its comment promises "blown off by the wind, to the right"; nothing moves right)      | ∅        | 560                      | I    | outlier-11 (G10)       |
 | Arrival                   | the leave reversed (`--kp-open: reverse-close`): from sepia, from 94 %                                                                                                    | ∅        | 560                      | I⁻¹  | outlier-11 (G10)       |
 | Update in place           | none: forest declares no `--kp-update`                                                                                                                                    | —        | —                        | —    | outlier-10 (G8)        |
-| Contour texture           | `kp-drift 40s linear` on `body::after`                                                                                                                                    | ∅        | 40 000                   | L    | fits (weather)         |
+| Contour texture           | none: a static page background, no motion (Kenny, 2026-10-07)                                                                                                                                    | —        | —                        | —    | G14 (map)              |
 | Meter (in the register)   | see 2.2                                                                                                                                                                   |          |                          |      |                        |
 
 ### 2.2 The decided component picks
@@ -310,6 +310,14 @@ proposal as its first option; nothing is applied before his verdicts.
 **Applied 2026-10-07** (css/forest-register.css, `kp.signature`, tokens `--kp-sig-fo-*`;
 `--fx-ease` and `--fx-lift` in css/themes.css; Kenny's picks on research/forest-character):
 
+- **Contour texture (Kenny, 2026-10-07, "does not form a whole"): applied.**
+  One seamless, periodic 900 x 900 px tile (sum-of-sines height field, marching
+  squares, smooth paths): every line that leaves an edge re-enters the opposite
+  edge at the same place, so the repeat is one continuous topographic map with
+  no seam and no ring cut off. It is the page's own static background
+  (scrolls with the content, repeats on both axes, never fixed): the 40 s
+  drift, its keyframes and the fixed overlay are gone for forest. Ink
+  `#235744` at alpha 0.05, measured at the weight of the old field.
 - **proposal-1, 8, 9 (grammar, durations, curve): applied.** `--fx-ease` is the
   growth curve; contact 200, growth 1000, loop 3200, stagger 80 ms.
 - **proposal-2, 3, 4 (loading): applied** on every waiting surface the package
@@ -336,10 +344,17 @@ proposal as its first option; nothing is applied before his verdicts.
   package has the part (tags and the change in italic, wood tags); the
   calendar, tiles and chart-research parts wait for the port.
 
+- **Skeleton block and circle, empty state (Kenny, 2026-10-07: stripes and rings
+  "not convinced"): applied.** Block = a plot being planted (planted rows, ground
+  line per row, dashed boundary, leaf corner), circle = a clearing planted in its
+  inscribed square, both on the bar's tree drawings and the 3200 ms linear
+  breath; the empty state's rings are replaced by a dashed leaf-cornered plot
+  with one seedling (grows once, 1000 ms) and a clay trig point (G14).
+
 **Package-decided aspects that fit as they stand:** the progress bar (the
 reference), the headline and the contour trace, the tooltip, the busy
 failure's tape, the dialog's backdrop and neat line, the empty state's
-rings, the texture's drift, the drawer's lichen ring and its swelling card.
+rings, the texture (static since 2026-10-07), the drawer's lichen ring and its swelling card.
 
 ---
 

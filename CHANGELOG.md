@@ -4,6 +4,18 @@
 
 - **Fixed: no register frames the theme picker's icon button** [2026-10-07, Kenny]. Sixteen registers (blueprint, brutalism, dark, deco, formal, grotesk, high-contrast, light, nostromo, pastel, retro, sepia, solstice, synthwave, terminal, titanium) listed `.kp-theme-menu`, the wrapper round the button, among the popover surfaces and drew a card border or shadow round it; the surface now belongs to `.kp-theme-menu__list`, the dropdown, and the wrapper takes none (as phantom's already did).
 
+- **Changed: forest's skeleton block and circle, and the empty state, carry forest's own pictures** [2026-10-07, Kenny: "not convinced" by the diagonal stripes and the rings]. The skeleton block is a plot of ground being planted (rows of seedlings with a ground line each, the grove walking every row, dashed plot boundary, leaf corner) and the circle a round clearing planted inside its inscribed square; same 3200 ms linear breath as the lines, reduced motion shows the half-planted pose; no stripe is left in forest. The empty state is a clearing on the map: a dashed leaf-cornered plot, one seedling that grows once (1000 ms, growth curve), a clay trig point at the corner (css/forest-register.css only; DOM, sizes and copy unchanged).
+
+- **Changed: forest's contour field is one seamless tile, static and part of the
+  page** [2026-10-07, Kenny: "they do not form a whole"]. A 900 x 900 px
+  periodic topographic tile (lines continue across every edge, closed summit
+  rings and long wandering lines, no ring cut off) replaces the 900 x 460 px
+  field of four cut-off rings. It is the body's own background: it scrolls with
+  the content and no longer drifts; the 40 s `kp-drift` animation and the fixed
+  `body::after` overlay are off for forest (css/themes.css, css/_rules.css,
+  css/forest-register.css). Weight measured in Firefox: 0.07 luminance levels
+  darker than the paper before, 0.09 after (alpha 0.05 ink either way).
+
 - **Fixed: forest's theme picker no longer sits in a card frame** [2026-10-07, Kenny]. The register painted the card chrome (border and shadow) on `.kp-theme-menu`, the wrapper round the icon button, so the button had a square frame around it; the chrome now belongs to `.kp-theme-menu__list`, the dropdown the React switcher draws.
 
 - **Changed (research demos only): the busy overlay's leave in forest's demo
