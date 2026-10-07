@@ -1,0 +1,315 @@
+/* research/synthwave-character: the page only. A centred column; the story
+   at the top, then one section of eighteen rows, each row a question with
+   its three options side by side on a desk and stacked on a phone. Every
+   option's own drawing is in options.css. */
+.sy-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sy-intro,
+.sy-story,
+.sy-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sy-intro :is(h1, p),
+.sy-story :is(h2, p),
+.sy-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.sy-intro p,
+.sy-story__text p,
+.sy-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.sy-motion {
+    color: var(--muted-foreground);
+}
+
+.sy-story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.sy-story__text {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sy-story__parts {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.sy-story__bar {
+    flex: 1 1 10rem;
+}
+
+.sy-story__divider {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.sy-story__skel {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.sy-gallery summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.sy-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.sy-gallery figure {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.sy-gallery figcaption {
+    font-weight: 600;
+}
+
+.sy-gallery iframe {
+    inline-size: 100%;
+    block-size: 14rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.sy-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sy-sec__head p,
+.sy-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.sy-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.sy-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sy-actions,
+.sy-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-sy-state][aria-pressed='true'],
+[data-sy-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.sy-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.sy-aspect {
+    /* A row far off screen is not rendered, so its loops cost nothing until
+       it scrolls near. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 60rem;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.sy-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.sy-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.sy-aspect__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-inline-end: 0.35rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 1.1rem;
+}
+
+.sy-aspect__rule {
+    margin-inline-start: 0.35rem;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 1rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.sy-aspect__q {
+    font-weight: 600;
+}
+
+/* The options in a subgrid, so the names, the words and the scenes line up
+   across the row whatever their length; one under the other below 64rem. */
+.sy-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.sy-trio[data-sy-n='4'] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sy-col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+@media (max-width: 64rem) {
+    .sy-story__grid,
+    .sy-trio,
+    .sy-trio[data-sy-n='4'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sy-col {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+}
+
+.sy-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.sy-label-row__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.sy-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sy-see,
+.sy-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sy-verdict {
+    color: var(--muted-foreground);
+}
+
+.sy-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The scene: a small dashboard of parts, the same parts in every option of
+   a row. */
+.sy-scene {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    min-block-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.sy-part {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sy-part--wide {
+    grid-column: 1 / -1;
+}
+
+.sy-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+.sy-readout {
+    margin: 0;
+    font-family: var(--theme-font-mono);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+}
+
+/* In the review dialog one option is shown alone and large: its scene gets
+   the room of the stage. */
+[data-rv-flip-trio] .sy-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+/* A control in a part keeps its own width; plates and strips take the part's. */
+.sy-part > :is(.kp-button, .kp-badge, .sy-tip, .sy-spark, a) {
+    justify-self: start;
+}
+
+.sy-part > .sy-spark {
+    justify-self: stretch;
+}

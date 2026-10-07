@@ -1,0 +1,2580 @@
+/* research/synthwave-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.sy-scene[data-sy-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --sy-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the ones measured in
+   themes/synthwave/CHARACTER.md §2. Parts at rest are drawn as the
+   recommended grammar has them (chrome over the floor, the stripe, square
+   panels and 2 px controls, the OSD and the chrome display, the marquee),
+   so each question changes only its own rule. */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    .sy-page {
+        /* G1: bodies on the sunrise curve; the register's quick curve
+           (cyberpunk's register too) and the picks' spring, for the options. */
+        --sy-sun: cubic-bezier(0.65, 0, 0.35, 1);
+        --sy-quick: cubic-bezier(0.2, 0.9, 0.2, 1);
+        --sy-spring: cubic-bezier(0.3, 1.6, 0.5, 1);
+        /* G4: one beat, a step of the marquee. */
+        --sy-beat: 225ms;
+        /* The neon rule: a near-white core, the colour in the bloom. */
+        --sy-tube: 0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.6), 0 0 14px hsl(from var(--primary) h s l / 0.3);
+        --sy-tube-up:
+            0 0 2px var(--sidebar-background), 0 0 7px hsl(from var(--primary) h s l / 0.95), 0 0 18px hsl(from var(--primary) h s l / 0.65),
+            0 0 34px hsl(from var(--primary) h s l / 0.4);
+        --sy-laser-glow: 0 0 4px var(--primary), 0 0 10px hsl(from var(--primary) h s l / 0.8), 0 0 22px hsl(from var(--primary) h s l / 0.45);
+        /* G7: the grid floor, lines closing toward the horizon and lines
+           converging on its centre. */
+        --sy-floor-lines:
+            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+        /* The flat crossing grid of the picked busy shape (option 2 of 7). */
+        --sy-flat-grid:
+            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.2) 0 1px, transparent 1px 10px),
+            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 0 1px, transparent 1px 10px);
+    }
+
+    .sy-scene {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .sy-scene .sy-title {
+        margin: 0;
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-shadow: var(--sy-tube);
+    }
+
+    /* A plate or a panel: the tape, square, a hairline; its stripe is its own
+       element (.sy-strip), so the register's border-image is set aside. */
+    .sy-scene :is(.sy-plate, .sy-panel) {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        margin: 0;
+        border: 1px solid var(--kp-hairline);
+        border-image: none;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 -2px 0 hsl(from var(--sidebar-background) h s l / 0.7);
+        color: var(--card-foreground);
+    }
+
+    .sy-scene .sy-panel {
+        background: var(--popover);
+    }
+
+    /* A grid places an absolute child in its grid area; these drawings span
+       the whole plate, so they take no area (the key figure is a grid). */
+    .sy-scene :is(.sy-strip, .sy-floor, .sy-load, .sy-slits) {
+        grid-area: auto;
+    }
+
+    .sy-scene .sy-strip {
+        position: absolute;
+        inset: 0 0 auto;
+        z-index: 1;
+        block-size: 3px;
+        background: var(--kp-stripe);
+        box-shadow: 0 1px 0 hsl(from var(--kp-core) h s l / 0.22);
+        pointer-events: none;
+    }
+
+    /* The grid floor under a reporting plate's horizon (G7). */
+    .sy-scene .sy-floor {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        block-size: var(--sy-floor, 1.35rem);
+        border-block-start: 1px solid hsl(from var(--kp-pink-text) h s l / 0.6);
+        background: var(--sy-floor-lines);
+        box-shadow: 0 -2px 12px hsl(from var(--primary) h s l / 0.3);
+        pointer-events: none;
+    }
+
+    /* A reporting plate keeps a band at its foot for the floor, so the words
+       stand above the horizon, never on the grid. */
+    .sy-scene .sy-plate:has(> .sy-floor) {
+        padding-block-end: calc(var(--sy-floor, 1.35rem) + 0.55rem);
+    }
+
+    .sy-scene .kp-card.sy-plate {
+        display: grid;
+        gap: 0.25rem;
+        padding-block-start: 0.85rem;
+        padding-inline: 1rem;
+    }
+
+    .sy-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .sy-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        border-radius: 0;
+        animation: none;
+    }
+
+    .sy-scene .kp-dialog::after {
+        animation: none;
+    }
+
+    .sy-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .sy-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .sy-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 12.25rem;
+    }
+
+    .sy-scene .sy-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.45rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .sy-scene .sy-pop {
+        position: relative;
+        inset: auto;
+        padding: 0.45rem 0.25rem 0.4rem;
+        animation: none;
+    }
+
+    .sy-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        list-style: none;
+    }
+
+    .sy-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .sy-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .sy-scene .sy-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sy-scene .kp-kpi.sy-plate {
+        display: grid;
+        gap: 0.15rem;
+        padding-block-start: 0.75rem;
+        padding-inline: 1rem;
+        color: inherit;
+        text-decoration: none;
+        text-align: start;
+    }
+
+    .sy-scene .kp-kpi__trend {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    /* The OSD names (G15): VT323 capitals after a cyan ▶, in the pink that reads. */
+    .sy-scene .sy-label {
+        color: var(--kp-pink-text);
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+        letter-spacing: 0.1em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .sy-scene .sy-label::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+
+    /* The chrome counts (G15): the display face, a near-white core in the tube. */
+    .sy-scene .sy-figure {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1.15;
+        text-shadow: var(--sy-tube);
+    }
+
+    .sy-scene .sy-chip {
+        border-radius: 2px;
+        font-family: var(--theme-font-mono);
+        font-size: 0.95rem;
+        letter-spacing: 0.06em;
+    }
+
+    .sy-scene .sy-faint {
+        opacity: 0.45;
+    }
+
+    .sy-scene .sy-carrier {
+        position: relative;
+    }
+
+    /* The state: a light and its word. */
+    .sy-scene .sy-state {
+        --sy-tone: var(--success-foreground);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: var(--theme-font-display);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .sy-scene .sy-state[data-sy-kind='bad'] {
+        --sy-tone: var(--destructive);
+    }
+
+    .sy-scene .sy-state__dot {
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--sy-tone);
+        box-shadow: 0 0 0.5em hsl(from var(--sy-tone) h s l / 0.7);
+    }
+
+    .sy-scene .sy-state__word {
+        display: inline-block;
+    }
+
+    /* Days of a month: 2 px cells, the figure in the display face. */
+    .sy-scene .sy-days {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .sy-scene .sy-week {
+        padding-block-end: 0.35rem;
+    }
+
+    .sy-scene .sy-day {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        overflow: hidden;
+        border: 1px solid var(--kp-hairline);
+        border-radius: 2px;
+        background: var(--card);
+    }
+
+    .sy-scene .sy-day__num {
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-shadow: var(--sy-tube);
+    }
+
+    .sy-scene .sy-rows {
+        display: grid;
+        gap: 0.25rem;
+    }
+
+    .sy-scene .sy-row-line {
+        color: var(--accent);
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+        letter-spacing: 0.06em;
+    }
+
+    /* Three readouts: grooves the sun's ramp fills to its mark. */
+    .sy-scene .sy-tracks {
+        display: grid;
+        gap: 0.55rem;
+    }
+
+    .sy-scene .sy-groove {
+        position: relative;
+        display: block;
+        block-size: 0.6rem;
+        overflow: hidden;
+        border-radius: 2px;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    .sy-scene .sy-track {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--to);
+        background: linear-gradient(90deg, var(--kp-sun-bottom), var(--primary) 55%, var(--kp-sun-top));
+        transform-origin: left center;
+    }
+
+    .sy-scene .sy-bulb-row {
+        position: relative;
+        block-size: 1rem;
+        border: 1px solid var(--kp-hairline);
+        background: var(--card);
+    }
+
+    /* A chart's plot: the night sky over the floor, a neon line, cyan ticks. */
+    .sy-scene .sy-plot {
+        position: relative;
+        isolation: isolate;
+        block-size: 6.5rem;
+        overflow: hidden;
+        border: 1px solid var(--kp-hairline);
+        background: linear-gradient(to bottom, var(--background), hsl(from var(--primary) h s l / 0.14) 56%, var(--background) 56%);
+        color: var(--primary);
+    }
+
+    .sy-scene .sy-plot .sy-floor {
+        --sy-floor: 44%;
+    }
+
+    .sy-scene .sy-plot svg {
+        position: absolute;
+        inset: 0.6rem 0.5rem 1.7rem;
+        inline-size: calc(100% - 1rem);
+        block-size: calc(100% - 2.3rem);
+        overflow: visible;
+    }
+
+    .sy-scene .sy-plot__trace {
+        stroke: color-mix(in oklab, var(--primary) 62%, var(--foreground));
+        filter: drop-shadow(0 0 1.5px var(--primary)) drop-shadow(0 0 4px var(--primary));
+    }
+
+    .sy-scene .sy-plot__read {
+        position: absolute;
+        inset: auto auto 0.25rem 0.5rem;
+        color: var(--accent);
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+
+    .sy-scene .sy-spark-wrap {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .sy-scene .sy-spark {
+        display: block;
+        block-size: 2.2rem;
+        color: color-mix(in oklab, var(--primary) 62%, var(--foreground));
+    }
+
+    .sy-scene .sy-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+        filter: drop-shadow(0 0 1.5px var(--primary)) drop-shadow(0 0 4px var(--primary));
+    }
+
+    .sy-scene .sy-column {
+        display: grid;
+        gap: 0.3rem;
+        justify-items: start;
+    }
+
+    .sy-scene .sy-meter,
+    .sy-scene .sy-bar {
+        inline-size: 100%;
+    }
+
+    .sy-scene .sy-meter-wrap,
+    .sy-scene .sy-meter-wait {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding-block: 0.3rem;
+    }
+
+    .sy-scene .sy-skel {
+        display: grid;
+        gap: 0.55rem;
+    }
+
+    .sy-scene .sy-skel__line {
+        position: relative;
+        display: block;
+        padding-block-start: 6px;
+    }
+
+    .sy-scene .sy-skel__line:nth-child(2) {
+        inline-size: 82%;
+    }
+
+    .sy-scene .sy-skel__line:nth-child(3) {
+        inline-size: 64%;
+    }
+
+    .sy-scene .sy-skel .kp-skeleton {
+        inline-size: 100%;
+    }
+
+    .sy-scene .sy-skel .kp-skeleton {
+        margin: 0;
+    }
+
+    .sy-scene .sy-skel .sy-bulbs {
+        inset-inline: 0;
+        inset-block-start: 0;
+    }
+
+    .sy-scene .sy-skel .sy-dash {
+        inset: auto 0 -4px;
+    }
+
+    .sy-scene .sy-table {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.3rem 1rem;
+        padding: 1rem 1rem 0.75rem;
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+        letter-spacing: 0.06em;
+    }
+
+    .sy-scene .sy-table > span:nth-of-type(-n + 3) {
+        color: var(--kp-pink-text);
+        text-transform: uppercase;
+    }
+
+    .sy-scene .sy-prose,
+    .sy-scene .sy-heading {
+        margin: 0;
+    }
+
+    .sy-scene .sy-heading {
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-shadow: var(--sy-tube);
+    }
+
+    .sy-scene .sy-rule {
+        display: block;
+        block-size: 2px;
+        margin-block-start: 0.4rem;
+        background: linear-gradient(to right, transparent, var(--kp-core) 20%, var(--kp-core) 80%, transparent);
+        box-shadow: var(--sy-laser-glow);
+    }
+
+    .sy-scene .sy-header .kp-page-header__title,
+    .sy-scene .sy-header .kp-page-header__description {
+        margin: 0;
+    }
+
+    .sy-scene .sy-header .kp-page-header__inner {
+        display: grid;
+        gap: 0.6rem;
+    }
+
+    .sy-scene .sy-header .kp-page-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: flex-start;
+    }
+
+    .sy-scene .sy-header {
+        position: relative;
+        margin: 0;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--kp-hairline);
+        background: var(--card);
+    }
+
+    .sy-scene .sy-header-mini {
+        padding: 0.75rem;
+        border: 1px solid var(--kp-hairline);
+        background: var(--card);
+    }
+
+    .sy-scene .sy-tile-link {
+        justify-self: start;
+    }
+
+    .sy-scene .sy-key {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.65rem;
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background: transparent;
+        color: var(--foreground);
+        font: inherit;
+        font-size: 0.85rem;
+    }
+
+    .sy-scene .sy-key__swatch {
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 4px var(--primary);
+    }
+
+    .sy-scene .sy-entry {
+        position: relative;
+    }
+
+    /* The sun's two slits, for a part that has no register ::before/::after. */
+    .sy-scene .sy-slits {
+        position: absolute;
+        inset: 0 -4px;
+        z-index: 2;
+        background:
+            linear-gradient(var(--sy-slit-ground, var(--card)) 0 0) 0 34% / 100% 3px no-repeat,
+            linear-gradient(var(--sy-slit-ground, var(--card)) 0 0) 0 58% / 100% 3px no-repeat;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-pop .sy-slits {
+        --sy-slit-ground: var(--popover);
+    }
+
+    /* The horizon a part rises over and sets behind (G3, G12): a near-white
+       core with the pink bloom, under the part; dark at rest. */
+    .sy-scene .sy-rise {
+        position: relative;
+    }
+
+    .sy-scene .sy-horizon {
+        position: absolute;
+        inset-inline: -0.35rem;
+        inset-block-end: -2px;
+        z-index: 3;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow:
+            var(--sy-laser-glow),
+            0 -5px 16px hsl(from var(--accent) h s l / 0.25);
+        opacity: 0;
+        transform: scaleX(0);
+        pointer-events: none;
+    }
+
+    /* The sun's stripes: bars in the ground's colour, fixed above the
+       horizon, wider toward it; closed (0 px) at rest. */
+    .sy-scene .sy-cuts {
+        position: absolute;
+        inset: 0 -0.35rem;
+        z-index: 3;
+        background:
+            linear-gradient(var(--background) 0 0) 0 calc(100% - 3px) / 100% 0 no-repeat,
+            linear-gradient(var(--background) 0 0) 0 74% / 100% 0 no-repeat,
+            linear-gradient(var(--background) 0 0) 0 54% / 100% 0 no-repeat,
+            linear-gradient(var(--background) 0 0) 0 36% / 100% 0 no-repeat;
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-horizon--week {
+        inset-inline: -0.2rem;
+        inset-block-end: 0;
+    }
+
+    .sy-scene .sy-sun-over {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        background: linear-gradient(
+            180deg,
+            var(--chart-3),
+            color-mix(in oklab, var(--chart-3), var(--primary)) 35%,
+            var(--primary) 70%,
+            var(--chart-4)
+        );
+        mask: repeating-linear-gradient(180deg, var(--foreground) 0 8px, transparent 8px 12px);
+        clip-path: circle(0% at 50% 120%);
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-leaver__body {
+        position: relative;
+    }
+
+    .sy-scene .sy-alert {
+        margin: 0;
+    }
+
+    /* ── Loading (G10) at rest: one drawing shown per option ─────────── */
+
+    .sy-scene .sy-waits {
+        position: relative;
+    }
+
+    .sy-scene .sy-load {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-load > * {
+        position: absolute;
+        display: none;
+    }
+
+    /* The marquee: a row of bulbs along the top, one in four lit. */
+    .sy-scene .sy-bulbs {
+        inset: 6px 0.5rem auto;
+        block-size: 3px;
+        background:
+            repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 3.4rem) 0 0 / 3.4rem 100% repeat-x,
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.25) 0 0.5rem, transparent 0.5rem 0.85rem) 0 0 / 0.85rem 100%
+                repeat-x;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.75));
+    }
+
+    .sy-scene .sy-bulb-row .sy-bulbs {
+        inset: calc(50% - 1.5px) 0.5rem auto;
+    }
+
+    .sy-scene .sy-day .sy-bulbs,
+    .sy-scene .sy-day .sy-dash {
+        inset-inline: calc(50% - 0.25rem);
+        inline-size: 0.5rem;
+        background: hsl(from var(--primary) h s l / 0.25);
+    }
+
+    .sy-scene .sy-day .sy-bulbs {
+        inset-block-start: 4px;
+    }
+
+    .sy-scene .sy-meter-wait .sy-bulbs {
+        inset-block-start: calc(50% - 1.5px);
+        inset-inline: 2px;
+    }
+
+    .sy-scene .kp-menu__item .sy-bulbs {
+        inset-block-start: 2px;
+    }
+
+    /* The drive: pink dashes along the foot (the key figure's, tiles' and menu's picks). */
+    .sy-scene .sy-dash {
+        inset: auto 0.75rem 0.45rem;
+        block-size: 2px;
+        background: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 10px) 0 0 / 10px 100% repeat-x;
+    }
+
+    .sy-scene .sy-day .sy-dash {
+        inset-block-end: 3px;
+    }
+
+    .sy-scene .sy-meter-wait .sy-dash {
+        inset: calc(50% - 1px) 2px auto;
+    }
+
+    /* As today: each part its own (CHARACTER.md §2.2). */
+    .sy-scene[data-sy-loading='mix'] .sy-roll {
+        inset: 0 0 auto;
+        block-size: 3px;
+        background: var(--primary);
+    }
+
+    .sy-scene[data-sy-loading='mix'] .sy-plot .sy-roll {
+        inset: 0 auto 0 70%;
+        inline-size: 2px;
+        block-size: auto;
+        background: var(--accent);
+    }
+
+    .sy-scene[data-sy-loading='marquee'] .sy-bulbs,
+    .sy-scene[data-sy-loading='drive'] .sy-dash,
+    .sy-scene[data-sy-durations] .sy-bulbs,
+    .sy-scene[data-sy-curve] .sy-bulbs {
+        display: block;
+    }
+
+    .sy-scene[data-sy-loading='mix'] :is(.sy-kpi, .kp-menu__item) .sy-dash,
+    .sy-scene[data-sy-loading='mix'] :is(.sy-day, .sy-plot) .sy-roll {
+        display: block;
+    }
+
+    /* The table as picked: one bulb near its top-end corner. */
+    .sy-scene[data-sy-loading='mix'] .sy-table .sy-bulbs {
+        display: block;
+        inset-inline: auto 0.5rem;
+        inline-size: 0.5rem;
+        background: repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 0.85rem) 0 0 / 1.35rem 100%;
+    }
+
+    .sy-scene[data-sy-loading='mix'] .sy-plot--wait .sy-floor {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--accent) h s l / 0.35) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(0deg, hsl(from var(--accent) h s l / 0.18) 0 1px, transparent 1px 12px);
+        block-size: 100%;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* Only the meter's own overdrive bar plays as today; the skeleton's sheen too. */
+    .sy-scene:not([data-sy-loading='mix']) .kp-meter[data-kp-loading]::after {
+        animation: none;
+        background: none;
+    }
+
+    .sy-scene:not([data-sy-loading='mix']) .sy-skel .kp-skeleton::after {
+        display: none;
+    }
+
+    /* ── The spinner (G11): one of three drawings per option ─────────── */
+
+    .sy-scene .sy-spin {
+        position: relative;
+        display: inline-grid;
+        flex: none;
+        inline-size: var(--sy-spin, 1rem);
+        block-size: var(--sy-spin, 1rem);
+        vertical-align: middle;
+    }
+
+    .sy-scene .sy-spin > * {
+        grid-area: 1 / 1;
+        display: none;
+    }
+
+    .sy-scene .sy-spin .kp-spinner {
+        inline-size: 100%;
+        block-size: 100%;
+        margin: 0;
+    }
+
+    .sy-scene[data-sy-spinner='sun'] .sy-spin__sun,
+    .sy-scene[data-sy-spinner='ring'] .sy-spin__ring,
+    .sy-scene[data-sy-spinner='road'] .sy-spin__road {
+        display: block;
+    }
+
+    /* A ring of eight bulbs, one lit. */
+    .sy-scene .sy-spin__ring {
+        position: relative;
+        border-radius: 50%;
+        background: repeating-conic-gradient(hsl(from var(--primary) h s l / 0.5) 0 16deg, transparent 16deg 45deg);
+        mask: radial-gradient(circle, transparent 52%, var(--foreground) 54% 70%, transparent 72%);
+    }
+
+    .sy-scene .sy-spin__ring::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: conic-gradient(var(--kp-core) 0 16deg, transparent 16deg);
+        filter: drop-shadow(0 0 2px var(--primary));
+    }
+
+    /* The road to the horizon, its lane dashes racing toward you. */
+    .sy-scene .sy-spin__road {
+        position: relative;
+        overflow: hidden;
+        background:
+            linear-gradient(var(--kp-core) 0 0) 50% 0 / 2px 100% no-repeat,
+            linear-gradient(var(--accent) 0 0) 0 0 / 100% 1px no-repeat,
+            hsl(from var(--primary) h s l / 0.22);
+        clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    }
+
+    .sy-scene .sy-spin__road::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(to right, var(--primary) 0 0) 0 0 / 2px 100% no-repeat,
+            linear-gradient(to left, var(--primary) 0 0) 100% 0 / 2px 100% no-repeat,
+            repeating-linear-gradient(to bottom, transparent 0 25%, var(--sidebar-background) 25% 50%);
+    }
+
+    .sy-scene .sy-spins {
+        gap: 1.25rem;
+    }
+
+    .sy-scene .sy-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .sy-scene .sy-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    /* ── Tone (G13) at rest ──────────────────────────────────────────── */
+
+    .sy-scene [data-sy-kind='warn'] {
+        --sy-tone: var(--warning-foreground);
+        --sy-tone-plate: var(--warning);
+        --sy-tone-ink: var(--warning-foreground);
+    }
+
+    .sy-scene [data-sy-kind='bad'] {
+        --sy-tone: var(--destructive);
+        --sy-tone-plate: var(--destructive);
+        --sy-tone-ink: var(--destructive-foreground);
+    }
+
+    .sy-scene .sy-ring {
+        display: none;
+        flex: none;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+        margin-inline-end: 0.45rem;
+        border-radius: 50%;
+        vertical-align: -0.1em;
+        box-shadow:
+            inset 0 0 0 1.5px var(--kp-core),
+            inset 0 0 0 3px hsl(from var(--sy-tone) h s l / 0.85),
+            inset 0 0 6px var(--sy-tone),
+            0 0 5px var(--sy-tone),
+            0 0 14px hsl(from var(--sy-tone) h s l / 0.6);
+    }
+
+    /* The neon ring, the words in the tone (recommended). */
+    .sy-scene[data-sy-tone='ring'] [data-sy-kind] .sy-ring {
+        display: inline-block;
+    }
+
+    .sy-scene[data-sy-tone='ring'] .sy-state[data-sy-kind='bad'] .sy-state__dot {
+        display: none;
+    }
+
+    .sy-scene[data-sy-tone='ring'] [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state) :is(.sy-figure, .sy-toned, .sy-state__word),
+    .sy-scene[data-sy-tone='ring'] .sy-tile[data-sy-kind] .sy-title {
+        color: var(--sy-tone);
+        text-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 8px hsl(from var(--sy-tone) h s l / 0.6);
+    }
+
+    .sy-scene[data-sy-tone='ring'] .sy-meter-wrap .sy-ring {
+        margin-inline-end: 0;
+    }
+
+    /* The arcade warning: the figure or word on its tone's plate. */
+    .sy-scene[data-sy-tone='plate'] [data-sy-kind]:is(.sy-kpi) .sy-figure,
+    .sy-scene[data-sy-tone='plate'] .sy-tile[data-sy-kind] .sy-toned,
+    .sy-scene[data-sy-tone='plate'] .sy-state[data-sy-kind] .sy-state__word {
+        padding-inline: 0.25em;
+        background: var(--sy-tone-plate);
+        color: var(--sy-tone-ink);
+        text-shadow: none;
+    }
+
+    .sy-scene[data-sy-tone='plate'] .kp-menu__item[data-sy-kind] {
+        background: hsl(from var(--destructive) h s l / 0.1);
+        box-shadow: inset 0 -2px 0 var(--destructive);
+    }
+
+    .sy-scene[data-sy-tone='plate'] .sy-tile[data-sy-kind] {
+        box-shadow: inset 0 2px 0 var(--destructive);
+    }
+
+    /* The full neon frame. */
+    .sy-scene[data-sy-tone='frame'] [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state, .sy-meter-wrap) {
+        outline: 2px solid var(--sy-tone);
+        outline-offset: -2px;
+        box-shadow: 0 0 10px hsl(from var(--sy-tone) h s l / 0.55);
+    }
+
+    .sy-scene[data-sy-tone='frame'] .sy-state[data-sy-kind] {
+        padding: 0.2rem 0.5rem;
+        outline-offset: 0;
+    }
+
+    .sy-scene[data-sy-tone='frame'] .sy-meter-wrap[data-sy-kind] {
+        padding-inline: 0.4rem;
+    }
+
+    /* ── Colour (G5) ─────────────────────────────────────────────────── */
+
+    .sy-scene[data-sy-colour] .kp-button.sy-pointed {
+        box-shadow:
+            inset 0 0 0.7em 0 var(--kp-glow),
+            0 0 1.6em 0 var(--kp-glow);
+    }
+
+    .sy-scene[data-sy-colour] .sy-picked {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .sy-scene[data-sy-colour='mix'] .sy-picked {
+        outline-color: var(--accent);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-colour='mix'] .kp-button.sy-act {
+        --kp-frame: var(--accent);
+        --kp-glow: hsl(from var(--accent) h s l / 0.4);
+        border-radius: 999px;
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    .sy-scene[data-sy-colour='mix'] .sy-rule {
+        background: linear-gradient(to right, transparent, var(--warning-foreground) 20%, var(--warning-foreground) 80%, transparent);
+        box-shadow: 0 0 8px hsl(from var(--warning-foreground) h s l / 0.6);
+    }
+
+    .sy-scene[data-sy-colour='mix'] .sy-plot__read {
+        color: var(--kp-pink-text);
+    }
+
+    .sy-scene:is([data-sy-colour='roles'], [data-sy-colour='mix']) .sy-warn .sy-ring {
+        display: inline-block;
+    }
+
+    .sy-scene:is([data-sy-colour='roles'], [data-sy-colour='mix']) .sy-warn .sy-figure {
+        color: var(--warning-foreground);
+        text-shadow: 0 0 8px hsl(from var(--warning-foreground) h s l / 0.5);
+    }
+
+    .sy-scene[data-sy-colour='pink'] .sy-label::before {
+        color: var(--kp-pink-text);
+    }
+
+    .sy-scene[data-sy-colour='pink'] .sy-plot__read {
+        color: var(--kp-pink-text);
+    }
+
+    .sy-scene[data-sy-colour='pink'] .sy-warn .sy-figure {
+        color: var(--warning-foreground);
+    }
+
+    .sy-scene[data-sy-colour='pink'] .sy-warn .sy-ring {
+        display: inline-block;
+    }
+
+    .sy-scene[data-sy-colour='pink'] .sy-prose a:not([class]) {
+        background: linear-gradient(var(--primary) 0 0) left bottom / 100% 2px no-repeat;
+    }
+
+    .sy-scene[data-sy-colour='pink'] .kp-button {
+        --kp-frame: var(--primary);
+    }
+
+    /* ── Corners (G6) ────────────────────────────────────────────────── */
+
+    .sy-scene[data-sy-corners='soft'] :is(.sy-plate, .sy-panel, .kp-button, .kp-badge, .kp-tag, .sy-chip, .sy-tip) {
+        border-radius: 0.4rem;
+    }
+
+    .sy-scene[data-sy-corners='pill'] :is(.kp-button, .kp-badge, .kp-tag, .sy-chip, .sy-tip) {
+        border-radius: 999px;
+    }
+
+    .sy-scene[data-sy-corners='pill'] .sy-tip {
+        padding-inline: 0.85rem;
+    }
+
+    .sy-scene .sy-tip {
+        position: relative;
+        inset: auto;
+        display: inline-block;
+        justify-self: start;
+        margin: 0;
+        opacity: 1;
+        animation: none;
+    }
+
+    /* ── Surface (G7) ────────────────────────────────────────────────── */
+
+    .sy-scene[data-sy-surface='grid'] .sy-floor,
+    .sy-scene[data-sy-surface='rim'] .sy-floor {
+        display: none;
+    }
+
+    .sy-scene:is([data-sy-surface='grid'], [data-sy-surface='rim'], [data-sy-motifs='none']) .sy-plate {
+        padding-block-end: 0.85rem;
+    }
+
+    .sy-scene[data-sy-surface='grid'] .sy-plate,
+    .sy-scene[data-sy-surface='grid'] .sy-plot {
+        border: 0;
+        border-radius: 0.2rem;
+        background: var(--sy-flat-grid), var(--card);
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--kp-core) h s l / 0.35),
+            inset 0 -2px 0 hsl(from var(--foreground) h s l / 0.2),
+            0 0 0 1px var(--border-strong);
+    }
+
+    .sy-scene[data-sy-surface='grid'] .sy-plate .sy-strip {
+        display: none;
+    }
+
+    .sy-scene[data-sy-surface='grid'] .sy-title {
+        font-family: var(--theme-font-mono);
+        font-size: 1.15rem;
+        font-weight: 400;
+        text-shadow: none;
+    }
+
+    .sy-scene[data-sy-surface='rim'] .sy-plate,
+    .sy-scene[data-sy-surface='rim'] .sy-plot {
+        border: 2px solid var(--primary);
+        border-radius: 0.4rem;
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    .sy-scene[data-sy-surface='rim'] .sy-plate .sy-strip {
+        display: none;
+    }
+
+    .sy-scene[data-sy-surface='rim'] .sy-plot {
+        background: var(--background);
+    }
+
+    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
+
+    /* The tube turns up, the sun cut crosses (recommended). */
+    .sy-scene[data-sy-hover='tube'] .kp-button.sy-pointed {
+        box-shadow:
+            inset 0 0 0.7em 0 var(--kp-glow),
+            0 0 1.6em 0 var(--kp-glow);
+    }
+
+    .sy-scene[data-sy-hover='tube'] .kp-button--ghost.sy-pointed {
+        --kp-frame: var(--kp-hairline);
+        box-shadow: none;
+        text-shadow: var(--sy-tube-up);
+    }
+
+    .sy-scene[data-sy-hover='tube'] .kp-menu__item.sy-pointed {
+        background: hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    .sy-scene[data-sy-hover='tube']
+        :is(.kp-menu__item.sy-pointed .sy-entry, .sy-pointed .sy-figure, .sy-pointed-tile .sy-title, .sy-day.sy-pointed .sy-day__num) {
+        color: var(--kp-core);
+        text-shadow: var(--sy-tube-up);
+    }
+
+    .sy-scene[data-sy-hover='tube'] :is(.sy-pointed, .sy-pointed-tile) > .sy-strip {
+        block-size: 4px;
+        filter: brightness(1.35) drop-shadow(0 0 4px var(--primary));
+    }
+
+    .sy-scene[data-sy-hover='tube'] .sy-day.sy-pointed {
+        border-color: hsl(from var(--kp-pink-text) h s l / 0.6);
+    }
+
+    /* The marquee outline on everything (the families page). */
+    .sy-scene[data-sy-hover='outline'] :is(.sy-pointed, .sy-pointed-tile) {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        box-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .sy-scene[data-sy-hover='outline'] .kp-menu__item.sy-pointed {
+        outline-offset: -3px;
+    }
+
+    /* As today. */
+    .sy-scene[data-sy-hover='mix'] .kp-button.sy-pointed:not(.kp-button--ghost) {
+        box-shadow:
+            inset 0 0 0.7em 0 var(--kp-glow),
+            0 0 1.6em 0 var(--kp-glow);
+        transform: translateY(-1px);
+    }
+
+    .sy-scene[data-sy-hover='mix'] .kp-menu__item.sy-pointed {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    .sy-scene[data-sy-hover='mix'] .sy-pointed-tile {
+        border: 2px solid var(--primary);
+        border-radius: 0.4rem;
+        box-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .sy-scene[data-sy-hover='mix'] .sy-tile-link.sy-pointed::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.5rem;
+        margin-inline-start: 0.3rem;
+        border-radius: 0 0 50% 50%;
+        background: var(--primary);
+        vertical-align: middle;
+        opacity: 1;
+        position: static;
+        animation: none;
+    }
+
+    .sy-scene[data-sy-hover='mix'] .sy-kpi.sy-pointed .sy-figure {
+        color: var(--primary);
+    }
+
+    .sy-scene[data-sy-hover='mix'] .sy-day.sy-pointed {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
+
+    /* DI2's ring: inset inside a framed control, outside everything else. */
+    .sy-scene[data-sy-focus='ring'] .kp-button.sy-focused:not(.kp-button--ghost),
+    .sy-scene[data-sy-focus='ring'] .kp-menu__item.sy-focused {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .sy-scene[data-sy-focus='ring'] :is(.sy-kpi, .sy-day, .kp-button--ghost).sy-focused {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .sy-scene[data-sy-focus='ring'] :is(.sy-focused .sy-figure, .sy-focused .sy-entry, .sy-day.sy-focused .sy-day__num),
+    .sy-scene[data-sy-focus='ring'] .kp-button--ghost.sy-focused {
+        text-shadow: var(--sy-tube-up);
+    }
+
+    .sy-scene[data-sy-focus='trace'] .sy-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-focus='trace'] .kp-menu__item.sy-focused {
+        outline-offset: -4px;
+    }
+
+    .sy-scene[data-sy-focus='trace'] .kp-button--primary.sy-focused {
+        outline-offset: -5px;
+    }
+
+    .sy-scene[data-sy-focus='mix'] .kp-button.sy-focused:not(.sy-in-header, .kp-button--ghost) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .sy-scene[data-sy-focus='mix'] .sy-in-header.sy-focused {
+        border-radius: 999px;
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-focus='mix'] .sy-in-header {
+        --kp-frame: var(--accent);
+        --kp-glow: hsl(from var(--accent) h s l / 0.4);
+        border-radius: 999px;
+    }
+
+    .sy-scene[data-sy-focus='mix'] .sy-kpi.sy-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 0;
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.14) 0 1px, transparent 1px 2px), var(--card);
+    }
+
+    .sy-scene[data-sy-focus='mix'] .kp-menu__item.sy-focused {
+        outline: none;
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    .sy-scene[data-sy-focus='mix'] .sy-day.sy-focused {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    .sy-scene[data-sy-focus='mix'] .sy-tile-link.sy-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+        box-shadow: none;
+    }
+
+    /* ── Composites (G17): the State buttons ─────────────────────────── */
+
+    /* As today, at rest: the header's pills in cyan frames. */
+    .sy-scene:is([data-sy-composites='today'], [data-sy-composites='pills']) .sy-in-header {
+        --kp-frame: var(--accent);
+        --kp-glow: hsl(from var(--accent) h s l / 0.4);
+        border-radius: 999px;
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    .sy-scene:is([data-sy-composites='today'], [data-sy-composites='pills']) .sy-in-header.kp-button--primary {
+        --kp-frame: transparent;
+        text-shadow: none;
+    }
+
+    /* Hover. */
+    [data-sy-show='hover'] .sy-scene[data-sy-composites] :is(.kp-button:not(.kp-button--ghost)),
+    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .sy-in-header {
+        box-shadow:
+            inset 0 0 0.7em 0 var(--kp-glow),
+            0 0 1.6em 0 var(--kp-glow);
+    }
+
+    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-menu__item {
+        background: hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    [data-sy-show='hover']
+        .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills'])
+        :is(.kp-menu__item .sy-entry, .sy-in-kpi .sy-figure),
+    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-button--ghost {
+        color: var(--kp-core);
+        text-shadow: var(--sy-tube-up);
+    }
+
+    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-in-header {
+        background-image: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.35), transparent);
+    }
+
+    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-tile-link::after {
+        content: '';
+        position: static;
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.5rem;
+        margin-inline-start: 0.3rem;
+        border-radius: 0 0 50% 50%;
+        background: var(--primary);
+        vertical-align: middle;
+        opacity: 1;
+        animation: none;
+    }
+
+    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-in-kpi .sy-figure {
+        color: var(--primary);
+    }
+
+    /* Focus. */
+    [data-sy-show='focus'] .sy-scene[data-sy-composites] .kp-button:not(.kp-button--ghost),
+    [data-sy-show='focus'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-menu__item {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    [data-sy-show='focus'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) :is(.sy-in-kpi, .kp-button--ghost) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .sy-in-header {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] :is(.sy-in-kpi, .sy-tile-link) {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+    }
+
+    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .sy-in-kpi {
+        outline-offset: 0;
+    }
+
+    /* Press. */
+    [data-sy-show='press'] .sy-scene[data-sy-composites] .kp-button:not(.kp-button--primary, .kp-button--ghost),
+    [data-sy-show='press'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) :is(.kp-menu__item, .sy-in-kpi, .kp-button--ghost) {
+        background: var(--secondary-active);
+        box-shadow: none;
+        text-shadow: none;
+    }
+
+    [data-sy-show='press'] .sy-scene[data-sy-composites] .kp-button--primary {
+        background: var(--primary-active);
+        box-shadow: none;
+    }
+
+    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .sy-in-header {
+        transform: translateX(1px);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
+        box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .sy-in-kpi {
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.2) 0 2px, transparent 2px 5px), var(--card);
+    }
+
+    /* ── The voice (G15) ─────────────────────────────────────────────── */
+
+    .sy-scene .sy-type {
+        gap: 0.45rem;
+    }
+
+    .sy-scene .sy-type :is(p, table) {
+        margin: 0;
+    }
+
+    .sy-scene .sy-type__label {
+        color: var(--kp-pink-text);
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .sy-scene .sy-type__label::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+
+    .sy-scene .sy-type__head {
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow: var(--sy-tube);
+    }
+
+    .sy-scene .sy-type__prose {
+        max-inline-size: 46ch;
+    }
+
+    .sy-scene .sy-type__figure .sy-figure {
+        font-size: 2rem;
+    }
+
+    .sy-scene .sy-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .sy-scene .sy-type__strip > div {
+        display: grid;
+        gap: 0.2rem;
+    }
+
+    .sy-scene .sy-type__table {
+        border-collapse: collapse;
+    }
+
+    .sy-scene .sy-type__table :is(th, td) {
+        padding: 0.2rem 0.75rem 0.2rem 0;
+        text-align: start;
+        border-block-end: 1px solid var(--kp-hairline);
+    }
+
+    .sy-scene .sy-type__table th {
+        color: var(--kp-pink-text);
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .sy-scene .sy-stamp {
+        color: var(--accent);
+        font-family: var(--theme-font-mono);
+        font-size: 1.05rem;
+    }
+
+    .sy-scene[data-sy-type='mono'] :is(.sy-figure, .sy-type__table td, .sy-stamp) {
+        font-family: var(--kp-mono);
+        font-size: inherit;
+        letter-spacing: 0.02em;
+        text-shadow: none;
+    }
+
+    .sy-scene[data-sy-type='mono'] .sy-type__figure .sy-figure {
+        font-size: 1.8rem;
+    }
+
+    .sy-scene[data-sy-type='mono'] .sy-type__strip .sy-figure {
+        font-size: 1.25rem;
+    }
+
+    .sy-scene[data-sy-type='plain'] :is(.sy-label, .sy-type__label, .sy-type__table th, .sy-stamp, .kp-badge) {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.85rem;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .sy-scene[data-sy-type='plain'] :is(.sy-label, .sy-type__label)::before {
+        content: none;
+    }
+
+    .sy-scene[data-sy-type='plain'] :is(.sy-figure, .sy-type__head) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0;
+        text-transform: none;
+        text-shadow: none;
+    }
+
+    /* ── Motifs (G16) ────────────────────────────────────────────────── */
+
+    .sy-scene .sy-events__mark {
+        position: absolute;
+        inset-inline-start: var(--x);
+        inset-block-start: var(--y);
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        margin: -0.35rem 0 0 -0.35rem;
+        border-radius: 50%;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-core),
+            0 0 6px var(--warning-foreground),
+            0 0 12px hsl(from var(--warning-foreground) h s l / 0.5);
+    }
+
+    .sy-scene .sy-motif-list {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sy-scene .sy-motif-empty {
+        margin: 0;
+    }
+
+    .sy-scene .sy-divider {
+        margin-block: 0.25rem;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .kp-meter__mark::before,
+    .sy-scene[data-sy-motifs='none'] .sy-motif-empty::before,
+    .sy-scene[data-sy-motifs='none'] .sy-motif-empty::after,
+    .sy-scene[data-sy-motifs='none'] .sy-floor {
+        display: none;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .kp-meter::before {
+        background: var(--primary);
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-events__mark {
+        background: var(--warning-foreground);
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-label::before {
+        content: none;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-motif-empty {
+        padding-block-start: 1.25rem;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-divider {
+        block-size: 1px;
+        background: var(--kp-hairline);
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-divider::before,
+    .sy-scene[data-sy-motifs='none'] .sy-divider::after {
+        display: none;
+    }
+
+    .sy-scene[data-sy-motifs='none'] .sy-plot .sy-floor {
+        display: none;
+    }
+
+    .sy-scene[data-sy-motifs='all'] .sy-motif-card {
+        background: radial-gradient(circle at 78% 30%, var(--kp-sun-top) 0 1.4rem, transparent 1.45rem), var(--card);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .sy-scene[data-sy-motifs='all'] .sy-motif-button {
+        background: var(--sy-floor-lines);
+    }
+
+    .sy-scene[data-sy-motifs='all'] :is(.sy-label, .kp-empty__title) {
+        text-shadow:
+            2px 0 hsl(from var(--chart-4) h s l / 0.7),
+            -2px 0 hsl(from var(--accent) h s l / 0.6);
+    }
+
+    .sy-scene[data-sy-motifs='all'] .sy-motif-empty {
+        background: var(--sy-flat-grid);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    .sy-scene[data-sy-motifs='all'] .kp-meter {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* ── The press (G14): the marked parts are pressed during `in` ───── */
+
+    .sy-scene[data-sy-press][data-sy-phase='in'] .kp-button.sy-press:not(.kp-button--primary),
+    .sy-scene[data-sy-press][data-sy-phase='in'] :is(.kp-menu__item, .sy-day, .sy-key, .sy-kpi).sy-press {
+        background: var(--secondary-active);
+    }
+
+    .sy-scene[data-sy-press][data-sy-phase='in'] .kp-button--primary.sy-press {
+        background: var(--primary-active);
+    }
+
+    .sy-scene[data-sy-press='dip'][data-sy-phase='in'] .sy-press,
+    .sy-scene[data-sy-press='dip'][data-sy-phase='in'] .sy-press :is(.sy-entry, .sy-figure, .sy-day__num, .sy-key__swatch) {
+        box-shadow: none;
+        text-shadow: none;
+    }
+
+    .sy-scene[data-sy-press='drop'][data-sy-phase='in'] .sy-press {
+        transform: translateY(1px);
+    }
+
+    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .kp-button.sy-press::before,
+    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .kp-button.sy-press::after,
+    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .sy-press > .sy-slits {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+
+    .sy-scene[data-sy-press='cut'] .kp-button--primary.sy-press::before,
+    .sy-scene[data-sy-press='cut'] .kp-button--primary.sy-press::after {
+        background: var(--background);
+    }
+
+    .sy-scene .sy-day > .sy-slits,
+    .sy-scene .sy-key > .sy-slits {
+        --sy-slit-ground: var(--background);
+    }
+
+    .sy-scene .sy-kpi > .sy-slits {
+        z-index: 3;
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Away during `gap`: whatever arrives, opens or leaves. */
+        .sy-scene:is([data-sy-curve], [data-sy-opening], [data-sy-durations], [data-sy-leave])[data-sy-phase='gap'] .sy-rise > :first-child,
+        .sy-scene[data-sy-direction][data-sy-phase='gap'] :is(.sy-rise > :first-child, .sy-day, .sy-row-line, .sy-walk svg) {
+            visibility: hidden;
+        }
+
+        /* Over the horizon (G3, G12): the line first, then the part rises. */
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon']):is(
+                [data-sy-phase='in'],
+                [data-sy-phase='hold']
+            )
+            .sy-opens
+            > :first-child {
+            animation: sy-rise-body calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
+            .sy-rise:not(.sy-opens)
+            > :first-child,
+        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
+            animation: sy-rise-body calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon']):is(
+                [data-sy-phase='in'],
+                [data-sy-phase='hold']
+            )
+            .sy-opens
+            > .sy-horizon {
+            animation: sy-horizon-in calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
+            .sy-rise:not(.sy-opens)
+            > .sy-horizon,
+        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
+            animation: sy-horizon-in calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* The stripes close as the part rises, open as it sets. */
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon'], [data-sy-durations]):is(
+                [data-sy-phase='in'],
+                [data-sy-phase='hold']
+            )
+            .sy-opens
+            > .sy-cuts {
+            animation: sy-cuts-close calc(var(--sy-o, 450ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
+            .sy-rise:not(.sy-opens)
+            > .sy-cuts,
+        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation: sy-cuts-close calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > .sy-cuts {
+            animation: sy-cuts-open calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > .sy-cuts {
+            animation: sy-cuts-open calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* Setting behind it: the panels close, the leavers leave. */
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > :first-child {
+            animation: sy-set-body calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > .sy-horizon {
+            animation: sy-horizon-out calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > :first-child {
+            animation: sy-set-body calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > .sy-horizon {
+            animation: sy-horizon-out calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* The stripe strikes on with a tube's dips as a panel opens (G3). */
+        .sy-scene[data-sy-opening='rise'][data-sy-phase='in'] .sy-opens .sy-strip {
+            animation: sy-strike calc(450ms * var(--sy-slow, 1)) calc(160ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        /* Light switches (G1): the bulbs jump a bulb a step. */
+        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-loading='marquee'], [data-sy-durations]) .sy-bulbs {
+            animation: sy-marquee calc(var(--sy-loop, 900ms) * var(--sy-slow, 1)) steps(4, end) infinite;
+        }
+
+        .sy-scene:is([data-sy-curve='quick'], [data-sy-curve='spring']) .sy-bulbs {
+            animation: sy-marquee calc(900ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='marquee'] .sy-day .sy-bulbs {
+            animation: sy-bulb-beat calc(900ms * var(--sy-slow, 1)) calc(var(--i) * 225ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='marquee'] .sy-skel__line .sy-bulbs {
+            animation-delay: calc(var(--i) * 225ms * var(--sy-slow, 1));
+        }
+
+        /* The readouts fill to their mark. */
+        .sy-scene[data-sy-curve='sunrise']:not([data-sy-phase='gap']) .sy-track {
+            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-curve='quick']:not([data-sy-phase='gap']) .sy-track {
+            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        .sy-scene[data-sy-curve='spring']:not([data-sy-phase='gap']) .sy-track {
+            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        }
+
+        /* The quick curve: rise 10 px and fade in, fast. */
+        .sy-scene[data-sy-curve='quick']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
+            animation: sy-lift-in calc(450ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        .sy-scene[data-sy-curve='quick'][data-sy-phase='out'] .sy-opens > :first-child {
+            animation: sy-lift-out calc(450ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        /* The spring: up past its place and back. */
+        .sy-scene[data-sy-curve='spring']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
+            animation: sy-spring-in calc(600ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        }
+
+        .sy-scene[data-sy-curve='spring'][data-sy-phase='out'] .sy-opens > :first-child {
+            animation: sy-lift-out calc(450ms * var(--sy-slow, 1)) ease-in both;
+        }
+
+        /* The live update in the curve row: the laser on each curve. */
+        .sy-scene[data-sy-curve='sunrise'][data-sy-phase='in'] .sy-carrier::after,
+        .sy-scene[data-sy-live='laser'][data-sy-phase='in'] .sy-carrier::after {
+            animation: sy-laser calc(675ms * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve='quick'][data-sy-phase='in'] .sy-carrier::after {
+            animation: sy-laser-quick calc(675ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        .sy-scene[data-sy-curve='spring'][data-sy-phase='in'] .sy-carrier::after {
+            animation: sy-laser-quick calc(675ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        }
+
+        /* Direction (G2). */
+        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-horizon--week {
+            animation: sy-horizon-in calc(1600ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-day {
+            animation: sy-rise-cell calc(450ms * var(--sy-slow, 1)) calc((200ms + var(--i) * 112ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-row-line {
+            animation: sy-rise-cell calc(450ms * var(--sy-slow, 1)) calc(var(--i) * 225ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-direction]:not([data-sy-phase='gap']) .sy-walk svg {
+            animation: sy-draw calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-direction='race']:not([data-sy-phase='gap']) :is(.sy-day, .sy-row-line, .sy-rise > :first-child) {
+            animation: sy-race calc(380ms * var(--sy-slow, 1)) calc(var(--i, 0) * 60ms * var(--sy-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .sy-scene[data-sy-direction='race']:not([data-sy-phase='gap']) .sy-walk svg {
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+            animation-duration: calc(380ms * var(--sy-slow, 1));
+        }
+
+        .sy-scene[data-sy-direction='drop']:not([data-sy-phase='gap']) :is(.sy-day, .sy-row-line, .sy-rise > :first-child, .sy-walk svg) {
+            animation: sy-drop calc(400ms * var(--sy-slow, 1)) calc(var(--i, 0) * 60ms * var(--sy-slow, 1)) steps(4, end) both;
+        }
+
+        /* Opening, the other options. */
+        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-strike-rim calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens .sy-strip {
+            animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-opening='strike'][data-sy-phase='out'] .sy-opens > :first-child {
+            animation: sy-strike-off calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-opening='tape']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-tape calc(320ms * var(--sy-slow, 1)) steps(4, end) both;
+        }
+
+        .sy-scene[data-sy-opening='tape'][data-sy-phase='out'] .sy-opens > :first-child {
+            animation: sy-tape-out calc(320ms * var(--sy-slow, 1)) steps(4, end) both;
+        }
+
+        /* Durations (G4): each option's own numbers. */
+        .sy-scene[data-sy-durations='beats'] {
+            --sy-c: 225ms;
+            --sy-o: 450ms;
+            --sy-l: 675ms;
+            --sy-loop: 900ms;
+        }
+
+        .sy-scene[data-sy-durations='slow'] {
+            --sy-c: 360ms;
+            --sy-o: 2880ms;
+            --sy-l: 900ms;
+            --sy-loop: 2600ms;
+        }
+
+        .sy-scene[data-sy-durations='brisk'] {
+            --sy-c: 150ms;
+            --sy-o: 300ms;
+            --sy-l: 450ms;
+            --sy-loop: 600ms;
+        }
+
+        .sy-scene[data-sy-durations][data-sy-phase='in'] .sy-tap {
+            animation: sy-tap calc(var(--sy-c) * 2 * var(--sy-slow, 1)) steps(1, end);
+        }
+
+        .sy-scene[data-sy-durations]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-rise-body calc(var(--sy-o) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-durations]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in calc(var(--sy-o) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-durations][data-sy-phase='in'] .sy-carrier::after {
+            animation: sy-laser calc(var(--sy-l) * var(--sy-slow, 1)) both;
+        }
+
+        /* The tone (G13): the ring strikes on; the plate flashes; the frame lights. */
+        .sy-scene[data-sy-tone='ring'][data-sy-phase='in'] .sy-ring {
+            animation: sy-strike calc(450ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-tone='plate'][data-sy-phase='in'] [data-sy-kind] :is(.sy-figure, .sy-toned, .sy-state__word) {
+            animation: sy-flash calc(900ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-tone='plate'][data-sy-phase='in'] .sy-meter-wrap .kp-meter {
+            animation: sy-bump calc(400ms * var(--sy-slow, 1)) ease-out;
+        }
+
+        /* The live update (G9). */
+        .sy-scene[data-sy-live='flare'][data-sy-phase='in'] .sy-carrier:not(.sy-carrier--dot, .sy-carrier--line),
+        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-kpi .sy-carrier {
+            animation: sy-flare calc(550ms * var(--sy-slow, 1)) ease-out;
+        }
+
+        .sy-scene:is([data-sy-live='flare'], [data-sy-live='mix'])[data-sy-phase='in'] .sy-carrier--dot {
+            animation: sy-bright calc(600ms * var(--sy-slow, 1)) ease-out;
+        }
+
+        .sy-scene[data-sy-live='flare'][data-sy-phase='in'] .sy-carrier--line svg {
+            animation: sy-flare-line calc(550ms * var(--sy-slow, 1)) ease-out;
+        }
+
+        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-carrier--line svg {
+            animation: sy-flare-line calc(900ms * var(--sy-slow, 1)) ease-out;
+        }
+
+        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-column .sy-carrier {
+            animation: sy-flip calc(500ms * var(--sy-slow, 1)) ease-in-out;
+        }
+
+        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-live-tile {
+            animation: sy-jump calc(350ms * var(--sy-slow, 1)) cubic-bezier(0.3, 1.6, 0.6, 1);
+        }
+
+        /* Loading (G10). */
+        .sy-scene[data-sy-loading='drive'] .sy-dash,
+        .sy-scene[data-sy-loading='mix'] .sy-kpi .sy-dash {
+            animation: sy-drive calc(900ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='mix'] .kp-menu__item .sy-dash {
+            animation: sy-drive-back calc(1000ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='mix'] .sy-table .sy-bulbs {
+            animation: sy-marquee-one calc(900ms * var(--sy-slow, 1)) steps(4, end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='mix'] .sy-day .sy-roll {
+            animation: sy-beam calc(1300ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='mix'] .sy-plot--wait .sy-floor {
+            animation: sy-feed calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        /* The spinner (G11). */
+        .sy-scene[data-sy-spinner='sun'] .sy-spin .kp-spinner::before {
+            animation: kp-sig-synthwave-sw-set calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-spinner='ring'] .sy-spin__ring::after {
+            animation: sy-ring-step calc(900ms * var(--sy-slow, 1)) steps(8, end) infinite;
+        }
+
+        .sy-scene[data-sy-spinner='road'] .sy-spin__road::after {
+            animation: sy-road calc(600ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        /* Leaving and arriving (G12), the other options. */
+        .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-swallow-back calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) both;
+        }
+
+        .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
+            animation: sy-fade-back calc(750ms * var(--sy-slow, 1)) ease-out both;
+        }
+
+        .sy-scene[data-sy-leave='swallow'][data-sy-phase='out'] .sy-sun-over {
+            animation: sy-swallow calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) both;
+        }
+
+        .sy-scene[data-sy-leave='swallow'][data-sy-phase='out'] .sy-leaver__body {
+            animation: sy-fade calc(750ms * var(--sy-slow, 1)) ease-in both;
+        }
+
+        .sy-scene[data-sy-leave='crt']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
+            animation: sy-crt-on calc(550ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        .sy-scene[data-sy-leave='crt'][data-sy-phase='out'] .sy-leaver__body {
+            animation: sy-crt-off calc(550ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        }
+
+        /* Hover (G8): the sun cut crosses the pointed button every few seconds. */
+        .sy-scene:is([data-sy-hover='tube'], [data-sy-hover='mix'], [data-sy-colour]) .kp-button.sy-pointed::before {
+            animation: sy-sun-cut-loop calc(2400ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .sy-scene:is([data-sy-hover='tube'], [data-sy-hover='mix'], [data-sy-colour]) .kp-button.sy-pointed::after {
+            animation: sy-sun-cut-loop calc(2400ms * var(--sy-slow, 1)) calc(60ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        }
+    }
+
+    @keyframes sy-rise-body {
+        0%,
+        30% {
+            translate: 0 0.5rem;
+            clip-path: inset(100% 0 0.5rem 0);
+        }
+
+        99% {
+            translate: 0 0;
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            translate: 0 0;
+            clip-path: none;
+        }
+    }
+
+    @keyframes sy-set-body {
+        0% {
+            translate: 0 0;
+            clip-path: inset(0 0 0 0);
+        }
+
+        72%,
+        100% {
+            translate: 0 0.5rem;
+            clip-path: inset(100% 0 0.5rem 0);
+        }
+    }
+
+    @keyframes sy-cuts-close {
+        0%,
+        30% {
+            background-size:
+                100% 13%,
+                100% 9%,
+                100% 6%,
+                100% 3%;
+        }
+
+        100% {
+            background-size:
+                100% 0,
+                100% 0,
+                100% 0,
+                100% 0;
+        }
+    }
+
+    @keyframes sy-cuts-open {
+        0% {
+            background-size:
+                100% 0,
+                100% 0,
+                100% 0,
+                100% 0;
+        }
+
+        72%,
+        100% {
+            background-size:
+                100% 13%,
+                100% 9%,
+                100% 6%,
+                100% 3%;
+        }
+    }
+
+    @keyframes sy-horizon-in {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        30% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        75% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes sy-horizon-out {
+        0% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+
+        12%,
+        70% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+    }
+
+    @keyframes sy-rise-cell {
+        from {
+            translate: 0 0.6rem;
+            clip-path: inset(100% 0 0.6rem 0);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes sy-strike {
+        0% {
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        34% {
+            opacity: 0.35;
+        }
+
+        48% {
+            opacity: 1;
+        }
+
+        62% {
+            opacity: 0.6;
+        }
+
+        76%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes sy-strike-rim {
+        0% {
+            border-color: var(--primary);
+        }
+
+        40% {
+            border-color: var(--accent);
+        }
+
+        70% {
+            border-color: var(--primary);
+        }
+
+        100% {
+            border-color: var(--kp-hairline);
+        }
+    }
+
+    @keyframes sy-strike-off {
+        0% {
+            border-color: var(--accent);
+        }
+
+        40% {
+            border-color: var(--primary);
+        }
+
+        70% {
+            border-color: var(--accent);
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-tape {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes sy-tape-out {
+        from {
+            clip-path: inset(0);
+        }
+
+        to {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes sy-marquee {
+        to {
+            background-position-x: 3.4rem, 0;
+        }
+    }
+
+    @keyframes sy-marquee-one {
+        to {
+            background-position-x: 1.35rem;
+        }
+    }
+
+    @keyframes sy-bulb-beat {
+        0% {
+            background: var(--primary);
+            filter: drop-shadow(0 0 3px var(--primary));
+        }
+
+        25%,
+        100% {
+            background: hsl(from var(--primary) h s l / 0.25);
+            filter: none;
+        }
+    }
+
+    @keyframes sy-fill {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes sy-lift-in {
+        from {
+            opacity: 0;
+            translate: 0 10px;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes sy-lift-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 10px;
+        }
+    }
+
+    @keyframes sy-spring-in {
+        from {
+            opacity: 0;
+            translate: 0 1.25rem;
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    /* The laser under a changed value (G9): drawn from its centre out on the
+       sunrise curve, flaring, then burning down. */
+    @keyframes sy-laser {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        33% {
+            opacity: 1;
+            transform: scaleX(1);
+            box-shadow:
+                0 0 6px var(--primary),
+                0 0 16px var(--primary),
+                0 0 30px hsl(from var(--primary) h s l / 0.6);
+            animation-timing-function: linear;
+        }
+
+        60% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes sy-laser-quick {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        40%,
+        60% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes sy-draw {
+        from {
+            clip-path: inset(-10px 100% -10px -10px);
+        }
+
+        to {
+            clip-path: inset(-10px -10px -10px -10px);
+        }
+    }
+
+    @keyframes sy-race {
+        from {
+            opacity: 0;
+            transform: translateX(-28px) skewX(-18deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes sy-drop {
+        from {
+            translate: 0 -0.75rem;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes sy-tap {
+        0% {
+            background: var(--secondary-active);
+            box-shadow: none;
+            text-shadow: none;
+        }
+
+        50%,
+        100% {
+            background: transparent;
+        }
+    }
+
+    @keyframes sy-flash {
+        0%,
+        34%,
+        68% {
+            background: var(--sy-tone-plate, transparent);
+            color: var(--sy-tone-ink, inherit);
+        }
+
+        17%,
+        51%,
+        85% {
+            background: transparent;
+            color: var(--sy-tone, inherit);
+        }
+
+        100% {
+            background: var(--sy-tone-plate, transparent);
+            color: var(--sy-tone-ink, inherit);
+        }
+    }
+
+    @keyframes sy-bump {
+        40% {
+            scale: 1.04 1.3;
+        }
+    }
+
+    @keyframes sy-flare {
+        0% {
+            text-shadow: 0 0 0 transparent;
+        }
+
+        35% {
+            text-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.95);
+        }
+
+        100% {
+            text-shadow: 0 0 0 transparent;
+        }
+    }
+
+    @keyframes sy-bright {
+        40% {
+            filter: brightness(2);
+        }
+    }
+
+    @keyframes sy-flare-line {
+        35% {
+            filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 9px var(--primary));
+            stroke-width: 3px;
+        }
+    }
+
+    @keyframes sy-flip {
+        50% {
+            rotate: x 90deg;
+        }
+    }
+
+    @keyframes sy-jump {
+        40% {
+            translate: 0 -0.22rem;
+        }
+    }
+
+    @keyframes sy-drive {
+        to {
+            background-position-x: 10px;
+        }
+    }
+
+    @keyframes sy-drive-back {
+        to {
+            background-position-x: -10px;
+        }
+    }
+
+    @keyframes sy-beam {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 calc(2.4rem - 3px);
+        }
+    }
+
+    @keyframes sy-feed {
+        to {
+            background-position:
+                -12px 0,
+                -12px 0;
+        }
+    }
+
+    @keyframes sy-ring-step {
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes sy-road {
+        to {
+            background-position:
+                0 0,
+                100% 0,
+                0 100%;
+        }
+    }
+
+    @keyframes sy-swallow {
+        from {
+            clip-path: circle(0% at 50% 120%);
+        }
+
+        70%,
+        to {
+            clip-path: circle(120% at 50% 120%);
+        }
+    }
+
+    @keyframes sy-swallow-back {
+        from {
+            clip-path: circle(120% at 50% 120%);
+        }
+
+        30% {
+            clip-path: circle(120% at 50% 120%);
+        }
+
+        to {
+            clip-path: circle(0% at 50% 120%);
+        }
+    }
+
+    @keyframes sy-fade {
+        0%,
+        60% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-fade-back {
+        from {
+            opacity: 0;
+        }
+
+        40%,
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes sy-crt-off {
+        0% {
+            transform: scaleY(1);
+            filter: brightness(1);
+            opacity: 1;
+        }
+
+        60% {
+            transform: scaleY(0.02);
+            filter: brightness(3);
+        }
+
+        100% {
+            transform: scaleY(0.02) scaleX(0);
+            filter: brightness(5);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-crt-on {
+        0% {
+            transform: scaleY(0.02) scaleX(0);
+            filter: brightness(5);
+            opacity: 0;
+        }
+
+        40% {
+            transform: scaleY(0.02);
+            filter: brightness(3);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scaleY(1);
+            filter: brightness(1);
+            opacity: 1;
+        }
+    }
+
+    /* The register's sun cut, once every 2.4 s, so a still scene shows it. */
+    @keyframes sy-sun-cut-loop {
+        0% {
+            opacity: 1;
+            transform: translateX(-10%);
+        }
+
+        5% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        10% {
+            opacity: 1;
+            transform: translateX(10%);
+        }
+
+        15%,
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+    }
+
+    /* The laser line under a carrier (G9), dark until a change draws it. */
+    .sy-scene .sy-carrier::after {
+        content: '';
+        position: absolute;
+        inset-inline: -0.15rem;
+        inset-block-end: -5px;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+        opacity: 0;
+        transform: scaleX(0);
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-carrier--dot::after {
+        inset-inline: -0.35rem;
+        inset-block-end: -6px;
+    }
+
+    .sy-scene .sy-carrier--line::after {
+        inset-block-end: -3px;
+    }
+}

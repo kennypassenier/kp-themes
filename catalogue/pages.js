@@ -82,6 +82,8 @@ export const PAGES = [
             { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
             { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
+            // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
+            { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave' },
         ],
     },
     {
