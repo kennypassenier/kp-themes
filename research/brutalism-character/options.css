@@ -2634,8 +2634,9 @@
     }
 
     /* ── 10b · The progress bar (Kenny, 2026-10-07: "I don't like the
-       progress bar, make 10 variations on that, five should be brand new") ──
-       Every picture is drawn on the package's own markup (track, fill, head)
+       progress bar, make 10 variations on that"; then "a mix between 7 and 10,
+       where we keep the looks of 7, but print the value in the yellow tip",
+       with three slower variations). Every picture is drawn on the package's own markup (track, fill, head)
        at its medium size, with a share (`--kp-value`) and a busy state that
        has none (`data-bc-busy`, standing for `data-kp-indeterminate` here so
        the register's own busy drawing stays out of the way). A share arrives
@@ -2710,39 +2711,32 @@
         }
     }
 
-    /* ─ 1 · Solid: no tape, the head leads ─ */
-    .bc-scene[data-bc-progress='solid'] {
-        --bc-kin: steps(8, jump-end);
-        --bc-kout: steps(8, jump-start);
-
-        .bc-bar {
-            --bc-hw: calc(0.7rem * var(--kp-progressbar-scale, 1));
-        }
-
-        .kp-progressbar__fill {
-            background: var(--bc-ink);
-            clip-path: inset(0 calc(100% - var(--bc-v) * (100% - var(--bc-hw))) 0 0);
-        }
-
-        .kp-progressbar__head {
-            inline-size: var(--bc-hw);
-            margin-inline-start: 0;
-            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 6;
-                --bc-end: calc(100cqi - var(--bc-hw));
-                animation: bc-hop var(--bc-d) linear infinite;
-            }
-        }
-    }
-
-    /* ─ 2 · Ruled: tenths marked on the track and in the fill ─ */
-    .bc-scene[data-bc-progress='ruled'] {
+    /* ─ The one bar: ruled and labelled (Kenny, 2026-10-07: "a mix between 7 and
+       10, where we keep the looks of 7, but print the value in the yellow tip",
+       "3 variations on it, with slightly slower speeds") ─
+       Ruled's drawing: ink ticks on the empty track, paper ticks cut through the
+       ink fill, tenth by tenth in hard steps. The yellow head is the tip that
+       prints the share (labelled's plate, now at ruled's place: its right edge
+       is the share's edge, held inside the track so it is never cut at 0 or 100).
+       Busy: the tip hops tick to tick and prints three dots.
+       --bc-pf is the speed of the whole bar against the page's 1200 ms loop;
+       the step count stays, so each hard step is longer, nothing else changes. */
+    .bc-scene[data-bc-progress^='ruled'] {
+        --bc-pf: 1;
+        --bc-d: calc(var(--bc-loop) * var(--bc-slow, 1) * var(--bc-pf));
         --bc-kin: steps(10, jump-end);
         --bc-kout: steps(10, jump-start);
+
+        .bc-bar {
+            --bc-fs: calc(0.85rem * var(--kp-progressbar-scale, 1));
+            --bc-hw: calc(3.7 * var(--bc-fs) + 2 * var(--kp-line, 3px));
+        }
+
+        .bc-bar--det {
+            animation-delay:
+                calc(var(--i, 0) * 100ms * var(--bc-slow, 1) * var(--bc-pf)),
+                calc(var(--i, 0) * 100ms * var(--bc-slow, 1) * var(--bc-pf));
+        }
 
         .kp-progressbar__track {
             background:
@@ -2765,134 +2759,17 @@
         }
 
         .kp-progressbar__head {
-            transform: translateX(calc(var(--bc-v) * 100cqi));
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 10;
-                --bc-end: 100cqi;
-                animation: bc-hop var(--bc-d) linear infinite;
-            }
-        }
-    }
-
-    /* ─ 3 · Placed: the register's bar, but the share lands under gravity and
-       the busy tape stands still while the head hops ─ */
-    .bc-scene[data-bc-progress='placed'] {
-        .kp-progressbar__fill {
-            clip-path: inset(0 calc((1 - var(--bc-v)) * 100%) 0 0);
-        }
-
-        .kp-progressbar__head {
-            transform: translateX(calc(var(--bc-v) * 100cqi));
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            clip-path: none;
-            background: repeating-linear-gradient(
-                -45deg,
-                var(--bc-ink) 0 calc(3 * var(--bc-u)),
-                transparent calc(3 * var(--bc-u)) var(--br-stripe)
-            );
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 6;
-                --bc-end: calc(100cqi - var(--br-block));
-                margin-inline-start: 0;
-                animation: bc-hop var(--bc-d) linear infinite;
-            }
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__head {
-            margin-inline-start: 0;
-        }
-    }
-
-    /* ─ 4 · Slug: busy is a piece of the share's own fill, cut loose ─ */
-    .bc-scene[data-bc-progress='piece'] {
-        --bc-kin: steps(6, jump-end);
-        --bc-kout: steps(6, jump-start);
-
-        .kp-progressbar__fill {
-            clip-path: inset(0 calc((1 - var(--bc-v)) * 100%) 0 0);
-        }
-
-        .kp-progressbar__head {
-            transform: translateX(calc(var(--bc-v) * 100cqi));
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            clip-path: none;
-            inset-inline-end: auto;
-            inline-size: 33.333%;
-            translate: 200% 0;
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__head {
-            translate: 100cqi 0;
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__fill {
-                animation: bc-slug var(--bc-d) linear infinite;
-            }
-
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 8;
-                --bc-end: 100cqi;
-                animation: bc-hop var(--bc-d) linear infinite;
-            }
-        }
-    }
-
-    @keyframes bc-slug {
-        0% {
-            translate: -100% 0;
-            animation-timing-function: steps(8, jump-end);
-        }
-
-        66.667% {
-            translate: 200% 0;
-            animation-timing-function: steps(1, end);
-        }
-
-        83.333%,
-        100% {
-            translate: -100% 0;
-        }
-    }
-
-    /* ─ 5 · Labelled: the head is a plate that says the share ─ */
-    .bc-scene[data-bc-progress='labelled'] {
-        --bc-kin: steps(10, jump-end);
-        --bc-kout: steps(10, jump-start);
-
-        .bc-bar {
-            --bc-hw: 3.1rem;
-        }
-
-        .kp-progressbar__fill {
-            background: var(--bc-ink);
-            clip-path: inset(0 calc(100% - var(--bc-v) * (100% - var(--bc-hw))) 0 0);
-        }
-
-        .kp-progressbar__head {
             display: grid;
             place-items: center;
             inline-size: var(--bc-hw);
             margin-inline-start: 0;
             counter-reset: bc-pct calc(var(--bc-v) * 100);
-            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
+            transform: translateX(max(0px, calc(var(--bc-v) * 100cqi - var(--bc-hw))));
             color: var(--secondary-foreground);
             font-family: var(--theme-font-display);
-            font-size: 0.8rem;
+            font-size: var(--bc-fs);
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
             line-height: 1;
             white-space: nowrap;
         }
@@ -2911,279 +2788,23 @@
 
         @media (prefers-reduced-motion: no-preference) {
             .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 6;
+                --bc-steps: 10;
                 --bc-end: calc(100cqi - var(--bc-hw));
                 animation: bc-hop var(--bc-d) linear infinite;
             }
         }
     }
 
-    /* ─ 6 · Trolley (new): a load rides the bar, a floor is laid under it ─ */
-    .bc-scene[data-bc-progress='trolley'] {
-        --bc-kin: steps(6, jump-end);
-        --bc-kout: steps(6, jump-start);
-
-        .bc-bar {
-            --bc-hw: calc(0.9rem * var(--kp-progressbar-scale, 1));
-        }
-
-        .kp-progressbar__track::before {
-            content: '';
-            position: absolute;
-            inset: 0 0 auto;
-            block-size: calc(2 * var(--bc-u));
-            background: var(--bc-ink);
-        }
-
-        .kp-progressbar__fill {
-            inset: auto 0 0;
-            block-size: calc(4 * var(--bc-u));
-            background: var(--bc-ink);
-            clip-path: inset(0 calc(100% - (var(--bc-v) * (100% - var(--bc-hw)) + var(--bc-hw) / 2)) 0 0);
-        }
-
-        .kp-progressbar__head {
-            inset-block: auto calc(4 * var(--bc-u));
-            block-size: 44%;
-            inline-size: var(--bc-hw);
-            margin-inline-start: 0;
-            border: 2px solid var(--bc-ink);
-            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
-        }
-
-        .kp-progressbar__head::before {
-            content: '';
-            position: absolute;
-            inset: auto 0 calc(100% + 2px);
-            inline-size: calc(2 * var(--bc-u));
-            margin-inline: auto;
-            block-size: 400%;
-            background: var(--bc-ink);
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-end: calc(100cqi - var(--bc-hw));
-                --bc-rise: -70%;
-                animation: bc-hauled var(--bc-d) linear infinite;
-            }
-        }
+    .bc-scene[data-bc-progress='ruled-slower'] {
+        --bc-pf: 1.25;
     }
 
-    /* ─ 7 · Cast (new): a mould stands on a beam and the beam is cast under it ─ */
-    .bc-scene[data-bc-progress='cast'] {
-        .bc-bar {
-            --bc-hw: calc(1rem * var(--kp-progressbar-scale, 1));
-        }
-
-        .kp-progressbar__fill {
-            inset-block-start: 56%;
-            background: var(--bc-ink);
-            transform-origin: 50% 100%;
-            clip-path: inset(0 calc(100% - (var(--bc-v) * (100% - var(--bc-hw)) + var(--bc-hw))) 0 0);
-        }
-
-        .kp-progressbar__head {
-            inset-block: 0 44%;
-            inline-size: var(--bc-hw);
-            margin-inline-start: 0;
-            border-block-start: var(--br-line) solid var(--bc-ink);
-            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            transform: scaleY(0.5);
-            clip-path: inset(0 calc(100% - var(--bc-hw)) 0 0);
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__fill {
-                animation: bc-pour var(--bc-d) steps(1, end) infinite;
-            }
-        }
+    .bc-scene[data-bc-progress='ruled-slow'] {
+        --bc-pf: 1.5;
     }
 
-    /* ─ 8 · Wall (new): blocks are laid in two courses, the next one set down ─ */
-    .bc-scene[data-bc-progress='wall'] {
-        --bc-kin: steps(10, jump-end);
-        --bc-kout: steps(10, jump-start);
-
-        .kp-progressbar__fill {
-            background:
-                repeating-linear-gradient(90deg, var(--bc-ink) 0 calc(10% - 2 * var(--bc-u)), transparent calc(10% - 2 * var(--bc-u)) 10%)
-                    0 100% / 100% calc(50% - var(--bc-u)) no-repeat,
-                repeating-linear-gradient(90deg, var(--bc-ink) -5% calc(5% - 2 * var(--bc-u)), transparent calc(5% - 2 * var(--bc-u)) 5%)
-                    0 0 / 100% calc(50% - var(--bc-u)) no-repeat;
-            clip-path: inset(0 calc(100% - round(down, var(--bc-v) * 100% + 0.4%, 10%)) 0 0);
-        }
-
-        .kp-progressbar__head {
-            inline-size: calc(10cqi - 2 * var(--bc-u));
-            margin-inline-start: 0;
-            transform: translateX(round(down, var(--bc-v) * 100cqi + 0.4cqi, 10cqi));
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__fill {
-                animation: bc-wall-window var(--bc-d) linear infinite;
-            }
-
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                animation: bc-wall-head var(--bc-d) linear infinite;
-            }
-        }
-    }
-
-    @keyframes bc-wall-window {
-        0% {
-            clip-path: inset(0 100% 0 0);
-            animation-timing-function: steps(3, jump-end);
-        }
-
-        16.667% {
-            clip-path: inset(0 70% 0 0);
-            animation-timing-function: steps(7, jump-end);
-        }
-
-        50% {
-            clip-path: inset(0 0 0 70%);
-            animation-timing-function: steps(3, jump-end);
-        }
-
-        66.667%,
-        100% {
-            clip-path: inset(0 0 0 100%);
-        }
-    }
-
-    @keyframes bc-wall-head {
-        0% {
-            translate: 0 0;
-            animation-timing-function: steps(3, jump-end);
-        }
-
-        16.667% {
-            translate: 30cqi 0;
-            animation-timing-function: steps(7, jump-end);
-        }
-
-        66.667% {
-            translate: 100cqi 0;
-            animation-timing-function: steps(1, end);
-        }
-
-        83.333%,
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    /* ─ 9 · Stairs (new): a staircase is built a tenth at a time ─ */
-    .bc-scene[data-bc-progress='stairs'] {
-        --bc-kin: steps(10, jump-end);
-        --bc-kout: steps(10, jump-start);
-
-        .bc-bar {
-            --bc-s: round(down, calc(var(--bc-v) * 10 + 0.04), 1);
-        }
-
-        .kp-progressbar__track::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: color-mix(in oklch, var(--bc-ink) 16%, var(--card));
-            clip-path: polygon(0 100%, 0 90%, 10% 90%, 10% 80%, 20% 80%, 20% 70%, 30% 70%, 30% 60%, 40% 60%, 40% 50%, 50% 50%, 50% 40%, 60% 40%, 60% 30%, 70% 30%, 70% 20%, 80% 20%, 80% 10%, 90% 10%, 90% 0%, 100% 0%, 100% 100%);
-        }
-
-        .kp-progressbar__fill {
-            background: var(--bc-ink);
-            clip-path: polygon(0 100%, 0 90%, min(10%, calc(var(--bc-s) * 10%)) 90%, min(10%, calc(var(--bc-s) * 10%)) 80%, min(20%, calc(var(--bc-s) * 10%)) 80%, min(20%, calc(var(--bc-s) * 10%)) 70%, min(30%, calc(var(--bc-s) * 10%)) 70%, min(30%, calc(var(--bc-s) * 10%)) 60%, min(40%, calc(var(--bc-s) * 10%)) 60%, min(40%, calc(var(--bc-s) * 10%)) 50%, min(50%, calc(var(--bc-s) * 10%)) 50%, min(50%, calc(var(--bc-s) * 10%)) 40%, min(60%, calc(var(--bc-s) * 10%)) 40%, min(60%, calc(var(--bc-s) * 10%)) 30%, min(70%, calc(var(--bc-s) * 10%)) 30%, min(70%, calc(var(--bc-s) * 10%)) 20%, min(80%, calc(var(--bc-s) * 10%)) 20%, min(80%, calc(var(--bc-s) * 10%)) 10%, min(90%, calc(var(--bc-s) * 10%)) 10%, min(90%, calc(var(--bc-s) * 10%)) 0%, min(100%, calc(var(--bc-s) * 10%)) 0%, min(100%, calc(var(--bc-s) * 10%)) 100%);
-        }
-
-        .kp-progressbar__head {
-            inset-block: auto calc(var(--bc-s) * 10%);
-            block-size: 40%;
-            inline-size: calc(10cqi - 2 * var(--bc-u));
-            margin-inline-start: 0;
-            transform: translateX(calc(max(0, var(--bc-s) - 1) * 10cqi));
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                --bc-steps: 9;
-                --bc-end: 90cqi;
-                --bc-ey: -225%;
-                animation: bc-hop var(--bc-d) linear infinite;
-            }
-        }
-    }
-
-    /* ─ 10 · Level (new): the channel is poured level, in four hard lifts ─ */
-    .bc-scene[data-bc-progress='level'] {
-        --bc-kin: steps(4, jump-end);
-        --bc-kout: steps(4, jump-start);
-
-        .kp-progressbar__fill {
-            background: var(--bc-ink);
-            clip-path: inset(calc((1 - var(--bc-v)) * 100%) 0 0 0);
-        }
-
-        .kp-progressbar__head {
-            inset-block: auto calc(var(--bc-v) * 100% - 3 * var(--bc-u));
-            inset-inline: 0;
-            inline-size: auto;
-            block-size: calc(3 * var(--bc-u));
-            margin-inline-start: 0;
-            border: 0;
-            transform: none;
-        }
-
-        .bc-bar[data-bc-busy] .kp-progressbar__fill {
-            clip-path: none;
-            transform: scaleY(0.5);
-            transform-origin: 50% 100%;
-        }
-
-        @media (prefers-reduced-motion: no-preference) {
-            .bc-bar[data-bc-busy] .kp-progressbar__fill {
-                animation: bc-pour var(--bc-d) steps(1, end) infinite;
-            }
-
-            .bc-bar[data-bc-busy] .kp-progressbar__head {
-                animation: bc-level-head var(--bc-d) steps(1, end) infinite;
-            }
-        }
-    }
-
-    @keyframes bc-level-head {
-        0% {
-            inset-block-end: calc(0% - 3 * var(--bc-u));
-        }
-
-        16.667% {
-            inset-block-end: calc(25% - 3 * var(--bc-u));
-        }
-
-        33.333% {
-            inset-block-end: calc(50% - 3 * var(--bc-u));
-        }
-
-        50% {
-            inset-block-end: calc(75% - 3 * var(--bc-u));
-        }
-
-        66.667% {
-            inset-block-end: calc(100% - 3 * var(--bc-u));
-        }
-
-        83.333%,
-        100% {
-            inset-block-end: calc(0% - 3 * var(--bc-u));
-        }
+    .bc-scene[data-bc-progress='ruled-slowest'] {
+        --bc-pf: 2;
     }
 
     /* ── 11 · Spinner ────────────────────────────────────────────────── */

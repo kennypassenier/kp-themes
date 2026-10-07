@@ -1,5 +1,5 @@
 {
-    "update": 2,
+    "update": 3,
     "picks": {
         "brutalism": {
             "curve": "gravity",
@@ -18,18 +18,15 @@
             "press": "ground",
             "hover": "invert",
             "voice": "shout",
-            "motifs": "one"
+            "motifs": "one",
+            "loading": "hoist-lintel"
         }
     },
     "questions": {
         "brutalism": {
-            "loading": {
-                "comment": "I like hoisted best, but it looks best in the skeleton lines because of its shape. And it doesnt look good in like the chart plot. So make 5 variations on it",
-                "reply": "Hoisted is one thin cable and one small load in the middle, which fits the skeleton's thin lines and leaves a wide well (the chart plot, the busy table) mostly empty. Five variations follow it, each checked in every cell: on a gantry (a trolley carries the load along a rail), in relay (three loads, one after the other), as a lintel (one beam as wide as the well), in bays (a hoist for every square of the width) and as a pair (one rises, one is lowered). The progress bar's busy picture no longer sits among the cells; it is the next question."
-            },
             "progress": {
-                "comment": "I don' tlike the progress bar, make 10 variations on that, five should be brand new",
-                "reply": "A new question, the progress bar, with ten options. Measured, the signature bar is weak in five ways: its stripes are hazard tape, its head covers 18 % of a 122 px track, busy runs on three clocks (600, 1600 and 1200 ms), a share is wiped by a 100 ms clip, and busy and a share are two different textures. Five options keep the bar and fix some of that (solid, ruled, placed, cut loose, labelled); five are brand new, built from the slab (cast, trolley, wall, stairs, level). Each shows busy, 25, 60 and 100 %, and a bar in a card. My pick is cast, a mould on a beam."
+                "comment": "can, we make it a mix between 7 and 10, where we keep the looks of 7, but print the value in the yellow tip. And maybe make 3 variations on it, with slightly slower speeds",
+                "reply": "Seven was Ruled and ten was Labelled. The first option is the mix: Ruled's track and fill with its ticks, and the yellow tip prints the value in ink at weight 800, counting up in the same ten hard steps as the share arrives (busy prints three dots). Three variations follow with only the speed changed, every one keeping its ten steps with each step longer: a little slower (1.25x, 1500 ms loop), slower (1.5x, 1800 ms) and a lot slower (2x, 2400 ms). The ten earlier bars are gone from the list."
             }
         }
     }
