@@ -34,24 +34,24 @@ terminal (`.kp-button` with its register's cursor, `.kp-dialog`, `.kp-popover` +
 first option is always the recommendation; every option says what you see and why it is or is not recommended, on the page and in its
 hint in the dialog.
 
-| #   | Question (rule)                 | Options, recommended first                                                                                                              |
-| --- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | The step (G1)                   | one hard step per cell or line written · two jumps whatever the distance (the register) · a smooth glide (near grotesk's pace)          |
-| 2   | How a part arrives (G2)         | typed out, the cursor at the head · typed out without the cursor (the family as drawn) · printed from the top (near nostromo, titanium) |
-| 3   | Opening a menu or a dialog (G3) | printed by line feeds, the cursor at the next line · printed, no cursor (near titanium's cut) · slid in from its edge (titanium's)      |
-| 4   | How long things take (G4)       | two clocks: the line and the blink · as the picks · at once (retro's 0 ms)                                                              |
-| 5   | Where the colour goes (G5)      | one phosphor at three brightnesses · second hues and glows (near cyberpunk's and synthwave's neon) · one flat brightness                |
-| 6   | The surface (G7)                | a line of htop: brackets at two ends (the family) · a grid of cells (near blueprint's paper) · a double box line (near high-contrast)   |
-| 7   | A warning (G13)                 | reverse in its colour with `[warn]` / `[fail]` · reverse in its colour (the family as drawn) · an edge bar (grotesk's index)            |
-| 8   | A live update (G9)              | three rapid blinks, bright and dim (the family, readable) · three blinks off and on (the graph's) · the reverse flash (high-contrast's) |
-| 9   | Loading (G10)                   | the cursor waits (the family) · a run of cells along the foot (near dark's ticker) · the turning bar `\| / - \`                         |
-| 10  | Leaving and arriving (G12)      | deleted by the cursor in one sweep (the leave) · backspaced, a cell a step · cleared line by line from the bottom                       |
-| 11  | Buttons inside composites (G17) | exactly terminal's own · as today · own but quiet                                                                                       |
-| 12  | Pointing at something (G8)      | the cursor ring and the cursor after the label (the family, gap-4) · reverse video (high-contrast's bar flips) · brighter only          |
-| 13  | The focus ring (DI2)            | the dashed box, 2 px out (the family) · the package's two-channel ring · one 1 px dashed ring                                           |
-| 14  | The press (G14)                 | entered in reverse video (the family's words) · a phosphor tint (the key figure as drawn) · sinks 1 px (titanium's press)               |
-| 15  | The voice (G15)                 | as a shell writes: lower case, the sigils · capitals tracked wide (the dark themes' voice) · plain sentence case                        |
-| 16  | Motifs (G16)                    | every motif means one thing · only text · on everything                                                                                 |
+| #   | Question (rule)                 | Options, recommended first                                                                                                                                                                                |
+| --- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The step (G1)                   | one hard step per cell or line written · two jumps whatever the distance (the register) · a smooth glide (near grotesk's pace)                                                                            |
+| 2   | How a part arrives (G2)         | typed out, the cursor at the head · typed out without the cursor (the family as drawn) · printed from the top (near nostromo, titanium)                                                                   |
+| 3   | Opening a menu or a dialog (G3) | printed by line feeds, the cursor at the next line · printed, no cursor (near titanium's cut) · slid in from its edge (titanium's)                                                                        |
+| 4   | How long things take (G4)       | two clocks: the line and the blink · as the picks · at once (retro's 0 ms)                                                                                                                                |
+| 5   | Where the colour goes (G5)      | one phosphor at three brightnesses · second hues and glows (near cyberpunk's and synthwave's neon) · one flat brightness                                                                                  |
+| 6   | The surface (G7)                | a line of htop: brackets at two ends (the family) · a grid of cells (near blueprint's paper) · a double box line (near high-contrast)                                                                     |
+| 7   | A warning (G13)                 | reverse in its colour with `[warn]` / `[fail]` · reverse in its colour (the family as drawn) · an edge bar (grotesk's index)                                                                              |
+| 8   | A live update (G9)              | three rapid blinks, bright and dim (the family, readable) · three blinks off and on (the graph's) · the reverse flash (high-contrast's)                                                                   |
+| 9   | Loading (G10)                   | the cursor writes cells along the foot and backspaces them · the cursor walks, the phosphor decays behind it · an htop row, the cursor its head · a prompt types its dots · the cursor waits (the family) |
+| 10  | Leaving and arriving (G12)      | deleted by the cursor in one sweep (the leave) · backspaced, a cell a step · cleared line by line from the bottom                                                                                         |
+| 11  | Buttons inside composites (G17) | exactly terminal's own · as today · own but quiet                                                                                                                                                         |
+| 12  | Pointing at something (G8)      | the cursor ring and the cursor after the label (the family, gap-4) · reverse video (high-contrast's bar flips) · brighter only                                                                            |
+| 13  | The focus ring (DI2)            | the dashed box, 2 px out (the family) · the package's two-channel ring · one 1 px dashed ring                                                                                                             |
+| 14  | The press (G14)                 | entered in reverse video (the family's words) · a phosphor tint (the key figure as drawn) · sinks 1 px (titanium's press)                                                                                 |
+| 15  | The voice (G15)                 | as a shell writes: lower case, the sigils · capitals tracked wide (the dark themes' voice) · plain sentence case                                                                                          |
+| 16  | Motifs (G16)                    | every motif means one thing · only text · on everything                                                                                                                                                   |
 
 **How.**
 
@@ -89,19 +89,23 @@ labels) by the shell's lower case.
 **Measured as the eye sees it** (Kenny, 15:16; 2026-10-07, Firefox, the page clock paused and every animation of a scene seeked together
 to each 60 Hz frame, the revealed fraction read per part; at 1600 px):
 
-| Scene (recommended option) | Part                                   | In: 50 % / 90 % / whole (ms)                  | Out: 50 % / 90 % gone / gone (ms) | Out = in backwards |
-| -------------------------- | -------------------------------------- | --------------------------------------------- | --------------------------------- | ------------------ |
-| The step, arrival          | a week, day by day (7 × 3 cells)       | 83–683 / 117–717 / 717                        | the last day first, 717 in all    | yes, every day     |
-|                            | a tile (24 cells)                      | 417 / 750 / 817                               | 383 / 717 / 783                   | yes                |
-|                            | a menu (4 lines)                       | 283 / 550 / 550                               | 150 / 417 / 417                   | yes                |
-| How a part arrives         | three log lines (57 cells at 19 ms)    | 200–917 / 350–1067 / 1083                     | the last line first               | yes                |
-|                            | a strip of columns (3 × 7 cells)       | 150–617 / 250–717 / 717                       | the last column first             | yes                |
-|                            | a line in time (32 cells)              | 550 / 1000 / 1100                             | 517 / 967 / 1067                  | yes                |
-| Opening                    | a menu (4 lines), a dialog (6 lines)   | 283, 417 / 550, 817                           | 150, 283 / 417, 683               | yes                |
-| Leaving                    | an alert, a card, a key figure (glide) | 250 / 433 / 483                               | 250 / 433 / 483                   | yes (linear)       |
-| A live update              | a value, a mark                        | bright at 0, dim at 167, 450, 750; ink at 900 | —                                 | —                  |
-| The press                  | a button, the primary                  | reverse at 50 (one cell)                      | —                                 | —                  |
-| Loading                    | the waiting cursor                     | lit 0–500, dark 500–1000                      | —                                 | —                  |
+| Scene (recommended option) | Part                                                | In: 50 % / 90 % / whole (ms)                                                        | Out: 50 % / 90 % gone / gone (ms) | Out = in backwards |
+| -------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------- | ------------------ |
+| The step, arrival          | a week, day by day (7 × 3 cells)                    | 83–683 / 117–717 / 717                                                              | the last day first, 717 in all    | yes, every day     |
+|                            | a tile (24 cells)                                   | 417 / 750 / 817                                                                     | 383 / 717 / 783                   | yes                |
+|                            | a menu (4 lines)                                    | 283 / 550 / 550                                                                     | 150 / 417 / 417                   | yes                |
+| How a part arrives         | three log lines (57 cells at 19 ms)                 | 200–917 / 350–1067 / 1083                                                           | the last line first               | yes                |
+|                            | a strip of columns (3 × 7 cells)                    | 150–617 / 250–717 / 717                                                             | the last column first             | yes                |
+|                            | a line in time (32 cells)                           | 550 / 1000 / 1100                                                                   | 517 / 967 / 1067                  | yes                |
+| Opening                    | a menu (4 lines), a dialog (6 lines)                | 283, 417 / 550, 817                                                                 | 150, 283 / 417, 683               | yes                |
+| Leaving                    | an alert, a card, a key figure (glide)              | 250 / 433 / 483                                                                     | 250 / 433 / 483                   | yes (linear)       |
+| A live update              | a value, a mark                                     | bright at 0, dim at 167, 450, 750; ink at 900                                       | —                                 | —                  |
+| The press                  | a button, the primary                               | reverse at 50 (one cell)                                                            | —                                 | —                  |
+| Loading (loops, 1600 ms)   | written and backspaced: 16-cell run / 7-cell figure | 280 / 530 / 560 in; 1160 / 1410 / 1440 out (a cell a step both ways: 17 / 8 values) | out = in backwards                | yes                |
+|                            | walked: 16 cells / 7 cells (trail)                  | head 760 / 1440 / 1520; 720-800 / 1430-1440 / 1440                                  | —                                 | —                  |
+|                            | htop row: 16 cells / 7 cells                        | 490 / 910 / 970 (full), redrawn at once at 1600                                     | —                                 | —                  |
+|                            | prompt: one dot per beat                            | 600 / 900 / 900 (4 poses, 300 ms apart)                                             | —                                 | —                  |
+|                            | the waiting cursor                                  | lit 0–500, dark 500–1000                                                            | —                                 | —                  |
 
 Side by side in a scene every part lands within 0.5 to 1.1 s (the week 717 ms, the tile 817, the menu 550, the log lines 1083, the line
 in time 1100), so none looks instant beside another; each option's words were checked against these numbers (the glide and the slide

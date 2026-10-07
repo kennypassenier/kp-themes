@@ -1129,17 +1129,11 @@
         inset-block-start: 0;
     }
 
-    /* A run of cells along the foot (the hash bar, the dots, the block). */
-    .tc-scene[data-tc-loading='run'] .tc-wait__run,
+    /* The picks' dotted march (the durations question's loop). */
     .tc-scene[data-tc-durations='picks'] .tc-wait__run {
         display: block;
         inset-inline: 0;
         inset-block-end: 0.15em;
-        block-size: 0.4em;
-        background: repeating-linear-gradient(90deg, var(--tc-bright) 0 6px, transparent 6px 9px) 0 0 / 100% 100% no-repeat;
-    }
-
-    .tc-scene[data-tc-durations='picks'] .tc-wait__run {
         block-size: 2px;
         background: radial-gradient(circle, var(--primary) 1px, transparent 1.2px) 0 0 / 8px 2px repeat-x;
     }
@@ -1148,15 +1142,138 @@
         display: none;
     }
 
-    /* The turning bar | / - \ in one cell (the calendar's). */
-    .tc-scene[data-tc-loading='spin'] .tc-wait__spin {
+    /* The runs of cells (G10, the cursor's own work). Every run is a whole
+       number of cells (`--tc-w`, 1ch each) at the start of the waiting place;
+       `--tc-k` runs 0 to 1 in hard steps, one per cell, and both the cells
+       and the cursor that rides their head read it. At rest (reduced motion)
+       --tc-k is 1: the finished row, the cursor lit at its end. */
+    .tc-scene .tc-wait {
+        --tc-w: 12;
+    }
+
+    .tc-scene .tc-wait--figure {
+        --tc-w: 7;
+    }
+
+    .tc-scene .tc-wait--body,
+    .tc-scene .tc-wait--row,
+    .tc-scene .tc-wait--meter {
+        --tc-w: 16;
+    }
+
+    .tc-scene .tc-wait--entry {
+        --tc-w: 6;
+    }
+
+    .tc-scene .tc-wait--day {
+        --tc-w: 3;
+    }
+
+    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run {
         display: block;
-        inset-block-start: 0;
         inset-inline-start: 0;
+        inset-block-end: 0.1em;
+        inline-size: calc(var(--tc-w) * 1ch);
+        max-inline-size: 100%;
+        block-size: 0.55em;
+    }
+
+    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::before,
+    .tc-scene:is([data-tc-loading='write'], [data-tc-loading='trail'], [data-tc-loading='bracket']) .tc-wait__run::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+    }
+
+    /* The cursor writes: the cells in the ink, the cursor on the last one. */
+    .tc-scene[data-tc-loading='write'] .tc-wait__run::before {
+        inset-inline: 0;
+        background: repeating-linear-gradient(90deg, var(--tc-ink) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch);
+        clip-path: inset(0 calc((1 - var(--tc-k)) * 100%) 0 0);
+    }
+
+    .tc-scene[data-tc-loading='write'] .tc-wait__run::after {
+        inset-block: -0.2em;
         inline-size: 1ch;
-        color: var(--tc-bright);
-        line-height: 1.2;
-        text-align: center;
+        inset-inline-start: max(0px, calc(var(--tc-k) * 100% - 1ch));
+        background: var(--tc-bright);
+        box-shadow: var(--tc-bloom);
+    }
+
+    /* The cursor walks: a three-cell window (dim, ink, bright) steps along. At
+       rest it stands at the end of the foot, the head on the last cell. */
+    .tc-scene[data-tc-loading='trail'] .tc-wait__run {
+        clip-path: inset(-0.2em 0);
+    }
+
+    .tc-scene[data-tc-loading='trail'] .tc-wait__run::before {
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 3ch;
+        background:
+            linear-gradient(var(--tc-bright), var(--tc-bright)) 2ch 0 / 1ch 100% no-repeat,
+            linear-gradient(var(--tc-ink), var(--tc-ink)) 1ch 0 / calc(1ch - 2px) 100% no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 0 / calc(1ch - 2px) 100% no-repeat;
+        box-shadow: none;
+        translate: calc((var(--tc-w) - 3) * 1ch) 0;
+    }
+
+    /* An htop row: dim brackets and unlit cells, the lit cells in the ink,
+       the head a cell that blinks. */
+    .tc-scene[data-tc-loading='bracket'] .tc-wait__run {
+        inline-size: calc(var(--tc-w) * 1ch + 8px);
+        background:
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--tc-dim), var(--tc-dim)) 100% 100% / 3px 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--tc-dim) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px / calc(var(--tc-w) * 1ch)
+                calc(100% - 6px) no-repeat;
+    }
+
+    .tc-scene[data-tc-loading='bracket'] .tc-wait__run::before {
+        inset-block: 3px;
+        inset-inline: 4px;
+        background: repeating-linear-gradient(90deg, var(--tc-ink) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch);
+        clip-path: inset(0 calc((1 - var(--tc-k)) * 100%) 0 0);
+    }
+
+    .tc-scene[data-tc-loading='bracket'] .tc-wait__run::after {
+        inset-block: 3px;
+        inline-size: calc(1ch - 2px);
+        inset-inline-start: calc(4px + max(0px, calc(var(--tc-k) * var(--tc-w) * 1ch - 1ch)));
+        background: var(--tc-bright);
+    }
+
+    /* A prompt types its dots: the first waiting place only. */
+    .tc-scene[data-tc-loading='prompt'] .tc-wait--first .tc-wait__txt {
+        display: block;
+        inset-block-start: 0.1em;
+        inset-inline-start: 0;
+        inline-size: 5ch;
+        block-size: 1.15em;
+        line-height: 1.15;
+        white-space: pre;
+        color: var(--tc-ink);
+    }
+
+    .tc-scene[data-tc-loading='prompt'] .tc-wait--first .tc-wait__txt::before {
+        content: '> ...';
+        position: absolute;
+        inset: 0;
+        clip-path: inset(0 calc(3ch - var(--tc-k) * 3ch) 0 0);
+    }
+
+    .tc-scene[data-tc-loading='prompt'] .tc-wait--first .tc-wait__txt::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inline-size: 1ch;
+        inset-inline-start: calc(2ch + var(--tc-k) * 3ch);
+        background: var(--tc-bright);
+        box-shadow: var(--tc-bloom);
     }
 
     /* ── Motion ──────────────────────────────────────────────────────── */
@@ -1354,16 +1471,33 @@
             animation: none;
         }
 
-        .tc-scene[data-tc-loading='run'] .tc-wait__run {
-            animation: tc-run calc(1600ms * var(--tc-slow, 1)) steps(8, jump-end) infinite;
-        }
-
         .tc-scene[data-tc-durations='picks'] .tc-wait__run {
             animation: tc-dots calc(1200ms * var(--tc-slow, 1)) steps(8, jump-end) infinite;
         }
 
-        .tc-scene[data-tc-loading='spin'] .tc-wait__spin {
-            animation: tc-spin calc(800ms * var(--tc-slow, 1)) steps(4, jump-end) infinite;
+        /* The cursor writes and backspaces (one period 1600 ms, the same in
+           every waiting place; the steps are the place's cells). */
+        .tc-scene[data-tc-loading='write'] .tc-wait {
+            animation: tc-wr calc(1600ms * var(--tc-slow, 1)) steps(var(--tc-w), jump-end) infinite;
+        }
+
+        /* The cursor walks (the window crosses the foot, then is gone). */
+        .tc-scene[data-tc-loading='trail'] .tc-wait__run::before {
+            animation: tc-walk calc(1600ms * var(--tc-slow, 1)) steps(calc(var(--tc-w) + 3), jump-none) infinite;
+        }
+
+        /* The htop row fills, the head blinks on the slow clock, the row is redrawn. */
+        .tc-scene[data-tc-loading='bracket'] .tc-wait {
+            animation: tc-fill calc(1600ms * var(--tc-slow, 1)) steps(var(--tc-w), jump-end) infinite;
+        }
+
+        .tc-scene[data-tc-loading='bracket'] .tc-wait__run::after {
+            animation: tc-blink-slow calc(var(--tc-blink) * var(--tc-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        /* The prompt: one dot a beat of the rapid clock (300 ms). */
+        .tc-scene[data-tc-loading='prompt'] .tc-wait--first {
+            animation: tc-dots-typed calc(1200ms * var(--tc-slow, 1)) steps(4, jump-none) infinite;
         }
 
         /* ── G12: deleted by the cursor; arriving, written ── */
@@ -1560,16 +1694,6 @@
         }
     }
 
-    @keyframes tc-run {
-        from {
-            background-size: 0 100%;
-        }
-
-        to {
-            background-size: 100% 100%;
-        }
-    }
-
     @keyframes tc-dots {
         from {
             background-position: 0 0;
@@ -1580,13 +1704,54 @@
         }
     }
 
-    @keyframes tc-spin {
+    @keyframes tc-wr {
+        0% {
+            --tc-k: 0;
+        }
+
+        35%,
+        55% {
+            --tc-k: 1;
+        }
+
+        90%,
+        100% {
+            --tc-k: 0;
+        }
+    }
+
+    @keyframes tc-fill {
+        0% {
+            --tc-k: 0;
+        }
+
+        60%,
+        99.9% {
+            --tc-k: 1;
+        }
+
+        100% {
+            --tc-k: 0;
+        }
+    }
+
+    @keyframes tc-walk {
         from {
-            rotate: 0deg;
+            translate: calc(-2ch) 0;
         }
 
         to {
-            rotate: 180deg;
+            translate: calc(var(--tc-w) * 1ch) 0;
+        }
+    }
+
+    @keyframes tc-dots-typed {
+        from {
+            --tc-k: 0;
+        }
+
+        to {
+            --tc-k: 1;
         }
     }
 

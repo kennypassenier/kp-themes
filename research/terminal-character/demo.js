@@ -32,12 +32,13 @@ const level = (/** @type {string} */ kind, /** @type {string} */ word) => `<span
 /**
  * The place a waiting reading will be written (G10), with every loading
  * picture an option may draw in it: the cursor (`.tc-wait__cur`), a run of
- * cells along the foot (`.tc-wait__run`) and the turning bar
- * (`.tc-wait__spin`). options.css shows one. `first` marks the one place of a
+ * cells along the foot (`.tc-wait__run`, written, walked or filled by the
+ * block cursor) and the prompt line (`.tc-wait__txt`). options.css shows
+ * one. `first` marks the one place of a
  * surface where its single cursor stands.
  */
 const wait = (/** @type {string} */ kind, i = 0, first = i === 0) =>
-    `<span class="tc-wait tc-wait--${kind}${first ? ' tc-wait--first' : ''}" style="--i: ${i}" aria-hidden="true"><span class="tc-wait__cur"></span><span class="tc-wait__run"></span><span class="tc-wait__spin">|</span></span>`;
+    `<span class="tc-wait tc-wait--${kind}${first ? ' tc-wait--first' : ''}" style="--i: ${i}" aria-hidden="true"><span class="tc-wait__cur"></span><span class="tc-wait__run"></span><span class="tc-wait__txt"></span></span>`;
 
 /** The change, with its sign, underlined (G13, the tone family). */
 const change = (/** @type {string} */ text, dir = 'up') => `<span class="tc-change" data-tc-dir="${dir}">${dir === 'up' ? '+' : '-'}${text}</span>`;
@@ -670,29 +671,49 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does a part look like while its reading is on its way?',
-        why: 'Your loading family is the busy table’s The cursor blinks: one block cursor where the words will be written, on and off, once a second. Your other picks draw seven more pictures: a hash bar, a dotted march (close to dark’s ticker baseline), stepping dots, a stepping block, a turning bar, a flicker and a modem waterfall.',
+        why: 'Your loading family is the busy table’s The cursor blinks: one block cursor where the words will be written, on and off, once a second. You liked the run of cells along the foot best, but along a foot is dark’s, forest’s, solstice’s and nostromo’s way. So every run below is the block cursor’s own work: it writes the cells and backspaces them, walks and leaves a decaying trail, heads an htop row, or types a prompt. The turning bar is dropped (the braille spinner already turns).',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
-                key: 'cursor',
-                name: 'The cursor waits (your family, everywhere)',
-                see: 'One block cursor per waiting part, where its reading will be written, blinking once a second, hard. Labels stay readable; the braille spinner and the busy bar stay as approved.',
+                key: 'write',
+                name: 'The cursor writes the cells and backspaces them',
+                see: 'Along the foot of every waiting part the block cursor writes a row of cells, one hard step per cell, the cursor riding the last cell written. The row stands for a beat, then the cursor backs up and deletes the cells one step at a time, until only the waiting cursor is left. Then it writes again. Writing and deleting are the same steps in opposite order.',
                 verdict: rec(
-                    'it is your family carried to every waiting part, it says where the answer will appear, and it is the cursor that then types it.',
+                    'it is the run of cells you liked, but written and deleted by the block cursor, so it is the only waiting picture that shows the cursor working; at rest it is exactly your family’s cursor. It does replace the rule that nothing runs along the foot (G10).',
                 ),
             },
             {
-                key: 'run',
-                name: 'A run of cells along the foot (your hash bar, dots and block; near dark’s ticker baseline)',
-                see: 'A row of blocks fills along the foot of each waiting part, again and again.',
-                verdict: not('it shows work going on, but something running along the foot is dark’s, forest’s, solstice’s and nostromo’s way.'),
+                key: 'trail',
+                name: 'The cursor walks, the phosphor decays behind it',
+                see: 'The block cursor steps along the foot one cell per step. Behind it the cells burn at the three brightnesses: the cell it just left in the ink, the one before in the dim phosphor, then gone. At the end it walks off the part and starts again at the start.',
+                verdict: not(
+                    'it is the busiest and nearest to the braille spinner’s decaying trail, but it only shows that something moves, not how far the work is, and it jumps back to the start instead of reversing.',
+                ),
             },
             {
-                key: 'spin',
-                name: 'The turning bar | / - \\ (your calendar’s pick)',
-                see: 'A bar turns in one cell, | / - \\, in every waiting place.',
-                verdict: not('it is a classic, but it is a spinner in every place, and your spinner is already the braille cell.'),
+                key: 'bracket',
+                name: 'An htop row, the cursor its head',
+                see: 'A row between two square brackets with all its cells dim. The cells light in the ink one per step from the start, the last lit cell is the block cursor and blinks, and when the row is full it is cleared at once and fills again.',
+                verdict: not(
+                    'it is your signature progress bar looped, so it reads as a progress that never arrives; it is clearer as a bar than as waiting, and its restart is a redraw, not the fill reversed.',
+                ),
+            },
+            {
+                key: 'prompt',
+                name: 'A prompt line types its dots',
+                see: 'In the first waiting place one line, a prompt and dots: > then . .. ... one dot per beat of the rapid clock (300 ms), the block cursor after the last dot, then the line starts again. One prompt per waiting part, no run along the foot.',
+                verdict: not(
+                    'it is the most terminal in words and takes no foot space, but it is the smallest, it needs a line of its own, and its beat is the rapid clock, not the line’s cell rate.',
+                ),
+            },
+            {
+                key: 'cursor',
+                name: 'The cursor waits (your family, as approved)',
+                see: 'One block cursor per waiting part, where its reading will be written, blinking once a second, hard. Labels stay readable; the braille spinner and the busy bar stay as approved.',
+                verdict: not(
+                    'it is your approved family and stays the quietest, but it only says that something waits, not that work is going on; the first option is this cursor at rest, with the work added.',
+                ),
             },
         ],
     },
