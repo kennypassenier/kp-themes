@@ -1,0 +1,916 @@
+/* research/blueprint-anchor: the six anchor candidates for blueprint, every
+   drawing and every motion, in the theme's signature layer. Each candidate is
+   one inline SVG (viewBox 480 x 200) on a stage, scoped by the stage's own
+   attribute (`.ba-scene[data-ba-anchor='<key>']`); colours come from the
+   theme's tokens only.
+
+   One timeline for all six, so they can be compared: T = 2880 ms (18 units of
+   the register's 160 ms). 0 to 16.7 % the instrument is drawn (3 units),
+   16.7 to 77.8 % it works, the loading picture (11 units), 77.8 to 100 % it
+   completes (4 units). The leave is the same keyframes on the same duration
+   played backwards (`animation-direction: reverse`), so every frame of the
+   leave is a frame of the arrival, last in, first out.
+
+   The stage's clock (demo.js) writes `data-ba-phase` on every stage: `gap`
+   (everything away), `in` (the forward run), `hold` (the finished picture),
+   `out` (the same run backwards). The base style of every part is its
+   FINISHED pose, so `hold` needs no animation and the reduced-motion pose is
+   the finished picture. Every animation sits under
+   `prefers-reduced-motion: no-preference`.
+
+   The review dialog moves the section out of the page into its stage, so
+   every rule and custom property here hangs on `.ba-scene`, never on the
+   page. The plotter's feed (G1) is written once as `--ba-feed`. */
+
+@layer kp.signature {
+    .ba-scene {
+        --ba-pen: var(--primary);
+        --ba-note: var(--accent);
+        --ba-line: var(--border-strong);
+        --ba-ink: var(--foreground);
+        --ba-ground: var(--background);
+        --ba-bad: var(--destructive);
+        /* G1: the stepper plotter's trapezoid: a fifth to reach the feed, three fifths at it, a fifth to stop. */
+        --ba-feed: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+        --ba-T: 2880ms;
+
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        min-block-size: 15rem;
+        padding: 1.25rem;
+        /* The ruled sheet the instruments stand on (the register's own texture); no frame. */
+        background-color: var(--background);
+        background-image: var(--fx-texture);
+        background-size: var(--fx-texture-size);
+    }
+
+    .ba-lineup .ba-scene {
+        min-block-size: 0;
+        padding: 0.5rem;
+    }
+
+    .ba-part {
+        display: grid;
+        inline-size: 100%;
+        place-items: center;
+    }
+
+    .ba-art {
+        display: block;
+        inline-size: 100%;
+        max-inline-size: 36rem;
+        block-size: auto;
+        overflow: visible;
+    }
+
+    /* ── What every drawing is made of ───────────────────────────────── */
+
+    .ba-art .ba-ln {
+        fill: none;
+        stroke-width: 1.5;
+    }
+
+    .ba-art .ba-bold {
+        stroke-width: 2;
+    }
+
+    .ba-art .ba-pen {
+        stroke: var(--ba-pen);
+    }
+
+    .ba-art .ba-steel {
+        stroke: var(--ba-line);
+    }
+
+    .ba-art .ba-note {
+        stroke: var(--ba-note);
+    }
+
+    .ba-art .ba-ink {
+        stroke: var(--ba-ink);
+    }
+
+    .ba-art .ba-fill-pen {
+        fill: var(--ba-pen);
+        stroke: none;
+    }
+
+    .ba-art .ba-fill-steel {
+        fill: var(--ba-line);
+        stroke: none;
+    }
+
+    .ba-art .ba-fill-note {
+        fill: var(--ba-note);
+        stroke: none;
+    }
+
+    .ba-art .ba-fill-ground {
+        fill: var(--ba-ground);
+        stroke: none;
+    }
+
+    /* G15: the draughtsman's lettering, mono capitals sloped 15 degrees. */
+    .ba-art text {
+        fill: var(--ba-ink);
+        font-family: var(--theme-font-mono);
+        font-size: 11px;
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .ba-art text.ba-note-text {
+        fill: var(--ba-note);
+    }
+
+    .ba-art text.ba-figure {
+        font-family: var(--theme-font-display);
+        font-size: 46px;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    .ba-art text.ba-faint {
+        fill: hsl(from var(--ba-ink) h s l / 0.45);
+    }
+
+    .ba-art .ba-nib {
+        fill: var(--ba-pen);
+        stroke: var(--ba-pen);
+        stroke-width: 1.5;
+    }
+
+    .ba-art .ba-hatch {
+        fill: none;
+        stroke: var(--ba-pen);
+        stroke-width: 1.5;
+    }
+
+    .ba-art .ba-mm {
+        fill: none;
+        stroke: hsl(from var(--ba-line) h s l / 0.3);
+        stroke-width: 0.6;
+    }
+
+    /* A line drawn by the pen: one normalised length (pathLength 1), hidden by shifting the dash. */
+    .ba-art .ba-draw {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 0;
+    }
+
+    /* ── One rule for every part ───────────────────────────────────────
+       `in` and `out` are the same keyframes, forward and backwards. They
+       are never adjacent to one another: `hold` and `gap` carry no
+       animation, so each run starts a fresh animation (a CSS animation whose
+       name stays the same would only be updated and carry on from where the
+       last one stopped). `hold` is the base style, the finished picture;
+       `gap` is written out below, the first frame of every part. */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ba-scene[data-ba-phase='in'] .ba-p {
+            animation: var(--ba-k) calc(var(--ba-T) * var(--ba-slow, 1)) linear 0s 1 normal both;
+        }
+
+        .ba-scene[data-ba-phase='out'] .ba-p {
+            animation: var(--ba-k) calc(var(--ba-T) * var(--ba-slow, 1)) linear 0s 1 reverse both;
+        }
+    }
+
+    /* The first frame of every part (the 0 % pose of its keyframes): nothing drawn. */
+    .ba-scene[data-ba-phase='gap'] .ba-dim-wit,
+    .ba-scene[data-ba-phase='gap'] .ba-plot-line,
+    .ba-scene[data-ba-phase='gap'] .ba-plot-mark,
+    .ba-scene[data-ba-phase='gap'] .ba-plot-leader,
+    .ba-scene[data-ba-phase='gap'] .ba-cloud-draw,
+    .ba-scene[data-ba-phase='gap'] .ba-cloud-tri,
+    .ba-scene[data-ba-phase='gap'] .ba-cp-arc,
+    .ba-scene[data-ba-phase='gap'] .ba-cp-rad,
+    .ba-scene[data-ba-phase='gap'] .ba-sx-base {
+        stroke-dashoffset: 1;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-dim-scale {
+        clip-path: inset(0 88.333% 0 0) view-box;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-dim-fill {
+        clip-path: inset(0 85.833% 0 0) view-box;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-dim-head {
+        translate: 0 0;
+        opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-dim-chain {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-dim-arrows,
+    .ba-scene[data-ba-phase='gap'] .ba-dim-label,
+    .ba-scene[data-ba-phase='gap'] .ba-dim-value,
+    .ba-scene[data-ba-phase='gap'] .ba-plot-label,
+    .ba-scene[data-ba-phase='gap'] .ba-cloud-value,
+    .ba-scene[data-ba-phase='gap'] .ba-cloud-letter,
+    .ba-scene[data-ba-phase='gap'] .ba-cp-in,
+    .ba-scene[data-ba-phase='gap'] .ba-cp-radhead,
+    .ba-scene[data-ba-phase='gap'] .ba-cp-radtext,
+    .ba-scene[data-ba-phase='gap'] .ba-sx-units {
+        opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-plot-rail {
+        translate: 0 138px;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-plot-carriage {
+        translate: 80px 138px;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-plot-nib {
+        fill-opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-cy-veil,
+    .ba-scene[data-ba-phase='gap'] .ba-cloud-pending {
+        opacity: 1;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-cp-arm {
+        rotate: 0deg;
+        opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-sx-reveal {
+        clip-path: inset(0 87.25% 0 0) view-box;
+        opacity: 0;
+    }
+
+    .ba-scene[data-ba-phase='gap'] .ba-sx-cursor {
+        translate: 0 0;
+        opacity: 0;
+    }
+
+    /* ═══ 1 · The dimension line ═════════════════════════════════════════
+       Witness lines first, then the measured length with its arrowheads and
+       scale, then the hatched fill grows along it behind a head, a chain
+       line feeding along inside it; when it is full the head and the chain
+       are lifted and the length is lettered and read. The clips are in the
+       drawing's own coordinates (`view-box`), so the head sits exactly on
+       the fill's end. */
+
+    .ba-dim-wit {
+        --ba-k: ba-dim-wit;
+    }
+
+    .ba-dim-scale {
+        --ba-k: ba-dim-scale;
+        clip-path: inset(0 11.667% 0 0) view-box;
+    }
+
+    .ba-dim-arrows {
+        --ba-k: ba-dim-arrows;
+    }
+
+    .ba-dim-fill {
+        --ba-k: ba-dim-fill;
+        clip-path: inset(0 14.167% 0 0) view-box;
+    }
+
+    .ba-dim-head {
+        --ba-k: ba-dim-head;
+        translate: 344px 0;
+        opacity: 0;
+    }
+
+    .ba-dim-chain {
+        --ba-k: ba-dim-chain;
+        stroke-dasharray: 13 3 3 3;
+        stroke-dashoffset: -55px;
+        opacity: 0;
+    }
+
+    .ba-dim-label {
+        --ba-k: ba-dim-label;
+    }
+
+    .ba-dim-value {
+        --ba-k: ba-dim-value;
+    }
+
+    @keyframes ba-dim-wit {
+        0% {
+            stroke-dashoffset: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        11.111% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-dim-scale {
+        0%,
+        5.556% {
+            clip-path: inset(0 88.333% 0 0) view-box;
+        }
+        5.556% {
+            animation-timing-function: var(--ba-feed);
+        }
+        16.667% {
+            clip-path: inset(0 11.667% 0 0) view-box;
+        }
+    }
+
+    @keyframes ba-dim-arrows {
+        0%,
+        11.111% {
+            opacity: 0;
+        }
+        16.667% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ba-dim-fill {
+        0% {
+            clip-path: inset(0 85.833% 0 0) view-box;
+        }
+        16.667% {
+            clip-path: inset(0 85.833% 0 0) view-box;
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            clip-path: inset(0 14.167% 0 0) view-box;
+        }
+    }
+
+    @keyframes ba-dim-head {
+        0%,
+        11.111% {
+            opacity: 0;
+            translate: 0 0;
+        }
+        16.667% {
+            opacity: 1;
+            translate: 0 0;
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            opacity: 1;
+            translate: 344px 0;
+        }
+        83.333% {
+            opacity: 0;
+            translate: 344px 0;
+        }
+    }
+
+    @keyframes ba-dim-chain {
+        0%,
+        11.111% {
+            opacity: 0;
+            stroke-dashoffset: 0;
+        }
+        16.667% {
+            opacity: 1;
+            stroke-dashoffset: 0;
+        }
+        77.778% {
+            opacity: 1;
+            stroke-dashoffset: -55px;
+        }
+        83.333% {
+            opacity: 0;
+            stroke-dashoffset: -55px;
+        }
+    }
+
+    @keyframes ba-dim-label {
+        0%,
+        77.778% {
+            opacity: 0;
+        }
+        88.889% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ba-dim-value {
+        0%,
+        88.889% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* ═══ 2 · The plotter pen ════════════════════════════════════════════
+       A gantry rail and a carriage with a pen: the pen goes down, plots a
+       series stroke after stroke (the feed ramps up and down at every
+       vertex, as a stepper plotter does), rings the last point, draws its
+       leader, lifts, and the figure is lettered. The rail follows the pen's
+       height, the carriage its position; the line's dash is keyed to the same
+       vertices, so the ink is exactly where the pen has been. */
+
+    .ba-plot-line {
+        --ba-k: ba-plot-line;
+    }
+
+    .ba-plot-mark {
+        --ba-k: ba-plot-mark;
+    }
+
+    .ba-plot-leader {
+        --ba-k: ba-plot-leader;
+    }
+
+    .ba-plot-label {
+        --ba-k: ba-plot-label;
+    }
+
+    .ba-plot-rail {
+        --ba-k: ba-plot-rail;
+        translate: 0 30px;
+    }
+
+    .ba-plot-carriage {
+        --ba-k: ba-plot-carriage;
+        translate: 432px 30px;
+    }
+
+    .ba-plot-nib {
+        --ba-k: ba-plot-nib;
+        fill-opacity: 0;
+    }
+
+    @keyframes ba-plot-line {
+        0% {
+            stroke-dashoffset: 1;
+        }
+        5.556% {
+            stroke-dashoffset: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        16.897% {
+            stroke-dashoffset: 0.8144;
+            animation-timing-function: var(--ba-feed);
+        }
+        25.903% {
+            stroke-dashoffset: 0.667;
+            animation-timing-function: var(--ba-feed);
+        }
+        38.606% {
+            stroke-dashoffset: 0.4592;
+            animation-timing-function: var(--ba-feed);
+        }
+        49.292% {
+            stroke-dashoffset: 0.2843;
+            animation-timing-function: var(--ba-feed);
+        }
+        66.667% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-plot-carriage {
+        0%,
+        5.556% {
+            translate: 80px 138px;
+        }
+        5.556% {
+            animation-timing-function: var(--ba-feed);
+        }
+        16.897% {
+            translate: 140px 112px;
+            animation-timing-function: var(--ba-feed);
+        }
+        25.903% {
+            translate: 190px 126px;
+            animation-timing-function: var(--ba-feed);
+        }
+        38.606% {
+            translate: 250px 84px;
+            animation-timing-function: var(--ba-feed);
+        }
+        49.292% {
+            translate: 310px 98px;
+            animation-timing-function: var(--ba-feed);
+        }
+        66.667%,
+        72.222% {
+            translate: 400px 54px;
+        }
+        72.222% {
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            translate: 432px 30px;
+        }
+    }
+
+    @keyframes ba-plot-rail {
+        0%,
+        5.556% {
+            translate: 0 138px;
+        }
+        5.556% {
+            animation-timing-function: var(--ba-feed);
+        }
+        16.897% {
+            translate: 0 112px;
+            animation-timing-function: var(--ba-feed);
+        }
+        25.903% {
+            translate: 0 126px;
+            animation-timing-function: var(--ba-feed);
+        }
+        38.606% {
+            translate: 0 84px;
+            animation-timing-function: var(--ba-feed);
+        }
+        49.292% {
+            translate: 0 98px;
+            animation-timing-function: var(--ba-feed);
+        }
+        66.667%,
+        72.222% {
+            translate: 0 54px;
+        }
+        72.222% {
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            translate: 0 30px;
+        }
+    }
+
+    @keyframes ba-plot-nib {
+        0% {
+            fill-opacity: 0;
+        }
+        5.556%,
+        77.778% {
+            fill-opacity: 1;
+        }
+        83.333% {
+            fill-opacity: 0;
+        }
+    }
+
+    @keyframes ba-plot-mark {
+        0%,
+        66.667% {
+            stroke-dashoffset: 1;
+        }
+        66.667% {
+            animation-timing-function: var(--ba-feed);
+        }
+        72.222% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-plot-leader {
+        0%,
+        72.222% {
+            stroke-dashoffset: 1;
+        }
+        72.222% {
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-plot-label {
+        0%,
+        83.333% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* ═══ 3 · The cyanotype exposure ═════════════════════════════════════
+       The sheet starts pale, as sensitised paper. Loading is the exposure:
+       the pale veil thins to a mid blue over the latent drawing; arrival is
+       the developing, which takes the veil away to the deep blue of the
+       ground and leaves the drawing in white. The drawing is white ink and
+       does not move: it only comes up as the sheet darkens. */
+
+    .ba-cy-veil {
+        --ba-k: ba-cy-veil;
+        fill: hsl(from var(--primary) h 60% 90%);
+        stroke: none;
+        opacity: 0;
+    }
+
+    @keyframes ba-cy-veil {
+        0% {
+            opacity: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            opacity: 0.42;
+            animation-timing-function: var(--ba-feed);
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* ═══ 4 · The revision cloud ═════════════════════════════════════════
+       Round a value that is on its way, the checker draws a scalloped cloud
+       clockwise, side by side, at the plotter's feed. While it is drawn the
+       place reads "- - -". When it closes the dashes are lifted, the value
+       is written at once, and the revision triangle with its letter is
+       drawn at the cloud's top-end corner. */
+
+    .ba-cloud-draw {
+        --ba-k: ba-cloud-draw;
+    }
+
+    .ba-cloud-pending {
+        --ba-k: ba-cloud-pending;
+        opacity: 0;
+    }
+
+    .ba-cloud-value {
+        --ba-k: ba-cloud-value;
+    }
+
+    .ba-cloud-tri {
+        --ba-k: ba-cloud-tri;
+    }
+
+    .ba-cloud-letter {
+        --ba-k: ba-cloud-letter;
+    }
+
+    @keyframes ba-cloud-draw {
+        0% {
+            stroke-dashoffset: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        27.451% {
+            stroke-dashoffset: 0.6471;
+            animation-timing-function: var(--ba-feed);
+        }
+        38.889% {
+            stroke-dashoffset: 0.5;
+            animation-timing-function: var(--ba-feed);
+        }
+        66.34% {
+            stroke-dashoffset: 0.1471;
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-cloud-pending {
+        0%,
+        77.778% {
+            opacity: 1;
+        }
+        83.333% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes ba-cloud-value {
+        0%,
+        83.333% {
+            opacity: 0;
+        }
+        88.889% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ba-cloud-tri {
+        0%,
+        88.889% {
+            stroke-dashoffset: 1;
+        }
+        88.889% {
+            animation-timing-function: var(--ba-feed);
+        }
+        97.222% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-cloud-letter {
+        0%,
+        94.444% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* ═══ 5 · The compass ════════════════════════════════════════════════
+       The centre mark and the dashed construction circle stand first. The
+       compass (seen from above: its pencil leg, the pencil on the circle,
+       the hinge on the centre) swings once round the centre while the circle
+       is drawn behind the pencil; the leg is lifted, and the radius is
+       dimensioned. The arm and the arc share their keyframe times and curve,
+       so the pencil is always on the arc's end. */
+
+    .ba-cp-in {
+        --ba-k: ba-cp-in;
+    }
+
+    .ba-cp-arm {
+        --ba-k: ba-cp-arm;
+        transform-origin: 240px 100px;
+        rotate: 360deg;
+        opacity: 0;
+    }
+
+    .ba-cp-arc {
+        --ba-k: ba-cp-arc;
+    }
+
+    .ba-cp-rad {
+        --ba-k: ba-cp-rad;
+    }
+
+    .ba-cp-radhead {
+        --ba-k: ba-cp-radhead;
+    }
+
+    .ba-cp-radtext {
+        --ba-k: ba-cp-radtext;
+    }
+
+    @keyframes ba-cp-in {
+        0% {
+            opacity: 0;
+        }
+        5.556% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ba-cp-arm {
+        0% {
+            rotate: 0deg;
+            opacity: 0;
+        }
+        5.556% {
+            rotate: 0deg;
+            opacity: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            rotate: 360deg;
+            opacity: 1;
+        }
+        83.333% {
+            rotate: 360deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes ba-cp-arc {
+        0%,
+        5.556% {
+            stroke-dashoffset: 1;
+        }
+        5.556% {
+            animation-timing-function: var(--ba-feed);
+        }
+        77.778% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-cp-rad {
+        0%,
+        83.333% {
+            stroke-dashoffset: 1;
+        }
+        83.333% {
+            animation-timing-function: var(--ba-feed);
+        }
+        94.444% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-cp-radhead {
+        0%,
+        88.889% {
+            opacity: 0;
+        }
+        94.444% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ba-cp-radtext {
+        0%,
+        94.444% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* ═══ 6 · The scale ruler ════════════════════════════════════════════
+       An engineer's scale: its edge is drawn, then a hairline cursor slides
+       along it one tick at a time (a whole thing counted, so `steps`), and
+       every tick and numeral is inked as the cursor reaches it; at the end
+       the cursor is lifted and the scale and its unit are lettered. The
+       reveal and the cursor run on the same 41 steps over the same time, so
+       the cursor is always on the last tick. */
+
+    .ba-sx-base {
+        --ba-k: ba-sx-base;
+    }
+
+    .ba-sx-reveal {
+        --ba-k: ba-sx-reveal;
+        clip-path: inset(0 12.25% 0 0) view-box;
+    }
+
+    .ba-sx-cursor {
+        --ba-k: ba-sx-cursor;
+        translate: 360px 0;
+        opacity: 0;
+    }
+
+    .ba-sx-units {
+        --ba-k: ba-sx-units;
+    }
+
+    @keyframes ba-sx-base {
+        0% {
+            stroke-dashoffset: 1;
+            animation-timing-function: var(--ba-feed);
+        }
+        11.111% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes ba-sx-reveal {
+        0%,
+        11.111% {
+            opacity: 0;
+            clip-path: inset(0 87.25% 0 0) view-box;
+        }
+        16.667% {
+            opacity: 1;
+            clip-path: inset(0 87.25% 0 0) view-box;
+            animation-timing-function: steps(41, jump-none);
+        }
+        77.778% {
+            opacity: 1;
+            clip-path: inset(0 12.25% 0 0) view-box;
+        }
+    }
+
+    @keyframes ba-sx-cursor {
+        0%,
+        11.111% {
+            opacity: 0;
+            translate: 0 0;
+        }
+        16.667% {
+            opacity: 1;
+            translate: 0 0;
+            animation-timing-function: steps(41, jump-none);
+        }
+        77.778% {
+            opacity: 1;
+            translate: 360px 0;
+        }
+        83.333% {
+            opacity: 0;
+            translate: 360px 0;
+        }
+    }
+
+    @keyframes ba-sx-units {
+        0%,
+        83.333% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+}
