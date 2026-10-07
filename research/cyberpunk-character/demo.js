@@ -41,6 +41,110 @@ const meter = (value = 0.62, mark = 0.8, extra = '') =>
 const plot = (cls = '', extra = '') => `<div class="cy-plot ${cls}" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none">
         <polyline class="cy-plot__trace" points="0,36 20,30 40,33 60,22 80,26 100,16 120,20 140,12 160,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" pathLength="1"/></svg>${extra}<span class="cy-plot__read">FLOW 412</span></div>`;
 
+/**
+ * The text glitch (the count-down stutter, `js/update.js`) played on a whole
+ * part: two copies of the part stand behind it, yellow right and up, cyan
+ * right and down, and come home 6, 4, 2, 1 px in four ticks. A CSS
+ * `drop-shadow` chain would also shadow its own first copy (a third ghost at
+ * 12 px), so the copies are SVG filters, one per tick, that options.css names
+ * in its keyframes: `copies` (the copies alone), `slice` (strips sliced out of
+ * the part, the copies behind it), `tear` (bands of the part slipped sideways,
+ * the copies behind), `split` (the part's own pixels tinted yellow and cyan, the
+ * real part arriving on the third tick). The bands are pixel rows from the
+ * part's top edge; a part shorter than a band simply shows fewer. Colours are
+ * the theme's tokens (yellow `--primary`, cyan `--accent`).
+ */
+(() => {
+    const COPIES = [
+        [6, 4],
+        [4, 3],
+        [2, 2],
+        [1, 1],
+    ];
+    // [top px, height px] strips cut out per tick, and [top, height, shift px] bands slipped per tick.
+    const SLICES = [
+        [
+            [16, 14],
+            [52, 10],
+            [88, 8],
+        ],
+        [
+            [34, 8],
+            [70, 6],
+        ],
+        [
+            [24, 4],
+            [60, 3],
+        ],
+        [[46, 2]],
+    ];
+    const TEARS = [
+        [
+            [10, 16, 6],
+            [52, 14, -6],
+        ],
+        [
+            [32, 14, 4],
+            [70, 12, -4],
+        ],
+        [
+            [18, 12, 2],
+            [60, 10, -2],
+        ],
+        [[44, 10, 1]],
+    ];
+    const flood = (/** @type {string} */ colour, /** @type {string} */ result) => `<feFlood style="flood-color: ${colour}" result="${result}"/>`;
+    const band = (/** @type {number} */ i, /** @type {number} */ top, /** @type {number} */ height) =>
+        `<feFlood x="-48" width="1400" y="${top}" height="${height}" style="flood-color: var(--background)" result="b${i}"/>`;
+    /** The two copies of `src` behind it. */
+    const copies = (/** @type {string} */ src, /** @type {number[]} */ [dx, dy]) =>
+        `${flood('var(--primary)', 'fy')}<feComposite in="fy" in2="${src}" operator="in"/><feOffset dx="${dx}" dy="${-dy}" result="oy"/>` +
+        `${flood('var(--accent)', 'fc')}<feComposite in="fc" in2="${src}" operator="in"/><feOffset dx="${dx}" dy="${dy}" result="oc"/>` +
+        `<feMerge><feMergeNode in="oc"/><feMergeNode in="oy"/><feMergeNode in="${src}"/></feMerge>`;
+    const filters = COPIES.map((c, i) => {
+        const cutOut = SLICES[i]
+            .map(
+                ([top, height], k) =>
+                    band(k, top, height) + `<feComposite in="${k ? `s${k - 1}` : 'SourceGraphic'}" in2="b${k}" operator="out" result="s${k}"/>`,
+            )
+            .join('');
+        const slipped = TEARS[i].map(
+            ([top, height, shift], k) =>
+                band(k, top, height) +
+                `<feOffset in="SourceGraphic" dx="${shift}" result="o${k}"/><feComposite in="o${k}" in2="b${k}" operator="in" result="p${k}"/>` +
+                `<feComposite in="${k ? `r${k - 1}` : 'SourceGraphic'}" in2="b${k}" operator="out" result="r${k}"/>`,
+        );
+        const lastSlice = `s${SLICES[i].length - 1}`;
+        const lastRest = `r${TEARS[i].length - 1}`;
+        const tint = (/** @type {string} */ colour, /** @type {string} */ id, /** @type {number} */ dy) =>
+            `${flood(colour, `f${id}`)}<feBlend in="g" in2="f${id}" mode="multiply"/><feComposite in2="SourceAlpha" operator="in"/><feOffset dx="${c[0]}" dy="${dy}" result="t${id}"/>`;
+        return {
+            cp: copies('SourceGraphic', c),
+            sl: cutOut + copies(lastSlice, c),
+            tr:
+                slipped.join('') +
+                `<feMerge result="torn"><feMergeNode in="${lastRest}"/>${TEARS[i].map((_, k) => `<feMergeNode in="p${k}"/>`).join('')}</feMerge>` +
+                copies('torn', c),
+            sp:
+                `<feColorMatrix in="SourceGraphic" type="saturate" values="0" result="g"/>${tint('var(--primary)', 'y', -c[1])}${tint('var(--accent)', 'c', c[1])}` +
+                `<feComposite in="ty" in2="tc" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"${i < 2 ? '' : ' result="sum"'}/>` +
+                (i < 2 ? '' : '<feMerge><feMergeNode in="sum"/><feMergeNode in="SourceGraphic"/></feMerge>'),
+        };
+    });
+    const defs = filters
+        .flatMap((f, i) =>
+            Object.entries(f).map(
+                ([kind, body]) =>
+                    `<filter id="cy-fx-${kind}-${i}" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" x="-48" y="-48" width="1400" height="1000">${body}</filter>`,
+            ),
+        )
+        .join('');
+    document.body.insertAdjacentHTML(
+        'beforeend',
+        `<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>${defs}</defs></svg>`,
+    );
+})();
+
 const PART = {
     dialog: () => `<div class="kp-dialog cy-dialog cy-arrives cy-opens" role="group" aria-label="A dialog opening">
         <p class="kp-dialog__title cy-title">Close INC-4471?</p>
@@ -267,11 +371,11 @@ const LOADERS = () =>
     cell('Skeleton lines', PART.skeleton()) +
     cell('Meter, measuring', `<div class="cy-meter-wait cy-waits" aria-busy="true">${meter(0.62, 0.8, 'data-kp-loading')}${LOAD}</div>`);
 
-/** One spinner in ten drawings; options.css shows the option's. */
+/** One spinner in seven drawings (six of signal bars, the reticle); options.css shows the option's. */
 const spin = (size = '', label = 'Working…', hidden = false) =>
     `<span class="cy-spin"${hidden ? ' aria-hidden="true"' : ` role="status" aria-label="${label}"`}${
         size ? ` style="--cy-spin: ${size}"` : ''
-    }><span class="cy-spin__ret"></span><span class="cy-s1"></span><span class="cy-s2"></span><span class="cy-s3"></span><span class="cy-s4"></span></span>`;
+    }><span class="cy-spin__ret"></span><span class="cy-s1"></span><span class="cy-s2"></span><span class="cy-s3"></span><span class="cy-s4"></span><span class="cy-s5"></span><span class="cy-s6"></span></span>`;
 
 const SPINNERS = () =>
     cell('Three sizes', `<div class="cy-row cy-spins">${['1rem', '1.5rem', '2.5rem'].map((s) => spin(s)).join('')}</div>`, 'cy-part--wide') +
@@ -528,41 +632,48 @@ const ASPECTS = [
         id: 'curve',
         label: 'The motion curve',
         rule: 'G1',
-        question: 'How does cyberpunk move: a signal acquired in hard ticks, smoothly on its register’s curve, or in even steps along a path?',
-        why: 'A theme exists to be distinct (your rule of 03:37). Cyberpunk’s register curve, cubic-bezier(0.2, 0.9, 0.2, 1), is synthwave’s exactly and almost titanium’s. Every family you picked for cyberpunk moves in hard ticks (Glitch in, the lock-on, Target locked, the count-down stutter), and the stutter lands its copies 6, 4, 2, 1 px off and then home.',
+        question:
+            'How does cyberpunk move: as the text glitch of a live update (copies that come home), as hard ticks that shake the part home, smoothly, or in even steps?',
+        why: 'Round 2 (your verdict: the jitter is a bit too shaky instead of glitchy; make variations on the text glitch of a live update). The four new options play that stutter, its copies and its numbers, on the whole part; the jitter stays as the reference. A theme exists to be distinct (your rule of 03:37). Cyberpunk’s register curve, cubic-bezier(0.2, 0.9, 0.2, 1), is synthwave’s exactly and almost titanium’s. Every family you picked for cyberpunk moves in hard ticks (Glitch in, the lock-on, Target locked, the count-down stutter), and the stutter lands its copies 6, 4, 2, 1 px off and then home.',
         kind: 'cycle',
         scene: MOVING,
         options: [
             {
+                key: 'converge',
+                name: 'Copies converge: the text glitch on the whole part',
+                see: 'The part does not shake. When a readout moves to a new value, a dialog opens, a menu drops from its button or a tile arrives, it stands at its place at once, whole, with two copies of itself behind it: a yellow one right and up, a cyan one right and down, 6 px out. In four ticks of 120 ms they come home (6, 4, 2, 1 px), the same picture as a figure that updates, and then the part stands clean. Closing is the same four ticks backwards: the copies leave the part again, and the part and both copies are gone on the last tick. The notch stays cut on every tick.',
+                verdict: rec(
+                    'it is the live update you named, the count-down stutter, on the whole part and in its exact numbers, so the part never moves and nothing shakes: it only has copies that come home.',
+                ),
+            },
+            {
                 key: 'jitter',
                 name: 'Hard ticks: it jitters home',
                 see: 'Every motion is a run of held poses, 60 ms each, and every close is the same ticks backwards. When a readout moves, it does not travel: it lands at its mark at once, overshot sideways, and jitters home (+18, −12, +8, −4, +1, 0 px). When a dialog opens, a menu drops from its button or a tile arrives, it tears in as bands that grow out from the middle line (8, 28, 48, 68, 84, 96 % of its height), jumping sideways with a cyan and a red copy, and lock. Closing shrinks the same bands back in the same ticks and the whole part is gone on the last tick, no strip left behind; when a figure updates, its copies stutter home in four ticks.',
-                verdict: rec(
-                    'it is how your stutter and your glitch-in already move, gathered into one clock, and no other theme moves like it: the hard-step themes (terminal, retro, grotesk, brutalism) step along a path, cyberpunk lands off to the side and locks.',
-                ),
-            },
-            {
-                key: 'swing',
-                name: 'Whiplash: slapped sideways, it swings back and settles',
-                see: 'When a readout moves to a new value, a dialog opens, a menu drops from its button or a tile arrives: the whole part is slapped 28 px sideways and sheared, with a cyan and a red copy, then swings back across its place, each tick less and on the other side (18, 11, 6, 3, 1 px). No bands, the part is whole from the first tick; the readouts swing across the room around their mark. Closing is the same swings backwards, growing, and the whole part is gone on the last tick.',
                 verdict: not(
-                    'it is the jitter with more weight: the whole part bounces instead of being torn, which reads as rubber and spring, and a tear is what a hacked signal does. The jitter keeps the bands.',
+                    'it is the reference you liked and the best of the first round, but it shakes where the live update glitches: the part travels and overshoots sideways, and the copies you named are only a fringe on the bands.',
                 ),
             },
             {
-                key: 'ghost',
-                name: 'Triple vision: two copies are drawn in to the part',
-                see: 'When a readout moves, a dialog opens, a menu drops from its button or a tile arrives: the part stands in its place at once and does not move; a cyan and a red copy of it stand 36 px out, left and right, and are drawn in to it (36, 24, 15, 8, 3, 1 px), like a misregistered print locking. The readouts stand at their mark with a cyan copy at the place they came from and a red one at the far end. Closing pushes the copies out again, and the part and its copies are gone on the same tick.',
-                verdict: not(
-                    'it is the anchor (the cyan and red copy) shown as the whole motion, but nothing is torn or thrown sideways, and a part standing whole from the first tick is closer to a fade of the copies than to a jitter.',
-                ),
-            },
-            {
-                key: 'weave',
-                name: 'Interlace: two fields weave into one picture',
-                see: 'When a readout moves, a dialog opens, a menu drops from its button or a tile arrives: first only the even scan lines of the part show, 12 px out; then only the odd ones, 9 px back; then the even ones 6 px, the odd ones 3, 1, 1 px, and then the two fields lie in one picture. The readouts land at their mark in alternate fields. Closing weaves the fields apart again, in the same ticks backwards, and the part is gone on the last tick.',
+                key: 'slice',
+                name: 'Sliced: the copies converge and strips are cut out of the part',
+                see: 'The same two copies come home 6, 4, 2, 1 px in four ticks, and the part is sliced as well: on the first tick three horizontal strips (14, 10 and 8 px high) are cut out of it and out of nothing else, on the second two (8 and 6 px), on the third two thin ones (4 and 3 px), on the fourth one hairline (2 px), then the part is whole. Readouts, being tiny, only show the copies. Closing is the same ticks backwards, the part sliced up more each tick, and everything is gone on the last tick.',
                 verdict:
-                    'Second choice, the best of the new three: it jitters home like your pick, in hard ticks and on both sides of the mark, but through a picture that only a CRT or a VHS tape does (Blade Runner’s scan lines, Ghost in the Shell’s monitors). Not first, because the jitter with its bands is what you picked and it is the tear of the glitch itself.',
+                    'Second choice, the most like the text glitch you named: the slices are the torn lines of a corrupt picture. Not first, because strips cut out of a menu hide a menu entry for 120 ms and the copies alone already say glitch.',
+            },
+            {
+                key: 'tear',
+                name: 'Torn: the copies converge and bands slip sideways',
+                see: 'The same two copies come home 6, 4, 2, 1 px, and two bands of the part slip sideways, one right and one left, by the same number of pixels (6, 4, 2, 1), a band of 16 and 14 px on the first tick, 14 and 12 px on the second, 12 and 10 px on the third, a single 10 px band on the fourth; then the part is whole. Readouts only show the copies. Closing is the same ticks backwards and the whole part is gone on the last tick.',
+                verdict:
+                    'Third choice, the busiest: a picture tearing is the glitch at its most literal, but bands that slip across a dialog or a tile make their text jump while you read it. The slices and the plain copies keep every letter in its place.',
+            },
+            {
+                key: 'split',
+                name: 'Channel split: the part is two tinted copies until they meet',
+                see: 'For the first two ticks the part itself is not drawn: only its own picture in yellow, right and up, and in cyan, right and down, 6 px and then 4 px out, where the two overlap they add up to the part’s light. On the third tick (2 px) the real part stands in the middle of them, on the fourth (1 px) they are a hairline, then the part is clean. Readouts show the same split on their tab. Closing plays it backwards and the whole part is gone on the last tick.',
+                verdict:
+                    'Fourth choice: it is the chromatic split of a misaligned print, the one place where the colours carry the part and not only fringe it, but for 240 ms the text is two coloured ghosts, which is slow to read in a menu.',
             },
             {
                 key: 'smooth',
@@ -617,39 +728,58 @@ const ASPECTS = [
         id: 'opening',
         label: 'Opening what drops from a button',
         rule: 'G3',
-        question: 'How does a menu or a dialog open?',
-        why: 'Your arrival family is the menu’s Glitch in: the panel tears into place as bands with a cyan and red split and locks clean. The toast already does this. Today the dialog opens from a yellow line across its middle (your signature pick of 2026-10-03, at a quarter speed, 1.5 s), the header menu drops from the top in four steps, the drawer slides in, the navbar’s menu drops 6 px.',
+        question: 'How does a menu or a dialog open: the panel blinks in, or the text glitch plays on it?',
+        why: 'Round 2 (your verdict: power flicker is best, but it drew a square rectangle over the cut corners while it played; give five alternatives in line with the curve). Cause: every option clipped the part with a plain rectangle while it played and only the last frame put the notch back; now the clip keeps the notch at every frame. Your arrival family is the menu’s Glitch in: the panel tears into place as bands with a cyan and red split and locks clean. The toast already does this. Today the dialog opens from a yellow line across its middle (your signature pick of 2026-10-03, at a quarter speed, 1.5 s), the header menu drops from the top in four steps, the drawer slides in, the navbar’s menu drops 6 px.',
         kind: 'cycle',
         scene: OPENING,
         options: [
             {
+                key: 'flicker',
+                name: 'Power flicker: the panel blinks into place',
+                see: 'When a menu drops from its button or a dialog opens after a click: the whole panel blinks. It shows 18 px out and split in cyan and red; goes dark for a tick; shows 10 px back; goes dark; shows 4 px out, then 1 px, and holds. Closing is the same blinks backwards and the panel is gone on the last tick. The panel’s cut corner stays cut on every blink (before, it was drawn as a plain rectangle while it played).',
+                verdict: rec(
+                    'it is the one you picked out of the first round and it stays the one the new five are measured against: a panel that blinks on like a failing light, with its notch kept at every frame.',
+                ),
+            },
+            {
                 key: 'glitch',
                 name: 'Glitched in',
                 see: 'When a menu drops from its button or a dialog opens after a click: it tears in as horizontal bands that grow from the middle line (8, 28, 48, 68, 84, 96 % of its height), jumping sideways with a cyan and a red copy, smaller each tick, and lock clean after 6 ticks (360 ms). Closing is exactly that backwards: the bands shrink steadily to the middle line and the whole part is gone on the sixth tick, with no last strip left standing.',
-                verdict: rec('it is your arrival family on every panel, it never squashes a letter, and no other theme opens like a torn signal.'),
+                verdict: not(
+                    'it is the arrival family you liked and it still never squashes a letter, but it is the older cyan-and-red tear, where power flicker and the text glitch below are the shapes you asked for now. Its corner is now cut at every tick too.',
+                ),
             },
             {
-                key: 'rows',
-                name: 'Row shuffle: the rows flash in out of order',
-                see: 'When a menu drops from its button or a dialog opens after a click: the part is eight rows, and they flash in out of order, 1, 2, 4, 5, 7 and then all 8 of them at 60 ms a tick, thrown sideways with a cyan and a red copy, smaller each tick, and lock. Closing takes the rows away again in the same ticks backwards: the last row to arrive is the first to go, and every row is gone on the same tick.',
+                key: 'converge',
+                name: 'Copies converge: the panel stands whole, its copies come home',
+                see: 'When a menu drops from its button or a dialog opens after a click: the panel stands in its place at once, with a yellow copy of it right and up and a cyan copy right and down, 6 px out. In four ticks of 120 ms the copies come home (6, 4, 2, 1 px) and the panel is clean. Closing is the same four ticks backwards and the panel and both copies are gone on the last tick.',
                 verdict:
-                    'Second choice, the closest to your glitched in: the same sideways tear and split, but the bands arrive scrambled, like a bad signal, instead of growing from the middle. Not first, because your pick already is that tear and this one is busier on a menu with only three entries.',
+                    'Second choice and the best of the new five: it is the live update’s text glitch on the whole panel, the quietest one, and the menu entries are readable from the first tick.',
             },
             {
-                key: 'blocks',
-                name: 'Macroblocks: the panel pops in as scattered blocks',
-                see: 'When a menu drops from its button or a dialog opens after a click: the part is twelve blocks (four by three), and they pop in scattered, 2, 4, 6, 8, 10 and then all 12 at 60 ms a tick, each tick keeping the blocks of the one before and thrown sideways, then it locks clean. Closing is the same ticks backwards, the blocks dropping out of the corrupted picture until none is left, all on the same tick.',
-                verdict: not(
-                    'it is the datamosh look of a broken video stream and the most visibly corrupted of the three, but it hides the menu entries behind blocks for 240 ms, which is slow for something you open to read.',
-                ),
+                key: 'blink',
+                name: 'Blink: the copies converge and the power drops for a tick',
+                see: 'When a menu drops from its button or a dialog opens after a click: the panel shows with its two copies 6 px out; goes dark for a tick (copies too); shows again with the copies 2 px out; then 1 px; then clean. Four ticks of 120 ms, the same yellow and cyan copies as the text glitch. Closing is the same blinks backwards and the panel is gone on the last tick.',
+                verdict:
+                    'Second choice, your power flicker in the text glitch’s own numbers. Not first because the dark tick hides the entries for 120 ms, which is the one thing a menu you open to read cannot afford.',
             },
             {
-                key: 'flicker',
-                name: 'Power flicker: the panel blinks into place',
-                see: 'When a menu drops from its button or a dialog opens after a click: the whole panel blinks. It shows 18 px out and split in cyan and red; goes dark for a tick; shows 10 px back; goes dark; shows 4 px out, then 1 px, and holds. Closing is the same blinks backwards and the panel is gone on the last tick.',
-                verdict: not(
-                    'it is a signal dropping out, but the dark ticks make a menu look broken instead of torn, and nothing grows or covers: the panel is whole or absent.',
-                ),
+                key: 'slice',
+                name: 'Sliced: strips are cut out of the panel as the copies come home',
+                see: 'When a menu drops from its button or a dialog opens after a click: the panel with its two copies (6, 4, 2, 1 px) has strips cut out of it, three on the first tick, two on the second, two thin ones on the third, one hairline on the fourth, and then it is whole. Closing is the same four ticks backwards and the whole panel is gone on the last tick.',
+                verdict: 'Third choice, the torn lines of a corrupt picture; not first because the strips hide a few entries for a tick at a time.',
+            },
+            {
+                key: 'tear',
+                name: 'Torn: two bands of the panel slip sideways as the copies come home',
+                see: 'When a menu drops from its button or a dialog opens after a click: the panel with its two copies (6, 4, 2, 1 px) has two bands slipped sideways, one right and one left, by the same 6, 4, 2, 1 px, then one band on the fourth tick, then it is whole. Closing is the same four ticks backwards and the whole panel is gone on the last tick.',
+                verdict: 'Fourth choice, the most literal tear; not first because words in a slipped band jump while someone reads them.',
+            },
+            {
+                key: 'split',
+                name: 'Channel split: the panel is its own yellow and cyan ghosts until they meet',
+                see: 'When a menu drops from its button or a dialog opens after a click: for two ticks only the panel’s own picture in yellow (right and up) and in cyan (right and down) is there, 6 px and then 4 px out; on the third tick (2 px) the real panel stands between them; on the fourth (1 px) they are a hairline; then it is clean. Closing is the same four ticks backwards and everything is gone on the last tick.',
+                verdict: 'Fifth choice: the chromatic split of a print that is not aligned yet, but the text is two coloured ghosts for 240 ms.',
             },
             {
                 key: 'crt',
@@ -658,12 +788,6 @@ const ASPECTS = [
                 verdict: not(
                     'it is your own dialog pick and it is beautiful slowed down, but it is the opening nostromo’s grammar proposes for its tube, and 1.5 s is long for a menu.',
                 ),
-            },
-            {
-                key: 'cut',
-                name: 'Cut from the top in steps (the header menu’s packet rain; titanium’s cut)',
-                see: 'The menu and the dialog are uncovered from their top edge down in four hard steps (320 ms); closing covers them back up in the same four steps.',
-                verdict: not('clear and quick, but uncovering from the top is titanium’s opening; the steps alone do not make it cyberpunk.'),
             },
         ],
     },
@@ -953,80 +1077,64 @@ const ASPECTS = [
         label: 'The spinner',
         rule: 'G11',
         question: 'What does cyberpunk’s spinner show?',
-        why: 'The spinner is the one loading part too small to hunt across. You liked the reticle locking on its core, so it stays first; nine other spinners follow, each shown at the same three sizes, in a busy button (where the ink takes the button’s colour) and in the busy panel. Today’s register spinner, the scanning cut square, is gone from this page.',
+        why: 'You picked the signal bars and found them too jumpy. First the bars themselves, slowed and calmed; then five variations of the same idea (a rising and falling meter, a glitch copy, a peak-hold tick, an equalizer, a skyline scan), each at a calm cadence; the reticle from round 1 comes last as the older reference. Each is shown at three sizes, in a busy button (where the ink takes the button’s colour) and in the busy panel.',
         kind: 'loop',
         scene: SPINNERS,
         options: [
             {
-                key: 'reticle',
-                name: 'The reticle locks on its core',
-                see: 'Four corner brackets close on the cyan core in hard ticks, blink the lock cyan and yellow, and open again, once per 1.8 s. Seen whenever a small thing waits: a busy button, a busy panel, a loading line.',
-                verdict: rec(
-                    'it is your pick, and the target lock is also this theme’s warning word, so the smallest wait speaks the same language as the largest; no other theme has it.',
-                ),
-            },
-            {
                 key: 'bars',
-                name: 'Signal bars jump',
-                see: 'Four cyan bars with a yellow cap stand side by side and jump between heights in hard 120 ms ticks, each on its own beat, like a signal meter that cannot settle. Seen in a busy button, a busy panel or a loading line.',
-                verdict: not(
-                    'very recognisable and busy-looking, but a level meter is a sound icon, and bars that rise and fall are what G2 forbids for the page.',
+                name: 'Signal bars, calmer',
+                see: 'Four cyan bars with a yellow cap stand side by side. Each bar moves one small step up or down every 240 ms, and the four never move on the same tick (60 ms apart), so one bar moves at a time. Seen whenever a small thing waits: a busy button, a busy panel, a loading line. A full loop is 2.4 s. Round 1 jumped every 120 ms, all four bars together, over any distance (up to 80 % of the height).',
+                verdict: rec(
+                    'it is the one you picked, now about a fifth as jumpy (measured from the keyframes: 13 bar changes a second of 22 % each, one bar at a time, against 31 of 45 % with all four at once), and it still reads as working at 1 rem.',
                 ),
             },
             {
-                key: 'count',
-                name: 'A digit counts down (Akira)',
-                see: 'A cut square holds one yellow digit that counts 9, 8 … 0 in 180 ms ticks; on 0 it flashes with a cyan copy right and up and a red copy right and down, and starts again at 9.',
-                verdict: not('the most cinematic, but a countdown says "something ends in 9 ticks", which a wait of unknown length never keeps.'),
-            },
-            {
-                key: 'tear',
-                name: 'The square tears (the glitch itself)',
-                see: 'A solid yellow square holds still, then tears: horizontal bands of it jump sideways with a cyan copy right and up and a red copy right and down, smaller each tick, and snap whole again. About 1.8 s, a third of it torn.',
+                key: 'meter',
+                name: 'Signal strength rises and falls',
+                see: 'Five bars of rising height, like a phone’s signal icon. Cyan bars light one by one from the short one to the tall one (one every 300 ms) and then go dark again from the tallest down, so the meter climbs to full and drains back. Seen in a busy button, a busy panel or a loading line. 2.4 s a loop.',
                 verdict: not(
-                    'the theme’s anchor as a spinner and the strongest alternative to the reticle, but unlike the others it holds still for two thirds of a loop, so at 1 rem it can read as stuck.',
+                    'the calmest and the clearest direction, but a signal-strength icon says "searching for a network", which is a narrower story than "working".',
                 ),
             },
             {
-                key: 'barcode',
-                name: 'A barcode is read (Blade Runner ID)',
-                see: 'A cyan barcode changes its bars in three hard poses while a yellow scan line hops across it from start to end; then it starts over. 1.8 s.',
-                verdict: not('it reads as an ID check, not as waiting, and at 1 rem the bars are single pixels.'),
-            },
-            {
-                key: 'chevrons',
-                name: 'Chevrons run',
-                see: 'Three chevrons (> > >) light yellow one after another from start to end, each for a short beat, over a dim cyan row; then all go dim and the run starts again. 1.8 s.',
+                key: 'glitch',
+                name: 'Bars with a glitch copy',
+                see: 'Four yellow bars with a cyan cap move calmly, one step each 300 ms. Twice per 3 s loop the whole spinner tears for a moment: a cyan copy appears right and up, a red copy right and down, and two of the bars slip sideways and snap back. Seen in a busy button, a busy panel or a loading line.',
                 verdict: not(
-                    'clear and fast to read and it follows start to end, but it is a "forward" sign, closer to a play button than to a wait.',
+                    'the theme’s anchor in the bars you liked, but the tear is two blinks in three seconds, so the spinner is a calm bar set most of the time; your pick if you want the glitch to stay in the smallest wait.',
                 ),
             },
             {
-                key: 'ratchet',
-                name: 'The cross ratchets round',
-                see: 'A cyan cross with one yellow tip turns in eight hard steps of 45°, 180 ms each, one turn per 1.4 s: the one spinner here that turns.',
+                key: 'peak',
+                name: 'Bars with a peak-hold tick',
+                see: 'Five columns. In each a cyan bar rises and falls (a step every 300 ms) and a yellow tick above it holds the highest point the bar reached, then drops. It is the level meter of a mixing desk. Seen in a busy button, a busy panel or a loading line. 2.4 s a loop.',
                 verdict: not(
-                    'it is the only one that looks like a spinner at a glance, but turning is every theme’s default picture; forest’s compass, nostromo’s reel and blueprint’s compass all turn.',
+                    'the richest of the bars, two layers per column, but at 1 rem the tick is a single 2 px line and the whole thing is busier than the plain bars you asked to calm.',
                 ),
             },
             {
-                key: 'charge',
-                name: 'A cell charges',
-                see: 'A cut square outline fills with yellow from the start to the end in six ticks, flashes full cyan once and empties, once per 1.2 s.',
-                verdict: not('easy to read, but it looks like a progress bar that never ends, the thing a spinner is meant not to be.'),
-            },
-            {
-                key: 'neon',
-                name: 'A neon tube stutters (Blade Runner signs)',
-                see: 'A square sign of two tubes, a cyan upper-left half and a yellow lower-right half, glows and flickers on its own beats like a broken neon sign, with a spark in the middle. About 1.8 s a loop.',
-                verdict: not('the most atmospheric, but a flicker has no direction, so it does not say "progress", only "alive".'),
-            },
-            {
-                key: 'hazard',
-                name: 'Hazard stripes crawl',
-                see: 'A cut square window filled with yellow hazard stripes that crawl from start to end, inside a cyan frame, linear, 0.9 s a loop.',
+                key: 'eq',
+                name: 'Equalizer from a centre line',
+                see: 'Six thin cyan bars with yellow ends grow out of a horizontal centre line, up and down together, one step every 300 ms, each bar on its own beat so the shape drifts like a sound wave. Seen in a busy button, a busy panel or a loading line. 2.4 s a loop.',
                 verdict: not(
-                    'it says "work in progress", but hazard stripes are this theme’s warning picture (the armed state), and a spinner that looks like a warning is read as one.',
+                    'it is the most "something is being processed" picture and it is symmetric, but six bars at 1 rem are about 2 px each, and a waveform reads as audio.',
+                ),
+            },
+            {
+                key: 'skyline',
+                name: 'Skyline scan',
+                see: 'Five cyan towers of different, fixed heights, dim. A yellow light hops from the first tower to the last, 240 ms on each, brightening it, and then starts over from the first. Nothing grows or shrinks; only the light moves. Seen in a busy button, a busy panel or a loading line. 1.4 s a loop.',
+                verdict: not(
+                    'the stillest of the bars and it has a direction, but a hopping highlight is the chevron run in other clothes, and without moving bars it is no longer your signal bars.',
+                ),
+            },
+            {
+                key: 'reticle',
+                name: 'The reticle locks on its core (round 1)',
+                see: 'Four corner brackets close on the cyan core in hard ticks, blink the lock cyan and yellow, and open again, once per 1.8 s. Kept as the older reference. Seen whenever a small thing waits: a busy button, a busy panel, a loading line.',
+                verdict: not(
+                    'the round 1 pick, kept to compare; this round you chose signal bars, and the reticle is also this theme’s target-lock warning word.',
                 ),
             },
         ],
@@ -1036,7 +1144,7 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does a part leave the page, and how does it arrive?',
-        why: 'What leaves plays the register’s leave; what arrives plays that leave backwards (you approved the pairing on 2026-10-05). Today the leave is the classic glitch you picked on 2026-10-04: the text turns cyan, a cyan and a red copy drift out, the box is sliced away, 650 ms, every frame tweened smoothly.',
+        why: 'Round 2 (your verdict: glitched in is best; make new variations on the ones you commissioned in the curve and opening questions). The torn leave stays as it was, the reference you like. The six new pairs are the curve and opening options (converge, blink, flicker, slice, tear, split) on a part that leaves and arrives: the same yellow and cyan copies, the same 6, 4, 2, 1 px in four ticks of 120 ms, the same cut corner kept at every tick. Every leave is exactly its arrival backwards, tick for tick, and the part is gone on the last tick. The old round 1 leaves (smooth glitch, tube, seam, corner, rows, macroblocks, un-decode, powered down) are gone.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
@@ -1047,64 +1155,47 @@ const ASPECTS = [
                 verdict: rec('it is your classic glitch kept, on the theme’s clock, and the arrival it gives is your arrival family exactly.'),
             },
             {
-                key: 'today',
-                name: 'The classic glitch as today',
-                see: 'Leaving, the text turns cyan, the copies drift out smoothly, the box sways and is sliced to its middle line, 650 ms; arriving, the same backwards.',
-                verdict: not('it is your 2026-10-04 pick, but its frames melt into each other: a smooth glitch beside hard-ticked ones.'),
-            },
-            {
-                key: 'tube',
-                name: 'Collapsed to a line (nostromo’s tube switched off)',
-                see: 'Leaving, the part collapses to a bright line through its middle, the line to a dot, and the dot goes out; arriving, the reverse.',
-                verdict: not('clean, and close to your dialog’s line, but it is the leave nostromo’s grammar proposes for its tube.'),
-            },
-            {
-                key: 'seam',
-                name: 'Squeezed to a seam, widened from a seam',
-                see: 'When an alert, a card or a menu leaves the page, it narrows toward its vertical middle line in five hard ticks of 60 ms (78, 55, 36, 20, 7 % of its width), jumping sideways with a cyan and a red copy, and is gone on the sixth (360 ms). When it arrives, the seam widens to the full part in the same ticks backwards.',
-                verdict: not(
-                    'clear and quick and it reverses cleanly, but it is a narrower cousin of the tube, and the words squash flat before they can be read.',
-                ),
-            },
-            {
-                key: 'notch',
-                name: 'Sucked into its corner, grown out of its corner',
-                see: 'When a part leaves the page, it shrinks toward its top corner at the end of the line (84, 66, 48, 30, 14 % of its size) in hard ticks, split in cyan and red, and is gone on the sixth tick (360 ms). When it arrives, it grows out of that corner in the same ticks backwards.',
-                verdict: not(
-                    'grow and shrink are exact opposites and it reads as a window minimised, but it is the one option that scales the words, and a scaled word is never a glitch.',
-                ),
-            },
-            {
-                key: 'rows',
-                name: 'Rows drop out, rows come back',
-                see: 'When a part leaves the page, it is eight rows and they drop out of order (7, 5, 4, 2, 1 of them stay), thrown sideways and split in cyan and red, until none is left on the sixth tick (360 ms). When it arrives, the rows come back in the same ticks backwards. The opening question’s “rows” is the same thing.',
-                verdict: not(
-                    'it is a clean scan-line failure and pairs with the opening of the same name, but the gaps run through the words, so a half-gone part is hard to read.',
-                ),
-            },
-            {
-                key: 'blocks',
-                name: 'Macroblocks drop out, blocks come back',
-                see: 'When a part leaves the page, it is twelve blocks (four by three) and they vanish scattered (10, 8, 6, 4, 2 of them stay) at 60 ms a tick until none is left (360 ms). When it arrives, the blocks come back in the same ticks backwards, the datamosh of a broken video stream. It pairs with the opening question’s “macroblocks”.',
+                key: 'converge',
+                name: 'Copies converge, copies leave: the text glitch on the whole part',
+                see: 'When an alert, a card or a key figure arrives on the page, it stands in its place whole at once, with two copies of itself behind it: a yellow one right and up, a cyan one right and down, 6 px out. In four ticks of 120 ms they come home (6, 4, 2, 1 px) and the part is clean, the same picture as a figure that updates. When it leaves, those four ticks play backwards: the copies go out again (1, 2, 4, 6 px) and the part and both copies are gone on the last tick, nothing left behind. The cut corner stays cut on every tick.',
                 verdict: rec(
-                    'it is the most visibly corrupted without touching the words’ shape, and every piece goes on the same tick, so nothing lingers; second choice after the torn leave.',
+                    'the best of the new ones: it is the curve and opening question’s converge, the live update’s text glitch in its own numbers, so a part that leaves is read to the last tick and the one rule (leave is arrival backwards) is plainly visible.',
                 ),
             },
             {
-                key: 'unwrite',
-                name: 'Un-decoded: erased from the end, decoded from the start',
-                see: 'When a part leaves the page, it is erased from its end back to its start (12, 28, 46, 68, 88 % gone), the cut edge jittering and split in cyan and red, and is gone on the sixth tick (360 ms). When it arrives, it is decoded from start to end, the way text is read.',
-                verdict: not(
-                    'it reads like a terminal wiping a line and the arrival is a pleasure to read, but a sweep from one side is the uncover of other themes, so only the jitter makes it ours.',
-                ),
+                key: 'blink',
+                name: 'Blink out, blink in: the copies converge and the power drops for a tick',
+                see: 'When an alert, a card or a key figure arrives on the page, it shows with its two copies (yellow right and up, cyan right and down) 6 px out; goes dark for a tick, copies too; shows with the copies 2 px out; then 1 px; then clean, four ticks of 120 ms. When it leaves, the same four ticks play backwards: clean, 1 px, 2 px, dark, and then it is gone on the last tick. The cut corner stays cut on every tick.',
+                verdict:
+                    'Your power flicker in the text glitch’s own numbers, built from the opening question’s blink. Not first because the dark tick hides the words for 120 ms, but a one-tick gap is the signal dropping that you liked in the flicker.',
             },
             {
                 key: 'flicker',
-                name: 'Powered down: blinks out, blinks in',
-                see: 'When a part leaves the page, it stands 2 px out, goes dark for a tick, shows 6 px back, goes dark, shows once more 16 px out and split in cyan and red, and is gone (360 ms). When it arrives, the same blinks play backwards. It pairs with the opening question’s “flicker”.',
-                verdict: not(
-                    'it is a signal dropping out, but a part that is whole or absent has no middle, and the dark ticks make it look broken instead of torn.',
-                ),
+                name: 'Power flicker out, power flicker in',
+                see: 'When an alert, a card or a key figure arrives on the page, it blinks into place: it shows 18 px out and split in cyan and red, goes dark for a tick, shows 10 px back, goes dark, shows 4 px out, then 1 px, and holds (six ticks of 60 ms, 360 ms). When it leaves, those same blinks play backwards and it is gone on the last tick. The cut corner stays cut on every blink.',
+                verdict:
+                    'It is the opening question’s power flicker on a part that leaves, kept at its own six ticks and the cyan and red copies; not first because it is the older fringe, where the converge uses the text glitch’s yellow and cyan.',
+            },
+            {
+                key: 'slice',
+                name: 'Sliced away, sliced back in: strips are cut out as the copies come home',
+                see: 'When an alert, a card or a key figure arrives on the page, it stands with its two copies (6, 4, 2, 1 px) and strips cut out of it: three on the first tick, two on the second, two thin ones on the third, one hairline on the fourth, then it is whole. When it leaves, the same four ticks play backwards: it is sliced up more each tick, and part and copies are gone on the last tick. The cut corner stays cut on every tick.',
+                verdict:
+                    'The torn lines of a corrupt picture, from the curve and opening question’s slice; not first because the strips hide a few words for a tick at a time.',
+            },
+            {
+                key: 'tear',
+                name: 'Torn off, torn on: two bands slip sideways as the copies come home',
+                see: 'When an alert, a card or a key figure arrives on the page, it stands with its two copies (6, 4, 2, 1 px) and two bands of it slipped sideways, one right and one left by the same 6, 4, 2, 1 px, then one band on the fourth tick, then it is whole. When it leaves, the same four ticks play backwards and part and copies are gone on the last tick. The cut corner stays cut on every tick.',
+                verdict:
+                    'The most literal tear, from the curve and opening question’s tear; not first because words in a slipped band jump while you read them. The torn leave above is the older, six-tick version of this idea.',
+            },
+            {
+                key: 'split',
+                name: 'Channel split out, channel split in: yellow and cyan ghosts until they meet',
+                see: 'When an alert, a card or a key figure arrives on the page, for two ticks only its own picture in yellow (right and up) and in cyan (right and down) is there, 6 px and then 4 px out; on the third tick (2 px) the real part stands between them; on the fourth (1 px) they are a hairline; then it is clean. When it leaves, those four ticks play backwards: clean, a hairline, the ghosts 4 px and then 6 px out, and everything is gone on the last tick.',
+                verdict:
+                    'The chromatic split of a misaligned print, from the curve and opening question’s split; not first because for 240 ms the words are two coloured ghosts.',
             },
         ],
     },
@@ -1185,56 +1276,96 @@ const ASPECTS = [
         rule: 'G8',
         question:
             'What does a part do when the mouse pointer arrives on it, while the pointer rests there, and when the pointer leaves again? (A button, a menu entry, a card, a key figure that is a link, a calendar day.)',
-        why: 'None of the three earlier options (the circuit lights, the charge runs, as today) was right, so these are six new ones, all built from the glitch, the theme’s anchor, and from the HUD of Cyberpunk 2077, Watch Dogs and the Matrix terminals. In every scene the page’s clock plays one pointer: it is away for half a second, arrives on the part, rests on it for about 2.7 seconds and leaves. The arrival is three ticks of 60 ms (180 ms) and the leave is those same three frames played backwards, so nothing lingers.',
+        why: 'Round 2. You liked the split edge, but on the menu the right square edge went past the corner of the menu itself: the bands were plain rectangles laid over a part whose corner is cut, so the end band ran into the notch. They are now drawn inside the part’s own cut and follow it at every frame, for the button (cut at its foot end), the card and the key figure (cut at the head end) and the menu entry (cut to the menu’s own notch). Options 2 to 6 are five more split edges (a different edge, width, timing and lead); options 7 to 11 are five glitchy ones (neon words, a cyan copy right and up, a red copy right and down, sliced). In every scene the page’s clock plays one pointer: it is away for half a second, arrives on the part, rests on it for about 2.7 seconds and leaves. The arrival is three ticks (the leave is the same frames played backwards), so nothing lingers.',
         kind: 'cycle',
         scene: HOVER,
         options: [
             {
-                key: 'flash',
-                name: 'Glitch flash: the words flash and stay neon',
-                see: 'The moment the pointer arrives on a button, a menu entry, a card, a key figure or a calendar day, its words flash: a cyan copy stands right and up, a red copy right and down (4.5 px, then 3, then 1.5) and both are gone after three ticks. While the pointer rests, the words stay neon cyan (the yellow Jack in button keeps its dark ink and its face lifts a little toward smoke). When the pointer leaves, the same three frames play backwards and the part is at rest.',
-                verdict: rec(
-                    'it is the anchor of the theme at the size of a pointer (neon words, a cyan and a red copy), it moves nothing under the pointer, and the resting state reads at 13:1 (cyan on the card).',
-                ),
-            },
-            {
-                key: 'static',
-                name: 'Static: a checker of noise flickers over the part',
-                see: 'When the pointer arrives, a fine checker of the part’s own ink flickers over its whole face for three ticks, 72 %, 52 %, 32 % strong and shifting each tick, and settles to a faint 12 % dither that stays while the pointer rests. On leaving, the three frames play backwards.',
-                verdict: not(
-                    'it is the screen of a hacked monitor and does not move anything, but the dither also lies over the words, which at 12 % is quiet and over a long list gets restless.',
-                ),
-            },
-            {
-                key: 'tear',
-                name: 'Tear: the part is thrown sideways and jitters home',
-                see: 'When the pointer arrives, the whole part is thrown 4.5 px to one side and jitters home in three ticks (−4.5, 3, −1.5, 0 px, the way the theme’s glitch-in lands); a 3 px bar stays on its end edge while the pointer rests. On leaving, the same jitter plays backwards.',
-                verdict: not(
-                    'it is the theme’s own landing used as a hover, but the part moves under the pointer (up to 4.5 px) and on a small target it can slip out from under it.',
-                ),
-            },
-            {
                 key: 'split',
-                name: 'Split edge: the part’s edge is doubled in cyan and red',
-                see: 'When the pointer arrives, the part’s edge is doubled: a cyan band along its top and end, a red band along its foot and end, 5 px thick, then 4, then 3, and 2 px for as long as the pointer rests. On leaving, the bands thicken again in the same three frames backwards and are gone.',
-                verdict: not(
-                    'it is the glitch’s split drawn as a frame and it is unmistakable, but the split is meant for a signal that changes and here it stands for as long as you point.',
+                name: 'Split edge: the edge is doubled in cyan and red (fixed)',
+                see: 'When the pointer arrives on a button, a menu entry, a card, a key figure or a calendar day, its edge is doubled: a cyan band along its head and its end, a red band along its foot, 5 px thick, then 4, then 3, and 2 px for as long as the pointer rests. When the pointer leaves, the bands thicken again in the same frames backwards and are gone. The fix: the bands are now drawn inside the part’s own cut, so on a menu entry at the notched head end of the menu they follow the notch and never stand square past the menu’s corner; on a button and a card they run along the cut too.',
+                verdict: rec(
+                    'it is the split edge you liked, now closed: both bands follow the part’s cut at every frame, so nothing leaves the menu’s corner. Of the new ones, the glitchy “Flash and split” (7) is the one to look at first.',
                 ),
             },
             {
-                key: 'chevron',
-                name: 'Chevron: a wedge grows out of the start edge',
-                see: 'When the pointer arrives, a yellow wedge pointing inward grows out of the start edge of the part (2.5, 5, 7.5, then 10 px wide) beside a 3 px bar on the edge, as a selected entry looks in Cyberpunk 2077’s menus. It stays while the pointer rests and shrinks away in the same frames backwards.',
+                key: 'bar',
+                name: 'End bar: only the end edge is doubled',
+                see: 'When the pointer arrives, a bar grows on the end edge of the part only, two columns, cyan inside and red outside, 10 px wide, then 8, 6 and 4 px while the pointer rests; on a button or a card the bar ends on the cut. On leaving, the bar thins again in the same frames backwards and is gone. Where: the same five parts (button, menu entry, card, key figure, day).',
                 verdict: not(
-                    'it is clear and cheap, and a pointer on a list reads like a cursor, but it is a menu selection mark and says nothing glitchy, and on days and key figures it crowds the first word.',
+                    'it is the quietest of the five and reads like a selected row, and it cannot leave the menu’s corner, but the edge doubling is only on one side, so on a wide menu the pointer’s place is easy to miss.',
                 ),
             },
             {
-                key: 'flood',
-                name: 'Flood: the part is filled with its ink, start to end',
-                see: 'When the pointer arrives, a block of the part’s own ink (yellow on a dark part, dark on the yellow Jack in button) floods it from the start edge to the end in four ticks, a 3 px cyan edge leading, and the words turn to the ground colour as it passes. It stays full while the pointer rests (dark words on yellow, 15.6:1) and drains from the end back to the start on leaving.',
+                key: 'foot',
+                name: 'Foot rule: two rules under the part, cyan over red',
+                see: 'When the pointer arrives, a cyan rule and a red rule, 2 px each, stand under the part 6 px apart, then 4 px, then 2 px, and rest touching, a double underline of 4 px, for as long as the pointer rests. On leaving, they part again in the same frames backwards and are gone. A button’s rules end on its cut.',
                 verdict: not(
-                    'it is the strongest and clearest and the closest to the game’s own menus, but it is the loudest on a page of many cards, and for a few ticks the words are unreadable mid-flood.',
+                    'it is the misregistered print of a split and it leaves the shape of the part alone, but a rule under a card or a day looks like an underline of the whole part, not of the thing you point at.',
+                ),
+            },
+            {
+                key: 'frame',
+                name: 'Half frame: a closed frame closes on the edge, cyan above and red below',
+                see: 'When the pointer arrives, a closed 2 px frame, its upper half cyan and its lower half red, stands 6 px inside the part, then 4, then 2, and closes onto its edge, where it rests for as long as the pointer rests. On leaving, it moves back in the same frames and is gone. The frame follows the cut of a button, a card and the menu’s notch.',
+                verdict: not(
+                    'it is the only one that is a whole frame, so it is the clearest on a card, but the frame moves 6 px over the words in the first frames and a closed frame is the focus ring’s shape.',
+                ),
+            },
+            {
+                key: 'brackets',
+                name: 'Two bars: cyan leads on the end edge, red follows on the start edge',
+                see: 'When the pointer arrives, a cyan bar grows on the end edge (7.5 px, then 6, 4.5, and 3 px at rest). One tick later a red bar follows on the start edge, and both rest as a pair of bars, 3 px each, for as long as the pointer rests. On leaving, the red bar goes first, the cyan one last, in the same frames backwards.',
+                verdict: not(
+                    'it shows which channel leads (cyan reads first, red follows), and the pair of bars frames the words from both sides, but it is two marks to look at, not one.',
+                ),
+            },
+            {
+                key: 'lead',
+                name: 'Red leads: the channels swapped, red on the head and end, cyan on the foot',
+                see: 'When the pointer arrives, the edge is doubled with the channels the other way round: a red band along the head and the end, a cyan band along the foot, 6 px thick, then 5, then 4, and 3 px for as long as the pointer rests. On leaving, the bands thicken again in the same frames backwards and are gone. Like option 1 it follows the cut of the part.',
+                verdict: not(
+                    'it is the same split with the other channel leading and a heavier hand, which is easier to see, but red is the colour of an alarm, so pointing at something reads as a warning.',
+                ),
+            },
+            {
+                key: 'flashsplit',
+                name: 'Flash and split: neon words with a cyan and a red copy, and the split edge',
+                see: 'When the pointer arrives on a button, a menu entry, a card, a key figure or a calendar day, its words flash: a cyan copy right and up, a red copy right and down (4.5 px, then 3, then 1.5), while the split edge of option 1 tears in (5, 4, 3 px, then 2). Both lock after three ticks: the words stay neon cyan (the yellow Jack in button keeps its dark ink) and the edge stays 2 px for as long as the pointer rests. On leaving, the same frames play backwards.',
+                verdict: not(
+                    'it is the anchor at full size, text and edge together, and the one new option I would look at first; its words are cyan on the card at 13:1, but the copies make the first three ticks hard to read, and it is the busiest of the ten.',
+                ),
+            },
+            {
+                key: 'jitter',
+                name: 'Jitter: the two copies of the words jump from side to side',
+                see: 'When the pointer arrives, the words stand with a cyan copy up and a red copy down, both 4.5 px to the left, then 3 px to the right, then 1.5 px to the left, and lock; the words stay neon cyan while the pointer rests (the yellow Jack in button keeps its dark ink). The part itself does not move and has no edge, only a soft neon glow round the words. On leaving, the same jumps play backwards.',
+                verdict: not(
+                    'it is the jitter you liked in the curve question, drawn on the words only, so the part stays still under the pointer; but with no edge it is the least visible of the ten on a card.',
+                ),
+            },
+            {
+                key: 'slice',
+                name: 'Sliced bar: four slices of a bar slide home on the start edge',
+                see: 'When the pointer arrives, a 3 px bar, its upper half cyan and its lower half red, appears on the start edge of the part as four slices pushed in by 9, 3, 12 and 6 px; in three ticks the slices slide home (6, 2, 8 and 4 px, then 3, 1, 4, 2, then none) into one bar on the edge. The words turn neon cyan and the bar stays for as long as the pointer rests. On leaving, the slices break apart again in the same frames backwards.',
+                verdict: not(
+                    'it is the sliced half of the anchor on the edge, it stays inside the part, and no other theme tears a bar this way; but the slices pass over the first letters of a short word like a day’s number for three ticks.',
+                ),
+            },
+            {
+                key: 'slit',
+                name: 'Slits: two rows are sliced out of the part and close',
+                see: 'When the pointer arrives, two thin rows are sliced out of the part itself, one at about a third of its height and one at two thirds (6 px, then 4, then 2 px thick, stopping 14 px short of the end), while the words flash with a cyan copy right and up and a red copy right and down; the slits close and the words stay neon cyan while the pointer rests. On leaving, the slits open again in the same frames backwards.',
+                verdict: not(
+                    'it is the part “sliced away” as the theme’s exits do it, drawn small, and it never leaves the part’s own cut; but the slits go through the words, which for three ticks read in two pieces.',
+                ),
+            },
+            {
+                key: 'beam',
+                name: 'Scanline: a cyan and a red line rise through the part and park under its head',
+                see: 'When the pointer arrives, a cyan line with a red line under it, 2 px each, rises through the part from three quarters of its height to a half and a quarter, and parks under its head as a double rule 4 px thick; the words turn neon cyan. Both stay for as long as the pointer rests. On leaving, the rule drops back through the part in the same frames and is gone.',
+                verdict: not(
+                    'it is the scan line of a monitor and ends as a head rule that shows where the pointer is without touching the words; but it passes over the words for three ticks, and on a card the rule under the head can read as a header line.',
                 ),
             },
         ],

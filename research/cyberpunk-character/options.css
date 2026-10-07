@@ -20,6 +20,32 @@
         --cy-clip-plate: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
         --cy-clip-ctl: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
         --cy-clip-pair: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        /* The same cuts with the room around the part left open (40 px each
+           side): while a copy, a shadow or a shift plays outside the part's
+           box, the clip keeps the notch's diagonal and nothing else, so the
+           corner stays cut at every frame and never turns into a rectangle. */
+        --cy-wide-plate: polygon(
+            -40px -40px,
+            calc(100% - 54px) -40px,
+            calc(100% + 40px) 54px,
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --cy-wide-ctl: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - 48px),
+            calc(100% - 48px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        --cy-wide-pair: polygon(
+            -40px -40px,
+            calc(100% - 58px) -40px,
+            calc(100% + 40px) 58px,
+            calc(100% + 40px) calc(100% + 40px),
+            58px calc(100% + 40px),
+            -40px calc(100% - 58px)
+        );
         /* The holo (G7): the rim along the notch's cut, the 135° scan lines. */
         --cy-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 / 14px
             14px no-repeat;
@@ -47,6 +73,7 @@
 
     .cy-scene {
         --cy-end-clip: none;
+        --cy-wide-clip: none;
         --cy-line-clip: inset(calc(50% - 1px) 0);
         --cy-top-clip: inset(0 0 100% 0);
         --cy-start-clip: inset(0 100% 0 0);
@@ -72,6 +99,7 @@
     /* The holo plate (G7), cut at its dossier corner. */
     .cy-scene .cy-plate {
         --cy-end-clip: var(--cy-clip-plate);
+        --cy-wide-clip: var(--cy-wide-plate);
         --cy-line-clip: polygon(0 calc(50% - 1px), calc(100% - 14px) calc(50% - 1px), 100% calc(50% - 1px), 100% calc(50% + 1px), 0 calc(50% + 1px));
         --cy-top-clip: polygon(0 0, calc(100% - 14px) 0, 100% 0, 100% 0, 0 0);
         --cy-start-clip: polygon(0 0, 0 0, 0 14px, 0 100%, 0 100%);
@@ -97,6 +125,7 @@
 
     .cy-scene .kp-dialog {
         --cy-end-clip: var(--cy-clip-pair);
+        --cy-wide-clip: var(--cy-wide-pair);
         --cy-line-clip: polygon(
             0 calc(50% - 1px),
             calc(100% - 18px) calc(50% - 1px),
@@ -232,6 +261,7 @@
     .cy-scene .kp-badge,
     .cy-scene .kp-tag {
         --cy-end-clip: var(--cy-clip-ctl);
+        --cy-wide-clip: var(--cy-wide-ctl);
         clip-path: var(--cy-clip-ctl);
     }
 
@@ -1908,7 +1938,7 @@
         }
     }
 
-    /* ── The spinner (G11): nine more drawings beside the reticle ─────── */
+    /* ── The spinner (G11): signal bars in six drawings, and the older reticle ─── */
 
     /* Ink: the scene's colours; in a busy button every ink is the button's own. */
     .cy-spin {
@@ -1923,748 +1953,740 @@
         --cy-sp-3: currentColor;
     }
 
-    .cy-scene[data-cy-spinner] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
+    .cy-scene[data-cy-spinner] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5, .cy-s6) {
         position: absolute;
     }
 
-    .cy-scene[data-cy-spinner] .cy-spin::before,
-    .cy-scene[data-cy-spinner] .cy-spin::after {
-        position: absolute;
+    /* Every bar drawing stands its bars on one base line; a bar is a cyan body under a yellow cap. */
+    .cy-scene:is(
+            [data-cy-spinner='bars'],
+            [data-cy-spinner='meter'],
+            [data-cy-spinner='glitch'],
+            [data-cy-spinner='peak'],
+            [data-cy-spinner='eq'],
+            [data-cy-spinner='skyline']
+        )
+        .cy-spin
+        > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5, .cy-s6) {
+        background: linear-gradient(var(--cy-sp-2) 0 2px, var(--cy-sp-1) 2px);
+        inset-block-end: 8%;
     }
 
-    /* Signal bars: four bars that jump between heights. */
+    /* 1 · Signal bars (the reference): four bars, each one step at a time. */
     .cy-scene[data-cy-spinner='bars'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
         display: block;
-        inset-block-end: 8%;
         inline-size: 18%;
-        background: linear-gradient(var(--cy-sp-2) 0 2px, var(--cy-sp-1) 2px);
     }
 
     .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s1 {
         inset-inline-start: 4%;
-        block-size: 40%;
+        block-size: 52%;
     }
 
     .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s2 {
         inset-inline-start: 28%;
-        block-size: 90%;
+        block-size: 92%;
     }
 
     .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s3 {
         inset-inline-start: 52%;
-        block-size: 60%;
+        block-size: 28%;
     }
 
     .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s4 {
         inset-inline-start: 76%;
-        block-size: 75%;
+        block-size: 76%;
     }
 
-    /* Countdown: one digit in a cut frame. */
-    .cy-scene[data-cy-spinner='count'] .cy-spin::before {
-        content: '9';
-        inset: 0;
-        display: grid;
-        place-items: center;
-        color: var(--cy-sp-2);
-        font-family: var(--kp-mono);
-        font-size: calc(var(--cy-spin) * 0.78);
-        font-weight: 700;
-        line-height: 1;
-    }
-
-    .cy-scene[data-cy-spinner='count'] .cy-spin::after {
-        content: '';
-        inset: 0;
-        border: 2px solid var(--cy-sp-1);
-        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
-    }
-
-    /* The tear: a square in bands, with the glitch's split copies. */
-    .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1,
-    .cy-scene[data-cy-spinner='tear'] .cy-spin::before,
-    .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
-        content: '';
+    /* 2 · Signal strength: five rising bars light one by one, then go dark again from the top. */
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5) {
         display: block;
-        inset: 8%;
+        inline-size: 14%;
     }
 
-    .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1 {
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s1 {
+        inset-inline-start: 3%;
+        block-size: 30%;
+    }
+
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s2 {
+        inset-inline-start: 22.5%;
+        block-size: 45%;
+    }
+
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s3 {
+        inset-inline-start: 42%;
+        block-size: 62%;
+    }
+
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s4 {
+        inset-inline-start: 61.5%;
+        block-size: 80%;
+    }
+
+    .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s5 {
+        inset-inline-start: 81%;
+        block-size: 92%;
+    }
+
+    /* 3 · Bars with a glitch copy: yellow bars that tear once per loop. */
+    .cy-scene[data-cy-spinner='glitch'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
+        display: block;
+        inline-size: 18%;
+        background: linear-gradient(var(--cy-sp-1) 0 2px, var(--cy-sp-2) 2px);
+    }
+
+    .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s1 {
+        inset-inline-start: 4%;
+        block-size: 52%;
+    }
+
+    .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s2 {
+        inset-inline-start: 28%;
+        block-size: 92%;
+    }
+
+    .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s3 {
+        inset-inline-start: 52%;
+        block-size: 28%;
+    }
+
+    .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s4 {
+        inset-inline-start: 76%;
+        block-size: 76%;
+    }
+
+    /* 4 · Peak hold: five columns, a cyan body that rises and falls under a yellow tick that holds the peak. */
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5) {
+        display: block;
+        inline-size: 14%;
+        block-size: 84%;
+        background: none;
+    }
+
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::before,
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+    }
+
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::before {
+        inset-block-end: 0;
+        block-size: 72%;
+        background: var(--cy-sp-1);
+    }
+
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::after {
+        inset-block-end: 84%;
+        block-size: max(2px, 8%);
         background: var(--cy-sp-2);
     }
 
-    .cy-scene[data-cy-spinner='tear'] .cy-spin::before {
-        background: var(--cy-sp-1);
-        opacity: 0;
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s1 {
+        inset-inline-start: 3%;
     }
 
-    .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
-        background: var(--cy-sp-3);
-        opacity: 0;
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s2 {
+        inset-inline-start: 22.5%;
     }
 
-    /* Barcode: three poses of bars and a scan line. */
-    .cy-scene[data-cy-spinner='barcode'] .cy-spin::before {
-        content: '';
-        inset: 14% 4%;
-        background: linear-gradient(
-            90deg,
-            var(--cy-sp-1) 0% 8%,
-            transparent 8% 14%,
-            var(--cy-sp-1) 14% 18%,
-            transparent 18% 26%,
-            var(--cy-sp-1) 26% 40%,
-            transparent 40% 46%,
-            var(--cy-sp-1) 46% 52%,
-            transparent 52% 60%,
-            var(--cy-sp-1) 60% 64%,
-            transparent 64% 70%,
-            var(--cy-sp-1) 70% 82%,
-            transparent 82% 88%,
-            var(--cy-sp-1) 88% 100%
-        );
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s3 {
+        inset-inline-start: 42%;
     }
 
-    .cy-scene[data-cy-spinner='barcode'] .cy-spin::after {
-        content: '';
-        inset-block: 0;
-        inset-inline-start: 50%;
-        inline-size: 2px;
-        background: var(--cy-sp-2);
-        box-shadow: 0 0 4px var(--cy-sp-2);
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s4 {
+        inset-inline-start: 61.5%;
     }
 
-    /* Chevrons: three lit in turn. */
-    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3) {
+    .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s5 {
+        inset-inline-start: 81%;
+    }
+
+    /* 5 · Equalizer: six thin bars grow from a centre line, up and down together. */
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5, .cy-s6) {
         display: block;
-        inset-block: 15%;
-        inline-size: 38%;
-        background: var(--cy-sp-1);
-        clip-path: polygon(0 0, 55% 0, 100% 50%, 55% 100%, 0 100%, 45% 50%);
-        opacity: 0.3;
+        inline-size: 11%;
+        inset-block-end: auto;
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        background: linear-gradient(var(--cy-sp-2) 0 2px, var(--cy-sp-1) 2px calc(100% - 2px), var(--cy-sp-2) calc(100% - 2px));
     }
 
-    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s1 {
-        inset-inline-start: 0;
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s1 {
+        inset-inline-start: 4%;
+        block-size: 92%;
+    }
+
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s2 {
+        inset-inline-start: 20.2%;
+        block-size: 62%;
+    }
+
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s3 {
+        inset-inline-start: 36.4%;
+        block-size: 30%;
+    }
+
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s4 {
+        inset-inline-start: 52.6%;
+        block-size: 62%;
+    }
+
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s5 {
+        inset-inline-start: 68.8%;
+        block-size: 92%;
+    }
+
+    .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s6 {
+        inset-inline-start: 85%;
+        block-size: 46%;
+    }
+
+    /* 6 · Skyline scan: five fixed towers, a yellow light hops from tower to tower. */
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5) {
+        display: block;
+        inline-size: 14%;
+        background: var(--cy-sp-1);
+        opacity: 0.35;
+    }
+
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s3 {
         background: var(--cy-sp-2);
         opacity: 1;
     }
 
-    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s2 {
-        inset-inline-start: 31%;
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s1 {
+        inset-inline-start: 3%;
+        block-size: 45%;
     }
 
-    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s3 {
-        inset-inline-start: 62%;
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s2 {
+        inset-inline-start: 22.5%;
+        block-size: 70%;
     }
 
-    /* Ratchet: a cross with one yellow tip. */
-    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::before,
-    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::after {
-        content: '';
-        background: var(--cy-sp-1);
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s3 {
+        inset-inline-start: 42%;
+        block-size: 92%;
     }
 
-    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::before {
-        inset: 42% 0;
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s4 {
+        inset-inline-start: 61.5%;
+        block-size: 60%;
     }
 
-    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::after {
-        inset: 0 42%;
-    }
-
-    .cy-scene[data-cy-spinner='ratchet'] .cy-spin > .cy-s1 {
-        display: block;
-        inset-block: 0 70%;
-        inset-inline: 36%;
-        background: var(--cy-sp-2);
-    }
-
-    /* Charge: a cut cell fills start to end. */
-    .cy-scene[data-cy-spinner='charge'] .cy-spin::before {
-        content: '';
-        inset: 0;
-        border: 2px solid var(--cy-sp-1);
-        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
-    }
-
-    .cy-scene[data-cy-spinner='charge'] .cy-spin::after {
-        content: '';
-        inset: max(3px, 14%);
-        inset-inline-end: auto;
-        inline-size: calc(100% - 2 * max(3px, 14%));
-        background: var(--cy-sp-2);
-    }
-
-    /* Neon: two tubes and a spark. */
-    .cy-scene[data-cy-spinner='neon'] .cy-spin::before,
-    .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
-        content: '';
-        inset: 0;
-        border: 2px solid transparent;
-    }
-
-    .cy-scene[data-cy-spinner='neon'] .cy-spin::before {
-        border-color: var(--cy-sp-1) transparent transparent var(--cy-sp-1);
-        filter: drop-shadow(0 0 3px var(--cy-sp-1));
-    }
-
-    .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
-        border-color: transparent var(--cy-sp-2) var(--cy-sp-2) transparent;
-        filter: drop-shadow(0 0 3px var(--cy-sp-2));
-    }
-
-    .cy-scene[data-cy-spinner='neon'] .cy-spin > .cy-s1 {
-        display: block;
-        inset: 42%;
-        background: var(--cy-sp-2);
-    }
-
-    /* Hazard: stripes crawling in a cut window. */
-    .cy-scene[data-cy-spinner='hazard'] .cy-spin::before {
-        content: '';
-        inset: 0;
-        border: 2px solid var(--cy-sp-1);
-        background: linear-gradient(135deg, var(--cy-sp-2) 0 25%, transparent 25% 50%, var(--cy-sp-2) 50% 75%, transparent 75%) 0 0 /
-            calc(var(--cy-spin) * 0.5) calc(var(--cy-spin) * 0.5);
-        background-clip: padding-box;
-        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+    .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s5 {
+        inset-inline-start: 81%;
+        block-size: 85%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .cy-scene[data-cy-spinner='bars'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
-            animation: cy-sp-bars calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s1 {
+            animation: cy-sp-bars calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(0ms * var(--cy-slow, 1));
         }
 
         .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s2 {
-            animation-delay: calc(-480ms * var(--cy-slow, 1));
+            animation: cy-sp-bars calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-780ms * var(--cy-slow, 1));
         }
 
         .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s3 {
-            animation-delay: calc(-960ms * var(--cy-slow, 1));
+            animation: cy-sp-bars calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-1560ms * var(--cy-slow, 1));
         }
 
         .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s4 {
-            animation-delay: calc(-240ms * var(--cy-slow, 1));
+            animation: cy-sp-bars calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-2100ms * var(--cy-slow, 1));
         }
 
-        .cy-scene[data-cy-spinner='count'] .cy-spin::before {
-            animation: cy-sp-count calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s2 {
+            animation: cy-sp-lit-2 calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1 {
-            animation: cy-sp-tear-main calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s3 {
+            animation: cy-sp-lit-3 calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-scene[data-cy-spinner='tear'] .cy-spin::before {
-            animation: cy-sp-tear-cyan calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s4 {
+            animation: cy-sp-lit-4 calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
-            animation: cy-sp-tear-red calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='meter'] .cy-spin > .cy-s5 {
+            animation: cy-sp-lit-5 calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-scene[data-cy-spinner='barcode'] .cy-spin::before {
-            animation: cy-sp-code calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s1 {
+            animation: cy-sp-bars calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(0ms * var(--cy-slow, 1));
         }
 
-        .cy-scene[data-cy-spinner='barcode'] .cy-spin::after {
-            animation: cy-sp-scan calc(1800ms * var(--cy-slow, 1)) steps(10, end) infinite;
+        .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s4 {
+            animation: cy-sp-bars calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-2625ms * var(--cy-slow, 1));
         }
 
-        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3) {
-            animation: cy-sp-chev calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='glitch'] .cy-spin {
+            animation: cy-sp-tear calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s1 {
-            animation-delay: calc(-1800ms * var(--cy-slow, 1));
+        .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s2 {
+            animation:
+                cy-sp-bars calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite,
+                cy-sp-tear-slip calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-975ms * var(--cy-slow, 1)), 0ms;
         }
 
-        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s2 {
-            animation-delay: calc(-1620ms * var(--cy-slow, 1));
+        .cy-scene[data-cy-spinner='glitch'] .cy-spin > .cy-s3 {
+            animation:
+                cy-sp-bars calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite,
+                cy-sp-tear-slip calc(3000ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-1950ms * var(--cy-slow, 1)), 0ms;
         }
 
-        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s3 {
-            animation-delay: calc(-1440ms * var(--cy-slow, 1));
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s1 {
+            --cy-sp-delay: 0ms;
         }
 
-        .cy-scene[data-cy-spinner='ratchet'] .cy-spin {
-            animation: cy-sp-ratchet calc(1440ms * var(--cy-slow, 1)) steps(8, end) infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s2 {
+            --cy-sp-delay: -660ms;
         }
 
-        .cy-scene[data-cy-spinner='charge'] .cy-spin::after {
-            animation: cy-sp-charge calc(1200ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s3 {
+            --cy-sp-delay: -1620ms;
         }
 
-        .cy-scene[data-cy-spinner='neon'] .cy-spin::before {
-            animation: cy-sp-neon-a calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s4 {
+            --cy-sp-delay: -480ms;
         }
 
-        .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
-            animation: cy-sp-neon-b calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > .cy-s5 {
+            --cy-sp-delay: -2040ms;
         }
 
-        .cy-scene[data-cy-spinner='neon'] .cy-spin > .cy-s1 {
-            animation: cy-sp-spark calc(600ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::before {
+            animation: cy-sp-pk-body calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(var(--cy-sp-delay) * var(--cy-slow, 1));
         }
 
-        .cy-scene[data-cy-spinner='hazard'] .cy-spin::before {
-            animation: cy-sp-hazard calc(900ms * var(--cy-slow, 1)) linear infinite;
+        .cy-scene[data-cy-spinner='peak'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4, .cy-s5)::after {
+            animation: cy-sp-pk-tick calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(var(--cy-sp-delay) * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s1 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(0ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s2 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-950ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s3 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-1900ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s4 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-450ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s5 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-1400ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='eq'] .cy-spin > .cy-s6 {
+            animation: cy-sp-eq calc(2400ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-2350ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s1 {
+            animation: cy-sp-hop calc(1440ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(0ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s2 {
+            animation: cy-sp-hop calc(1440ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-1200ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s3 {
+            animation: cy-sp-hop calc(1440ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-960ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s4 {
+            animation: cy-sp-hop calc(1440ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-720ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='skyline'] .cy-spin > .cy-s5 {
+            animation: cy-sp-hop calc(1440ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc(-480ms * var(--cy-slow, 1));
         }
     }
 
     @keyframes cy-sp-bars {
-        0.00% {
-            block-size: 30%;
-        }
-
-        6.67% {
-            block-size: 85%;
-        }
-
-        13.33% {
-            block-size: 50%;
-        }
-
-        20.00% {
-            block-size: 100%;
-        }
-
-        26.67% {
-            block-size: 20%;
-        }
-
-        33.33% {
-            block-size: 70%;
-        }
-
-        40.00% {
-            block-size: 40%;
-        }
-
-        46.67% {
-            block-size: 90%;
-        }
-
-        53.33% {
-            block-size: 60%;
-        }
-
-        60.00% {
-            block-size: 25%;
-        }
-
-        66.67% {
-            block-size: 80%;
-        }
-
-        73.33% {
-            block-size: 45%;
-        }
-
-        80.00% {
-            block-size: 95%;
-        }
-
-        86.67% {
-            block-size: 35%;
-        }
-
-        93.33% {
-            block-size: 65%;
-        }
-    }
-
-    @keyframes cy-sp-count {
         0% {
-            content: '9';
-            text-shadow: none;
+            block-size: 52%;
         }
 
         10% {
-            content: '8';
-            text-shadow: none;
+            block-size: 76%;
         }
 
         20% {
-            content: '7';
-            text-shadow: none;
+            block-size: 92%;
         }
 
         30% {
-            content: '6';
-            text-shadow: none;
+            block-size: 92%;
         }
 
         40% {
-            content: '5';
-            text-shadow: none;
+            block-size: 76%;
         }
 
         50% {
-            content: '4';
-            text-shadow: none;
+            block-size: 52%;
         }
 
         60% {
-            content: '3';
-            text-shadow: none;
+            block-size: 28%;
         }
 
         70% {
-            content: '2';
-            text-shadow: none;
+            block-size: 28%;
         }
 
         80% {
-            content: '1';
-            text-shadow: none;
+            block-size: 52%;
         }
 
         90% {
-            content: '0';
-            text-shadow:
-                0.08em -0.06em 0 var(--cy-sp-1),
-                0.08em 0.06em 0 var(--cy-sp-3);
+            block-size: 28%;
         }
     }
 
-    @keyframes cy-sp-tear-main {
+    @keyframes cy-sp-lit-2 {
         0% {
-            clip-path: inset(0);
-            translate: 0 0;
+            opacity: 0.25;
         }
 
-        33.33% {
-            clip-path: inset(20% 0 55% 0);
-            translate: calc(var(--cy-spin) * -0.12) 0;
-        }
-
-        38.89% {
-            clip-path: inset(60% 0 10% 0);
-            translate: calc(var(--cy-spin) * 0.12) 0;
-        }
-
-        44.44% {
-            clip-path: inset(5% 0 70% 0);
-            translate: calc(var(--cy-spin) * -0.08) 0;
-        }
-
-        50% {
-            clip-path: inset(45% 0 30% 0);
-            translate: calc(var(--cy-spin) * 0.08) 0;
-        }
-
-        55.56% {
-            clip-path: inset(75% 0 5% 0);
-            translate: calc(var(--cy-spin) * -0.04) 0;
-        }
-
-        61.11% {
-            clip-path: inset(0);
-            translate: 0 0;
-        }
-    }
-
-    @keyframes cy-sp-tear-cyan {
-        0% {
-            clip-path: inset(0);
-            translate: 0 0;
-            opacity: 0;
-        }
-
-        33.33% {
-            clip-path: inset(20% 0 55% 0);
-            translate: calc(var(--cy-spin) * 0) calc(var(--cy-spin) * -0.08);
+        12.5% {
             opacity: 1;
         }
 
-        38.89% {
-            clip-path: inset(60% 0 10% 0);
-            translate: calc(var(--cy-spin) * 0.24) calc(var(--cy-spin) * -0.08);
+        25% {
             opacity: 1;
         }
 
-        44.44% {
-            clip-path: inset(5% 0 70% 0);
-            translate: calc(var(--cy-spin) * 0.04) calc(var(--cy-spin) * -0.08);
+        37.5% {
             opacity: 1;
         }
 
         50% {
-            clip-path: inset(45% 0 30% 0);
-            translate: calc(var(--cy-spin) * 0.2) calc(var(--cy-spin) * -0.08);
             opacity: 1;
         }
 
-        55.56% {
-            clip-path: inset(75% 0 5% 0);
-            translate: calc(var(--cy-spin) * 0.08) calc(var(--cy-spin) * -0.08);
+        62.5% {
             opacity: 1;
         }
 
-        61.11% {
-            clip-path: inset(0);
-            translate: 0 0;
-            opacity: 0;
+        75% {
+            opacity: 1;
+        }
+
+        87.5% {
+            opacity: 1;
         }
     }
 
-    @keyframes cy-sp-tear-red {
+    @keyframes cy-sp-lit-3 {
         0% {
-            clip-path: inset(0);
-            translate: 0 0;
-            opacity: 0;
+            opacity: 0.25;
         }
 
-        33.33% {
-            clip-path: inset(20% 0 55% 0);
-            translate: calc(var(--cy-spin) * 0) calc(var(--cy-spin) * 0.08);
+        12.5% {
+            opacity: 0.25;
+        }
+
+        25% {
             opacity: 1;
         }
 
-        38.89% {
-            clip-path: inset(60% 0 10% 0);
-            translate: calc(var(--cy-spin) * 0.24) calc(var(--cy-spin) * 0.08);
-            opacity: 1;
-        }
-
-        44.44% {
-            clip-path: inset(5% 0 70% 0);
-            translate: calc(var(--cy-spin) * 0.04) calc(var(--cy-spin) * 0.08);
+        37.5% {
             opacity: 1;
         }
 
         50% {
-            clip-path: inset(45% 0 30% 0);
-            translate: calc(var(--cy-spin) * 0.2) calc(var(--cy-spin) * 0.08);
             opacity: 1;
         }
 
-        55.56% {
-            clip-path: inset(75% 0 5% 0);
-            translate: calc(var(--cy-spin) * 0.08) calc(var(--cy-spin) * 0.08);
+        62.5% {
             opacity: 1;
         }
 
-        61.11% {
-            clip-path: inset(0);
-            translate: 0 0;
-            opacity: 0;
-        }
-    }
-
-    @keyframes cy-sp-code {
-        0% {
-            background: linear-gradient(
-                90deg,
-                var(--cy-sp-1) 0% 8%,
-                transparent 8% 14%,
-                var(--cy-sp-1) 14% 18%,
-                transparent 18% 26%,
-                var(--cy-sp-1) 26% 40%,
-                transparent 40% 46%,
-                var(--cy-sp-1) 46% 52%,
-                transparent 52% 60%,
-                var(--cy-sp-1) 60% 64%,
-                transparent 64% 70%,
-                var(--cy-sp-1) 70% 82%,
-                transparent 82% 88%,
-                var(--cy-sp-1) 88% 100%
-            );
-        }
-
-        33.33% {
-            background: linear-gradient(
-                90deg,
-                var(--cy-sp-1) 0% 12%,
-                transparent 12% 18%,
-                var(--cy-sp-1) 18% 30%,
-                transparent 30% 36%,
-                var(--cy-sp-1) 36% 40%,
-                transparent 40% 50%,
-                var(--cy-sp-1) 50% 60%,
-                transparent 60% 66%,
-                var(--cy-sp-1) 66% 72%,
-                transparent 72% 78%,
-                var(--cy-sp-1) 78% 86%,
-                transparent 86% 92%,
-                var(--cy-sp-1) 92% 100%
-            );
-        }
-
-        66.67% {
-            background: linear-gradient(
-                90deg,
-                var(--cy-sp-1) 0% 6%,
-                transparent 6% 12%,
-                var(--cy-sp-1) 12% 22%,
-                transparent 22% 28%,
-                var(--cy-sp-1) 28% 34%,
-                transparent 34% 44%,
-                var(--cy-sp-1) 44% 50%,
-                transparent 50% 58%,
-                var(--cy-sp-1) 58% 68%,
-                transparent 68% 74%,
-                var(--cy-sp-1) 74% 80%,
-                transparent 80% 90%,
-                var(--cy-sp-1) 90% 100%
-            );
-        }
-    }
-
-    @keyframes cy-sp-scan {
-        from {
-            inset-inline-start: 0;
-        }
-
-        to {
-            inset-inline-start: calc(100% - 2px);
-        }
-    }
-
-    @keyframes cy-sp-chev {
-        0% {
-            opacity: 0.3;
-            background: var(--cy-sp-1);
-        }
-
-        8% {
+        75% {
             opacity: 1;
-            background: var(--cy-sp-2);
         }
 
-        33% {
-            opacity: 0.3;
-            background: var(--cy-sp-1);
+        87.5% {
+            opacity: 0.25;
         }
     }
 
-    @keyframes cy-sp-ratchet {
-        to {
-            rotate: 360deg;
-        }
-    }
-
-    @keyframes cy-sp-charge {
+    @keyframes cy-sp-lit-4 {
         0% {
-            inline-size: 0;
-            background: var(--cy-sp-2);
-            animation-timing-function: steps(6, end);
+            opacity: 0.25;
+        }
+
+        12.5% {
+            opacity: 0.25;
+        }
+
+        25% {
+            opacity: 0.25;
+        }
+
+        37.5% {
+            opacity: 1;
         }
 
         50% {
-            inline-size: calc(100% - 2 * max(3px, 14%));
-            background: var(--cy-sp-2);
-            animation-timing-function: steps(1, end);
+            opacity: 1;
         }
 
-        66.67% {
-            background: var(--cy-sp-1);
+        62.5% {
+            opacity: 1;
         }
 
-        83.33% {
-            background: var(--cy-sp-2);
+        75% {
+            opacity: 0.25;
         }
 
-        91.67% {
-            inline-size: 0;
+        87.5% {
+            opacity: 0.25;
         }
     }
 
-    @keyframes cy-sp-neon-a {
+    @keyframes cy-sp-lit-5 {
+        0% {
+            opacity: 0.25;
+        }
+
+        12.5% {
+            opacity: 0.25;
+        }
+
+        25% {
+            opacity: 0.25;
+        }
+
+        37.5% {
+            opacity: 0.25;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        62.5% {
+            opacity: 0.25;
+        }
+
+        75% {
+            opacity: 0.25;
+        }
+
+        87.5% {
+            opacity: 0.25;
+        }
+    }
+
+    @keyframes cy-sp-pk-body {
+        0% {
+            block-size: 22%;
+        }
+
+        12.5% {
+            block-size: 46%;
+        }
+
+        25% {
+            block-size: 72%;
+        }
+
+        37.5% {
+            block-size: 46%;
+        }
+
+        50% {
+            block-size: 30%;
+        }
+
+        62.5% {
+            block-size: 56%;
+        }
+
+        75% {
+            block-size: 22%;
+        }
+
+        87.5% {
+            block-size: 38%;
+        }
+    }
+
+    @keyframes cy-sp-pk-tick {
+        0% {
+            inset-block-end: 34%;
+        }
+
+        12.5% {
+            inset-block-end: 58%;
+        }
+
+        25% {
+            inset-block-end: 84%;
+        }
+
+        37.5% {
+            inset-block-end: 84%;
+        }
+
+        50% {
+            inset-block-end: 84%;
+        }
+
+        62.5% {
+            inset-block-end: 84%;
+        }
+
+        75% {
+            inset-block-end: 84%;
+        }
+
+        87.5% {
+            inset-block-end: 50%;
+        }
+    }
+
+    @keyframes cy-sp-eq {
+        0% {
+            block-size: 30%;
+        }
+
+        12.5% {
+            block-size: 62%;
+        }
+
+        25% {
+            block-size: 92%;
+        }
+
+        37.5% {
+            block-size: 62%;
+        }
+
+        50% {
+            block-size: 30%;
+        }
+
+        62.5% {
+            block-size: 46%;
+        }
+
+        75% {
+            block-size: 76%;
+        }
+
+        87.5% {
+            block-size: 46%;
+        }
+    }
+
+    @keyframes cy-sp-hop {
         0% {
             opacity: 1;
+            background-color: var(--cy-sp-2);
         }
 
-        8% {
-            opacity: 0.15;
+        16.667% {
+            opacity: 0.35;
+            background-color: var(--cy-sp-1);
         }
 
-        12% {
-            opacity: 1;
+        33.333% {
+            opacity: 0.35;
+            background-color: var(--cy-sp-1);
         }
 
-        30% {
-            opacity: 1;
+        50% {
+            opacity: 0.35;
+            background-color: var(--cy-sp-1);
         }
 
-        34% {
-            opacity: 0.3;
+        66.667% {
+            opacity: 0.35;
+            background-color: var(--cy-sp-1);
         }
 
-        37% {
-            opacity: 1;
+        83.333% {
+            opacity: 0.35;
+            background-color: var(--cy-sp-1);
         }
+    }
 
-        58% {
-            opacity: 1;
+    @keyframes cy-sp-tear {
+        0% {
+            filter: none;
         }
 
         60% {
-            opacity: 0;
+            filter: drop-shadow(calc(var(--cy-spin) * 0.1) calc(var(--cy-spin) * -0.08) 0 var(--cy-sp-1))
+                drop-shadow(calc(var(--cy-spin) * 0.1) calc(var(--cy-spin) * 0.08) 0 var(--cy-sp-3));
         }
 
-        66% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes cy-sp-neon-b {
-        0% {
-            opacity: 0.2;
-        }
-
-        14% {
-            opacity: 1;
-        }
-
-        40% {
-            opacity: 1;
-        }
-
-        43% {
-            opacity: 0;
-        }
-
-        46% {
-            opacity: 1;
+        64% {
+            filter: none;
         }
 
         70% {
-            opacity: 0.25;
+            filter: drop-shadow(calc(var(--cy-spin) * 0.06) calc(var(--cy-spin) * -0.05) 0 var(--cy-sp-1))
+                drop-shadow(calc(var(--cy-spin) * 0.06) calc(var(--cy-spin) * 0.05) 0 var(--cy-sp-3));
         }
 
-        73% {
-            opacity: 1;
-        }
-
-        90% {
-            opacity: 1;
-        }
-
-        93% {
-            opacity: 0;
-        }
-
-        96% {
-            opacity: 1;
+        72% {
+            filter: none;
         }
     }
 
-    @keyframes cy-sp-spark {
+    @keyframes cy-sp-tear-slip {
         0% {
-            opacity: 1;
+            translate: 0 0;
         }
 
-        50% {
-            opacity: 0.25;
+        60% {
+            translate: 16% 0;
         }
-    }
 
-    @keyframes cy-sp-hazard {
-        to {
-            background-position: calc(var(--cy-spin) * 0.5) 0;
+        64% {
+            translate: 0 0;
+        }
+
+        70% {
+            translate: -8% 0;
+        }
+
+        72% {
+            translate: 0 0;
         }
     }
 
@@ -2898,91 +2920,305 @@
         --cy-p: 1;
     }
 
-    /* 1. Glitch flash: the anchor, at the size of a pointer. The text turns
-       neon cyan and, for three ticks, a cyan copy stands right and up, a red
-       one right and down, smaller each tick. */
-    .cy-scene[data-cy-hover='flash'] .cy-aim {
+    /* How a pointed part is cut (Kenny, 2026-10-07 23:xx: "the right square edge goes
+       beyond the edge of the corner of the menu"). Every doubled edge below is drawn
+       on the part's own ::after and clipped to the part's silhouette, so a copy can
+       never leave the cut it sits in: a button is cut at its foot end (the register's
+       notch), a plate at its head end (14 px), and a menu entry follows the menu's own
+       head-end cut: 14 px, less the 0.25 rem the entry sits in from the end and the
+       0.35 rem from the head, plus 3 px of air. */
+    .cy-scene[data-cy-hover] .cy-aim {
+        --cy-h-ct: 0px;
+        --cy-h-cb: 0px;
+        --cy-h-o: 0px;
+        --cy-h-d: 0px;
+        --cy-h-l0: 0px;
+        --cy-h-l1: 0px;
+        --cy-h-i: calc(var(--cy-h-o) + var(--cy-h-d));
+        /* The ring: the silhouette at inset o minus the silhouette at inset o + d, open at the start edge unless l0 and l1 close it. A diagonal moves in 0.414 px along each axis per px of inset. */
+        --cy-h-ring: polygon(
+            evenodd,
+            var(--cy-h-l0) var(--cy-h-o),
+            calc(100% - max(var(--cy-h-o), var(--cy-h-ct) + 0.414 * var(--cy-h-o))) var(--cy-h-o),
+            calc(100% - var(--cy-h-o)) max(var(--cy-h-o), var(--cy-h-ct) + 0.414 * var(--cy-h-o)),
+            calc(100% - var(--cy-h-o)) calc(100% - max(var(--cy-h-o), var(--cy-h-cb) + 0.414 * var(--cy-h-o))),
+            calc(100% - max(var(--cy-h-o), var(--cy-h-cb) + 0.414 * var(--cy-h-o))) calc(100% - var(--cy-h-o)),
+            var(--cy-h-l0) calc(100% - var(--cy-h-o)),
+            var(--cy-h-l0) var(--cy-h-o),
+            var(--cy-h-l1) var(--cy-h-i),
+            calc(100% - max(var(--cy-h-i), var(--cy-h-ct) + 0.414 * var(--cy-h-i))) var(--cy-h-i),
+            calc(100% - var(--cy-h-i)) max(var(--cy-h-i), var(--cy-h-ct) + 0.414 * var(--cy-h-i)),
+            calc(100% - var(--cy-h-i)) calc(100% - max(var(--cy-h-i), var(--cy-h-cb) + 0.414 * var(--cy-h-i))),
+            calc(100% - max(var(--cy-h-i), var(--cy-h-cb) + 0.414 * var(--cy-h-i))) calc(100% - var(--cy-h-i)),
+            var(--cy-h-l1) calc(100% - var(--cy-h-i)),
+            var(--cy-h-l1) var(--cy-h-i)
+        );
+        /* The pointed part's own cut, as a polygon, for the options that slice the part itself. */
+        --cy-h-sil: polygon(
+            0 0,
+            calc(100% - var(--cy-h-ct)) 0,
+            100% var(--cy-h-ct),
+            100% calc(100% - var(--cy-h-cb)),
+            calc(100% - var(--cy-h-cb)) 100%,
+            0 100%
+        );
+    }
+
+    .cy-scene[data-cy-hover] .kp-button.cy-aim {
+        --cy-h-cb: var(--kp-button-notch, 14px);
+    }
+
+    .cy-scene[data-cy-hover] .cy-plate.cy-aim {
+        --cy-h-ct: 14px;
+    }
+
+    .cy-scene[data-cy-hover] .kp-menu__item.cy-aim {
+        --cy-h-ct: calc(14px - 0.25rem - 0.35rem + 3px);
+    }
+
+    /* The doubled edge itself: one pseudo-element per part, painted and shaped by the option. */
+    .cy-scene[data-cy-hover]:is(
+            [data-cy-hover='split'],
+            [data-cy-hover='bar'],
+            [data-cy-hover='foot'],
+            [data-cy-hover='frame'],
+            [data-cy-hover='brackets'],
+            [data-cy-hover='lead'],
+            [data-cy-hover='flashsplit'],
+            [data-cy-hover='slice'],
+            [data-cy-hover='beam']
+        )
+        .cy-aim::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border: 0;
+        background: var(--cy-h-fill);
+        clip-path: var(--cy-h-shape, none);
+        transform: none;
+        animation: none;
+        pointer-events: none;
+    }
+
+    /* The words of the glitchy options: neon cyan while pointed (the yellow Jack in button keeps its dark ink and its face lifts toward smoke). */
+    .cy-scene[data-cy-hover]:is(
+            [data-cy-hover='flashsplit'],
+            [data-cy-hover='jitter'],
+            [data-cy-hover='slice'],
+            [data-cy-hover='slit'],
+            [data-cy-hover='beam']
+        )
+        .cy-aim {
         --cy-neon: var(--accent);
         color: color-mix(in oklch, var(--cy-neon) calc(var(--cy-p) * 100%), var(--cy-rest));
+    }
+
+    .cy-scene[data-cy-hover]:is(
+            [data-cy-hover='flashsplit'],
+            [data-cy-hover='jitter'],
+            [data-cy-hover='slice'],
+            [data-cy-hover='slit'],
+            [data-cy-hover='beam']
+        )
+        .kp-button--primary.cy-aim {
+        --cy-neon: var(--kp-btn-fg);
+        --kp-btn-fill: color-mix(in oklch, var(--primary) calc(100% - var(--cy-p) * 28%), var(--foreground));
+    }
+
+    /* 1. Split edge (fixed): the edge is doubled, cyan along the head and the end, red along the foot, 5, 4, 3 px and then 2 px while pointed. */
+    .cy-scene[data-cy-hover='split'] .cy-aim {
+        --cy-h-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
+        --cy-h-shape: var(--cy-h-ring);
+        --cy-h-fill: linear-gradient(0deg, var(--destructive) 0 var(--cy-h-d), var(--accent) var(--cy-h-d));
+    }
+
+    /* 2. End bar: only the end edge is doubled, a bar of two columns, cyan inside and red outside, 10, 8, 6 px and then 4 px. */
+    .cy-scene[data-cy-hover='bar'] .cy-aim {
+        --cy-h-w: calc(var(--cy-p) * (4px + var(--cy-t) * 2px));
+        --cy-h-shape: polygon(
+            calc(100% - var(--cy-h-w)) max(0px, var(--cy-h-ct) - var(--cy-h-w)),
+            100% var(--cy-h-ct),
+            100% calc(100% - var(--cy-h-cb)),
+            calc(100% - var(--cy-h-w)) calc(100% - max(0px, var(--cy-h-cb) - var(--cy-h-w)))
+        );
+        --cy-h-fill: linear-gradient(
+            90deg,
+            transparent calc(100% - var(--cy-h-w)),
+            var(--accent) calc(100% - var(--cy-h-w)) calc(100% - var(--cy-h-w) / 2),
+            var(--destructive) calc(100% - var(--cy-h-w) / 2)
+        );
+    }
+
+    /* 3. Foot rule: two 2 px rules under the part, cyan over red, 6, 4, 2 px apart and then touching. */
+    .cy-scene[data-cy-hover='foot'] .cy-aim {
+        --cy-h-h: calc(var(--cy-p) * 2px);
+        --cy-h-g: calc(var(--cy-p) * var(--cy-t) * 2px);
+        --cy-h-shape: polygon(
+            0 0,
+            0 calc(100% - var(--cy-h-h)),
+            calc(100% - var(--cy-h-cb)) calc(100% - var(--cy-h-h)),
+            calc(100% - var(--cy-h-cb)) 100%,
+            0 100%,
+            0 calc(100% - var(--cy-h-h)),
+            0 0,
+            0 calc(100% - 2 * var(--cy-h-h) - var(--cy-h-g)),
+            calc(100% - max(0px, var(--cy-h-cb) - 2 * var(--cy-h-h) - var(--cy-h-g))) calc(100% - 2 * var(--cy-h-h) - var(--cy-h-g)),
+            calc(100% - max(0px, var(--cy-h-cb) - 2 * var(--cy-h-h) - var(--cy-h-g))) calc(100% - var(--cy-h-h) - var(--cy-h-g)),
+            0 calc(100% - var(--cy-h-h) - var(--cy-h-g)),
+            0 calc(100% - 2 * var(--cy-h-h) - var(--cy-h-g)),
+            0 0
+        );
+        --cy-h-fill: linear-gradient(0deg, var(--destructive) 0 var(--cy-h-h), var(--accent) var(--cy-h-h));
+    }
+
+    /* 4. Half frame: a closed 2 px frame, cyan on its upper half and red on its lower half, closing on the edge from 6, 4, 2 px inside. */
+    .cy-scene[data-cy-hover='frame'] .cy-aim {
+        --cy-h-o: calc(var(--cy-p) * var(--cy-t) * 2px);
+        --cy-h-d: calc(var(--cy-p) * 2px);
+        --cy-h-l0: var(--cy-h-o);
+        --cy-h-l1: var(--cy-h-i);
+        --cy-h-shape: var(--cy-h-ring);
+        --cy-h-fill: linear-gradient(180deg, var(--accent) 50%, var(--destructive) 50%);
+    }
+
+    /* 5. Brackets: a red bar on the start edge and a cyan bar on the end edge; the cyan one leads and the red one follows a tick later (and goes first on the way out). */
+    .cy-scene[data-cy-hover='brackets'] .cy-aim {
+        --cy-h-we: calc(var(--cy-p) * (3px + var(--cy-t) * 1.5px));
+        --cy-h-ws: calc(var(--cy-h-we) * min(1, max(0, 3 - var(--cy-t))));
+        --cy-h-shape: polygon(
+            0 0,
+            var(--cy-h-ws) 0,
+            var(--cy-h-ws) 100%,
+            0 100%,
+            0 0,
+            0 0,
+            calc(100% - var(--cy-h-we)) max(0px, var(--cy-h-ct) - var(--cy-h-we)),
+            100% var(--cy-h-ct),
+            100% calc(100% - var(--cy-h-cb)),
+            calc(100% - var(--cy-h-we)) calc(100% - max(0px, var(--cy-h-cb) - var(--cy-h-we))),
+            calc(100% - var(--cy-h-we)) max(0px, var(--cy-h-ct) - var(--cy-h-we)),
+            0 0
+        );
+        --cy-h-fill: linear-gradient(
+            90deg,
+            var(--destructive) var(--cy-h-ws),
+            transparent var(--cy-h-ws) calc(100% - var(--cy-h-we)),
+            var(--accent) calc(100% - var(--cy-h-we))
+        );
+    }
+
+    /* 6. Red leads: the same doubled edge with the channels swapped and a heavier hand: red along the head and the end, cyan along the foot, 6, 5, 4 px and then 3 px. */
+    .cy-scene[data-cy-hover='lead'] .cy-aim {
+        --cy-h-d: calc(var(--cy-p) * (3px + var(--cy-t) * 1px));
+        --cy-h-shape: var(--cy-h-ring);
+        --cy-h-fill: linear-gradient(0deg, var(--accent) 0 var(--cy-h-d), var(--destructive) var(--cy-h-d));
+    }
+
+    /* The glitchy five. The anchor: neon words, a cyan copy right and up, a red copy right and down, and the part sliced. */
+
+    /* 7. Flash and split: the words flash with their two copies (4.5, 3, 1.5 px) while the split edge of option 1 tears in; both lock together. */
+    .cy-scene[data-cy-hover='flashsplit'] .cy-aim {
+        --cy-h-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
+        --cy-h-shape: var(--cy-h-ring);
+        --cy-h-fill: linear-gradient(0deg, var(--destructive) 0 var(--cy-h-d), var(--accent) var(--cy-h-d));
         text-shadow:
             calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * -1px) 0 hsl(from var(--accent) h s l / var(--cy-t)),
             calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * 1px) 0 hsl(from var(--destructive) h s l / var(--cy-t));
     }
 
-    .cy-scene[data-cy-hover='flash'] .kp-button--primary.cy-aim {
-        --cy-neon: var(--kp-btn-fg);
-        --kp-btn-fill: color-mix(in oklch, var(--primary) calc(100% - var(--cy-p) * 28%), var(--foreground));
+    /* 8. Jitter: the two copies of the words jump from side to side each tick (left 4.5, right 3, left 1.5 px) before they lock. */
+    .cy-scene[data-cy-hover='jitter'] .cy-aim {
+        --cy-h-x: calc(cos(var(--cy-t) * 180deg) * var(--cy-t) * 1.5px);
+        text-shadow:
+            var(--cy-h-x) calc(var(--cy-t) * -1px) 0 hsl(from var(--accent) h s l / var(--cy-t)),
+            var(--cy-h-x) calc(var(--cy-t) * 1px) 0 hsl(from var(--destructive) h s l / var(--cy-t)),
+            0 0 6px hsl(from var(--cy-h-glow, var(--accent)) h s l / calc(var(--cy-p) * 0.55));
     }
 
-    /* 2. Static: a checker of noise flickers over the part for three ticks
-       and leaves a faint dither on it for as long as it is pointed. */
-    .cy-scene[data-cy-hover='static'] .cy-aim::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        background: repeating-conic-gradient(var(--cy-ink) 0 25%, transparent 0 50%) calc(var(--cy-t) * 2px) calc(var(--cy-t) * 1px) / 4px 4px;
-        opacity: calc(var(--cy-t) * 0.2 + var(--cy-p) * 0.12);
-        transform: none;
-        pointer-events: none;
+    .cy-scene[data-cy-hover='jitter'] .kp-button--primary.cy-aim {
+        --cy-h-glow: transparent;
     }
 
-    /* 3. Tear: the part itself is thrown sideways and jitters home (−4.5, 3,
-       −1.5, 0 px); the torn edge stays as a bar on its end side. */
-    .cy-scene[data-cy-hover='tear'] .cy-aim {
-        translate: calc(cos(var(--cy-t) * 180deg) * var(--cy-t) * 1.5px) 0;
-        --cy-sh: inset calc(var(--cy-p) * -4px) 0 0 var(--cy-ink);
+    /* 9. Sliced bar: a bar on the start edge, half cyan and half red, comes in as four slices pushed in by 9, 3, 12 and 6 px and slides home into one bar. */
+    .cy-scene[data-cy-hover='slice'] .cy-aim {
+        --cy-h-w: calc(var(--cy-p) * 3px);
+        --cy-h-s1: calc(var(--cy-t) * 3px);
+        --cy-h-s2: calc(var(--cy-t) * 1px);
+        --cy-h-s3: calc(var(--cy-t) * 4px);
+        --cy-h-s4: calc(var(--cy-t) * 2px);
+        --cy-h-shape: polygon(
+            0 0,
+            var(--cy-h-s1) 0,
+            calc(var(--cy-h-s1) + var(--cy-h-w)) 0,
+            calc(var(--cy-h-s1) + var(--cy-h-w)) 25%,
+            var(--cy-h-s1) 25%,
+            var(--cy-h-s1) 0,
+            0 0,
+            var(--cy-h-s2) 25%,
+            calc(var(--cy-h-s2) + var(--cy-h-w)) 25%,
+            calc(var(--cy-h-s2) + var(--cy-h-w)) 50%,
+            var(--cy-h-s2) 50%,
+            var(--cy-h-s2) 25%,
+            0 0,
+            var(--cy-h-s3) 50%,
+            calc(var(--cy-h-s3) + var(--cy-h-w)) 50%,
+            calc(var(--cy-h-s3) + var(--cy-h-w)) 75%,
+            var(--cy-h-s3) 75%,
+            var(--cy-h-s3) 50%,
+            0 0,
+            var(--cy-h-s4) 75%,
+            calc(var(--cy-h-s4) + var(--cy-h-w)) 75%,
+            calc(var(--cy-h-s4) + var(--cy-h-w)) 100%,
+            var(--cy-h-s4) 100%,
+            var(--cy-h-s4) 75%,
+            0 0
+        );
+        --cy-h-fill: linear-gradient(180deg, var(--accent) 50%, var(--destructive) 50%);
     }
 
-    /* 4. Split edge: the part's edge is doubled, a cyan copy right and up, a
-       red copy right and down, 5, 4, 3 px and then 2 px for as long as it is
-       pointed. */
-    .cy-scene[data-cy-hover='split'] .cy-aim {
-        --cy-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
-        --cy-sh:
-            inset calc(-1 * var(--cy-d)) var(--cy-d) 0 0 var(--accent), inset calc(-1 * var(--cy-d)) calc(-1 * var(--cy-d)) 0 0 var(--destructive);
+    /* 10. Slits: two thin rows are sliced out of the part itself (6 px, then 4, then 2) and close; the words flash with a cyan copy right and up and a red copy right and down. */
+    .cy-scene[data-cy-hover='slit'] .cy-aim {
+        --cy-h-s: calc(var(--cy-p) * var(--cy-t) * 2px);
+        clip-path: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--cy-h-ct)) 0,
+            100% var(--cy-h-ct),
+            100% calc(100% - var(--cy-h-cb)),
+            calc(100% - var(--cy-h-cb)) 100%,
+            0 100%,
+            0 0,
+            0 38%,
+            calc(100% - 14px) 38%,
+            calc(100% - 14px) calc(38% + var(--cy-h-s)),
+            0 calc(38% + var(--cy-h-s)),
+            0 38%,
+            0 0,
+            0 70%,
+            calc(100% - 14px) 70%,
+            calc(100% - 14px) calc(70% + var(--cy-h-s) * 0.75),
+            0 calc(70% + var(--cy-h-s) * 0.75),
+            0 70%,
+            0 0
+        );
+        text-shadow:
+            calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * -1px) 0 hsl(from var(--accent) h s l / var(--cy-t)),
+            calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * 1px) 0 hsl(from var(--destructive) h s l / var(--cy-t));
     }
 
-    /* 5. Chevron: a wedge grows out of the start edge, pointing in, with a
-       3 px bar beside it. */
-    .cy-scene[data-cy-hover='chevron'] .cy-aim {
-        --cy-sh: inset calc(var(--cy-p) * 3px) 0 0 var(--cy-ink);
-    }
-
-    .cy-scene[data-cy-hover='chevron'] .cy-aim::after {
-        content: '';
-        position: absolute;
-        inset: calc(50% - 7px) auto auto 5px;
-        z-index: 1;
-        inline-size: calc(var(--cy-p) * (10px - var(--cy-t) * 2.5px));
-        block-size: 14px;
-        background: var(--cy-ink);
-        clip-path: polygon(0 0, 100% 50%, 0 100%);
-        transform: none;
-        pointer-events: none;
-    }
-
-    /* 6. Flood: a block of the part's own ink floods it from the start edge
-       to the end in four ticks, a 3 px cyan edge leading, and the words turn
-       to the ground colour as the flood passes over them. */
-    .cy-scene[data-cy-hover='flood'] .cy-aim {
-        --cy-flip: calc(var(--cy-p) * max(0, min(1, 2 - var(--cy-t))));
-        color: color-mix(in oklch, var(--cy-on-ink) calc(var(--cy-flip) * 100%), var(--cy-rest));
-    }
-
-    .cy-scene[data-cy-hover='flood'] .cy-aim .cy-label {
-        color: color-mix(in oklch, var(--cy-on-ink) calc(var(--cy-flip) * 100%), var(--accent));
-    }
-
-    .cy-scene[data-cy-hover='flood'] .cy-aim::after {
-        content: '';
-        position: absolute;
-        inset: 0 auto 0 0;
-        z-index: -1;
-        inline-size: calc(var(--cy-p) * (100% - var(--cy-t) * 25%));
-        background: linear-gradient(90deg, var(--cy-ink) calc(100% - min(var(--cy-t), 1) * 3px), var(--accent) 0);
-        transform: none;
-        pointer-events: none;
+    /* 11. Scanline: a cyan line with a red line under it rises through the part (at 75, 50 and 25 % of its height) and parks under its head as a double rule; the words stay neon. */
+    .cy-scene[data-cy-hover='beam'] .cy-aim {
+        --cy-h-y: calc((100% - 4px) * var(--cy-t) / 4);
+        --cy-h-m: calc(var(--cy-p) * 2px);
+        clip-path: var(--cy-h-sil);
+        --cy-h-fill: linear-gradient(
+            180deg,
+            transparent var(--cy-h-y),
+            var(--accent) var(--cy-h-y) calc(var(--cy-h-y) + var(--cy-h-m)),
+            var(--destructive) calc(var(--cy-h-y) + var(--cy-h-m)) calc(var(--cy-h-y) + 2 * var(--cy-h-m)),
+            transparent calc(var(--cy-h-y) + 2 * var(--cy-h-m))
+        );
     }
 
     /* ── Focus (G14, DI2), the new set: keyboard focus lands on `cy-focused` parts ── */
@@ -4192,33 +4428,47 @@
             animation: cy-stutter-even calc(480ms * var(--cy-slow, 1)) steps(6, end);
         }
 
-        .cy-scene[data-cy-curve='swing']:not([data-cy-phase='gap']) .cy-track {
-            --cy-room: min(var(--cy-to), calc(1 - var(--cy-to)));
-            animation: cy-swing-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        /* Q1, the text glitch on the whole part (the count-down stutter,
+           js/update.js): four ticks of 120 ms, a yellow copy right and up and
+           a cyan copy right and down, 6, 4, 2, 1 px, then home. Each
+           variation changes only what happens to the part itself. The
+           readouts are tiny, so a slice or a tear plays as the plain copies
+           on them. */
+        .cy-scene[data-cy-curve='converge']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-fx-track-copies calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-curve='ghost']:not([data-cy-phase='gap']) .cy-track {
-            animation: cy-ghost-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-curve='converge']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-fx-converge calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-curve='weave']:not([data-cy-phase='gap']) .cy-track {
-            animation: cy-weave-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-curve='slice']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-fx-track-copies calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-curve='swing']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
-            animation: cy-swing calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-curve='slice']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-fx-slice calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-curve='ghost']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
-            animation: cy-ghost calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-curve='tear']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-fx-track-copies calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-curve='weave']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
-            animation: cy-weave calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-curve='tear']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-fx-tear calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='split']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-fx-track-split calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='split']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-fx-split calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
         /* The live change stutters home the same way on every tick-driven curve. */
-        .cy-scene:is([data-cy-curve='swing'], [data-cy-curve='ghost'], [data-cy-curve='weave'])[data-cy-phase='in'] .cy-carrier {
+        .cy-scene:is([data-cy-curve='converge'], [data-cy-curve='slice'], [data-cy-curve='tear'], [data-cy-curve='split'])[data-cy-phase='in']
+            .cy-carrier {
             animation: cy-stutter calc(480ms * var(--cy-slow, 1)) steps(1, end);
         }
 
@@ -4261,20 +4511,28 @@
             animation: cy-crt calc(1520ms * var(--cy-slow, 1)) cubic-bezier(0.3, 0, 0.2, 1) both;
         }
 
-        .cy-scene[data-cy-opening='cut']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
-            animation: cy-cut calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
-        }
-
-        .cy-scene[data-cy-opening='rows']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
-            animation: cy-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-opening='blocks']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
-            animation: cy-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
         .cy-scene[data-cy-opening='flicker']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
             animation: cy-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='converge']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-fx-converge calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='blink']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-fx-blink calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='slice']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-fx-slice calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='tear']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-fx-tear calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='split']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-fx-split calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
         /* Q4, the durations. */
@@ -4399,73 +4657,39 @@
             animation: cy-spin-lock calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        /* Q12, leaving and arriving: what arrives plays the leave backwards. */
-        .cy-scene[data-cy-leave='today']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear reverse both;
+        /* Q12, leaving and arriving. What arrives plays the options of Q1 and
+           Q3 (the text glitch's copies, 6, 4, 2, 1 px in four ticks of 120 ms);
+           what leaves is the same animation backwards (demo.js,
+           closeByReverse), so no rule is drawn for `out`. The animated part is
+           the plate itself, not the glow round it, so its own cut corner is the
+           clip at every tick. */
+        .cy-leaver .kp-alert {
+            --cy-end-clip: var(--cy-clip-ctl);
+            --cy-wide-clip: var(--cy-wide-ctl);
         }
 
-        .cy-scene[data-cy-leave='today'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear both;
+        .cy-scene[data-cy-leave='converge']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-fx-converge calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-leave='tube']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        .cy-scene[data-cy-leave='blink']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-fx-blink calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-leave='tube'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-leave='flicker']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-leave-power calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-leave='seam']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-seam calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        .cy-scene[data-cy-leave='slice']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-fx-slice calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-leave='seam'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-seam calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        .cy-scene[data-cy-leave='tear']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-fx-tear calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-leave='notch']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-notch calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
-        }
-
-        .cy-scene[data-cy-leave='notch'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-notch calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-leave='rows']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
-        }
-
-        .cy-scene[data-cy-leave='rows'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-leave='blocks']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
-        }
-
-        .cy-scene[data-cy-leave='blocks'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-leave='unwrite']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-unwrite calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
-        }
-
-        .cy-scene[data-cy-leave='unwrite'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-unwrite calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-leave='flicker']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
-            animation: cy-leave-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
-        }
-
-        .cy-scene[data-cy-leave='flicker'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-leave-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-leave='notch'] .cy-leaver > * {
-            transform-origin: 100% 0;
+        .cy-scene[data-cy-leave='split']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver :is(.kp-alert, .cy-plate) {
+            animation: cy-fx-split calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
     }
 
@@ -4477,45 +4701,62 @@
        one before it (8, 28, 48, 68, 84, 96 % of the height), so played
        backwards the part shrinks steadily and no piece stands apart from
        the rest as it closes; the tick that follows the last is `gone`. */
+    /* Glitched in: bands grow from the middle line, jumping sideways with a
+       cyan and a red copy. The bands are a mask, not a clip: the clip is the
+       part's own cut (the notch, wide while copies play outside the box), so
+       the corner is cut at every tick and no band paints a rectangle over it. */
     @keyframes cy-glitch-in {
         0% {
-            clip-path: inset(46% -10px 46% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 50% / calc(100% + 24px) 8% no-repeat;
+            mask-clip: no-clip;
             translate: -18px 0;
             filter: drop-shadow(-6px 0 0 var(--accent)) drop-shadow(6px 0 0 var(--destructive));
         }
 
         16.67% {
-            clip-path: inset(38% -10px 36% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 51.3514% / calc(100% + 24px) 26% no-repeat;
+            mask-clip: no-clip;
             translate: 12px 0;
             filter: drop-shadow(-5px 0 0 var(--accent)) drop-shadow(5px 0 0 var(--destructive));
         }
 
         33.33% {
-            clip-path: inset(28% -10px 26% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 51.8519% / calc(100% + 24px) 46% no-repeat;
+            mask-clip: no-clip;
             translate: -8px 0;
             filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
         }
 
         50% {
-            clip-path: inset(18% -10px 16% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 52.9412% / calc(100% + 24px) 66% no-repeat;
+            mask-clip: no-clip;
             translate: 5px 0;
             filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
         }
 
         66.67% {
-            clip-path: inset(8% -10px 8% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 50% / calc(100% + 24px) 84% no-repeat;
+            mask-clip: no-clip;
             translate: -3px 0;
             filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
         }
 
         83.33% {
-            clip-path: inset(2% -10px 2% -10px);
+            clip-path: var(--cy-wide-clip);
+            mask: linear-gradient(#000 0 0) -12px 50% / calc(100% + 24px) 96% no-repeat;
+            mask-clip: no-clip;
             translate: 1px 0;
             filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
         }
 
         100% {
             clip-path: var(--cy-end-clip);
+            mask: none;
             translate: 0 0;
             filter: none;
         }
@@ -5057,700 +5298,309 @@
         }
     }
 
-    /* The register's leave as it is today (kp-sig-cyberpunk-leave, 650 ms,
-       every frame tweened). */
-    @keyframes cy-leave-today {
+    /* Q1 and Q3, the text glitch on a whole part: four ticks of 120 ms. The
+       clip is the part's own cut, wide around it, at every tick (the notch
+       never turns into a rectangle); the copies are the SVG filters of
+       demo.js, 6, 4, 2, 1 px; the last frame is the part clean. */
+    @keyframes cy-fx-converge {
         0% {
-            text-shadow: none;
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-cp-0);
         }
 
-        12% {
-            color: var(--accent-hover);
-            text-shadow:
-                4px -3px 0 hsl(from var(--accent) h s l / 0.85),
-                4px 3px 0 hsl(from var(--chart-3) h s l / 0.85);
-            transform: translateX(2px);
-        }
-
-        24% {
-            text-shadow:
-                7px -5px 0 hsl(from var(--accent) h s l / 0.85),
-                7px 5px 0 hsl(from var(--chart-3) h s l / 0.85);
-            transform: translateX(-2px);
-        }
-
-        36% {
-            text-shadow:
-                3px -2px 0 hsl(from var(--accent) h s l / 0.85),
-                3px 2px 0 hsl(from var(--chart-3) h s l / 0.85);
-            transform: translateX(3px);
-            clip-path: inset(0 0 0 0);
+        25% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-cp-1);
         }
 
         50% {
-            color: var(--accent-hover);
-            text-shadow:
-                10px -6px 0 hsl(from var(--accent) h s l / 0.9),
-                10px 6px 0 hsl(from var(--chart-3) h s l / 0.9);
-            clip-path: inset(20% 0 35% 0);
-            transform: translateX(-4px);
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-cp-2);
         }
 
-        65% {
-            clip-path: inset(55% 0 10% 0);
-            transform: translateX(6px);
+        75% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-cp-3);
         }
 
-        80% {
-            clip-path: inset(5% 0 75% 0);
-            transform: translateX(-3px);
-        }
-
-        to {
-            color: var(--accent-hover);
-            clip-path: inset(50% 0 50% 0);
-            transform: translateX(8px);
-            opacity: 0;
-        }
-    }
-
-    /* Nostromo's proposed switch-off: a line, a dot, gone. */
-    @keyframes cy-tube {
-        0% {
-            clip-path: inset(0);
-            filter: none;
-        }
-
-        16.67% {
-            clip-path: inset(calc(50% - 1px) 0);
-            filter: brightness(2);
-        }
-
-        66.67% {
-            clip-path: inset(calc(50% - 1px) calc(50% - 3px));
-            filter: brightness(2);
-        }
-
-        83.33%,
         100% {
-            clip-path: inset(50% 50%);
+            clip-path: var(--cy-end-clip);
             filter: none;
         }
     }
 
-    /* Q1, the whiplash: the whole part is slapped sideways and sheared, and
-       swings back across its place, each tick less than the one before and
-       on the other side (28, 18, 11, 6, 3, 1 px). Nothing is cut, so a close
-       is the swing growing again until the part is gone. */
-    @keyframes cy-swing {
+    @keyframes cy-fx-blink {
         0% {
-            translate: -28px 0;
-            transform: skewX(10deg);
-            clip-path: inset(-2px -48px);
+            clip-path: var(--cy-wide-clip);
+            opacity: 1;
+            filter: url(#cy-fx-cp-0);
+        }
+
+        25% {
+            clip-path: var(--cy-wide-clip);
+            opacity: 0;
+            filter: none;
+        }
+
+        50% {
+            clip-path: var(--cy-wide-clip);
+            opacity: 1;
+            filter: url(#cy-fx-cp-2);
+        }
+
+        75% {
+            clip-path: var(--cy-wide-clip);
+            opacity: 1;
+            filter: url(#cy-fx-cp-3);
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            filter: none;
+            opacity: 1;
+        }
+    }
+
+    @keyframes cy-fx-slice {
+        0% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sl-0);
+        }
+
+        25% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sl-1);
+        }
+
+        50% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sl-2);
+        }
+
+        75% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sl-3);
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    @keyframes cy-fx-tear {
+        0% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-tr-0);
+        }
+
+        25% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-tr-1);
+        }
+
+        50% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-tr-2);
+        }
+
+        75% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-tr-3);
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    @keyframes cy-fx-split {
+        0% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sp-0);
+        }
+
+        25% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sp-1);
+        }
+
+        50% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sp-2);
+        }
+
+        75% {
+            clip-path: var(--cy-wide-clip);
+            filter: url(#cy-fx-sp-3);
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    @keyframes cy-fx-track-copies {
+        0% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-cp-0);
+        }
+
+        25% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-cp-1);
+        }
+
+        50% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-cp-2);
+        }
+
+        75% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-cp-3);
+        }
+
+        100% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+            filter: none;
+        }
+    }
+
+    @keyframes cy-fx-track-split {
+        0% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-sp-0);
+        }
+
+        25% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-sp-1);
+        }
+
+        50% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-sp-2);
+        }
+
+        75% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(
+                -40px -40px,
+                calc(100% + 40px) -40px,
+                calc(100% + 40px) calc(100% - 44px),
+                calc(100% - 44px) calc(100% + 40px),
+                -40px calc(100% + 40px)
+            );
+            filter: url(#cy-fx-sp-3);
+        }
+
+        100% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+            filter: none;
+        }
+    }
+
+    /* Q12, power flicker on a part that leaves and arrives (the same blinks
+       as Q3's, 18 px out and split in cyan and red, dark, 10 px back, dark,
+       4 px, 1 px, hold), with the part's own cut corner as the clip at every
+       tick instead of a rectangle. */
+    @keyframes cy-leave-power {
+        0% {
+            opacity: 1;
+            translate: 18px 0;
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         16.67% {
-            translate: 18px 0;
-            transform: skewX(-7deg);
-            clip-path: inset(-2px -48px);
-            filter: drop-shadow(-6px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(6px 0 0 hsl(from var(--destructive) h s l / 0.5));
+            opacity: 0;
+            clip-path: var(--cy-wide-clip);
         }
 
         33.33% {
-            translate: -11px 0;
-            transform: skewX(4.5deg);
-            clip-path: inset(-2px -48px);
-            filter: drop-shadow(-4px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(4px 0 0 hsl(from var(--destructive) h s l / 0.5));
+            opacity: 1;
+            translate: -10px 0;
+            clip-path: var(--cy-wide-clip);
+            filter: drop-shadow(-5px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(5px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         50% {
-            translate: 6px 0;
-            transform: skewX(-2.5deg);
-            clip-path: inset(-2px -48px);
+            opacity: 0;
+            clip-path: var(--cy-wide-clip);
+        }
+
+        66.67% {
+            opacity: 1;
+            translate: 4px 0;
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(2px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
-        66.67% {
-            translate: -3px 0;
-            transform: skewX(1.2deg);
-            clip-path: inset(-2px -48px);
-            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
         83.33% {
-            translate: 1px 0;
-            transform: skewX(-0.5deg);
-            clip-path: inset(-2px -48px);
-            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        100% {
-            translate: 0 0;
-            transform: none;
-            clip-path: var(--cy-end-clip);
-            filter: none;
-        }
-    }
-
-    /* The readouts of the whiplash swing across the room they have around
-       their mark (0.9, 0.7, 0.45, 0.25, 0.1 of it, alternately) and stop. */
-    @keyframes cy-swing-track {
-        0% {
-            translate: 0 0;
-        }
-
-        16.67% {
-            translate: calc((var(--cy-to) + var(--cy-room) * 0.9) * 100cqi - 5px) 0;
-        }
-
-        33.33% {
-            translate: calc((var(--cy-to) + var(--cy-room) * -0.7) * 100cqi - 5px) 0;
-        }
-
-        50% {
-            translate: calc((var(--cy-to) + var(--cy-room) * 0.45) * 100cqi - 5px) 0;
-        }
-
-        66.67% {
-            translate: calc((var(--cy-to) + var(--cy-room) * -0.25) * 100cqi - 5px) 0;
-        }
-
-        83.33% {
-            translate: calc((var(--cy-to) + var(--cy-room) * 0.1) * 100cqi - 5px) 0;
-        }
-
-        100% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-        }
-    }
-
-    /* Q1, triple vision: the part does not move at all; a cyan and a red
-       copy of it stand 36 px out and are drawn in to it (36, 24, 15, 8, 3,
-       1 px), as a misregistered print locks. */
-    @keyframes cy-ghost {
-        0% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-36px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(36px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        16.67% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-24px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(24px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        33.33% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-15px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(15px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        50% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        66.67% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-3px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(3px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        83.33% {
-            clip-path: inset(-2px -56px);
-            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        100% {
-            clip-path: var(--cy-end-clip);
-            filter: none;
-        }
-    }
-
-    /* The readouts of triple vision stand at their mark at once; a cyan copy
-       holds the place they came from and a red one the far end, and both are
-       drawn in (1, 0.6, 0.35, 0.18, 0.06 of their way). */
-    @keyframes cy-ghost-track {
-        0% {
-            translate: 0 0;
-        }
-
-        16.67% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            clip-path: inset(-2px -1000px);
-            filter: drop-shadow(calc(var(--cy-to) * -1 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
-                drop-shadow(calc((1 - var(--cy-to)) * 1 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        33.33% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            clip-path: inset(-2px -1000px);
-            filter: drop-shadow(calc(var(--cy-to) * -0.6 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
-                drop-shadow(calc((1 - var(--cy-to)) * 0.6 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        50% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            clip-path: inset(-2px -1000px);
-            filter: drop-shadow(calc(var(--cy-to) * -0.35 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
-                drop-shadow(calc((1 - var(--cy-to)) * 0.35 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        66.67% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            clip-path: inset(-2px -1000px);
-            filter: drop-shadow(calc(var(--cy-to) * -0.18 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
-                drop-shadow(calc((1 - var(--cy-to)) * 0.18 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        83.33% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            clip-path: inset(-2px -1000px);
-            filter: drop-shadow(calc(var(--cy-to) * -0.06 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
-                drop-shadow(calc((1 - var(--cy-to)) * 0.06 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        100% {
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-            filter: none;
-        }
-    }
-
-    /* Q1, the weave: an interlaced picture. Only the even scan lines, 12 px
-       out; then only the odd ones, 9 px back; then even, 6 px; and so on,
-       until the two fields lie in one picture. */
-    @keyframes cy-weave {
-        0% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: 12px 0;
-        }
-
-        16.67% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 2px;
-            translate: -9px 0;
-        }
-
-        33.33% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: 6px 0;
-        }
-
-        50% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 2px;
-            translate: -3px 0;
-        }
-
-        66.67% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: 1px 0;
-        }
-
-        83.33% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 2px;
+            opacity: 1;
             translate: -1px 0;
+            clip-path: var(--cy-wide-clip);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         100% {
-            mask-image: none;
+            opacity: 1;
             translate: 0 0;
-        }
-    }
-
-    /* The readouts of the weave land at their mark in alternate fields
-       (6, 4, 2, 1, 1 px). */
-    @keyframes cy-weave-track {
-        0% {
-            translate: 0 0;
-        }
-
-        16.67% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: calc(var(--cy-to) * 100cqi - 5px + 6px) 0;
-        }
-
-        33.33% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 2px;
-            translate: calc(var(--cy-to) * 100cqi - 5px + -4px) 0;
-        }
-
-        50% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: calc(var(--cy-to) * 100cqi - 5px + 2px) 0;
-        }
-
-        66.67% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 2px;
-            translate: calc(var(--cy-to) * 100cqi - 5px + -1px) 0;
-        }
-
-        83.33% {
-            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
-            mask-position: 0 0px;
-            translate: calc(var(--cy-to) * 100cqi - 5px + 1px) 0;
-        }
-
-        100% {
-            mask-image: none;
-            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
-        }
-    }
-
-    /* Q3, row shuffle: the part is eight rows, and they flash in out of
-       order (1, 2, 4, 5, 7, 8 of them), thrown sideways and split, until
-       every row stands. Each tick holds the rows of the one before. */
-    @keyframes cy-rows {
-        0% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                transparent 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                transparent 62.5% 75%,
-                transparent 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: -14px 0;
-            filter: drop-shadow(-4px 0 0 var(--accent)) drop-shadow(4px 0 0 var(--destructive));
-        }
-
-        16.67% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                transparent 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                transparent 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: 9px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: -6px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        50% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                var(--foreground) 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: 4px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            mask-image: linear-gradient(
-                to bottom,
-                var(--foreground) 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                var(--foreground) 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                var(--foreground) 87.5% 100%
-            );
-            translate: -2px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            mask-image: linear-gradient(
-                to bottom,
-                var(--foreground) 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                var(--foreground) 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                var(--foreground) 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                var(--foreground) 87.5% 100%
-            );
-            translate: 1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        100% {
-            mask-image: none;
-            translate: 0 0;
-            filter: none;
-        }
-    }
-
-    /* Q3, macroblocks: the part is twelve blocks (four by three) and they
-       pop in scattered, a few at first (2, 4, 6, 8, 10, 12), each tick
-       keeping the blocks of the one before and thrown sideways. */
-    @keyframes cy-blocks {
-        0% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                0 0,
-                0 0,
-                0 0,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: -12px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        16.67% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: 8px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: -5px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        50% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: 3px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%;
-            mask-repeat: no-repeat;
-            translate: -1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%;
-            mask-repeat: no-repeat;
-            translate: 1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        100% {
-            mask-image: none;
-            translate: 0 0;
+            clip-path: var(--cy-end-clip);
             filter: none;
         }
     }
@@ -5761,38 +5611,38 @@
         0% {
             opacity: 1;
             translate: 18px 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         16.67% {
             opacity: 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
         }
 
         33.33% {
             opacity: 1;
             translate: -10px 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-5px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(5px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         50% {
             opacity: 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
         }
 
         66.67% {
             opacity: 1;
             translate: 4px 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(2px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
         83.33% {
             opacity: 1;
             translate: -1px 0;
-            clip-path: inset(-2px -24px);
+            clip-path: var(--cy-wide-clip);
             filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
         }
 
@@ -5801,469 +5651,6 @@
             translate: 0 0;
             clip-path: var(--cy-end-clip);
             filter: none;
-        }
-    }
-
-    /* Q12, squeezed to a seam: the part narrows toward its middle line in
-       hard ticks (0.78, 0.55, 0.36, 0.2, 0.07 of its width), jumping
-       sideways and split as it goes, and is gone. Arriving is the seam
-       widening to the part. */
-    @keyframes cy-leave-seam {
-        16.67% {
-            transform: scaleX(0.78);
-            translate: 3px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            transform: scaleX(0.55);
-            translate: -4px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        50% {
-            transform: scaleX(0.36);
-            translate: 3px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            transform: scaleX(0.2);
-            translate: -2px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            transform: scaleX(0.07);
-            translate: 1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        100% {
-            transform: scaleX(0);
-            translate: 0 0;
-            opacity: 0;
-        }
-    }
-
-    /* Q12, sucked into its corner: the part shrinks toward its dossier
-       corner (top, inline end) in hard ticks (0.84, 0.66, 0.48, 0.3, 0.14)
-       and is gone; arriving it grows out of that corner. */
-    @keyframes cy-leave-notch {
-        16.67% {
-            transform: scale(0.84);
-            translate: 3px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            transform: scale(0.66);
-            translate: -4px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        50% {
-            transform: scale(0.48);
-            translate: 3px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            transform: scale(0.3);
-            translate: -2px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            transform: scale(0.14);
-            translate: 1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        100% {
-            transform: scale(0);
-            translate: 0 0;
-            opacity: 0;
-        }
-    }
-
-    /* Q12, rows drop out: the part is eight rows and they go out of order
-       (7, 5, 4, 2, 1 of them stay), thrown sideways and split, until none
-       is left; arriving is the same ticks backwards. */
-    @keyframes cy-leave-rows {
-        16.67% {
-            mask-image: linear-gradient(
-                to bottom,
-                var(--foreground) 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                var(--foreground) 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                var(--foreground) 87.5% 100%
-            );
-            translate: -2px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                var(--foreground) 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: 4px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        50% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                var(--foreground) 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                var(--foreground) 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: -6px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                transparent 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                transparent 62.5% 75%,
-                var(--foreground) 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: 9px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            mask-image: linear-gradient(
-                to bottom,
-                transparent 0% 12.5%,
-                transparent 12.5% 25%,
-                transparent 25% 37.5%,
-                var(--foreground) 37.5% 50%,
-                transparent 50% 62.5%,
-                transparent 62.5% 75%,
-                transparent 75% 87.5%,
-                transparent 87.5% 100%
-            );
-            translate: -14px 0;
-            filter: drop-shadow(-4px 0 0 var(--accent)) drop-shadow(4px 0 0 var(--destructive));
-        }
-
-        100% {
-            mask-image: linear-gradient(transparent, transparent);
-            translate: 0 0;
-            filter: none;
-        }
-    }
-
-    /* Q12, macroblocks drop out: the part is twelve blocks and they vanish
-       scattered (10, 8, 6, 4, 2 of them stay) until none is left;
-       arriving is the same ticks backwards. */
-    @keyframes cy-leave-blocks {
-        16.67% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%;
-            mask-repeat: no-repeat;
-            translate: -1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: 3px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        50% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: -5px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: 8px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            mask-image:
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
-                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
-            mask-position:
-                0% 0%,
-                33.33% 0%,
-                66.67% 0%,
-                100% 0%,
-                0% 50%,
-                33.33% 50%,
-                66.67% 50%,
-                100% 50%,
-                0% 100%,
-                33.33% 100%,
-                66.67% 100%,
-                100% 100%;
-            mask-size:
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                26% 34%,
-                0 0,
-                0 0,
-                0 0,
-                0 0,
-                0 0,
-                0 0;
-            mask-repeat: no-repeat;
-            translate: -12px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        100% {
-            mask-image: linear-gradient(transparent, transparent);
-            translate: 0 0;
-            filter: none;
-        }
-    }
-
-    /* Q12, un-decoded: the part is erased from its end back to its start
-       (12, 28, 46, 68, 88 % gone), the cut edge jittering and split;
-       arriving it is decoded start to end, the way text is read. */
-    @keyframes cy-leave-unwrite {
-        16.67% {
-            clip-path: inset(-4px 12% -4px -4px);
-            translate: 2px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            clip-path: inset(-4px 28% -4px -4px);
-            translate: -3px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        50% {
-            clip-path: inset(-4px 46% -4px -4px);
-            translate: 2px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            clip-path: inset(-4px 68% -4px -4px);
-            translate: -1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            clip-path: inset(-4px 88% -4px -4px);
-            translate: 1px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        100% {
-            clip-path: inset(-4px 100% -4px -4px);
-            translate: 0 0;
-            opacity: 0;
-        }
-    }
-
-    /* Q12, powered down: the part blinks out. It stands, 2 px out; dark;
-       on, 6 px back; dark; on once more, 16 px out and split, and is gone.
-       Arriving is the same blinks backwards. */
-    @keyframes cy-leave-flicker {
-        16.67% {
-            opacity: 1;
-            translate: 2px 0;
-            clip-path: inset(-2px -24px);
-            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        33.33% {
-            opacity: 0;
-            clip-path: inset(-2px -24px);
-        }
-
-        50% {
-            opacity: 1;
-            translate: -6px 0;
-            clip-path: inset(-2px -24px);
-            filter: drop-shadow(-3px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(3px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        66.67% {
-            opacity: 0;
-            clip-path: inset(-2px -24px);
-        }
-
-        83.33% {
-            opacity: 1;
-            translate: 16px 0;
-            clip-path: inset(-2px -24px);
-            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
-        }
-
-        100% {
-            opacity: 0;
-            translate: 0 0;
-            clip-path: inset(-2px -24px);
         }
     }
 
