@@ -87,6 +87,10 @@ before it, once, and keeps every approval: the dialog walks only the rejected
 pairs, with no stored answer to clear by hand. Name pairs in `"reopen":
 ["<theme>|<item>", …]` only when something approved was redrawn too.
 
+"To judge" (catalogue/changed.html) then shows the demo as "Updated ·
+<themes>", naming the themes the round reopened; "Not started" is only for
+a demo never judged in that browser.
+
 ## Choices to tick
 
 When a demo asks the reviewer to pick between options, the options go in the
