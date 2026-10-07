@@ -65,6 +65,17 @@
         --bw-leave: 1120ms;
         --bw-loop: 2880ms;
         --bw-step: 80ms;
+        /* G2, G4: one pen draws one part after another, so the parts of a
+           group arrive in a row, never at once. A part's own time and where in
+           the row its group begins (a day 1 unit, a column and a row 2, a
+           tile 3). */
+        --bw-dayt: var(--bw-contact);
+        --bw-colt: calc(var(--bw-contact) * 2);
+        --bw-rowt: calc(var(--bw-contact) * 2);
+        --bw-part: var(--bw-set);
+        --bw-off: 0ms;
+        /* G14: where a dimension drawn outside a part stands, below its foot. */
+        --bw-dim-out: 1.1rem;
         /* G3: a panel led in from its trigger: the leader's length and where it leaves the trigger. */
         --bw-lead-gap: 1.25rem;
         --bw-lead-x: 1.6rem;
@@ -197,14 +208,14 @@
         gap: 0.25rem 0.5rem;
     }
 
-    .bw-scene :is(.bw-frame, .bw-trace, .bw-diag, .bw-mk, .bw-lead, .bw-wit, .bw-dim, .bw-datum, .bw-x, .bw-cloud) {
+    .bw-scene :is(.bw-frame, .bw-trace, .bw-mk, .bw-lead, .bw-ldr, .bw-rd, .bw-tk, .bw-wit, .bw-dim, .bw-dimv, .bw-cloud) {
         position: absolute;
         pointer-events: none;
     }
 
     /* The package's key figure places every child in its grid's area; a
        drawn mark is placed on the plate's own box instead. */
-    .bw-scene .bw-plate > :is(.bw-frame, .bw-trace, .bw-diag, .bw-mk, .bw-pen, .bw-wit, .bw-dim, .bw-datum, .bw-x) {
+    .bw-scene .bw-plate > :is(.bw-frame, .bw-trace, .bw-mk, .bw-ldr, .bw-rd, .bw-tk, .bw-pen, .bw-wit, .bw-dim, .bw-dimv) {
         grid-area: auto;
     }
 
@@ -262,32 +273,6 @@
             1px 0;
     }
 
-    /* The diagonal the pen sets a part out on, corner to corner (revealed
-       start → end, so the line ends at the nib), and the second diagonal of
-       a cross, end corner to start corner. Away at rest. */
-    .bw-scene .bw-diag {
-        inset: 0;
-        z-index: 2;
-        visibility: visible;
-        clip-path: inset(0 100% 0 0);
-        background: linear-gradient(
-            to bottom left,
-            transparent calc(50% - 0.5px),
-            var(--bw-pen) calc(50% - 0.5px) calc(50% + 0.5px),
-            transparent calc(50% + 0.5px)
-        );
-    }
-
-    .bw-scene .bw-diag--back {
-        clip-path: inset(0 0 0 100%);
-        background: linear-gradient(
-            to bottom right,
-            transparent calc(50% - 0.5px),
-            var(--bw-pen) calc(50% - 0.5px) calc(50% + 0.5px),
-            transparent calc(50% + 0.5px)
-        );
-    }
-
     /* The two witness lines the pen marks a part off with (the arrival's
        third way): amber, at the part's ends, overhanging top and foot. */
     .bw-scene .bw-mk {
@@ -333,6 +318,272 @@
         background: var(--bw-ground, var(--background));
     }
 
+    /* ── G2: what the one pen draws on an arriving part (static; the motion is below) ── */
+
+    /* Ruled: the part's own two scales, exactly the geometry of the plate's
+       frame (a rule along the start edge and the foot, a short tick every
+       8 px and a long one every 40), drawn tick by tick. */
+    .bw-scene[data-bw-arrival='ruled'] .bw-arrives > .bw-trace {
+        background-image:
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen)),
+            repeating-linear-gradient(90deg, var(--bw-pen) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--bw-pen) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--bw-pen) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--bw-pen) 0 1px, transparent 1px 40px);
+        background-position:
+            left bottom,
+            left top,
+            left bottom,
+            left top,
+            left bottom,
+            left top;
+        background-size:
+            0 1px,
+            1px 0,
+            0 4px,
+            4px 0,
+            0 7px,
+            7px 0;
+    }
+
+    /* The four corners: eight arms, `--bw-k` counting how many the pen has
+       drawn (two a corner: the arm from its end in to the corner, then out
+       along the other). A bracket grows from the arm's far end toward its
+       corner, as the nib goes. */
+    .bw-scene[data-bw-arrival='corners'] .bw-arrives > .bw-trace {
+        --bw-k: 0;
+        --bw-c0v: calc(clamp(0, var(--bw-k), 1) * var(--bw-arm));
+        --bw-c0h: calc(clamp(0, var(--bw-k) - 1, 1) * var(--bw-arm));
+        --bw-c1v: calc(clamp(0, var(--bw-k) - 2, 1) * var(--bw-arm));
+        --bw-c1h: calc(clamp(0, var(--bw-k) - 3, 1) * var(--bw-arm));
+        --bw-c2v: calc(clamp(0, var(--bw-k) - 4, 1) * var(--bw-arm));
+        --bw-c2h: calc(clamp(0, var(--bw-k) - 5, 1) * var(--bw-arm));
+        --bw-c3v: calc(clamp(0, var(--bw-k) - 6, 1) * var(--bw-arm));
+        --bw-c3h: calc(clamp(0, var(--bw-k) - 7, 1) * var(--bw-arm));
+
+        background-image:
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen)),
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen)),
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen)),
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen));
+        background-position:
+            left 0 top calc(var(--bw-arm) - var(--bw-c0v)),
+            left 0 top 0,
+            right 0 top calc(var(--bw-arm) - var(--bw-c1v)),
+            right 0 top 0,
+            right 0 bottom calc(var(--bw-arm) - var(--bw-c2v)),
+            right 0 bottom 0,
+            left 0 bottom calc(var(--bw-arm) - var(--bw-c3v)),
+            left 0 bottom 0;
+        background-size:
+            1px var(--bw-c0v),
+            var(--bw-c0h) 1px,
+            1px var(--bw-c1v),
+            var(--bw-c1h) 1px,
+            1px var(--bw-c2v),
+            var(--bw-c2h) 1px,
+            1px var(--bw-c3v),
+            var(--bw-c3h) 1px;
+    }
+
+    /* The centre lines: across at mid-height, down the middle. */
+    .bw-scene[data-bw-arrival='centre'] .bw-arrives > .bw-trace {
+        background-image: linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen));
+        background-position:
+            left 0 top 50%,
+            left 50% top 0;
+        background-size:
+            0 1px,
+            1px 0;
+    }
+
+    /* Led in: an amber leader from the margin to the part's start edge, its
+       node standing on the edge. Away until the pen draws it. */
+    .bw-scene .bw-ldr {
+        inset-block-start: 50%;
+        inset-inline-end: 100%;
+        z-index: 2;
+        visibility: visible;
+        inline-size: 1.3rem;
+        block-size: 1px;
+        background: var(--bw-note);
+        clip-path: inset(-4px 100% -4px 0);
+    }
+
+    .bw-scene .bw-ldr::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline-end: -3px;
+        inline-size: 6px;
+        block-size: 6px;
+        border: 1px solid var(--bw-note);
+        border-radius: 50%;
+        background: var(--background);
+    }
+
+    /* Read out: the pen's place on the part's own two scales. Amber witness
+       lines drop from the nib to the foot and back to the start edge, and a
+       pointer rests on each scale (the anchor's reading); `--bw-rp` is how far
+       along its diagonal the pen is. */
+    .bw-scene .bw-rd {
+        inset: 0;
+        z-index: 2;
+        visibility: hidden;
+    }
+
+    .bw-scene .bw-rd > i {
+        position: absolute;
+        display: block;
+    }
+
+    .bw-scene .bw-rd__v {
+        inset-block: calc(var(--bw-rp) * 100%) 0;
+        inset-inline-start: calc(var(--bw-rp) * 100%);
+        inline-size: 1px;
+        background: var(--bw-note);
+    }
+
+    .bw-scene .bw-rd__h {
+        inset-block-start: calc(var(--bw-rp) * 100%);
+        inset-inline-start: 0;
+        inline-size: calc(var(--bw-rp) * 100%);
+        block-size: 1px;
+        background: var(--bw-note);
+    }
+
+    .bw-scene .bw-rd__px {
+        inset-block-end: 0;
+        inset-inline-start: calc(var(--bw-rp) * 100% - 4.5px);
+        inline-size: 9px;
+        block-size: 5px;
+        background: conic-gradient(from -45deg at 50% 100%, var(--bw-note) 90deg, transparent 0);
+    }
+
+    .bw-scene .bw-rd__py {
+        inset-block-start: calc(var(--bw-rp) * 100% - 4.5px);
+        inset-inline-start: 0;
+        inline-size: 5px;
+        block-size: 9px;
+        background: conic-gradient(from 45deg at 0% 50%, var(--bw-note) 90deg, transparent 0);
+    }
+
+    /* Ticked in: a checker's tick at the part's top-end corner (the signature's
+       drawn check), drawn along its own length. */
+    .bw-scene .bw-tk {
+        inset-block-start: 0.3rem;
+        inset-inline-end: 0.4rem;
+        z-index: 2;
+        visibility: visible;
+        inline-size: 1rem;
+        block-size: 0.9rem;
+        overflow: visible;
+        fill: none;
+        stroke: var(--bw-pen);
+        stroke-width: 1.2;
+    }
+
+    .bw-scene .bw-tk path {
+        stroke-dasharray: 1 1;
+        stroke-dashoffset: 1;
+    }
+
+    /* Lettered: the lines of a part, each under its own rule. The rule is the
+       pen's mark; the line's words are inked when it is drawn. */
+    .bw-scene .bw-ln__r {
+        display: none;
+    }
+
+    .bw-scene[data-bw-arrival='lettered'] .bw-ln__r {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        display: block;
+        block-size: 1px;
+        background: var(--bw-pen);
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    /* One composite, so one pen can draw it from the first part to the last
+       (a tile, a strip of columns, a week, a list of sheets); the lines of
+       every part have a fixed height, so the pen's rules and its route
+       agree. */
+    .bw-scene .bw-compo {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+        gap: 0.9rem 1rem;
+        padding-inline-start: 1rem;
+    }
+
+    .bw-scene .bw-compo__week,
+    .bw-scene .bw-compo__rows {
+        grid-column: 1 / -1;
+    }
+
+    .bw-scene .bw-compo__strip {
+        --bw-part: var(--bw-colt);
+        --bw-off: var(--bw-set);
+    }
+
+    .bw-scene .bw-compo__week {
+        --bw-part: var(--bw-dayt);
+        --bw-off: calc(var(--bw-set) + var(--bw-colt) * 3);
+    }
+
+    .bw-scene .bw-compo__rows {
+        --bw-part: var(--bw-rowt);
+        --bw-off: calc(var(--bw-set) + var(--bw-colt) * 3 + var(--bw-dayt) * 5);
+    }
+
+    .bw-scene .bw-compo .bw-ln {
+        position: relative;
+        display: block;
+        min-block-size: var(--bw-lnh);
+        line-height: var(--bw-lnh);
+    }
+
+    .bw-scene .bw-compo .bw-tile {
+        --bw-lx: 0.9rem;
+        --bw-ly0: 2.4rem;
+        --bw-lys: 1.9rem;
+        --bw-lnh: 1.6rem;
+    }
+
+    .bw-scene .bw-compo .bw-strip__col {
+        --bw-arm: 0.5rem;
+        --bw-lx: 0.5rem;
+        --bw-ly0: 2.25rem;
+        --bw-lys: 2.05rem;
+        --bw-lnh: 1.9rem;
+    }
+
+    .bw-scene .bw-compo .bw-day {
+        --bw-arm: 0.5rem;
+        --bw-lx: 0.35rem;
+        --bw-ly0: 1.65rem;
+        --bw-lnh: 1.4rem;
+    }
+
+    .bw-scene .bw-compo .bw-row-line {
+        --bw-lx: 0.4rem;
+        --bw-ly0: 1.85rem;
+        --bw-lnh: 1.5rem;
+    }
+
+    /* A group draws its parts one after another at its own pace. */
+    .bw-scene .bw-days {
+        --bw-part: var(--bw-dayt);
+    }
+
+    .bw-scene .bw-rows {
+        --bw-part: var(--bw-rowt);
+    }
+
+    .bw-scene .bw-strip {
+        --bw-part: var(--bw-colt);
+    }
+
     /* The witness lines a part takes under the hand (G8): two amber lines
        at its ends, overhanging its top and foot. */
     .bw-scene .bw-wit {
@@ -375,33 +626,6 @@
 
     .bw-scene .bw-dim::after {
         inset-inline-end: -3px;
-    }
-
-    /* The datum the pen pricks at a held part's centre: a short cross. */
-    .bw-scene .bw-datum {
-        inset-block-start: 50%;
-        inset-inline-start: 50%;
-        inline-size: 0.9rem;
-        block-size: 0.9rem;
-        translate: -50% -50%;
-        opacity: 0;
-        background: linear-gradient(var(--bw-note), var(--bw-note)) center / 100% 1px no-repeat;
-    }
-
-    .bw-scene .bw-datum::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(var(--bw-note), var(--bw-note)) center / 1px 100% no-repeat;
-    }
-
-    /* The demolition hatch a part is hatched out with (G12). */
-    .bw-scene .bw-x {
-        inset: 0;
-        z-index: 2;
-        clip-path: inset(0 100% 0 0);
-        border: 1px dashed var(--bw-pen);
-        background: repeating-linear-gradient(45deg, var(--bw-pen) 0 1.5px, transparent 1.5px 9px);
     }
 
     /* The revision cloud and its letter (G9). */
@@ -1023,10 +1247,43 @@
 
     /* ── G16: the motifs ─────────────────────────────────────────────── */
 
+    /* The pen caught mid-stroke: the outline drawn along the top, down the end
+       and half along the foot, the nib down on the foot. */
+    .bw-scene .bw-motif-draw > .bw-trace--mid {
+        z-index: 2;
+        background-size:
+            100% 1px,
+            1px 100%,
+            55% 1px,
+            1px 0;
+    }
+
+    .bw-scene .bw-motif-draw > .bw-pen--mid {
+        --bw-px: 0.45;
+        --bw-py: 1;
+        --bw-nib: 1;
+    }
+
+    /* Only the line: no pen, no witness lines or pointers, no scales, no paper,
+       no compass; plain closed frames. */
     .bw-scene[data-bw-motifs='line'] .bw-frame,
     .bw-scene[data-bw-motifs='line'] .bw-pen,
+    .bw-scene[data-bw-motifs='line'] .bw-trace--mid,
+    .bw-scene[data-bw-motifs='line'] .bw-wit,
     .bw-scene[data-bw-motifs='line'] .bw-flag__mark,
     .bw-scene[data-bw-motifs='line'] .kp-empty::before {
+        display: none;
+    }
+
+    .bw-scene[data-bw-motifs='line'] .kp-button.bw-pointed {
+        border-color: var(--border-strong);
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-toned__line::before,
+    .bw-scene[data-bw-motifs='line'] .bw-toned__line::after,
+    .bw-scene[data-bw-motifs='line'] .bw-revised .bw-cloud::before,
+    .bw-scene[data-bw-motifs='line'] .bw-revised .bw-cloud::after,
+    .bw-scene[data-bw-motifs='line'] .kp-meter__mark::before {
         display: none;
     }
 
@@ -1052,6 +1309,8 @@
         background-color: var(--border-strong);
     }
 
+    /* On everything: a hatch and a grid on every plate, amber frames on
+       today and the pick, the pen parked on every plate. */
     .bw-scene[data-bw-motifs='all'] .bw-plate {
         border: 1px dashed var(--border-strong);
         background:
@@ -1070,15 +1329,6 @@
         outline-offset: -3px;
     }
 
-    .bw-scene[data-bw-motifs='all'] .bw-cloud--still {
-        inset: -6px;
-    }
-
-    .bw-scene[data-bw-motifs='all'] .bw-cloud--still::before {
-        opacity: 1;
-    }
-
-    /* The pen parked on every plate. */
     .bw-scene[data-bw-motifs='all'] .bw-plate > .bw-pen {
         --bw-pen-size: 11px;
 
@@ -1187,26 +1437,113 @@
 
     /* ── G14: the press (the clock presses .bw-press while `in`) ──────── */
 
-    .bw-scene:is([data-bw-press], [data-bw-durations])[data-bw-phase='in'] .bw-press:not(.kp-button--primary) {
-        background: var(--secondary-active);
-        color: var(--foreground);
+    /* The part is not recoloured: a press is read from what the pen draws
+       (Kenny, 2026-10-07 22:24: "I don't like the lighter colour it gives the
+       elements"). The register's own press ground never plays in these scenes;
+       only the last option answers with the ground, and then with a darker
+       step. */
+    .bw-scene[data-bw-press='dark'][data-bw-phase='in'] .bw-press:not(.kp-button--primary, .kp-menu__item, .bw-day, .kp-kpi) {
+        background: hsl(from var(--secondary) h s calc(l * 0.78));
     }
 
-    .bw-scene:is([data-bw-press], [data-bw-durations])[data-bw-phase='in'] .kp-button--primary.bw-press {
-        border-color: var(--primary-active);
-        background: var(--primary-active);
+    .bw-scene[data-bw-press='dark'][data-bw-phase='in'] .kp-button--primary.bw-press {
+        border-color: hsl(from var(--primary) h s calc(l * 0.8));
+        background: hsl(from var(--primary) h s calc(l * 0.8));
     }
 
-    /* The pen takes the dimension: the witness lines stand, the dimension is drawn between them. */
-    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .bw-press :is(.bw-dim, .bw-wit),
-    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .kp-button.bw-press::before,
-    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .kp-button.bw-press::after {
+    .bw-scene[data-bw-press='dark'][data-bw-phase='in'] :is(.kp-menu__item, .bw-day, .kp-kpi).bw-press {
+        background: hsl(from var(--background) h s calc(l * 0.62));
+    }
+
+    /* The press scenes draw the witness lines themselves (`.bw-wit`), so they
+       can reach further than the register's two (the option that draws below
+       the part). */
+    .bw-scene[data-bw-press] .kp-button.bw-press::before,
+    .bw-scene[data-bw-press] .kp-button.bw-press::after {
+        display: none;
+    }
+
+    /* Hover has set the witness lines; the press draws the dimension between them. */
+    .bw-scene[data-bw-press][data-bw-phase='in'] .bw-press :is(.bw-dim, .bw-dimv, .bw-wit),
+    .bw-scene[data-bw-press][data-bw-phase='in'] .bw-press > :is(.bw-dim, .bw-dimv, .bw-wit),
+    .bw-scene[data-bw-durations][data-bw-phase='in'] .bw-press :is(.bw-dim, .bw-wit),
+    .bw-scene[data-bw-durations][data-bw-phase='in'] .kp-button.bw-press::before,
+    .bw-scene[data-bw-durations][data-bw-phase='in'] .kp-button.bw-press::after {
         opacity: 1;
     }
 
-    /* The pen pricks the datum: only the cross, at the centre. */
-    .bw-scene[data-bw-press='datum'][data-bw-phase='in'] .bw-press .bw-datum {
-        opacity: 1;
+    /* The size, lettered on the dimension: only where the dimension stands outside the part. */
+    .bw-scene .bw-dim__t {
+        display: none;
+    }
+
+    .bw-scene[data-bw-press='below'] .bw-dim__t {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        display: block;
+        padding-inline: 0.3rem;
+        translate: -50% -50%;
+        background: var(--background);
+        color: var(--bw-note);
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        line-height: 1;
+    }
+
+    /* Below the part: the witness lines run on past it and the dimension stands outside. */
+    .bw-scene[data-bw-press='below'] .bw-press > .bw-wit {
+        inset-block-end: calc(-1 * var(--bw-dim-out) - 0.3rem);
+    }
+
+    .bw-scene[data-bw-press='below'] .bw-press .bw-dim {
+        inset-block-end: calc(-1 * var(--bw-dim-out) - 3.5px);
+    }
+
+    .bw-scene[data-bw-press='below'] .bw-part {
+        padding-block-end: 1.4rem;
+    }
+
+    /* Both dimensions: the width stops where the height begins. */
+    .bw-scene[data-bw-press='two'] .bw-press .bw-dim {
+        inset-inline-end: 6.5px;
+    }
+
+    .bw-scene .bw-dimv {
+        display: none;
+        inset-block: 6.5px;
+        inset-inline-end: 3px;
+        inline-size: 7px;
+        opacity: 0;
+        background: linear-gradient(var(--bw-note), var(--bw-note)) center / 1px 100% no-repeat;
+    }
+
+    .bw-scene[data-bw-press='two'] .bw-dimv {
+        display: block;
+    }
+
+    .bw-scene .bw-dimv::before,
+    .bw-scene .bw-dimv::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: 7px;
+        background: linear-gradient(
+            to top left,
+            transparent calc(50% - 0.5px),
+            var(--bw-note) calc(50% - 0.5px) calc(50% + 0.5px),
+            transparent calc(50% + 0.5px)
+        );
+    }
+
+    .bw-scene .bw-dimv::before {
+        inset-block-start: -3px;
+    }
+
+    .bw-scene .bw-dimv::after {
+        inset-block-end: -3px;
     }
 
     /* ── G17: buttons inside composites (forced by the State buttons) ── */
@@ -1335,102 +1672,73 @@
         scale: 0.99;
     }
 
-    /* ── G10: the waiting parts ──────────────────────────────────────── */
+    /* ── G10: the waiting components ──────────────────────────────────── */
 
-    .bw-scene .bw-wait {
+    /* A skeleton with fixed proportions (loaders.js): every place a reading
+       will stand is two dimension ticks on a baseline, at a known x (in %)
+       and y (in rem), so the one pen's route can be written exactly. */
+    .bw-scene .bw-sk {
         position: relative;
-        display: block;
-        block-size: 0.9rem;
-        inline-size: 100%;
+        block-size: var(--bw-skh);
+        min-inline-size: 0;
+        padding: 0;
     }
 
-    .bw-scene .bw-wait--figure {
+    .bw-scene .bw-sk__s {
+        position: absolute;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .bw-scene .bw-sk__rule {
+        position: absolute;
+        inset-inline: 0;
+        block-size: 1px;
+        background: hsl(from var(--bw-line) h s l / 0.6);
+    }
+
+    .bw-scene .bw-sk__p {
+        position: absolute;
+        block-size: 0.4rem;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.35), hsl(from var(--foreground) h s l / 0.35)) left / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.35), hsl(from var(--foreground) h s l / 0.35)) right / 1px 100% no-repeat;
+    }
+
+    /* The reading that stands in a place: away while the route runs, inked
+       at its end (the generated keyframes), standing in the reduced pose. */
+    .bw-scene .bw-sk__v {
+        position: absolute;
+        margin: 0;
+        overflow: hidden;
+        block-size: 1.1rem;
+        color: var(--bw-ink);
+        font-size: 0.85rem;
+        line-height: 1.1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .bw-scene .bw-sk__v--big {
         block-size: 1.5rem;
-        inline-size: min(100%, 6.5rem);
-        margin-block: 0.1rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.5rem;
     }
 
-    .bw-scene .bw-wait--body {
-        inline-size: 90%;
-        margin-block-start: 0.35rem;
-    }
-
-    .bw-scene .bw-wait--body + .bw-wait--body {
-        inline-size: 62%;
-    }
-
-    .bw-scene .bw-wait--row {
-        block-size: 0.8rem;
-    }
-
-    .bw-scene .bw-wait--entry {
-        inline-size: 6rem;
-        block-size: 0.75rem;
-        margin-block-start: 0.35rem;
-    }
-
-    .bw-scene .bw-wait--day {
-        block-size: 1rem;
-        inline-size: 1.6rem;
-    }
-
-    .bw-scene .bw-wait--meter {
-        block-size: 0.6rem;
-    }
-
-    .bw-scene .bw-entry-wait {
-        display: grid;
-        justify-items: start;
-    }
-
-    .bw-scene .bw-wait > span {
+    /* What the pen draws: a 1 px line, drawn by the generated keyframes;
+       away in the reduced pose (the readings stand without marks). */
+    .bw-scene .bw-sk__g {
         position: absolute;
-        inset: 0;
-        display: none;
+        z-index: 2;
+        background: var(--bw-pen);
+        pointer-events: none;
+        visibility: hidden;
     }
 
-    /* The tracer (the recommendation, and so how every waiting place looks
-       in the other questions): the place is a strip of millimetre paper
-       between two axes, and the pen traces the anchor's curve across it. */
-    .bw-scene:is([data-bw-loading='trace'], :not([data-bw-loading])) .bw-wait > .bw-tracer {
-        display: block;
-        background:
-            linear-gradient(var(--bw-line), var(--bw-line)) left bottom / 100% 1px no-repeat,
-            linear-gradient(var(--bw-line), var(--bw-line)) left top / 1px 100% no-repeat,
-            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px) 0 0 / 6px 6px,
-            linear-gradient(hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px) 0 0 / 6px 6px;
-    }
-
-    .bw-scene .bw-wait .bw-pen {
-        --bw-pen-size: 8px;
-    }
-
-    /* The section: two rules, a tick at each end, the cyan hatch, and a pen on its edge. */
-    .bw-scene[data-bw-loading='hatch'] .bw-wait > .bw-section {
-        display: block;
-        border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
-    }
-
-    .bw-scene .bw-section::before {
-        content: '';
-        position: absolute;
-        inset-block: -5px;
-        inset-inline: -1px;
-        background:
-            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 100% no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 100% no-repeat;
-    }
-
-    .bw-scene .bw-section::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(45deg, hsl(from var(--bw-pen) h s l / 0.6) 0 1px, transparent 1px 6px);
-    }
-
-    /* The outline the pen keeps tracing round the place. */
-    .bw-scene[data-bw-loading='outline'] .bw-wait > .bw-outline {
-        display: block;
+    .bw-scene .bw-sk__g--lead {
+        background: repeating-linear-gradient(90deg, var(--bw-pen) 0 1px, transparent 1px 4px);
     }
 
     /* The package's own loading parts keep the register's look. */
@@ -1449,61 +1757,161 @@
         }
 
         /* What arrives is away in the gap. */
-        .bw-scene[data-bw-phase='gap'] :is(.bw-arrives, .bw-opens, .bw-leaves) {
+        .bw-scene[data-bw-phase='gap'] :is(.bw-arrives, .bw-opens) {
             visibility: hidden;
         }
 
-        .bw-scene[data-bw-phase='gap'] .bw-plot--draws .bw-tracer {
-            visibility: hidden;
+        /* ── G2: a part arrives, brought by the ONE pen ────────────────── */
+
+        /* A part's own time and its turn in the row: the pen draws one part
+           after another, so no two parts of a group are drawn at once. */
+        .bw-scene .bw-arrives {
+            --bw-dur: calc(var(--bw-part) * var(--bw-slow, 1));
+            --bw-del: calc((var(--bw-off) + var(--i, 0) * var(--bw-part)) * var(--bw-slow, 1));
         }
 
-        /* ── G2: a part arrives, brought by the pen ───────────────────── */
-
-        /* The part stays hidden while the pen works and is inked at three
-           quarters, in every way the pen has of bringing it. */
-        .bw-scene[data-bw-phase='in'] .bw-arrives {
-            animation: bw-ink calc(var(--bw-set) * var(--bw-slow, 1)) linear calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        /* The part stays hidden while the pen draws its marks and is inked at
+           three quarters (the lettered and the read-out ways ink it line by
+           line instead, on a part that stands from the first frame). */
+        .bw-scene:not([data-bw-arrival='lettered'], [data-bw-arrival='readout'])[data-bw-phase='in'] .bw-arrives {
+            animation: bw-ink var(--bw-dur) linear var(--bw-del) backwards;
         }
 
-        /* Traced: the pen runs round the outline. */
-        .bw-scene:not([data-bw-arrival='diag'], [data-bw-arrival='marks'])[data-bw-phase='in'] .bw-arrives > .bw-trace {
-            animation: bw-trace calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        .bw-scene:is([data-bw-arrival='lettered'], [data-bw-arrival='readout'])[data-bw-phase='in'] .bw-arrives {
+            animation: bw-ink-0 var(--bw-dur) linear var(--bw-del) backwards;
         }
 
-        .bw-scene:not([data-bw-arrival='diag'], [data-bw-arrival='marks'])[data-bw-phase='in'] .bw-arrives > .bw-pen {
-            animation: bw-pen-trace calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1));
+        /* 1 · Traced: the pen runs round the outline, then the part is inked. */
+        .bw-scene:is([data-bw-arrival='trace'], :not([data-bw-arrival]))[data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-trace var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
         }
 
-        /* Set out: one diagonal. */
-        .bw-scene[data-bw-arrival='diag'][data-bw-phase='in'] .bw-arrives > .bw-diag {
-            animation: bw-diag calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        .bw-scene:is([data-bw-arrival='trace'], :not([data-bw-arrival]))[data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-trace var(--bw-dur) var(--bw-in) var(--bw-del);
         }
 
-        .bw-scene[data-bw-arrival='diag'][data-bw-phase='in'] .bw-arrives > .bw-pen {
-            animation: bw-pen-diag calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1));
-        }
-
-        /* Marked off: two witness lines. */
+        /* 2 · Marked off: the two witness lines. */
         .bw-scene[data-bw-arrival='marks'][data-bw-phase='in'] .bw-arrives > .bw-mk--s {
-            animation: bw-mk-s calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+            animation: bw-mk-s var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
         }
 
         .bw-scene[data-bw-arrival='marks'][data-bw-phase='in'] .bw-arrives > .bw-mk--e {
-            animation: bw-mk-e calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+            animation: bw-mk-e var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
         }
 
         .bw-scene[data-bw-arrival='marks'][data-bw-phase='in'] .bw-arrives > .bw-pen {
-            animation: bw-pen-marks calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1));
+            animation: bw-pen-marks var(--bw-dur) var(--bw-in) var(--bw-del);
         }
 
-        /* A line in time is the anchor itself: the pen traces the curve in
-           one stroke (one ramp) and its readings follow. */
-        .bw-scene[data-bw-phase='in'] .bw-plot--draws .bw-tracer {
-            animation: bw-p-run calc(var(--bw-panel) * var(--bw-slow, 1)) var(--bw-in) backwards;
+        /* 3 · Ruled: the part's two scales, tick by tick. */
+        .bw-scene[data-bw-arrival='ruled'][data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-ruled var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
         }
 
-        .bw-scene[data-bw-phase='in'] .bw-plot--draws .bw-tracer .bw-pen {
-            animation: bw-tracer-pen calc(var(--bw-panel) * var(--bw-slow, 1)) var(--bw-in);
+        .bw-scene[data-bw-arrival='ruled'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-axes var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        /* 4 · The four corners. */
+        .bw-scene[data-bw-arrival='corners'][data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-corners var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='corners'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-corners var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        /* 5 · One stroke along the top. */
+        .bw-scene[data-bw-arrival='top'][data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-trace-top var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='top'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-top var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        /* 6 · Lettered: a rule under each line, the line inked when the rule
+           is drawn. */
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-arrives[data-bw-n='1'] > .bw-pen {
+            animation: bw-pen-ln1 var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-arrives[data-bw-n='2'] > .bw-pen {
+            animation: bw-pen-ln2 var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='0/1'] > .bw-ln__r {
+            animation: bw-ln-r1 var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='0/2'] > .bw-ln__r {
+            animation: bw-ln-r2a var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='1/2'] > .bw-ln__r {
+            animation: bw-ln-r2b var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='0/1'] > .bw-ln__t {
+            animation: bw-show-70 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='0/2'] > .bw-ln__t {
+            animation: bw-show-33 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='lettered'][data-bw-phase='in'] .bw-ln[data-ln='1/2'] > .bw-ln__t {
+            animation: bw-show-71 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        /* 7 · Led in: a leader from the margin ends in a node on the part. */
+        .bw-scene[data-bw-arrival='led'][data-bw-phase='in'] .bw-arrives > .bw-ldr {
+            animation: bw-ldr var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='led'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-ldr var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        /* 8 · The two centre lines. */
+        .bw-scene[data-bw-arrival='centre'][data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-centre var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='centre'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-centre var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        /* 9 · Read out on its scales: the pen along the diagonal, its witness
+           lines and pointers on the part's own scales, each line inked as the
+           pen passes it. */
+        .bw-scene[data-bw-arrival='readout'][data-bw-phase='in'] .bw-arrives > .bw-rd {
+            animation: bw-rd var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='readout'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-diag var(--bw-dur) var(--bw-in) var(--bw-del);
+        }
+
+        .bw-scene[data-bw-arrival='readout'][data-bw-phase='in'] .bw-ln[data-ln='0/1'] > .bw-ln__t {
+            animation: bw-show-63 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='readout'][data-bw-phase='in'] .bw-ln[data-ln='0/2'] > .bw-ln__t {
+            animation: bw-show-30 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='readout'][data-bw-phase='in'] .bw-ln[data-ln='1/2'] > .bw-ln__t {
+            animation: bw-show-48 var(--bw-dur) linear var(--bw-del) backwards;
+        }
+
+        /* 10 · Ticked in: a checker's tick at the part's top-end corner. */
+        .bw-scene[data-bw-arrival='tick'][data-bw-phase='in'] .bw-arrives > .bw-tk path {
+            animation: bw-tick var(--bw-dur) var(--bw-in) var(--bw-del) backwards;
+        }
+
+        .bw-scene[data-bw-arrival='tick'][data-bw-phase='in'] .bw-arrives > .bw-pen {
+            animation: bw-pen-tick var(--bw-dur) var(--bw-in) var(--bw-del);
         }
 
         /* ── G3: what opens is drawn the same way; closing is that drawing
@@ -1588,141 +1996,386 @@
             animation: bw-pen-rule calc(var(--bw-rev) * var(--bw-slow, 1)) linear;
         }
 
-        /* ── G14: the pen takes the dimension, or pricks the datum ─────── */
+        /* ── G14: the pen takes the dimension (the ground stays as it is) ── */
 
-        .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .bw-press .bw-dim {
+        /* Across the foot, between the witness lines. */
+        .bw-scene:is([data-bw-press='foot'], [data-bw-press='dark'], [data-bw-durations])[data-bw-phase='in'] .bw-press .bw-dim {
             animation: bw-draw-dim calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in) both;
         }
 
-        .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .bw-press > .bw-pen {
+        .bw-scene:is([data-bw-press='foot'], [data-bw-press='dark'], [data-bw-durations])[data-bw-phase='in'] .bw-press > .bw-pen {
             animation: bw-pen-dim calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in);
         }
 
-        .bw-scene[data-bw-press='datum'][data-bw-phase='in'] .bw-press .bw-datum {
-            animation: bw-datum-h calc(var(--bw-dimt) * var(--bw-slow, 1)) linear both;
+        /* Below the part, outside it, on the extended witness lines, the size lettered. */
+        .bw-scene[data-bw-press='below'][data-bw-phase='in'] .bw-press .bw-dim {
+            animation: bw-draw-dim calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in) both;
         }
 
-        .bw-scene[data-bw-press='datum'][data-bw-phase='in'] .bw-press .bw-datum::after {
-            animation: bw-datum-v calc(var(--bw-dimt) * var(--bw-slow, 1)) linear both;
+        .bw-scene[data-bw-press='below'][data-bw-phase='in'] .bw-press > .bw-pen {
+            animation: bw-pen-dim-out calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in);
         }
 
-        .bw-scene[data-bw-press='datum'][data-bw-phase='in'] .bw-press > .bw-pen {
-            animation: bw-pen-datum calc(var(--bw-dimt) * var(--bw-slow, 1)) linear;
+        /* Both dimensions, the width and then the height, in one stroke. */
+        .bw-scene[data-bw-press='two'][data-bw-phase='in'] .bw-press .bw-dim {
+            animation: bw-draw-dim-2 calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in) both;
         }
 
-        /* ── G10: the waiting parts (loops) ───────────────────────────── */
-
-        /* The tracer: the pen traces the curve, the readings stand, all are
-           lifted, the pen goes back (7 + 7 + 4 units). */
-        .bw-scene:is([data-bw-loading='trace'], :not([data-bw-loading])) .bw-wait > .bw-tracer {
-            animation: bw-p-loop calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite backwards;
+        .bw-scene[data-bw-press='two'][data-bw-phase='in'] .bw-press .bw-dimv {
+            animation: bw-draw-dimv calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in) both;
         }
 
-        .bw-scene:is([data-bw-loading='trace'], :not([data-bw-loading])) .bw-wait > .bw-tracer .bw-pen {
-            animation: bw-tracer-pen-loop calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite;
+        .bw-scene[data-bw-press='two'][data-bw-phase='in'] .bw-press > .bw-pen {
+            animation: bw-pen-dim-two calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in);
         }
 
-        /* The section: hatched start → end by a pen on its edge, standing, lifted. */
-        .bw-scene[data-bw-loading='hatch'] .bw-section::after {
-            animation: bw-hatch calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite backwards;
+        /* A part that stands from the first frame: visible at once. */
+        @keyframes bw-ink-0 {
+            0% {
+                visibility: hidden;
+            }
+
+            0.1%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        .bw-scene[data-bw-loading='hatch'] .bw-section > .bw-pen {
-            animation: bw-pen-hatch calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite;
+        /* A line of a part inked when the pen's stroke under it ends (the
+           lettered way: 33 % and 71 % of two lines, 70 % of one) or when the
+           pen reading along the diagonal passes it (the read-out: 30 % and 48 %
+           of two lines, 63 % of one). */
+        @keyframes bw-show-30 {
+            0%,
+            29.9% {
+                visibility: hidden;
+            }
+
+            30%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        .bw-scene[data-bw-loading='hatch'] .bw-section > .bw-pen .bw-pen__sway {
-            animation: bw-sway calc(var(--bw-loop) / 12 * var(--bw-slow, 1)) linear infinite alternate;
+        @keyframes bw-show-33 {
+            0%,
+            32.9% {
+                visibility: hidden;
+            }
+
+            33%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        /* The outline: four strokes, standing, lifted. */
-        .bw-scene[data-bw-loading='outline'] .bw-outline > .bw-trace {
-            animation: bw-trace-loop calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite backwards;
+        @keyframes bw-show-48 {
+            0%,
+            47.9% {
+                visibility: hidden;
+            }
+
+            48%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        .bw-scene[data-bw-loading='outline'] .bw-outline > .bw-pen {
-            animation: bw-pen-loop calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite;
+        @keyframes bw-show-63 {
+            0%,
+            62.9% {
+                visibility: hidden;
+            }
+
+            63%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        /* ── G12: leaving and arriving ────────────────────────────────── */
+        @keyframes bw-show-70 {
+            0%,
+            69.9% {
+                visibility: hidden;
+            }
 
-        /* Hatched out by the pen and lifted off; set down and the hatch
-           taken away, backwards. */
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='out'] .bw-leaves {
-            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+            70%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='out'] .bw-leaves > .bw-x {
-            animation: bw-hatch-out calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        @keyframes bw-show-71 {
+            0%,
+            70.9% {
+                visibility: hidden;
+            }
+
+            71%,
+            100% {
+                visibility: visible;
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='out'] .bw-leaves > .bw-pen--leave {
-            animation: bw-pen-hatchout calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in);
+        /* Ruled: the start scale down (to 37.5 %), then the foot scale along
+           (to 75 %), the long ticks and the short ticks with the rules. */
+        @keyframes bw-ruled {
+            0% {
+                background-size:
+                    0 1px,
+                    1px 0,
+                    0 4px,
+                    4px 0,
+                    0 7px,
+                    7px 0;
+            }
+
+            37.5% {
+                background-size:
+                    0 1px,
+                    1px 100%,
+                    0 4px,
+                    4px 100%,
+                    0 7px,
+                    7px 100%;
+            }
+
+            75%,
+            100% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    100% 4px,
+                    4px 100%,
+                    100% 7px,
+                    7px 100%;
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='in'] .bw-leaves {
-            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
+        /* The corners: `--bw-k` counts the arms drawn, two to a corner (the
+           pen's route in pen.css has the same offsets). */
+        @keyframes bw-corners {
+            0% {
+                --bw-k: 0;
+            }
+
+            6% {
+                --bw-k: 1;
+            }
+
+            12%,
+            20% {
+                --bw-k: 2;
+            }
+
+            26% {
+                --bw-k: 3;
+            }
+
+            32%,
+            40% {
+                --bw-k: 4;
+            }
+
+            46% {
+                --bw-k: 5;
+            }
+
+            52%,
+            60% {
+                --bw-k: 6;
+            }
+
+            66% {
+                --bw-k: 7;
+            }
+
+            72%,
+            100% {
+                --bw-k: 8;
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='in'] .bw-leaves > .bw-x {
-            animation: bw-hatch-out calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
+        /* One stroke along the top: drawn while the nib goes along (62.5 %). */
+        @keyframes bw-trace-top {
+            0% {
+                background-size:
+                    0 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
+
+            62.5%,
+            100% {
+                background-size:
+                    100% 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='in'] .bw-leaves > .bw-pen--leave {
-            animation: bw-pen-hatchout calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse;
+        /* The rule under a line, drawn start to end while the nib goes along
+           and lifted when the line is inked. */
+        @keyframes bw-ln-r1 {
+            0% {
+                visibility: visible;
+                clip-path: inset(0 100% 0 0);
+            }
+
+            70% {
+                visibility: visible;
+                clip-path: inset(0);
+            }
+
+            70.1%,
+            100% {
+                visibility: hidden;
+                clip-path: inset(0);
+            }
         }
 
-        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]), [data-bw-leave='cross']) .bw-leaves > .bw-pen--leave .bw-pen__sway {
-            animation: bw-sway calc(var(--bw-leave) / 7 * var(--bw-slow, 1)) linear infinite alternate;
+        @keyframes bw-ln-r2a {
+            0% {
+                visibility: visible;
+                clip-path: inset(0 100% 0 0);
+            }
+
+            33% {
+                visibility: visible;
+                clip-path: inset(0);
+            }
+
+            33.1%,
+            100% {
+                visibility: hidden;
+                clip-path: inset(0);
+            }
         }
 
-        /* Untraced: the construction played backwards (demo.js plays the
-           arrival below in reverse): the pen returns, the ink is lifted, the
-           outline is run back. (The three leaves take the leave's 7 units,
-           so they compare.) */
-        .bw-scene[data-bw-leave='untrace'][data-bw-phase='in'] .bw-leaves {
-            animation: bw-ink calc(var(--bw-leave) * var(--bw-slow, 1)) linear backwards;
+        @keyframes bw-ln-r2b {
+            0%,
+            38% {
+                visibility: visible;
+                clip-path: inset(0 100% 0 0);
+            }
+
+            71% {
+                visibility: visible;
+                clip-path: inset(0);
+            }
+
+            71.1%,
+            100% {
+                visibility: hidden;
+                clip-path: inset(0);
+            }
         }
 
-        .bw-scene[data-bw-leave='untrace'][data-bw-phase='in'] .bw-leaves > .bw-trace {
-            animation: bw-trace calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) backwards;
+        /* The leader: drawn from the margin to the part (58 %), its node
+           standing on the part's edge when the nib arrives. */
+        @keyframes bw-ldr {
+            0% {
+                clip-path: inset(-4px 100% -4px 0);
+            }
+
+            58%,
+            100% {
+                clip-path: inset(-4px -4px -4px 0);
+            }
         }
 
-        .bw-scene[data-bw-leave='untrace'][data-bw-phase='in'] .bw-leaves > .bw-pen:not(.bw-pen--leave) {
-            animation: bw-pen-trace calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in);
+        /* The centre lines: across at mid-height (to 32 %), the pen up, down
+           the middle (42 % to 74 %). */
+        @keyframes bw-centre {
+            0% {
+                background-size:
+                    0 1px,
+                    1px 0;
+            }
+
+            32%,
+            42% {
+                background-size:
+                    100% 1px,
+                    1px 0;
+            }
+
+            74%,
+            100% {
+                background-size:
+                    100% 1px,
+                    1px 100%;
+            }
         }
 
-        /* Crossed out: two diagonals, then lifted off. */
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='out'] .bw-leaves {
-            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        /* The read-out: how far along its diagonal the pen is (`--bw-rp`), shown
+           while it reads. The pen's own route is pen.css's bw-pen-diag. */
+        @keyframes bw-rd {
+            0% {
+                visibility: hidden;
+                --bw-rp: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-rp: 0;
+            }
+
+            62.5% {
+                visibility: visible;
+                --bw-rp: 1;
+            }
+
+            64%,
+            100% {
+                visibility: hidden;
+                --bw-rp: 1;
+            }
         }
 
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='out'] .bw-leaves > .bw-diag {
-            animation: bw-cross-a calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        /* The tick: down and across (a third of its length in the first 20 %),
+           then up (to 58 %). */
+        @keyframes bw-tick {
+            0%,
+            0.1% {
+                stroke-dashoffset: 1;
+            }
+
+            20% {
+                stroke-dashoffset: 0.667;
+            }
+
+            58%,
+            100% {
+                stroke-dashoffset: 0;
+            }
         }
 
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='out'] .bw-leaves > .bw-diag--back {
-            animation: bw-cross-b calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        /* The press's dimension across the foot and then up the end: the width
+           in the first 38 %, the height to 72 %. */
+        @keyframes bw-draw-dim-2 {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            38%,
+            100% {
+                clip-path: inset(0);
+            }
         }
 
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='out'] .bw-leaves > .bw-pen--leave {
-            animation: bw-pen-cross calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in);
-        }
+        @keyframes bw-draw-dimv {
+            0%,
+            38% {
+                clip-path: inset(100% 0 0 0);
+            }
 
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='in'] .bw-leaves {
-            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
-        }
-
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='in'] .bw-leaves > .bw-diag {
-            animation: bw-cross-a calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
-        }
-
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='in'] .bw-leaves > .bw-diag--back {
-            animation: bw-cross-b calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
-        }
-
-        .bw-scene[data-bw-leave='cross'][data-bw-phase='in'] .bw-leaves > .bw-pen--leave {
-            animation: bw-pen-cross calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse;
+            72%,
+            100% {
+                clip-path: inset(0);
+            }
         }
 
         @keyframes bw-ink {
@@ -1782,24 +2435,6 @@
                     1px 100%,
                     100% 1px,
                     1px 100%;
-            }
-        }
-
-        /* The diagonal: drawn while the nib goes corner to corner (62.5 %),
-           standing until the part is inked, lifted then. */
-        @keyframes bw-diag {
-            0% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            62.5%,
-            74.9% {
-                clip-path: inset(0);
-            }
-
-            75%,
-            100% {
-                clip-path: inset(0 0 0 100%);
             }
         }
 
@@ -1908,63 +2543,6 @@
                     1px 100%,
                     100% 1px,
                     1px 100%;
-            }
-        }
-
-        /* The waiting outline: four strokes in 7 of 18 units, standing 7, lifted. */
-        @keyframes bw-trace-loop {
-            0% {
-                background-size:
-                    0 1px,
-                    1px 0,
-                    0 1px,
-                    1px 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            13.6% {
-                background-size:
-                    100% 1px,
-                    1px 0,
-                    0 1px,
-                    1px 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            19.4% {
-                background-size:
-                    100% 1px,
-                    1px 100%,
-                    0 1px,
-                    1px 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            33.1% {
-                background-size:
-                    100% 1px,
-                    1px 100%,
-                    100% 1px,
-                    1px 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            38.9%,
-            77.8% {
-                background-size:
-                    100% 1px,
-                    1px 100%,
-                    100% 1px,
-                    1px 100%;
-            }
-
-            77.9%,
-            100% {
-                background-size:
-                    0 1px,
-                    1px 0,
-                    0 1px,
-                    1px 0;
             }
         }
 
@@ -2091,101 +2669,6 @@
             }
 
             70%,
-            100% {
-                clip-path: inset(0);
-            }
-        }
-
-        @keyframes bw-datum-h {
-            0% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            35%,
-            100% {
-                clip-path: inset(0);
-            }
-        }
-
-        @keyframes bw-datum-v {
-            0%,
-            51.5% {
-                clip-path: inset(0 0 100% 0);
-            }
-
-            85%,
-            100% {
-                clip-path: inset(0);
-            }
-        }
-
-        /* The section: hatched in 7 of 18 units on the feed, standing 7,
-           lifted at once and empty for 4. */
-        @keyframes bw-hatch {
-            0% {
-                clip-path: inset(0 100% 0 0);
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            38.9%,
-            77.8% {
-                clip-path: inset(0);
-            }
-
-            77.9%,
-            100% {
-                clip-path: inset(0 0 0 100%);
-            }
-        }
-
-        /* Kenny's leave: the drift toward the top-end corner over the
-           whole time, gone from 70 %. */
-        @keyframes bw-lift {
-            0% {
-                translate: 0 0;
-                opacity: 1;
-            }
-
-            70% {
-                opacity: 1;
-            }
-
-            100% {
-                translate: 6px -6px;
-                opacity: 0;
-            }
-        }
-
-        @keyframes bw-hatch-out {
-            0% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            60%,
-            100% {
-                clip-path: inset(0);
-            }
-        }
-
-        /* The cross: the first diagonal in 25 %, the second from 37.5 % to 60 %. */
-        @keyframes bw-cross-a {
-            0% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            25%,
-            100% {
-                clip-path: inset(0);
-            }
-        }
-
-        @keyframes bw-cross-b {
-            0%,
-            37.5% {
-                clip-path: inset(0 0 0 100%);
-            }
-
-            60%,
             100% {
                 clip-path: inset(0);
             }

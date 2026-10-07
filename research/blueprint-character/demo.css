@@ -212,6 +212,11 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Ten options: as many columns as fit at a readable width. */
+.bw-trio[data-bw-n='10'] {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+}
+
 .bw-col {
     display: grid;
     grid-row: span 4;
@@ -223,7 +228,8 @@
 @media (max-width: 64rem) {
     .bw-story__grid,
     .bw-trio,
-    .bw-trio[data-bw-n='4'] {
+    .bw-trio[data-bw-n='4'],
+    .bw-trio[data-bw-n='10'] {
         grid-template-columns: minmax(0, 1fr);
     }
 
@@ -340,4 +346,17 @@
 
 .bw-part > :is(.bw-spark, .bw-meter-wait) {
     justify-self: stretch;
+}
+
+/* The motifs scene: nine small labelled parts, wide and short, so the dialog
+   can show it large; the loading scene: four components, two by two. (These
+   are the page's, not the signature layer's: an unlayered rule outranks it.) */
+.bw-scene[data-bw-motifs] {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr));
+    gap: 0.8rem 0.7rem;
+    padding-inline: 1rem 1rem;
+}
+
+.bw-scene[data-bw-loading] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }

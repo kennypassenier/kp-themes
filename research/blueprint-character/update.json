@@ -1,5 +1,48 @@
 {
-    "update": 1,
-    "picks": {},
-    "questions": {}
+    "update": 2,
+    "picks": {
+        "blueprint": {
+            "curve": "feed",
+            "colour": "pen",
+            "surface": "axes",
+            "tone": "pointed",
+            "live": "read",
+            "composites": "own",
+            "hover": "read",
+            "focus": "ring",
+            "voice": "lettering"
+        }
+    },
+    "questions": {
+        "blueprint": {
+            "arrival": {
+                "comment": "I like 1 and 3 but I feel like they are not good enough. Maybe 1 is a bit too busy. Come up with ten more examples to judge",
+                "reply": "Ten new options, all led by ONE visible pen that draws one part after another (a tile, a strip, a week, a list), never two at once: before, a week of days had six pens overlapping, which was the busy. Nothing is filled, washed or framed. 1 is your first way calmer (the pen traces the outline once per part, then inks it), 2 your third way calmer (witness lines), then eight new ways: 3 the pen rules the part's two scales tick by tick, 4 it sets the four corners, 5 one stroke along the top, 6 it letters the part line by line, 7 led in by a leader and a node, 8 the two centre lines, 9 read out on its scales (the anchor's diagonal with witness lines and pointers), 10 ticked in with a checker's tick."
+            },
+            "opening": {
+                "comment": "I can't judge this yet, we need to see what the other steps do first",
+                "reply": "Kept exactly as it was (the three options are unchanged). Opening derives from how a part arrives, loads and leaves, so judge it after those three are settled; it is asked again then."
+            },
+            "durations": {
+                "comment": "needs input from previous steps first to judge",
+                "reply": "Kept exactly as it was (the three options are unchanged). The durations follow from arrival, loading and leave, so judge them after those are settled."
+            },
+            "loading": {
+                "comment": "I kind of like option 1, but it doesn't work well with components where there are multiple elements, it would be nice if it was always just one pen that traces everything, make a couple of variations on this",
+                "reply": "Four variations, each shown on four components with several elements (a table, a card with several lines, a form, a strip of key figures): ONE pen traces the whole component in one continuous route, the pen up between elements, and when the route ends the readings are inked at once as the arrival of the content. 1 the outline first, then every place in reading order; 2 reading order, a row in one stroke with dotted leaders; 3 row after row one way and back, the pen up between places; 4 one unbroken meander, the pen never lifted."
+            },
+            "leave": {
+                "comment": "not approved",
+                "reply": "Four new leaves, none of the three you saw (hatched out, untraced, crossed out). Each is exactly the reverse of a way to arrive, frame for frame, so the one pen goes back through the sheet register from its last part to its first: 1 unlettered, the pen runs back under each line and the line is gone; 2 read back, the pen returns along its diagonal and each line goes as it passes; 3 bracketed then gone, the four corners set round the part; 4 unruled, the two scales taken away tick by tick."
+            },
+            "press": {
+                "comment": "option 1 is best, but I don't like the lighter colour it gives the elements, make a couple of variations",
+                "reply": "Four variations on the pen taking the dimension. In none of the first three does the pressed part change colour at all: 1 the dimension across the foot, ground unchanged; 2 the dimension below the part with extended witness lines and the size lettered; 3 both dimensions in one stroke, the width and then the height. 4 is the same as 1 with the ground a darker step (never lighter)."
+            },
+            "motifs": {
+                "comment": "nothing is showing here, do it again",
+                "reply": "Rebuilt, and visible now. The review dialog was shrinking this tall scene to about half size; the review kit now stops at three quarters and the stage scrolls (reload with Ctrl+Shift+R). On top of that the scene itself is new: every motif stands in a labelled part of its own on the package's real components (the pen caught mid-stroke, witness lines and pointers, the scales, a reading, a warning pointed out on its scale, millimetre paper, the compass, today and the pick, the fold line), and the three options are strongly different: every motif means one thing, only the line, on everything."
+            }
+        }
+    }
 }

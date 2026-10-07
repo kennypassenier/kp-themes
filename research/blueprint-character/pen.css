@@ -63,6 +63,20 @@
         initial-value: 1;
     }
 
+    /* How many strokes of a route are done (the corner brackets: two arms a
+       corner), and how far along its diagonal a read-out has come. */
+    @property --bw-k {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 8;
+    }
+
+    @property --bw-rp {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 1;
+    }
+
     /* ── The pen ─────────────────────────────────────────────────────── */
 
     .bw-scene .bw-pen {
@@ -355,6 +369,8 @@
                 visibility: hidden;
                 --bw-px: 1;
                 --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
                 --bw-nib: 0;
             }
         }
@@ -647,96 +663,6 @@
             }
         }
 
-        /* Hatching a part out: the pen follows the hatch's edge, start to end
-           in 60 % of the leave. */
-        @keyframes bw-pen-hatchout {
-            0% {
-                visibility: hidden;
-                --bw-px: 1;
-                --bw-py: 0;
-                --bw-ox: 0px;
-                --bw-oy: 0px;
-                --bw-nib: 0;
-            }
-
-            0.1% {
-                visibility: visible;
-                --bw-px: 0;
-                --bw-py: 0;
-                --bw-nib: 1;
-            }
-
-            60% {
-                --bw-px: 1;
-                --bw-py: 0;
-            }
-
-            61.5% {
-                --bw-nib: 0;
-            }
-
-            64% {
-                visibility: hidden;
-                --bw-px: 1;
-                --bw-py: 0;
-                --bw-nib: 0;
-            }
-        }
-
-        /* Crossing a part out: one diagonal down, the pen up the end edge, the
-           other diagonal back (the cross is done in 60 % of the leave). */
-        @keyframes bw-pen-cross {
-            0% {
-                visibility: hidden;
-                --bw-px: 1;
-                --bw-py: 0;
-                --bw-ox: 0px;
-                --bw-oy: 0px;
-                --bw-nib: 0;
-            }
-
-            0.1% {
-                visibility: visible;
-                --bw-px: 0;
-                --bw-py: 0;
-                --bw-nib: 1;
-            }
-
-            25% {
-                --bw-px: 1;
-                --bw-py: 1;
-            }
-
-            26.5% {
-                --bw-nib: 0;
-            }
-
-            36% {
-                --bw-px: 1;
-                --bw-py: 0;
-            }
-
-            37.5% {
-                --bw-nib: 1;
-            }
-
-            60% {
-                --bw-px: 0;
-                --bw-py: 1;
-            }
-
-            61.5% {
-                --bw-nib: 0;
-            }
-
-            64% {
-                visibility: hidden;
-                --bw-px: 0;
-                --bw-py: 1;
-                --bw-nib: 0;
-            }
-        }
-
         /* The dimension across the foot of a held control, end to end, then up and away. */
         @keyframes bw-pen-dim {
             0% {
@@ -837,156 +763,571 @@
             }
         }
 
-        /* The waiting section: the pen follows the hatch's edge, lifts, and the
-           next cycle begins (the hatch's own offsets, 18 units). */
-        @keyframes bw-pen-hatch {
+        /* The pen along the top edge, one stroke, then away (the top rule). */
+        @keyframes bw-pen-top {
             0% {
-                visibility: visible;
-                --bw-px: 0;
-                --bw-py: 0;
-                --bw-nib: 1;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            38.9% {
+                visibility: hidden;
                 --bw-px: 1;
                 --bw-py: 0;
-                --bw-nib: 1;
-            }
-
-            40.4% {
+                --bw-ox: 0px;
+                --bw-oy: 0px;
                 --bw-nib: 0;
-            }
-
-            41% {
-                visibility: hidden;
-                --bw-px: 1;
-            }
-
-            100% {
-                visibility: hidden;
-                --bw-px: 1;
-            }
-        }
-
-        /* The waiting outline: four strokes in 7 units, then away (18 units). */
-        @keyframes bw-pen-loop {
-            0% {
-                visibility: visible;
-                --bw-px: 0;
-                --bw-py: 0;
-                --bw-nib: 1;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            13.6% {
-                --bw-px: 1;
-                --bw-py: 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            19.4% {
-                --bw-px: 1;
-                --bw-py: 1;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            33.1% {
-                --bw-px: 0;
-                --bw-py: 1;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            38.9% {
-                --bw-px: 0;
-                --bw-py: 0;
-                --bw-nib: 1;
-            }
-
-            40.4% {
-                --bw-nib: 0;
-            }
-
-            41% {
-                visibility: hidden;
-            }
-
-            100% {
-                visibility: hidden;
-            }
-        }
-
-        @keyframes bw-sway {
-            from {
-                translate: 0 0;
-            }
-
-            to {
-                translate: 0 100cqh;
-            }
-        }
-
-        /* The tracer: one stroke, one ramp (a single interval of --bw-p). */
-        @keyframes bw-p-run {
-            from {
-                --bw-p: 0;
-            }
-
-            to {
-                --bw-p: 1;
-            }
-        }
-
-        @keyframes bw-p-loop {
-            0% {
-                visibility: visible;
-                --bw-p: 0;
-                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
-            }
-
-            38.9% {
-                --bw-p: 1;
-            }
-
-            77.8% {
-                visibility: visible;
-                --bw-p: 1;
-            }
-
-            77.9% {
-                visibility: hidden;
-                --bw-p: 0;
-            }
-
-            100% {
-                visibility: hidden;
-                --bw-p: 0;
-            }
-        }
-
-        @keyframes bw-tracer-pen {
-            0% {
-                visibility: hidden;
             }
 
             0.1% {
                 visibility: visible;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            62.5% {
+                --bw-px: 1;
+                --bw-py: 0;
+            }
+
+            64% {
+                --bw-nib: 0;
             }
 
             100% {
                 visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
             }
         }
 
-        @keyframes bw-tracer-pen-loop {
-            0%,
-            38.9% {
-                visibility: visible;
+        /* Four corner brackets, each one stroke in two arms (the arm's end,
+           the corner, the other arm's end), the pen up between corners: 0 %,
+           20 %, 40 %, 60 % are the corners' starts (an arm takes 6 %); the ink (`--bw-k`) has
+           the same offsets. */
+        @keyframes bw-pen-corners {
+            0% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: var(--bw-arm);
+                --bw-nib: 0;
             }
 
-            39%,
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            0.8% {
+                --bw-nib: 1;
+            }
+
+            6% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+            }
+
+            12% {
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-ox: var(--bw-arm);
+                --bw-oy: 0px;
+            }
+
+            13% {
+                --bw-nib: 0;
+            }
+
+            19% {
+                --bw-nib: 0;
+            }
+
+            20% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: var(--bw-arm);
+                --bw-nib: 1;
+            }
+
+            26% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+            }
+
+            32% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: calc(-1 * var(--bw-arm));
+                --bw-oy: 0px;
+            }
+
+            33% {
+                --bw-nib: 0;
+            }
+
+            39% {
+                --bw-nib: 0;
+            }
+
+            40% {
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-ox: 0px;
+                --bw-oy: calc(-1 * var(--bw-arm));
+                --bw-nib: 1;
+            }
+
+            46% {
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+            }
+
+            52% {
+                --bw-px: 1;
+                --bw-py: 1;
+                --bw-ox: calc(-1 * var(--bw-arm));
+                --bw-oy: 0px;
+            }
+
+            53% {
+                --bw-nib: 0;
+            }
+
+            59% {
+                --bw-nib: 0;
+            }
+
+            60% {
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-ox: 0px;
+                --bw-oy: calc(-1 * var(--bw-arm));
+                --bw-nib: 1;
+            }
+
+            66% {
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+            }
+
+            72% {
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-ox: var(--bw-arm);
+                --bw-oy: 0px;
+            }
+
+            73.5% {
+                --bw-nib: 0;
+            }
+
+            74.5% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 1;
+                --bw-ox: var(--bw-arm);
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
             100% {
                 visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Lettered: the pen rules under each line of a part, start to end,
+           and goes on to the next (the part's own line geometry: `--bw-lx`
+           the inset, `--bw-ly0` the first rule's depth, `--bw-lys` the
+           step). One line: one stroke; two lines: two strokes, the pen up
+           between. */
+        @keyframes bw-pen-ln1 {
+            0% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-ox: var(--bw-lx);
+                --bw-oy: var(--bw-ly0);
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            6% {
+                --bw-nib: 1;
+            }
+
+            70% {
+                --bw-px: 1;
+                --bw-ox: calc(-1 * var(--bw-lx));
+                --bw-nib: 1;
+            }
+
+            72% {
+                --bw-nib: 0;
+            }
+
+            76% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: calc(-1 * var(--bw-lx));
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        @keyframes bw-pen-ln2 {
+            0% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 0;
+                --bw-ox: var(--bw-lx);
+                --bw-oy: var(--bw-ly0);
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            6% {
+                --bw-nib: 1;
+            }
+
+            33% {
+                --bw-px: 1;
+                --bw-ox: calc(-1 * var(--bw-lx));
+                --bw-oy: var(--bw-ly0);
+                --bw-nib: 1;
+            }
+
+            35% {
+                --bw-nib: 0;
+            }
+
+            38% {
+                --bw-px: 0;
+                --bw-ox: var(--bw-lx);
+                --bw-oy: calc(var(--bw-ly0) + var(--bw-lys));
+            }
+
+            42% {
+                --bw-nib: 1;
+            }
+
+            71% {
+                --bw-px: 1;
+                --bw-ox: calc(-1 * var(--bw-lx));
+                --bw-oy: calc(var(--bw-ly0) + var(--bw-lys));
+                --bw-nib: 1;
+            }
+
+            76% {
+                --bw-nib: 0;
+            }
+
+            78% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: calc(-1 * var(--bw-lx));
+                --bw-oy: calc(var(--bw-ly0) + var(--bw-lys));
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* Led in: the leader from the margin to the part's start edge. */
+        @keyframes bw-pen-ldr {
+            0% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 0.5;
+                --bw-ox: -1.3rem;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            58% {
+                --bw-px: 0;
+                --bw-py: 0.5;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+            }
+
+            59.5% {
+                --bw-nib: 0;
+            }
+
+            62% {
+                visibility: hidden;
+                --bw-ox: 0px;
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The two centre lines: across at mid-height, the pen up to the top
+           centre, down the middle. */
+        @keyframes bw-pen-centre {
+            0% {
+                visibility: hidden;
+                --bw-px: 0;
+                --bw-py: 0.5;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            32% {
+                --bw-px: 1;
+                --bw-py: 0.5;
+            }
+
+            33.5% {
+                --bw-nib: 0;
+            }
+
+            42% {
+                --bw-px: 0.5;
+                --bw-py: 0;
+            }
+
+            43.5% {
+                --bw-nib: 1;
+            }
+
+            74% {
+                --bw-px: 0.5;
+                --bw-py: 1;
+            }
+
+            75.5% {
+                --bw-nib: 0;
+            }
+
+            77% {
+                visibility: hidden;
+                --bw-px: 0.5;
+                --bw-py: 1;
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* A tick drawn at the part's top-end corner: down and across, then up
+           and away, one stroke (1 : 2 along its two sides). */
+        @keyframes bw-pen-tick {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: -1.35rem;
+                --bw-oy: 0.75rem;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-nib: 0;
+            }
+
+            1.5% {
+                --bw-nib: 1;
+            }
+
+            20% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: -1.05rem;
+                --bw-oy: 1.15rem;
+            }
+
+            58% {
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: -0.45rem;
+                --bw-oy: 0.35rem;
+            }
+
+            59.5% {
+                --bw-nib: 0;
+            }
+
+            62% {
+                visibility: hidden;
+                --bw-nib: 0;
+            }
+
+            100% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+        }
+
+        /* The dimension drawn BELOW a part, outside it, between its extended
+           witness lines, then up and away. */
+        @keyframes bw-pen-dim-out {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-ox: 0.35rem;
+                --bw-py: 1;
+                --bw-oy: var(--bw-dim-out);
+                --bw-nib: 1;
+            }
+
+            70% {
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 1;
+                --bw-oy: var(--bw-dim-out);
+            }
+
+            72% {
+                --bw-nib: 0;
+            }
+
+            90% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: -0.35rem;
+                --bw-py: 1;
+                --bw-oy: calc(var(--bw-dim-out) + 0.6rem);
+                --bw-nib: 0;
+            }
+        }
+
+        /* Both dimensions in one stroke: across the foot (the width), turning
+           up the end edge (the height). */
+        @keyframes bw-pen-dim-two {
+            0% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-py: 0;
+                --bw-ox: 0px;
+                --bw-oy: 0px;
+                --bw-nib: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --bw-px: 0;
+                --bw-ox: 0.35rem;
+                --bw-py: 1;
+                --bw-oy: -6.5px;
+                --bw-nib: 1;
+            }
+
+            38% {
+                --bw-px: 1;
+                --bw-ox: -6.5px;
+                --bw-py: 1;
+                --bw-oy: -6.5px;
+            }
+
+            72% {
+                --bw-px: 1;
+                --bw-ox: -6.5px;
+                --bw-py: 0;
+                --bw-oy: 6.5px;
+            }
+
+            74% {
+                --bw-nib: 0;
+            }
+
+            90% {
+                visibility: hidden;
+                --bw-px: 1;
+                --bw-ox: -6.5px;
+                --bw-py: 0;
+                --bw-oy: -0.5rem;
+                --bw-nib: 0;
             }
         }
     }
