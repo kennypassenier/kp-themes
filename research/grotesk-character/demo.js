@@ -16,6 +16,16 @@
 // the clock only writes attributes and text, it never reads layout. The
 // network graph is in no scene: it changes in no theme (Kenny, 02:54), so it
 // is a source of the grammar here, never a target.
+//
+// ROUND 2 (Kenny, 2026-10-07 21:23): the anchor is chosen, "Out of register"
+// (research/grotesk-anchor): a second, red plate arrives offset, travels a
+// closing spiral, falls into register with a dwell and leaves as the same fall
+// played backwards; two plates of one print, the red under the black ink,
+// skeleton text as the hero, no crosshairs, no marks, no rings. This page was
+// built before the anchor was chosen; every motion question is re-derived from
+// it: the red plate is the one thing that moves, and where it stands says what
+// the part is (off: arriving, waiting, pointed at, changing; in register: there,
+// held). Options that already fit stay; the rest are replaced or demoted.
 
 /* ----------------------------------------------------------- the parts */
 
@@ -42,6 +52,15 @@ const plotWait = () =>
         <g class="gk-plate-ink"><polyline points="0,36 20,30 40,32 60,20 80,24 100,12 120,16 140,8 160,10" fill="none" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" vector-effect="non-scaling-stroke"/></g>
     </svg><span class="gk-run"></span><span class="gk-flap"></span></span>`;
 
+/**
+ * The skeleton text, the anchor's hero (research/grotesk-anchor): a heading
+ * bar and five lines, each on a row of its own, drawn in ink; the red plate is
+ * the same block's `drop-shadow`. It is also a waiting part (`.gk-wait`), so
+ * the loading questions can draw their own picture on it.
+ */
+const skText = () =>
+    `<span class="gk-wait gk-wait--text" aria-hidden="true"><span class="gk-sktext">${'<i></i>'.repeat(6)}</span><span class="gk-run"></span><span class="gk-flap"></span></span>`;
+
 /** The change, on a square plate; its arrow is the option's. */
 const chip = (text, dir = 'up', tone = 'good') =>
     `<span class="kp-kpi__delta gk-chip" data-kp-tone="${tone}" data-kp-direction="${dir}">${text}</span>`;
@@ -66,14 +85,14 @@ const plot = (cls = '', extra = '') => `<div class="gk-plot ${cls}" aria-hidden=
 
 const PART = {
     dialog: () =>
-        `<div class="gk-printed gk-printed--dialog"><div class="kp-dialog gk-dialog gk-float gk-opens" role="group" aria-label="A dialog opening">
+        `<div class="gk-printed gk-printed--dialog"><div class="kp-dialog gk-dialog gk-float gk-opens gk-arrives" role="group" aria-label="A dialog opening">
         <p class="kp-dialog__title gk-title">Change the platform?</p>
         <p class="kp-dialog__description">The 07:32 to Basel moves to platform 9.</p>
         <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Move it', 'kp-button--sm kp-button--primary')}</div>
     </div>${BAND}</div>`,
     menu: () => `<div class="gk-menu-wrap">
         ${button('More ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}
-        <div class="gk-pop-wrap"><div class="gk-printed"><div class="kp-popover gk-pop gk-float gk-opens"><ul class="kp-menu" role="menu">
+        <div class="gk-pop-wrap"><div class="gk-printed"><div class="kp-popover gk-pop gk-float gk-opens gk-arrives"><ul class="kp-menu" role="menu">
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the timetable</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign a platform…</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Cancel the train</button></li>
@@ -108,7 +127,8 @@ const PART = {
             .join('')}</div>`,
     state: (word = 'Running', kind = 'good') =>
         `<span class="gk-state" data-gk-kind="${kind}"><span class="gk-state__dot gk-carrier gk-carrier--mark" aria-hidden="true"></span><span class="gk-state__word gk-carrier" data-gk-word>${word}</span></span>`,
-    alert: (text = 'The 07:32 is back on time.') => `<div class="kp-alert gk-alert" role="status"><span class="kp-alert__body">${text}</span></div>`,
+    alert: (text = 'The 07:32 is back on time.', cls = '') =>
+        `<div class="kp-alert gk-alert ${cls}" role="status"><span class="kp-alert__body">${text}</span></div>`,
     spark: () => `<div class="gk-spark-wrap"><span class="kp-kpi__label gk-label">Departures, 24 h</span><span class="gk-spark gk-carrier gk-carrier--line" aria-hidden="true"><svg viewBox="0 0 120 32" preserveAspectRatio="none">
         <polyline points="0,24 15,20 30,22 45,14 60,16 75,10 90,12 105,6 120,8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"/></svg></span></div>`,
     column: (label = 'On time', value = '38') =>
@@ -154,18 +174,15 @@ const waitingTile = () =>
 
 const DURATION = () =>
     cell(
-        'Contact: a press',
+        'Contact: the face answers a press',
         `<div class="gk-row">${button('Export the timetable', 'gk-press')}</div><p class="gk-readout" data-gk-readout="contact"></p>`,
     ) +
-    cell('A set: a tile arrives', PART.tile() + '<p class="gk-readout" data-gk-readout="set"></p>') +
-    cell('The bands: a menu opens', PART.menu() + '<p class="gk-readout" data-gk-readout="bands"></p>') +
+    cell('A fall: a tile arrives', PART.tile() + '<p class="gk-readout" data-gk-readout="fall"></p>') +
+    cell('A fall: a menu opens', PART.menu() + '<p class="gk-readout" data-gk-readout="open"></p>') +
     cell('A loop: a tile waits', `${waitingTile()}<p class="gk-readout" data-gk-readout="loop"></p>`);
 
 const COLOUR = () =>
-    cell(
-        'Buttons, one pointed at, and a state',
-        `<div class="gk-row">${button('Export', 'gk-pointed')}${button('Depart', 'kp-button--primary')}${PART.state('Running')}</div>`,
-    ) +
+    cell('Buttons and a state', `<div class="gk-row">${button('Export')}${button('Depart', 'kp-button--primary')}${PART.state('Running')}</div>`) +
     cell('A meter', meter(0.62, 0.8)) +
     cell(
         'Key figures',
@@ -238,6 +255,7 @@ const LIVE = () =>
 
 /** Every waiting part of the dashboard, the loading picture drawn in each. */
 const LOADERS = () =>
+    cell('Skeleton text (the anchor)', skText(), 'gk-part--wide') +
     cell('Key figure', waitingKpi()) +
     cell(
         'Busy table',
@@ -261,6 +279,7 @@ const LOADERS = () =>
 
 /** The slip question: the same proofs, the red plate moving each option's way. */
 const SLIP = () =>
+    cell('Skeleton text (the anchor)', skText(), 'gk-part--wide') +
     cell('Key figure', waitingKpi()) +
     cell(
         'Busy table',
@@ -278,7 +297,7 @@ const SLIP = () =>
 const spin = (size = '', label = 'Working…', hidden = false) =>
     `<span class="gk-spin"${hidden ? ' aria-hidden="true"' : ` role="status" aria-label="${label}"`}${
         size ? ` style="--gk-spin: ${size}"` : ''
-    }><span class="gk-spin__mark"></span><span class="kp-spinner gk-spin__quarter"></span><span class="gk-spin__ring"></span></span>`;
+    }><span class="gk-spin__plate"></span><span class="kp-spinner gk-spin__quarter"></span><span class="gk-spin__ring"></span></span>`;
 
 const SPINNERS = () =>
     cell('Three sizes', `<div class="gk-row gk-spins">${['1rem', '1.5rem', '2.5rem'].map((s) => spin(s)).join('')}</div>`, 'gk-part--wide') +
@@ -302,12 +321,8 @@ const BARS = () =>
         'gk-part--wide',
     ) +
     cell(
-        'Skeleton lines',
-        `<div class="gk-skel-set"><div class="gk-skel-sig" aria-hidden="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span></div><div class="gk-skel-proof" aria-hidden="true">${[
-            0, 1, 2,
-        ]
-            .map((i) => `<span class="gk-skel__line" style="--i: ${i}">${wait('line')}</span>`)
-            .join('')}</div></div>`,
+        'Skeleton text',
+        `<div class="gk-skel-set"><div class="gk-skel-sig" aria-hidden="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span></div>${skText()}</div>`,
     ) +
     cell(
         'A key figure, its skeleton',
@@ -319,12 +334,12 @@ const BARS = () =>
 /** A part that leaves and arrives. */
 const leaver = (html) => `<div class="gk-printed gk-leaver">${html}${BAND}</div>`;
 const LEAVE = () =>
-    cell('An alert', leaver(PART.alert())) +
-    cell('A card', leaver(PART.tile('Basel SBB', '07:32 · platform 7', 'gk-leaves'))) +
+    cell('An alert', leaver(PART.alert(undefined, 'gk-arrives'))) +
+    cell('A card', leaver(PART.tile('Basel SBB', '07:32 · platform 7', 'gk-leaves gk-arrives'))) +
     cell(
         'A key figure',
         leaver(
-            `<div class="kp-kpi gk-plate gk-kpi gk-leaves"><span class="kp-kpi__label gk-label">Trains today</span><span class="kp-kpi__value gk-figure">412</span></div>`,
+            `<div class="kp-kpi gk-plate gk-kpi gk-leaves gk-arrives"><span class="kp-kpi__label gk-label">Trains today</span><span class="kp-kpi__value gk-figure">412</span></div>`,
         ),
     );
 
@@ -507,30 +522,32 @@ const ASPECTS = [
         id: 'curve',
         label: 'The motion curve',
         rule: 'G1',
-        question: 'How does grotesk move: on time, in hard cuts, or eased in and out?',
-        why: 'A theme exists to be distinct (your rule of 03:37). Grotesk’s register moves on cubic-bezier(0.2, 0, 0, 1), which is formal’s, light’s, nostromo’s and brutalism’s too. Your picks use nine curves; three of them, and the graph’s Out of register, run at an even pace (the chart’s At an even pace, the drawer’s hard beat, the meter’s Express), and the graph holds still in register for a beat before it slips again, the way the Swiss station clock’s hand stops at the top before it goes on. No theme moves like that yet.',
+        question: 'How does grotesk move: on time, in hard hops, or eased in and out?',
+        why: 'Your anchor, Out of register (approved 07/10/2026 21:23): a second, red plate falls into register on the black one. It travels a closing spiral at an even angular pace, falls into register in the seventh of eight units, dwells and is released the way it came. Every motion below is that plate. The register’s own curve is cubic-bezier(0.2, 0, 0, 1), which is formal’s, light’s, nostromo’s and brutalism’s; the plate has none: it keeps an even pace, stops dead in register and dwells, the way the Swiss station clock’s hand stops at the top before it goes on.',
         kind: 'cycle',
         scene: MOVING,
         options: [
             {
                 key: 'ontime',
-                name: 'On time: an even pace, a dead stop',
-                see: 'Everything travels at an even pace and stops dead on its mark: the week is set day by day, the menu is printed, the tile is set, the train runs under the changed figure. The loop travels, stops in register and dwells there, then goes again (stop-to-go).',
+                name: 'On time: an even pace, a dead stop, the dwell (the plate’s own)',
+                see: 'Every arrival is a part in black with its red plate falling into register on it: the week day by day, the menu, the tile; the value’s plate falls back in; the waiting part falls, dwells and is released. The plate travels at an even pace round the closing spiral and stops dead in register.',
                 verdict: rec(
-                    'it is a timetable you can see, the trains run on time and stop at the station, and the dwell is no other theme’s: titanium’s feed never stops.',
+                    'it is the anchor moving exactly as you approved it, a timetable you can see: the trains run on time and stop at the station, and the dwell is no other theme’s (titanium’s feed never stops, cyberpunk’s copies jitter home).',
                 ),
             },
             {
                 key: 'cut',
-                name: 'Hard cuts (your resize; terminal’s, nostromo’s, cyberpunk’s way)',
-                see: 'Everything jumps to its place in three hard cuts, no travel in between, as your resize’s cut does today.',
-                verdict: not('it is crisp and very Swiss for a resize, but hard steps for everything are how three other themes move.'),
+                name: 'Hard hops (terminal’s, nostromo’s, cyberpunk’s way)',
+                see: 'The red plate jumps from one of the eight points of the spiral to the next, each held, and lands in register at the last.',
+                verdict: not('it is crisp, but jumping between held poses is how three other themes move, and the spiral turns into a ring of dots.'),
             },
             {
                 key: 'eased',
-                name: 'Eased in and out (your four Set in type picks; near synthwave’s sunrise)',
-                see: 'Everything starts slowly, speeds up and slows down into place, cubic-bezier(0.7, 0, 0.3, 1), as your Set in type picks and the leave do today.',
-                verdict: not('it is smooth, but a slow start and a soft landing is synthwave’s sunrise curve, and a timetable does not ease.'),
+                name: 'Eased in and out (near synthwave’s sunrise)',
+                see: 'The plate takes the same eight points, slow at the start, quick in the middle and slow into register, cubic-bezier(0.7, 0, 0.3, 1), as your Set in type picks and the leave do today.',
+                verdict: not(
+                    'it is smooth, but a slow start and a soft landing is synthwave’s sunrise curve, and a plate that settles softly does not stop dead in register.',
+                ),
             },
         ],
     },
@@ -538,17 +555,25 @@ const ASPECTS = [
         id: 'direction',
         label: 'The direction',
         rule: 'G2',
-        question: 'Which way does a part move when it arrives?',
-        why: 'Your arrivals all come from the start: the calendar’s On the grid, the columns’ Slid in and the tiles’ Set in type move the part itself along its line; the menu’s, the header’s and the trend’s Set in type cut it in place from the start, which is exactly how titanium’s arrivals work. Brutalism’s analysis left grotesk the sideways shove.',
+        question: 'Where does an arriving part come from?',
+        why: 'Your arrivals all come from the start: the calendar’s On the grid, the columns’ Slid in and the tiles’ Set in type move the part itself along its line; the menu’s, the header’s and the trend’s Set in type cut it in place from the start, which is exactly how titanium’s arrivals work. Round 1 recommended setting a part along its line. The anchor changes the question: in a print nothing slides in; a part is printed in black and its second, red plate falls into register on it.',
         kind: 'cycle',
         scene: DIRECTION,
         options: [
             {
-                key: 'line',
-                name: 'Set along its line: it slides out from behind its own start edge',
-                see: 'Each day, departure, tile and column slides in along its own line from the start and stops flush on its column; it appears from behind its own start edge, so nothing pokes out before its slot. One after another, in reading order.',
+                key: 'plate',
+                name: 'From where it slipped: its red plate falls into register on it',
+                see: 'Each day, departure, tile and column is printed in black; behind it its red plate, slipped a few pixels, travels the closing spiral and falls into register in 8 units, then stands. One part after another in reading order, half a unit apart. Nothing slides in and nothing is clipped.',
                 verdict: rec(
-                    'it is type being set in the composing stick, every part stops flush on the grid, and no other theme moves the part itself along its line.',
+                    'it is the anchor itself on every part, so arriving, waiting and leaving are one picture, and no other theme brings a part in as a second plate.',
+                ),
+            },
+            {
+                key: 'line',
+                name: 'Set along its line: it slides out from behind its own start edge (round 1’s recommendation)',
+                see: 'Each day, departure, tile and column slides in along its own line from the start and stops flush on its column; it appears from behind its own start edge, so nothing pokes out before its slot. One after another, in reading order.',
+                verdict: not(
+                    'it is type being set in the composing stick and was the recommendation before the anchor, but it is a second idea beside the plate, and nothing else on the page moves along a line.',
                 ),
             },
             {
@@ -570,23 +595,31 @@ const ASPECTS = [
         label: 'Opening a menu or a dialog',
         rule: 'G3',
         question: 'How does a menu or a dialog open?',
-        why: 'Your menu and your header’s menu are Set in type: cut in place from the start (their text says “drawn in from the top”). The signature’s dialog, toast and tooltip are cut in from the start too. Your leave is three colour bands, red, ink and paper, sweeping across like a Swiss poster (2026-10-04), and since 2026-10-05 an opening is the leave played backwards.',
+        why: 'Your menu and your header’s menu are Set in type: cut in place from the start (their text says “drawn in from the top”). The signature’s dialog, toast and tooltip are cut in from the start too. Your leave is three colour bands, red, ink and paper (2026-10-04), and since 2026-10-05 an opening is the leave played backwards. The anchor opens a panel another way: it is printed in black and its red plate falls into register on it.',
         kind: 'cycle',
         scene: OPENING,
         options: [
             {
+                key: 'plate',
+                name: 'Printed, its red plate falling into register (the anchor)',
+                see: 'The panel and its 3 px frame appear in black; its red plate, 8 px off, travels the closing spiral round the frame and falls into register in 8 units (960 ms), and the panel stands. Closing, the same fall played backwards and the panel is gone.',
+                verdict: rec(
+                    'it is the anchor opening a panel, the same picture as an arrival, a wait and a leave, and no other theme opens with a second plate.',
+                ),
+            },
+            {
                 key: 'bands',
                 name: 'Printed by the colour bands (your leave, backwards)',
                 see: 'Three flat bands, paper, ink and red, sweep across the panel’s place from the start at an even pace and leave it printed behind them: 4 units (480 ms). Closing, they sweep back toward the start and take it off.',
-                verdict: rec(
-                    'it is your own leave played backwards, so opening, arriving and leaving are one picture, and no other theme opens with flat colour sweeping across.',
+                verdict: not(
+                    'it is your decided leave played backwards and was the recommendation before the anchor, but it is a second picture beside the plate, and flat colour sweeping across reads as a wipe, not as a print in two plates.',
                 ),
             },
             {
                 key: 'cut',
                 name: 'Cut in from the start, as picked (near titanium’s feed)',
                 see: 'The panel is uncovered from its start edge to its end, 260 ms, as your menu’s Set in type and the signature’s dialog do.',
-                verdict: not('it is your pick, but a cut from the start is titanium’s arrival, and it is not the picture your leave draws.'),
+                verdict: not('it is your pick, but a cut from the start is titanium’s arrival, and it is not the picture of the anchor.'),
             },
             {
                 key: 'slide',
@@ -602,24 +635,24 @@ const ASPECTS = [
         id: 'durations',
         label: 'How long things take',
         rule: 'G4',
-        question: 'How long do contact, a set, the bands and a loop take?',
-        why: 'Grotesk’s register gives contact 120 ms; your resize cuts in 240 ms and your leave takes 550. Your picks take 150 to 1200 ms for a one-shot and 0.6 to 2.6 s for a loop, with no unit under them; the graph’s Out of register takes 2600 ms.',
+        question: 'How long do contact, a fall and a loop take?',
+        why: 'The anchor has its own clock, counted in units of the register’s 120 ms: a gap of 2, the red plate falls in 8 (960 ms), dwells 4 and is released in 8, 22 units (2640 ms) in all, the graph’s Out of register period within 2 %. Contact, the face answering a touch, is 1 unit, the register’s --fx-duration. Your picks take 150 to 1200 ms for a one-shot and 0.6 to 2.6 s for a loop, with no unit under them.',
         kind: 'cycle',
         scene: DURATION,
         options: [
             {
                 key: 'units',
-                name: '120 · 240 · 480 · 2640 (units of 120 ms)',
-                see: 'Contact 1 unit (120 ms), a set 2 (240 ms), the bands 4 (480 ms), a loop 22 (2640 ms, of which 4 dwell in register): the readouts under each part say the numbers.',
+                name: '120 · 960 · 2640 (units of 120 ms)',
+                see: 'Contact 1 unit (120 ms), a fall 8 units (960 ms), for a tile or a menu, a loop 22 units (2640 ms): 2 of gap, the fall of 8, the dwell of 4, the release of 8. The readouts under each part say the numbers.',
                 verdict: rec(
-                    'every duration is the register’s own 120 ms counted, a set is your resize’s cut, and the loop keeps the graph’s period within 2 %.',
+                    'every duration is the register’s own 120 ms counted, and the fall and the loop are the anchor’s clock exactly (the dwell is what a station clock’s hand does at the top).',
                 ),
             },
             {
                 key: 'picks',
                 name: 'As the picks, the slowest of each kind',
-                see: 'Contact 150 ms (the nav link), a set 1200 ms (the chart’s even pace), the bands 550 ms (the leave), a loop 2600 ms (the graph).',
-                verdict: not('it is your picks, but a set of 1.2 s is a slow train, and nothing ties one number to another.'),
+                see: 'Contact 150 ms (the nav link), a fall 1200 ms (the chart’s even pace), a loop 2600 ms (the graph).',
+                verdict: not('it is your picks, but 1.2 s for a fall is a slow train, and nothing ties one number to another.'),
             },
             {
                 key: 'instant',
@@ -641,8 +674,10 @@ const ASPECTS = [
             {
                 key: 'signal',
                 name: 'Black builds, the red signals once, the statuses state',
-                see: 'Every word, rule and line is black; the red marks one thing: the hand (the pointed button’s baseline), today, the primary action, the pick’s line; the meter’s share; the statuses only as a tone (the change). The plates are white.',
-                verdict: rec('the red keeps saying “this one”, as on a Swiss poster, and black and white carry everything else.'),
+                see: 'Every word, rule and line is black; the red marks one thing: the second plate (what waits, arrives, is pointed at or has just changed, shown in the motion questions), today, the primary action, the pick’s line; the meter’s share; the statuses only as a tone (the change). The plates are white.',
+                verdict: rec(
+                    'the red keeps saying “this one”, as on a Swiss poster, it is the anchor’s second plate (seen where something is off, behind the black when it is in register), and black and white carry everything else.',
+                ),
             },
             {
                 key: 'lines',
@@ -733,16 +768,24 @@ const ASPECTS = [
         label: 'A live update',
         rule: 'G9',
         question: 'How does a value that changes in place show it changed?',
-        why: 'Your live picks: the key figure’s Flipped (a jump up in two hard steps; its text promises a departure-board flap), the tiles’ Flipped (a jump up in hard steps; it never played until 2026-10-07, when the arrival’s rule outranked it), the columns’ Inverted (high-contrast’s The bar flips), the state’s A flat swap (a swell to 1.4×) and at once for the trend and the chart (formal’s Redrawn). Your graph’s live update is The train passes: a train runs along the changed line.',
+        why: 'Your live picks: the key figure’s Flipped (a jump up in two hard steps; its text promises a departure-board flap), the tiles’ Flipped (a jump up in hard steps; it never played until 2026-10-07, when the arrival’s rule outranked it), the columns’ Inverted (high-contrast’s The bar flips), the state’s A flat swap (a swell to 1.4×) and at once for the trend and the chart (formal’s Redrawn). Your graph’s live update is The train passes: a train runs along the changed line. The anchor says it another way for a value: what has just changed is not yet in register.',
         kind: 'cycle',
         scene: LIVE,
         options: [
             {
+                key: 'plate',
+                name: 'Re-registered: the value’s red plate slips and falls back in (the anchor)',
+                see: 'The new value is written in black at once and nothing moves; behind it a red copy of the value starts a few pixels off and falls into register along the closing spiral in 8 units. A line, a mark or a tile is re-registered the same way.',
+                verdict: rec(
+                    'it is the anchor on a value: what is true stands in register, what has just changed is not yet, and it is the same picture as arriving and waiting.',
+                ),
+            },
+            {
                 key: 'train',
                 name: 'The train passes (your graph’s, carried to every value)',
                 see: 'The new value is written at once; a short red train runs along its baseline from the start to the end at an even pace and leaves, 4 units (480 ms). A line, a mark or a tile is passed along its foot.',
-                verdict: rec(
-                    'it is your graph’s own live update, the value never moves, and no theme runs a train under a value (synthwave’s laser is drawn out from the centre and glows).',
+                verdict: not(
+                    'it is your graph’s own live update and decided there, but it runs along the baseline, which is the baseline’s idea and not the anchor’s (the graph stays as decided).',
                 ),
             },
             {
@@ -766,16 +809,16 @@ const ASPECTS = [
         label: 'Loading: the picture on every waiting part',
         rule: 'G10',
         question: 'What does a waiting part show while it loads?',
-        why: 'Your graph’s loading, Out of register (2026-10-06 21:37): the map printed in black over a red plate that has slipped; the red copy travels round the black one, snaps into register for a beat and slips off again. You asked for every loading element to be shown from it. Your other loading picks: eight lines running along the part (the columns, the trend, the calendar’s ticker, the menu’s ruling pen, the chart’s grid build, the meter’s Express, the signature skeleton and busy bar), the tiles’ flap, and the busy table’s Poster shifts, which does not move at all.',
+        why: 'Out of register is the anchor (approved 07/10/2026 21:23), and the skeleton text is its hero: a heading bar and five lines in black, and under them the same text in red, slipped. The red plate no longer circles at a constant distance: it travels a closing spiral, falls into register in the seventh of eight units, dwells and is released the way it came. No crosshairs, no marks, no rings. You asked for every loading element to be shown from it. Your other loading picks: eight lines running along the part (the columns, the trend, the calendar’s ticker, the menu’s ruling pen, the chart’s grid build, the meter’s Express, the signature skeleton and busy bar), the tiles’ flap, and the busy table’s Poster shifts, which does not move at all.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
                 key: 'register',
                 name: 'Out of register: the reading’s place printed as a proof in two plates',
-                see: 'Where the value will stand is a proof in heavy ink; under it the same proof in red has slipped and travels round it, snaps into register (the red disappears behind the black), dwells there for 4 units and slips off again: 2640 ms. The labels stay readable above it.',
+                see: 'Skeleton text, and where every value will stand, is a proof in heavy ink; under it the same proof in red slips off, travels the closing spiral, falls into register (the red disappears behind the black), dwells for 4 units and is released: 2640 ms. The labels stay readable above it.',
                 verdict: rec(
-                    'it is your graph’s picture carried to every part, it is print, which is where the Swiss style was made, and no theme loads in two plates.',
+                    'it is your anchor on every waiting part, it is print, which is where the Swiss style was made, and no theme loads in two plates.',
                 ),
             },
             {
@@ -797,16 +840,24 @@ const ASPECTS = [
         label: 'Loading: how the red plate moves',
         rule: 'G10',
         question: 'While it waits, how does the red plate move against the black?',
-        why: 'On your graph the red copy circles the black one at an even pace through eight positions, 16 px off, snaps into register at 84 % of 2600 ms, holds to 92 % while the stations press, and slips off again. On a key figure or a day the slip is smaller: 3 to 8 px. The picture stays out of register in every option; only the slip changes.',
+        why: 'The anchor’s red plate travels a closing spiral: one turn round the black in 45 degree steps at an even angular pace, the radius shrinking from 1 to 0.2, falling into register in the seventh of eight units, dwelling and then released as the spiral played backwards. Your graph circles at a constant 16 px, snaps in at 84 % of 2600 ms and slips off again; you refined that in the anchor round. On a key figure or a day the slip is smaller: 3 to 8 px. The picture stays out of register in every option; only the slip changes.',
         kind: 'loop',
         scene: SLIP,
         options: [
             {
-                key: 'orbit',
-                name: 'Round the black, then into register (your graph’s)',
-                see: 'The red plate travels round the black at an even pace, snaps under it and dwells for 4 units, then slips off and goes round again: 2640 ms.',
+                key: 'spiral',
+                name: 'A closing spiral, then into register (the anchor)',
+                see: 'The red plate travels one turn round the black at an even pace while its distance shrinks, falls into register and dwells for 4 units, then leaves as the same spiral played backwards: 2640 ms.',
                 verdict: rec(
-                    'it is exactly your graph’s movement, so every waiting part loads the way the network does, with the station clock’s dwell.',
+                    'it is exactly the anchor you approved, the plate arrives from afar and lands, so the wait ends in a visible registration, and the dwell is the station clock’s.',
+                ),
+            },
+            {
+                key: 'orbit',
+                name: 'Round at a constant distance, then into register (your graph’s, before the anchor)',
+                see: 'The red plate travels round the black at a constant distance at an even pace, snaps under it and dwells for 4 units, then slips off and goes round again: 2640 ms.',
+                verdict: not(
+                    'it is your graph’s decided movement (it stays so in the graph), but a plate that circles at one distance and then jumps into register has no arrival; you asked for it refined.',
                 ),
             },
             {
@@ -830,23 +881,23 @@ const ASPECTS = [
         label: 'Loading: the spinner',
         rule: 'G11',
         question: 'What is grotesk’s spinner?',
-        why: 'The signature (2026-10-03): a red quarter disc stepping round an ink square, each quarter turn held, 1600 ms. Out of register can draw the printer’s own mark: the registration mark every proof carries in its margin.',
+        why: 'The signature (2026-10-03): a red quarter disc stepping round an ink square, each quarter turn held, 1600 ms. Round 1 recommended a printer’s registration mark, a ring crossed by two hairlines; you refused crosshairs in the anchor round. The spinner is now the plate alone, with no mark, no ring and no cross: the signature’s own ink square, and its red twin falling into register on it.',
         kind: 'loop',
         scene: SPINNERS,
         options: [
             {
-                key: 'mark',
-                name: 'The register mark (out of register, carried)',
-                see: 'A printer’s registration mark, a ring crossed by two hairlines, in ink; its red copy travels round it, snaps into register and dwells, 2640 ms.',
+                key: 'plate',
+                name: 'The plate: an ink square and its red twin falling into register',
+                see: 'A 2 px ink square; its red twin, a few pixels off, travels the closing spiral, falls into register, dwells and is released, 2640 ms, on the same clock as every waiting part. Three sizes; on the red primary button the two plates are paper and ink.',
                 verdict: rec(
-                    'it is the loading picture in its smallest form, so the spinner and every waiting part speak one picture, and no theme’s spinner is a print mark.',
+                    'it is the anchor in its smallest form, so the spinner and every waiting part speak one picture; it uses the signature’s own ink square and draws no crosshair; and no theme’s spinner is a square with a second square falling into it.',
                 ),
             },
             {
                 key: 'quarter',
                 name: 'The signature’s quarter, as approved',
                 see: 'A red quarter disc stepping round an ink square, each quarter turn held, 1600 ms.',
-                verdict: not('it is your signature and it already dwells at each quarter, but it is a second loading picture beside the proof.'),
+                verdict: not('it is your signature and it already dwells at each quarter, but it is a second loading picture beside the plate.'),
             },
             {
                 key: 'ring',
@@ -861,15 +912,17 @@ const ASPECTS = [
         label: 'Loading: the busy bar and the skeleton',
         rule: 'G11',
         question: 'How do the busy progress bar and the skeleton lines wait?',
-        why: 'The signature (2026-10-03): the busy bar steps one red column along its twelve columns (1440 ms), the skeleton’s grey lines have a red marker running under them (1800 ms, on synthwave’s curve). Both run along a line; Out of register prints them instead.',
+        why: 'The signature (2026-10-03): the busy bar steps one red column along its twelve columns (1440 ms), the skeleton’s grey lines have a red marker running under them (1800 ms, on synthwave’s curve). Both run along a line; the anchor prints them instead: the bar’s ruled track is a proof, and the skeleton is the skeleton text itself, the anchor’s hero.',
         kind: 'loop',
         scene: BARS,
         options: [
             {
                 key: 'register',
-                name: 'Printed out of register',
-                see: 'The bar’s ruled track and the skeleton’s lines are proofs in ink, their red plates travelling round them and registering on the same clock; the lines one column of time apart, so the misprint moves down the page.',
-                verdict: rec('it is one loading picture for every waiting element, the bar keeps its twelve columns, and nothing runs along a line.'),
+                name: 'Printed out of register (the anchor)',
+                see: 'The bar’s ruled track is a proof in ink with its red plate falling into register under it; the skeleton text, a heading bar and five lines, is one print whose red plate travels the closing spiral for all of it at once; the key figure’s skeleton is its block, on the same clock.',
+                verdict: rec(
+                    'it is the anchor’s own bar and hero, one loading picture for every waiting element, the bar keeps its twelve columns, and nothing runs along a line.',
+                ),
             },
             {
                 key: 'signature',
@@ -882,7 +935,7 @@ const ASPECTS = [
             {
                 key: 'line',
                 name: 'A line runs (your columns’ pick)',
-                see: 'A short ink line runs along the bar and under each skeleton line.',
+                see: 'A short ink line runs along the bar and under the skeleton text.',
                 verdict: not('it is plain, but it is the runner many themes share, and the bar loses its grid.'),
             },
         ],
@@ -892,15 +945,25 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does something leave, and how does it arrive?',
-        why: 'Your leave (2026-10-04, round 7): three colour bands, red, ink and paper, sweep across and take it with them, 550 ms on an ease-in-out, the part fading out in its last 10 %; what arrives plays it backwards. The bands do not cover the part’s frame today.',
+        why: 'Your leave (2026-10-04, round 7): three colour bands, red, ink and paper, sweep across and take it with them, 550 ms on an ease-in-out, the part fading out in its last 10 %; what arrives plays it backwards. The anchor leaves another way: the second plate is released, the same fall played backwards, and what arrives is the fall forwards.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
+                key: 'plate',
+                name: 'Released: the arrival played backwards (the anchor)',
+                see: 'The part stands in black; its red plate leaves register, travels the spiral open again over 8 units (960 ms) and the part is gone at the end of it. Arriving is the same fall forwards, so arriving, waiting and leaving are one picture.',
+                verdict: rec(
+                    'it is the anchor’s own release: one idea for a part’s whole life, nothing fades, and no other theme leaves with a second plate.',
+                ),
+            },
+            {
                 key: 'bands',
-                name: 'The colour bands, at an even pace (your leave)',
+                name: 'The colour bands, at an even pace (your leave, 2026-10-04)',
                 see: 'Red, ink and paper sweep across the part toward the start, frame and all, and the paper takes it off: 4 units (480 ms), no fade. Arriving, the bands sweep the other way and print it.',
-                verdict: rec('it is your own leave on grotesk’s even pace, it is the opening’s picture too, and no other theme leaves this way.'),
+                verdict: not(
+                    'it is your decided leave and still a Swiss poster, and it was the recommendation before the anchor, but it is a second picture beside the plate.',
+                ),
             },
             {
                 key: 'cut',
@@ -912,7 +975,7 @@ const ASPECTS = [
                 key: 'shove',
                 name: 'Shoved out toward the start (near brutalism’s picked slam)',
                 see: 'The part slides back along its line behind its own start edge and is gone; arriving, it is set again.',
-                verdict: not('it matches the arrival, but a part shoved out sideways is brutalism’s picked leave, and you chose the bands.'),
+                verdict: not('it matches round 1’s arrival, but a part shoved out sideways is brutalism’s picked leave, and you chose the bands.'),
             },
         ],
     },
@@ -921,14 +984,14 @@ const ASPECTS = [
         label: 'Buttons inside composites',
         rule: 'G17',
         question: 'How do buttons, links and menu entries behave when they sit inside a header, a menu, a tile, a drawer or a key figure?',
-        why: 'Use the State buttons above to see them hovered, focused and pressed. Today the header’s actions have a 1 px line, a red bar at the foot on hover and one red outline for focus; the menu entries grow a red top border; the tile’s Open link takes one red outline; the key figure as a link turns red with a tint.',
+        why: 'Use the State buttons above to see them hovered, focused and pressed (a held state plays the plate’s fall on a loop). Today the header’s actions have a 1 px line, a red bar at the foot on hover and one red outline for focus; the menu entries grow a red top border; the tile’s Open link takes one red outline; the key figure as a link turns red with a tint.',
         kind: 'still',
         scene: COMPOSITES,
         options: [
             {
                 key: 'own',
                 name: 'Exactly grotesk’s own elements',
-                see: 'Every inner button is grotesk’s button: the 2 px ink line, the wash and the red baseline when pointed at, the two-channel ring, the thickened rule when pressed; a menu entry takes the wash and the baseline; the key figure as a link the same.',
+                see: 'Every inner button is grotesk’s button: the 2 px ink line, its red plate falling into register when pointed at, the two-channel ring on focus, the grey face with the black label when pressed; a menu entry and the key figure as a link the same.',
                 verdict: rec('a button is a button wherever it sits, so the theme stays one grammar.'),
             },
             {
@@ -940,7 +1003,7 @@ const ASPECTS = [
             {
                 key: 'quiet',
                 name: 'Grotesk’s own, but quiet: words only inside a composite',
-                see: 'Inside a composite every button is its words alone (no line) until pointed at, when its line and baseline appear.',
+                see: 'Inside a composite every button is its words alone (no line) until pointed at, when its line and its red plate appear.',
                 verdict: not('it is calmer, but a composite’s actions stop looking like buttons until you touch them.'),
             },
         ],
@@ -950,16 +1013,24 @@ const ASPECTS = [
         label: 'Pointing at something',
         rule: 'G8',
         question: 'What happens to a part when the pointer is on it?',
-        why: 'Your scope-12 (2026-09-12): touching a control draws the red baseline its words stand on, from the start; the register adds the wash. Your component picks draw a red bar at the foot (the header), a red top border that pushes the entry 2 px (the menu), a top bar growing 6 → 10 px that pushes the tile’s content (the tiles), a red line with a tint (the key figure) and an underline (a day).',
-        kind: 'still',
+        why: 'Your scope-12 (2026-09-12): touching a control draws the red baseline its words stand on, from the start; the register adds the wash. Your component picks draw a red bar at the foot (the header), a red top border that pushes the entry 2 px (the menu), a top bar growing 6 → 10 px that pushes the tile’s content (the tiles), a red line with a tint (the key figure) and an underline (a day). The anchor answers another way: pointing at a part takes it into register.',
+        kind: 'cycle',
         scene: HOVER,
         options: [
+            {
+                key: 'plate',
+                name: 'The red plate falls in: the part is taken into register (the anchor)',
+                see: 'Pointing at a part shows its red plate, slipped a few pixels, travelling the closing spiral and falling into register on it in 8 units; it dwells there for as long as the pointer stays and is released the way it came when the pointer leaves. The first frame already shows the red, so the answer is immediate; nothing beside it moves. Under reduced motion the part takes the light wash.',
+                verdict: rec(
+                    'it is the anchor on a touch, the same plate as loading and arriving; and a plate that falls in is neither brutalism’s still hard shadow nor cyberpunk’s jitter.',
+                ),
+            },
             {
                 key: 'baseline',
                 name: 'The baseline appears (your scope-12)',
                 see: 'The part pointed at gets the red rule its words stand on, drawn from the start, and its plate takes the light wash; a coloured button inverts. Nothing moves, siblings are untouched.',
-                verdict: rec(
-                    'it is your approved baseline on every part, the type’s own line rather than the box’s edge, and nothing beside it shifts.',
+                verdict: not(
+                    'it is your approved baseline, drawn on every button and link today, and it was the recommendation before the anchor, but it is the type’s idea and not the anchor’s; keep it and the plate belongs to loading, arriving and leaving only.',
                 ),
             },
             {
@@ -981,16 +1052,24 @@ const ASPECTS = [
         label: 'The focus ring',
         rule: 'G14, DI2',
         question: 'How does a part show it has keyboard focus?',
-        why: 'The register gives a button one 2 px ink ring with the page’s white outside it, and a coloured button three layers. Three of your picks use one outline instead: red on the header’s action and the tile’s link, a thin ink line 3 px out on the key figure.',
-        kind: 'still',
+        why: 'The register gives a button one 2 px ink ring with the page’s white outside it, and a coloured button three layers (DI2: two channels). Three of your picks use one outline instead: red on the header’s action and the tile’s link, a thin ink line 3 px out on the key figure. The anchor adds the plate: focus is the ring, plus the same fall as under the pointer.',
+        kind: 'cycle',
         scene: FOCUS,
         options: [
             {
                 key: 'ring',
-                name: 'The two-channel ring, and the baseline drawn',
-                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and the red baseline under its words as when pointed at.',
+                name: 'The two-channel ring, and the plate falling in (the anchor)',
+                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and its red plate falls into register on it as under the pointer, 8 units, dwelling for as long as the focus stays.',
                 verdict: rec(
-                    'it is the design invariant, it reads on white, on the red primary and on the ink alike, and the baseline says where you are.',
+                    'the ring is the design invariant and reads on white, on the red primary and on the ink alike, and the plate says where you are in the same picture as pointing, so hover and focus belong together.',
+                ),
+            },
+            {
+                key: 'baseline',
+                name: 'The two-channel ring, and the baseline drawn (round 1’s recommendation)',
+                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and the red baseline under its words as when pointed at.',
+                verdict: not(
+                    'it was the recommendation before the anchor and the ring is right, but the baseline is the type’s idea, and focus would answer in a picture the rest of the theme does not use.',
                 ),
             },
             {
@@ -1014,21 +1093,31 @@ const ASPECTS = [
         label: 'The press',
         rule: 'G14',
         question: 'What happens to a part while it is pressed?',
-        why: 'Your scope-12: the press thickens the baseline downward into the deeper red, at once; the plate takes the darker grey, and a coloured button presses grey with a black label (2026-09-14). Your header’s and menu’s picks turn their bar to ink instead.',
+        why: 'Your scope-12: the press thickens the baseline downward into the deeper red, at once; the plate takes the darker grey, and a coloured button presses grey with a black label (2026-09-14). Your header’s and menu’s picks turn their bar to ink instead. The anchor has its own press (research/grotesk-anchor): the red plate falls into register as the press lands, and the part is held there through the dwell.',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
+                key: 'plate',
+                name: 'The plate falls into register as the press lands (the anchor)',
+                see: 'The part is pointed at, its red plate falling in; the press lands in the seventh unit, when the plate is in register: the face turns the darker grey and the label black, at once, and stays for as long as it is held. The release is the fall played backwards. The part never moves.',
+                verdict: rec(
+                    'it is the anchor’s own press and says “held” exactly: in register, the red gone behind the black; no other theme presses by registering a plate.',
+                ),
+            },
+            {
                 key: 'rule',
-                name: 'The rule thickens (your scope-12)',
+                name: 'The rule thickens (your scope-12; round 1’s recommendation)',
                 see: 'The baseline under the words thickens to 4 px in the deeper red, the plate turns the darker grey, at once, for as long as it is held; the primary presses grey with a black label. Nothing moves.',
-                verdict: rec('it is your approved press, it says “held” on the very line the hover drew, and no other theme thickens a rule.'),
+                verdict: not(
+                    'it is your approved press and it says “held” on the very line the hover drew, but if pointing is the plate, a press that draws the baseline is a second idea.',
+                ),
             },
             {
                 key: 'grey',
                 name: 'The grey alone (the package’s press)',
                 see: 'The plate turns the darker grey; no rule.',
-                verdict: not('it is plain, but it drops the baseline you approved, so hover and press no longer belong together.'),
+                verdict: not('it is plain, but it drops the plate and the baseline, so hover and press no longer belong together.'),
             },
             {
                 key: 'reverse',
@@ -1125,7 +1214,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', 'grotesk');
-lookLine.textContent = `${ASPECTS.length} questions, one rule of grotesk each (9 to 12 the loading demo from the graph’s Out of register); the first option of every question is the recommendation. Pick the one that is grotesk to you, or “None of these” with a note.`;
+lookLine.textContent = `${ASPECTS.length} questions, one rule of grotesk each (9 to 12 the loading demo from the graph’s Out of register; every motion question is re-derived from the anchor, Out of register, approved 07/10/2026 21:23); the first option of every question is the recommendation. Pick the one that is grotesk to you, or “None of these” with a note.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the rows */
@@ -1170,20 +1259,21 @@ ASPECTS.forEach((a, n) => {
 });
 rows.append(built);
 
-// The durations row says its own numbers under each part.
-const BANDS = { units: [120, 240, 480, 2640], picks: [150, 1200, 550, 2600], instant: [0, 0, 0, 0] };
+// The durations row says its own numbers under each part (units of 120 ms).
+const BANDS = { units: [120, 960, 960, 2640], picks: [150, 1200, 1200, 2600], instant: [0, 0, 0, 0] };
 for (const scene of section.querySelectorAll('[data-gk-durations]')) {
     const key = /** @type {keyof typeof BANDS} */ (scene.getAttribute('data-gk-durations'));
-    const [contact, set, bands, loop] = BANDS[key];
-    const units = (/** @type {number} */ ms) => (key === 'units' ? `, ${ms / 120} ${ms === 120 ? 'unit' : 'units'}` : '');
+    const [contact, fall, open, loop] = BANDS[key];
+    const units = (/** @type {number} */ ms, /** @type {string} */ more = '') =>
+        key === 'units' ? `, ${ms / 120} ${ms === 120 ? 'unit' : 'units'}${more}` : '';
     const say = (/** @type {string} */ id, /** @type {string} */ text) => {
         const p = scene.querySelector(`[data-gk-readout="${id}"]`);
         if (p) p.textContent = text;
     };
     say('contact', `${contact} ms${units(contact)}`);
-    say('set', `${set} ms${units(set)}`);
-    say('bands', `${bands} ms${units(bands)}`);
-    say('loop', loop ? `${loop} ms a cycle${units(loop)}` : 'standing still, out of register');
+    say('fall', `${fall} ms${units(fall)}`);
+    say('open', `${open} ms${units(open)}`);
+    say('loop', loop ? `${loop} ms a cycle${units(loop, ', 4 of them the dwell')}` : 'standing still, out of register');
 }
 
 /* ---------------------------------------------------------- the one clock */
@@ -1201,7 +1291,7 @@ const PHASES = /** @type {const} */ ([
     ['gap', 700],
     ['in', 1900],
     ['hold', 1800],
-    ['out', 900],
+    ['out', 1100],
 ]);
 const values = ['412', '436', '398', '451'];
 let tick = 0;

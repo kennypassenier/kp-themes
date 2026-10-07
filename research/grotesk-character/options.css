@@ -17,7 +17,21 @@
    The proof: a waiting reading's place in two plates, the red on ::before
    and the ink on ::after, both drawn from one `--gk-img` declared on each
    pseudo-element so each resolves its own `--gk-c`; only the red moves
-   (`translate`, a transform). */
+   (`translate`, a transform).
+
+   ROUND 2 (the anchor, Kenny 07/10/2026 21:23): Out of register is the one
+   element every grotesk decision departs from: a second, red plate arrives
+   offset, travels a closing spiral at an even angular pace, falls into
+   register in the seventh of eight units, dwells and leaves as the same fall
+   played backwards. Its red plate is a `drop-shadow` of the part itself
+   (the way the graph's decided loading draws it) animated by the `gk-fall`
+   keyframes, or, on a pseudo-element proof, a `translate` (`gk-loop`). It is
+   under the ink, so in register it is behind the black. The parts: an
+   arrival is a part printed in black with the plate falling in (`gk-arrive`,
+   hidden until its turn), a leave is that played backwards (by demo.js, as
+   before), a value that changed is re-registered, pointing, focus and the
+   press are the plate's fall, waiting is its 22 unit loop. No crosshairs, no
+   marks, no rings. Rules and tokens hang on `.gk-scene` as well as the page. */
 
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
@@ -32,6 +46,9 @@
         --gk-dir: 1;
         --gk-clip-start: inset(0 0 0 100%);
         --gk-clip-end: inset(0 100% 0 0);
+        /* The anchor's second plate: the red, and how far it slipped. */
+        --gk-plate: var(--primary);
+        --gk-r: 6px;
     }
 
     .gk-scene:dir(rtl) {
@@ -53,23 +70,36 @@
         --gk-bands: 480ms;
         --gk-loop: 2640ms;
         --gk-step: 60ms;
-        --gk-arrive: gk-set;
+        /* The fall: 8 units (960 ms), the anchor's. A part arrives by it
+           unless the direction question asks for another way. */
+        --gk-fall: 960ms;
+        --gk-arrive: gk-arrive;
+        --gk-arrive-t: var(--gk-fall);
+        --gk-fallkf: gk-fall;
+        --gk-loopkf: gk-loop;
         /* G7: nothing is translucent; the proof says busy, so layout.css's
            busy dim (0.7) stays off. */
         --kp-busy-opacity: 1;
     }
 
     .gk-scene[data-gk-curve='cut'] {
-        --gk-in: steps(3, jump-end);
+        /* Each segment of the spiral is held, then jumps to the next. */
+        --gk-in: steps(1, end);
     }
 
+    /* The eased fall is the same eight points at the times cubic-bezier
+       (0.7, 0, 0.3, 1) reaches them, so the plate eases along the whole
+       spiral and not per segment. */
     .gk-scene[data-gk-curve='eased'] {
-        --gk-in: cubic-bezier(0.7, 0, 0.3, 1);
+        --gk-arrive: gk-arrive-eased;
+        --gk-fallkf: gk-fall-eased;
+        --gk-loopkf: gk-loop-eased;
     }
 
     .gk-scene[data-gk-durations='picks'] {
         --gk-contact: 150ms;
         --gk-set: 1200ms;
+        --gk-fall: 1200ms;
         --gk-bands: 550ms;
         --gk-loop: 2600ms;
     }
@@ -77,15 +107,23 @@
     .gk-scene[data-gk-durations='instant'] {
         --gk-contact: 0ms;
         --gk-set: 0ms;
+        --gk-fall: 0ms;
         --gk-bands: 0ms;
+    }
+
+    .gk-scene[data-gk-direction='line'] {
+        --gk-arrive: gk-set;
+        --gk-arrive-t: var(--gk-set);
     }
 
     .gk-scene[data-gk-direction='clip'] {
         --gk-arrive: gk-cut;
+        --gk-arrive-t: var(--gk-set);
     }
 
     .gk-scene[data-gk-direction='rise'] {
         --gk-arrive: gk-rise;
+        --gk-arrive-t: var(--gk-set);
     }
 
     /* ── The parts at rest ───────────────────────────────────────────── */
@@ -134,7 +172,9 @@
         border: 0;
         border-block-start: 3px solid var(--gk-ink);
         border-radius: 0;
-        background: var(--card);
+        /* No paper of its own: the scene's is white, and the red plate
+           (a drop-shadow) shows only the part's ink and rules. */
+        background: transparent;
         color: var(--card-foreground);
         box-shadow: none;
     }
@@ -146,10 +186,11 @@
         margin: 0;
         border: 3px solid var(--gk-ink);
         border-radius: 0;
-        background: var(--popover);
+        background: transparent;
         color: var(--popover-foreground);
         box-shadow: none;
         animation: none;
+        --gk-r: 8px;
     }
 
     .gk-scene .kp-card.gk-plate {
@@ -202,6 +243,31 @@
     .gk-scene .gk-pop {
         display: block;
         padding: 0.25rem;
+    }
+
+    /* A button is its line and its words; its red plate is the ink's copy.
+       The primary's plate is the ink (its own red would not show). */
+    .gk-scene .kp-button:not(.kp-button--primary),
+    .gk-scene .kp-menu__item {
+        background: transparent;
+    }
+
+    .gk-scene :is(.kp-button, .kp-menu__item, .gk-key) {
+        --gk-r: 4px;
+    }
+
+    .gk-scene .kp-button--primary {
+        --gk-plate: var(--gk-ink);
+        --gk-bc-from: var(--primary);
+        --gk-bc-to: var(--secondary-active);
+    }
+
+    .gk-scene .gk-band {
+        display: none;
+    }
+
+    .gk-scene .gk-printed {
+        position: relative;
     }
 
     .gk-scene .kp-menu {
@@ -326,7 +392,8 @@
         block-size: 2.4rem;
         padding: 0 0.2rem 0.15rem;
         border-block-start: 2px solid var(--gk-ink);
-        background: var(--card);
+        background: transparent;
+        --gk-r: 4px;
         font-family: var(--theme-font-display);
         font-size: 1.05rem;
         font-weight: 800;
@@ -504,7 +571,7 @@
         padding: 0.25rem 0.45rem;
         border: 0;
         border-radius: 0;
-        background: var(--card);
+        background: transparent;
         color: var(--foreground);
         font: inherit;
         font-size: 0.85rem;
@@ -851,12 +918,12 @@
 
     /* ── G8: pointing at something (shown still on .gk-pointed) ───────── */
 
-    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) .kp-button.gk-pointed:not(.kp-button--primary),
-    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) :is(.kp-menu__item, .kp-kpi, .gk-day).gk-pointed {
+    .gk-scene[data-gk-hover='baseline'] .kp-button.gk-pointed:not(.kp-button--primary),
+    .gk-scene[data-gk-hover='baseline'] :is(.kp-menu__item, .kp-kpi, .gk-day).gk-pointed {
         background: var(--muted);
     }
 
-    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) .gk-pointed :is(.kp-button__label, .gk-words)::after {
+    .gk-scene[data-gk-hover='baseline'] .gk-pointed :is(.kp-button__label, .gk-words)::after {
         scale: 1 1;
     }
 
@@ -899,13 +966,13 @@
 
     /* ── DI2: the focus ring (shown still on .gk-focused) ─────────────── */
 
-    .gk-scene[data-gk-focus='ring'] .gk-focused {
+    .gk-scene:is([data-gk-focus='ring'], [data-gk-focus='baseline']) .gk-focused {
         outline: 2px solid var(--focus-ring);
         outline-offset: 2px;
         box-shadow: 0 0 0 2px var(--focus-ring-contrast);
     }
 
-    .gk-scene[data-gk-focus='ring'] .gk-focused :is(.kp-button__label, .gk-words)::after {
+    .gk-scene[data-gk-focus='baseline'] .gk-focused :is(.kp-button__label, .gk-words)::after {
         scale: 1 1;
     }
 
@@ -929,8 +996,7 @@
         --kp-baseline-colour: var(--primary-active);
     }
 
-    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after,
-    .gk-scene[data-gk-durations][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after {
+    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after {
         scale: 1 1;
         transition: none;
     }
@@ -960,34 +1026,29 @@
 
     /* ── G17: buttons inside composites (forced by the State buttons) ── */
 
-    /* Own: the theme's own hover, ring and press, inside and alone. */
-    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone:not(.kp-button--primary),
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link):not(.kp-button--primary),
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-entry, .gk-in-kpi),
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link):not(.kp-button--primary),
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-entry, .gk-in-kpi) {
+    /* Own and quiet: the theme's own states, inside and alone. Pointed at is
+       the plate's fall, played on a loop while the state is held (it falls
+       into register, dwells and is released); focus is the two-channel ring
+       and the same fall; pressed is the grey face with the black label, the
+       plate in register behind the black (nothing of it to see). */
+    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone,
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi),
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi) {
         border-color: var(--gk-ink);
-        background: var(--muted);
+        --gk-r: 4px;
+        animation: gk-echo-loop calc(22 * 120ms * var(--gk-slow, 1)) linear infinite;
     }
 
     [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone.kp-button--primary,
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer).kp-button--primary,
-    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer).kp-button--primary {
+    [data-gk-show='hover']
+        .gk-scene[data-gk-composites='own']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi).kp-button--primary,
+    [data-gk-show='hover']
+        .gk-scene[data-gk-composites='quiet']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi).kp-button--primary {
         border-color: var(--primary);
         background: var(--background);
         color: var(--primary);
-    }
-
-    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
-    [data-gk-show='hover']
-        .gk-scene[data-gk-composites='own']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after,
-    [data-gk-show='hover']
-        .gk-scene[data-gk-composites='quiet']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after {
-        scale: 1 1;
     }
 
     [data-gk-show='focus'] .gk-scene[data-gk-composites] .gk-alone,
@@ -996,18 +1057,8 @@
         outline: 2px solid var(--focus-ring);
         outline-offset: 2px;
         box-shadow: 0 0 0 2px var(--focus-ring-contrast);
-    }
-
-    [data-gk-show='focus'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
-    [data-gk-show='focus']
-        .gk-scene[data-gk-composites='own']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after,
-    [data-gk-show='focus']
-        .gk-scene[data-gk-composites='quiet']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after {
-        scale: 1 1;
+        --gk-r: 4px;
+        animation: gk-echo-loop calc(22 * 120ms * var(--gk-slow, 1)) linear infinite;
     }
 
     [data-gk-show='press'] .gk-scene[data-gk-composites] .gk-alone,
@@ -1016,21 +1067,18 @@
         border-color: var(--secondary-active);
         background: var(--secondary-active);
         color: var(--foreground);
-        --kp-baseline-weight: 4px;
-        --kp-baseline-colour: var(--primary-active);
     }
 
-    [data-gk-show='press'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
-    [data-gk-show='press']
-        .gk-scene[data-gk-composites='own']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after,
-    [data-gk-show='press']
-        .gk-scene[data-gk-composites='quiet']
-        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
-        :is(.kp-button__label, .gk-words)::after {
-        scale: 1 1;
-        transition: none;
+    @media (prefers-reduced-motion: reduce) {
+        [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone:not(.kp-button--primary),
+        [data-gk-show='hover']
+            .gk-scene[data-gk-composites='own']
+            :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi):not(.kp-button--primary),
+        [data-gk-show='hover']
+            .gk-scene[data-gk-composites='quiet']
+            :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi):not(.kp-button--primary) {
+            background: var(--muted);
+        }
     }
 
     /* Quiet: inside a composite a button is its words alone at rest. */
@@ -1270,10 +1318,76 @@
         background-image: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px calc(100% / 12));
     }
 
-    /* Skeleton lines: three proofs, each its own width. */
-    .gk-scene .gk-skel-proof {
+    /* The skeleton text, the anchor's hero (research/grotesk-anchor): a
+       heading bar and five lines, each on a row that carries its own leading.
+       Two plates of one print: the red on ::before, the ink on ::after, so the
+       ink is on top; only the red moves, all six rows together. */
+    .gk-scene .gk-wait--text {
+        padding-block-end: 0.4rem;
+    }
+
+    .gk-scene .gk-sktext {
+        --gk-u: 0.7rem;
+        --gk-r: calc(var(--gk-u) * 0.95);
         display: grid;
-        gap: 0.6rem;
+        inline-size: min(100%, calc(var(--gk-u) * 24));
+    }
+
+    .gk-scene .gk-sktext > i {
+        display: grid;
+        align-items: center;
+        block-size: calc(var(--gk-u) * 1.9);
+        --w: 100%;
+    }
+
+    .gk-scene .gk-sktext > i::before,
+    .gk-scene .gk-sktext > i::after {
+        content: '';
+        grid-area: 1 / 1;
+        display: block;
+        block-size: var(--gk-u);
+        inline-size: var(--w);
+    }
+
+    /* Positioned, so the red plate (which is moved, and so paints above
+       what is not positioned) still lies under the ink. */
+    .gk-scene .gk-sktext > i::before,
+    .gk-scene .gk-sktext > i::after {
+        position: relative;
+    }
+
+    .gk-scene .gk-sktext > i::before {
+        z-index: 0;
+        background: var(--gk-plate);
+        /* At rest (and under reduced motion): a little out of register. */
+        translate: calc(var(--gk-r) * 0.45 * var(--gk-dir)) calc(var(--gk-r) * 0.35);
+    }
+
+    .gk-scene .gk-sktext > i::after {
+        z-index: 1;
+        background: var(--gk-sk, var(--gk-ink));
+    }
+
+    .gk-scene .gk-sktext > i:nth-child(1) {
+        --w: 62%;
+        block-size: calc(var(--gk-u) * 3.6);
+    }
+
+    .gk-scene .gk-sktext > i:nth-child(1)::before,
+    .gk-scene .gk-sktext > i:nth-child(1)::after {
+        block-size: calc(var(--gk-u) * 2);
+    }
+
+    .gk-scene .gk-sktext > i:nth-child(3) {
+        --w: 94%;
+    }
+
+    .gk-scene .gk-sktext > i:nth-child(5) {
+        --w: 80%;
+    }
+
+    .gk-scene .gk-sktext > i:nth-child(6) {
+        --w: 46%;
     }
 
     /* The signature's own skeleton keeps the register's spacing. */
@@ -1320,15 +1434,20 @@
         display: block;
     }
 
-    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-proof, .gk-skel-proof) {
+    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-proof, .gk-skel-proof, .gk-wait--text) {
         display: none;
     }
 
     /* The line that runs, and the flap (the options' own pictures): the
        reading's place stands faint, in grey, its red plate gone. */
     .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::before,
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-red {
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-red,
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-sktext > i::before {
         display: none;
+    }
+
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-sktext {
+        --gk-sk: var(--border);
     }
 
     .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::after {
@@ -1382,42 +1501,43 @@
         display: none;
     }
 
-    .gk-scene .gk-spin__mark {
+    /* The plate (research/grotesk-anchor, no crosshairs, no marks, no rings):
+       the signature's own ink square and its red twin, a few pixels off, that
+       falls into register. */
+    .gk-scene .gk-spin__plate {
         position: relative;
-        --gk-r: calc(var(--gk-spin-size) * 0.14);
+        --gk-r: calc(var(--gk-spin-size) * 0.2);
     }
 
-    .gk-scene .gk-spin__mark::before,
-    .gk-scene .gk-spin__mark::after {
+    .gk-scene .gk-spin__plate::before,
+    .gk-scene .gk-spin__plate::after {
         content: '';
         position: absolute;
         inset: 0;
-        background:
-            radial-gradient(closest-side, transparent calc(62% - 1.6px), var(--gk-c) calc(62% - 1.6px) 62%, transparent calc(62% + 0.5px)),
-            linear-gradient(var(--gk-c) 0 0) 50% 50% / 100% 1.6px no-repeat,
-            linear-gradient(var(--gk-c) 0 0) 50% 50% / 1.6px 100% no-repeat;
+        box-sizing: border-box;
+        border: max(2px, calc(var(--gk-spin-size) * 0.09)) solid var(--gk-c);
     }
 
-    .gk-scene .gk-spin__mark::before {
-        --gk-c: var(--gk-red);
-        translate: calc(var(--gk-r) * 0.6) calc(var(--gk-r) * 0.5);
+    .gk-scene .gk-spin__plate::before {
+        --gk-c: var(--gk-plate);
+        translate: calc(var(--gk-r) * 0.45 * var(--gk-dir)) calc(var(--gk-r) * 0.35);
     }
 
-    .gk-scene .gk-spin__mark::after {
+    .gk-scene .gk-spin__plate::after {
         --gk-c: var(--gk-ink);
     }
 
     /* On the red primary face the two plates are its own white and the ink. */
-    .gk-scene .kp-button--primary .gk-spin__mark::before {
+    .gk-scene .kp-button--primary .gk-spin__plate::before {
         --gk-c: var(--gk-ink);
     }
 
-    .gk-scene .kp-button--primary .gk-spin__mark::after {
+    .gk-scene .kp-button--primary .gk-spin__plate::after {
         --gk-c: var(--primary-foreground);
     }
 
-    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__mark,
-    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__mark {
+    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__plate,
+    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__plate {
         display: none;
     }
 
@@ -1441,6 +1561,8 @@
 
     .gk-scene .gk-carrier {
         position: relative;
+        /* A value's red plate slips a little more than a quarter of its height. */
+        --gk-r: 0.14em;
     }
 
     /* The train: a 1.5 em red mark on the baseline, run start → end. */
@@ -1453,6 +1575,18 @@
         background: linear-gradient(var(--gk-red), var(--gk-red)) 0 0 / 1.5em 100% no-repeat;
         visibility: hidden;
         pointer-events: none;
+    }
+
+    .gk-scene .gk-carrier--mark {
+        --gk-r: 0.45em;
+    }
+
+    .gk-scene .gk-state__word.gk-carrier {
+        --gk-r: 0.22em;
+    }
+
+    .gk-scene .gk-carrier--line {
+        --gk-r: 3px;
     }
 
     .gk-scene .gk-carrier--mark::after {
@@ -1477,33 +1611,36 @@
     /* ── Motion ──────────────────────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
-        /* G2: what arrives is set along its line from the start (or the
-           direction question's other ways); hidden in the gap. */
+        /* G2: what arrives is printed in black and its red plate falls into
+           register on it (the anchor), or is set along its line and so on
+           (the direction question's other ways); hidden in the gap. The
+           close is the arrival played backwards (demo.js). */
         .gk-scene[data-gk-phase='gap'] .gk-arrives {
             visibility: hidden;
         }
 
         .gk-scene[data-gk-phase='in'] .gk-arrives {
-            animation: var(--gk-arrive) calc(var(--gk-set) * var(--gk-slow, 1)) var(--gk-in) calc(var(--i, 0) * var(--gk-step) * var(--gk-slow, 1))
-                backwards;
+            animation: var(--gk-arrive) calc(var(--gk-arrive-t) * var(--gk-slow, 1)) var(--gk-in)
+                calc(var(--i, 0) * var(--gk-step) * var(--gk-slow, 1)) backwards;
         }
 
-        /* G3, G12: the bands print what opens and arrives, and take off what
-           closes and leaves. Paper covers it in the gap. */
-        .gk-scene .gk-printed {
-            position: relative;
+        /* G3, G12: the colour bands (your leave, 2026-10-04) print what opens
+           and arrives and take off what closes and leaves, in the options
+           that ask for them. Paper covers the part in the gap. */
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-printed {
             overflow: clip;
         }
 
-        .gk-scene .gk-band {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-band {
             position: absolute;
             inset: 0;
             z-index: 3;
+            display: block;
             overflow: clip;
             pointer-events: none;
         }
 
-        .gk-scene .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-band__strip {
             position: absolute;
             inset-block: 0;
             inset-inline-start: 0;
@@ -1512,31 +1649,27 @@
             translate: calc(33.34% * var(--gk-dir)) 0;
         }
 
-        .gk-scene:dir(rtl) .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']):dir(rtl) .gk-band__strip {
             background: linear-gradient(to left, var(--gk-red) 0 33.34%, var(--gk-ink) 33.34% 66.67%, var(--background) 66.67% 100%);
         }
 
-        .gk-scene[data-gk-phase='gap']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
-            .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='gap'] .gk-band__strip {
             translate: calc(-66.67% * var(--gk-dir)) 0;
         }
 
-        .gk-scene[data-gk-phase='in']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
-            .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='in'] .gk-band__strip {
             animation: gk-print calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
         }
 
-        .gk-scene[data-gk-phase='out']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
-            .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='out'] .gk-band__strip {
             animation: gk-unprint calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
         }
 
-        .gk-scene:is([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove']) .gk-band {
-            display: none;
+        /* The bands' own panels do not fall; the strip prints them. */
+        .gk-scene[data-gk-opening='bands'][data-gk-phase='in'] .gk-opens,
+        .gk-scene[data-gk-leave='bands'][data-gk-phase='in'] .gk-leaver > :first-child {
+            animation: none;
         }
-
-        /* The menu in the moving and the duration scenes is shut in the gap
-           and out phases only by its bands; the leave question's parts too. */
 
         /* Opening, as picked: cut in from the start (260 ms). */
         .gk-scene[data-gk-opening='cut'][data-gk-phase='gap'] .gk-opens {
@@ -1564,8 +1697,8 @@
             animation: gk-from-end calc(220ms * var(--gk-slow, 1)) linear reverse forwards;
         }
 
-        /* Leaving, the other two ways (the part inside the printed wrapper);
-           each arrival and leave are one animation, played both ways. */
+        /* Leaving, the other two ways (the part inside the wrapper); each
+           arrival and leave are one animation, played both ways. */
         .gk-scene:is([data-gk-leave='cut'], [data-gk-leave='shove'])[data-gk-phase='gap'] .gk-leaver > :first-child {
             visibility: hidden;
         }
@@ -1586,12 +1719,18 @@
             animation: gk-set calc(var(--gk-set) * var(--gk-slow, 1)) linear reverse forwards;
         }
 
-        /* G9: a live change. The train runs along the baseline once. */
-        .gk-scene[data-gk-phase='in']:not([data-gk-live='jolt'], [data-gk-live='invert']) .gk-carrier::after {
+        /* G9: a changed value is re-registered: written at once in black,
+           its red plate falls back into register (the anchor). The train
+           (your graph's) runs along the baseline once. */
+        .gk-scene:not([data-gk-live='train'], [data-gk-live='jolt'], [data-gk-live='invert'])[data-gk-phase='in'] .gk-carrier {
+            animation: var(--gk-fallkf) calc(var(--gk-fall) * var(--gk-slow, 1)) var(--gk-in) both;
+        }
+
+        .gk-scene[data-gk-live='train'][data-gk-phase='in'] .gk-carrier::after {
             animation: gk-train calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in);
         }
 
-        .gk-scene:dir(rtl)[data-gk-phase='in']:not([data-gk-live='jolt'], [data-gk-live='invert']) .gk-carrier::after {
+        .gk-scene:dir(rtl)[data-gk-live='train'][data-gk-phase='in'] .gk-carrier::after {
             animation-name: gk-train-rtl;
         }
 
@@ -1603,6 +1742,38 @@
             animation: gk-invert calc(600ms * var(--gk-slow, 1)) steps(1);
         }
 
+        /* G8, G14, DI2: pointing at a part, focusing it and pressing it are
+           the plate too. Pointed at or focused: its red plate falls into
+           register on it, dwells while the pointer or focus stays and is
+           released as the same fall played backwards (the part's own close
+           below). Pressed: the same fall, and the press lands in the seventh
+           unit, when the plate is in register: the face goes grey and the
+           label black, and stays until the release. */
+        .gk-scene[data-gk-hover='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-pointed,
+        .gk-scene[data-gk-focus='ring']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-focused,
+        .gk-scene[data-gk-press='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
+            animation: gk-fall calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
+        }
+
+        .gk-scene[data-gk-hover='plate'][data-gk-phase='out'] .gk-pointed,
+        .gk-scene[data-gk-focus='ring'][data-gk-phase='out'] .gk-focused,
+        .gk-scene[data-gk-press='plate'][data-gk-phase='out'] .gk-press {
+            animation: gk-fall-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
+        }
+
+        /* The press: the face lands with the plate, at 87.5 % of the fall. */
+        .gk-scene[data-gk-press='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
+            animation:
+                gk-fall calc(var(--gk-fall) * var(--gk-slow, 1)) linear both,
+                gk-face calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
+        }
+
+        .gk-scene[data-gk-press='plate'][data-gk-phase='out'] .gk-press {
+            animation:
+                gk-fall-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both,
+                gk-face-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
+        }
+
         /* The press, the contact time: the baseline's own scale stays 120 ms. */
         .gk-scene .gk-press {
             transition:
@@ -1610,15 +1781,13 @@
                 color calc(var(--gk-contact) * var(--gk-slow, 1)) linear;
         }
 
-        /* G10: the proof's red plate travels round the ink and registers. */
+        /* G10: the proof's red plate travels the closing spiral, falls into
+           register, dwells and is released (22 units, the anchor's clock). */
         .gk-scene .gk-proof::before,
         .gk-scene .gk-plate-red,
-        .gk-scene .gk-spin__mark::before {
-            animation: gk-orbit calc(var(--gk-loop) * var(--gk-slow, 1)) var(--gk-in) infinite;
-            animation-delay: calc(var(--i, 0) * var(--gk-loop) * var(--gk-slow, 1) / 11);
-        }
-
-        .gk-scene .gk-skel__line .gk-proof::before {
+        .gk-scene .gk-spin__plate::before,
+        .gk-scene .gk-sktext > i::before {
+            animation: var(--gk-loopkf) calc(var(--gk-loop) * var(--gk-slow, 1)) var(--gk-in) infinite;
             animation-delay: calc(var(--i, 0) * var(--gk-loop) * var(--gk-slow, 1) / 11);
         }
 
@@ -1626,27 +1795,28 @@
             --i: 0;
         }
 
-        .gk-scene .gk-skel__line:nth-child(2) {
-            --i: 1;
-        }
-
-        .gk-scene .gk-skel__line:nth-child(3) {
-            --i: 2;
+        .gk-scene[data-gk-slip='orbit'] .gk-proof::before,
+        .gk-scene[data-gk-slip='orbit'] .gk-plate-red,
+        .gk-scene[data-gk-slip='orbit'] .gk-sktext > i::before {
+            animation-name: gk-orbit;
         }
 
         .gk-scene[data-gk-slip='line'] .gk-proof::before,
-        .gk-scene[data-gk-slip='line'] .gk-plate-red {
+        .gk-scene[data-gk-slip='line'] .gk-plate-red,
+        .gk-scene[data-gk-slip='line'] .gk-sktext > i::before {
             animation-name: gk-slide;
         }
 
         .gk-scene[data-gk-slip='steps'] .gk-proof::before,
-        .gk-scene[data-gk-slip='steps'] .gk-plate-red {
+        .gk-scene[data-gk-slip='steps'] .gk-plate-red,
+        .gk-scene[data-gk-slip='steps'] .gk-sktext > i::before {
             animation-name: gk-hop;
             animation-timing-function: steps(1, end);
         }
 
         .gk-scene[data-gk-durations='instant'] .gk-proof::before,
-        .gk-scene[data-gk-durations='instant'] .gk-plate-red {
+        .gk-scene[data-gk-durations='instant'] .gk-plate-red,
+        .gk-scene[data-gk-durations='instant'] .gk-sktext > i::before {
             animation: none;
         }
 
@@ -1661,6 +1831,41 @@
 
         .gk-scene[data-gk-spinner='ring'] .gk-spin__ring {
             animation: gk-ring calc(900ms * var(--gk-slow, 1)) linear infinite;
+        }
+    }
+
+    /* Under reduced motion the plate is in register, and a part pointed at
+       takes the light wash (the register's own hover). */
+    @media (prefers-reduced-motion: reduce) {
+        .gk-scene[data-gk-hover='plate'] .kp-button.gk-pointed:not(.kp-button--primary),
+        .gk-scene[data-gk-hover='plate'] :is(.kp-menu__item, .kp-kpi, .gk-day).gk-pointed {
+            background: var(--muted);
+        }
+    }
+
+    /* The plate's own scenes: pointing at a part, focus and the press show
+       the fall, not the baseline the register draws on hover. */
+    .gk-scene:is([data-gk-hover='plate'], [data-gk-focus='ring'], [data-gk-press='plate']) :is(.kp-button__label, .gk-words)::after {
+        scale: 0 1;
+        transition: none;
+    }
+
+    /* The pressed face of the anchor's press: grey, the label black. */
+    .gk-scene[data-gk-press='plate'] .gk-press {
+        --gk-face-from: transparent;
+        --gk-label-from: var(--foreground);
+    }
+
+    .gk-scene[data-gk-press='plate'] .kp-button--primary.gk-press {
+        --gk-face-from: var(--primary);
+        --gk-label-from: var(--primary-foreground);
+        border-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .gk-scene[data-gk-press='plate'] .gk-press {
+            background: var(--secondary-active);
+            color: var(--foreground);
         }
     }
 
@@ -1901,6 +2106,558 @@
     @keyframes gk-ring {
         to {
             rotate: 1turn;
+        }
+    }
+
+    /* The plate: the anchor's fall (research/grotesk-anchor, generated from
+       its `ga-fall`): one turn round the ink in 45 degree steps, the radius
+       shrinking from 1 to 0.2 of --gk-r, into register in the seventh of
+       eight units, then the dwell. `gk-arrive` is the fall of a part that is
+       hidden until its turn, `gk-fall-out` its release, `gk-loop` the 22 unit
+       cycle of a waiting proof (gap 2, fall 8, dwell 4, release 8) and
+       `gk-echo-loop` the same cycle as a drop-shadow. The -eased ones reach
+       the same eight points when cubic-bezier(0.7, 0, 0.3, 1) does. The
+       register frame is a transparent shadow, so no hair of red shows at the
+       edge of the ink. */
+    @keyframes gk-arrive {
+        0% {
+            visibility: hidden;
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        0.01% {
+            visibility: visible;
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        87.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes gk-fall {
+        0% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        87.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes gk-fall-out {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        12.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        23.44% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        34.38% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        45.31% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        56.25% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        67.19% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        78.13% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        89.06% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+    }
+
+    @keyframes gk-arrive-eased {
+        0% {
+            visibility: hidden;
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        0.01% {
+            visibility: visible;
+        }
+
+        28.59% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        35.9% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        40.32% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        47.18% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        51.6% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        58.91% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        87.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes gk-fall-eased {
+        0% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        28.59% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        35.9% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        40.32% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        47.18% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        51.6% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        58.91% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        87.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes gk-fall-eased-out {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        12.5% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        41.09% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        48.4% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        52.82% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        56.25% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        59.68% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        64.1% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        71.41% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+    }
+
+    @keyframes gk-loop {
+        0% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        9.09% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        13.07% {
+            translate: calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626);
+        }
+
+        17.05% {
+            translate: 0 calc(var(--gk-r) * 0.771);
+        }
+
+        21.02% {
+            translate: calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465);
+        }
+
+        25% {
+            translate: calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0;
+        }
+
+        28.98% {
+            translate: calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303);
+        }
+
+        32.95% {
+            translate: 0 calc(var(--gk-r) * -0.314);
+        }
+
+        36.93% {
+            translate: calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141);
+        }
+
+        40.91% {
+            translate: 0 0;
+        }
+
+        63.64% {
+            translate: 0 0;
+        }
+
+        72.16% {
+            translate: calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141);
+        }
+
+        76.14% {
+            translate: 0 calc(var(--gk-r) * -0.314);
+        }
+
+        80.11% {
+            translate: calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303);
+        }
+
+        84.09% {
+            translate: calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0;
+        }
+
+        88.07% {
+            translate: calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465);
+        }
+
+        92.05% {
+            translate: 0 calc(var(--gk-r) * 0.771);
+        }
+
+        96.02% {
+            translate: calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626);
+        }
+
+        100% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        100% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+    }
+
+    @keyframes gk-loop-eased {
+        0% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        9.09% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        19.49% {
+            translate: calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626);
+        }
+
+        22.15% {
+            translate: 0 calc(var(--gk-r) * 0.771);
+        }
+
+        23.75% {
+            translate: calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465);
+        }
+
+        25% {
+            translate: calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0;
+        }
+
+        26.25% {
+            translate: calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303);
+        }
+
+        27.85% {
+            translate: 0 calc(var(--gk-r) * -0.314);
+        }
+
+        30.51% {
+            translate: calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141);
+        }
+
+        40.91% {
+            translate: 0 0;
+        }
+
+        63.64% {
+            translate: 0 0;
+        }
+
+        78.58% {
+            translate: calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141);
+        }
+
+        81.24% {
+            translate: 0 calc(var(--gk-r) * -0.314);
+        }
+
+        82.84% {
+            translate: calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303);
+        }
+
+        84.09% {
+            translate: calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0;
+        }
+
+        85.34% {
+            translate: calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465);
+        }
+
+        86.94% {
+            translate: 0 calc(var(--gk-r) * 0.771);
+        }
+
+        89.6% {
+            translate: calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626);
+        }
+
+        100% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+
+        100% {
+            translate: calc(var(--gk-r) * 1 * var(--gk-dir)) 0;
+        }
+    }
+
+    @keyframes gk-echo-loop {
+        0% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        9.09% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        13.07% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        17.05% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        21.02% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        25% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        28.98% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        32.95% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        36.93% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        40.91% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        63.64% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+
+        72.16% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.141 * var(--gk-dir)) calc(var(--gk-r) * -0.141) 0 var(--gk-plate));
+        }
+
+        76.14% {
+            filter: drop-shadow(0 calc(var(--gk-r) * -0.314) 0 var(--gk-plate));
+        }
+
+        80.11% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.303 * var(--gk-dir)) calc(var(--gk-r) * -0.303) 0 var(--gk-plate));
+        }
+
+        84.09% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.543 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        88.07% {
+            filter: drop-shadow(calc(var(--gk-r) * -0.465 * var(--gk-dir)) calc(var(--gk-r) * 0.465) 0 var(--gk-plate));
+        }
+
+        92.05% {
+            filter: drop-shadow(0 calc(var(--gk-r) * 0.771) 0 var(--gk-plate));
+        }
+
+        96.02% {
+            filter: drop-shadow(calc(var(--gk-r) * 0.626 * var(--gk-dir)) calc(var(--gk-r) * 0.626) 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(calc(var(--gk-r) * 1 * var(--gk-dir)) 0 0 var(--gk-plate));
+        }
+    }
+
+    /* The anchor's press: the face goes grey and the label black as the
+       plate lands, in the seventh unit of eight; the release is the mirror. */
+    @keyframes gk-face {
+        0%,
+        87.49% {
+            background-color: var(--gk-face-from);
+            border-color: var(--gk-bc-from, var(--gk-ink));
+            color: var(--gk-label-from);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            border-color: var(--gk-bc-to, var(--gk-ink));
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes gk-face-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            border-color: var(--gk-bc-to, var(--gk-ink));
+            color: var(--foreground);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--gk-face-from);
+            border-color: var(--gk-bc-from, var(--gk-ink));
+            color: var(--gk-label-from);
         }
     }
 }

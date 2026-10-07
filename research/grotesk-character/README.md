@@ -9,6 +9,25 @@ grotesk's loading grammar and has four questions of its own (9 to 12). The analy
 G1-G18, the families, seventeen outliers, the composites and twenty-eight proposals. This page turns the proposals into the questions
 Kenny answers to fix grotesk's grammar.
 
+**Round 2: rebuilt around the anchor (Kenny, 07/10/2026 21:23).** Kenny approved _Out of register_ as grotesk's anchor
+(research/grotesk-anchor: a second, red plate that arrives offset, travels a closing spiral, falls into register on the skeleton text,
+dwells and leaves as the same fall played backwards; no crosshairs, no marks, no rings) and noticed this page was built before it. Every
+question was asked again: does the recommendation, and each alternative, follow from the plate? The plate is the page's one moving
+thing, and where it stands says what the part is: slipped is arriving, waiting, pointed at, changing; in register is there, held.
+
+- **Changed (re-derived, the anchor recommended, the earlier recommendation kept as an option where it still has a case):** 1 the curve
+  (the plate's own even pace; the hops and the eased fall are the same eight points), 2 the direction (the plate falls in; the set along
+  the line is now option 2), 3 opening (the plate; the colour bands are option 2), 4 durations (120 · 960 · 2640: contact, a fall of 8
+  units, the 22 unit loop), 8 the live update (re-registered; the train is option 2), 9 loading (the skeleton text is the hero, the
+  closing spiral), 10 the slip (the closing spiral; the graph's constant circle is option 2), 11 the spinner (the plate: an ink square and
+  its red twin; the registration mark and every cross are gone), 12 the busy bar and skeleton (the anchor's bar and hero), 13 leaving
+  (released: the arrival played backwards; the bands are option 2), 14 composites (their states are the plate's), 15 pointing (the plate
+  falls in; the baseline is option 2), 16 focus (ring and plate), 17 the press (the plate falls into register as the press lands; the rule
+  is option 2). Pointing, focus and the press are now cycles on the page's clock, like the arrivals.
+- **Unchanged:** 5 colour (only the red is named the second plate), 6 the surface, 7 the warning (an out-of-register tone would be
+  cyberpunk's standing split, so the index stays), 18 the voice, 19 the motifs: none of them is about motion or the plate.
+- Round id `2026-10-07-r2`: Kenny's next verdict is a new round of the same demo.
+
 **Already decided, not asked again.** Twelve Columns (2026-09-08), the baseline that appears under a touched control (scope-12,
 2026-09-12), the inverting coloured buttons and their grey press with a black label (2026-09-13/14), the alarm (scope-94), the signature
 (2026-10-03), the cut as the resize and the colour bands as the leave (2026-10-04), the reverse-close pairing, and every component pick
@@ -35,27 +54,27 @@ in grotesk (`.kp-button` with its label, so the register's baseline draws, `.kp-
 `.kp-page-header`, the divider). The first option is always the recommendation; every option says what you see and why it is or is not
 recommended, on the page and in its hint in the dialog.
 
-| #   | Question (rule)                              | Options, recommended first                                                                                                       |
-| --- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | The motion curve (G1)                        | on time: an even pace, a dead stop, the loop's dwell · hard cuts (terminal's, nostromo's, cyberpunk's) · eased (synthwave's)     |
-| 2   | The direction (G2)                           | set along its line from behind its start edge · cut in place from the start (titanium's feed) · rising (solstice's, synthwave's) |
-| 3   | Opening a menu or a dialog (G3)              | printed by the colour bands (the leave backwards) · cut in from the start, as picked (near titanium's) · slid in from the end    |
-| 4   | How long things take (G4)                    | 120 · 240 · 480 · 2640 (units of 120 ms) · as the picks, the slowest · at once (retro's 0 ms)                                    |
-| 5   | Where the colour goes (G5)                   | black builds, the red signals once · line colours (the transit map on every plate) · black plates (near high-contrast's)         |
-| 6   | The surface (G7)                             | a column under its rule, no box · the transit board's red bar (near synthwave's stripe) · the box (high-contrast's, brutalism's) |
-| 7   | A warning (G13)                              | indexed: a start-edge bar and the tone's word · the figure on the tone's plate (high-contrast's) · the underlined figure         |
-| 8   | A live update (G9)                           | the train passes (the graph's) · flipped, as picked (a jump) · inverted (high-contrast's)                                        |
-| 9   | Loading: the picture on every waiting part   | out of register (the graph's, carried) · a line runs (forest's, solstice's, nostromo's way) · the flap board                     |
-| 10  | Loading: how the red plate moves (G10)       | round the black, then into register (the graph's) · along the line · in hard steps                                               |
-| 11  | Loading: the spinner (G11)                   | the register mark · the signature's quarter, as approved · the package's ring                                                    |
-| 12  | Loading: the busy bar and the skeleton (G11) | printed out of register · the signature, as approved · a line runs                                                               |
-| 13  | Leaving and arriving (G12)                   | the colour bands at an even pace (the leave) · cut out in three hard cuts (near titanium's) · shoved out (near brutalism's slam) |
-| 14  | Buttons inside composites (G17)              | exactly grotesk's own · as today · grotesk's own but quiet (words only inside a composite)                                       |
-| 15  | Pointing at something (G8)                   | the baseline appears (scope-12) · a bar on the edge thickens (near solstice's lit foot) · inverted (high-contrast's)             |
-| 16  | The focus ring (G14, DI2)                    | the two-channel ring with the baseline · one red outline · a thin ink frame                                                      |
-| 17  | The press (G14)                              | the rule thickens (scope-12) · the grey alone · reverse video (terminal's)                                                       |
-| 18  | The voice (G15)                              | Archivo heavy and tight, Inter, sentence case · mono capitals (the dark themes') · all lowercase (the Bauhaus)                   |
-| 19  | Motifs (G16)                                 | every motif means one thing · only the grid and the rule · on everything                                                         |
+| #   | Question (rule)                              | Options, recommended first                                                                                                           |
+| --- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | The motion curve (G1)                        | on time: the plate's even pace, a dead stop, the dwell · hard hops (terminal's, nostromo's, cyberpunk's) · eased (synthwave's)       |
+| 2   | The direction (G2)                           | from where it slipped: the red plate falls into register on it · set along its line (round 1's) · cut in place (titanium's) · rising |
+| 3   | Opening a menu or a dialog (G3)              | printed, its red plate falling in · the colour bands (the leave backwards) · cut in from the start · slid in from the end            |
+| 4   | How long things take (G4)                    | 120 · 960 · 2640 (contact, a fall, a loop) · as the picks, the slowest · at once (retro's 0 ms)                                      |
+| 5   | Where the colour goes (G5)                   | black builds, the red signals once · line colours (the transit map on every plate) · black plates (near high-contrast's)             |
+| 6   | The surface (G7)                             | a column under its rule, no box · the transit board's red bar (near synthwave's stripe) · the box (high-contrast's, brutalism's)     |
+| 7   | A warning (G13)                              | indexed: a start-edge bar and the tone's word · the figure on the tone's plate (high-contrast's) · the underlined figure             |
+| 8   | A live update (G9)                           | re-registered: the value's plate falls back in · the train passes (the graph's) · flipped · inverted                                 |
+| 9   | Loading: the picture on every waiting part   | out of register (the graph's, carried) · a line runs (forest's, solstice's, nostromo's way) · the flap board                         |
+| 10  | Loading: how the red plate moves (G10)       | a closing spiral, then into register (the anchor) · round at a constant distance (the graph's) · along the line · in hard steps      |
+| 11  | Loading: the spinner (G11)                   | the plate: an ink square and its red twin falling in (no mark, no cross) · the signature's quarter · the package's ring              |
+| 12  | Loading: the busy bar and the skeleton (G11) | printed out of register · the signature, as approved · a line runs                                                                   |
+| 13  | Leaving and arriving (G12)                   | released: the arrival played backwards · the colour bands (the leave) · cut out · shoved out                                         |
+| 14  | Buttons inside composites (G17)              | exactly grotesk's own · as today · grotesk's own but quiet (words only inside a composite)                                           |
+| 15  | Pointing at something (G8)                   | the red plate falls in · the baseline (scope-12) · a bar on the edge thickens · inverted                                             |
+| 16  | The focus ring (G14, DI2)                    | the two-channel ring and the plate falling in · ring and baseline (round 1's) · one red outline · a thin ink frame                   |
+| 17  | The press (G14)                              | the plate falls into register as the press lands · the rule thickens (scope-12) · the grey alone · reverse video                     |
+| 18  | The voice (G15)                              | Archivo heavy and tight, Inter, sentence case · mono capitals (the dark themes') · all lowercase (the Bauhaus)                       |
+| 19  | Motifs (G16)                                 | every motif means one thing · only the grid and the rule · on everything                                                             |
 
 **How.**
 
@@ -72,6 +91,12 @@ recommended, on the page and in its hint in the dialog.
   exactly the fault found in the register's resize cut.
 - The bands: a 300 % strip of red, ink and paper thirds over the part (the leave's own drawing), moved by `translate` only; paper covers the
   part in the clock's gap, so nothing needs hiding.
+- The plate (round 2): a part's red plate is a `drop-shadow` of the part itself (the way the graph's decided loading draws it) animated by
+  the generated `gk-fall` keyframes (the anchor's `ga-fall`: one turn in 45 degree steps, the radius closing from 1 to 0.2, into
+  register in the seventh of eight units, transparent in register); an arrival is `gk-arrive` (the same, hidden until its turn), its close
+  is played backwards by `demo.js` as before, pointing, focus and the press play `gk-fall` / `gk-fall-out` on the clock, a changed value
+  falls back in, a waiting proof moves its red `::before` by `translate` through `gk-loop` (gap 2, fall 8, dwell 4, release 8 = 22 units).
+  The eased and hop curves are the same eight points at other times (`-eased`) or held (`steps(1, end)`).
 - The proof: a waiting reading's place in two plates, the red on `::before` and the ink on `::after`, both painted from one `--gk-img`
   declared on each pseudo-element so each resolves its own `--gk-c`; only the red plate moves (`translate`, a transform), round the ink
   through eight positions at an even pace, into register and a 4-unit dwell, 22 units in all, two units apart from proof to proof. The plot's
