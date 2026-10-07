@@ -2067,6 +2067,7 @@
     [data-theme='nostromo'] .kp-toast {
         --kp-sig-dur: var(--kp-sig-no-strike);
         --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
         position: relative;
         padding-inline-start: 2rem;
         box-shadow: var(--kp-sig-no-raised);
@@ -2124,6 +2125,18 @@
        the browser places itself) holds it. */
     [data-theme='nostromo'] .kp-dialog:not(dialog) {
         position: relative;
+    }
+
+    /* A toast, a tile and a key figure carry the same beam, but not on a
+       pseudo-element: the toast's ::before is its lamp, a card's the stamp,
+       and a key figure is the box its trend link's ::after stretches over.
+       Theirs is one mechanism for all three, a background layer that exists
+       only while the raster draws or erases them (the beam-layer keyframes
+       below): at rest the part has no extra layer at all. The tail is the
+       research demo's for a tile and a leaving part (research/nostromo-
+       character, 1.1 rem). */
+    [data-theme='nostromo'] :is(.kp-card, .kp-kpi) {
+        --kp-sig-no-tail: 1.1rem;
     }
 
     [data-theme='nostromo'] .kp-dialog::after {
@@ -2280,12 +2293,20 @@
            a bounce of its own). Closing is this played backwards: the dialog
            by js/motion.js, the tooltip by playEntranceBackwards(), the toast
            by its leave below, which is this draw reversed. */
-        [data-theme='nostromo'] :is(.kp-toast, .kp-dialog, .kp-tooltip) {
+        [data-theme='nostromo'] :is(.kp-dialog, .kp-tooltip) {
             animation: kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
         }
 
         [data-theme='nostromo'] .kp-dialog::after {
             animation: kp-sig-nostromo-beam var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        /* The toast's beam rides the same edge on the same frames, as a
+           background layer (its ::before is the lamp). */
+        [data-theme='nostromo'] .kp-toast {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
         }
 
         /* The tour's card opens as a panel does, and the tour plays it
@@ -2323,6 +2344,54 @@
         to {
             inset-block-start: calc(100% - var(--kp-sig-no-tail));
             opacity: 0;
+        }
+    }
+
+    /* The same beam as a background layer, for a part whose pseudo-elements
+       are taken: the image, its size and its box are set only while it
+       plays, so at rest the part keeps its own background untouched. The
+       layer is the tail's height, its foot on the border box's edge that
+       the raster has reached: -tail at the start (above the part, unseen),
+       100% at the end (its foot on the bottom edge); in between, at a share
+       p of the draw, its top is p * height - tail, the dialog's ::after's
+       place. It lies under the part's text and inset frames (the klaxon
+       frame stays on top). */
+    @keyframes kp-sig-nostromo-beam-layer {
+        from {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 calc(var(--kp-sig-no-tail) * -1);
+        }
+
+        to {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 100%;
+        }
+    }
+
+    /* The beam layer travelling back up as the raster erases: the draw's
+       keyframes the other way, on the erase's timing, so frame t of the
+       leave is frame (T - t) of the draw. */
+    @keyframes kp-sig-nostromo-beam-layer-erase {
+        from {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 100%;
+        }
+
+        to {
+            background-image: var(--kp-sig-no-beam);
+            background-repeat: no-repeat;
+            background-origin: border-box;
+            background-size: 100% var(--kp-sig-no-tail);
+            background-position: 0 calc(var(--kp-sig-no-tail) * -1);
         }
     }
 
@@ -2950,6 +3019,16 @@
            of the draw. */
         [data-theme='nostromo'] [data-kp-leaving] {
             animation: kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+
+        /* A toast, a tile and a key figure are erased under the beam, which
+           climbs back up the edge on the same frames (its background layer,
+           kp-sig-nostromo-beam-layer-erase); played backwards by js/motion.js,
+           this is also how a tile or a key figure arrives. */
+        [data-theme='nostromo'] :is(.kp-toast, .kp-card, .kp-kpi)[data-kp-leaving] {
+            animation:
+                kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
         }
     }
 
