@@ -1,5 +1,7 @@
 # What is grotesk's anchor element
 
+**Decided (Kenny, 07/10/2026 21:23): Out of register: the red plate falls into register** ("grotesk-anchor · grotesk: The anchor element = Out of register"), option 2, as refined in round two (no crosshairs, the skeleton text as hero). Recorded in themes/grotesk/CHARACTER.md §0 and decided.json. Round one (07/10/2026 18:42): "I like one and two … don't like the crosshairs … come up with a couple more examples."
+
 **Why.** Kenny, 2026-10-07 18:13: every theme gets one recognisable anchor element, the thing every later decision of the theme departs
 from (forest: the tree progress bar, titanium: the new loading animation, cyberpunk: the glitch, solstice: the sun on its arc, terminal:
 the block cursor, brutalism: the hard slab). The colours are already right and are the shared base. Grotesk's candidate so far was the

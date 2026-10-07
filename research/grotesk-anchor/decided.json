@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-07 21:23 Brussels, Kenny: 1 of 1 approved in the review dialog (research/grotesk-anchor/README.md): Grotesk's anchor element = Out of register: the red plate falls into register",
+    "attributes": "the ANCHORS keys in research/grotesk-anchor/demo.js (baseline, register, overprint, reversed, jogged); the scenes in research/grotesk-anchor/options.css",
+    "picks": {
+        "grotesk": {
+            "anchor": "register"
+        }
+    }
+}

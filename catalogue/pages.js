@@ -88,8 +88,6 @@ export const PAGES = [
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
-            // Kenny, 2026-10-07 18:13 and round two: every theme gets one anchor element that every later decision departs from; for grotesk he kept The baseline and Out of register (refined: no crosshairs, skeleton text as the hero, the plate falls into register) and asked for more in that family. Five candidates drawn only from grotesk's own world (the baseline, out of register, overprint, reversed out, jogged into register), each shown on skeleton text, as a progress bar and as a button press; the recommendation first.
-            { href: 'research/grotesk-anchor/demo.html', label: "What is grotesk's anchor element" },
             // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
             { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
@@ -102,6 +100,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 21:23: Kenny picked out of register as grotesk's anchor element (research/grotesk-anchor/decided.json).
+            { href: 'research/grotesk-anchor/demo.html', label: "What is grotesk's anchor element" },
             // Decided 2026-10-07 21:21: Kenny picked the page horizon as synthwave's anchor element (research/synthwave-anchor/decided.json).
             { href: 'research/synthwave-anchor/demo.html', label: "Synthwave's anchor element" },
             // Decided 2026-10-07 21:19: Kenny picked the tracing pen as blueprint's anchor element (research/blueprint-anchor/decided.json).
