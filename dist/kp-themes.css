@@ -35499,6 +35499,15 @@
 }
 /* ── End of the signature ── */
 
+/* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
+   registered so the keyframes interpolate it; at the top level because
+   Firefox does not register an @property inside a layer. */
+@property --kp-fo-breath {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/forest-register.css
    The forest register, 5.0.0 [S48, LIFT_PLAN forest row]: the contour-map
@@ -36838,8 +36847,6 @@
            pattern. */
         --kp-fo-trees: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='15' cy='10.4' rx='4.5' ry='5.2'/%3E%3Crect x='14.3' y='10.4' width='1.4' height='9.6'/%3E%3Cpolygon points='25.0,4.4 27.5,8.5 26.4,8.5 28.3,12.7 26.8,12.7 29.0,16.8 21.0,16.8 23.2,12.7 21.7,12.7 23.6,8.5 22.5,8.5'/%3E%3Crect x='24.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='35.0,1.2 37.5,5.1 36.4,5.1 38.0,9.0 36.7,9.0 38.6,12.9 37.0,12.9 39.2,16.8 30.8,16.8 33.0,12.9 31.4,12.9 33.3,9.0 32.0,9.0 33.6,5.1 32.5,5.1'/%3E%3Crect x='34.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='45.0,2.6 48.1,7.3 46.7,7.3 49.0,12.1 47.2,12.1 49.9,16.8 40.1,16.8 42.8,12.1 41.0,12.1 43.3,7.3 41.9,7.3'/%3E%3Crect x='44.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='55' cy='11.1' rx='3.9' ry='4.5'/%3E%3Crect x='54.3' y='11.1' width='1.4' height='8.9'/%3E%3Cpolygon points='65.0,0.6 67.5,4.6 66.4,4.6 68.1,8.7 66.7,8.7 68.7,12.7 67.0,12.7 69.3,16.8 60.7,16.8 63.0,12.7 61.3,12.7 63.3,8.7 61.9,8.7 63.6,4.6 62.5,4.6'/%3E%3Crect x='64.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
         --kp-fo-seedling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3C/svg%3E");
-        --kp-fo-mound: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cellipse cx='5' cy='20' rx='4.2' ry='1.7'/%3E%3C/svg%3E");
-        --kp-fo-sapling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5,5.2 7.2,9.2 6.1,9.2 8.0,13.2 6.7,13.2 8.8,17.4 1.2,17.4 3.3,13.2 2.0,13.2 3.9,9.2 2.8,9.2'/%3E%3Crect x='4.45' y='17' width='1.1' height='3'/%3E%3C/svg%3E");
     }
 
     [data-theme='forest'] .kp-progressbar__track {
@@ -36871,68 +36878,36 @@
         mask: var(--kp-fo-trees) 0 0 / calc(var(--kp-fo-pitch) * 7) 100% repeat-x;
     }
 
-    [data-theme='forest'] .kp-progressbar__head {
-        inline-size: var(--kp-fo-pitch);
-        background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
-        transform: translateX(var(--kp-fo-edge));
-        transition: transform var(--fx-duration) var(--fx-ease);
+    /* The sapling head is gone (Kenny, 2026-10-07): the planted row alone shows
+       the share, so the head never renders, determinate or busy. */
+    [data-theme='forest'] .kp-progressbar__head,
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
     }
 
-    [data-theme='forest'] .kp-progressbar__head::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: var(--selected);
-        mask: var(--kp-fo-sapling) 0 0 / 100% 100% no-repeat;
-        transform-origin: 50% 100%;
-    }
-
-    [data-theme='forest'] .kp-progressbar__head::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: var(--selected);
-        mask: var(--kp-fo-mound) 0 0 / 100% 100% no-repeat;
-    }
-
-    [data-theme='forest'] .kp-progressbar:not([aria-valuenow='0']):not([aria-valuenow='100']) .kp-progressbar__head::before {
-        animation: kp-progressbar-forest-sway 2800ms ease-in-out infinite alternate;
-    }
-
+    /* Busy: the same planted row breathes. --kp-fo-breath (0 to 1) walks the
+       edge across whole slots exactly as --kp-value does, so only whole trees
+       ever stand; the bar fills in 3000 ms, holds full for 600 ms and empties
+       in 3000 ms with the same symmetric easing, which makes the leave the
+       arrival's frames reversed. Set on the bar, so an inline --kp-value
+       cannot interfere. */
     [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] {
-        --kp-fo-grove: 32cqi;
+        --kp-fo-edge: min(var(--kp-fo-margin) + round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), 100cqi);
+        animation: kp-progressbar-forest-breath 6600ms linear infinite;
     }
 
     [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
         inset-inline: 0;
         inline-size: auto;
         transition: none;
-        animation: kp-progressbar-forest-grove 3200ms linear infinite;
-    }
-
-    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
-        display: block;
-        transition: none;
-        animation: kp-progressbar-forest-front 3200ms linear infinite;
+        animation: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
-        [data-theme='forest'] .kp-progressbar .kp-progressbar__head::before {
+        /* No motion: the finished pose at half breath, whole trees only. */
+        [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] {
+            --kp-fo-breath: 0.5;
             animation: none;
-            transform: none;
-        }
-
-        [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-            --kp-fo-from: calc(var(--kp-fo-margin) + round(down, 0.35 * var(--kp-fo-run), var(--kp-fo-pitch)));
-            --kp-fo-to: calc(var(--kp-fo-margin) + round(down, 0.65 * var(--kp-fo-run), var(--kp-fo-pitch)));
-            animation: none;
-            /* On slot boundaries, like the determinate edge: whole trees only. */
-            clip-path: inset(0 calc(100% - var(--kp-fo-to)) 0 var(--kp-fo-from));
-        }
-
-        [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
-            animation: none;
-            transform: translateX(calc(var(--kp-fo-margin) + round(down, 0.65 * var(--kp-fo-run), var(--kp-fo-pitch))));
         }
     }
 
@@ -37402,30 +37377,21 @@
         }
     }
 
-    @keyframes kp-progressbar-forest-sway {
-        from {
-            transform: rotate(-5deg);
+    @keyframes kp-progressbar-forest-breath {
+        0% {
+            --kp-fo-breath: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
         }
-        to {
-            transform: rotate(5deg);
+        45.4545% {
+            --kp-fo-breath: 1;
+            animation-timing-function: linear;
         }
-    }
-
-    @keyframes kp-progressbar-forest-grove {
-        from {
-            clip-path: inset(0 100% 0 calc(-1 * var(--kp-fo-grove)));
+        54.5455% {
+            --kp-fo-breath: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
         }
-        to {
-            clip-path: inset(0 calc(-1 * var(--kp-fo-grove)) 0 100%);
-        }
-    }
-
-    @keyframes kp-progressbar-forest-front {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(calc(100cqi + var(--kp-fo-grove)));
+        100% {
+            --kp-fo-breath: 0;
         }
     }
 

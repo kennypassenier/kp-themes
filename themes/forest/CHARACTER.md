@@ -104,8 +104,8 @@ past 1). Direction: S→E inline-start to end, ↑ up, ↓ down, ↔ back and fo
 | Spinner                   | the compass: `kp-sig-forest-forest-needle` 1800 ms, keyframes 0 → 205 → 172 → 180 → 385 → 352 → 360 deg, each step on the default `ease`                                  | ⟳        | 1800           | ease | outlier-8 (G1, G9)     |
 | Skeleton                  | the survey: a pill (`border-radius: 999px`), a clay dashed line under it, a lake-blue wash cut in S→E and faded, `kp-sig-forest-forest-survey`, lines 300 / 600 ms apart  | S→E      | 2600           | R    | outlier-7 (G9)         |
 | Progress, with a share    | trees planted in whole slots (`--kp-fo-pitch`), fill `clip-path` and head `transform` transitions                                                                         | S→E      | 200            | R    | **the reference** (G9) |
-| Progress, the head        | the newest sapling on its mound sways `rotate(±5deg)`, `kp-progressbar-forest-sway`                                                                                       | ↔        | 2800 alternate | IO   | fits (wind, G1)        |
-| Progress, busy            | a grove of whole trees travels down the row, `kp-progressbar-forest-grove` / `-front`                                                                                     | S→E      | 3200           | L    | **the reference** (G9) |
+| Progress, the head        | removed 2026-10-07 at Kenny's request: no sapling, no sway; the head never renders                                                                                       | none     | none           | none | changed 2026-10-07     |
+| Progress, busy            | the planted row breathes: whole trees fill start → end, hold, then leave end → start, `kp-progressbar-forest-breath` on `--kp-fo-breath` (changed 2026-10-07, Kenny)       | S→E, E→S | 6600 (3000 + 600 + 3000) | IO   | changed 2026-10-07     |
 | Checkbox, radio           | tick drawn `clip-path inset(0 100% 0 0) → inset(0)`; radio ring `scale(1.6) → none` + fade                                                                                | S→E / ∅  | 380            | R    | radio: outlier-14      |
 | Switch                    | thumb `transform 260ms`                                                                                                                                                   | S→E      | 260            | R    | outlier-14 (G1)        |
 | Toast                     | `kp-sig-forest-forest-note` clip S→E; its clay blaze `scaleY(0) → none` from the top, after 40 %                                                                          | S→E / ↓  | 520            | R    | blaze ↓: outlier-14    |
@@ -331,13 +331,14 @@ carries to every other loading element:
 3. **The forest.** Seven trees per tile (`--kp-fo-trees`: pines, spruces, two
    broadleaves, seven heights) in forest ink, so the skyline does not read as a
    pattern.
-4. **The newest tree.** A sapling on a mound of fresh earth (`--selected`)
-   stands at the planting front and sways in the wind, `rotate(±5deg)`,
-   2800 ms `ease-in-out` alternate: the only sway the grammar keeps.
-5. **Busy, no share known.** A grove of whole trees (32 % of the row) walks
-   down the row start → end, linear, 3200 ms, the sapling at its front
-   (`kp-progressbar-forest-grove` / `-front`). This is the loading loop of
-   every other element: **one picture, one period**, `--kp-sig-fo-loop`.
+4. **The newest tree.** Removed on 2026-10-07 at Kenny's request: the
+   sapling head and its sway are gone; the planted row alone shows the share.
+5. **Busy, no share known.** Changed on 2026-10-07 at Kenny's request: the
+   same planted row breathes. Whole trees fill the bar start → end in
+   3000 ms, it holds full 600 ms, and the trees leave end → start in 3000 ms,
+   the arrival's frames reversed (`--kp-fo-breath`, symmetric ease-in-out,
+   `kp-progressbar-forest-breath`). Reduced motion shows the pose at half
+   breath. The compass stays the spinner's loop (`--kp-sig-fo-loop`).
 6. **On every waiting surface** (a tile, a panel, a table row, a menu
    entry, a busy button or card, a chart's plot): the planting strip at the
    surface's foot, the bar itself at `--kp-progressbar-scale: 0.8` (a 1 rem

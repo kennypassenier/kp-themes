@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Changed: forest's progress bar breathes and loses its sapling** [Kenny,
+  2026-10-07]. The light-green sapling head (and its sway, mound and the
+  travelling grove keyframes) is gone, determinate and busy alike. A busy bar
+  fills the planted row start to end in 3000 ms, holds full 600 ms and empties
+  in 3000 ms with the same frames reversed (`--kp-fo-breath`,
+  `kp-progressbar-forest-breath`); reduced motion shows whole trees at half
+  breath. The compass spinner is unchanged [themes/forest/CHARACTER.md].
 - **Fixed: grotesk's resize cut cuts in three.** `kp-sig-grotesk-size-cut`
   declared only a `from` inset, and an inset does not interpolate with a
   line's own `clip-path: none`, so a line arriving in a resized box was
