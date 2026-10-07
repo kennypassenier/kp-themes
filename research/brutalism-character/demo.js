@@ -1,0 +1,1192 @@
+// What makes brutalism brutalism (Kenny, 2026-10-07 04:23: the themes one by
+// one, "cyberpunk, synthwave, solstice, brutalism, grotesk, blueprint"), the
+// same way as titanium, forest, nostromo, cyberpunk, synthwave and solstice
+// (02:54: "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan
+// zo voorstellen doet").
+//
+// A review-kit demo in aspect mode, brutalism only. Each ASPECT is one rule of
+// the theme's grammar (themes/brutalism/CHARACTER.md, G1-G18) asked as a
+// question; each OPTION is a live scene built from the package's own
+// components, with one attribute on the scene's wrapper
+// (`data-bc-<aspect>="<key>"`) that options.css reads. The recommended option
+// is always first. The page's one clock (below) plays every scene that
+// arrives, opens, presses, updates or leaves, so the rule is seen in action;
+// the clock only writes attributes and text, it never reads layout. The
+// network graph is in no scene: it changes in no theme (Kenny, 02:54), so it
+// is a source of the grammar here, never a target.
+
+/* ----------------------------------------------------------- the parts */
+
+const button = (label, modifier = '', extra = '') => `<button type="button" class="kp-button ${modifier}" ${extra}>${label}</button>`;
+
+/**
+ * The well a waiting reading is cast in (G10), with every loading picture an
+ * option may draw in it: the pour, the hammer, the tape. options.css shows one.
+ */
+const well = (cls = '') =>
+    `<span class="bc-well ${cls}" aria-hidden="true"><span class="bc-pour"></span><span class="bc-hammer"></span><span class="bc-tape"></span></span>`;
+
+/** The change, on a square plate; its drawing is the option's. */
+const chip = (text, dir = 'up', tone = 'good') =>
+    `<span class="kp-kpi__delta bc-chip" data-kp-tone="${tone}" data-kp-direction="${dir}">${text}</span>`;
+
+/** The hazard band a warning is taped off with (G13); options.css shows it where the option asks. */
+const TAPE = `<span class="bc-hazard" aria-hidden="true"></span>`;
+
+const meter = (value = 0.62, mark = 0.8, extra = '') =>
+    `<div class="kp-meter bc-meter" role="meter" aria-label="Load, ${Math.round(value * 100)} %" aria-valuenow="${Math.round(
+        value * 100,
+    )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}; --kp-mark: ${mark}" ${extra}><span class="kp-meter__mark"></span></div>`;
+
+/** A chart's plot on its poster: the line, square-cut, on the slab. */
+const plot = (cls = '', extra = '') => `<div class="bc-plot bc-slab ${cls}" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none">
+        <polyline class="bc-plot__line" points="0,36 20,30 40,32 60,20 80,24 100,12 120,16 140,8 160,10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" pathLength="1"/></svg>${extra}<span class="bc-plot__read">Load, 412 t</span></div>`;
+
+const PART = {
+    dialog: () =>
+        `<div class="bc-drops bc-drops--dialog"><div class="kp-dialog bc-dialog bc-slab" role="group" aria-label="A dialog opening">
+        <p class="kp-dialog__title bc-title">Pour the slab?</p>
+        <p class="kp-dialog__description">The formwork on level 3 is ready.</p>
+        <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Pour it', 'kp-button--sm kp-button--primary')}</div>
+    </div></div>`,
+    menu: () => `<div class="bc-menu-wrap">
+        ${button('More ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}
+        <div class="bc-drops bc-pop-wrap"><div class="kp-popover bc-pop bc-slab"><ul class="kp-menu" role="menu">
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the log</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
+            <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete</button></li>
+        </ul></div></div>
+    </div>`,
+    tile: (label = 'Crane 02', body = '4.2 t · 61 m', cls = 'bc-arrives') =>
+        `<div class="kp-card bc-slab bc-tile ${cls}">
+        <p class="kp-card__title bc-title">${label}</p>
+        <p class="kp-card__body">${body}</p>
+    </div>`,
+    plainTile: (label = 'Crane 02', body = 'Hook 61 m', cls = '') =>
+        `<div class="kp-card bc-slab bc-tile ${cls}"><p class="kp-card__title bc-title">${label}</p><p class="kp-card__body">${body}</p></div>`,
+    kpi: (label = 'Poured today', value = '412', foot = chip('6 %'), cls = '', extra = '') =>
+        `<div class="kp-kpi bc-slab bc-kpi ${cls}" ${extra}>
+        <span class="kp-kpi__label bc-label">${label}</span>
+        <span class="kp-kpi__value bc-figure bc-carrier" data-bc-num>${value}</span>
+        <span class="kp-kpi__trend">${foot} on yesterday</span>
+    </div>`,
+    tracks: () => `<div class="bc-tracks" aria-hidden="true">
+        <span class="bc-groove"><span class="bc-track" style="--to: 72%"></span></span>
+        <span class="bc-groove"><span class="bc-track" style="--to: 48%"></span></span>
+        <span class="bc-groove"><span class="bc-track" style="--to: 88%"></span></span>
+    </div>`,
+    days: (n = 7, from = 12) =>
+        `<div class="bc-days bc-week" aria-hidden="true">${[...Array(n).keys()]
+            .map((i) => `<span class="bc-day bc-small bc-arrives" style="--i: ${i}"><span class="bc-day__num">${from + i}</span></span>`)
+            .join('')}</div>`,
+    rows: () =>
+        `<div class="bc-rows" aria-hidden="true">${['Crane 01, 3.8 t', 'Crane 02, 4.2 t', 'Hoist 03, 1.1 t']
+            .map((t, i) => `<span class="bc-row-line bc-small bc-arrives" style="--i: ${i}">${t}</span>`)
+            .join('')}</div>`,
+    state: (word = 'Running', kind = 'good') =>
+        `<span class="bc-state" data-bc-kind="${kind}"><span class="bc-state__dot bc-carrier bc-carrier--dot" aria-hidden="true"></span><span class="bc-state__word bc-carrier" data-bc-word>${word}</span></span>`,
+    alert: (text = 'The hoist is back on.') =>
+        `<div class="kp-alert bc-slab bc-alert" role="status"><span class="kp-alert__body">${text}</span></div>`,
+    spark: () => `<div class="bc-spark-wrap"><span class="kp-kpi__label bc-label">Load, 24 h</span><span class="bc-spark bc-carrier bc-carrier--line" aria-hidden="true"><svg viewBox="0 0 120 32" preserveAspectRatio="none">
+        <polyline points="0,24 15,20 30,22 45,14 60,16 75,10 90,12 105,6 120,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" pathLength="1"/></svg></span></div>`,
+    column: (label = 'Open', value = '38') =>
+        `<div class="bc-column bc-slab"><span class="kp-kpi__label bc-label">${label}</span><span class="bc-column__num bc-figure bc-carrier" data-bc-num>${value}</span></div>`,
+    skeleton: () =>
+        `<div class="bc-skel" aria-hidden="true">${[0, 1, 2]
+            .map((i) => `<span class="bc-skel__line bc-small bc-waits" style="--i: ${i}">${well('bc-well--fill')}</span>`)
+            .join('')}</div>`,
+    bar: (label = 'Pour busy') =>
+        `<div class="kp-progressbar bc-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`,
+    field: () =>
+        `<label class="kp-field bc-field"><span class="kp-field__label">Level</span><input class="kp-field__input" value="Level 3, east" /></label>`,
+    menuStatic: (items = ['Open the log', 'Assign to…'], cls = '', pointed = true) =>
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab ${cls}"><ul class="kp-menu" role="menu">${items
+            .map(
+                (t, i) =>
+                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === 0 && pointed ? ' bc-pointed' : ''}">${t}</button></li>`,
+            )
+            .join('')}</ul></div>`,
+};
+const caption = (text) => `<p class="bc-cap">${text}</p>`;
+const cell = (cap, html, cls = '') => `<div class="bc-part ${cls}">${caption(cap)}${html}</div>`;
+
+/* ------------------------------------------------------------ the scenes */
+
+/** The moving parts every motion question is shown on. */
+const MOVING = () =>
+    cell('Three shares are thrown on', PART.tracks(), 'bc-part--wide') +
+    cell('A dialog opens', PART.dialog()) +
+    cell('A menu opens', PART.menu()) +
+    cell('A tile arrives', PART.tile()) +
+    cell('A live update', `<div class="kp-kpis">${PART.kpi()}</div>`);
+
+const DIRECTION = () =>
+    cell('A week of days arrives', PART.days(7), 'bc-part--wide') +
+    cell('A list of readings is set down', PART.rows()) +
+    cell('A tile arrives', PART.tile()) +
+    cell('A menu opens', PART.menu());
+
+const OPENING = () => cell('A menu drops from its button', PART.menu()) + cell('A dialog opens', PART.dialog());
+
+const waitingTile = () =>
+    `<div class="kp-card bc-slab bc-tile bc-waits" aria-busy="true"><p class="kp-card__title bc-title">Crane 03</p>${well('bc-well--body')}</div>`;
+
+const DURATION = () =>
+    cell('Contact: a press', `<div class="bc-row">${button('Export loads', 'bc-press')}</div><p class="bc-readout" data-bc-readout="contact"></p>`) +
+    cell('A fall: a menu opens', PART.menu() + '<p class="bc-readout" data-bc-readout="open"></p>') +
+    cell('The dialog, the big slab', PART.dialog() + '<p class="bc-readout" data-bc-readout="dialog"></p>') +
+    cell('A loop: a tile waits', `${waitingTile()}<p class="bc-readout" data-bc-readout="loop"></p>`);
+
+const warnKpi = () => PART.kpi('Wind at the crane, km/h', '61', chip('12', 'up', 'bad'), 'bc-warn', 'data-bc-kind="warn"');
+
+const COLOUR = () =>
+    cell(
+        'Buttons, one pointed at, and a state',
+        `<div class="bc-row">${button('Export', 'bc-pointed')}${button('Pour it', 'kp-button--primary')}${PART.state('Running')}</div>`,
+    ) +
+    cell('A meter', meter(0.62, 0.8)) +
+    cell(
+        'Key figures',
+        `<div class="kp-kpis bc-kpi-row">${PART.kpi('Poured today', '412')}${PART.kpi('Cranes', '6', chip('1', 'up'))}</div>`,
+        'bc-part--wide',
+    ) +
+    cell(
+        'A strip of columns',
+        `<div class="bc-strip">${[
+            ['Open', '38'],
+            ['Late', '4'],
+            ['Done', '112'],
+        ]
+            .map(([l, v]) => `<div class="bc-strip__col"><span class="bc-label">${l}</span><span class="bc-figure">${v}</span></div>`)
+            .join('')}</div>`,
+    ) +
+    cell(
+        'A link and the picked day',
+        `<p class="bc-prose">See the <a href="#bc-intro">site log</a> for details.</p><div class="bc-days bc-days--pick">${[12, 13, 14, 15]
+            .map((d) => `<span class="bc-day bc-small${d === 13 ? ' bc-picked' : ''}"><span class="bc-day__num">${d}</span></span>`)
+            .join('')}</div>`,
+    ) +
+    cell('Tags', `<div class="bc-row"><span class="kp-badge">12 new</span><span class="kp-tag">Level 3</span></div>`);
+
+const CORNERS = () =>
+    cell('Card', PART.plainTile('Crane 02', 'Hook 61 m', 'bc-c-card')) +
+    cell('Menu panel', PART.menuStatic(['Open the log', 'Assign to…'], 'bc-c-menu', false)) +
+    cell('Key figure with its change', `<div class="kp-kpis">${PART.kpi('Poured today', '412', chip('6 %'), 'bc-c-kpi')}</div>`) +
+    cell(
+        'Button, tag and a tile mark',
+        `<div class="bc-row">${button('Export', 'bc-c-button')}<span class="kp-badge bc-c-tag">12 new</span><span class="bc-mark bc-c-mark" aria-hidden="true"></span></div>`,
+    ) +
+    cell('Tooltip', `<div class="kp-tooltip bc-tip" role="tooltip">18:00 · 412 t</div>`) +
+    cell(
+        'A tour card',
+        `<div class="bc-tour bc-slab"><p class="bc-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p></div>`,
+    );
+
+const SURFACE = () =>
+    cell('Card', PART.plainTile('Crane 02', 'Hook 61 m', 'bc-sheet')) +
+    cell('Key figure', `<div class="kp-kpis">${PART.kpi('Poured today', '18 240', chip('6 %'), 'bc-sheet')}</div>`) +
+    cell('The plot of a chart', plot('bc-sheet')) +
+    cell('Meter', `<div class="bc-meter-plate bc-slab bc-sheet">${meter(0.62, 0.8)}</div>`) +
+    cell(
+        'Buttons and a tag',
+        `<div class="bc-row">${button('Export')}${button('Pour it', 'kp-button--primary')}<span class="kp-badge">12 new</span></div>`,
+    ) +
+    cell('Field', PART.field());
+
+/** The tone scene does not replay; its figures and words stay as written. */
+const steady = (html) => html.replace(/ data-bc-(num|word)/g, '');
+const TONE = () =>
+    steady(
+        cell(
+            'Key figures: normal and warning',
+            `<div class="kp-kpis bc-kpi-row">${PART.kpi('Poured today', '412', chip('6 %'))}${warnKpi().replace('</div>', `${TAPE}</div>`)}</div>`,
+            'bc-part--wide',
+        ) +
+            cell(
+                'A failed tile',
+                `<div class="kp-card bc-slab bc-tile bc-bad" data-bc-kind="bad"><p class="kp-card__title bc-title"><span class="bc-toned">Hoist 03</span></p><p class="kp-card__body">No reading since 16:40</p><span class="bc-sticker" aria-hidden="true">Failed</span>${TAPE}</div>`,
+            ) +
+            cell('A failed state', `<div class="bc-state-plate bc-slab bc-bad" data-bc-kind="bad">${PART.state('Failed', 'bad')}${TAPE}</div>`) +
+            cell(
+                'A menu with a destructive entry',
+                `<div class="kp-popover bc-pop bc-pop--static bc-slab"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open the log</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive bc-bad" data-bc-kind="bad"><span class="bc-toned">Delete</span>${TAPE}</button></li></ul></div>`,
+            ) +
+            cell(
+                'A meter turning to warning',
+                `<div class="bc-meter-plate bc-slab bc-warn" data-bc-kind="warn"><span class="bc-cap"><span class="bc-toned">Load near its limit</span></span>${meter(
+                    0.88,
+                    0.8,
+                    'data-kp-tone="warning"',
+                )}${TAPE}</div>`,
+            ),
+    );
+
+const LIVE = () =>
+    cell('Key figure number', `<div class="kp-kpis">${PART.kpi()}</div>`) +
+    cell('State word and its block', PART.state('Running')) +
+    cell('Trend line', PART.spark()) +
+    cell('Strip column number', PART.column()) +
+    cell(
+        'Dashboard tile',
+        `<div class="kp-card bc-slab bc-tile bc-live-tile"><p class="kp-card__title bc-title">Crane 02</p><p class="kp-card__body"><span class="bc-carrier bc-carrier--body" data-bc-num>4.2 t</span></p></div>`,
+    );
+
+const LOADERS = () =>
+    cell('The progress bar itself, busy (the tape runs)', PART.bar('Pour busy'), 'bc-part--wide') +
+    cell(
+        'Key figure',
+        `<div class="kp-kpis"><div class="kp-kpi bc-slab bc-kpi bc-waits" aria-busy="true"><span class="kp-kpi__label bc-label">Poured today</span>${well(
+            'bc-well--figure',
+        )}<span class="kp-kpi__trend bc-faint">on yesterday</span></div></div>`,
+    ) +
+    cell(
+        'Busy table',
+        `<div class="bc-table bc-slab bc-waits" aria-busy="true"><span class="bc-table__head">Crane</span><span class="bc-table__head">Load</span>${well('bc-well--rows')}</div>`,
+    ) +
+    cell(
+        'Menu, loading entry',
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bc-waits bc-entry-wait" aria-busy="true">Loading cranes${well(
+            'bc-well--entry',
+        )}</button></li></ul></div>`,
+    ) +
+    cell(
+        'Month heatmap days',
+        `<div class="bc-days bc-days--wait">${[1, 2, 3, 4, 5]
+            .map((d) => `<span class="bc-day bc-small bc-waits" style="--i: ${d - 1}">${well('bc-well--day')}</span>`)
+            .join('')}</div>`,
+    ) +
+    cell('Chart plot', `<div class="bc-plot bc-plot--wait bc-slab bc-waits" aria-busy="true">${well('bc-well--plot')}</div>`) +
+    cell('Skeleton lines', PART.skeleton()) +
+    cell('Meter, measuring', `<div class="bc-meter-wait bc-waits" aria-busy="true">${well('bc-well--meter')}</div>`);
+
+/** One spinner in three drawings; options.css shows the option's. */
+const spin = (size = '', label = 'Working…', hidden = false) =>
+    `<span class="bc-spin"${hidden ? ' aria-hidden="true"' : ` role="status" aria-label="${label}"`}${
+        size ? ` style="--bc-spin: ${size}"` : ''
+    }><span class="kp-spinner bc-spin__block"></span><span class="bc-spin__cube"><span class="bc-pour"></span></span><span class="bc-spin__ring"></span></span>`;
+
+const SPINNERS = () =>
+    cell('Three sizes', `<div class="bc-row bc-spins">${['1rem', '1.5rem', '2.5rem'].map((s) => spin(s)).join('')}</div>`, 'bc-part--wide') +
+    cell(
+        'A busy button',
+        `<button type="button" class="kp-button kp-button--primary bc-busy-button" aria-busy="true">${spin('', '', true)}Saving…</button>`,
+    ) +
+    cell(
+        'The busy panel',
+        `<div class="kp-card bc-slab bc-busy-panel">${spin('2rem', 'Reading the cranes')}<p class="kp-card__body">Reading the cranes…</p></div>`,
+    );
+
+/** A part that leaves and arrives. */
+const leaver = (html) => `<div class="bc-leaver">${html}</div>`;
+const LEAVE = () =>
+    cell('An alert', leaver(PART.alert())) +
+    cell('A card', leaver(PART.plainTile())) +
+    cell(
+        'A key figure',
+        leaver(
+            `<div class="kp-kpi bc-slab bc-kpi"><span class="kp-kpi__label bc-label">Poured today</span><span class="kp-kpi__value bc-figure">412</span></div>`,
+        ),
+    );
+
+const COMPOSITES = () =>
+    cell(
+        "Alone: the theme's own button, for reference",
+        `<div class="bc-row">${button('Export loads', 'bc-alone')}${button('Pour it', 'kp-button--primary bc-alone')}</div>`,
+        'bc-part--wide',
+    ) +
+    cell(
+        'Page header: its action buttons',
+        `<header class="kp-page-header bc-header bc-slab"><div class="kp-page-header__inner"><div><p class="kp-page-header__title bc-title">Cranes</p><p class="kp-page-header__description">Six on level 3.</p></div>
+        <div class="kp-page-header__actions">${button('Export', 'kp-button--sm bc-in-header')}${button('Add', 'kp-button--sm kp-button--primary bc-in-header')}</div></div></header>`,
+        'bc-part--wide',
+    ) +
+    cell(
+        'Menu: its entries',
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab bc-in-menu"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bc-in-entry">Open the log</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li></ul></div>`,
+    ) +
+    cell(
+        'Tile: its Open link',
+        `<div class="kp-card bc-slab bc-tile bc-in-tile"><p class="kp-card__title bc-title">Crane 02</p><a class="kp-button kp-button--ghost kp-button--sm bc-tile-link" href="#bc-intro">Open</a></div>`,
+    ) +
+    cell(
+        'Drawer: its tour buttons',
+        `<div class="kp-card bc-slab bc-drawer"><p class="kp-card__title bc-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="bc-row">${button(
+            'Skip',
+            'kp-button--sm kp-button--ghost bc-in-drawer',
+        )}${button('Next', 'kp-button--sm kp-button--primary bc-in-drawer')}</div></div>`,
+    ) +
+    cell(
+        'Key figure as a link',
+        `<div class="kp-kpis"><a class="kp-kpi bc-slab bc-kpi bc-in-kpi" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured today</span><span class="kp-kpi__value bc-figure">412</span><span class="kp-kpi__trend">since 07:00</span></a></div>`,
+    );
+
+const HOVER = () =>
+    cell('Button, pointed at', `<div class="bc-row">${button('Export loads', 'bc-pointed')}${button('Pour it', 'kp-button--primary')}</div>`) +
+    cell('Menu entries, the first pointed at', PART.menuStatic(['Open the log', 'Assign to…', 'Rename'])) +
+    cell(
+        'Tile with its Open link pointed at',
+        `<div class="kp-card bc-slab bc-tile"><p class="kp-card__title bc-title">Crane 02</p><a class="kp-button kp-button--ghost kp-button--sm bc-tile-link bc-pointed" href="#bc-intro">Open</a></div>`,
+    ) +
+    cell(
+        'Key figures, the first pointed at',
+        `<div class="kp-kpis bc-kpi-row"><a class="kp-kpi bc-slab bc-kpi bc-pointed" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured</span><span class="kp-kpi__value bc-figure">412</span></a><a class="kp-kpi bc-slab bc-kpi" href="#bc-intro"><span class="kp-kpi__label bc-label">Cranes</span><span class="kp-kpi__value bc-figure">6</span></a></div>`,
+    ) +
+    cell(
+        'Days of a month, one pointed at',
+        `<div class="bc-days">${[12, 13, 14, 15]
+            .map((d) => `<span class="bc-day bc-small${d === 13 ? ' bc-pointed' : ''}"><span class="bc-day__num">${d}</span></span>`)
+            .join('')}</div>`,
+    );
+
+const FOCUS = () =>
+    cell(
+        'Button and primary button',
+        `<div class="bc-row">${button('Export', 'bc-focused')}${button('Pour it', 'kp-button--primary bc-focused')}</div>`,
+    ) +
+    cell('Header action', `<div class="bc-header-mini bc-slab">${button('Export', 'kp-button--sm bc-in-header bc-focused')}</div>`) +
+    cell(
+        'Key figure link',
+        `<div class="kp-kpis"><a class="kp-kpi bc-slab bc-kpi bc-focused" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured today</span><span class="kp-kpi__value bc-figure">412</span></a></div>`,
+    ) +
+    cell(
+        'Menu entry',
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bc-focused">Assign to…</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Rename</button></li></ul></div>`,
+    ) +
+    cell(
+        'Calendar day',
+        `<div class="bc-days"><span class="bc-day bc-small"><span class="bc-day__num">13</span></span><span class="bc-day bc-small bc-focused"><span class="bc-day__num">14</span></span><span class="bc-day bc-small"><span class="bc-day__num">15</span></span></div>`,
+    ) +
+    cell(
+        'Tile link',
+        `<div class="kp-card bc-slab bc-tile"><p class="kp-card__title bc-title">Crane 02</p><a class="kp-button kp-button--ghost kp-button--sm bc-tile-link bc-focused" href="#bc-intro">Open</a></div>`,
+    );
+
+const PRESS = () =>
+    cell('Button', `<div class="bc-row">${button('Export loads', 'bc-press')}</div>`) +
+    cell('Primary button', `<div class="bc-row">${button('Pour it', 'kp-button--primary bc-press')}</div>`) +
+    cell(
+        'Menu entry',
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item bc-press bc-press--flat">Assign to…</button></li></ul></div>`,
+    ) +
+    cell('Calendar day', `<div class="bc-days"><span class="bc-day bc-small bc-press"><span class="bc-day__num">14</span></span></div>`) +
+    cell(
+        'Key figure as a filter',
+        `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle bc-slab bc-kpi bc-press" aria-pressed="false"><span class="kp-kpi__label bc-label">Open faults</span><span class="kp-kpi__value bc-figure">3</span></button></div>`,
+    ) +
+    cell(
+        'Chart legend key',
+        `<div class="bc-row"><button type="button" class="bc-key bc-small bc-press" aria-pressed="false"><span class="bc-key__swatch" aria-hidden="true"></span>Crane 01</button></div>`,
+    );
+
+const TYPE = () =>
+    cell(
+        'A tile with its words and figures',
+        `<div class="kp-card bc-slab bc-type"><p class="bc-type__label">Level 3, east</p><p class="bc-type__head">Crane 02</p>
+        <p class="bc-type__prose">The wind rose past the crane's limit at noon; the site checks it again at 14:30.</p>
+        <p class="bc-type__figure"><span class="bc-figure">61</span> <small>km/h</small> ${chip('12 km/h', 'up', 'bad')}</p>
+        <div class="bc-type__strip">${[
+            ['Load', '412'],
+            ['Poured', '18 240'],
+            ['Cranes', '6'],
+        ]
+            .map(([l, v]) => `<div><span class="bc-label">${l}</span><span class="bc-figure">${v}</span></div>`)
+            .join('')}</div>
+        <table class="bc-type__table"><tbody><tr><th scope="row">Load</th><td>412 t</td></tr><tr><th scope="row">Last reading</th><td><span class="kp-timestamp bc-stamp">2026-10-07 14:12</span></td></tr></tbody></table>
+        <p>${button('Open the log', 'kp-button--sm')} <span class="kp-badge bc-tagged">12 new</span></p></div>`,
+        'bc-part--wide',
+    );
+
+const MOTIFS = () =>
+    cell('Meter with its mark', meter(0.62, 0.8)) +
+    cell(
+        'Chart events on a plot',
+        plot(
+            'bc-events',
+            '<span class="bc-events__mark" style="--x: 37.5%; --y: 52%"></span><span class="bc-events__mark" style="--x: 75%; --y: 42%"></span>',
+        ),
+    ) +
+    cell(
+        'A card and a warning card',
+        `<div class="bc-motif-pair">${PART.plainTile('Crane 02', 'Hook 61 m', 'bc-motif-card')}<div class="kp-card bc-slab bc-tile bc-motif-warn bc-warn" data-bc-kind="warn"><p class="kp-card__title bc-title">Crane 04</p><p class="kp-card__body">Wind 61 km/h</p>${TAPE}</div></div>`,
+        'bc-part--wide',
+    ) +
+    cell(
+        'Changes, today and the pick',
+        `<div class="bc-row">${chip('6 %', 'up', 'good')}${chip('3 %', 'down', 'bad')}</div><div class="bc-days bc-days--motif">${[12, 13, 14, 15]
+            .map(
+                (d) =>
+                    `<span class="bc-day bc-small${d === 13 ? ' bc-today' : ''}${d === 14 ? ' bc-picked' : ''}"><span class="bc-day__num">${d}</span></span>`,
+            )
+            .join('')}</div>`,
+    ) +
+    cell(
+        'Empty state',
+        `<div class="kp-empty bc-motif-empty"><p class="kp-empty__title">No readings yet</p><p class="kp-empty__body">The first arrives at 07:00.</p></div>`,
+    ) +
+    cell('A divider between two sections', `<p class="bc-cap">Cranes</p><div class="bc-divider" data-kp-divider></div><p class="bc-cap">Hoists</p>`);
+
+/* ------------------------------------------------------------ the aspects */
+
+const rec = (why) => `Recommended: this one, because ${why}`;
+const not = (why) => `Not recommended, because ${why}`;
+
+/**
+ * One question each. `kind`: 'cycle' scenes are replayed by the page's clock
+ * (arrive, open, press, update, leave), 'loop' scenes loop in CSS, 'still'
+ * scenes do not move. `options[0]` is the recommendation.
+ * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: () => string,
+ *   options: { key: string, name: string, see: string, verdict: string }[] }[]}
+ */
+const ASPECTS = [
+    {
+        id: 'curve',
+        label: 'The motion curve',
+        rule: 'G1',
+        question: 'How does brutalism move: under gravity, in hard steps, or on its register’s smooth curve?',
+        why: 'A theme exists to be distinct (your rule of 03:37). Most of your picks slam in two hard steps, which is how terminal’s register, nostromo’s frame clock, cyberpunk’s ticks and retro move too; the register’s smooth curve, cubic-bezier(0.2, 0, 0, 1), is formal’s, light’s, grotesk’s and nostromo’s. Two of your picks fall under gravity, the meter’s Thrown on and the chart’s Dropped in: they speed up all the way and land at full speed. No theme moves like that yet.',
+        kind: 'cycle',
+        scene: MOVING,
+        options: [
+            {
+                key: 'gravity',
+                name: 'Gravity: it falls and stops dead',
+                see: 'What comes leaves at rest, speeds up all the way down and stops in one frame on its shadow: the shares are thrown on, the dialog and the menu land, the tile lands, the figure is slammed on. What goes is lifted on the same curve played back. The meter’s own Thrown on curve, cubic-bezier(0.6, 0, 0.9, 0.5).',
+                verdict: rec(
+                    'it is weight you can see, the slab falling onto its shadow and stopping dead, and every other theme slows down into place instead.',
+                ),
+            },
+            {
+                key: 'steps',
+                name: 'Hard steps (most of your picks; terminal’s, nostromo’s, cyberpunk’s)',
+                see: 'Everything jumps to its place in two hard steps, no travel in between, as the menu’s and the columns’ Slammed do today.',
+                verdict: not('it is blunt and fast, but hard steps are how four other themes move, and a jump has no weight.'),
+            },
+            {
+                key: 'smooth',
+                name: 'The register’s smooth curve (formal’s, light’s, grotesk’s)',
+                see: 'Everything on cubic-bezier(0.2, 0, 0, 1): a quick start and a long, soft landing, as the signature’s drops and the hover do today.',
+                verdict: not('it is pleasant, but a soft landing is the opposite of a slab, and it is four other themes’ curve.'),
+            },
+        ],
+    },
+    {
+        id: 'direction',
+        label: 'The direction',
+        rule: 'G2',
+        question: 'Which way does a slab move when it arrives, is pointed at or leaves?',
+        why: 'Brutalism’s shadow falls down and to the right, so up off the page is up and to the left: your button lifts that way, your headline’s words and the signature’s dialog drop from there. Your component picks mostly drop straight down the page (the menu, the columns, the chart, the calendar, the meter) or shove in from the side (the tiles, the drawer, the leave).',
+        kind: 'cycle',
+        scene: DIRECTION,
+        options: [
+            {
+                key: 'diagonal',
+                name: 'Along the shadow’s diagonal: up off the page is up-left',
+                see: 'Each day, row, tile and the menu fall from up-left onto a shadow that is already lying where they will stand; the shadow never moves. The days are set down one after another from the start.',
+                verdict: rec(
+                    'it is the only direction in which a box with a hard shadow can fall onto the page, and no other theme has a shadow to fall onto.',
+                ),
+            },
+            {
+                key: 'down',
+                name: 'Straight down from above (the columns’, chart’s, calendar’s, meter’s and menu’s picks)',
+                see: 'Everything slides down the page into place, its shadow travelling with it.',
+                verdict: not('it reads as falling, but the shadow comes along, so the slab slides down the page instead of landing on it.'),
+            },
+            {
+                key: 'side',
+                name: 'Shoved in from the side (the tiles’ and the drawer’s picks; titanium’s feed, grotesk’s shove)',
+                see: 'Everything is shoved in from the start side and stops.',
+                verdict: not('it is forceful, but sideways is titanium’s feed and grotesk’s shove, and it has nothing to do with weight.'),
+            },
+        ],
+    },
+    {
+        id: 'opening',
+        label: 'Opening what drops from a button',
+        rule: 'G3',
+        question: 'How does a menu or a dialog open?',
+        why: 'Your menu and your header’s menu are both Slammed: straight down from above in two hard steps (the header’s after a top-down clip, which is titanium’s cut). The signature’s dialog, toast and tooltip drop from up-left with a slight tilt and a fade, and you asked for the dialog at a quarter of its speed so you can see it land.',
+        kind: 'cycle',
+        scene: OPENING,
+        options: [
+            {
+                key: 'footprint',
+                name: 'Dropped onto its footprint',
+                see: 'The panel’s hard shadow is on the page from the first frame, where the panel will stand; the panel falls onto it from up-left, speeding up, and stops dead: the menu in 3 units (300 ms), the dialog, the big slab, in 15 (1500 ms, your quarter speed). No tilt, no fade.',
+                verdict: rec(
+                    'it shows the weight before the slab lands, it keeps your slowed dialog, and no theme opens onto a waiting shadow; solstice left brutalism the drop from above.',
+                ),
+            },
+            {
+                key: 'slam',
+                name: 'Slammed in two hard steps, as picked',
+                see: 'The panel jumps down from above to near its place and then to its place, two hard steps, as your menu pick draws it: 300 ms.',
+                verdict: not('it is your pick, but two hard steps are the hard-step themes’ gesture, and the shadow travels with the panel.'),
+            },
+            {
+                key: 'tilt',
+                name: 'The tilted drop with a fade (the signature’s; near pastel’s Stuck on)',
+                see: 'The panel fades in while it drops from up-left with a slight tilt and settles softly, as the signature’s dialog and toast do.',
+                verdict: not(
+                    'it is lively, but a tilted panel fading in is pastel’s note swung in from its corner, and printed matter does not fade.',
+                ),
+            },
+        ],
+    },
+    {
+        id: 'durations',
+        label: 'How long things take',
+        rule: 'G4',
+        question: 'How long do contact, a fall, the dialog and a loop take?',
+        why: 'Brutalism’s register gives contact 100 ms. Your picks take 150 to 700 ms for a one-shot and 0.48 to 2.2 s for a loop, with no unit under them; the dialog’s drop takes 1520 ms because you slowed it to a quarter.',
+        kind: 'cycle',
+        scene: DURATION,
+        options: [
+            {
+                key: 'units',
+                name: '100 · 300 · 1500 · 1200 (units of 100 ms)',
+                see: 'Contact 1 unit (100 ms), a fall 3 (300 ms), the dialog 15 (1500 ms), a loop 12 (1200 ms): the readouts under each part say the numbers.',
+                verdict: rec(
+                    'every duration is the register’s own 100 ms counted, the falls are short and hard, and your slowed dialog keeps its time.',
+                ),
+            },
+            {
+                key: 'picks',
+                name: 'As the picks, the slowest of each kind',
+                see: 'Contact 100 ms, a fall 700 ms (the chart’s Dropped in), the dialog 1520 ms, a loop 2200 ms (the meter’s blocks).',
+                verdict: not('it is your picks, but a fall of 700 ms floats, and nothing ties one number to another.'),
+            },
+            {
+                key: 'instant',
+                name: 'At once (retro’s 0 ms; the anatomy’s “no arrival”)',
+                see: 'Nothing moves: every part is simply there, and a waiting part shows its half-poured well standing still.',
+                verdict: not(
+                    'it is the anatomy’s printed matter that is simply there, but it hides every pick of yours that moves, and 0 ms is retro’s register.',
+                ),
+            },
+        ],
+    },
+    {
+        id: 'colour',
+        label: 'Where the colour goes',
+        rule: 'G5',
+        question: 'What do the ink, yellow, lavender and the statuses each mean?',
+        why: 'The anatomy: one ink for every line and the primary, yellow as the ordinary button, candy plates with black ink. Your picks add lavender sheets mixed into the plates (22 to 55 %: the key figure, the tiles, the menu), coloured shadows (the tiles’ tone marks, the busy failure’s cream) and the chart’s poster on yellow stock. You also said brutalism must be raw.',
+        kind: 'still',
+        scene: COLOUR,
+        options: [
+            {
+                key: 'roles',
+                name: 'Ink builds, yellow is the hand, lavender the second sheet, statuses paint',
+                see: 'Every line, shadow and word is the ink; yellow is where a hand is (the ordinary button, the pointed one, the picked day); lavender is the second plate (the meter’s share, every other column); the slabs are white; paint is flat and full.',
+                verdict: rec('every colour has one job, the slabs stay white and raw, and the candy is paint, never a tint.'),
+            },
+            {
+                key: 'sheets',
+                name: 'The sticker sheets (your key figure’s, tiles’ and menu’s picks; pastel’s candy)',
+                see: 'The plates are tinted lavender, the picked day and the change are lavender stickers too.',
+                verdict: not('it is cheerful, but tinted sheets with stickers are pastel’s sticker chart, and a tint is not raw.'),
+            },
+            {
+                key: 'concrete',
+                name: 'Raw concrete: grey slabs, ink and one yellow',
+                see: 'The slabs are the muted concrete grey, lavender goes, yellow only where a hand is.',
+                verdict: not(
+                    'it is the 1960s’ béton brut, as raw as it gets, but the anatomy chose Gumroad’s paper and candy, and grey slabs on cream paper lose the print.',
+                ),
+            },
+        ],
+    },
+    {
+        id: 'corners',
+        label: 'The corners',
+        rule: 'G6',
+        question: 'Which corners do brutalism’s parts have?',
+        why: 'Radius 0 is load-bearing in the anatomy. Your picks round two stickers to 0.2 rem (the key figure’s change, the tiles’ mark) and cut a stencil notch off the tour card’s corner, which is cyberpunk’s notch and titanium’s chamfer.',
+        kind: 'still',
+        scene: CORNERS,
+        options: [
+            {
+                key: 'square',
+                name: 'Square, everything',
+                see: 'Every card, panel, key figure, button, tag, tooltip, mark and the tour card square; round only for the radio and the empty state’s stamped zero.',
+                verdict: rec('it is the anatomy’s, it has no exceptions to learn, and a slab is square.'),
+            },
+            {
+                key: 'picked',
+                name: 'As picked: rounded stickers and a notched tour card',
+                see: 'The change and the tile’s mark are rounded and askew; the tour card has a notch cut off its corner.',
+                verdict: not('it is your picks, but the notch is cyberpunk’s and the rounded sticker pastel’s.'),
+            },
+            {
+                key: 'soft',
+                name: 'A soft corner (pastel’s)',
+                see: 'Every part rounded to 0.5 rem.',
+                verdict: not('it is friendly, but it softens exactly what brutalism is for, and it is pastel’s.'),
+            },
+        ],
+    },
+    {
+        id: 'surface',
+        label: 'The surface',
+        rule: 'G7',
+        question: 'What is a brutalism plate made of?',
+        why: 'The anatomy’s signature is the shadow: a box in one 3 px line standing on a hard shadow 6 px down-right. Your picks draw it with 1, 2, 3 and 4 px lines and 2 to 10 px shadows, leave the shadow off the key figure, the tour card and the chart’s tip, double it under the busy panel, and tint four plates lavender into a sticker sheet. The network graph keeps its sticker sheet whatever you pick (it changes in no theme).',
+        kind: 'still',
+        scene: SURFACE,
+        options: [
+            {
+                key: 'slab',
+                name: 'The slab: white, one ink line, its hard shadow',
+                see: 'Every plate white in the 3 px ink line on a 6 px hard shadow straight down-right; small parts a 2 px line on a 3 px shadow. Nothing tinted, nothing blurred.',
+                verdict: rec(
+                    'it is brutalism’s own and nobody else’s (no other theme draws a hard shadow), and it is honest: the line is the structure, the shadow the weight.',
+                ),
+            },
+            {
+                key: 'sticker',
+                name: 'The sticker sheet (your key figure’s, tiles’, menu’s and the graph’s; pastel’s sticker chart)',
+                see: 'Each plate a lavender sheet in the ink line, no shadow, its mark an askew sticker.',
+                verdict: not(
+                    'it is your shape four times, but tinted sheets with askew stickers are pastel’s sticker chart, and decoration rather than structure.',
+                ),
+            },
+            {
+                key: 'poster',
+                name: 'The poster stock (the chart’s pick)',
+                see: 'Each plate printed on yellow stock in a 4 px frame on a 6 px shadow.',
+                verdict: not('it is loud and printed, but when every plate is yellow, yellow no longer marks where a hand is.'),
+            },
+        ],
+    },
+    {
+        id: 'tone',
+        label: 'A warning',
+        rule: 'G13',
+        question: 'How does a warning or a failure show on a part?',
+        why: 'Your tone picks draw eight ways: the warning poster three times (the menu, the trend, the key figure’s figure), an askew sticker (the key figure’s change, the state), a coloured shadow (the tiles), a cream frame on a red slab (the busy failure), a bump (the meter) and a red tip. Hazard tape runs through your other picks: the trend’s band, the graph’s site taped off, the alarm’s bars.',
+        kind: 'still',
+        scene: TONE,
+        options: [
+            {
+                key: 'taped',
+                name: 'Taped off: hazard tape at the foot, the figure on the tone’s plate',
+                see: 'A warning or failed part carries a band of hazard tape along its foot, its tone’s paint and the ink in 45° stripes, and its figure or title is printed on the tone’s plate, framed in the ink line on its hard shadow.',
+                verdict: rec(
+                    'it is your warning poster with the tape that says danger on a building site, and no theme’s warning is a hazard band (cyberpunk refuses one).',
+                ),
+            },
+            {
+                key: 'poster',
+                name: 'The warning poster alone (near high-contrast’s framed plate)',
+                see: 'The figure or title on the tone’s plate, framed in ink on its shadow; no tape.',
+                verdict: not('it is your pick, but a tone on a framed plate is high-contrast’s The framed plate and terminal’s square plate.'),
+            },
+            {
+                key: 'sticker',
+                name: 'The askew sticker (the key figure’s and the state’s picks; pastel’s sticker chart)',
+                see: 'The warning on an askew sticker in a black outline, slapped onto the part.',
+                verdict: not('it is playful, but a sticker is pastel’s, and askew stickers are decoration, not danger.'),
+            },
+        ],
+    },
+    {
+        id: 'live',
+        label: 'A live update',
+        rule: 'G9',
+        question: 'How does a value that changes in place show it changed?',
+        why: 'Your live picks: the columns’ figure inverted for a moment (high-contrast’s The bar flips), the state’s shadow jumping, the tiles kicked, and at once for the key figure, the trend and the chart (formal’s Redrawn). The package declares none for brutalism. Your headline’s words already slam onto their yellow offset (2026-09-08).',
+        kind: 'cycle',
+        scene: LIVE,
+        options: [
+            {
+                key: 'slam',
+                name: 'Slammed onto its offset (the headline’s slam)',
+                see: 'The new value appears just up-left of its place and falls onto a yellow copy of itself lying 3 px down-right, in 3 units; the yellow offset stands a moment and is struck off in one cut. A line or a block falls onto its yellow copy the same way.',
+                verdict: rec('it is your headline’s own slam, read at once, and no theme’s live update drops the value onto anything.'),
+            },
+            {
+                key: 'invert',
+                name: 'Inverted (the columns’ pick; high-contrast’s The bar flips)',
+                see: 'The changed value shows reversed out of the ink for a moment, then returns.',
+                verdict: not('it is your pick, but a flip to ink is high-contrast’s live family, and it blacks the value out for a moment.'),
+            },
+            {
+                key: 'once',
+                name: 'At once (the key figure’s, the trend’s and the chart’s picks; formal’s Redrawn)',
+                see: 'The new value is simply there; nothing marks the change.',
+                verdict: not('it is quiet and honest, but nobody sees that something changed, and it is formal’s live family.'),
+            },
+        ],
+    },
+    {
+        id: 'loading',
+        label: 'Loading',
+        rule: 'G10',
+        question: 'What does a waiting part show while it loads?',
+        why: 'Eleven loading pictures today: hammers (the busy table, the key figure), stamps (the tiles, the columns, the menu’s shadow), the chart’s rivet gun, the calendar’s tape, the meter’s blocks, the skeleton’s presses and the trend’s pour, which you picked again today. A strike is formal’s loading family (the seal pressed and lifted); running tape is high-contrast’s The tape runs.',
+        kind: 'loop',
+        scene: LOADERS,
+        options: [
+            {
+                key: 'pour',
+                name: 'The pour: the reading is cast in its own place',
+                see: 'Where the value will stand is a well in the ink line; ink is poured into it from its floor in four hard lifts, it holds full for one, and it is struck clean at once, 12 units (1200 ms). The labels stay readable above it.',
+                verdict: rec(
+                    'it is your trend’s pour carried to every part, casting is how brutalism makes a reading, and it travels nowhere, which no theme’s loading does.',
+                ),
+            },
+            {
+                key: 'strike',
+                name: 'The hammer (the key figure’s, the busy table’s and the tiles’ picks; near formal’s seal)',
+                see: 'A small ink block hammers down along the well’s floor, three places in turn, hard steps.',
+                verdict: not('it is your pick four times, but a stamp pressed again and again is formal’s seal.'),
+            },
+            {
+                key: 'tape',
+                name: 'The tape runs (the calendar’s pick; near high-contrast’s and cyberpunk’s)',
+                see: 'A strip of yellow-and-ink hazard tape crawls along the foot of every waiting part.',
+                verdict: not(
+                    'it is unmistakable, but running tape is high-contrast’s, hazard stripes are cyberpunk’s armed sign, and tape should mean danger.',
+                ),
+            },
+        ],
+    },
+    {
+        id: 'spinner',
+        label: 'The spinner',
+        rule: 'G11',
+        question: 'What is brutalism’s spinner?',
+        why: 'The signature (2026-10-03): a yellow block on its ink footprint is lifted, turned a quarter and set down, 1400 ms on the smooth curve.',
+        kind: 'loop',
+        scene: SPINNERS,
+        options: [
+            {
+                key: 'tip',
+                name: 'The block tipped over (the signature, on gravity)',
+                see: 'The yellow block is lifted off its footprint, turned a quarter and dropped back onto it, stopping dead: 12 units (1200 ms).',
+                verdict: rec('it is your signature, a slab handled with weight, and no other theme’s spinner turns a block over.'),
+            },
+            {
+                key: 'cube',
+                name: 'A cube being poured',
+                see: 'A small square well in the ink line fills with ink in four lifts and is struck, again and again.',
+                verdict: not('it matches the loading pour, but it does not turn, so it reads as a progress mark rather than “busy”.'),
+            },
+            {
+                key: 'ring',
+                name: 'The package’s ring (the register before the signature)',
+                see: 'A round ink ring with a yellow quarter turning.',
+                verdict: not('it is familiar, but it is round, and every interface has it.'),
+            },
+        ],
+    },
+    {
+        id: 'leave',
+        label: 'Leaving and arriving',
+        rule: 'G12',
+        question: 'How does something leave, and how does it arrive?',
+        why: 'Your leave (2026-10-04): slammed out to the left in two hard steps, while its opacity steps out; what arrives plays it backwards, so it comes in from the side. A sideways shove in hard steps is grotesk’s leave too (shoved and cut in three steps).',
+        kind: 'cycle',
+        scene: LEAVE,
+        options: [
+            {
+                key: 'lift',
+                name: 'Lifted off and gone; set down',
+                see: 'The part is lifted 1 rem up-left off its footprint, its shadow staying on the ground and growing, and at the top it is gone in one cut, shadow and all: 3 units. Arriving plays it backwards: it appears lifted over its footprint and falls onto it.',
+                verdict: rec('it is the opening’s drop played backwards, so leaving, arriving and opening are one picture, and nothing fades.'),
+            },
+            {
+                key: 'left',
+                name: 'Slammed out to the left (your pick; near grotesk’s shove)',
+                see: 'The part jumps out to the left in two hard steps while it steps out of sight; arriving, it jumps in from the left.',
+                verdict: not('it is your pick, but sideways in hard steps is grotesk’s leave, and an arrival from the side breaks the drop.'),
+            },
+            {
+                key: 'ground',
+                name: 'Driven into the ground',
+                see: 'The part is pressed onto its footprint, shadow gone, and cut out of the page; arriving, it stands up from its footprint into place.',
+                verdict: not('it is blunt, but it reads as a press, not a leave, and standing up from the ground is no arrival.'),
+            },
+        ],
+    },
+    {
+        id: 'composites',
+        label: 'Buttons inside composites',
+        rule: 'G17',
+        question: 'How do buttons, links and menu entries behave when they sit inside a header, a menu, a tile, a drawer or a key figure?',
+        why: 'Use the State buttons above to see them hovered, focused and pressed. Today the header’s actions are thinner (a 2 px line on a 3 px shadow) and take one outline for focus; the menu entries are outlined and kicked sideways; the tile’s Open link turns into an ink plate; the key figure as a link has no shadow at rest.',
+        kind: 'still',
+        scene: COMPOSITES,
+        options: [
+            {
+                key: 'own',
+                name: 'Exactly brutalism’s own elements',
+                see: 'Every inner button is brutalism’s button: the 3 px line on the 6 px shadow, lifted off its footprint and named when pointed at, the two-channel ring, driven into its footprint when pressed; a menu entry takes the yellow plate in place; the key figure stands on its shadow.',
+                verdict: rec('a button is a button wherever it sits, so the theme stays one grammar.'),
+            },
+            {
+                key: 'today',
+                name: 'As today',
+                see: 'The header’s actions in a 2 px line on a 3 px shadow with one outline, the menu entries outlined and kicked sideways, the tile’s link inverted, the key figure without a shadow.',
+                verdict: not('each part was picked on its own, so the same button looks and answers four ways.'),
+            },
+            {
+                key: 'quiet',
+                name: 'Brutalism’s own, but quiet: ghosts inside a composite',
+                see: 'Inside a composite every button is a ghost (no plate, no line, no shadow) until pointed at, when it stands up as the full slab.',
+                verdict: not('it is calmer, but a composite’s actions stop looking like buttons until you touch them.'),
+            },
+        ],
+    },
+    {
+        id: 'hover',
+        label: 'Pointing at something',
+        rule: 'G8',
+        question: 'What happens to a part when the pointer is on it?',
+        why: 'Your register lifts a button 2 px up-left off its shadow, which stays on the ground, and the button names itself (BUTTON, your scope-12 of 2026-09-11). Your component picks grow the shadow without the lift (the tiles, the header), kick a menu entry sideways, invert the tile’s link and lift a day straight up.',
+        kind: 'still',
+        scene: HOVER,
+        options: [
+            {
+                key: 'lift',
+                name: 'Lifted off its footprint, and it names itself',
+                see: 'The part pointed at moves 2 px up-left while its shadow stays on the ground, its plate turns yellow or steps darker, and its tag says what it is; siblings are untouched.',
+                verdict: rec(
+                    'it is your register’s Gumroad pair and your scope-12, and no other theme leaves a hard footprint behind when it lifts.',
+                ),
+            },
+            {
+                key: 'kick',
+                name: 'Kicked sideways (the menu’s pick)',
+                see: 'The part pointed at is shoved 4 px sideways, its plate yellow.',
+                verdict: not('it is your menu’s pick, but sideways has nothing to do with the shadow, and it shifts the words you are reading.'),
+            },
+            {
+                key: 'invert',
+                name: 'Inverted (the tile link’s pick; high-contrast’s The bar flips)',
+                see: 'The part pointed at turns to the ink plate with yellow words; nothing moves.',
+                verdict: not('it is strong, but the flip to ink is high-contrast’s hover family, and the primary button is already ink.'),
+            },
+        ],
+    },
+    {
+        id: 'focus',
+        label: 'The focus ring',
+        rule: 'G14, DI2',
+        question: 'How does a part show it has keyboard focus?',
+        why: 'The register draws DI2’s two channels in the concept demo’s order (the outline, an inner ring in the paper). Three of your picks replace them with one thick ink outline (the header, the key figure, the tile link), which vanishes against the ink primary button and the ink shadow.',
+        kind: 'still',
+        scene: FOCUS,
+        options: [
+            {
+                key: 'ring',
+                name: 'The two-channel ring, and the part lifted',
+                see: 'Every focused part: the ink outline with the paper ring inside it, and the part lifted off its footprint as under the pointer.',
+                verdict: rec(
+                    'it is the design invariant, it reads on the yellow, the white and the ink plate alike, and the lift says where you are.',
+                ),
+            },
+            {
+                key: 'outline',
+                name: 'One thick ink outline (the header’s, key figure’s and tile link’s picks)',
+                see: 'One 3 px ink outline 2 px out, no paper ring, no lift.',
+                verdict: not('it is heavy, but on the ink primary button and against the ink shadow it disappears.'),
+            },
+            {
+                key: 'fill',
+                name: 'The field’s yellow fill, with the ring',
+                see: 'The two-channel ring, and the focused part filled yellow, as a field fills today; no lift.',
+                verdict: not('it is clear, but yellow already means “pointed at”, so focus and hover look the same.'),
+            },
+        ],
+    },
+    {
+        id: 'press',
+        label: 'The press',
+        rule: 'G14',
+        question: 'What happens to a part while it is pressed?',
+        why: 'The base layer drops a pressed brutalism button onto its own shadow, but by 4 px while the shadow lies 6 px away, so the pressed box hangs 2 px above its footprint. Your header and key figure picks drop the full way; the menu’s pick shoves its entry 6 px sideways.',
+        kind: 'cycle',
+        scene: PRESS,
+        options: [
+            {
+                key: 'ground',
+                name: 'Driven into its footprint',
+                see: 'The pressed part moves exactly onto its shadow, 6 px (3 px on a small part), the shadow gone, its plate one step darker, for as long as it is held.',
+                verdict: rec('it is the anatomy’s own press, landed where the shadow says, and it is brutalism’s alone.'),
+            },
+            {
+                key: 'shove',
+                name: 'Shoved sideways (the menu’s pick)',
+                see: 'The pressed part is shoved 6 px sideways; its shadow comes along.',
+                verdict: not('it is your menu’s pick, but sideways is no press, and the part never meets its shadow.'),
+            },
+            {
+                key: 'reverse',
+                name: 'Reverse video while held (terminal’s)',
+                see: 'The pressed part prints in reverse, the ink plate with paper words; nothing moves.',
+                verdict: not('it is crisp, but reverse video is terminal’s press, and it loses the weight.'),
+            },
+        ],
+    },
+    {
+        id: 'voice',
+        label: 'The voice',
+        rule: 'G15',
+        question: 'Which typeface says what?',
+        why: 'Archivo Black in capitals shouts the headlines, Space Grotesk speaks the body; your picks set labels in Space Grotesk 800 capitals (the columns, the state, the trend). Some register parts speak in mono capitals (the footer’s microlabel, the side note, the platforms, a table’s status), which is the dark themes’ label voice.',
+        kind: 'still',
+        scene: TYPE,
+        options: [
+            {
+                key: 'shout',
+                name: 'Archivo Black shouts, Space Grotesk speaks in bold capitals',
+                see: 'Titles and figures in Archivo Black capitals; labels, buttons, tags and table heads in Space Grotesk 700 capitals, tracked; prose in Space Grotesk; the mono only for the timestamp.',
+                verdict: rec(
+                    'it is the concept demo’s voice and your picks’, every face has one job, and it is told apart from grotesk’s Archivo in sentence case.',
+                ),
+            },
+            {
+                key: 'mono',
+                name: 'Mono capitals for labels (the dark themes’ label voice)',
+                see: 'Labels, tags and table heads in the mono, capitals, tracked wide.',
+                verdict: not('it looks technical, but tracked mono capitals are nostromo’s, cyberpunk’s, synthwave’s and titanium’s labels.'),
+            },
+            {
+                key: 'black',
+                name: 'Archivo Black for everything, prose too',
+                see: 'Labels, buttons, tags, table heads and the running text in Archivo Black.',
+                verdict: not('it is loud everywhere, so nothing is louder than anything else, and a paragraph in Archivo Black is hard to read.'),
+            },
+        ],
+    },
+    {
+        id: 'motifs',
+        label: 'Motifs',
+        rule: 'G16',
+        question: 'Where do brutalism’s motifs (the shadow, the tape, the bolts, the bar, the stamp) appear?',
+        why: 'Your picks put hazard tape on today in the month, on the chart’s tip and along the trend’s foot at rest, besides the graph’s site and the alarm where something is dangerous; stickers on four parts; the chart’s events as beaded rings (the same drawing as solstice’s Rivets).',
+        kind: 'still',
+        scene: MOTIFS,
+        options: [
+            {
+                key: 'one',
+                name: 'Every motif means one thing',
+                see: 'The shadow is weight; hazard tape only on the warning; the chart’s events square bolts with their own small shadow; today ruled off by the six-pixel bar; the pick yellow; the empty state’s stamped zero askew.',
+                verdict: rec('each motif says one thing, so a glance reads the page, and none of them is another theme’s.'),
+            },
+            {
+                key: 'shadow',
+                name: 'Only the shadow',
+                see: 'No tape, no bolts, no bar, no stamp: slabs and their shadows, plain dots for events, today in bold.',
+                verdict: not('it is pure, but it throws away the tape, the bar and the stamp you approved.'),
+            },
+            {
+                key: 'all',
+                name: 'On everything (as the picks spread them)',
+                see: 'Tape on today, on the card’s foot and the tip; stickers on the changes; beaded rings for the events; a stamp on the card.',
+                verdict: not('it is lively, but tape everywhere stops meaning danger, and stickers and beads are other themes’.'),
+            },
+        ],
+    },
+];
+
+/* ---------------------------------------------------- the review kit's text */
+
+const section = /** @type {HTMLElement} */ (document.querySelector('[data-review-item="brutalism"]'));
+// Each hint repeats the question, then what this option shows and the
+// recommendation line: the dialog shows only the hint of the option on
+// screen, so each hint has to stand on its own.
+section.setAttribute(
+    'data-review-choices',
+    JSON.stringify(
+        ASPECTS.map((a) => ({
+            id: a.id,
+            label: a.label,
+            options: a.options.map((o, at) => ({
+                value: String(at + 1),
+                label: `${o.name}${at === 0 ? ' (recommended)' : ''}`,
+                hint: `${a.question} ${o.see} ${o.verdict}`,
+            })),
+        })),
+    ),
+);
+const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
+const lookLine = document.createElement('p');
+lookLine.setAttribute('data-for', 'brutalism');
+lookLine.textContent = `${ASPECTS.length} questions, one rule of brutalism each; the first option of every question is the recommendation. Pick the one that is brutalism to you, or “None of these” with a note.`;
+look.append(lookLine);
+
+/* ---------------------------------------------------------------- the rows */
+
+const rows = /** @type {HTMLElement} */ (section.querySelector('[data-bc-aspects]'));
+const toc = document.querySelector('[data-bc-toc]');
+const built = document.createDocumentFragment();
+ASPECTS.forEach((a, n) => {
+    const box = document.createElement('section');
+    box.className = 'bc-aspect';
+    box.id = `bc-${a.id}`;
+    box.setAttribute('data-bc-aspect', a.id);
+    box.setAttribute('aria-labelledby', `h-bc-${a.id}`);
+    box.innerHTML = `<div class="bc-aspect__head">
+        <h3 id="h-bc-${a.id}"><span class="bc-aspect__no">${n + 1}</span> ${a.label} <span class="bc-aspect__rule">${a.rule}</span></h3>
+        <p class="bc-aspect__q"></p><p class="bc-aspect__why"></p></div><div class="bc-trio" data-bc-n="${a.options.length}"></div>`;
+    /** @type {HTMLElement} */ (box.querySelector('.bc-aspect__q')).textContent = a.question;
+    /** @type {HTMLElement} */ (box.querySelector('.bc-aspect__why')).textContent = a.why;
+    const trio = /** @type {HTMLElement} */ (box.querySelector('.bc-trio'));
+    a.options.forEach((o, at) => {
+        const col = document.createElement('div');
+        col.className = 'bc-col';
+        col.setAttribute('data-bc-option', String(at + 1));
+        col.innerHTML = `<p class="bc-label-row"><span class="bc-label-row__no">${at + 1}</span> <span class="bc-label-row__name"></span>${
+            at === 0 ? ' <span class="bc-label-row__rec">Recommended</span>' : ''
+        }</p><p class="bc-see"></p><p class="bc-verdict"></p>
+        <div class="bc-scene" data-bc-kind="${a.kind}" data-bc-${a.id}="${o.key}" data-bc-phase="in">${a.scene()}</div>`;
+        /** @type {HTMLElement} */ (col.querySelector('.bc-label-row__name')).textContent = o.name;
+        /** @type {HTMLElement} */ (col.querySelector('.bc-see')).textContent = o.see;
+        const verdict = /** @type {HTMLElement} */ (col.querySelector('.bc-verdict'));
+        verdict.textContent = o.verdict;
+        verdict.classList.toggle('bc-verdict--rec', at === 0);
+        trio.append(col);
+    });
+    built.append(box);
+    if (toc) {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="#bc-${a.id}"></a>`;
+        /** @type {HTMLElement} */ (li.firstElementChild).textContent = `${a.label} (${a.rule})`;
+        toc.append(li);
+    }
+});
+rows.append(built);
+
+// The durations row says its own numbers under each part.
+const BANDS = { units: [100, 300, 1500, 1200], picks: [100, 700, 1520, 2200], instant: [0, 0, 0, 0] };
+for (const scene of section.querySelectorAll('[data-bc-durations]')) {
+    const key = /** @type {keyof typeof BANDS} */ (scene.getAttribute('data-bc-durations'));
+    const [contact, open, dialog, loop] = BANDS[key];
+    const units = (/** @type {number} */ ms) => (key === 'units' ? `, ${ms / 100} ${ms === 100 ? 'unit' : 'units'}` : '');
+    const say = (/** @type {string} */ id, /** @type {string} */ text) => {
+        const p = scene.querySelector(`[data-bc-readout="${id}"]`);
+        if (p) p.textContent = text;
+    };
+    say('contact', `${contact} ms${units(contact)}`);
+    say('open', `${open} ms${units(open)}`);
+    say('dialog', `${dialog} ms${units(dialog)}`);
+    say('loop', loop ? `${loop} ms a cycle${units(loop)}` : 'standing still, half poured');
+}
+
+/* ---------------------------------------------------------- the one clock */
+
+// Every scene that arrives, opens, presses, updates or leaves is replayed by
+// one clock, so the options of a row always start together and can be
+// compared. One cycle: `gap` (what arrives is away), `in` (it arrives, a
+// press lands, a value updates), `hold` (it stands), `out` (it leaves). The
+// CSS keys every motion to these phases; the clock only writes attributes and
+// text, all in one pass, and never reads layout.
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const motionNote = document.querySelector('[data-bc-motion]');
+let slow = 1;
+const PHASES = /** @type {const} */ ([
+    ['gap', 700],
+    ['in', 1700],
+    ['hold', 1800],
+    ['out', 900],
+]);
+const values = ['412', '436', '398', '451'];
+let tick = 0;
+let timer = 0;
+const cycleScenes = [...section.querySelectorAll('.bc-scene[data-bc-kind="cycle"]')];
+const numbers = [...section.querySelectorAll('.bc-scene[data-bc-kind="cycle"] [data-bc-num]')];
+const words = [...section.querySelectorAll('.bc-scene[data-bc-kind="cycle"] [data-bc-word]')];
+
+/** Whether the review dialog's Pause (Space) is on: then the clock stands still too. */
+const dialogPaused = () => Boolean(document.getElementById('rv-flip-pause')?.textContent);
+
+function setPhase(/** @type {string} */ phase) {
+    for (const scene of cycleScenes) scene.setAttribute('data-bc-phase', phase);
+    if (phase !== 'in') return;
+    tick += 1;
+    for (const num of numbers) {
+        const text = (num.textContent || '').trim();
+        if (/ t$/.test(text)) num.textContent = tick % 2 ? '4.4 t' : '4.2 t';
+        else if (/^\d+$/.test(text) && Number(text) > 99) num.textContent = values[tick % values.length];
+        else if (/^\d+$/.test(text)) num.textContent = String(30 + ((tick * 7) % 20));
+        else if (/^\d+ \d+$/.test(text)) num.textContent = tick % 2 ? '18 312' : '18 240';
+    }
+    for (const word of words) word.textContent = tick % 2 ? 'Lifting' : 'Running';
+}
+
+function run(/** @type {number} */ at = 0) {
+    clearTimeout(timer);
+    if (reduced.matches) {
+        setPhase('hold');
+        return;
+    }
+    if (dialogPaused()) {
+        timer = window.setTimeout(() => run(at), 300);
+        return;
+    }
+    const [phase, ms] = PHASES[at];
+    setPhase(phase);
+    timer = window.setTimeout(() => run((at + 1) % PHASES.length), ms * slow);
+}
+
+/* --------------------------------------------------------------- controls */
+
+/** A radio-like group: one pressed button. */
+function radio(/** @type {string} */ attr, /** @type {(value: string) => void} */ apply) {
+    const buttons = [...document.querySelectorAll(`[${attr}]`)];
+    for (const b of buttons)
+        b.addEventListener('click', () => {
+            for (const other of buttons) other.setAttribute('aria-pressed', String(other === b));
+            apply(b.getAttribute(attr) || '');
+        });
+}
+radio('data-bc-speed', (value) => {
+    slow = 1 / Number(value);
+    document.documentElement.style.setProperty('--bc-slow', String(slow));
+    run(0);
+});
+radio('data-bc-state', (value) => {
+    section.setAttribute('data-bc-show', value);
+});
+document.querySelector('[data-bc-replay]')?.addEventListener('click', () => run(0));
+
+// The links and buttons in the scenes are scenery: a click does nothing.
+section.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target.closest('.bc-scene a, .bc-scene button') : null;
+    if (target) event.preventDefault();
+});
+
+const syncMotion = () => {
+    if (motionNote) /** @type {HTMLElement} */ (motionNote).hidden = !reduced.matches;
+    run(0);
+};
+reduced.addEventListener('change', syncMotion);
+syncMotion();
+
+/* ---------------------------------------------------------- the gallery */
+
+// The decided brutalism components as they are today: each character demo
+// embedded by the review kit (`?embed=<aspect>&theme=brutalism`, only its
+// combination of the decided picks). Loaded when the gallery is opened, so
+// the page itself stays light.
+const gallery = /** @type {HTMLDetailsElement | null} */ (document.querySelector('[data-bc-gallery]'));
+const frameOf = new Map();
+gallery?.addEventListener('toggle', () => {
+    if (!gallery.open) return;
+    for (const frame of gallery.querySelectorAll('iframe[data-src]')) {
+        frame.setAttribute('src', frame.getAttribute('data-src') || '');
+        frame.removeAttribute('data-src');
+        frame.addEventListener('load', () => {
+            if (/** @type {HTMLIFrameElement} */ (frame).contentWindow) frameOf.set(/** @type {HTMLIFrameElement} */ (frame).contentWindow, frame);
+        });
+    }
+});
+addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (event.origin !== location.origin || data.type !== 'rv-embed') return;
+    const frame = frameOf.get(event.source);
+    if (frame && data.height) frame.style.blockSize = `${Math.min(Math.max(data.height, 96), 900)}px`;
+});

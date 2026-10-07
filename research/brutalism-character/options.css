@@ -1,0 +1,1932 @@
+/* research/brutalism-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.bc-scene[data-bc-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --bc-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "as picked" options are the ones measured in
+   themes/brutalism/CHARACTER.md §2. Parts at rest are drawn as the
+   recommended grammar has them (the white slab in the ink line on its hard
+   shadow, square, Archivo Black and Space Grotesk in capitals), so each
+   question changes only its own rule.
+
+   The footprint: a slab's hard shadow is where it would fall. A part is
+   moved against it by two knobs, --bc-lift (up-left, off the page) and
+   --bc-push (down-right, into the shadow); its translate and its shadow are
+   computed from them, so the shadow never moves on the page. Motion that
+   carries a part (a drop, a lift) animates translate and box-shadow
+   together for the same reason. */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    /* On the scene as well as the page: the review dialog shows a copy of
+       a scene outside the page. */
+    .bc-page,
+    .bc-scene {
+        /* G1: gravity. What comes on the meter's own Thrown on curve (it
+           leaves at rest and lands at full speed), what goes on it played
+           back; the hard steps and the register's smooth curve, for the
+           options. */
+        --bc-fall: cubic-bezier(0.6, 0, 0.9, 0.5);
+        --bc-up: cubic-bezier(0.1, 0.5, 0.4, 1);
+        --bc-smooth: cubic-bezier(0.2, 0, 0, 1);
+        --bc-ink: var(--foreground);
+        --bc-sheet: color-mix(in oklch, var(--accent) 28%, var(--card));
+        --bc-tape-warn: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--foreground) 6px 12px);
+        --bc-tape-bad: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--foreground) 6px 12px);
+        --bc-tape-site: repeating-linear-gradient(45deg, var(--secondary) 0 5px, var(--foreground) 5px 10px);
+    }
+
+    .bc-scene {
+        position: relative;
+        /* A part dropping from up-left may start a little outside the
+           scene's frame, into the gap between the options. */
+        overflow: clip;
+        overflow-clip-margin: 1.4rem;
+        /* G1, G4: every scene runs on the recommended curve and units; the
+           curve and duration questions change these. */
+        --bc-in: var(--bc-fall);
+        --bc-out: var(--bc-up);
+        --bc-contact: 100ms;
+        --bc-drop: 300ms;
+        --bc-dialog: 1500ms;
+        --bc-loop: 1200ms;
+        /* G7, proposal-29: nothing is translucent; the pour says busy, so
+           layout.css's busy dim (0.7) stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .bc-scene[data-bc-curve='steps'] {
+        --bc-in: steps(2, jump-end);
+        --bc-out: steps(2, jump-end);
+    }
+
+    .bc-scene[data-bc-curve='smooth'] {
+        --bc-in: var(--bc-smooth);
+        --bc-out: var(--bc-smooth);
+    }
+
+    .bc-scene[data-bc-durations='picks'] {
+        --bc-drop: 700ms;
+        --bc-dialog: 1520ms;
+        --bc-loop: 2200ms;
+    }
+
+    .bc-scene[data-bc-durations='instant'] {
+        --bc-contact: 0ms;
+        --bc-drop: 0ms;
+        --bc-dialog: 0ms;
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .bc-scene :is(.bc-title, .kp-card__title, .kp-dialog__title, .kp-page-header__title) {
+        margin: 0;
+        color: inherit;
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        text-transform: uppercase;
+    }
+
+    /* G7: a slab, white in the 3 px ink line on its hard shadow; a small
+       part a 2 px line on a 3 px shadow. The shadow is computed from the
+       footprint's knobs, so it stays on the page while the part moves. */
+    .bc-scene :is(.bc-slab, .bc-small, .kp-button) {
+        --bc-sh: 6px;
+        --bc-lift: 0px;
+        --bc-push: 0px;
+        position: relative;
+        margin: 0;
+        border: 3px solid var(--bc-ink);
+        border-radius: 0;
+        translate: calc(var(--bc-push) - var(--bc-lift)) calc(var(--bc-push) - var(--bc-lift));
+        box-shadow: calc(var(--bc-sh) + var(--bc-lift) - var(--bc-push)) calc(var(--bc-sh) + var(--bc-lift) - var(--bc-push)) 0 0 var(--bc-ink);
+    }
+
+    .bc-scene :is(.bc-slab, .bc-small) {
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .bc-scene .bc-small {
+        --bc-sh: 3px;
+        border-width: 2px;
+    }
+
+    .bc-scene .kp-button--ghost {
+        --bc-sh: 0px;
+        border-color: transparent;
+    }
+
+    /* A scene's own button, focused by the keyboard, keeps DI2's two channels. */
+    .bc-scene :is(.kp-button, .bc-slab, .bc-small):focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene :is(.bc-slab, .bc-small, .kp-button) {
+            transition:
+                translate calc(var(--bc-contact) * var(--bc-slow, 1)) var(--bc-in),
+                box-shadow calc(var(--bc-contact) * var(--bc-slow, 1)) var(--bc-in);
+        }
+    }
+
+    .bc-scene .kp-card.bc-slab {
+        display: grid;
+        gap: 0.25rem;
+        padding: 0.7rem 0.9rem 0.8rem;
+    }
+
+    .bc-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .bc-scene .kp-dialog {
+        position: relative;
+        inset: auto;
+        display: block;
+        max-inline-size: none;
+        padding: 0 1rem 1rem;
+        animation: none;
+    }
+
+    .bc-scene .kp-dialog__title {
+        margin: 0 -1rem 0.6rem;
+        padding: 0.5rem 1rem;
+        border-block-end: 3px solid var(--bc-ink);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene .kp-dialog__description {
+        margin: 0 0 0.7rem;
+    }
+
+    .bc-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .bc-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 11.5rem;
+    }
+
+    .bc-scene .bc-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.9rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 11rem;
+    }
+
+    .bc-scene .bc-pop {
+        position: relative;
+        inset: auto;
+        display: block;
+        padding: 0.25rem;
+        animation: none;
+    }
+
+    .bc-scene .kp-menu {
+        display: grid;
+        gap: 0.1rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        list-style: none;
+    }
+
+    /* A menu entry is a row of the menu's slab: flat, no line of its own. */
+    .bc-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        translate: none;
+        white-space: nowrap;
+        text-align: start;
+    }
+
+    .bc-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.9rem;
+    }
+
+    .bc-scene .bc-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bc-scene .kp-kpi.bc-slab {
+        display: grid;
+        gap: 0.15rem;
+        padding: 0.65rem 0.9rem 0.75rem;
+        color: inherit;
+        text-decoration: none;
+        text-align: start;
+    }
+
+    .bc-scene .kp-kpi__trend {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    /* G15: Space Grotesk speaks the labels, in bold capitals. */
+    .bc-scene .bc-label {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    /* G15: Archivo Black counts. */
+    .bc-scene .bc-figure {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.9rem;
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+
+    /* G13: the change on a square plate with a hard shadow, + or −. */
+    .bc-scene .bc-chip {
+        display: inline-block;
+        padding: 0 0.3rem;
+        border: 2px solid var(--bc-ink);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 2px 2px 0 0 var(--bc-ink);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    .bc-scene .bc-chip[data-kp-direction='up']::before {
+        content: '+';
+    }
+
+    .bc-scene .bc-chip[data-kp-direction='down']::before {
+        content: '\2212';
+    }
+
+    .bc-cap {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    .bc-scene .bc-faint {
+        color: var(--muted-foreground);
+    }
+
+    .bc-scene .kp-tooltip {
+        position: relative;
+        inset: auto;
+        display: inline-block;
+        margin: 0;
+        animation: none;
+    }
+
+    .bc-scene .bc-field {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    /* The days of a month: small slabs. */
+    .bc-scene .bc-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem 0.6rem;
+    }
+
+    .bc-scene .bc-day {
+        display: grid;
+        place-items: center;
+        inline-size: 2.1rem;
+        block-size: 2.1rem;
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+    }
+
+    .bc-scene .bc-picked {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene .bc-rows {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .bc-scene .bc-row-line {
+        display: block;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .bc-scene .bc-tracks {
+        display: grid;
+        gap: 0.7rem;
+    }
+
+    .bc-scene .bc-groove {
+        position: relative;
+        display: block;
+        block-size: 0.875rem;
+        overflow: clip;
+        border: 2px solid var(--bc-ink);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene .bc-track {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--to, 60%);
+        border-inline-end: 2px solid var(--bc-ink);
+        background: var(--accent);
+    }
+
+    .bc-scene .bc-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-state__dot {
+        display: inline-block;
+        inline-size: 0.75em;
+        block-size: 0.75em;
+        border: 2px solid var(--bc-ink);
+        background: var(--success);
+    }
+
+    .bc-scene .bc-state[data-bc-kind='bad'] .bc-state__dot {
+        background: var(--destructive);
+    }
+
+    .bc-scene .bc-state__word {
+        display: inline-block;
+    }
+
+    .bc-scene .bc-spark-wrap {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .bc-scene .bc-spark {
+        display: block;
+        block-size: 2.2rem;
+        color: var(--foreground);
+    }
+
+    .bc-scene .bc-spark svg,
+    .bc-scene .bc-plot svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .bc-scene .bc-column {
+        display: grid;
+        gap: 0.1rem;
+        justify-items: center;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .bc-scene .bc-column__num {
+        justify-self: center;
+    }
+
+    .bc-scene .bc-plot {
+        display: grid;
+        block-size: 6.5rem;
+        padding: 0.6rem 0.7rem 1.4rem;
+        color: var(--foreground);
+    }
+
+    .bc-scene .bc-plot__read {
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-end: 0.3rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border: 3px solid var(--bc-ink);
+        background: var(--card);
+        box-shadow: 6px 6px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene .bc-strip__col {
+        display: grid;
+        justify-items: center;
+        padding: 0.4rem 0.3rem;
+    }
+
+    .bc-scene .bc-strip__col + .bc-strip__col {
+        border-inline-start: 3px solid var(--bc-ink);
+    }
+
+    /* G5: every other column on the second sheet, lavender. */
+    .bc-scene .bc-strip__col:nth-child(even) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .bc-scene .bc-prose {
+        margin: 0;
+    }
+
+    .bc-scene .bc-meter-plate,
+    .bc-scene .bc-state-plate {
+        display: grid;
+        gap: 0.5rem;
+        padding: 0.8rem 1rem 1rem;
+    }
+
+    .bc-scene .bc-mark {
+        display: inline-block;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border: 2px solid var(--bc-ink);
+        background: var(--accent);
+        box-shadow: 2px 2px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene .bc-tour {
+        display: grid;
+        gap: 0.3rem;
+        padding: 0.7rem 0.9rem;
+    }
+
+    .bc-scene .bc-table {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem 0.75rem;
+        padding: 0.6rem 0.8rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .bc-scene .bc-table__head {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-header {
+        padding: 0.8rem 1rem;
+    }
+
+    .bc-scene .bc-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .bc-scene .kp-page-header__description {
+        margin: 0;
+        font-size: 0.85rem;
+    }
+
+    .bc-scene .kp-page-header__actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .bc-scene .kp-page-header__actions > .kp-button {
+        inline-size: auto;
+    }
+
+    .bc-scene .bc-drawer {
+        gap: 0.4rem;
+    }
+
+    .bc-scene .bc-header-mini {
+        display: flex;
+        padding: 0.8rem;
+    }
+
+    .bc-scene .bc-key {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.2rem 0.55rem;
+        background: var(--card);
+        color: var(--foreground);
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: default;
+    }
+
+    .bc-scene .bc-key__swatch {
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border: 2px solid var(--bc-ink);
+        background: var(--chart-3);
+    }
+
+    /* The tile's Open link keeps its own width, with room above it for
+       the tag it shows when pointed at. */
+    .bc-scene .bc-tile-link {
+        justify-self: start;
+        margin-block-start: 1rem;
+    }
+
+    .bc-scene .bc-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .bc-scene .bc-motif-pair {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .bc-scene .bc-motif-empty {
+        margin: 0;
+    }
+
+    .bc-scene .bc-divider {
+        margin-block: 0.3rem;
+    }
+
+    /* The register's tag (scope-12) is shown by the hover questions, not by
+       a real pointer passing over a scene. */
+    .bc-scene :is(.kp-button, .kp-card, .kp-alert, .kp-badge, .kp-field__input):hover::after {
+        opacity: 0;
+    }
+
+    /* The bits a question shows only in its own options. */
+    .bc-scene :is(.bc-hazard, .bc-sticker, .bc-hammer, .bc-tape) {
+        display: none;
+    }
+
+    /* ── 1 · Curve, 2 · direction, 3 · opening, 4 · durations ────────── */
+
+    /* What arrives is away in the gap. */
+    .bc-scene[data-bc-kind='cycle'][data-bc-phase='gap'] :is(.bc-arrives, .bc-drops > .bc-slab, .bc-track, .bc-leaver > *) {
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G3, G2: dropped onto its footprint from up-left, the footprint
+           there from the first frame. */
+        .bc-scene[data-bc-phase='in'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            --bc-h: 1.5rem;
+            animation: bc-drop calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-in) both;
+            animation-delay: calc(var(--i, 0) * 70ms * var(--bc-slow, 1));
+        }
+
+        /* A small part falls from a smaller height, so its footprint stays
+           under it. */
+        .bc-scene[data-bc-phase='in'] .bc-small.bc-arrives {
+            --bc-h: 0.75rem;
+        }
+
+        .bc-scene[data-bc-phase='in'] .bc-drops--dialog > .bc-slab {
+            --bc-h: 2.5rem;
+            animation-duration: calc(var(--bc-dialog) * var(--bc-slow, 1));
+        }
+
+        /* A share is thrown on: it falls into its groove from up-left. */
+        .bc-scene[data-bc-phase='in'] .bc-track {
+            animation: bc-throw calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-in) both;
+        }
+
+        .bc-scene[data-bc-phase='in'] .bc-groove:nth-child(2) .bc-track {
+            animation-delay: calc(70ms * var(--bc-slow, 1));
+        }
+
+        .bc-scene[data-bc-phase='in'] .bc-groove:nth-child(3) .bc-track {
+            animation-delay: calc(140ms * var(--bc-slow, 1));
+        }
+
+        /* G12: what goes is lifted off and gone in one cut. */
+        .bc-scene[data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            --bc-h: 1rem;
+            animation: bc-lift-off calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-out) forwards;
+        }
+
+        .bc-scene[data-bc-phase='out'] .bc-small.bc-arrives {
+            --bc-h: 0.5rem;
+        }
+
+        .bc-scene[data-bc-phase='out'] .bc-track {
+            animation: bc-throw calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-out) reverse forwards;
+        }
+
+        /* 2 · straight down: the shadow travels with the part. */
+        .bc-scene[data-bc-direction='down'][data-bc-phase='in'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            animation-name: bc-down;
+        }
+
+        .bc-scene[data-bc-direction='down'][data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            animation-name: bc-down-out;
+        }
+
+        /* 2 · shoved in from the start side. */
+        .bc-scene[data-bc-direction='side'][data-bc-phase='in'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            animation-name: bc-side;
+        }
+
+        .bc-scene[data-bc-direction='side'][data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
+            animation-name: bc-side-out;
+        }
+
+        /* 3 · slammed in two hard steps, as the menu's pick draws it. */
+        .bc-scene[data-bc-opening='slam'][data-bc-phase='in'] .bc-drops > .bc-slab {
+            animation: bc-slam2 calc(300ms * var(--bc-slow, 1)) steps(2, jump-end) both;
+        }
+
+        .bc-scene[data-bc-opening='slam'][data-bc-phase='out'] .bc-drops > .bc-slab {
+            animation: bc-slam2-out calc(300ms * var(--bc-slow, 1)) steps(2, jump-end) forwards;
+        }
+
+        /* 3 · the signature's tilted drop with a fade. */
+        .bc-scene[data-bc-opening='tilt'][data-bc-phase='in'] .bc-drops > .bc-slab {
+            animation: bc-tilt calc(420ms * var(--bc-slow, 1)) var(--bc-smooth) both;
+        }
+
+        .bc-scene[data-bc-opening='tilt'][data-bc-phase='in'] .bc-drops--dialog > .bc-slab {
+            animation-name: bc-tilt-big;
+            animation-duration: calc(1520ms * var(--bc-slow, 1));
+        }
+
+        .bc-scene[data-bc-opening='tilt'][data-bc-phase='out'] .bc-drops > .bc-slab {
+            animation: bc-tilt calc(420ms * var(--bc-slow, 1)) var(--bc-smooth) reverse forwards;
+        }
+
+        /* 4 · contact: a press lands during the in phase. */
+        .bc-scene[data-bc-durations][data-bc-phase='in'] .bc-press {
+            --bc-push: var(--bc-sh);
+        }
+
+        .bc-scene[data-bc-durations='instant'] * {
+            animation-duration: 0s !important;
+            transition-duration: 0s !important;
+        }
+    }
+
+    @keyframes bc-drop {
+        from {
+            translate: calc(-1 * var(--bc-h)) calc(-1 * var(--bc-h));
+            box-shadow: calc(var(--bc-sh) + var(--bc-h)) calc(var(--bc-sh) + var(--bc-h)) 0 0 var(--bc-ink);
+        }
+
+        to {
+            translate: 0 0;
+            box-shadow: var(--bc-sh) var(--bc-sh) 0 0 var(--bc-ink);
+        }
+    }
+
+    @keyframes bc-lift-off {
+        from {
+            translate: 0 0;
+            box-shadow: var(--bc-sh) var(--bc-sh) 0 0 var(--bc-ink);
+        }
+
+        to {
+            translate: calc(-1 * var(--bc-h)) calc(-1 * var(--bc-h));
+            box-shadow: calc(var(--bc-sh) + var(--bc-h)) calc(var(--bc-sh) + var(--bc-h)) 0 0 var(--bc-ink);
+            visibility: hidden;
+        }
+    }
+
+    @keyframes bc-throw {
+        from {
+            translate: -0.75rem -100%;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-down {
+        from {
+            translate: 0 calc(-1 * var(--bc-h));
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-down-out {
+        to {
+            translate: 0 calc(-1 * var(--bc-h));
+            visibility: hidden;
+        }
+    }
+
+    @keyframes bc-side {
+        from {
+            translate: calc(-1 * var(--bc-h)) 0;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-side-out {
+        to {
+            translate: calc(-1 * var(--bc-h)) 0;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes bc-slam2 {
+        0%,
+        50% {
+            translate: 0 -14px;
+        }
+
+        51% {
+            translate: 0 -4px;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-slam2-out {
+        0% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 -4px;
+        }
+
+        100% {
+            translate: 0 -14px;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes bc-tilt {
+        0% {
+            opacity: 0;
+            transform: translate(-10px, -18px) rotate(-3deg);
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        70% {
+            transform: translate(-4px, -4px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes bc-tilt-big {
+        0% {
+            opacity: 0;
+            transform: translate(-14px, -40px) rotate(-2deg);
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        70% {
+            transform: translate(-6px, -6px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* ── 5 · Colour ──────────────────────────────────────────────────── */
+
+    .bc-scene[data-bc-colour='sheets'] :is(.bc-kpi, .bc-strip, .bc-strip__col, .kp-card) {
+        background: var(--bc-sheet);
+    }
+
+    .bc-scene[data-bc-colour='sheets'] :is(.bc-kpi, .kp-card) {
+        box-shadow: none;
+    }
+
+    .bc-scene[data-bc-colour='sheets'] .bc-picked,
+    .bc-scene[data-bc-colour='sheets'] .bc-chip {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .bc-scene[data-bc-colour='sheets'] .bc-chip {
+        border-radius: 0.2rem;
+        rotate: -5deg;
+    }
+
+    .bc-scene[data-bc-colour='concrete'] :is(.bc-kpi, .bc-strip, .bc-strip__col, .kp-meter, .kp-badge, .kp-tag),
+    .bc-scene[data-bc-colour='concrete'] .kp-button:not(.kp-button--primary, .bc-pointed) {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .bc-scene[data-bc-colour='concrete'] .kp-meter {
+        --kp-meter-fill: var(--foreground);
+    }
+
+    .bc-scene[data-bc-colour='concrete'] .bc-state__dot {
+        background: var(--muted-foreground);
+    }
+
+    /* ── 6 · Corners ─────────────────────────────────────────────────── */
+
+    .bc-scene[data-bc-corners='picked'] .bc-c-kpi .bc-chip {
+        border-radius: 0.2rem;
+        background: var(--accent);
+        rotate: -5deg;
+    }
+
+    .bc-scene[data-bc-corners='picked'] .bc-c-mark {
+        border-radius: 0.2rem;
+        box-shadow: 1px 1px 0 0 var(--bc-ink);
+        rotate: -6deg;
+    }
+
+    .bc-scene[data-bc-corners='picked'] .bc-tour {
+        border-width: 2px;
+        box-shadow: none;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    }
+
+    .bc-scene[data-bc-corners='soft'] :is(.bc-slab, .bc-small, .kp-button, .bc-chip, .kp-badge, .kp-tooltip, .bc-mark) {
+        border-radius: 0.5rem;
+    }
+
+    /* ── 7 · Surface ─────────────────────────────────────────────────── */
+
+    .bc-scene[data-bc-surface='sticker'] .bc-sheet {
+        --bc-sh: 0px;
+        background: var(--bc-sheet);
+    }
+
+    .bc-scene[data-bc-surface='sticker'] .bc-sheet .bc-chip {
+        border-radius: 0.2rem;
+        background: var(--accent);
+        box-shadow: none;
+        rotate: -5deg;
+    }
+
+    .bc-scene[data-bc-surface='sticker'] .kp-badge {
+        rotate: -4deg;
+        background: var(--accent);
+    }
+
+    .bc-scene[data-bc-surface='poster'] .bc-sheet {
+        border-width: 4px;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* ── 8 · Tone ────────────────────────────────────────────────────── */
+
+    .bc-scene[data-bc-tone] :is(.bc-warn, .bc-bad) {
+        position: relative;
+    }
+
+    /* G13: the figure or title on its tone's plate, framed in ink on its
+       hard shadow (the warning poster). */
+    .bc-scene:is([data-bc-tone='taped'], [data-bc-tone='poster']) .bc-warn :is(.bc-figure, .bc-toned) {
+        padding: 0 0.25em;
+        border: 2px solid var(--bc-ink);
+        background: var(--warning);
+        color: var(--warning-foreground);
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene:is([data-bc-tone='taped'], [data-bc-tone='poster']) .bc-bad :is(.bc-toned, .bc-state__word) {
+        display: inline-block;
+        padding: 0 0.25em;
+        border: 2px solid var(--bc-ink);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+    }
+
+    /* G13: taped off, a band of hazard tape along the foot. */
+    .bc-scene[data-bc-tone='taped'] :is(.bc-warn, .bc-bad) {
+        padding-block-end: calc(0.5rem + 0.8rem);
+    }
+
+    .bc-scene[data-bc-tone='taped'] .kp-menu__item.bc-bad {
+        padding-block-end: calc(0.35rem + 0.55rem);
+    }
+
+    .bc-scene[data-bc-tone='taped'] .bc-hazard {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        display: block;
+        block-size: 0.5rem;
+        border-block-start: 2px solid var(--bc-ink);
+        background: var(--bc-tape-warn);
+    }
+
+    .bc-scene[data-bc-tone='taped'] .bc-bad .bc-hazard {
+        background: var(--bc-tape-bad);
+    }
+
+    .bc-scene[data-bc-tone='taped'] .kp-menu__item .bc-hazard {
+        block-size: 0.35rem;
+    }
+
+    /* 8 · the askew sticker. */
+    .bc-scene[data-bc-tone='sticker'] .bc-warn .bc-chip,
+    .bc-scene[data-bc-tone='sticker'] .bc-bad :is(.bc-toned, .bc-state__word),
+    .bc-scene[data-bc-tone='sticker'] .bc-warn .bc-toned {
+        display: inline-block;
+        padding: 0 0.3em;
+        border: 2px solid var(--bc-ink);
+        border-radius: 0.2rem;
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: none;
+        rotate: -5deg;
+    }
+
+    .bc-scene[data-bc-tone='sticker'] .bc-bad :is(.bc-toned, .bc-state__word) {
+        border-color: var(--destructive);
+        outline: 2px solid var(--destructive);
+    }
+
+    .bc-scene[data-bc-tone='sticker'] .bc-sticker {
+        position: absolute;
+        inset-block-start: 0.4rem;
+        inset-inline-end: 0.5rem;
+        display: block;
+        padding: 0 0.35rem;
+        border: 2px solid var(--destructive);
+        border-radius: 0.2rem;
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        rotate: 6deg;
+    }
+
+    /* ── 9 · Live ────────────────────────────────────────────────────── */
+
+    .bc-scene .bc-carrier--line,
+    .bc-scene .bc-carrier--body {
+        display: inline-block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G9: slammed onto its offset. The new value falls from up-left onto
+           a yellow copy of itself that lies still 3 px down-right (the copy
+           is a drop shadow moved against the fall, so it stays put). */
+        .bc-scene[data-bc-live='slam'][data-bc-phase='in'] .bc-carrier,
+        .bc-scene[data-bc-curve][data-bc-phase='in'] .bc-carrier {
+            animation: bc-slam calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-in) both;
+        }
+
+        .bc-scene:is([data-bc-live='slam'], [data-bc-curve])[data-bc-phase='hold'] .bc-carrier {
+            filter: drop-shadow(3px 3px 0 var(--secondary));
+        }
+
+        /* 9 · inverted for a moment. */
+        .bc-scene[data-bc-live='invert'][data-bc-phase='in'] .bc-carrier {
+            animation: bc-invert calc(600ms * var(--bc-slow, 1)) steps(1, end) both;
+        }
+    }
+
+    @keyframes bc-slam {
+        from {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--secondary));
+        }
+
+        to {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--secondary));
+        }
+    }
+
+    @keyframes bc-invert {
+        from {
+            background: var(--foreground);
+            color: var(--background);
+            box-shadow: 0 0 0 0.15em var(--foreground);
+        }
+
+        to {
+            background: transparent;
+            color: inherit;
+            box-shadow: none;
+        }
+    }
+
+    /* ── 10 · Loading ────────────────────────────────────────────────── */
+
+    /* G10: the well the reading is cast in, in the 2 px ink line. */
+    .bc-scene .bc-well {
+        position: relative;
+        display: block;
+        overflow: clip;
+        border: 2px solid var(--bc-ink);
+        background: var(--card);
+        container-type: inline-size;
+    }
+
+    .bc-scene .bc-well--figure {
+        inline-size: 6.5rem;
+        block-size: 2.1rem;
+        margin-block: 0.1rem;
+    }
+
+    .bc-scene .bc-well--body {
+        inline-size: 80%;
+        block-size: 1.15rem;
+    }
+
+    .bc-scene .bc-well--rows {
+        grid-column: 1 / -1;
+        block-size: 3.1rem;
+    }
+
+    .bc-scene .bc-well--entry {
+        display: inline-block;
+        inline-size: 3.25rem;
+        block-size: 0.95rem;
+        margin-inline-start: 0.6rem;
+        vertical-align: -0.1rem;
+    }
+
+    .bc-scene .bc-well--day {
+        position: absolute;
+        inset: 0.35rem;
+        border-width: 2px;
+    }
+
+    .bc-scene .bc-days--wait .bc-day {
+        position: relative;
+    }
+
+    .bc-scene .bc-well--plot {
+        position: absolute;
+        inset: 0.6rem 0.7rem;
+    }
+
+    .bc-scene .bc-plot--wait {
+        position: relative;
+    }
+
+    .bc-scene .bc-well--meter {
+        block-size: 0.875rem;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene .bc-skel {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .bc-scene .bc-skel__line {
+        display: block;
+        block-size: 1rem;
+        border: 0;
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene .bc-skel__line:nth-child(2) {
+        inline-size: 80%;
+    }
+
+    .bc-scene .bc-skel__line:nth-child(3) {
+        inline-size: 55%;
+    }
+
+    .bc-scene .bc-well--fill {
+        position: absolute;
+        inset: 0;
+    }
+
+    .bc-scene .bc-entry-wait {
+        display: flex;
+        align-items: center;
+    }
+
+    /* The pour: ink from the floor, four lifts, struck. At rest (and in the
+       reduced pose) half poured. */
+    .bc-scene .bc-pour {
+        position: absolute;
+        inset: 0;
+        background: var(--bc-ink);
+        transform: scaleY(0.5);
+        transform-origin: 50% 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene[data-bc-loading='pour'] .bc-pour,
+        .bc-scene:not([data-bc-loading]) .bc-waits .bc-pour,
+        .bc-scene[data-bc-spinner='cube'] .bc-spin__cube .bc-pour {
+            animation: bc-pour calc(var(--bc-loop) * var(--bc-slow, 1)) steps(1, end) infinite;
+        }
+
+        /* The days of a week one unit apart, the skeleton's blocks two. */
+        .bc-scene .bc-day.bc-waits .bc-pour {
+            animation-delay: calc(var(--i, 0) * 100ms * var(--bc-slow, 1));
+        }
+
+        .bc-scene .bc-skel__line .bc-pour {
+            animation-delay: calc(var(--i, 0) * 200ms * var(--bc-slow, 1));
+        }
+
+        .bc-scene[data-bc-durations='instant'] .bc-pour {
+            animation: none;
+        }
+    }
+
+    @keyframes bc-pour {
+        0% {
+            transform: scaleY(0);
+        }
+
+        16.667% {
+            transform: scaleY(0.25);
+        }
+
+        33.333% {
+            transform: scaleY(0.5);
+        }
+
+        50% {
+            transform: scaleY(0.75);
+        }
+
+        66.667% {
+            transform: scaleY(1);
+        }
+
+        83.333%,
+        100% {
+            transform: scaleY(0);
+        }
+    }
+
+    /* 10 · the hammer: a block strikes three places along the well's floor. */
+    .bc-scene[data-bc-loading='strike'] .bc-pour {
+        display: none;
+    }
+
+    .bc-scene[data-bc-loading='strike'] .bc-hammer {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        display: block;
+        inline-size: min(0.65rem, 30cqi);
+        block-size: min(0.65rem, 30cqi);
+        background: var(--bc-ink);
+        translate: 5cqi 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene[data-bc-loading='strike'] .bc-hammer {
+            animation: bc-hammer calc(1200ms * var(--bc-slow, 1)) steps(1, end) infinite;
+        }
+    }
+
+    @keyframes bc-hammer {
+        0%,
+        25% {
+            translate: 5cqi 0;
+        }
+
+        30% {
+            translate: 5cqi -0.35rem;
+        }
+
+        33%,
+        58% {
+            translate: 42cqi 0;
+        }
+
+        63% {
+            translate: 42cqi -0.35rem;
+        }
+
+        66%,
+        92% {
+            translate: 78cqi 0;
+        }
+
+        96% {
+            translate: 78cqi -0.35rem;
+        }
+    }
+
+    /* 10 · the tape runs along the foot. */
+    .bc-scene[data-bc-loading='tape'] .bc-pour {
+        display: none;
+    }
+
+    .bc-scene[data-bc-loading='tape'] .bc-tape {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        display: block;
+        block-size: min(0.45rem, 45%);
+        overflow: clip;
+    }
+
+    .bc-scene[data-bc-loading='tape'] .bc-tape::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -14.1421px;
+        inline-size: calc(100% + 14.1421px);
+        background: var(--bc-tape-site);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene[data-bc-loading='tape'] .bc-tape::before {
+            animation: bc-tape calc(600ms * var(--bc-slow, 1)) linear infinite;
+        }
+    }
+
+    @keyframes bc-tape {
+        to {
+            transform: translateX(14.1421px);
+        }
+    }
+
+    /* ── 11 · Spinner ────────────────────────────────────────────────── */
+
+    .bc-scene .bc-spin {
+        display: inline-grid;
+        place-items: center;
+        inline-size: var(--bc-spin, 1.25rem);
+        block-size: var(--bc-spin, 1.25rem);
+        vertical-align: middle;
+    }
+
+    .bc-scene .bc-spins {
+        gap: 1.5rem;
+    }
+
+    .bc-scene .bc-spin > * {
+        grid-area: 1 / 1;
+        display: none;
+    }
+
+    .bc-scene .bc-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .bc-scene .bc-busy-button .bc-spin {
+        inline-size: 1rem;
+        block-size: 1rem;
+    }
+
+    .bc-scene[data-bc-spinner='tip'] .bc-spin__block {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G11: lifted off its footprint on the lifting curve, turned, and
+           set down on the fall, stopping dead. */
+        .bc-scene[data-bc-spinner='tip'] .bc-spin__block::after {
+            animation: bc-tip calc(1200ms * var(--bc-slow, 1)) infinite;
+        }
+    }
+
+    @keyframes bc-tip {
+        0% {
+            transform: none;
+            animation-timing-function: cubic-bezier(0.1, 0.5, 0.4, 1);
+        }
+
+        25% {
+            transform: translate(-3px, -3px);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        60% {
+            transform: translate(-3px, -3px) rotate(90deg);
+            animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+        }
+
+        75%,
+        100% {
+            transform: rotate(90deg);
+        }
+    }
+
+    .bc-scene[data-bc-spinner='cube'] .bc-spin__cube {
+        position: relative;
+        display: block;
+        inline-size: 80%;
+        block-size: 80%;
+        overflow: clip;
+        border: 2px solid var(--bc-ink);
+        background: var(--card);
+        box-shadow: 2px 2px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-spinner='ring'] .bc-spin__ring {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        box-sizing: border-box;
+        border: 3px solid var(--bc-ink);
+        border-block-start-color: var(--secondary);
+        border-radius: 50%;
+    }
+
+    .bc-scene[data-bc-spinner='ring'] .bc-busy-button .bc-spin__ring {
+        border-color: var(--primary-foreground);
+        border-block-start-color: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene[data-bc-spinner='ring'] .bc-spin__ring {
+            animation: bc-ring calc(800ms * var(--bc-slow, 1)) linear infinite;
+        }
+    }
+
+    @keyframes bc-ring {
+        to {
+            rotate: 1turn;
+        }
+    }
+
+    /* ── 12 · Leave ──────────────────────────────────────────────────── */
+
+    .bc-scene .bc-leaver {
+        display: grid;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G12: set down (in) and lifted off (out). */
+        .bc-scene[data-bc-leave='lift'][data-bc-phase='in'] .bc-leaver > * {
+            --bc-h: 1rem;
+            animation: bc-drop calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-fall) both;
+        }
+
+        .bc-scene[data-bc-leave='lift'][data-bc-phase='out'] .bc-leaver > * {
+            --bc-h: 1rem;
+            animation: bc-lift-off calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-up) forwards;
+        }
+
+        /* 12 · slammed out to the left, the picked leave. */
+        .bc-scene[data-bc-leave='left'][data-bc-phase='in'] .bc-leaver > * {
+            animation: bc-left calc(240ms * var(--bc-slow, 1)) steps(2, jump-end) reverse both;
+        }
+
+        .bc-scene[data-bc-leave='left'][data-bc-phase='out'] .bc-leaver > * {
+            animation: bc-left calc(240ms * var(--bc-slow, 1)) steps(2, jump-end) forwards;
+        }
+
+        /* 12 · driven into the ground and cut. */
+        .bc-scene[data-bc-leave='ground'][data-bc-phase='in'] .bc-leaver > * {
+            animation: bc-ground calc(300ms * var(--bc-slow, 1)) var(--bc-up) reverse both;
+        }
+
+        .bc-scene[data-bc-leave='ground'][data-bc-phase='out'] .bc-leaver > * {
+            animation: bc-ground calc(300ms * var(--bc-slow, 1)) var(--bc-fall) forwards;
+        }
+    }
+
+    @keyframes bc-left {
+        to {
+            transform: translateX(-60px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes bc-ground {
+        0% {
+            translate: 0 0;
+            box-shadow: var(--bc-sh) var(--bc-sh) 0 0 var(--bc-ink);
+        }
+
+        80% {
+            translate: var(--bc-sh) var(--bc-sh);
+            box-shadow: 0 0 0 0 var(--bc-ink);
+            visibility: visible;
+        }
+
+        100% {
+            translate: var(--bc-sh) var(--bc-sh);
+            box-shadow: 0 0 0 0 var(--bc-ink);
+            visibility: hidden;
+        }
+    }
+
+    /* ── 13 · Composites, 14 · hover, 15 · focus, 16 · press ─────────── */
+
+    /* The states, drawn on marked parts. G8: lifted off its footprint, the
+       plate a step, the tag above it. */
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-pointed:not(.kp-menu__item),
+    [data-bc-show='hover']
+        .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet'])
+        :is(.bc-alone, .bc-in-header, .bc-tile-link, .bc-in-drawer, .bc-in-kpi),
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-alone {
+        --bc-lift: 2px;
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button.bc-pointed,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites] .bc-alone,
+    [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='today']) :is(.bc-in-header, .bc-in-drawer) {
+        background: oklch(from var(--kp-plate, var(--secondary)) calc(l - 0.06) calc(c + 0.1) h);
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button--ghost.bc-pointed,
+    [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='today']) .kp-button--ghost.bc-in-drawer,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='own'] .bc-tile-link,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='quiet'] :is(.bc-in-header, .bc-in-drawer, .bc-tile-link) {
+        --bc-sh: 6px;
+        border-color: var(--bc-ink);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-pointed.kp-menu__item, .bc-day.bc-pointed),
+    .bc-scene[data-bc-hover='kick'] .bc-pointed,
+    [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet']) .bc-in-entry,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-in-entry {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-kpi.bc-pointed {
+        background: var(--secondary);
+    }
+
+    /* The tag (scope-12): the part names itself. */
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button.bc-pointed::after,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites] .bc-alone:first-child::after {
+        opacity: 1;
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-kpi, .bc-day).bc-pointed::after {
+        content: var(--kp-label, 'KEY FIGURE');
+        position: absolute;
+        inset-block-end: calc(100% + 0.3rem);
+        inset-inline-start: 0;
+        padding: 0.1rem 0.3rem;
+        background: var(--foreground);
+        color: var(--background);
+        font-family: var(--theme-font-body);
+        font-size: 0.5rem;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+    }
+
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-day.bc-pointed::after {
+        content: var(--kp-label, 'DAY');
+    }
+
+    /* 14 · kicked sideways. */
+    .bc-scene[data-bc-hover='kick'] .bc-pointed {
+        translate: 4px 0;
+    }
+
+    /* 14 · inverted. */
+    .bc-scene[data-bc-hover='invert'] .bc-pointed,
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-tile-link {
+        border-color: var(--bc-ink);
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    .bc-scene[data-bc-hover='invert'] .bc-pointed .bc-label,
+    .bc-scene[data-bc-hover='invert'] .bc-pointed .bc-figure {
+        color: inherit;
+    }
+
+    /* G14, DI2: the two-channel ring in the register's order, the part lifted. */
+    .bc-scene[data-bc-focus='ring'] .bc-focused:not(.kp-menu__item),
+    .bc-scene[data-bc-focus='fill'] .bc-focused,
+    [data-bc-show='focus']
+        .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet'])
+        :is(.bc-alone, .bc-in-header, .bc-tile-link, .bc-in-drawer, .bc-in-kpi, .bc-in-entry),
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] :is(.bc-alone, .bc-in-drawer, .bc-in-entry) {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .bc-scene[data-bc-focus='ring'] .bc-focused:not(.kp-menu__item),
+    [data-bc-show='focus']
+        .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet'])
+        :is(.bc-alone, .bc-in-header, .bc-tile-link, .bc-in-drawer, .bc-in-kpi),
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] :is(.bc-alone, .bc-in-drawer) {
+        --bc-lift: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            calc(var(--bc-sh) + var(--bc-lift)) calc(var(--bc-sh) + var(--bc-lift)) 0 0 var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-focus='ring'] .bc-focused.kp-menu__item,
+    [data-bc-show='focus'] .bc-scene[data-bc-composites] .bc-in-entry {
+        outline-offset: -4px;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    [data-bc-show='focus'] .bc-scene[data-bc-composites] :is(.kp-button--ghost.bc-in-drawer, .bc-tile-link),
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='quiet'] :is(.bc-in-header, .bc-in-drawer, .bc-tile-link) {
+        --bc-sh: 6px;
+        border-color: var(--bc-ink);
+    }
+
+    /* 15 · one thick ink outline, no paper ring, no lift. */
+    .bc-scene[data-bc-focus='outline'] .bc-focused,
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] .bc-in-header {
+        outline: 3px solid var(--foreground);
+        outline-offset: 2px;
+    }
+
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] .bc-tile-link {
+        outline: 4px solid var(--foreground);
+        outline-offset: 2px;
+    }
+
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] .bc-in-kpi {
+        outline: 3px solid var(--foreground);
+        outline-offset: 0;
+    }
+
+    /* 15 · the field's yellow fill, with the ring. */
+    .bc-scene[data-bc-focus='fill'] .bc-focused {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene[data-bc-focus='fill'] .bc-focused:not(.kp-menu__item) {
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            var(--bc-sh) var(--bc-sh) 0 0 var(--bc-ink);
+    }
+
+    /* G14: driven into its footprint. The press question lands it during
+       the clock's in phase; the composites' State button holds it. */
+    .bc-scene[data-bc-press='ground'][data-bc-phase='in'] .bc-press,
+    [data-bc-show='press']
+        .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet'])
+        :is(.bc-alone, .bc-in-header, .bc-tile-link, .bc-in-drawer, .bc-in-kpi) {
+        --bc-push: var(--bc-sh);
+    }
+
+    .bc-scene[data-bc-press='ground'][data-bc-phase='in'] .bc-press.kp-button,
+    [data-bc-show='press'] .bc-scene[data-bc-composites] :is(.bc-alone, .bc-in-header, .bc-in-drawer, .bc-tile-link) {
+        background: var(--secondary-active);
+    }
+
+    .bc-scene[data-bc-press='ground'][data-bc-phase='in'] .bc-press.kp-button--primary,
+    [data-bc-show='press'] .bc-scene[data-bc-composites] .kp-button--primary:is(.bc-alone, .bc-in-header, .bc-in-drawer) {
+        background: var(--primary-active);
+    }
+
+    .bc-scene[data-bc-press='ground'][data-bc-phase='in'] :is(.bc-press.bc-press--flat, .bc-day.bc-press, .bc-key.bc-press, .bc-kpi.bc-press),
+    [data-bc-show='press'] .bc-scene[data-bc-composites] .bc-in-entry {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+    }
+
+    /* 16 · shoved sideways. */
+    .bc-scene[data-bc-press='shove'][data-bc-phase='in'] .bc-press {
+        translate: 6px 0;
+    }
+
+    .bc-scene[data-bc-press='shove'][data-bc-phase='in'] .bc-press--flat {
+        background: var(--secondary);
+    }
+
+    /* 16 · reverse video while held. */
+    .bc-scene[data-bc-press='reverse'][data-bc-phase='in'] .bc-press {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    .bc-scene[data-bc-press='reverse'][data-bc-phase='in'] .bc-press :is(.bc-label, .bc-figure) {
+        color: inherit;
+    }
+
+    /* 13 · as today: the header's thin actions, the sticker menu's outlined
+       entries and its kick, the key figure without its shadow. */
+    .bc-scene[data-bc-composites='today'] .bc-in-header {
+        --bc-sh: 3px;
+        border-width: 2px;
+    }
+
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-in-header {
+        --bc-lift: 2px;
+        --bc-sh: 6px;
+    }
+
+    .bc-scene[data-bc-composites='today'] .bc-in-menu {
+        background: color-mix(in srgb, var(--popover) 55%, var(--accent) 45%);
+    }
+
+    .bc-scene[data-bc-composites='today'] .bc-in-menu .kp-menu__item {
+        outline: 2px solid var(--bc-ink);
+        outline-offset: -2px;
+    }
+
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-in-entry,
+    [data-bc-show='focus'] .bc-scene[data-bc-composites='today'] .bc-in-entry {
+        translate: 4px 0;
+    }
+
+    [data-bc-show='press'] .bc-scene[data-bc-composites='today'] .bc-in-entry {
+        translate: 6px 0;
+    }
+
+    .bc-scene[data-bc-composites='today'] .bc-in-kpi {
+        --bc-sh: 0px;
+        background: var(--bc-sheet);
+    }
+
+    [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-in-kpi {
+        --bc-sh: 4px;
+    }
+
+    [data-bc-show='press'] .bc-scene[data-bc-composites='today'] :is(.bc-in-header, .bc-in-kpi) {
+        --bc-push: var(--bc-sh);
+    }
+
+    [data-bc-show='press'] .bc-scene[data-bc-composites='today'] .bc-alone {
+        --bc-push: 4px;
+    }
+
+    /* 13 · quiet: a composite's buttons are ghosts until pointed at. */
+    .bc-scene[data-bc-composites='quiet'] :is(.bc-in-header, .bc-in-drawer, .bc-tile-link) {
+        --bc-sh: 0px;
+        border-color: transparent;
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    .bc-scene[data-bc-composites='quiet'] .kp-button--primary:is(.bc-in-header, .bc-in-drawer) {
+        color: var(--foreground);
+    }
+
+    [data-bc-show='press'] .bc-scene[data-bc-composites='quiet'] .kp-button--primary:is(.bc-in-header, .bc-in-drawer) {
+        color: var(--primary-foreground);
+    }
+
+    /* ── 17 · Voice ──────────────────────────────────────────────────── */
+
+    .bc-scene .bc-type {
+        gap: 0.45rem;
+    }
+
+    .bc-scene .bc-type p {
+        margin: 0;
+    }
+
+    .bc-scene .bc-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-type__prose {
+        max-inline-size: 52ch;
+    }
+
+    .bc-scene .bc-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+    }
+
+    .bc-scene .bc-type__strip {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .bc-scene .bc-type__strip > div {
+        display: grid;
+    }
+
+    .bc-scene .bc-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .bc-scene .bc-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        border-block-end: 2px solid var(--bc-ink);
+        text-align: start;
+    }
+
+    .bc-scene .bc-type__table th {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene .bc-stamp {
+        font-family: var(--theme-font-mono);
+    }
+
+    .bc-scene[data-bc-voice='mono'] :is(.bc-type__label, .bc-label, .bc-type__table th, .kp-badge, .bc-chip) {
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .bc-scene[data-bc-voice='black'] :is(.bc-type__label, .bc-label, .bc-type__table :is(th, td), .kp-badge, .bc-chip, .kp-button, .bc-type__prose) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+    }
+
+    /* ── 18 · Motifs ─────────────────────────────────────────────────── */
+
+    .bc-scene .bc-events {
+        position: relative;
+    }
+
+    .bc-scene .bc-events__mark {
+        position: absolute;
+        inset-inline-start: calc(var(--x) - 0.3rem);
+        inset-block-start: calc(var(--y) - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+    }
+
+    /* G16: square bolts with their own small shadow. */
+    .bc-scene[data-bc-motifs='one'] .bc-events__mark {
+        border: 2px solid var(--bc-ink);
+        background: var(--chart-2);
+        box-shadow: 2px 2px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-motifs='shadow'] .bc-events__mark {
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-events__mark {
+        border: 2px dashed var(--bc-ink);
+        border-radius: 50%;
+        background: var(--chart-2);
+    }
+
+    /* G16: the six-pixel bar rules today off; the pick is yellow. */
+    .bc-scene .bc-days--motif .bc-day {
+        position: relative;
+    }
+
+    .bc-scene[data-bc-motifs='one'] .bc-today::before {
+        content: '';
+        position: absolute;
+        inset-inline: -2px;
+        inset-block-start: -2px;
+        block-size: 6px;
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-motifs='shadow'] .bc-today {
+        text-decoration: underline 3px;
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-today::before {
+        content: '';
+        position: absolute;
+        inset: -4px -6px auto;
+        block-size: 10px;
+        background: var(--bc-tape-site);
+        box-shadow: 0 0 0 2px var(--bc-ink);
+        rotate: -4deg;
+    }
+
+    .bc-scene .bc-motif-warn {
+        position: relative;
+    }
+
+    .bc-scene:is([data-bc-motifs='one'], [data-bc-motifs='all']) .bc-motif-warn {
+        padding-block-end: calc(0.5rem + 0.8rem);
+    }
+
+    .bc-scene:is([data-bc-motifs='one'], [data-bc-motifs='all']) .bc-motif-warn .bc-hazard,
+    .bc-scene[data-bc-motifs='all'] .bc-motif-card::before {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        display: block;
+        block-size: 0.5rem;
+        border-block-start: 2px solid var(--bc-ink);
+        background: var(--bc-tape-warn);
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-motif-card {
+        padding-block-end: calc(0.5rem + 0.8rem);
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-motif-card::before {
+        content: '';
+        background: var(--bc-tape-site);
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-motif-card .kp-card__title::after {
+        content: 'Checked';
+        display: inline-block;
+        margin-inline-start: 0.6rem;
+        padding: 0.1rem 0.35rem;
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        box-shadow: var(--kp-pixel);
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        rotate: -7deg;
+    }
+
+    .bc-scene[data-bc-motifs='all'] .bc-chip {
+        border-radius: 0.2rem;
+        background: var(--accent);
+        rotate: -5deg;
+    }
+
+    .bc-scene[data-bc-motifs='shadow'] .bc-motif-empty::before {
+        display: none;
+    }
+
+    .bc-scene[data-bc-motifs='shadow'] .bc-divider {
+        block-size: 0;
+        border-block-width: 3px 0;
+        background: none;
+    }
+
+    .bc-scene[data-bc-motifs='shadow'] .bc-divider::before {
+        display: none;
+    }
+}
