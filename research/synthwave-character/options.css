@@ -4107,4 +4107,147 @@
             transform: scaleY(1);
         }
     }
+
+    /* ═══ Update 3, round 5: loading = the oncoming page + the bars of step 1 ═══════════════
+       Kenny, 23:32: "I want a option 2, but with the progress bars of option 5". Option 2 is the page where the
+       floor drives toward you (900 ms) while the sun's ramp flows through the page tube the other way (1800 ms,
+       `sy-flow` reversed); option 5 is the three bars of the curve question (72 / 48 / 88 %, mono captions,
+       the package's .kp-progressbar). The scene is `.sy-pg--lx`; the six options vary only what was open.
+       Periods are whole beats (225 ms): the ramp 8, the floor 4, the bars 20 (16 when locked to the beat). */
+
+    :is(.sy-page, .rv-dialog__stage) {
+        --lx-ramp: 1800ms;
+        --lx-drive: 900ms;
+        --lx-bar: 4500ms;
+        --lx-lock: 3600ms;
+        --lx-busy: 600ms;
+        --lx-tail: 7rem;
+    }
+
+    /* The tube is the bar's empty track (the generic loading rule) with the ramp flowing through it; the far line is lit. */
+    .sy-scene[data-sy-loading] .sy-pg--lx .sy-hz__far {
+        opacity: 0.8;
+    }
+
+    .sy-scene[data-sy-loading] .sy-pg--lx .sy-hz__fx {
+        display: block;
+    }
+
+    .sy-scene[data-sy-loading] .sy-pg--lx .sy-hz__fx::before {
+        inset: 0;
+        background: var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sy-scene[data-sy-loading] .sy-pg--lx .kp-progressbar__fill,
+    .sy-scene[data-sy-loading] .sy-pg--lx .kp-progressbar__head {
+        transition: none;
+    }
+
+    /* 3 · A floor of its own under each bar: the plate's floor (horizon line at the top, lines spreading toward you). */
+    .sy-scene[data-sy-loading] .sy-pg--lx .sy-pbar-row--floor {
+        position: relative;
+        padding-block-end: calc(var(--sy-floor, 1.35rem) + 0.15rem);
+    }
+
+    .sy-scene[data-sy-loading] .sy-pg--lx .sy-pbar-row--floor > .sy-floor {
+        inset-block-end: 0;
+    }
+
+    /* 2 and 6 · The ramp in each bar's head: a tail of 7 rem growing out of nothing behind the head, stripes kept. */
+    .sy-scene:is([data-sy-loading='headramp'], [data-sy-loading='mixed']) .sy-pbar .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 2px;
+        inline-size: var(--lx-tail);
+        background:
+            var(--sy-bar-stripes) 0 0 / 100% 100% no-repeat,
+            var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 55%);
+        mask-image: linear-gradient(90deg, transparent, #000 55%);
+        filter: brightness(1.3) drop-shadow(0 0 4px hsl(from var(--kp-sun-top) h s l / 0.7));
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Option 2's motion, the same in all six: the ramp one way through the tube, the floor toward you. */
+        .sy-scene[data-sy-loading] .sy-pg--lx .sy-hz__fx::before {
+            animation: sy-flow calc(var(--lx-ramp) * var(--sy-slow, 1)) linear infinite reverse;
+        }
+
+        .sy-scene[data-sy-loading] .sy-pg--lx .sy-hz__floor::before {
+            animation: sy-floor-run calc(var(--lx-drive) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading] .sy-pg--lx .sy-pbar-row--floor > .sy-floor {
+            animation: sy-floor-drive calc(var(--lx-drive) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        /* Option 5's bars: fill, hold, empty backwards (4500 ms), on the sunrise curve. */
+        .sy-scene[data-sy-loading] .sy-pg--lx .sy-pbar .kp-progressbar__fill {
+            animation: sy-bl-fill calc(var(--lx-bar) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading] .sy-pg--lx .sy-pbar .kp-progressbar__head {
+            animation: sy-bl-head calc(var(--lx-bar) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='headramp'] .sy-pbar .kp-progressbar__head::before,
+        .sy-scene[data-sy-loading='mixed'] .sy-pbar .kp-progressbar__head::before {
+            animation: sy-flow calc(var(--lx-ramp) * var(--sy-slow, 1)) linear infinite reverse;
+        }
+
+        .sy-scene[data-sy-loading='mixed'] .sy-pbar-row[data-sy-dir='old'] .kp-progressbar__head::before {
+            animation-direction: normal;
+        }
+
+        /* 4 · Locked to the beat: 3600 ms (16 beats), four notches of one beat up and four down. */
+        .sy-scene[data-sy-loading='locked'] .sy-pg--lx .sy-pbar .kp-progressbar__fill {
+            animation: sy-lx-fill calc(var(--lx-lock) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='locked'] .sy-pg--lx .sy-pbar .kp-progressbar__head {
+            animation: sy-lx-head calc(var(--lx-lock) * var(--sy-slow, 1)) linear infinite;
+        }
+    }
+
+    /* The locked bar: 16 beats. Beat 1 to 5 four notches up, hold to beat 11, beat 11 to 15 four notches down. */
+    @keyframes sy-lx-fill {
+        0%,
+        6.25% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        31.25%,
+        68.75% {
+            clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        93.75%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes sy-lx-head {
+        0%,
+        6.25% {
+            transform: translateX(0);
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        31.25%,
+        68.75% {
+            transform: translateX(calc(var(--kp-value) * 100cqi));
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        93.75%,
+        100% {
+            transform: translateX(0);
+        }
+    }
 }

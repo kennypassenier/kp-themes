@@ -1,5 +1,5 @@
 {
-    "update": 2,
+    "update": 3,
     "picks": {
         "synthwave": {
             "direction": "horizon",
@@ -16,22 +16,16 @@
             "opening": "climb",
             "tone": "osd",
             "focus": "rails",
-            "press": "charge"
+            "press": "charge",
+            "corners": "fall",
+            "leave": "setssink"
         }
     },
     "questions": {
         "synthwave": {
-            "corners": {
-                "comment": "I think I prefer option 3, but the colours from the side should start with the colours they are touching from the gradiant from the top, so it's pink top left and blue top right, try a couple variations on that",
-                "reply": "Option 3 (the light runs down the sides and fades) is the base. Five new variations, all following your rule: the left side starts in the stripe's pink (the register's --primary) and the right side in its cyan (--accent), exactly the stripe's end colours. They differ in how the light travels: a tube that fades out, on through the ramp toward laser yellow, a short drop of fixed length, a 1 px hairline, and sides that sink into the floor. The old option 3 stays last for reference (its sides start white and are pink on both sides). Square, 2 px controls, nothing notched, nothing flickers."
-            },
             "loading": {
-                "comment": "I want a mix of option 2 and 4. And give me more progressbar options. One of those options should be the progressbar you used to measure the timings in step 1 of this demo. The progressbar from the screenshot should be one of the progressbar options",
-                "reply": "Ten options. 1 to 4 mix option 2 (the ramp flows through the tube) and option 4 (the floor drives toward you): both at once; the ramp against the drive; the floor fast and the ramp trailing; the floor wearing the ramp's colours. 5 is the three progress bars of step 1 (the curve question: Sync, Backup, Upload with their captions, the lit length charging on the page tube one beat ahead), looping. 6 is the package's own busy bar, unchanged, at full size. 7 to 10 are new progress bars derived from them: the ramp at the package's three weights, slats that count the beats, the bar as the page tube pulled down, and a head that leaves the road behind it. I cannot see your screenshot: if it shows a bar that is not option 5 or 6, name it and I draw that one."
-            },
-            "leave": {
-                "comment": "I like 1 and 6, make 3 variations on each of them",
-                "reply": "Options 1 to 4 are the sun sets through it (the original, then with a laser rim on its lower edge, with its stripes widening as it sets, and with the part sinking with the sun); options 5 to 8 are the sun's slab (the original, then with the horizon line riding its top edge, with a standing beat, and thinning into its stripes). Every leave is 900 ms and every arrival is the leave backwards, measured frame by frame: mirror on every part, no flag."
+                "comment": "I want a option 2, but with the progress bars of option 5",
+                "reply": "Six options, all option 2's motion on the three bars of option 5 (Sync 72 %, Backup 48 %, Upload 88 %, with their mono captions): the page tube with the ramp flowing through it, 1800 ms, the floor driving toward you, 900 ms, and the bars under them. They differ only in what was still open: 1 the straight combination (the bars exactly as they were); 2 the ramp flows through each bar's head as a short tail; 3 each bar stands on a floor of its own that drives toward you; 4 everything on one beat clock (3600 ms), the bar heads stepping one notch per beat so each lands on a beat; 5 the bars busy (no share) with the package's road; 6 the ramp in the heads alternating, bar 2 against bars 1 and 3. Corners (the light runs down the sides from the stripe's colours and fades) and the leave (the sun sets through it, the part sinking with it) are locked and no longer asked. One correction to the last round's text: I measured the direction of the ramp. In the old option 2 the ramp travels from the tube's left end to its right (the old text said the reverse); it is kept exactly as you saw it, and the texts now say what you see."
             }
         }
     }
