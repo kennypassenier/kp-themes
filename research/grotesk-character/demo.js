@@ -24,8 +24,17 @@
 // skeleton text as the hero, no crosshairs, no marks, no rings. This page was
 // built before the anchor was chosen; every motion question is re-derived from
 // it: the red plate is the one thing that moves, and where it stands says what
-// the part is (off: arriving, waiting, pointed at, changing; in register: there,
+// the part is (off: arriving, waiting, hovered, changing; in register: there,
 // held). Options that already fit stay; the rest are replaced or demoted.
+//
+// ROUND 3 / UPDATE 2 (Kenny's verdict on round 2): thirteen questions are
+// approved and locked (update.json "picks"); six are asked again. Kenny: "I
+// like a closing spiral, but I feel like I only like it going clockwise", so
+// the rule of opposites is broken for the waiting loop and the leave: the red
+// plate turns clockwise ALWAYS, on its way in and on its way out. The slip
+// (how the plate moves), the spinner, the busy bar and the leave are redrawn
+// on that rule; hover is explained in plain words (it means hover); the press
+// no longer borrows the loading spiral (it looked like a loading animation).
 
 /* ----------------------------------------------------------- the parts */
 
@@ -33,7 +42,7 @@
 const button = (label, modifier = '', extra = '') =>
     `<button type="button" class="kp-button ${modifier}" ${extra}><span class="kp-button__label">${label}</span></button>`;
 
-/** Words that take the baseline when their part is pointed at, focused or pressed (G8, G14). */
+/** Words that take the baseline when their part is hovered, focused or pressed (G8, G14). */
 const words = (text) => `<span class="gk-words">${text}</span>`;
 
 /**
@@ -293,11 +302,15 @@ const SLIP = () =>
             .join('')}</div>`,
     );
 
-/** One spinner in three drawings; options.css shows the option's. */
+/**
+ * One spinner; options.css draws the option's. The plate holds the two
+ * plates (its ::before is the red one, its ::after the ink) and two spare
+ * marks some options use; the quarter is the signature's own.
+ */
 const spin = (size = '', label = 'Working…', hidden = false) =>
     `<span class="gk-spin"${hidden ? ' aria-hidden="true"' : ` role="status" aria-label="${label}"`}${
         size ? ` style="--gk-spin: ${size}"` : ''
-    }><span class="gk-spin__plate"></span><span class="kp-spinner gk-spin__quarter"></span><span class="gk-spin__ring"></span></span>`;
+    }><span class="gk-spin__plate"><i></i><i></i></span><span class="kp-spinner gk-spin__quarter"></span></span>`;
 
 const SPINNERS = () =>
     cell('Three sizes', `<div class="gk-row gk-spins">${['1rem', '1.5rem', '2.5rem'].map((s) => spin(s)).join('')}</div>`, 'gk-part--wide') +
@@ -310,25 +323,25 @@ const SPINNERS = () =>
         `<div class="kp-card gk-plate gk-busy-panel">${spin('2rem', 'Reading the timetable')}<p class="kp-card__body">Reading the timetable…</p></div>`,
     );
 
-/** The busy progress bar and the skeleton, in the three drawings. */
+/**
+ * The busy bar: two plates of one print. The red plate is `.gk-bar__red`, the
+ * ink `.gk-bar__ink`; twelve spare blocks (`b`) and a frame (`.gk-bar__frame`)
+ * serve the options that print in sections. Every shape is a bold solid: no
+ * hairline, no stroke under 3 px (Kenny, update 2: "I especially don't like
+ * the fine lines of it").
+ */
+const bar = () =>
+    `<span class="gk-bar" role="progressbar" aria-label="Timetable busy" aria-busy="true"><i class="gk-bar__red"></i><i class="gk-bar__ink"></i><i class="gk-bar__frame"></i>${'<b></b>'.repeat(12)}</span>`;
+
+/** The busy progress bar, the skeleton text (its hero) and a key figure's proof. */
 const BARS = () =>
-    cell(
-        'The busy progress bar',
-        `<div class="gk-bar-set"><div class="kp-progressbar gk-bar-sig" role="progressbar" aria-label="Timetable busy" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>${wait(
-            'bar',
-            'gk-bar-proof',
-        )}</div>`,
-        'gk-part--wide',
-    ) +
-    cell(
-        'Skeleton text',
-        `<div class="gk-skel-set"><div class="gk-skel-sig" aria-hidden="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span></div>${skText()}</div>`,
-    ) +
+    cell('The busy progress bar', bar(), 'gk-part--wide') +
+    cell('Skeleton text (the hero)', skText()) +
     cell(
         'A key figure, its skeleton',
-        `<div class="kp-kpis"><div class="kp-kpi gk-plate gk-kpi gk-waits" aria-busy="true"><span class="kp-kpi__label gk-label">Trains today</span><div class="gk-skel-set gk-skel-set--figure"><div class="gk-skel-sig" aria-hidden="true"><span class="kp-skeleton"></span></div><div class="gk-skel-proof" aria-hidden="true"><span class="gk-skel__line">${wait(
+        `<div class="kp-kpis"><div class="kp-kpi gk-plate gk-kpi gk-waits" aria-busy="true"><span class="kp-kpi__label gk-label">Trains today</span>${wait(
             'figure',
-        )}</span></div></div></div></div>`,
+        )}</div></div>`,
     );
 
 /** A part that leaves and arrives. */
@@ -380,14 +393,14 @@ const COMPOSITES = () =>
     );
 
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="gk-row">${button('Export the timetable', 'gk-pointed')}${button('Depart', 'kp-button--primary')}</div>`) +
-    cell('Menu entries, the first pointed at', PART.menuStatic(['Open the timetable', 'Assign a platform…', 'Rename'])) +
+    cell('Button, hovered', `<div class="gk-row">${button('Export the timetable', 'gk-pointed')}${button('Depart', 'kp-button--primary')}</div>`) +
+    cell('Menu entries, the first hovered', PART.menuStatic(['Open the timetable', 'Assign a platform…', 'Rename'])) +
     cell(
-        'Tile with its Open link pointed at',
+        'Tile with its Open link hovered',
         `<div class="kp-card gk-plate gk-tile gk-tile--pointed"><p class="kp-card__title gk-title">Basel SBB</p><p class="kp-card__body">07:32 · platform 7</p><a class="kp-button kp-button--ghost kp-button--sm gk-tile-link gk-pointed" href="#gk-intro"><span class="kp-button__label">Open</span></a></div>`,
     ) +
     cell(
-        'Key figures, the first pointed at',
+        'Key figures, the first hovered',
         `<div class="kp-kpis gk-kpi-row"><a class="kp-kpi gk-plate gk-kpi gk-pointed" href="#gk-intro"><span class="kp-kpi__label gk-label">${words(
             'Trains',
         )}</span><span class="kp-kpi__value gk-figure">412</span></a><a class="kp-kpi gk-plate gk-kpi" href="#gk-intro"><span class="kp-kpi__label gk-label">${words(
@@ -395,7 +408,7 @@ const HOVER = () =>
         )}</span><span class="kp-kpi__value gk-figure">4</span></a></div>`,
     ) +
     cell(
-        'Days of a month, one pointed at',
+        'Days of a month, one hovered',
         `<div class="gk-days">${[12, 13, 14, 15]
             .map((d) => `<span class="gk-day${d === 13 ? ' gk-pointed' : ''}"><span class="gk-day__num">${words(String(d))}</span></span>`)
             .join('')}</div>`,
@@ -636,7 +649,7 @@ const ASPECTS = [
         label: 'How long things take',
         rule: 'G4',
         question: 'How long do contact, a fall and a loop take?',
-        why: 'The anchor has its own clock, counted in units of the register’s 120 ms: a gap of 2, the red plate falls in 8 (960 ms), dwells 4 and is released in 8, 22 units (2640 ms) in all, the graph’s Out of register period within 2 %. Contact, the face answering a touch, is 1 unit, the register’s --fx-duration. Your picks take 150 to 1200 ms for a one-shot and 0.6 to 2.6 s for a loop, with no unit under them.',
+        why: 'The anchor has its own clock, counted in units of the register’s 120 ms: a gap of 2, the red plate falls in 8 (960 ms), dwells 4 and is released in 8, 22 units (2640 ms) in all, the graph’s Out of register period within 2 %. Contact, the face answering a press, is 1 unit, the register’s --fx-duration. Your picks take 150 to 1200 ms for a one-shot and 0.6 to 2.6 s for a loop, with no unit under them.',
         kind: 'cycle',
         scene: DURATION,
         options: [
@@ -674,7 +687,7 @@ const ASPECTS = [
             {
                 key: 'signal',
                 name: 'Black builds, the red signals once, the statuses state',
-                see: 'Every word, rule and line is black; the red marks one thing: the second plate (what waits, arrives, is pointed at or has just changed, shown in the motion questions), today, the primary action, the pick’s line; the meter’s share; the statuses only as a tone (the change). The plates are white.',
+                see: 'Every word, rule and line is black; the red marks one thing: the second plate (what waits, arrives, is hovered over or has just changed, shown in the motion questions), today, the primary action, the pick’s line; the meter’s share; the statuses only as a tone (the change). The plates are white.',
                 verdict: rec(
                     'the red keeps saying “this one”, as on a Swiss poster, it is the anchor’s second plate (seen where something is off, behind the black when it is in register), and black and white carry everything else.',
                 ),
@@ -839,40 +852,50 @@ const ASPECTS = [
         id: 'slip',
         label: 'Loading: how the red plate moves',
         rule: 'G10',
-        question: 'While it waits, how does the red plate move against the black?',
-        why: 'The anchor’s red plate travels a closing spiral: one turn round the black in 45 degree steps at an even angular pace, the radius shrinking from 1 to 0.2, falling into register in the seventh of eight units, dwelling and then released as the spiral played backwards. Your graph circles at a constant 16 px, snaps in at 84 % of 2600 ms and slips off again; you refined that in the anchor round. On a key figure or a day the slip is smaller: 3 to 8 px. The picture stays out of register in every option; only the slip changes.',
+        question: 'While a part waits, how does the red plate turn against the black?',
+        why: 'You said: “I like a closing spiral, but I feel like I only like it going clockwise. So I know there’s a rule of opposites, but maybe we can break that for this theme. Make the clockwise spiral loop, give a couple of variations on this so I can decide.” So the rule that a close is its open played backwards is broken here, on purpose: in the first five options the red plate turns clockwise all the time, on its way in and on its way out, and never turns back. The last option is the spiral you approved, whose way out is the way in played backwards (counter-clockwise), kept to compare. Every option runs the anchor’s 22 units (2640 ms), so they compare directly; only the path changes.',
         kind: 'loop',
         scene: SLIP,
         options: [
             {
-                key: 'spiral',
-                name: 'A closing spiral, then into register (the anchor)',
-                see: 'The red plate travels one turn round the black at an even pace while its distance shrinks, falls into register and dwells for 4 units, then leaves as the same spiral played backwards: 2640 ms.',
+                key: 'cw',
+                name: 'Clockwise in, clockwise out: one turn each way (the loop you asked for)',
+                see: 'The red plate starts 6 px off and turns one full turn clockwise while it closes in at an even pace, falls into register (the red disappears behind the black) and dwells for 5 units; then it turns one more full turn clockwise while it opens out again, and the loop starts over: 2640 ms. It never turns back.',
                 verdict: rec(
-                    'it is exactly the anchor you approved, the plate arrives from afar and lands, so the wait ends in a visible registration, and the dwell is the station clock’s.',
+                    'it is exactly what you asked for: the anchor’s closing spiral looping clockwise, the way out clockwise too, so the plate keeps turning one way for ever, and the dwell in register is the station clock’s stop.',
                 ),
             },
             {
-                key: 'orbit',
-                name: 'Round at a constant distance, then into register (your graph’s, before the anchor)',
-                see: 'The red plate travels round the black at a constant distance at an even pace, snaps under it and dwells for 4 units, then slips off and goes round again: 2640 ms.',
+                key: 'twice',
+                name: 'Two tighter turns each way',
+                see: 'The same path with two turns clockwise on the way in (9 units) and two on the way out (9 units), and a shorter dwell of 3 units. The plate turns twice as fast and winds up tighter.',
+                verdict: not('it winds up more and reads as busier work, but at 6 px the second turn is hard to follow, and the dwell is shorter.'),
+            },
+            {
+                key: 'sling',
+                name: 'Wound in slowly, slung out in one quick turn',
+                see: 'Two slow turns clockwise on the way in (12 units), a dwell of 5 units, then one quick turn clockwise on the way out (3 units): wound up like a spring and let go.',
+                verdict: not('it is the liveliest of the set, but the quick exit is the one part of the loop that is not at an even pace.'),
+            },
+            {
+                key: 'sweep',
+                name: 'One sweep: half a turn in, half a turn out',
+                see: 'The plate swings clockwise through half a turn while it closes in (8 units), dwells for 4 units, and swings clockwise through the other half on the way out: a slow S, the calmest of the set.',
+                verdict: not('it is calm and easy to follow, but half a turn is not a spiral any more, and it reads as a swing.'),
+            },
+            {
+                key: 'drop',
+                name: 'Unwinds clockwise, then drops straight back in',
+                see: 'The plate waits in register (6 units), unwinds one and a half turns clockwise to its far point (10 units), then drops straight back in along a line (2 units) and dwells again.',
                 verdict: not(
-                    'it is your graph’s decided movement (it stays so in the graph), but a plate that circles at one distance and then jumps into register has no arrival; you asked for it refined.',
+                    'the way out is clockwise and the way back is a straight drop, so it turns only half the time, and a line back is a second idea.',
                 ),
             },
             {
-                key: 'line',
-                name: 'Along the line, then back into register',
-                see: 'The red plate slides off along the line toward the end at an even pace, snaps back under the black and dwells there, then slides off again.',
-                verdict: not(
-                    'it keeps to grotesk’s horizontal line, but a plate that only slides sideways reads as a shadow or a trail, not a misprint.',
-                ),
-            },
-            {
-                key: 'steps',
-                name: 'In hard steps round the black',
-                see: 'The red plate jumps between four offsets (end, below, start, above), holding each, then snaps into register.',
-                verdict: not('it is crisp, but hard jumps are how cyberpunk’s copies move, and it loses the even pace of the press.'),
+                key: 'reversed',
+                name: 'The closing spiral with its way out played backwards (as approved)',
+                see: 'Clockwise on the way in, counter-clockwise on the way out: the release is the fall played backwards, the rule of opposites kept, as the anchor draws it.',
+                verdict: not('it keeps the rule, but the plate turns clockwise and then back again, and you said you only like it going clockwise.'),
             },
         ],
     },
@@ -881,16 +904,56 @@ const ASPECTS = [
         label: 'Loading: the spinner',
         rule: 'G11',
         question: 'What is grotesk’s spinner?',
-        why: 'The signature (2026-10-03): a red quarter disc stepping round an ink square, each quarter turn held, 1600 ms. Round 1 recommended a printer’s registration mark, a ring crossed by two hairlines; you refused crosshairs in the anchor round. The spinner is now the plate alone, with no mark, no ring and no cross: the signature’s own ink square, and its red twin falling into register on it.',
+        why: 'You said: “I like the plate, but I feel like we can do even better.” The plate stays as the reference (sixth). The five new candidates before it are each a print of two plates, an ink shape and a red one, and each turns clockwise only, like the loading plate in the question before. None borrows another theme’s spinner (titanium’s facing cut, nostromo’s reel, forest’s tree, cyberpunk’s reticle, synthwave’s setting sun, solstice’s arc, brutalism’s tipped block, blueprint’s compass). The signature’s quarter, as approved, is last. Shown at three sizes, in a busy button and in the busy panel.',
         kind: 'loop',
         scene: SPINNERS,
         options: [
             {
-                key: 'plate',
-                name: 'The plate: an ink square and its red twin falling into register',
-                see: 'A 2 px ink square; its red twin, a few pixels off, travels the closing spiral, falls into register, dwells and is released, 2640 ms, on the same clock as every waiting part. Three sizes; on the red primary button the two plates are paper and ink.',
+                key: 'turn',
+                name: 'The twin turns: a red square turns clockwise behind the ink square',
+                see: 'An ink square outline, and behind it its red twin turning clockwise at an even pace. The twin is in register every quarter turn (a square looks the same every 90 degrees) and rests there for 3 units, so the spinner never stops and never turns back: a quarter turn in 8 units, 2640 ms for half a turn.',
                 verdict: rec(
-                    'it is the anchor in its smallest form, so the spinner and every waiting part speak one picture; it uses the signature’s own ink square and draws no crosshair; and no theme’s spinner is a square with a second square falling into it.',
+                    'it really spins, so it reads as a spinner at a glance even at 16 px; the corners of the red twin stick out past the ink and are swallowed again, which is the plate falling in and out of register; it turns clockwise only, and it is a bold shape with no hairline.',
+                ),
+            },
+            {
+                key: 'pie',
+                name: 'Two plates take turns: red fills the square clockwise, then the ink covers it',
+                see: 'A solid ink square. A red plate is printed over it as a wedge that grows clockwise from twelve o’clock until the whole square is red; then the ink is printed back over the red the same way, clockwise, until the square is black again: 2640 ms.',
+                verdict: not(
+                    'it is the boldest of the set and shows progress at a glance like a timer; but it is the only one where the plates never register, because one plate always covers the other.',
+                ),
+            },
+            {
+                key: 'clock',
+                name: 'The station clock: a red hand turns clockwise in the ink square and stops at twelve',
+                see: 'An ink square outline, and a red hand that sweeps clockwise at an even pace and stops dead at twelve o’clock for 2 units before it goes on, the way the Swiss station clock’s second hand does: 2640 ms a turn.',
+                verdict: not(
+                    'it is the most grotesk of the set, the timetable itself, but the hand is a second shape rather than a second plate of the same print, and it turns slowly.',
+                ),
+            },
+            {
+                key: 'orbit',
+                name: 'A red square orbits the ink core, then registers',
+                see: 'A solid ink square, and a red square of the same size going round it clockwise 7 px away at an even pace; it snaps in under the ink, dwells for 3 units and slips out again, clockwise: 2640 ms.',
+                verdict: not(
+                    'it is easy to read and it is your graph’s own movement, but the orbit alone is the circling every spinner has; the registering is what makes it grotesk.',
+                ),
+            },
+            {
+                key: 'corners',
+                name: 'The red twin slips to each corner in turn, clockwise',
+                see: 'An ink square outline and its red twin, which sits 3 px off at the top left, jumps to the top right, then the bottom right, then the bottom left, a stop of 4 units at each, then falls into register and rests for 6 units: clockwise, in counted stops.',
+                verdict: not(
+                    'it is counted like a timetable and has its own rhythm, but jumping between held poses is how three other themes move, and it is the quietest of the set.',
+                ),
+            },
+            {
+                key: 'plate',
+                name: 'The plate, as before: an ink square and its red twin falling into register',
+                see: 'A 2 px ink square outline; its red twin travels the clockwise loop (one turn in, a dwell, one turn out), 2640 ms, on the same clock as every waiting part. The reference you liked.',
+                verdict: not(
+                    'it is the reference: it fits the anchor exactly, but it is the quietest to look at, and the second plate is mostly hidden.',
                 ),
             },
             {
@@ -899,44 +962,96 @@ const ASPECTS = [
                 see: 'A red quarter disc stepping round an ink square, each quarter turn held, 1600 ms.',
                 verdict: not('it is your signature and it already dwells at each quarter, but it is a second loading picture beside the plate.'),
             },
-            {
-                key: 'ring',
-                name: 'The package’s ring (the register before the signature)',
-                see: 'A grey ring with a red quarter turning.',
-                verdict: not('it is familiar, but it is every interface’s spinner.'),
-            },
         ],
     },
     {
         id: 'bars',
         label: 'Loading: the busy bar and the skeleton',
         rule: 'G11',
-        question: 'How do the busy progress bar and the skeleton lines wait?',
-        why: 'The signature (2026-10-03): the busy bar steps one red column along its twelve columns (1440 ms), the skeleton’s grey lines have a red marker running under them (1800 ms, on synthwave’s curve). Both run along a line; the anchor prints them instead: the bar’s ruled track is a proof, and the skeleton is the skeleton text itself, the anchor’s hero.',
+        question: 'How does the busy progress bar wait, with the skeleton text as its hero?',
+        why: 'You said: “I like printed out of register, but the progress bar itself should be better. I especially don’t like the fine lines of it. But I want ten variations.” Ten bars, each printed out of register in a different way. Every shape is a bold solid: nothing is thinner than 3 px, there are no hairlines and no twelve-column ticks. All run the anchor’s 22 units (2640 ms). Under each bar the skeleton text (the hero, its red plate turning clockwise like the loading plate) and a key figure’s proof stand unchanged, so the bar is the only thing that differs.',
         kind: 'loop',
         scene: BARS,
         options: [
             {
-                key: 'register',
-                name: 'Printed out of register (the anchor)',
-                see: 'The bar’s ruled track is a proof in ink with its red plate falling into register under it; the skeleton text, a heading bar and five lines, is one print whose red plate travels the closing spiral for all of it at once; the key figure’s skeleton is its block, on the same clock.',
+                key: 'slab',
+                name: 'The slab: one heavy ink bar, its red plate turning clockwise behind it',
+                see: 'A solid ink bar, 16 px high, the full width. Behind it a red bar of the same size turns clockwise 6 px away, closes in, falls into register and dwells, then opens out again clockwise: 2640 ms. Only the red fringe shows until the plates register.',
                 verdict: rec(
-                    'it is the anchor’s own bar and hero, one loading picture for every waiting element, the bar keeps its twelve columns, and nothing runs along a line.',
+                    'it is the anchor, scaled to a bar: the same plate on the same clock as the skeleton text above it, nothing thin in it, and it reads as a progress bar at a glance.',
                 ),
             },
             {
-                key: 'signature',
-                name: 'The signature, as approved',
-                see: 'The busy bar steps one red column along its twelve columns; the skeleton’s red marker runs under its grey lines.',
+                key: 'blocks',
+                name: 'Twelve blocks register one after another',
+                see: 'Twelve solid ink blocks with 4 px gaps, each with its own red twin 4 px away turning clockwise; the twins run a twelfth of a loop apart, so a wave of registration passes along the bar like sheets through the press.',
                 verdict: not(
-                    'it is your signature, but it runs along a line like forest’s and solstice’s loading, and it is a second picture beside the proof.',
+                    'it shows the registering best, one block at a time, but twelve small plates are busier than one, and it is the closest to the signature’s columns.',
                 ),
             },
             {
-                key: 'line',
-                name: 'A line runs (your columns’ pick)',
-                see: 'A short ink line runs along the bar and under the skeleton text.',
-                verdict: not('it is plain, but it is the runner many themes share, and the bar loses its grid.'),
+                key: 'frame',
+                name: 'The frame slips round the red',
+                see: 'A 4 px ink frame round a solid red bar. Here the frame is the plate that slips: it turns clockwise round the red, so the red bleeds out of one side and the paper shows on the other, until the frame registers and holds it.',
+                verdict: not(
+                    'it is the only one where the bar is red when it is true, which is bold, but red as the main colour of a bar breaks “black builds, red signals once”.',
+                ),
+            },
+            {
+                key: 'stamps',
+                name: 'Three sections are stamped in, one after another',
+                see: 'The bar is three solid ink sections. Each has its red twin 8 px above it; one after another, left to right, the twins drop straight in and register; they dwell, and lift out again in the same order.',
+                verdict: not(
+                    'it is a stamp press at work and very readable, but the plates move straight up and down, and that is a stomping, not the clockwise turning of the rest.',
+                ),
+            },
+            {
+                key: 'sheets',
+                name: 'Three sheets through the press',
+                see: 'Three solid 8 px bars stacked with 4 px between them, each with its red twin turning clockwise; the sheets run 2 units apart, so the misregistration moves down the stack.',
+                verdict: not(
+                    'it is the print shop in one picture, but a stack of three bars is a taller part than a progress bar is, and the bars are thin next to the slab.',
+                ),
+            },
+            {
+                key: 'halves',
+                name: 'The plate prints in two halves that close in from opposite corners',
+                see: 'The ink bar and its red plate in two halves: the left half slips up and to the left, the right half down and to the right; the halves come in together and register, dwell, then split again.',
+                verdict: not(
+                    'it is clear and symmetrical, but the halves slide in straight lines, and a plate that is split is not the plate of the other loading pictures.',
+                ),
+            },
+            {
+                key: 'bleed',
+                name: 'The bleed is trimmed',
+                see: 'The red plate is taller than the ink: it bleeds 6 px above and below. It is trimmed down to the ink’s height at an even pace, registers, dwells and bleeds again.',
+                verdict: not(
+                    'it is the mechanism of a print trimmed to size, easy to read, but it only moves up and down, and the red stays visible as a stripe above and below for half the loop.',
+                ),
+            },
+            {
+                key: 'stretch',
+                name: 'The red sheet is stretched',
+                see: 'The red plate is 14 % too long: a red tab sticks out past the end of the ink. The stretch comes out at an even pace until the plates register; they dwell, then the red sheet stretches again.',
+                verdict: not(
+                    'it is a real printing fault and the simplest to read, but it is one red tab at the end, and it moves along the line, which is the runner the other themes use.',
+                ),
+            },
+            {
+                key: 'jog',
+                name: 'Jogged up a line at a time',
+                see: 'The red plate is one line (9 px) low. It jogs up in three counted stops of 3 px to register, dwells, and jogs back down in three stops.',
+                verdict: not(
+                    'it is counted like a timetable, but a jump between held poses is how three other themes move, and it is the stillest of the ten.',
+                ),
+            },
+            {
+                key: 'catch',
+                name: 'The ink catches up with the red',
+                see: 'A 4 px ink frame with a red fill that grows in six counted steps. The ink fill follows half a step behind, so the red leads by a block until the ink catches up and the plates register for 2 units. Then it starts again.',
+                verdict: not(
+                    'it looks most like a progress bar and has the clearest start and end, but it is a fill that grows along the line, and it is a determinate bar in disguise.',
+                ),
             },
         ],
     },
@@ -944,38 +1059,82 @@ const ASPECTS = [
         id: 'leave',
         label: 'Leaving and arriving',
         rule: 'G12',
-        question: 'How does something leave, and how does it arrive?',
-        why: 'Your leave (2026-10-04, round 7): three colour bands, red, ink and paper, sweep across and take it with them, 550 ms on an ease-in-out, the part fading out in its last 10 %; what arrives plays it backwards. The anchor leaves another way: the second plate is released, the same fall played backwards, and what arrives is the fall forwards.',
+        question: 'How does something leave, with the red plate turning clockwise?',
+        why: 'You said: “Definitely a variation on option 1. But as I said in the other step, I feel like I mostly like it going clockwise. So come up with ten variations, base them on the other step so they can be in line.” A part still arrives the way the anchor has it: black, with its red plate closing in clockwise. But it no longer leaves as that played backwards: it leaves with the plate turning clockwise too (opening out), so the plate keeps one direction through a part’s whole life, as in the loading step. The rule of opposites is broken here, on purpose. Ten ways to leave; the first is the plain one.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
-                key: 'plate',
-                name: 'Released: the arrival played backwards (the anchor)',
-                see: 'The part stands in black; its red plate leaves register, travels the spiral open again over 8 units (960 ms) and the part is gone at the end of it. Arriving is the same fall forwards, so arriving, waiting and leaving are one picture.',
+                key: 'cw',
+                name: 'Opens out clockwise, then it is gone',
+                see: 'The part stands in black. Its red plate leaves register and turns one full turn clockwise while it opens out to 8 px (8 units, 960 ms), and the part is gone at the end of the turn. Arriving was the fall closing in clockwise, so the plate has turned the same way the whole time.',
                 verdict: rec(
-                    'it is the anchor’s own release: one idea for a part’s whole life, nothing fades, and no other theme leaves with a second plate.',
+                    'it is the arrival’s own spiral carried on in the same direction: in, stay, out, one picture and one way of turning, and it is the same path as the loading step’s recommended loop.',
                 ),
             },
             {
-                key: 'bands',
-                name: 'The colour bands, at an even pace (your leave, 2026-10-04)',
-                see: 'Red, ink and paper sweep across the part toward the start, frame and all, and the paper takes it off: 4 units (480 ms), no fade. Arriving, the bands sweep the other way and print it.',
+                key: 'hand',
+                name: 'The station clock’s hand sweeps round and takes it off',
+                see: 'A red hand, 4 px wide, sweeps clockwise from twelve o’clock round the part at an even pace and erases the part behind it until it is gone: 960 ms.',
                 verdict: not(
-                    'it is your decided leave and still a Swiss poster, and it was the recommendation before the anchor, but it is a second picture beside the plate.',
+                    'it is the most readable clockwise leave and the station clock’s own picture, but the hand is not the red plate of the arrival, so it is a second idea.',
                 ),
             },
             {
-                key: 'cut',
-                name: 'Cut out toward the start in three hard cuts (your resize’s cut; near titanium’s cut)',
-                see: 'The part is cut away from its end toward its start in three hard cuts; arriving, it is cut in again.',
-                verdict: not('it is your resize’s cut, but a cut is titanium’s way of making and unmaking a part.'),
+                key: 'quarters',
+                name: 'Taken off a quarter at a time, clockwise',
+                see: 'The plate opens out clockwise as in option 1, and the part is taken off in four counted quarters, clockwise from twelve o’clock, one every 2 units, like the quarter hours of the station clock.',
+                verdict: not(
+                    'it is counted, which the timetable likes, but the quarters of a wide card are slabs, and hard steps are the way three other themes move.',
+                ),
             },
             {
-                key: 'shove',
-                name: 'Shoved out toward the start (near brutalism’s picked slam)',
-                see: 'The part slides back along its line behind its own start edge and is gone; arriving, it is set again.',
-                verdict: not('it matches round 1’s arrival, but a part shoved out sideways is brutalism’s picked leave, and you chose the bands.'),
+                key: 'twice',
+                name: 'Two quick turns out',
+                see: 'The plate turns clockwise twice while it opens out, 8 units: twice as fast as the plain leave, and the part is gone at the end.',
+                verdict: not('it is brisk and shows the direction twice, but the second turn is too fast to follow at this size.'),
+            },
+            {
+                key: 'sling',
+                name: 'Held, then slung out in a quick half turn',
+                see: 'The plate stays in register for 5 units, then is slung out clockwise through half a turn in 3 units, and the part goes with it.',
+                verdict: not('it is the sharpest exit, a spring let go, but the long hold makes the part look as if nothing happens first.'),
+            },
+            {
+                key: 'sweep',
+                name: 'One sweep: half a turn out',
+                see: 'The plate swings clockwise through half a turn while it opens out, 8 units, to the far side of the part, and the part is gone there.',
+                verdict: not('it is calm, one clear arc, but half a turn is a swing and not the spiral of the arrival.'),
+            },
+            {
+                key: 'slur',
+                name: 'Slurred out: the red plate leaves a smear behind it',
+                see: 'The plate opens out clockwise as in option 1, and two more red copies follow it round, 20 and 40 degrees behind, like a slurred print: 8 units.',
+                verdict: not(
+                    'it makes the clockwise direction obvious, the smear points back along the way, but two extra copies is a busier picture, and a smear is a fault.',
+                ),
+            },
+            {
+                key: 'rows',
+                name: 'Line by line, each line’s plate turning once',
+                see: 'The part’s lines leave one after another, top first, a unit apart: each line’s red plate opens out clockwise by itself, and the plate at the top of the part goes last.',
+                verdict: not('it clears the part like a timetable board, but it is several plates at once, and the lines are small.'),
+            },
+            {
+                key: 'wide',
+                name: 'A wide turn out',
+                see: 'The plate opens out clockwise in one and a half turns to 12 px, twice as far as the plain leave, and the part is gone at the end.',
+                verdict: not(
+                    'it is the biggest gesture, easy to see, but it reaches the part next to it, and a leave should stay inside its own part.',
+                ),
+            },
+            {
+                key: 'stops',
+                name: 'Calls at three stations on the way out',
+                see: 'The plate opens out clockwise in three legs of a third of a turn, with a dead stop of one unit between the legs, like a train at three stations; the part is gone at the end.',
+                verdict: not(
+                    'it is the stop-to-go of the station clock, but it takes longer to say goodbye, and it is several movements for one leave.',
+                ),
             },
         ],
     },
@@ -984,14 +1143,14 @@ const ASPECTS = [
         label: 'Buttons inside composites',
         rule: 'G17',
         question: 'How do buttons, links and menu entries behave when they sit inside a header, a menu, a tile, a drawer or a key figure?',
-        why: 'Use the State buttons above to see them hovered, focused and pressed (a held state plays the plate’s fall on a loop). Today the header’s actions have a 1 px line, a red bar at the foot on hover and one red outline for focus; the menu entries grow a red top border; the tile’s Open link takes one red outline; the key figure as a link turns red with a tint.',
+        why: 'Use the State buttons above to see them on hover, focused and pressed (a held state plays the plate’s fall on a loop). Today the header’s actions have a 1 px line, a red bar at the foot on hover and one red outline for focus; the menu entries grow a red top border; the tile’s Open link takes one red outline; the key figure as a link turns red with a tint.',
         kind: 'still',
         scene: COMPOSITES,
         options: [
             {
                 key: 'own',
                 name: 'Exactly grotesk’s own elements',
-                see: 'Every inner button is grotesk’s button: the 2 px ink line, its red plate falling into register when pointed at, the two-channel ring on focus, the grey face with the black label when pressed; a menu entry and the key figure as a link the same.',
+                see: 'Every inner button is grotesk’s button: the 2 px ink line, its red plate falling into register on hover, the two-channel ring on focus, the grey face with the black label when pressed; a menu entry and the key figure as a link the same.',
                 verdict: rec('a button is a button wherever it sits, so the theme stays one grammar.'),
             },
             {
@@ -1003,46 +1162,46 @@ const ASPECTS = [
             {
                 key: 'quiet',
                 name: 'Grotesk’s own, but quiet: words only inside a composite',
-                see: 'Inside a composite every button is its words alone (no line) until pointed at, when its line and its red plate appear.',
-                verdict: not('it is calmer, but a composite’s actions stop looking like buttons until you touch them.'),
+                see: 'Inside a composite every button is its words alone (no line) until you hover over it, when its line and its red plate appear.',
+                verdict: not('it is calmer, but a composite’s actions stop looking like buttons until you hover over them.'),
             },
         ],
     },
     {
         id: 'hover',
-        label: 'Pointing at something',
+        label: 'Hover: what happens when the mouse is over something',
         rule: 'G8',
-        question: 'What happens to a part when the pointer is on it?',
-        why: 'Your scope-12 (2026-09-12): touching a control draws the red baseline its words stand on, from the start; the register adds the wash. Your component picks draw a red bar at the foot (the header), a red top border that pushes the entry 2 px (the menu), a top bar growing 6 → 10 px that pushes the tile’s content (the tiles), a red line with a tint (the key figure) and an underline (a day). The anchor answers another way: pointing at a part takes it into register.',
+        question: 'What does a button, a row or a tile do while you hover over it (the mouse pointer rests on it, before any click)?',
+        why: 'Yes, this question is about hover: what a part does while the mouse pointer is on it, before you click. (Keyboard focus is a different question, the next one.) The review dialog plays it for you: it moves the pointer onto the part and away again, over and over, so each option shows its hover and what happens when the hover ends. Your scope-12 (2026-09-12): hovering over a control draws the red baseline its words stand on, from the start; the register adds a light wash. Your component picks draw a red bar at the foot (the header), a red top border that pushes the entry 2 px (the menu), a top bar growing from 6 to 10 px that pushes the tile’s content (the tiles), a red line with a tint (the key figure) and an underline (a day). The anchor answers another way: hovering over a part takes it into register.',
         kind: 'cycle',
         scene: HOVER,
         options: [
             {
                 key: 'plate',
-                name: 'The red plate falls in: the part is taken into register (the anchor)',
-                see: 'Pointing at a part shows its red plate, slipped a few pixels, travelling the closing spiral and falling into register on it in 8 units; it dwells there for as long as the pointer stays and is released the way it came when the pointer leaves. The first frame already shows the red, so the answer is immediate; nothing beside it moves. Under reduced motion the part takes the light wash.',
+                name: 'Hover: the red plate falls into register on the part (the anchor)',
+                see: 'When you hover over a part, its red plate, slipped a few pixels, travels the closing spiral and falls into register on it in 8 units; it stays there for as long as you hover, and when you move the pointer away it is released the way it came. The first frame already shows red, so the answer is immediate, and nothing beside the part moves. With reduced motion the part takes the light wash instead.',
                 verdict: rec(
-                    'it is the anchor on a touch, the same plate as loading and arriving; and a plate that falls in is neither brutalism’s still hard shadow nor cyberpunk’s jitter.',
+                    'it is the anchor on a hover, the same plate as loading and arriving; and a plate that falls in is neither brutalism’s still hard shadow nor cyberpunk’s jitter.',
                 ),
             },
             {
                 key: 'baseline',
-                name: 'The baseline appears (your scope-12)',
-                see: 'The part pointed at gets the red rule its words stand on, drawn from the start, and its plate takes the light wash; a coloured button inverts. Nothing moves, siblings are untouched.',
+                name: 'Hover: the red baseline is drawn under the words (your scope-12)',
+                see: 'When you hover over a part, a red rule is drawn from the start of the line the words stand on, and the part takes the light wash; a coloured button inverts. Nothing moves, and the parts beside it are untouched.',
                 verdict: not(
                     'it is your approved baseline, drawn on every button and link today, and it was the recommendation before the anchor, but it is the type’s idea and not the anchor’s; keep it and the plate belongs to loading, arriving and leaving only.',
                 ),
             },
             {
                 key: 'bar',
-                name: 'A bar on the edge thickens (your header’s, menu’s and tiles’ picks; near solstice’s lit foot)',
-                see: 'A red bar appears or thickens on the part’s edge: the tile’s top bar grows and pushes its words down, a menu entry grows a top border.',
+                name: 'Hover: a red bar on the edge thickens (your header’s, menu’s and tiles’ picks)',
+                see: 'When you hover over a part, a red bar appears or thickens on its edge: the tile’s top bar grows and pushes its words down, a menu entry grows a top border.',
                 verdict: not('it is your picks, but a growing border moves what is beside it, and a lit edge is solstice’s hover.'),
             },
             {
                 key: 'invert',
-                name: 'Inverted (the primary button’s mirror on everything; high-contrast’s The bar flips)',
-                see: 'The part pointed at turns to the ink plate with white words; nothing moves.',
+                name: 'Hover: the part turns black with white words (high-contrast’s The bar flips)',
+                see: 'When you hover over a part, it turns to the ink plate with white words; nothing moves.',
                 verdict: not('it is strong, but the flip to ink is high-contrast’s hover family, and a whole tile turning black is loud.'),
             },
         ],
@@ -1052,22 +1211,22 @@ const ASPECTS = [
         label: 'The focus ring',
         rule: 'G14, DI2',
         question: 'How does a part show it has keyboard focus?',
-        why: 'The register gives a button one 2 px ink ring with the page’s white outside it, and a coloured button three layers (DI2: two channels). Three of your picks use one outline instead: red on the header’s action and the tile’s link, a thin ink line 3 px out on the key figure. The anchor adds the plate: focus is the ring, plus the same fall as under the pointer.',
+        why: 'The register gives a button one 2 px ink ring with the page’s white outside it, and a coloured button three layers (DI2: two channels). Three of your picks use one outline instead: red on the header’s action and the tile’s link, a thin ink line 3 px out on the key figure. The anchor adds the plate: focus is the ring, plus the same fall as on hover.',
         kind: 'cycle',
         scene: FOCUS,
         options: [
             {
                 key: 'ring',
                 name: 'The two-channel ring, and the plate falling in (the anchor)',
-                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and its red plate falls into register on it as under the pointer, 8 units, dwelling for as long as the focus stays.',
+                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and its red plate falls into register on it as on hover, 8 units, dwelling for as long as the focus stays.',
                 verdict: rec(
-                    'the ring is the design invariant and reads on white, on the red primary and on the ink alike, and the plate says where you are in the same picture as pointing, so hover and focus belong together.',
+                    'the ring is the design invariant and reads on white, on the red primary and on the ink alike, and the plate says where you are in the same picture as hover, so hover and focus belong together.',
                 ),
             },
             {
                 key: 'baseline',
                 name: 'The two-channel ring, and the baseline drawn (round 1’s recommendation)',
-                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and the red baseline under its words as when pointed at.',
+                see: 'Every focused part: a white ring tight round it and the ink outline outside that, and the red baseline under its words as on hover.',
                 verdict: not(
                     'it was the recommendation before the anchor and the ring is right, but the baseline is the type’s idea, and focus would answer in a picture the rest of the theme does not use.',
                 ),
@@ -1092,38 +1251,58 @@ const ASPECTS = [
         id: 'press',
         label: 'The press',
         rule: 'G14',
-        question: 'What happens to a part while it is pressed?',
-        why: 'Your scope-12: the press thickens the baseline downward into the deeper red, at once; the plate takes the darker grey, and a coloured button presses grey with a black label (2026-09-14). Your header’s and menu’s picks turn their bar to ink instead. The anchor has its own press (research/grotesk-anchor): the red plate falls into register as the press lands, and the part is held there through the dwell.',
+        question: 'What happens to a button, a row or a day while you press it (the mouse button is down)?',
+        why: 'You said: “I need better options, and why is the loading animation running?” The loading animation was the plate’s closing spiral: the old first option used the very same fall as loading, so a press looked like something waiting. It is gone: no option here turns or spirals, and nothing in the scene loads; only the press plays. Each scene rests, the press lands, the part is held down, and the release follows. Five new presses, each a different thing the print does when it lands; your scope-12 rule is last, to compare. In all of them the part never moves, and a coloured button presses grey with a black label (2026-09-14).',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
-                key: 'plate',
-                name: 'The plate falls into register as the press lands (the anchor)',
-                see: 'The part is pointed at, its red plate falling in; the press lands in the seventh unit, when the plate is in register: the face turns the darker grey and the label black, at once, and stays for as long as it is held. The release is the fall played backwards. The part never moves.',
+                key: 'slam',
+                name: 'Slammed home: the red plate is driven into register in one stroke',
+                see: 'On the press, a red copy of the part starts 8 px off, to the lower right, and is driven straight into register in 2 units (240 ms) at an even pace, a dead stop. As it lands, the face turns grey and the label black. On the release the plate is pulled straight back out and gone. No turning, no spiral.',
                 verdict: rec(
-                    'it is the anchor’s own press and says “held” exactly: in register, the red gone behind the black; no other theme presses by registering a plate.',
+                    'the anchor’s second plate lands as the press lands, you see it arrive and you see it stop, “held” means in register, and it is a straight stroke, so it cannot be mistaken for the loading plate.',
+                ),
+            },
+            {
+                key: 'beats',
+                name: 'Two beats: the second plate lands, the ink a beat later',
+                see: 'On the press the red second plate is driven in from 8 px off and registers over 2 units; one beat (120 ms) later the ink lands: the face turns grey and the label black. On the release they go in the reverse order: the face lets go first, then the red plate leaves.',
+                verdict: not(
+                    'it shows both plates landing one after the other, which is the print press exactly, but it takes a beat longer to feel held than the slam, and the face answers late.',
+                ),
+            },
+            {
+                key: 'jog',
+                name: 'Jogged home in three counted stops',
+                see: 'On the press the red copy starts 9 px off and jogs home in three hard stops of a unit each (6, 3, 0 px), a dead stop at each; as it lands the face turns grey and the label black. Nothing travels between the stops.',
+                verdict: not(
+                    'it is counted like a timetable and the three stops are easy to see, but jumping between held poses is how three other themes move.',
+                ),
+            },
+            {
+                key: 'squash',
+                name: 'Ink squash: the label gets heavier and a keyline closes in',
+                see: 'As in letterpress, the press squeezes the ink out: the label gets heavier and a 3 px ink keyline closes in inside the frame while the face turns grey. No red, nothing moves.',
+                verdict: not(
+                    'it is the honest look of a pressed print and needs no second plate, but without the red it leaves the anchor, and the heavier label is a small change.',
+                ),
+            },
+            {
+                key: 'overprint',
+                name: 'Overprinted: the second plate prints over the black and deepens it',
+                see: 'On the press the frame and the label turn the deep red of the second plate printed over the black, and the face goes grey. At once, nothing moves; on the release the black is back.',
+                verdict: not(
+                    'it is the quietest of the five and uses only the two plates, but its deep red label on the grey face reads 4.28:1, below WCAG 2.2 AA’s 4.5:1 (the black label of the others reads 11.31:1), and red marking a pressed part says “current”, not “held”.',
                 ),
             },
             {
                 key: 'rule',
-                name: 'The rule thickens (your scope-12; round 1’s recommendation)',
-                see: 'The baseline under the words thickens to 4 px in the deeper red, the plate turns the darker grey, at once, for as long as it is held; the primary presses grey with a black label. Nothing moves.',
+                name: 'The rule thickens (your scope-12)',
+                see: 'The baseline under the words thickens to 4 px in the deeper red, the face turns the darker grey, at once, for as long as it is held; the primary presses grey with a black label. Nothing moves.',
                 verdict: not(
-                    'it is your approved press and it says “held” on the very line the hover drew, but if pointing is the plate, a press that draws the baseline is a second idea.',
+                    'it is your approved press and it says “held” on the very line a hover draws, but if hovering is the plate, a press that draws the baseline is a second idea.',
                 ),
-            },
-            {
-                key: 'grey',
-                name: 'The grey alone (the package’s press)',
-                see: 'The plate turns the darker grey; no rule.',
-                verdict: not('it is plain, but it drops the plate and the baseline, so hover and press no longer belong together.'),
-            },
-            {
-                key: 'reverse',
-                name: 'Reverse video while held (terminal’s)',
-                see: 'The pressed part prints white on black; nothing moves.',
-                verdict: not('it is crisp, but reverse video is terminal’s press.'),
             },
         ],
     },
@@ -1204,7 +1383,8 @@ section.setAttribute(
             id: a.id,
             label: a.label,
             options: a.options.map((o, at) => ({
-                value: String(at + 1),
+                // The option's key, so an approved pick in update.json names it.
+                value: o.key,
                 label: `${o.name}${at === 0 ? ' (recommended)' : ''}`,
                 hint: `${a.question} ${o.see} ${o.verdict}`,
             })),

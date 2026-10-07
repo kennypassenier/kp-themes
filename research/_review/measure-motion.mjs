@@ -22,7 +22,13 @@
 // - front: t90 as a share of the run (≤ 0.3 reads as instant);
 // - for each part that arrives and leaves: whether the leave's frames are
 //   the arrival's frames in reverse order, within a tolerance of one frame
-//   in time and 8 % of each component's range in value.
+//   in time and 8 % of each component's range in value;
+// - for a part that turns (a translate or a drop-shadow offset going round
+//   the part, or a rotation): how far it turned in each phase, in degrees,
+//   positive clockwise (screen y points down). A leave that is not the
+//   arrival's mirror but turns the same way is a rule broken on purpose
+//   (grotesk, update 2: "I only like it going clockwise"): it is reported as
+//   `clockwise both ways`, not as a mirror fault.
 //
 // Usage (a static server on the repository root must be running):
 //   node research/_review/measure-motion.mjs research/nostromo-character \
@@ -372,6 +378,43 @@ export function table(part) {
     return { keys, rows, times: samples.map((s) => s.t) };
 }
 
+/**
+ * How far a part turned, in degrees, positive clockwise on the screen (y
+ * points down). Reads the plate's polar position from its `translate` or the
+ * offset of its `drop-shadow`, or a plain `rotate`. Null when it does not turn.
+ * @param {{ samples: { v: Record<string, string> }[] } | null | undefined} part
+ */
+export function turnOf(part) {
+    if (!part) return null;
+    const num = (/** @type {string | undefined} */ t) => (t || '').match(/-?[\d.]+(?:e-?\d+)?/g)?.map(Number) || [];
+    /** @type {number[]} */
+    const angles = [];
+    let rotated = 0;
+    let hasRotate = false;
+    for (const { v } of part.samples) {
+        let x = NaN;
+        let y = NaN;
+        const f = (v.filter || '').replace(/(?:color|rgba?|hsla?)\([^)]*\)/g, '');
+        const shadow = /drop-shadow\(\s*(-?[\d.]+(?:e-?\d+)?)px\s+(-?[\d.]+(?:e-?\d+)?)px/.exec(f);
+        if (shadow) [x, y] = [Number(shadow[1]), Number(shadow[2])];
+        else if (v.translate && v.translate !== 'none') [x, y] = [num(v.translate)[0] ?? 0, num(v.translate)[1] ?? 0];
+        if (Number.isFinite(x) && Math.hypot(x, y) > 0.4) angles.push((Math.atan2(y, x) * 180) / Math.PI);
+        if (v.rotate && v.rotate !== 'none') {
+            hasRotate = true;
+            rotated = num(v.rotate).at(-1) ?? rotated;
+        }
+    }
+    let total = 0;
+    for (let i = 1; i < angles.length; i += 1) {
+        let d = angles[i] - angles[i - 1];
+        while (d > 180) d -= 360;
+        while (d < -180) d += 360;
+        total += d;
+    }
+    if (hasRotate && Math.abs(rotated) > Math.abs(total)) total = rotated;
+    return Math.abs(total) < 20 ? null : Math.round(total);
+}
+
 /* ---------------------------------------------------------------- metrics */
 
 /**
@@ -614,7 +657,16 @@ async function main() {
                     symmetry = r.ok ? 'mirror' : r.why;
                 }
             } else if (tl && ml && ml.kind !== 'still' && (!ma || ma.kind === 'still')) symmetry = 'closes with motion, opens without';
+            const turnIn = turnOf(a);
+            const turnOut = turnOf(l);
+            // Turning the same way in and out is the opposites rule broken on purpose, not a mirror fault.
+            if (turnOut !== null && turnOut > 0 && (turnIn === null || turnIn > 0) && symmetry !== 'mirror')
+                symmetry = `clockwise both ways, not mirrored on purpose (in ${turnIn === null ? 'none' : `+${turnIn}°`}, out +${turnOut}°)`;
+            else if (turnIn !== null || turnOut !== null)
+                symmetry = `${symmetry}${symmetry ? ' ' : ''}[turns in ${turnIn ?? 0}°, out ${turnOut ?? 0}°]`;
             return {
+                cell: (a || l)?.cell,
+                turnOut,
                 label: (a || l)?.label,
                 in: ma && { ...ma, names: a?.names },
                 out: ml && { ...ml, names: l?.names },
@@ -630,6 +682,12 @@ async function main() {
                         : '',
             };
         });
+        // A leave drawn by another part of the cell (a hand, the lines of a row) that turns clockwise: say so, not "off".
+        for (const p of parts) {
+            const by = parts.find((q) => q !== p && q.cell === p.cell && q.cell >= 0 && (q.turnOut ?? 0) > 0);
+            if (by && /^worst /.test(p.symmetry))
+                p.symmetry = `leave drawn by ${by.label}, clockwise (+${by.turnOut}°); the arrival is not played backwards, on purpose`;
+        }
         report.push({ ...s, parts });
     }
     await browser.close();

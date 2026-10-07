@@ -28,6 +28,26 @@ thing, and where it stands says what the part is: slipped is arriving, waiting, 
   cyberpunk's standing split, so the index stays), 18 the voice, 19 the motifs: none of them is about motion or the plate.
 - Round id `2026-10-07-r2`: Kenny's next verdict is a new round of the same demo.
 
+**Round 3 / update 2 (Kenny's verdict on round 2, `update.json`).** Thirteen questions are approved and locked (curve ontime, direction
+plate, opening plate, durations units, colour signal, surface rule, tone index, live plate, loading register, composites own, focus ring,
+voice sentence, motifs one); six are asked again, each with his comment and a reply in `update.json`:
+
+- **10 the slip:** the red plate turns **clockwise always**, in and out (his words: "I only like it going clockwise ... maybe we can break
+  [the rule of opposites] for this theme"). Six options: one turn each way (recommended), two tighter turns, wound in slowly and slung
+  out, half a turn in and out, unwinds then drops straight in, and the old spiral whose way out is reversed. Drawn with `--gk-a` and
+  `--gk-q` (themes/grotesk/CHARACTER.md §0b).
+- **11 the spinner:** the plate stays as the reference; five new plate candidates, clockwise only (the twin turns, two plates take turns,
+  the station clock, orbit, the corners), and the signature's quarter.
+- **12 the busy bar:** ten bold printings, nothing under 3 px, no hairlines or ticks (slab, blocks, frame, stamps, sheets, halves, bleed,
+  stretch, jog, catch); the skeleton text stays as the hero under each.
+- **13 leaving:** ten variations on the plate, clockwise and not the arrival reversed (opens out, clock hand, quarters, two turns, sling,
+  sweep, slur, rows, wide, stops).
+- **15 hover:** explained as hover in plain words; the other questions that said pointed at, pointer or touch now say hover too.
+- **17 the press:** it no longer borrows the loading spiral (that was the "loading animation"); five new presses (slammed home, two beats,
+  jogged home, ink squash, overprinted) and the scope-12 rule to compare.
+- Round id `2026-10-07-r3`. Measured with `research/_review/measure-motion.mjs`, which now reports the turn of a plate in degrees and
+  says "clockwise both ways" for the intentionally unmirrored leave.
+
 **Already decided, not asked again.** Twelve Columns (2026-09-08), the baseline that appears under a touched control (scope-12,
 2026-09-12), the inverting coloured buttons and their grey press with a black label (2026-09-13/14), the alarm (scope-94), the signature
 (2026-10-03), the cut as the resize and the colour bands as the leave (2026-10-04), the reverse-close pairing, and every component pick

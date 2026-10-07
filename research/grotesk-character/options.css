@@ -31,9 +31,52 @@
    hidden until its turn), a leave is that played backwards (by demo.js, as
    before), a value that changed is re-registered, pointing, focus and the
    press are the plate's fall, waiting is its 22 unit loop. No crosshairs, no
-   marks, no rings. Rules and tokens hang on `.gk-scene` as well as the page. */
+   marks, no rings. Rules and tokens hang on `.gk-scene` as well as the page.
+
+   ROUND 3 / UPDATE 2 (Kenny's verdict on round 2): the red plate turns
+   CLOCKWISE ALWAYS, on its way in and on its way out ("I feel like I only like
+   it going clockwise ... maybe we can break that for this theme"), so the rule
+   of opposites is broken on purpose for the waiting loop and the leave. Those
+   paths are drawn with two registered custom properties, `--gk-a` (the angle
+   of the plate round the ink, only ever growing) and `--gk-q` (its distance,
+   0 = in register), and the plate's `translate` or `filter` reads them with
+   cos() and sin(): screen y points down, so a growing angle is clockwise. The
+   old spiral (`gk-loop`, whose way out is its way in backwards) stays for the
+   approved scenes and as the "as approved" option of the slip question. */
 
 @layer kp.signature {
+    /* The plate's polar position (round 3): a growing --gk-a is clockwise. */
+    @property --gk-a {
+        syntax: '<angle>';
+        inherits: false;
+        initial-value: 0deg;
+    }
+
+    @property --gk-q {
+        syntax: '<number>';
+        inherits: false;
+        initial-value: 1;
+    }
+
+    /* A wipe's angle (the pie spinner, the clock hand's sweep). */
+    @property --gk-s1 {
+        syntax: '<angle>';
+        inherits: false;
+        initial-value: 0deg;
+    }
+
+    @property --gk-s2 {
+        syntax: '<angle>';
+        inherits: false;
+        initial-value: 0deg;
+    }
+
+    @property --gk-w {
+        syntax: '<angle>';
+        inherits: false;
+        initial-value: 0deg;
+    }
+
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
     /* On the scene as well as the page: the review dialog shows a copy of
@@ -124,6 +167,28 @@
     .gk-scene[data-gk-direction='rise'] {
         --gk-arrive: gk-rise;
         --gk-arrive-t: var(--gk-set);
+    }
+
+    /* The slip question (round 3): which way the waiting plate turns. Every
+       option but the last turns clockwise only, in and out. */
+    .gk-scene[data-gk-slip='cw'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-slip='twice'] {
+        --gk-loopkf: gk-cw-twice;
+    }
+
+    .gk-scene[data-gk-slip='sling'] {
+        --gk-loopkf: gk-cw-sling;
+    }
+
+    .gk-scene[data-gk-slip='sweep'] {
+        --gk-loopkf: gk-cw-sweep;
+    }
+
+    .gk-scene[data-gk-slip='drop'] {
+        --gk-loopkf: gk-cw-drop;
     }
 
     /* ── The parts at rest ───────────────────────────────────────────── */
@@ -988,7 +1053,7 @@
 
     /* ── G14: the press (the clock presses .gk-press while `in`) ──────── */
 
-    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press,
+    .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press,
     .gk-scene[data-gk-durations][data-gk-phase='in'] .gk-press {
         background: var(--secondary-active);
         color: var(--foreground);
@@ -996,32 +1061,13 @@
         --kp-baseline-colour: var(--primary-active);
     }
 
-    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after {
+    .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press :is(.kp-button__label, .gk-words)::after {
         scale: 1 1;
         transition: none;
     }
 
-    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .kp-button--primary.gk-press {
+    .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .kp-button--primary.gk-press {
         border-color: var(--secondary-active);
-    }
-
-    .gk-scene[data-gk-press='grey'][data-gk-phase='in'] .gk-press {
-        background: var(--secondary-active);
-        color: var(--foreground);
-    }
-
-    .gk-scene[data-gk-press='grey'][data-gk-phase='in'] .kp-button--primary.gk-press {
-        border-color: var(--secondary-active);
-    }
-
-    .gk-scene[data-gk-press='reverse'][data-gk-phase='in'] .gk-press {
-        border-color: var(--gk-ink);
-        background: var(--gk-ink);
-        color: var(--accent-foreground);
-    }
-
-    .gk-scene[data-gk-press='reverse'][data-gk-phase='in'] .gk-press :is(.gk-figure, .gk-label) {
-        color: var(--accent-foreground);
     }
 
     /* ── G17: buttons inside composites (forced by the State buttons) ── */
@@ -1149,6 +1195,143 @@
         color: var(--primary);
     }
 
+    /* ── G12: leaving (round 3: the red plate turns clockwise on its way out) ──
+       A part's red plate is its drop-shadow, positioned by --gk-a and --gk-q
+       (the plate's angle round the ink, growing only, and its distance; 0 is
+       in register, where the shadow is transparent). An arrival animates
+       `filter` itself (gk-arrive, the fall closing in clockwise); a leave
+       animates the two numbers, so the plate opens out clockwise and the part
+       is gone at the end. Not the arrival played backwards: the rule of
+       opposites is broken here on purpose (Kenny, update 2). */
+
+    .gk-scene[data-gk-leave] .gk-leaver > :first-child,
+    .gk-scene[data-gk-leave='rows'] .gk-leaver > :first-child > * {
+        --gk-a: 0deg;
+        --gk-q: 0;
+        filter: drop-shadow(
+            calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a))) 0
+                rgb(from var(--gk-plate) r g b / clamp(0, calc(var(--gk-q) * 40), 1))
+        );
+    }
+
+    /* Slurred: two more copies follow the plate round, 20 and 40 degrees behind. */
+    .gk-scene[data-gk-leave='slur'] .gk-leaver > :first-child {
+        filter: drop-shadow(
+                calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a))) 0
+                    rgb(from var(--gk-plate) r g b / clamp(0, calc(var(--gk-q) * 40), 1))
+            )
+            drop-shadow(
+                calc(var(--gk-r) * var(--gk-q) * cos(calc(var(--gk-a) - 20deg)) * var(--gk-dir))
+                    calc(var(--gk-r) * var(--gk-q) * sin(calc(var(--gk-a) - 20deg))) 0
+                    rgb(from var(--gk-plate) r g b / clamp(0, calc(var(--gk-q) * 40), 1))
+            )
+            drop-shadow(
+                calc(var(--gk-r) * var(--gk-q) * cos(calc(var(--gk-a) - 40deg)) * var(--gk-dir))
+                    calc(var(--gk-r) * var(--gk-q) * sin(calc(var(--gk-a) - 40deg))) 0
+                    rgb(from var(--gk-plate) r g b / clamp(0, calc(var(--gk-q) * 40), 1))
+            );
+    }
+
+    /* Line by line: the lines carry the plates, the part only goes last. */
+    .gk-scene[data-gk-leave='rows'] .gk-leaver > :first-child,
+    .gk-scene[data-gk-leave='hand'] .gk-leaver > :first-child {
+        filter: none;
+    }
+
+    /* The station clock's hand: a 4 px red bar from the part's centre. */
+    .gk-scene[data-gk-leave='hand'] .gk-leaver::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: calc(50% - 2px);
+        inset-block-end: 50%;
+        display: none;
+        inline-size: 4px;
+        block-size: 100vmax;
+        background: var(--gk-red);
+        transform-origin: 50% 100%;
+        pointer-events: none;
+    }
+
+    .gk-scene[data-gk-leave='hand'][data-gk-phase='out'] .gk-leaver {
+        overflow: clip;
+    }
+
+    .gk-scene[data-gk-leave='hand'][data-gk-phase='out'] .gk-leaver::after {
+        display: block;
+    }
+
+    .gk-scene[data-gk-leave='hand'][data-gk-phase='out'] .gk-leaver > :first-child,
+    .gk-scene[data-gk-leave='quarters'][data-gk-phase='out'] .gk-leaver > :first-child {
+        mask-image: conic-gradient(from 0deg at 50% 50%, transparent var(--gk-w), #000 0);
+    }
+
+    /* ── G14: the press (round 3) ─────────────────────────────────────────
+       The press lands; the part never moves. Each option names its plate
+       keyframes (--gk-pk), its face keyframes (--gk-fk) and how long it takes
+       (--gk-pt). Nothing here turns or spirals: that was the loading
+       animation Kenny saw in the old first option. */
+
+    .gk-scene[data-gk-press]:not([data-gk-press='rule']) {
+        --gk-pr: 8px;
+    }
+
+    .gk-scene[data-gk-press='slam'] {
+        --gk-pk: gk-press-slam;
+        --gk-fk: gk-press-face-end;
+        --gk-pt: 240ms;
+    }
+
+    .gk-scene[data-gk-press='beats'] {
+        --gk-pk: gk-press-beats;
+        --gk-fk: gk-press-face-end;
+        --gk-pt: 360ms;
+    }
+
+    .gk-scene[data-gk-press='jog'] {
+        --gk-pk: gk-press-jog;
+        --gk-fk: gk-press-face-end;
+        --gk-pt: 360ms;
+    }
+
+    .gk-scene[data-gk-press='squash'] {
+        --gk-pk: none;
+        --gk-fk: gk-press-squash;
+        --gk-pt: 120ms;
+    }
+
+    .gk-scene[data-gk-press='overprint'] {
+        --gk-pk: none;
+        --gk-fk: gk-press-overprint;
+        --gk-pt: 120ms;
+    }
+
+    /* The face before the press: the part's own, and the primary's red. */
+    .gk-scene[data-gk-press]:not([data-gk-press='rule']) .gk-press {
+        --gk-face-from: transparent;
+        --gk-label-from: var(--foreground);
+    }
+
+    .gk-scene[data-gk-press]:not([data-gk-press='rule']) .kp-button--primary.gk-press {
+        --gk-face-from: var(--primary);
+        --gk-label-from: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .gk-scene[data-gk-press]:not([data-gk-press='rule']) .gk-press {
+            background: var(--secondary-active);
+            color: var(--foreground);
+        }
+
+        .gk-scene[data-gk-press='squash'] .gk-press {
+            box-shadow: inset 0 0 0 3px var(--gk-ink);
+        }
+
+        .gk-scene[data-gk-press='overprint'] .gk-press {
+            border-color: var(--primary-active);
+            color: var(--primary-active);
+        }
+    }
+
     /* ── G10: the waiting parts ──────────────────────────────────────── */
 
     .gk-scene .gk-wait {
@@ -1181,8 +1364,11 @@
 
     .gk-scene .gk-proof::before {
         --gk-c: var(--gk-red);
-        /* At rest (and under reduced motion): a little out of register. */
-        translate: calc(var(--gk-r) * 0.6 * var(--gk-dir)) calc(var(--gk-r) * 0.5);
+        /* At rest (and under reduced motion): a little out of register. The
+           position is polar (round 3), so a clockwise loop can animate it. */
+        --gk-a: 39.8deg;
+        --gk-q: 0.78;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
     }
 
     .gk-scene .gk-proof::after {
@@ -1269,19 +1455,6 @@
             linear-gradient(var(--gk-c) 0 0) 0 0.1rem / 82% 0.55rem no-repeat, linear-gradient(var(--gk-c) 0 0) 0 1.05rem / 55% 0.55rem no-repeat;
     }
 
-    .gk-scene .gk-wait--bar .gk-proof {
-        --gk-h: 1rem;
-        --gk-r: 3px;
-    }
-
-    .gk-scene .gk-wait--bar .gk-proof::before,
-    .gk-scene .gk-wait--bar .gk-proof::after {
-        --gk-img:
-            linear-gradient(var(--gk-c) 0 0) 0 100% / 100% 2px no-repeat, linear-gradient(var(--gk-c) 0 0) 0 0 / 100% 1px no-repeat,
-            linear-gradient(var(--gk-c) 0 0) 100% 0 / 1px 100% no-repeat,
-            repeating-linear-gradient(90deg, var(--gk-c) 0 1px, transparent 1px calc(100% / 12));
-    }
-
     .gk-scene .gk-wait--line .gk-proof {
         --gk-h: 0.75rem;
         --gk-r: 3px;
@@ -1307,7 +1480,9 @@
 
     .gk-scene .gk-plate-red {
         stroke: var(--gk-red);
-        translate: calc(var(--gk-r) * 0.6 * var(--gk-dir)) calc(var(--gk-r) * 0.5);
+        --gk-a: 39.8deg;
+        --gk-q: 0.78;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
     }
 
     .gk-scene .gk-plate-ink {
@@ -1360,7 +1535,9 @@
         z-index: 0;
         background: var(--gk-plate);
         /* At rest (and under reduced motion): a little out of register. */
-        translate: calc(var(--gk-r) * 0.45 * var(--gk-dir)) calc(var(--gk-r) * 0.35);
+        --gk-a: 37.9deg;
+        --gk-q: 0.57;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
     }
 
     .gk-scene .gk-sktext > i::after {
@@ -1390,75 +1567,27 @@
         --w: 46%;
     }
 
-    /* The signature's own skeleton keeps the register's spacing. */
-    .gk-scene .gk-skel-sig {
-        display: grid;
-        gap: 0;
-    }
-
-    .gk-scene .gk-skel__line:nth-child(2) {
-        inline-size: 80%;
-    }
-
-    .gk-scene .gk-skel__line:nth-child(3) {
-        inline-size: 60%;
-    }
-
-    .gk-scene .gk-skel__line {
-        display: block;
-    }
-
-    .gk-scene .gk-skel-sig .kp-skeleton:nth-child(2) {
-        inline-size: 80%;
-    }
-
-    .gk-scene .gk-skel-sig .kp-skeleton:nth-child(3) {
-        inline-size: 60%;
-    }
-
-    .gk-scene .gk-skel-set--figure .gk-skel-sig .kp-skeleton {
-        inline-size: 4.6rem;
-    }
-
-    /* The busy bar and the skeleton: one of the drawings shows. */
-    .gk-scene .gk-bar-sig,
-    .gk-scene .gk-skel-sig {
-        display: none;
-    }
-
-    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-sig, .gk-skel-sig) {
-        display: grid;
-    }
-
-    .gk-scene[data-gk-bars='signature'] .gk-bar-sig {
-        display: block;
-    }
-
-    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-proof, .gk-skel-proof, .gk-wait--text) {
-        display: none;
-    }
-
     /* The line that runs, and the flap (the options' own pictures): the
        reading's place stands faint, in grey, its red plate gone. */
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::before,
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-red,
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-sktext > i::before {
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-proof::before,
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-plate-red,
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-sktext > i::before {
         display: none;
     }
 
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-sktext {
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-sktext {
         --gk-sk: var(--border);
     }
 
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::after {
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-proof::after {
         --gk-c: var(--border);
     }
 
-    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-ink {
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap']) .gk-plate-ink {
         stroke: var(--border);
     }
 
-    .gk-scene:is([data-gk-loading='line'], [data-gk-bars='line']) .gk-wait > .gk-run {
+    .gk-scene:is([data-gk-loading='line']) .gk-wait > .gk-run {
         position: absolute;
         inset-inline: 0;
         inset-block-end: -5px;
@@ -1497,16 +1626,25 @@
         block-size: 100%;
     }
 
-    .gk-scene .gk-spin > :is(.gk-spin__quarter, .gk-spin__ring) {
+    .gk-scene .gk-spin > .gk-spin__quarter {
         display: none;
     }
 
     /* The plate (research/grotesk-anchor, no crosshairs, no marks, no rings):
-       the signature's own ink square and its red twin, a few pixels off, that
-       falls into register. */
+       two plates of one print, the second plate red (--gk-pa) on ::before and
+       the first plate ink (--gk-pb) on ::after, the ink on top. Round 3: every
+       candidate draws bold solids (a stroke of at least 3 px) and turns
+       clockwise only; the options below say how. */
     .gk-scene .gk-spin__plate {
         position: relative;
+        --gk-pa: var(--gk-plate);
+        --gk-pb: var(--gk-ink);
+        --gk-t: max(3px, calc(var(--gk-spin-size) * 0.15));
         --gk-r: calc(var(--gk-spin-size) * 0.2);
+    }
+
+    .gk-scene .gk-spin__plate > i {
+        display: none;
     }
 
     .gk-scene .gk-spin__plate::before,
@@ -1515,29 +1653,27 @@
         position: absolute;
         inset: 0;
         box-sizing: border-box;
-        border: max(2px, calc(var(--gk-spin-size) * 0.09)) solid var(--gk-c);
+        border: var(--gk-t) solid var(--gk-c);
     }
 
     .gk-scene .gk-spin__plate::before {
-        --gk-c: var(--gk-plate);
-        translate: calc(var(--gk-r) * 0.45 * var(--gk-dir)) calc(var(--gk-r) * 0.35);
+        --gk-c: var(--gk-pa);
+        --gk-a: 37.9deg;
+        --gk-q: 0.57;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
     }
 
     .gk-scene .gk-spin__plate::after {
-        --gk-c: var(--gk-ink);
+        --gk-c: var(--gk-pb);
     }
 
     /* On the red primary face the two plates are its own white and the ink. */
-    .gk-scene .kp-button--primary .gk-spin__plate::before {
-        --gk-c: var(--gk-ink);
+    .gk-scene .kp-button--primary .gk-spin__plate {
+        --gk-pa: var(--gk-ink);
+        --gk-pb: var(--primary-foreground);
     }
 
-    .gk-scene .kp-button--primary .gk-spin__plate::after {
-        --gk-c: var(--primary-foreground);
-    }
-
-    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__plate,
-    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__plate {
+    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__plate {
         display: none;
     }
 
@@ -1549,12 +1685,399 @@
         border-color: var(--primary-foreground);
     }
 
-    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__ring {
+    /* The plate, as before (the reference): a 2 px square and its twin on the
+       clockwise loop. */
+    .gk-scene[data-gk-spinner='plate'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-spinner='plate'] .gk-spin__plate {
+        --gk-t: max(2px, calc(var(--gk-spin-size) * 0.09));
+    }
+
+    /* The twin turns: the red square turns clockwise behind the ink square and
+       is in register every quarter turn. */
+    .gk-scene[data-gk-spinner='turn'] {
+        --gk-loopkf: gk-spin-turn;
+    }
+
+    .gk-scene[data-gk-spinner='turn'] .gk-spin__plate::before {
+        translate: none;
+        rotate: 22deg;
+    }
+
+    /* Two plates take turns: a solid ink square, the red printed over it as a
+       wedge growing clockwise, then the ink printed back over the red. */
+    .gk-scene[data-gk-spinner='pie'] {
+        --gk-loopkf: gk-spin-pie-1;
+    }
+
+    .gk-scene[data-gk-spinner='pie'] .gk-spin__plate {
+        background: var(--gk-pb);
+    }
+
+    .gk-scene[data-gk-spinner='pie'] .gk-spin__plate::before {
+        border: 0;
+        translate: none;
+        --gk-s1: 120deg;
+        background: conic-gradient(var(--gk-c) 0 var(--gk-s1), transparent 0);
+    }
+
+    .gk-scene[data-gk-spinner='pie'] .gk-spin__plate::after {
+        border: 0;
+        --gk-s2: 0deg;
+        background: conic-gradient(var(--gk-c) 0 var(--gk-s2), transparent 0);
+    }
+
+    /* The station clock: an ink square outline and a red hand from its
+       centre, 40 % of the way to the frame. */
+    .gk-scene[data-gk-spinner='clock'] {
+        --gk-loopkf: gk-spin-hand;
+    }
+
+    .gk-scene[data-gk-spinner='clock'] .gk-spin__plate::before {
+        inset: auto;
+        inset-inline-start: calc(50% - var(--gk-t) / 2);
+        inset-block-end: 50%;
+        inline-size: var(--gk-t);
+        block-size: 40%;
+        border: 0;
+        background: var(--gk-c);
+        transform-origin: 50% 100%;
+        translate: none;
+        rotate: 40deg;
+    }
+
+    /* A red square orbits an ink core, then registers. */
+    .gk-scene[data-gk-spinner='orbit'] {
+        --gk-loopkf: gk-spin-orbit;
+    }
+
+    .gk-scene[data-gk-spinner='orbit'] .gk-spin__plate {
+        --gk-r: calc(var(--gk-spin-size) * 0.34);
+    }
+
+    .gk-scene[data-gk-spinner='orbit'] .gk-spin__plate::before,
+    .gk-scene[data-gk-spinner='orbit'] .gk-spin__plate::after {
+        inset: 22%;
+        border: 0;
+        background: var(--gk-c);
+    }
+
+    /* The red twin slips to each corner in turn. */
+    .gk-scene[data-gk-spinner='corners'] {
+        --gk-loopkf: gk-spin-corners;
+    }
+
+    .gk-scene[data-gk-spinner='corners'] .gk-spin__plate::before {
+        translate: calc(var(--gk-spin-size) * 0.17 * var(--gk-dir)) calc(var(--gk-spin-size) * 0.14);
+    }
+
+    /* ── G11: the busy bar (round 3: ten bold printings) ─────────────────
+       Two plates of one print, the red `.gk-bar__red` under the ink
+       `.gk-bar__ink`; twelve spare blocks (`b`) and a frame serve the options
+       that print in sections. Kenny: "I especially don't like the fine lines
+       of it", so nothing here is thinner than 3 px: no hairline, no ruling. */
+
+    .gk-scene .gk-bar {
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        block-size: 2rem;
+        --gk-r: 12px;
+    }
+
+    .gk-scene .gk-bar > * {
+        position: absolute;
+        display: block;
+    }
+
+    .gk-scene .gk-bar > b,
+    .gk-scene .gk-bar__frame {
+        display: none;
+    }
+
+    .gk-scene .gk-bar__red,
+    .gk-scene .gk-bar__ink {
+        inset-block: 8px;
+        inset-inline: 16px;
+    }
+
+    .gk-scene .gk-bar__red {
+        background: var(--gk-plate);
+        --gk-a: 39.8deg;
+        --gk-q: 0.78;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
+    }
+
+    .gk-scene .gk-bar__ink {
+        background: var(--gk-ink);
+    }
+
+    /* Spare blocks: shown by the options that print in sections. */
+    .gk-scene .gk-bar > b::before,
+    .gk-scene .gk-bar > b::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    .gk-scene .gk-bar > b::before {
+        background: var(--gk-plate);
+        --gk-a: 39.8deg;
+        --gk-q: 0.78;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
+    }
+
+    .gk-scene .gk-bar > b::after {
+        background: var(--gk-ink);
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(1) {
+        --i: 0;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(2) {
+        --i: 1;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(3) {
+        --i: 2;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(4) {
+        --i: 3;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(5) {
+        --i: 4;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(6) {
+        --i: 5;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(7) {
+        --i: 6;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(8) {
+        --i: 7;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(9) {
+        --i: 8;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(10) {
+        --i: 9;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(11) {
+        --i: 10;
+    }
+
+    .gk-scene .gk-bar > b:nth-of-type(12) {
+        --i: 11;
+    }
+
+    /* The slab: one heavy ink bar, its red plate on the clockwise loop. */
+    .gk-scene[data-gk-bars='slab'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    /* Twelve blocks, each with its own twin, a twelfth of a loop apart. */
+    .gk-scene[data-gk-bars='blocks'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-bars='blocks'] .gk-bar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding-inline: 8px;
+        --gk-r: 6px;
+    }
+
+    .gk-scene[data-gk-bars='blocks'] .gk-bar > i {
+        display: none;
+    }
+
+    .gk-scene[data-gk-bars='blocks'] .gk-bar > b {
+        position: relative;
+        display: block;
+        flex: 1 1 0;
+        block-size: 16px;
+    }
+
+    /* The frame slips round a solid red bar. */
+    .gk-scene[data-gk-bars='frame'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-bars='frame'] .gk-bar__ink {
+        display: none;
+    }
+
+    .gk-scene[data-gk-bars='frame'] .gk-bar__red {
+        inset-block: 6px;
+        translate: none;
+    }
+
+    .gk-scene[data-gk-bars='frame'] .gk-bar__frame {
+        inset-block: 6px;
+        inset-inline: 16px;
         display: block;
         box-sizing: border-box;
-        border: 2px solid var(--border);
-        border-block-start-color: var(--gk-red);
-        border-radius: 50%;
+        border: 4px solid var(--gk-ink);
+        --gk-a: 39.8deg;
+        --gk-q: 0.78;
+        translate: calc(var(--gk-r) * var(--gk-q) * cos(var(--gk-a)) * var(--gk-dir)) calc(var(--gk-r) * var(--gk-q) * sin(var(--gk-a)));
+    }
+
+    /* Three sections stamped in, one after another. */
+    .gk-scene[data-gk-bars='stamps'] {
+        --gk-loopkf: gk-bar-stamp;
+    }
+
+    .gk-scene[data-gk-bars='stamps'] .gk-bar {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-content: center;
+        gap: 6px;
+        padding-inline: 8px;
+    }
+
+    .gk-scene[data-gk-bars='stamps'] .gk-bar > i {
+        display: none;
+    }
+
+    .gk-scene[data-gk-bars='stamps'] .gk-bar > b:nth-of-type(-n + 3) {
+        position: relative;
+        display: block;
+        block-size: 16px;
+    }
+
+    .gk-scene[data-gk-bars='stamps'] .gk-bar > b::before {
+        translate: 0 -8px;
+    }
+
+    /* Three sheets through the press. */
+    .gk-scene[data-gk-bars='sheets'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-bars='sheets'] .gk-bar {
+        display: grid;
+        grid-template-rows: repeat(3, 8px);
+        align-content: center;
+        gap: 4px;
+        padding-inline: 8px;
+        --gk-r: 6px;
+    }
+
+    .gk-scene[data-gk-bars='sheets'] .gk-bar > i {
+        display: none;
+    }
+
+    .gk-scene[data-gk-bars='sheets'] .gk-bar > b:nth-of-type(-n + 3) {
+        position: relative;
+        display: block;
+    }
+
+    /* The plate in two halves closing in from opposite corners. */
+    .gk-scene[data-gk-bars='halves'] {
+        --gk-loopkf: gk-cw;
+    }
+
+    .gk-scene[data-gk-bars='halves'] .gk-bar__red {
+        background: none;
+        translate: none;
+    }
+
+    .gk-scene[data-gk-bars='halves'] .gk-bar__red::before,
+    .gk-scene[data-gk-bars='halves'] .gk-bar__red::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inline-size: 50%;
+        background: var(--gk-plate);
+    }
+
+    .gk-scene[data-gk-bars='halves'] .gk-bar__red::before {
+        inset-inline-start: 0;
+        translate: calc(-7px * var(--gk-dir)) -6px;
+    }
+
+    .gk-scene[data-gk-bars='halves'] .gk-bar__red::after {
+        inset-inline-end: 0;
+        translate: calc(7px * var(--gk-dir)) 6px;
+    }
+
+    /* The bleed, trimmed. */
+    .gk-scene[data-gk-bars='bleed'] {
+        --gk-loopkf: gk-bar-bleed;
+    }
+
+    .gk-scene[data-gk-bars='bleed'] .gk-bar__red {
+        translate: none;
+        scale: 1 1.75;
+    }
+
+    /* The red sheet, stretched. */
+    .gk-scene[data-gk-bars='stretch'] {
+        --gk-loopkf: gk-bar-stretch;
+    }
+
+    .gk-scene[data-gk-bars='stretch'] .gk-bar__red {
+        translate: none;
+        scale: 1.12 1;
+        transform-origin: 0 50%;
+    }
+
+    .gk-scene[data-gk-bars='stretch']:dir(rtl) .gk-bar__red {
+        transform-origin: 100% 50%;
+    }
+
+    /* Jogged up a line at a time. */
+    .gk-scene[data-gk-bars='jog'] {
+        --gk-loopkf: gk-bar-jog;
+    }
+
+    .gk-scene[data-gk-bars='jog'] .gk-bar__red {
+        translate: 0 9px;
+    }
+
+    /* The ink catches up with the red: a frame, two fills in counted steps. */
+    .gk-scene[data-gk-bars='catch'] {
+        --gk-loopkf: gk-bar-catch-red;
+    }
+
+    .gk-scene[data-gk-bars='catch'] .gk-bar__frame {
+        inset-block: 6px;
+        inset-inline: 8px;
+        display: block;
+        box-sizing: border-box;
+        border: 4px solid var(--gk-ink);
+    }
+
+    .gk-scene[data-gk-bars='catch'] :is(.gk-bar__red, .gk-bar__ink) {
+        inset-block: 10px;
+        inset-inline: 12px;
+        translate: none;
+        transform-origin: 0 50%;
+    }
+
+    .gk-scene[data-gk-bars='catch'] .gk-bar__red {
+        scale: 0.67 1;
+    }
+
+    .gk-scene[data-gk-bars='catch'] .gk-bar__ink {
+        scale: 0.5 1;
+    }
+
+    .gk-scene[data-gk-bars='catch']:dir(rtl) :is(.gk-bar__red, .gk-bar__ink) {
+        transform-origin: 100% 50%;
     }
 
     /* ── G9: the carriers of a live update ───────────────────────────── */
@@ -1627,11 +2150,11 @@
         /* G3, G12: the colour bands (your leave, 2026-10-04) print what opens
            and arrives and take off what closes and leaves, in the options
            that ask for them. Paper covers the part in the gap. */
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-printed {
+        .gk-scene:is([data-gk-opening='bands']) .gk-printed {
             overflow: clip;
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-band {
+        .gk-scene:is([data-gk-opening='bands']) .gk-band {
             position: absolute;
             inset: 0;
             z-index: 3;
@@ -1640,7 +2163,7 @@
             pointer-events: none;
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']) .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands']) .gk-band__strip {
             position: absolute;
             inset-block: 0;
             inset-inline-start: 0;
@@ -1649,25 +2172,24 @@
             translate: calc(33.34% * var(--gk-dir)) 0;
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands']):dir(rtl) .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands']):dir(rtl) .gk-band__strip {
             background: linear-gradient(to left, var(--gk-red) 0 33.34%, var(--gk-ink) 33.34% 66.67%, var(--background) 66.67% 100%);
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='gap'] .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'])[data-gk-phase='gap'] .gk-band__strip {
             translate: calc(-66.67% * var(--gk-dir)) 0;
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='in'] .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'])[data-gk-phase='in'] .gk-band__strip {
             animation: gk-print calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
         }
 
-        .gk-scene:is([data-gk-opening='bands'], [data-gk-leave='bands'])[data-gk-phase='out'] .gk-band__strip {
+        .gk-scene:is([data-gk-opening='bands'])[data-gk-phase='out'] .gk-band__strip {
             animation: gk-unprint calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
         }
 
         /* The bands' own panels do not fall; the strip prints them. */
-        .gk-scene[data-gk-opening='bands'][data-gk-phase='in'] .gk-opens,
-        .gk-scene[data-gk-leave='bands'][data-gk-phase='in'] .gk-leaver > :first-child {
+        .gk-scene[data-gk-opening='bands'][data-gk-phase='in'] .gk-opens {
             animation: none;
         }
 
@@ -1697,28 +2219,6 @@
             animation: gk-from-end calc(220ms * var(--gk-slow, 1)) linear reverse forwards;
         }
 
-        /* Leaving, the other two ways (the part inside the wrapper); each
-           arrival and leave are one animation, played both ways. */
-        .gk-scene:is([data-gk-leave='cut'], [data-gk-leave='shove'])[data-gk-phase='gap'] .gk-leaver > :first-child {
-            visibility: hidden;
-        }
-
-        .gk-scene[data-gk-leave='cut'][data-gk-phase='in'] .gk-leaver > :first-child {
-            animation: gk-cut calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) backwards;
-        }
-
-        .gk-scene[data-gk-leave='cut'][data-gk-phase='out'] .gk-leaver > :first-child {
-            animation: gk-cut calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) reverse forwards;
-        }
-
-        .gk-scene[data-gk-leave='shove'][data-gk-phase='in'] .gk-leaver > :first-child {
-            animation: gk-set calc(var(--gk-set) * var(--gk-slow, 1)) linear backwards;
-        }
-
-        .gk-scene[data-gk-leave='shove'][data-gk-phase='out'] .gk-leaver > :first-child {
-            animation: gk-set calc(var(--gk-set) * var(--gk-slow, 1)) linear reverse forwards;
-        }
-
         /* G9: a changed value is re-registered: written at once in black,
            its red plate falls back into register (the anchor). The train
            (your graph's) runs along the baseline once. */
@@ -1742,36 +2242,20 @@
             animation: gk-invert calc(600ms * var(--gk-slow, 1)) steps(1);
         }
 
-        /* G8, G14, DI2: pointing at a part, focusing it and pressing it are
-           the plate too. Pointed at or focused: its red plate falls into
-           register on it, dwells while the pointer or focus stays and is
-           released as the same fall played backwards (the part's own close
-           below). Pressed: the same fall, and the press lands in the seventh
-           unit, when the plate is in register: the face goes grey and the
-           label black, and stays until the release. */
+        /* G8, DI2: hovering over a part and focusing it are the plate: its red
+           plate falls into register on it, dwells while the hover or focus
+           stays and is released as the same fall played backwards (the part's
+           own close below). The press (round 3) no longer borrows this fall:
+           it looked like the loading animation, so each press option draws
+           its own landing, further down. */
         .gk-scene[data-gk-hover='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-pointed,
-        .gk-scene[data-gk-focus='ring']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-focused,
-        .gk-scene[data-gk-press='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
+        .gk-scene[data-gk-focus='ring']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-focused {
             animation: gk-fall calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
         }
 
         .gk-scene[data-gk-hover='plate'][data-gk-phase='out'] .gk-pointed,
-        .gk-scene[data-gk-focus='ring'][data-gk-phase='out'] .gk-focused,
-        .gk-scene[data-gk-press='plate'][data-gk-phase='out'] .gk-press {
+        .gk-scene[data-gk-focus='ring'][data-gk-phase='out'] .gk-focused {
             animation: gk-fall-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
-        }
-
-        /* The press: the face lands with the plate, at 87.5 % of the fall. */
-        .gk-scene[data-gk-press='plate']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
-            animation:
-                gk-fall calc(var(--gk-fall) * var(--gk-slow, 1)) linear both,
-                gk-face calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
-        }
-
-        .gk-scene[data-gk-press='plate'][data-gk-phase='out'] .gk-press {
-            animation:
-                gk-fall-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both,
-                gk-face-out calc(var(--gk-fall) * var(--gk-slow, 1)) linear both;
         }
 
         /* The press, the contact time: the baseline's own scale stays 120 ms. */
@@ -1781,37 +2265,122 @@
                 color calc(var(--gk-contact) * var(--gk-slow, 1)) linear;
         }
 
+        /* G12 (round 3): a part leaves with its red plate turning clockwise
+           (8 units, 960 ms), the part gone at the end of the turn. */
+        .gk-scene[data-gk-leave] {
+            --gk-lv: calc(8 * 120ms * var(--gk-slow, 1));
+        }
+
+        .gk-scene:is([data-gk-leave='cw'], [data-gk-leave='slur'])[data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-cw var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='twice'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-twice var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='sling'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-sling var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='sweep'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-sweep var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='wide'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-wide var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='stops'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-stops var(--gk-lv) linear both;
+        }
+
+        /* Quarters: the plate opens out clockwise, the part is taken off a
+           quarter at a time, clockwise, one every 2 units. */
+        .gk-scene[data-gk-leave='quarters'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation:
+                gk-leave-cw var(--gk-lv) linear both,
+                gk-leave-quarters var(--gk-lv) linear both;
+        }
+
+        /* Hand: a red bar sweeps clockwise from twelve and erases the part. */
+        .gk-scene[data-gk-leave='hand'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-wipe var(--gk-lv) linear both;
+        }
+
+        .gk-scene[data-gk-leave='hand'][data-gk-phase='out'] .gk-leaver::after {
+            animation: gk-leave-hand var(--gk-lv) linear both;
+        }
+
+        /* Rows: each line's plate turns once, a unit apart, top first (6 units
+           each); the part, which keeps its rule, is gone when the last is. */
+        .gk-scene[data-gk-leave='rows'][data-gk-phase='out'] .gk-leaver > :first-child > * {
+            animation: gk-leave-cw calc(6 * 120ms * var(--gk-slow, 1)) linear both;
+        }
+
+        .gk-scene[data-gk-leave='rows'][data-gk-phase='out'] .gk-leaver > :first-child > :nth-child(2) {
+            animation-delay: calc(120ms * var(--gk-slow, 1));
+        }
+
+        .gk-scene[data-gk-leave='rows'][data-gk-phase='out'] .gk-leaver > :first-child > :nth-child(3) {
+            animation-delay: calc(2 * 120ms * var(--gk-slow, 1));
+        }
+
+        .gk-scene[data-gk-leave='rows'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-leave-gone 1ms linear calc(8 * 120ms * var(--gk-slow, 1) - 1ms) both;
+        }
+
+        /* G14 (round 3): the press rests 400 ms, lands, is held through `hold`
+           and is released at `out` as the landing played backwards. */
+        .gk-scene[data-gk-press]:not([data-gk-press='rule']):is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
+            animation:
+                var(--gk-pk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear calc(400ms * var(--gk-slow, 1)) both,
+                var(--gk-fk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear calc(400ms * var(--gk-slow, 1)) both;
+        }
+
+        .gk-scene[data-gk-press]:not([data-gk-press='rule'])[data-gk-phase='out'] .gk-press {
+            animation:
+                var(--gk-pk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear reverse both,
+                var(--gk-fk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear reverse both;
+        }
+
         /* G10: the proof's red plate travels the closing spiral, falls into
            register, dwells and is released (22 units, the anchor's clock). */
         .gk-scene .gk-proof::before,
         .gk-scene .gk-plate-red,
         .gk-scene .gk-spin__plate::before,
-        .gk-scene .gk-sktext > i::before {
+        .gk-scene .gk-sktext > i::before,
+        .gk-scene .gk-bar__red,
+        .gk-scene .gk-bar__frame,
+        .gk-scene .gk-bar > b::before {
             animation: var(--gk-loopkf) calc(var(--gk-loop) * var(--gk-slow, 1)) var(--gk-in) infinite;
             animation-delay: calc(var(--i, 0) * var(--gk-loop) * var(--gk-slow, 1) / 11);
         }
 
-        .gk-scene .gk-skel__line {
-            --i: 0;
+        /* The pie spinner's second wipe, the halves' two pieces and the catch
+           bar's ink fill have an animation of their own. */
+        .gk-scene[data-gk-spinner='pie'] .gk-spin__plate::after {
+            animation: gk-spin-pie-2 calc(var(--gk-loop) * var(--gk-slow, 1)) linear infinite;
         }
 
-        .gk-scene[data-gk-slip='orbit'] .gk-proof::before,
-        .gk-scene[data-gk-slip='orbit'] .gk-plate-red,
-        .gk-scene[data-gk-slip='orbit'] .gk-sktext > i::before {
-            animation-name: gk-orbit;
+        .gk-scene[data-gk-bars='halves'] .gk-bar__red {
+            animation: none;
         }
 
-        .gk-scene[data-gk-slip='line'] .gk-proof::before,
-        .gk-scene[data-gk-slip='line'] .gk-plate-red,
-        .gk-scene[data-gk-slip='line'] .gk-sktext > i::before {
-            animation-name: gk-slide;
+        .gk-scene[data-gk-bars='halves'] .gk-bar__red::before {
+            animation: gk-bar-half-l calc(var(--gk-loop) * var(--gk-slow, 1)) linear infinite;
         }
 
-        .gk-scene[data-gk-slip='steps'] .gk-proof::before,
-        .gk-scene[data-gk-slip='steps'] .gk-plate-red,
-        .gk-scene[data-gk-slip='steps'] .gk-sktext > i::before {
-            animation-name: gk-hop;
-            animation-timing-function: steps(1, end);
+        .gk-scene[data-gk-bars='halves'] .gk-bar__red::after {
+            animation: gk-bar-half-r calc(var(--gk-loop) * var(--gk-slow, 1)) linear infinite;
+        }
+
+        .gk-scene[data-gk-bars='catch'] .gk-bar__frame {
+            animation: none;
+        }
+
+        .gk-scene[data-gk-bars='catch'] .gk-bar__ink {
+            animation: gk-bar-catch-ink calc(var(--gk-loop) * var(--gk-slow, 1)) linear infinite;
         }
 
         .gk-scene[data-gk-durations='instant'] .gk-proof::before,
@@ -1821,16 +2390,12 @@
         }
 
         /* The options' own loading pictures. */
-        .gk-scene:is([data-gk-loading='line'], [data-gk-bars='line']) .gk-wait > .gk-run {
+        .gk-scene:is([data-gk-loading='line']) .gk-wait > .gk-run {
             animation: gk-run calc(1000ms * var(--gk-slow, 1)) linear infinite;
         }
 
         .gk-scene[data-gk-loading='flap'] .gk-wait > .gk-flap {
             animation: gk-flap calc(1000ms * var(--gk-slow, 1)) steps(1) infinite;
-        }
-
-        .gk-scene[data-gk-spinner='ring'] .gk-spin__ring {
-            animation: gk-ring calc(900ms * var(--gk-slow, 1)) linear infinite;
         }
     }
 
@@ -1984,95 +2549,6 @@
         }
     }
 
-    /* The orbit: 16 units round the ink through eight positions, 1 unit to
-       snap into register, 4 units of dwell, 1 unit to slip off (22 units). */
-    @keyframes gk-orbit {
-        0% {
-            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
-        }
-
-        9.09% {
-            translate: calc(var(--gk-r) * 0.7 * var(--gk-dir)) calc(var(--gk-r) * 0.7);
-        }
-
-        18.18% {
-            translate: 0 var(--gk-r);
-        }
-
-        27.27% {
-            translate: calc(var(--gk-r) * -0.7 * var(--gk-dir)) calc(var(--gk-r) * 0.7);
-        }
-
-        36.36% {
-            translate: calc(var(--gk-r) * -1 * var(--gk-dir)) 0;
-        }
-
-        45.45% {
-            translate: calc(var(--gk-r) * -0.7 * var(--gk-dir)) calc(var(--gk-r) * -0.7);
-        }
-
-        54.55% {
-            translate: 0 calc(var(--gk-r) * -1);
-        }
-
-        63.64% {
-            translate: calc(var(--gk-r) * 0.7 * var(--gk-dir)) calc(var(--gk-r) * -0.7);
-        }
-
-        72.73% {
-            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
-        }
-
-        77.27%,
-        95.45% {
-            translate: 0 0;
-        }
-
-        100% {
-            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
-        }
-    }
-
-    /* Along the line: out toward the end, back into register, dwell. */
-    @keyframes gk-slide {
-        0% {
-            translate: 0 0;
-        }
-
-        72.73% {
-            translate: calc(var(--gk-r) * 2 * var(--gk-dir)) 0;
-        }
-
-        77.27%,
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    /* In hard steps: four offsets held, then register. */
-    @keyframes gk-hop {
-        0% {
-            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
-        }
-
-        18.18% {
-            translate: 0 var(--gk-r);
-        }
-
-        36.36% {
-            translate: calc(var(--gk-r) * -1 * var(--gk-dir)) 0;
-        }
-
-        54.55% {
-            translate: 0 calc(var(--gk-r) * -1);
-        }
-
-        72.73%,
-        100% {
-            translate: 0 0;
-        }
-    }
-
     @keyframes gk-run {
         from {
             background-position-x: -50%;
@@ -2100,12 +2576,6 @@
         96% {
             transform: scaleY(1);
             background-color: var(--gk-red);
-        }
-    }
-
-    @keyframes gk-ring {
-        to {
-            rotate: 1turn;
         }
     }
 
@@ -2627,17 +3097,675 @@
         }
     }
 
-    /* The anchor's press: the face goes grey and the label black as the
-       plate lands, in the seventh unit of eight; the release is the mirror. */
-    @keyframes gk-face {
+    /* ── Round 3: the plate turns clockwise, in and out ─────────────────
+       --gk-a only ever grows (screen y points down, so a growing angle is
+       clockwise) and --gk-q is the distance: 1 is the far point, 0 register.
+       Times are in units of 120 ms; 22 units is the loop (4.545 % a unit). */
+
+    /* One turn in (7 units), a dwell of 5, one turn out (8): the loop Kenny
+       asked for. */
+    @keyframes gk-cw {
         0%,
-        87.49% {
+        9.09% {
+            --gk-a: 0deg;
+            --gk-q: 1;
+        }
+
+        40.91%,
+        63.64% {
+            --gk-a: 360deg;
+            --gk-q: 0;
+        }
+
+        100% {
+            --gk-a: 720deg;
+            --gk-q: 1;
+        }
+    }
+
+    /* Two turns each way (9 units), a dwell of 3. */
+    @keyframes gk-cw-twice {
+        0%,
+        4.55% {
+            --gk-a: 0deg;
+            --gk-q: 1;
+        }
+
+        45.45%,
+        59.09% {
+            --gk-a: 720deg;
+            --gk-q: 0;
+        }
+
+        100% {
+            --gk-a: 1440deg;
+            --gk-q: 1;
+        }
+    }
+
+    /* Wound in over two slow turns (12 units), a dwell of 5, slung out in one
+       quick turn (3 units). */
+    @keyframes gk-cw-sling {
+        0%,
+        4.55% {
+            --gk-a: 0deg;
+            --gk-q: 1;
+        }
+
+        59.09%,
+        81.82% {
+            --gk-a: 720deg;
+            --gk-q: 0;
+        }
+
+        95.45%,
+        100% {
+            --gk-a: 1080deg;
+            --gk-q: 1;
+        }
+    }
+
+    /* Half a turn in (8 units), a dwell of 4, half a turn out (8). */
+    @keyframes gk-cw-sweep {
+        0%,
+        9.09% {
+            --gk-a: 0deg;
+            --gk-q: 1;
+        }
+
+        45.45%,
+        63.64% {
+            --gk-a: 180deg;
+            --gk-q: 0;
+        }
+
+        100% {
+            --gk-a: 360deg;
+            --gk-q: 1;
+        }
+    }
+
+    /* Waits in register (6 units), unwinds one and a half turns (10), drops
+       straight back in (2) and dwells (4). */
+    @keyframes gk-cw-drop {
+        0%,
+        27.27% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+        }
+
+        72.73% {
+            --gk-a: 540deg;
+            --gk-q: 1;
+        }
+
+        81.82%,
+        100% {
+            --gk-a: 540deg;
+            --gk-q: 0;
+        }
+    }
+
+    /* The leave: the plate opens out clockwise from register and the part is
+       gone at the end (8 units; the quarters, rows and hand add to it). */
+    @keyframes gk-leave-cw {
+        0% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-a: 360deg;
+            --gk-q: 1;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 360deg;
+            --gk-q: 1;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-twice {
+        0% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-a: 720deg;
+            --gk-q: 1;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 720deg;
+            --gk-q: 1;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-sling {
+        0%,
+        62.5% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-a: 180deg;
+            --gk-q: 1;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 180deg;
+            --gk-q: 1;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-sweep {
+        0% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-a: 180deg;
+            --gk-q: 1;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 180deg;
+            --gk-q: 1;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-wide {
+        0% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-a: 540deg;
+            --gk-q: 2;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 540deg;
+            --gk-q: 2;
+            visibility: hidden;
+        }
+    }
+
+    /* Three legs of a third of a turn with a dead stop of a unit between. */
+    @keyframes gk-leave-stops {
+        0% {
+            --gk-a: 0deg;
+            --gk-q: 0;
+            visibility: visible;
+        }
+
+        25% {
+            --gk-a: 120deg;
+            --gk-q: 0.33;
+        }
+
+        37.5% {
+            --gk-a: 120deg;
+            --gk-q: 0.33;
+        }
+
+        62.5% {
+            --gk-a: 240deg;
+            --gk-q: 0.67;
+        }
+
+        75% {
+            --gk-a: 240deg;
+            --gk-q: 0.67;
+        }
+
+        99.9% {
+            --gk-a: 360deg;
+            --gk-q: 1;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-a: 360deg;
+            --gk-q: 1;
+            visibility: hidden;
+        }
+    }
+
+    /* The part is taken off a quarter at a time, clockwise from twelve. */
+    @keyframes gk-leave-quarters {
+        0% {
+            --gk-w: 0deg;
+            animation-timing-function: steps(1, end);
+        }
+
+        25% {
+            --gk-w: 90deg;
+            animation-timing-function: steps(1, end);
+        }
+
+        50% {
+            --gk-w: 180deg;
+            animation-timing-function: steps(1, end);
+        }
+
+        75% {
+            --gk-w: 270deg;
+            animation-timing-function: steps(1, end);
+        }
+
+        100% {
+            --gk-w: 360deg;
+        }
+    }
+
+    /* The hand: the bar and the erased angle turn together. */
+    @keyframes gk-leave-wipe {
+        0% {
+            --gk-w: 0deg;
+            visibility: visible;
+        }
+
+        99.9% {
+            --gk-w: 360deg;
+            visibility: visible;
+        }
+
+        100% {
+            --gk-w: 360deg;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-hand {
+        0% {
+            rotate: 0deg;
+            visibility: visible;
+        }
+
+        99.9% {
+            rotate: 360deg;
+            visibility: visible;
+        }
+
+        100% {
+            rotate: 360deg;
+            visibility: hidden;
+        }
+    }
+
+    @keyframes gk-leave-gone {
+        from {
+            visibility: visible;
+        }
+
+        to {
+            visibility: hidden;
+        }
+    }
+
+    /* ── Round 3: the spinners ─────────────────────────────────────────── */
+
+    /* A quarter turn in 8 units, a dwell of 3, a quarter turn, a dwell of 3:
+       half a turn a loop, in register every quarter (a square repeats). */
+    @keyframes gk-spin-turn {
+        0% {
+            rotate: 0deg;
+        }
+
+        36.36%,
+        50% {
+            rotate: 90deg;
+        }
+
+        86.36%,
+        100% {
+            rotate: 180deg;
+        }
+    }
+
+    /* The red wedge grows clockwise (9 units), then the ink is printed back
+       over it the same way (9 units). */
+    @keyframes gk-spin-pie-1 {
+        0% {
+            --gk-s1: 0deg;
+        }
+
+        40.91%,
+        100% {
+            --gk-s1: 360deg;
+        }
+    }
+
+    @keyframes gk-spin-pie-2 {
+        0%,
+        50% {
+            --gk-s2: 0deg;
+        }
+
+        90.91%,
+        100% {
+            --gk-s2: 360deg;
+        }
+    }
+
+    /* The hand stops at twelve for 2 units, then sweeps round at an even pace. */
+    @keyframes gk-spin-hand {
+        0%,
+        9.09% {
+            rotate: 0deg;
+        }
+
+        100% {
+            rotate: 360deg;
+        }
+    }
+
+    /* Orbit at a constant distance (12 units), snap in, dwell 4, slip out. */
+    @keyframes gk-spin-orbit {
+        0%,
+        9.09% {
+            --gk-a: 0deg;
+            --gk-q: 1;
+        }
+
+        63.64% {
+            --gk-a: 540deg;
+            --gk-q: 1;
+        }
+
+        68.18%,
+        86.36% {
+            --gk-a: 540deg;
+            --gk-q: 0;
+        }
+
+        100% {
+            --gk-a: 720deg;
+            --gk-q: 1;
+        }
+    }
+
+    /* Top left, top right, bottom right, bottom left (4 units each), then
+       register for 6. */
+    @keyframes gk-spin-corners {
+        0% {
+            translate: calc(var(--gk-spin-size) * -0.17 * var(--gk-dir)) calc(var(--gk-spin-size) * -0.14);
+            animation-timing-function: steps(1, end);
+        }
+
+        18.18% {
+            translate: calc(var(--gk-spin-size) * 0.17 * var(--gk-dir)) calc(var(--gk-spin-size) * -0.14);
+            animation-timing-function: steps(1, end);
+        }
+
+        36.36% {
+            translate: calc(var(--gk-spin-size) * 0.17 * var(--gk-dir)) calc(var(--gk-spin-size) * 0.14);
+            animation-timing-function: steps(1, end);
+        }
+
+        54.55% {
+            translate: calc(var(--gk-spin-size) * -0.17 * var(--gk-dir)) calc(var(--gk-spin-size) * 0.14);
+            animation-timing-function: steps(1, end);
+        }
+
+        72.73%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ── Round 3: the busy bar ─────────────────────────────────────────── */
+
+    /* A section is stamped in: 8 px above, dropped straight in (2 units),
+       held, lifted out (2 units). Staggered by --i, two units a section. */
+    @keyframes gk-bar-stamp {
+        0%,
+        9.09% {
+            translate: 0 -8px;
+        }
+
+        18.18%,
+        63.64% {
+            translate: 0 0;
+        }
+
+        72.73%,
+        100% {
+            translate: 0 -8px;
+        }
+    }
+
+    @keyframes gk-bar-half-l {
+        0%,
+        9.09% {
+            translate: calc(-7px * var(--gk-dir)) -6px;
+        }
+
+        40.91%,
+        63.64% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: calc(-7px * var(--gk-dir)) -6px;
+        }
+    }
+
+    @keyframes gk-bar-half-r {
+        0%,
+        9.09% {
+            translate: calc(7px * var(--gk-dir)) 6px;
+        }
+
+        40.91%,
+        63.64% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: calc(7px * var(--gk-dir)) 6px;
+        }
+    }
+
+    /* Bleeds 6 px above and below, trimmed to the ink, bleeds again. */
+    @keyframes gk-bar-bleed {
+        0%,
+        9.09% {
+            scale: 1 1.75;
+        }
+
+        40.91%,
+        63.64% {
+            scale: 1 1;
+        }
+
+        100% {
+            scale: 1 1.75;
+        }
+    }
+
+    @keyframes gk-bar-stretch {
+        0%,
+        9.09% {
+            scale: 1.12 1;
+        }
+
+        40.91%,
+        63.64% {
+            scale: 1 1;
+        }
+
+        100% {
+            scale: 1.12 1;
+        }
+    }
+
+    /* One line (6 px) low, jogged up in three counted stops and back down. */
+    @keyframes gk-bar-jog {
+        0% {
+            translate: 0 9px;
+            animation-timing-function: steps(1, end);
+        }
+
+        18.18% {
+            translate: 0 6px;
+            animation-timing-function: steps(1, end);
+        }
+
+        27.27% {
+            translate: 0 3px;
+            animation-timing-function: steps(1, end);
+        }
+
+        36.36% {
+            translate: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        63.64% {
+            translate: 0 3px;
+            animation-timing-function: steps(1, end);
+        }
+
+        72.73% {
+            translate: 0 6px;
+            animation-timing-function: steps(1, end);
+        }
+
+        81.82%,
+        100% {
+            translate: 0 9px;
+        }
+    }
+
+    /* The red fill grows in six counted steps (3 units each); the ink fill
+       follows one and a half units behind. */
+    @keyframes gk-bar-catch-red {
+        0% {
+            scale: 0 1;
+            animation-timing-function: steps(6, end);
+        }
+
+        81.82%,
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes gk-bar-catch-ink {
+        0%,
+        6.82% {
+            scale: 0 1;
+            animation-timing-function: steps(6, end);
+        }
+
+        88.64%,
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    /* ── Round 3: the press ──────────────────────────────────────────────
+       The red copy is the part's drop-shadow, --gk-pr off to the lower right;
+       it is driven straight in and stops dead, transparent in register. */
+    @keyframes gk-press-slam {
+        0% {
+            filter: drop-shadow(calc(var(--gk-pr) * var(--gk-dir)) var(--gk-pr) 0 transparent);
+        }
+
+        0.01% {
+            filter: drop-shadow(calc(var(--gk-pr) * var(--gk-dir)) var(--gk-pr) 0 var(--gk-plate));
+        }
+
+        99.9% {
+            filter: drop-shadow(0 0 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* The plate first, the face a beat later: the red copy is driven in over
+       2 units and sits in register for a beat before the ink lands. */
+    @keyframes gk-press-beats {
+        0% {
+            filter: drop-shadow(calc(var(--gk-pr) * var(--gk-dir)) var(--gk-pr) 0 transparent);
+        }
+
+        0.01% {
+            filter: drop-shadow(calc(var(--gk-pr) * var(--gk-dir)) var(--gk-pr) 0 var(--gk-plate));
+        }
+
+        66.6% {
+            filter: drop-shadow(0 0 0 var(--gk-plate));
+        }
+
+        66.7%,
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* Three counted stops: 9, 6 and 3 px off, then home. */
+    @keyframes gk-press-jog {
+        0% {
+            filter: drop-shadow(calc(9px * var(--gk-dir)) 9px 0 transparent);
+            animation-timing-function: steps(1, end);
+        }
+
+        0.01% {
+            filter: drop-shadow(calc(9px * var(--gk-dir)) 9px 0 var(--gk-plate));
+            animation-timing-function: steps(1, end);
+        }
+
+        33.33% {
+            filter: drop-shadow(calc(6px * var(--gk-dir)) 6px 0 var(--gk-plate));
+            animation-timing-function: steps(1, end);
+        }
+
+        66.66% {
+            filter: drop-shadow(calc(3px * var(--gk-dir)) 3px 0 var(--gk-plate));
+            animation-timing-function: steps(1, end);
+        }
+
+        99.9% {
+            filter: drop-shadow(0 0 0 var(--gk-plate));
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* The face lands at the end of the plate's stroke, or at its start. */
+    @keyframes gk-press-face-end {
+        0%,
+        99.9% {
             background-color: var(--gk-face-from);
             border-color: var(--gk-bc-from, var(--gk-ink));
             color: var(--gk-label-from);
         }
 
-        87.5%,
         100% {
             background-color: var(--secondary-active);
             border-color: var(--gk-bc-to, var(--gk-ink));
@@ -2645,19 +3773,40 @@
         }
     }
 
-    @keyframes gk-face-out {
-        0%,
-        12.5% {
-            background-color: var(--secondary-active);
-            border-color: var(--gk-bc-to, var(--gk-ink));
-            color: var(--foreground);
-        }
-
-        12.51%,
-        100% {
+    /* Ink squash: the face goes grey, the label gets heavier, a 3 px ink
+       keyline closes in inside the frame. */
+    @keyframes gk-press-squash {
+        from {
             background-color: var(--gk-face-from);
             border-color: var(--gk-bc-from, var(--gk-ink));
             color: var(--gk-label-from);
+            box-shadow: inset 0 0 0 0 var(--gk-ink);
+            text-shadow: 0 0 0 transparent;
+        }
+
+        to {
+            background-color: var(--secondary-active);
+            border-color: var(--gk-bc-to, var(--gk-ink));
+            color: var(--foreground);
+            box-shadow: inset 0 0 0 3px var(--gk-ink);
+            text-shadow:
+                0.7px 0 0 var(--foreground),
+                -0.7px 0 0 var(--foreground);
+        }
+    }
+
+    /* Overprinted: the frame and the label take the second plate's deep red. */
+    @keyframes gk-press-overprint {
+        from {
+            background-color: var(--gk-face-from);
+            border-color: var(--gk-bc-from, var(--gk-ink));
+            color: var(--gk-label-from);
+        }
+
+        to {
+            background-color: var(--secondary-active);
+            border-color: var(--primary-active);
+            color: var(--primary-active);
         }
     }
 }

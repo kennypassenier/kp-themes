@@ -170,6 +170,14 @@ when nine tenths are done in the first 30 % of the run, and, for every part
 that arrives, whether its close is its arrival played backwards (within one
 frame and 8 % of each value's range).
 
+A part that turns (a plate going round a part by `translate` or a
+`drop-shadow` offset, or a `rotate`) also gets its turn in degrees, positive
+clockwise. A leave that is not the arrival played backwards but turns the
+same way is a rule broken on purpose (grotesk, update 2: Kenny only likes the
+plate going clockwise, so its loop and its leave do not mirror): it is
+reported as `clockwise both ways, not mirrored on purpose (in +315°, out
++334°)`, or as `leave drawn by <part>, clockwise`, and not as a mirror fault.
+
 ```sh
 python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
 node research/_review/measure-motion.mjs research/nostromo-character [--aspect opening] [--parts] [--json out.json] [--width 900]

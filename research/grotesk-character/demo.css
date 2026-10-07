@@ -214,6 +214,12 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Five to ten options (round 3: the bars and the leave have ten): three
+   columns, as many rows as it takes. */
+.gk-trio:is([data-gk-n='5'], [data-gk-n='6'], [data-gk-n='7'], [data-gk-n='8'], [data-gk-n='9'], [data-gk-n='10']) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .gk-col {
     display: grid;
     grid-row: span 4;
@@ -225,7 +231,8 @@
 @media (max-width: 64rem) {
     .gk-story__grid,
     .gk-trio,
-    .gk-trio[data-gk-n='4'] {
+    .gk-trio[data-gk-n='4'],
+    .gk-trio:is([data-gk-n='5'], [data-gk-n='6'], [data-gk-n='7'], [data-gk-n='8'], [data-gk-n='9'], [data-gk-n='10']) {
         grid-template-columns: minmax(0, 1fr);
     }
 

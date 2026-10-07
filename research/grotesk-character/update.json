@@ -1,5 +1,48 @@
 {
-    "update": 1,
-    "picks": {},
-    "questions": {}
+    "update": 2,
+    "picks": {
+        "grotesk": {
+            "curve": "ontime",
+            "direction": "plate",
+            "opening": "plate",
+            "durations": "units",
+            "colour": "signal",
+            "surface": "rule",
+            "tone": "index",
+            "live": "plate",
+            "loading": "register",
+            "composites": "own",
+            "focus": "ring",
+            "voice": "sentence",
+            "motifs": "one"
+        }
+    },
+    "questions": {
+        "grotesk": {
+            "slip": {
+                "comment": "I like a closing spiral, but I feel like I only like it going clockwise. So I know there's a rule of opposites, but maybe we can break that for this theme. Make the clockwise spiral loop, give a couple of variations on this so I can decide",
+                "reply": "Done, and the rule of opposites is broken for this loop on purpose. The recommended option is exactly your loop: the red plate turns one full turn clockwise while it closes in, dwells in register, then turns one more full turn clockwise while it opens out, and starts over. It is drawn from a growing angle, so it cannot turn back. Four variations: two tighter turns each way, wound in slowly and slung out in one quick turn, half a turn in and half out (a slow S), and unwinds clockwise then drops straight back in. The old spiral, whose way out is the way in played backwards, is the last option for comparison. The graph's circle, the line and the hard steps are gone."
+            },
+            "spinner": {
+                "comment": "I like the plate, but I feel like we can do even better",
+                "reply": "The plate stays, now on the clockwise loop, as the sixth option, the reference. Before it are five new candidates, each two plates of one print, bold shapes, turning clockwise only: the twin turns (a red square turning behind the ink square, in register every quarter turn), two plates take turns (red fills the square like a timer, then the ink covers it), the station clock (a red hand that stops at twelve), a red square orbiting an ink core then registering, and the twin slipping to each corner in turn. The signature's quarter is last. None is another theme's spinner."
+            },
+            "bars": {
+                "comment": "I like printed out of register, but The progress bar itself should be better. I especially don't like the fine lines of it. But I want ten variations",
+                "reply": "Ten bars, each printed out of register in a different way, all bold solids: nothing is thinner than 3 px, and the hairlines and the twelve-column ticks are gone. The slab (my pick, the anchor scaled to a bar), twelve blocks registering in a wave, the frame slipping round a red bar, three sections stamped in, three sheets through the press, the plate in two halves, the bleed trimmed, the red sheet stretched, jogged up a line at a time, and the ink catching up with the red. The skeleton text stays as the hero under each bar, its red plate turning clockwise. The signature bar and the running line are no longer options."
+            },
+            "leave": {
+                "comment": "definitely a variation on option 1. But as I said in the other step, I feel like I mostly like it going clockwise. So come up with ten variations, base them on the other step so they can be in line.",
+                "reply": "Ten leaves, all variations on the plate. A part still arrives as before (black, its plate closing in clockwise) but now leaves with the plate turning clockwise too, not the arrival played backwards, so the rule of opposites is broken here on purpose, as in the loop. Opens out clockwise then gone (my pick), the station clock's hand sweeping round, taken off a quarter at a time, two quick turns, held then slung out, one half-turn sweep, slurred with a smear behind, line by line, a wide turn, and calling at three stations. Each uses the same paths as the loop step so they line up."
+            },
+            "hover": {
+                "comment": "ca,n you explain it better. \"when the pointer is on it\"? do you just mean hover?",
+                "reply": "Yes, it means hover: what a button, row or tile does while the mouse pointer rests on it, before any click. The question, the option names and their descriptions now say hover in plain words, and say that keyboard focus is a separate question. I also changed the other questions that said pointed at, pointer or touch to say hover. The options themselves are unchanged."
+            },
+            "press": {
+                "comment": "I need better options, and why is the loading animation running?",
+                "reply": "The loading animation was the plate's closing spiral: the old first option used the very same fall as loading, so a press looked like something waiting. It is gone, and no press option turns or spirals now; only the press plays. Five new presses: slammed home (a red copy driven straight into register, my pick), two beats (ink first, the red plate a beat later), jogged home in three counted stops, ink squash (heavier label and a keyline closes in, no red) and overprinted (frame and label take the second plate's deep red). Your scope-12 rule is last to compare, and now also stays through the hold like the others. The grey alone and reverse video are gone."
+            }
+        }
+    }
 }
