@@ -1,5 +1,7 @@
 # Synthwave's anchor element, round 2
 
+**Decided (Kenny, 07/10/2026 21:21): the anchor is the page horizon** (attempt 2 of round 2: one tube for the page on the header's foot, the floor being the page below it, components carrying 1 px of its light; under a hand a brighter piece of the tube appears exactly as wide as that component) (research/synthwave-anchor/decided.json; see themes/synthwave/CHARACTER.md §0).
+
 **Why.** Round 1 offered six anchors. Kenny, 2026-10-07 20:41: option 1, the neon horizon, is the one he likes, "but not sure how that
 plays out in real life, like that button press, that's waaay bigger than the button itself? that's not right? come up with a couple of
 new attempts and show them in an actual page before attempting the next demo." The fault: round 1 drew the anchor on a stage of its
