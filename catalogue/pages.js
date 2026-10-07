@@ -90,9 +90,9 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
-            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
+            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk', rework: 'reworked around its anchor' },
             // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
-            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
+            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint', rework: 'reworked around its anchor' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
         ],
