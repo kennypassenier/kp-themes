@@ -1,0 +1,53 @@
+{
+    "update": 1,
+    "picks": {
+        "synthwave": {
+            "direction": "horizon",
+            "durations": "beats",
+            "colour": "roles",
+            "surface": "floor",
+            "live": "laser",
+            "spinner": "sun",
+            "composites": "own",
+            "hover": "tube",
+            "type": "osd",
+            "motifs": "meaning"
+        }
+    },
+    "questions": {
+        "synthwave": {
+            "curve": {
+                "comment": "not sure about these, i like the progress bars though, come up with more examples that fit the synthwave feeling",
+                "reply": "Six new curves, each derived from the page horizon: the tube leads and the bodies follow, the tube strikes and bodies glide, four beats, the light passes, charge then release, an even tape-counter pace. They play on the progress bars you liked. Dropped: three surges, tape transport (blueprint's)."
+            },
+            "opening": {
+                "comment": "I like 1 and 2, but feel like there is more potential for something \"synthwave-y\"",
+                "reply": "Your two favourites stay (over the horizon, its stripe striking on; neon strikes) and four new ones depart from the horizon: the beam climbs to the horizon, the blinds are drawn up into it, it stands up on the floor, the horizon lets it down."
+            },
+            "corners": {
+                "comment": "I like square the most, but feel like we can do better.",
+                "reply": "Square stays as the baseline. Five new ideas, strictly inside the grammar (no notches, no pills): the light overshoots the corners, only top and foot rules, the light runs down the sides and fades, the stripe floats above the plate, a corner pixel."
+            },
+            "tone": {
+                "comment": "need more options",
+                "reply": "Six options for a warning, all on a tube that turns tone at the warned part's width: the VCR's symbols, your neon ring, the piece swells with the severity, three cells in the piece, the part between two tubes, the words cut by the sun's stripes. Retired: the arcade plate and the full frame (overlap with terminal and nostromo)."
+            },
+            "loading": {
+                "comment": "none of these are fancy enough, I already mentioned the progress bars you used to measure the timings in step 1/2, make some variations with those colours and some new ones. I want ten attempts",
+                "reply": "Ten attempts, all on the page tube and the progress bar's pink-to-laser-yellow ramp: the tube charges in five steps, the ramp flows through the tube, the road runs on the tube, the floor drives toward you, a slice of light runs the tube, headlights and tail lights, the sun's stripes light up from the horizon, the surface is the bar, the marquee on the tube in the ramp's colours, the rows of the floor light up."
+            },
+            "leave": {
+                "comment": "I like the sun swallows it, but it doesn't feel quite right yet, make some variations on it and some new ones, ten examples",
+                "reply": "Ten leaves around the horizon and the sun's stripes (the arrival is each one reversed): the sun's slab, the stripes close over it, the progress bar's ramp wipes it, the horizon's light pours over it, the floor takes it from its foot up, cut away by the stripes, it recedes into the page horizon, it closes toward its centre, it sets in four beats, the light drains out of it. The round-1 growing disc is not shown: it reads as solstice's eclipse and its clip cannot be verified frame by frame as a reverse."
+            },
+            "focus": {
+                "comment": "try new ones",
+                "reply": "Six new focus rings, always two channels: twin tubes, two tubes top and foot, the horizon shouts and the ring whispers, the sun's ramp as the ring, the light spills down from the piece, the part stands on its own tube."
+            },
+            "press": {
+                "comment": "new ones",
+                "reply": "Six new presses on the piece of tube under the part: it charges, the sun's ramp fills it, the light gathers under the part, a gleam crosses the part, it draws in to its core, the VCR acknowledges with a lit play symbol."
+            }
+        }
+    }
+}

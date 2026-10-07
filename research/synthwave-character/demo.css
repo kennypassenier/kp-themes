@@ -1,7 +1,10 @@
 /* research/synthwave-character: the page only. A centred column; the story
-   at the top, then one section of eight rows (round 2), each row a question
+   at the top, then one section of eight rows (round 3), each row a question
    with its options three to a line on a desk and stacked on a phone. Every
-   option's own drawing is in options.css. */
+   option is a real piece of page (a header's foot, the page horizon on it,
+   the part in question at its real size); its own drawing is in options.css.
+   This file is unlayered on purpose: the package's layout layer comes after
+   the signature layer and would beat the glue below. */
 .sy-page {
     display: grid;
     gap: var(--kp-space-xl, 2rem);
@@ -96,6 +99,8 @@
 }
 
 .sy-sec {
+    /* A full-width component: the dialog shows the option at the stage's width. */
+    --rv-flip-max: 100%;
     display: grid;
     gap: var(--kp-space-md, 1rem);
     padding: var(--kp-space-lg, 1.5rem);
@@ -149,7 +154,7 @@
     /* A row far off screen is not rendered, so its loops cost nothing until
        it scrolls near. */
     content-visibility: auto;
-    contain-intrinsic-size: auto 60rem;
+    contain-intrinsic-block-size: auto 60rem;
     display: grid;
     gap: var(--kp-space-md, 1rem);
     padding-block-start: var(--kp-space-lg, 1.5rem);
@@ -257,29 +262,17 @@
     font-weight: 600;
 }
 
-/* The scene: a small dashboard of parts, the same parts in every option of
-   a row. */
+/* The scene is a window on a real piece of page: the page inside it is what the
+   package draws, at its real size. */
 .sy-scene {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
-    gap: var(--kp-space-md, 1rem);
-    align-content: start;
     box-sizing: border-box;
     min-block-size: 100%;
-    padding: var(--kp-space-md, 1rem);
     border: 1px solid var(--border);
     background: var(--background);
 }
 
 .sy-part {
-    display: grid;
-    gap: 0.4rem;
-    align-content: start;
     min-inline-size: 0;
-}
-
-.sy-part--wide {
-    grid-column: 1 / -1;
 }
 
 .sy-cap {
@@ -295,17 +288,146 @@
     letter-spacing: 0.04em;
 }
 
-/* In the review dialog one option is shown alone and large: its scene gets
-   the room of the stage. */
+/* The header's foot: the title and the actions on one line, both standing on the tube. */
+.sy-pg .sy-hd .kp-page-header__inner {
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.sy-pg .sy-hd .kp-page-header__actions {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Below 36rem the header reads top to bottom, as the package's own does. */
+@container (max-width: 36rem) {
+    .sy-pg .sy-hd .kp-page-header__inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sy-pg .sy-hd .kp-page-header__actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+}
+
+/* The body: the parts on the floor below the tube, a grid of cells that keep
+   their place and size in every state. */
+.sy-pg .sy-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    padding: var(--sy-gap, 1.25rem) 1rem 1.25rem;
+}
+
+.sy-pg--curve .sy-body,
+.sy-pg--tone .sy-body,
+.sy-pg--leave .sy-body,
+.sy-pg--focus .sy-body,
+.sy-pg--press .sy-body,
+.sy-pg--waits .sy-body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sy-pg--leave .sy-body,
+.sy-pg--waits .sy-body {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@container (max-width: 40rem) {
+    .sy-pg--curve .sy-body,
+    .sy-pg--tone .sy-body,
+    .sy-pg--leave .sy-body,
+    .sy-pg--focus .sy-body,
+    .sy-pg--press .sy-body,
+    .sy-pg--waits .sy-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sy-pg--curve {
+    min-block-size: 15rem;
+}
+
+.sy-pg--waits .sy-body {
+    padding-block-start: 2.1rem;
+}
+
+.sy-pg--waits .sy-part--busy {
+    grid-column: 1 / -1;
+}
+
+/* Opening: the dialog stands in the body; the menu hangs from the More button
+   in the header (absolute, under the button and the tube). */
+.sy-pg--opening {
+    min-block-size: 19rem;
+}
+
+.sy-pg--opening .sy-part--drop {
+    position: absolute;
+    inset-block-start: calc(100% + var(--sy-hdpad, 0.75rem) + 0.5rem);
+    inset-inline-end: 0;
+    z-index: 4;
+    inline-size: 12rem;
+}
+
+.sy-pg--opening .sy-part--dialog {
+    max-inline-size: 18rem;
+}
+
+/* The tone scene: key figures side by side; the rest in their own cells. */
+.sy-pg--tone .sy-kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sy-part > .sy-host--block,
+.sy-part > .kp-kpis {
+    inline-size: 100%;
+}
+
+/* A control in a cell keeps its own width; plates and strips take the cell's. */
+.sy-part > :is(.kp-button, .kp-badge, .sy-tip, a, .sy-host:not(.sy-host--block)) {
+    justify-self: start;
+}
+
+/* In the review dialog one option is shown alone: its scene is the page piece at 1:1 (the kit's fitShown() sets an
+   inline `zoom` of down to 0.4 on the shown column, which would shrink a 3 px tube to nothing, so this rule beats it:
+   !important wins over an inline style). The dialog's bar already says the option's name and what it shows. */
 [data-rv-flip-trio] .sy-col:not([hidden]) {
     grid-column: 1 / -1;
 }
 
-/* A control in a part keeps its own width; plates and strips take the part's. */
-.sy-part > :is(.kp-button, .kp-badge, .sy-tip, .sy-spark, a) {
-    justify-self: start;
+.rv-dialog__stage .sy-col {
+    zoom: 1 !important;
 }
 
-.sy-part > .sy-spark {
-    justify-self: stretch;
+[data-rv-flip-trio] :is(.sy-label-row, .sy-see, .sy-verdict) {
+    display: none;
+}
+
+.rv-dialog__stage .sy-scene {
+    border: 0;
+}
+
+.rv-dialog__stage .sy-sec {
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+/* On a phone the More button wraps to the start of the header: the menu hangs from its start edge, and the dialog stands below it. */
+@container (max-width: 36rem) {
+    .sy-pg--opening .sy-part--drop {
+        inset-inline: 0 auto;
+    }
+
+    .sy-pg--opening .sy-body {
+        padding-block-start: 11rem;
+    }
+
+    .sy-pg--opening {
+        min-block-size: 0;
+    }
 }

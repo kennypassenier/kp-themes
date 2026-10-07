@@ -1,14 +1,16 @@
-/* research/synthwave-character: every option of every question, in the
-   theme's signature layer, scoped by the option's attribute on its scene
-   (`.sy-scene[data-sy-<question>='<key>']`). Colours come from the theme's
-   tokens only; every motion sits under prefers-reduced-motion:
-   no-preference, and the reduced pose is the finished part. Durations are
-   multiplied by --sy-slow (1, 2 or 4: the page's speed buttons). The values
-   of the "today" options are the ones measured in
-   themes/synthwave/CHARACTER.md §2. Parts at rest are drawn as the
-   recommended grammar has them (chrome over the floor, the stripe, square
-   panels and 2 px controls, the OSD and the chrome display, the marquee),
-   so each question changes only its own rule. */
+/* research/synthwave-character, round 3: every option of every question, in
+   the theme's signature layer, scoped by the option's attribute on its scene
+   (`.sy-scene[data-sy-<question>='<key>']`). Round 3 re-derives the eight open
+   questions from the decided anchor (the page horizon, 2026-10-07 21:21): every
+   scene is a real piece of page (a header's foot, the page tube on it, the
+   floor below, the part in question at its real size), and every option
+   starts from that line. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished part. Durations are multiplied by --sy-slow (1, 2 or
+   4: the page's speed buttons). The ten approved questions are the ground:
+   parts at rest are drawn as the recommended grammar has them (chrome over
+   the floor, the stripe, square panels and 2 px controls, the OSD and the
+   chrome display, the marquee), so each question changes only its own rule. */
 
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
@@ -648,28 +650,237 @@
         color: var(--accent);
     }
 
-    /* Tokens only reach the dialog's stage through :is(.sy-page, .rv-dialog__stage). */
+    /* ═══ Round 3: the anchor, drawn into a real piece of page ═══════════════
+       Kenny decided the anchor at 21:21: the page horizon. One neon tube for
+       the page on the header's foot, the floor being the page below it, every
+       part carrying 1 px of its light, and, under a hand, a brighter piece of
+       the tube exactly as wide as the part touched. Every scene below is that
+       page, cropped to what its question needs: the header's foot with its
+       actions at real size, the tube, the floor, and the part in question at
+       its real size. Nothing is magnified. The tube is calmer than in the
+       anchor demo (the quieter bloom) so that the piece, thicker and with the
+       strong bloom, stands out from it. */
 
-    /* ── The motion curve (G1) ───────────────────────────────────────── */
+    .sy-pg {
+        --sy-gap: 1.25rem;
+        --sy-hdpad: 0.75rem;
+        --sy-floor-h: 8.5rem;
+        position: relative;
+        isolation: isolate;
+        container-type: inline-size;
+        background: var(--background);
+    }
+
+    /* The header's foot: the title and the page's actions, standing on the tube. */
+    .sy-pg .sy-hd {
+        position: relative;
+        padding: 0.9rem 1rem var(--sy-hdpad);
+    }
+
+    .sy-pg .sy-hd__title {
+        margin: 0;
+        color: var(--kp-core);
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-shadow: var(--sy-tube);
+    }
+
+    /* The page tube and its floor. `.sy-hz` is a line of no height at the header's foot. */
+    .sy-hz {
+        position: relative;
+        block-size: 0;
+    }
+
+    .sy-hz > * {
+        position: absolute;
+        display: block;
+        pointer-events: none;
+    }
+
+    .sy-hz__floor {
+        inset: 0 0 auto;
+        z-index: -1;
+        block-size: var(--sy-floor-h);
+        overflow: hidden;
+        perspective: 30cqi;
+        perspective-origin: 50% 0;
+        mask-image: linear-gradient(to bottom, #000 0, #000 20%, transparent 95%);
+    }
+
+    .sy-hz__floor::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: -60%;
+        block-size: 90cqi;
+        background-image:
+            linear-gradient(hsl(from var(--primary) h s l / 0.5) 0 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.5) 0 1px, transparent 1px);
+        background-size: 3.6cqi 3.6cqi;
+        transform: rotateX(76deg);
+        transform-origin: 50% 0;
+    }
+
+    /* The ghost of the horizon runs edge to edge; the tube is the page column. */
+    .sy-hz__ghost {
+        inset: -1px 0 auto;
+        block-size: 1px;
+        background: hsl(from var(--primary) h s l / 0.32);
+    }
+
+    .sy-hz__far {
+        inset: 6px 0 auto;
+        block-size: 1px;
+        background: hsl(from var(--accent) h s l / 0.7);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.5);
+        opacity: 0.8;
+    }
+
+    .sy-hz__tube {
+        inset: -3px 0 auto;
+        z-index: 2;
+        block-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube);
+    }
+
+    /* A lit length's glowing front; away unless an option runs a lit length. */
+    .sy-hz__head {
+        inset: -3px auto auto 0;
+        z-index: 2;
+        display: none;
+        inline-size: 3px;
+        block-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+    }
+
+    /* A layer an option runs along the tube (a loading picture); away until one does. */
+    .sy-hz__fx {
+        inset: -3px 0 auto;
+        z-index: 2;
+        display: none;
+        block-size: 3px;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    /* A part the horizon can light, and the piece of the tube that appears under a hand exactly as
+       wide as the part: from the part's own width, at the tube's own height (`--sy-to`, set by the page). */
+    .sy-host {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .sy-host--block {
+        display: block;
+    }
+
+    .sy-seg {
+        position: absolute;
+        inset-block-start: calc(var(--sy-to, 0px) * -1 - 1.5px - var(--sy-seg-h, 5px) / 2);
+        inset-inline: 0;
+        z-index: 3;
+        block-size: var(--sy-seg-h, 5px);
+        background: var(--kp-core);
+        box-shadow:
+            var(--sy-tube-up),
+            0 8px 18px hsl(from var(--primary) h s l / 0.5);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .sy-host.sy-lit > .sy-seg {
+        opacity: 1;
+    }
+
+    /* The page below the tube: parts stand on the floor, 1 px of the horizon's light on each top edge. */
+    .sy-pg .sy-body {
+        position: relative;
+    }
+
+    /* ── The ground's motion: what rises is away during `gap` ────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .sy-scene[data-sy-phase='gap'] .sy-rise > :first-child {
+            visibility: hidden;
+        }
+
+        /* G4: an arrival or a leave is 4 beats, an opening 2. */
+        .sy-scene .sy-rise {
+            --sy-d: calc(900ms * var(--sy-slow, 1));
+        }
+
+        .sy-scene .sy-opens {
+            --sy-d: calc(450ms * var(--sy-slow, 1));
+        }
+    }
+
+    /* The piece of the tube a hand lights: it is drawn from its centre outward, in a beat. */
+    @keyframes sy-seg-on {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* ═══ 1 · The motion curve (G1): who goes first, and how a body travels ═══
+       The page tube charges (a lit length with its glowing front), the three
+       bars fill and the tile rises. Every option is a set of variables: the
+       tube's curve, delay and duration (`--cv-run*`), the bodies' (`--cv-body*`)
+       and the tile's own delay (`--cv-tile-*`). Every part that arrives ends
+       when its own cell ends, so every close is its arrival backwards. */
 
     .sy-scene[data-sy-curve] {
-        --sy-curve: var(--sy-sun);
-    }
-
-    .sy-scene[data-sy-curve='transport'] {
-        --sy-curve: var(--sy-c-transport);
-    }
-
-    .sy-scene[data-sy-curve='beats'] {
-        --sy-curve: steps(5, jump-none);
-    }
-
-    .sy-scene[data-sy-curve='surges'] {
-        --sy-curve: var(--sy-c-surges);
+        --cv-run: var(--sy-sun);
+        --cv-run-d: 0ms;
+        --cv-run-t: 900ms;
+        --cv-body: var(--sy-sun);
+        --cv-body-d: 225ms;
+        --cv-body-t: 900ms;
+        --cv-tile-d: 225ms;
+        --cv-tile-t: 900ms;
+        --sy-curve: var(--cv-body);
     }
 
     .sy-scene[data-sy-curve='strike'] {
-        --sy-curve: var(--sy-c-strike);
+        --cv-run: steps(1, end);
+        --cv-run-t: 225ms;
+    }
+
+    .sy-scene[data-sy-curve='beats'] {
+        --cv-run: steps(4, jump-end);
+        --cv-body: steps(4, jump-end);
+        --cv-body-d: 0ms;
+        --cv-tile-d: 0ms;
+    }
+
+    .sy-scene[data-sy-curve='passes'] {
+        --cv-body-d: 0ms;
+        --cv-tile-d: 450ms;
+        --cv-tile-t: 450ms;
+    }
+
+    .sy-scene[data-sy-curve='release'] {
+        --cv-run: cubic-bezier(0.55, 0, 0.9, 0.4);
+        --cv-run-t: 675ms;
+        --cv-body-d: 675ms;
+        --cv-body-t: 450ms;
+        --cv-tile-d: 675ms;
+        --cv-tile-t: 450ms;
+    }
+
+    .sy-scene[data-sy-curve='even'] {
+        --cv-run: linear;
+        --cv-body: linear;
+        --cv-body-d: 0ms;
+        --cv-tile-d: 0ms;
     }
 
     .sy-scene[data-sy-curve] .kp-progressbar__fill,
@@ -677,19 +888,114 @@
         transition: none;
     }
 
-    /* ── Opening (G3): what the panel is dressed in, at rest ─────────── */
+    .sy-scene[data-sy-curve] .sy-hz__head {
+        display: block;
+    }
+
+    .sy-scene[data-sy-curve='strike'] .sy-hz__head {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Away during `gap`. */
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] :is(.sy-hz__tube, .sy-hz__head) {
+            visibility: hidden;
+        }
+
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar-row .sy-cap {
+            visibility: hidden;
+        }
+
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__fill {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__head {
+            transform: translateX(0);
+        }
+
+        /* The page tube charges: a lit length, start to end, its glowing front ahead of it. */
+        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
+            animation: sy-reveal-x calc(var(--cv-run-t) * var(--sy-slow, 1)) var(--cv-run) calc(var(--cv-run-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
+            animation: sy-strike calc(var(--cv-run-t) * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-curve='strike']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__head {
+            animation:
+                sy-head-run calc(var(--cv-run-t) * var(--sy-slow, 1)) var(--cv-run) calc(var(--cv-run-d) * var(--sy-slow, 1)) both,
+                sy-head-out calc(var(--cv-run-t) * var(--sy-slow, 1)) linear calc(var(--cv-run-d) * var(--sy-slow, 1)) both;
+        }
+
+        /* The bars fill to their mark; their reading comes with them. */
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__fill {
+            animation: sy-fill-72 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__fill {
+            animation: sy-fill-48 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__fill {
+            animation: sy-fill-88 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__head {
+            animation: sy-head-72 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__head {
+            animation: sy-head-48 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__head {
+            animation: sy-head-88 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
+        }
+
+        /* The tile rises over its horizon (the ground), on the option's curve and from the option's moment. */
+        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
+            animation: sy-rise-body calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-horizon {
+            animation: sy-horizon-in calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-cuts {
+            animation: sy-cuts-close calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
+        }
+    }
+
+    /* ═══ 2 · Opening (G3): what drops from a button ══════════════════════
+       The header's More button opens a menu, the dialog stands under the
+       header; both open together. The piece of the page tube under the Add and
+       More buttons is lit (the hand is on them) and what opens comes from that
+       line. Every option is the same scene; only the rule differs. */
 
     .sy-scene[data-sy-opening] {
         --sy-curve: var(--sy-sun);
+        --op-seg-d: 0ms;
+        --op-seg-t: 225ms;
     }
 
-    /* The laser climbs: the beam is the horizon, anchored to the top. */
-    .sy-scene[data-sy-opening='climb'] .sy-opens > .sy-horizon {
+    /* The hand is on Add and More: their piece of the tube is lit (the finished pose). */
+    .sy-pg--opening .sy-host:nth-child(n + 2) > .sy-seg {
+        opacity: 1;
+    }
+
+    /* 1 · The beam climbs: the horizon of the panel is the beam, anchored to the top; the page answers when it arrives. */
+    .sy-scene[data-sy-opening='climb'] {
+        --op-seg-d: 225ms;
+    }
+
+    .sy-scene[data-sy-opening='climb'] .sy-opens > .sy-horizon,
+    .sy-scene[data-sy-opening='lower'] .sy-opens > .sy-horizon {
         inset-block: -2px auto;
     }
 
-    /* The blinds: five bars in the ground's colour over the panel, widest at
-       the horizon, each drawing back toward its own top. */
+    /* 2 · The blinds: five bars in the ground's colour over the panel, widest at the foot, each drawing back toward its own top. */
     .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts {
         display: flex;
         flex-direction: column;
@@ -725,16 +1031,121 @@
         block-size: 28%;
     }
 
-    /* The marquee carries it on: a row of bulbs along the top edge. */
-    .sy-scene[data-sy-opening='marquee'] .sy-opens > .sy-cuts {
-        inset: -10px 0 auto;
-        block-size: 9px;
-        background: radial-gradient(circle, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2px, transparent 3.6px) 0 50% / 0.9rem 100%
-            repeat-x;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
+    /* 3 · It stands up on the floor, around its foot. */
+    .sy-scene[data-sy-opening='stand'] .sy-opens > :first-child {
+        transform-origin: 50% 100%;
     }
 
-    /* ── The corners (G6): the four corners' own element ─────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        .sy-scene[data-sy-opening][data-sy-phase='gap'] .sy-pg--opening .sy-seg {
+            visibility: hidden;
+        }
+
+        /* The piece under the buttons: drawn from its centre, in a beat (the climb's after the beam), the strike's in hard steps. */
+        .sy-scene[data-sy-opening]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-pg--opening .sy-host:nth-child(n + 2) > .sy-seg {
+            animation: sy-seg-on calc(var(--op-seg-t) * var(--sy-slow, 1)) var(--sy-sun) calc(var(--op-seg-d) * var(--sy-slow, 1)) both;
+        }
+
+        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-pg--opening .sy-host:nth-child(n + 2) > .sy-seg {
+            animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        /* 1 · climb */
+        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-climb-body var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation:
+                sy-climb-beam var(--sy-d) var(--sy-curve) both,
+                sy-climb-glow var(--sy-d) linear both;
+        }
+
+        .sy-scene[data-sy-opening='climb'][data-sy-phase='in'] .sy-opens .sy-strip {
+            animation: sy-strike calc(300ms * var(--sy-slow, 1)) calc(150ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        /* 2 · blinds */
+        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts > i {
+            animation: sy-blind calc(270ms * var(--sy-slow, 1)) calc(var(--sy-bd) * 45ms * var(--sy-slow, 1)) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(1) {
+            --sy-bd: 4;
+        }
+
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(2) {
+            --sy-bd: 3;
+        }
+
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(3) {
+            --sy-bd: 2;
+        }
+
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(4) {
+            --sy-bd: 1;
+        }
+
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(5) {
+            --sy-bd: 0;
+        }
+
+        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
+        }
+
+        /* 3 · stand */
+        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-stand var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
+        }
+
+        /* 4 · lower: the beam leaves the piece and runs down the panel, which is uncovered behind it. */
+        .sy-scene[data-sy-opening='lower']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-lower-body var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='lower']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation:
+                sy-lower-beam var(--sy-d) var(--sy-curve) both,
+                sy-climb-glow var(--sy-d) linear both;
+        }
+
+        .sy-scene[data-sy-opening='lower'][data-sy-phase='in'] .sy-opens .sy-strip {
+            animation: sy-strike calc(300ms * var(--sy-slow, 1)) calc(150ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        /* 5 · rise: round 1's 1, the ground itself, its stripe striking on. */
+        .sy-scene[data-sy-opening='rise']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-rise-body var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='rise']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='rise']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts {
+            animation: sy-cuts-close var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='rise'][data-sy-phase='in'] .sy-opens .sy-strip {
+            animation: sy-strike calc(450ms * var(--sy-slow, 1)) calc(160ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        /* 6 · strike: round 1's 2, there at once. */
+        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-strike-rim calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+
+        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens .sy-strip {
+            animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
+        }
+    }
+
+    /* ═══ 3 · The corners (G6): where the horizon's light ends or starts a part ═══ */
 
     .sy-scene :is(.sy-plate, .sy-panel) {
         --sy-pg: var(--card);
@@ -744,7 +1155,17 @@
         --sy-pg: var(--popover);
     }
 
-    /* Tube ends overshoot: the stripe and a bottom tube run past the sides. */
+    .sy-scene .sy-tip {
+        position: relative;
+        inset: auto;
+        display: inline-block;
+        justify-self: start;
+        margin: 0;
+        opacity: 1;
+        animation: none;
+    }
+
+    /* 1 · The light overshoots: the stripe and a bottom tube run past the sides. */
     .sy-scene[data-sy-corners='tubes'] :is(.sy-plate, .sy-panel) {
         overflow: visible;
     }
@@ -769,7 +1190,7 @@
         box-shadow: var(--sy-laser-glow);
     }
 
-    /* Only the top and bottom rules: no sides, a stripe above, a horizon below. */
+    /* 2 · Only the top and foot rules. */
     .sy-scene[data-sy-corners='rules'] :is(.sy-plate, .sy-panel) {
         border-inline-width: 0;
     }
@@ -787,75 +1208,32 @@
         box-shadow: var(--sy-laser-glow);
     }
 
-    /* The sun-stripe slots: a patch cut by the sun's stripes in each corner. */
-    .sy-scene[data-sy-corners='slots'] :is(.sy-plate, .sy-panel) > .sy-corners {
+    /* 3 · The light runs down the sides and fades: lit from the horizon above. */
+    .sy-scene[data-sy-corners='fade'] :is(.sy-plate, .sy-panel) {
+        border-inline-color: transparent;
+        border-block-end-color: transparent;
+    }
+
+    .sy-scene[data-sy-corners='fade'] :is(.sy-plate, .sy-panel) > .sy-corners {
         display: block;
-    }
-
-    .sy-scene[data-sy-corners='slots'] .sy-corners::before,
-    .sy-scene[data-sy-corners='slots'] .sy-corners::after {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        block-size: 0.8rem;
-        --sy-slot-top: linear-gradient(
-            to bottom,
-            var(--primary) 0 4px,
-            transparent 4px 5px,
-            var(--primary) 5px 8px,
-            transparent 8px 10px,
-            var(--primary) 10px 12px,
-            transparent 12px
-        );
-        --sy-slot-foot: linear-gradient(
-            to bottom,
-            transparent 0 1px,
-            var(--primary) 1px 3px,
-            transparent 3px 6px,
-            var(--primary) 6px 8px,
-            transparent 8px 10px,
-            var(--primary) 10px 11px,
-            transparent 11px
-        );
-    }
-
-    .sy-scene[data-sy-corners='slots'] .sy-corners::before {
-        inset-block-start: 3px;
         background:
-            var(--sy-slot-top) 0 0 / 1rem 100% no-repeat,
-            var(--sy-slot-top) 100% 0 / 1rem 100% no-repeat;
-        opacity: 0.8;
+            linear-gradient(to bottom, var(--kp-core), var(--primary) 45%, transparent 95%) 0 0 / 3px 100% no-repeat,
+            linear-gradient(to bottom, var(--kp-core), var(--primary) 45%, transparent 95%) 100% 0 / 3px 100% no-repeat;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.7));
     }
 
-    .sy-scene[data-sy-corners='slots'] .sy-corners::after {
-        inset-block-end: 0;
-        background:
-            var(--sy-slot-foot) 0 0 / 1rem 100% no-repeat,
-            var(--sy-slot-foot) 100% 0 / 1rem 100% no-repeat;
-        opacity: 0.8;
+    /* 4 · The stripe floats: a 2 px dark cut between it and the slab. */
+    .sy-scene[data-sy-corners='float'] :is(.sy-plate, .sy-panel) {
+        overflow: visible;
+        margin-block-start: 10px;
     }
 
-    /* A horizon slit through each side near the corners. */
-    .sy-scene[data-sy-corners='slit'] :is(.sy-plate, .sy-panel) {
-        border-inline-width: 0;
+    .sy-scene[data-sy-corners='float'] :is(.sy-plate, .sy-panel) > .sy-strip {
+        inset-block-start: -10px;
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.5);
     }
 
-    .sy-scene[data-sy-corners='slit'] :is(.sy-plate, .sy-panel) > .sy-corners {
-        display: block;
-        --sy-side: linear-gradient(
-            to bottom,
-            hsl(from var(--kp-pink-text) h s l / 0.85) 0 0.5rem,
-            transparent 0.5rem calc(0.5rem + 3px),
-            hsl(from var(--kp-pink-text) h s l / 0.85) calc(0.5rem + 3px) calc(100% - 0.5rem - 3px),
-            transparent calc(100% - 0.5rem - 3px) calc(100% - 0.5rem),
-            hsl(from var(--kp-pink-text) h s l / 0.85) calc(100% - 0.5rem)
-        );
-        background:
-            var(--sy-side) 0 0 / 2px 100% no-repeat,
-            var(--sy-side) 100% 0 / 2px 100% no-repeat;
-    }
-
-    /* A corner pixel, like a VCR's OSD: two lit squares. */
+    /* 5 · A corner pixel, like a VCR's OSD: two lit squares. */
     .sy-scene[data-sy-corners='pixel'] :is(.sy-plate, .sy-panel) > .sy-corners {
         display: block;
     }
@@ -883,17 +1261,7 @@
             0 0 14px hsl(from var(--accent) h s l / 0.45);
     }
 
-    .sy-scene .sy-tip {
-        position: relative;
-        inset: auto;
-        display: inline-block;
-        justify-self: start;
-        margin: 0;
-        opacity: 1;
-        animation: none;
-    }
-
-    /* ── A warning (G13): the marks, at rest ─────────────────────────── */
+    /* ═══ 4 · A warning (G13): the page tube changes tone at the warned part's width ═══ */
 
     .sy-scene [data-sy-kind='warn'] {
         --sy-tone: var(--warning-foreground);
@@ -974,31 +1342,6 @@
         inline-size: 0.7rem;
         block-size: 0.7rem;
     }
-
-    /* A three-pip level: two lit for a warning, three for a failure. */
-    .sy-scene[data-sy-tone='level'] [data-sy-kind] .sy-ring {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.13rem;
-        block-size: 0.9rem;
-    }
-
-    .sy-scene[data-sy-tone='level'] [data-sy-kind] .sy-ring > i {
-        display: block;
-        inline-size: 0.28rem;
-        block-size: 0.72rem;
-        background: hsl(from var(--sy-tone) h s l / 0.22);
-    }
-
-    .sy-scene[data-sy-tone='level'] [data-sy-kind='warn'] .sy-ring > i:nth-child(-n + 2),
-    .sy-scene[data-sy-tone='level'] [data-sy-kind='bad'] .sy-ring > i {
-        background: var(--kp-core);
-        box-shadow:
-            0 0 2px var(--sidebar-background),
-            0 0 5px var(--sy-tone),
-            0 0 12px hsl(from var(--sy-tone) h s l / 0.6);
-    }
-
     /* Two tube rails above and below the part. */
     .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring {
         display: block;
@@ -1053,78 +1396,80 @@
         filter: drop-shadow(0 0 5px hsl(from var(--sy-tone) h s l / 0.55));
     }
 
-    /* The sun going down: half set behind a horizon for a warning, set for a failure. */
-    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring {
-        display: inline-block;
-        position: relative;
-        inline-size: 1.1rem;
-        block-size: 0.95rem;
-        overflow: hidden;
+    /* The piece of the page tube over a toned part: lit in the tone, as wide as the part. */
+    .sy-scene[data-sy-tone] .sy-host[data-sy-kind] > .sy-seg {
+        --sy-seg-h: 5px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 3px var(--sy-tone),
+            0 0 9px var(--sy-tone),
+            0 0 18px hsl(from var(--sy-tone) h s l / 0.5),
+            0 8px 18px hsl(from var(--sy-tone) h s l / 0.4);
+        opacity: 1;
     }
 
-    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring::before {
+    /* The words' glow also on the host's plate, whatever the plate. */
+    .sy-scene[data-sy-tone] .sy-host--word[data-sy-kind] {
+        padding-block: 0.25rem;
+    }
+
+    /* 3 · The piece swells with the severity: 5 px for a warning, 8 px for a failure. */
+    .sy-scene[data-sy-tone='swell'] .sy-host[data-sy-kind='warn'] > .sy-seg {
+        --sy-seg-h: 5px;
+    }
+
+    .sy-scene[data-sy-tone='swell'] .sy-host[data-sy-kind='bad'] > .sy-seg {
+        --sy-seg-h: 8px;
+    }
+
+    .sy-scene[data-sy-tone]:not([data-sy-tone='swell']) .sy-host[data-sy-kind] > .sy-seg {
+        --sy-seg-h: 3px;
+    }
+
+    /* 4 · Three cells in the piece: two lit for a warning, three for a failure. */
+    .sy-scene[data-sy-tone='pips'] .sy-host[data-sy-kind] > .sy-seg {
+        --sy-seg-h: 6px;
+        background:
+            linear-gradient(var(--kp-core) 0 0) 0 0 / calc(33.33% - 8px) 100% no-repeat,
+            linear-gradient(var(--kp-core) 0 0) 50% 0 / calc(33.33% - 8px) 100% no-repeat,
+            linear-gradient(var(--sy-pip3, var(--kp-core)) 0 0) 100% 0 / calc(33.33% - 8px) 100% no-repeat;
+        box-shadow: none;
+        filter: drop-shadow(0 0 4px var(--sy-tone)) drop-shadow(0 6px 10px hsl(from var(--sy-tone) h s l / 0.5));
+    }
+
+    .sy-scene[data-sy-tone='pips'] .sy-host[data-sy-kind='warn'] > .sy-seg {
+        --sy-pip3: hsl(from var(--sy-tone) h s l / 0.3);
+    }
+
+    /* 5 · The part between two tubes: the piece above, a tube of the same width at the foot. */
+    .sy-scene[data-sy-tone='rails'] .sy-host[data-sy-kind]::after {
         content: '';
         position: absolute;
-        inset: 0.05rem 0.12rem auto;
-        block-size: 0.85rem;
-        border-radius: 50%;
-        background: linear-gradient(180deg, hsl(from var(--sy-tone) h s calc(l + 12)), var(--sy-tone));
-        mask-image: var(--kp-sig-sw-cuts);
-        filter: drop-shadow(0 0 3px hsl(from var(--sy-tone) h s l / 0.7));
-        clip-path: inset(0 0 38% 0);
-    }
-
-    .sy-scene[data-sy-tone='dusk'] [data-sy-kind='bad'] .sy-ring::before {
-        clip-path: inset(0 0 100% 0);
-    }
-
-    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring::after {
-        content: '';
-        position: absolute;
-        inset: auto 0 0.3rem;
+        inset: auto 0 -3px;
         block-size: 2px;
         background: var(--kp-core);
         box-shadow:
             0 0 3px var(--sy-tone),
-            0 0 9px hsl(from var(--sy-tone) h s l / 0.7);
+            0 0 9px var(--sy-tone),
+            0 0 18px hsl(from var(--sy-tone) h s l / 0.5);
+        pointer-events: none;
     }
 
-    /* ── Loading (G10): the layers at rest ───────────────────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The tone strikes on once as the piece is drawn from its centre. */
+        .sy-scene[data-sy-tone][data-sy-phase='in'] .sy-host[data-sy-kind] > .sy-seg {
+            animation: sy-seg-on calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+    }
+
+    /* ═══ 5 · Loading (G10): the page tube loads, the parts carry it at their scale ═══
+       While the page waits the tube is unlit (the bar's empty track) and the
+       picture lights it; every waiting part carries the same picture on its
+       top edge (`.sy-g`), its foot (`.sy-b`) or its face (`.sy-f`). The floor
+       options keep the tube lit and move the floor. */
 
     .sy-scene .sy-waits {
         position: relative;
-        --sy-lh: 8px;
-        --sy-lx: 0px;
-        --sy-ly: 0px;
-        --sy-lh2: 1.2rem;
-    }
-
-    .sy-scene .kp-menu__item.sy-waits {
-        --sy-lh: 4px;
-        --sy-lx: 2px;
-        --sy-ly: 2px;
-        --sy-lh2: 0.7rem;
-    }
-
-    .sy-scene .sy-day.sy-waits {
-        --sy-lh: 4px;
-        --sy-lx: 3px;
-        --sy-ly: 3px;
-        --sy-lh2: 0.8rem;
-    }
-
-    .sy-scene .sy-skel__line {
-        --sy-lh: 4px;
-        --sy-lx: 0px;
-        --sy-ly: 0px;
-        --sy-lh2: 0.6rem;
-    }
-
-    .sy-scene .sy-meter-wait {
-        --sy-lh: 4px;
-        --sy-lx: 0px;
-        --sy-ly: 0px;
-        --sy-lh2: 0.6rem;
     }
 
     .sy-scene .sy-load {
@@ -1141,106 +1486,181 @@
         display: none;
     }
 
-    /* The bands: a small bar at the foot (b), another at the top (g), the whole face (f). */
-    .sy-scene .sy-load > .sy-b {
-        inset: auto var(--sy-lx) var(--sy-ly);
-        block-size: var(--sy-lh);
-        container-type: inline-size;
-        background: var(--sidebar-background);
-        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    .sy-scene .sy-load > .sy-g {
+        inset: 0 0 auto;
+        block-size: 3px;
+        background: hsl(from var(--primary) h s l / 0.2);
     }
 
-    .sy-scene .sy-load > .sy-g {
-        inset: var(--sy-ly) var(--sy-lx) auto;
-        block-size: var(--sy-lh);
+    .sy-scene .sy-load > .sy-b {
+        inset: auto 0 0;
+        block-size: 3px;
     }
 
     .sy-scene .sy-load > .sy-f {
         inset: 0;
     }
 
+    .sy-scene .sy-g::before,
+    .sy-scene .sy-g::after,
     .sy-scene .sy-b::before,
-    .sy-scene .sy-b::after {
+    .sy-scene .sy-b::after,
+    .sy-scene .sy-hz__fx::before,
+    .sy-scene .sy-hz__fx::after {
         content: '';
         position: absolute;
+    }
+
+    .sy-scene[data-sy-loading] .sy-pg--waits .sy-part--busy .sy-cap {
+        display: block;
+    }
+
+    /* The tube waits unlit, as the bar's empty track, except where the floor is what moves. */
+    .sy-scene[data-sy-loading]:not([data-sy-loading='drive'], [data-sy-loading='rows']) .sy-hz__tube {
+        background: hsl(from var(--primary) h s l / 0.3);
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-loading]:not([data-sy-loading='drive'], [data-sy-loading='rows'], [data-sy-loading='lanes']) .sy-hz__far {
+        opacity: 0.35;
     }
 
     .sy-scene[data-sy-loading] .sy-skel .kp-skeleton::after {
         display: none;
     }
 
-    /* 1 · The ramp charges along the foot: the bar's own parts, five hard steps. */
-    .sy-scene[data-sy-loading='charge'] .sy-load > .sy-b {
+    /* 1 · The tube charges in five steps: the bar's own parts, a ramp and a head. */
+    .sy-scene[data-sy-loading='charge'] :is(.sy-hz__fx, .sy-load > .sy-g) {
         display: block;
     }
 
-    .sy-scene[data-sy-loading='charge'] .sy-b::before {
+    .sy-scene[data-sy-loading='charge'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='charge'] .sy-g::before {
         inset: 0;
-        background: var(--sy-bar-stripes), var(--sy-ramp);
-        clip-path: inset(0 40% 0 0);
+        background: var(--sy-ramp);
+        clip-path: inset(-12px 40% -12px 0);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.8));
     }
 
-    .sy-scene[data-sy-loading='charge'] .sy-b::after {
+    .sy-scene[data-sy-loading='charge'] .sy-hz__fx::after,
+    .sy-scene[data-sy-loading='charge'] .sy-g::after {
         inset-block: -1px;
         inset-inline-start: -2px;
-        inline-size: 2px;
+        inline-size: 3px;
         background: var(--kp-core);
         box-shadow: var(--sy-head);
         transform: translateX(60cqi);
     }
 
-    /* 2 · The ramp flows through the stripes. */
-    .sy-scene[data-sy-loading='flow'] .sy-load > .sy-b {
+    /* 2 · The ramp flows through the tube. */
+    .sy-scene[data-sy-loading='flow'] :is(.sy-hz__fx, .sy-load > .sy-g) {
         display: block;
     }
 
-    .sy-scene[data-sy-loading='flow'] .sy-b::before {
+    .sy-scene[data-sy-loading='flow'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='flow'] .sy-g::before {
         inset: 0;
-        background:
-            var(--sy-bar-stripes) 0 0 / 100% 100% no-repeat,
-            var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+        background: var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
     }
 
-    /* 3 · The road. */
-    .sy-scene[data-sy-loading='road'] .sy-load > .sy-b {
+    /* 3 · The road runs on the tube: lane dashes of near-white core. */
+    .sy-scene[data-sy-loading='road'] :is(.sy-hz__fx, .sy-load > .sy-g) {
         display: block;
-        background: linear-gradient(hsl(from var(--primary) h s l / 0.2) 0 0), var(--sidebar-background);
     }
 
-    .sy-scene[data-sy-loading='road'] .sy-b::before {
+    .sy-scene[data-sy-loading='road'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='road'] .sy-g::before {
         inset: 0;
-        background: linear-gradient(90deg, var(--kp-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 2px repeat-x;
-        filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
+        background: linear-gradient(90deg, var(--kp-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 100% repeat-x;
+        filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.8));
     }
 
-    /* 4 · The part is the bar. */
-    .sy-scene[data-sy-loading='fill'] .sy-load > .sy-f {
-        display: block;
-        background: var(--sy-bar-stripes), var(--sy-ramp);
-        opacity: 0.3;
-        clip-path: inset(0 100% 0 0);
+    /* 4 · The floor drives toward you: the tube stands lit, the grid runs. */
+    .sy-scene[data-sy-loading='drive'] .sy-load > .sy-b {
+        display: none;
     }
 
-    .sy-scene[data-sy-loading='fill'] .sy-load > .sy-g {
+    /* 5 · A slice of light runs the tube: a glowing head with a short ramp tail. */
+    .sy-scene[data-sy-loading='slice'] :is(.sy-hz__fx, .sy-load > .sy-g) {
         display: block;
-        inset: 0 auto 0 0;
-        inline-size: 2px;
-        background: var(--kp-core);
-        box-shadow: var(--sy-head);
-        opacity: 0;
     }
 
-    /* 5 · The sun's stripes light up from the horizon. */
-    .sy-scene[data-sy-loading='ladder'] .sy-load > .sy-b {
+    .sy-scene[data-sy-loading='slice'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='slice'] .sy-g::before {
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--sy-slice-w, 16%);
+        background: linear-gradient(90deg, transparent, var(--primary) 50%, var(--kp-sun-top) 90%, var(--kp-core));
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.9));
+        translate: -100% 0;
+    }
+
+    .sy-scene[data-sy-loading='slice'] .sy-g {
+        --sy-slice-w: 30%;
+    }
+
+    /* 6 · Headlights and tail lights: pink along the tube, cyan back along its far line. */
+    .sy-scene[data-sy-loading='lanes'] :is(.sy-hz__fx, .sy-load > :is(.sy-g, .sy-b)) {
         display: block;
-        block-size: var(--sy-lh2);
-        background: none;
+    }
+
+    .sy-scene[data-sy-loading='lanes'] .sy-hz__fx::before {
+        inset: 0;
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.7rem, transparent 0.7rem 2.1rem);
+        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 7px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sy-scene[data-sy-loading='lanes'] .sy-hz__far {
+        background: repeating-linear-gradient(90deg, var(--accent) 0 0.7rem, transparent 0.7rem 2.1rem);
         box-shadow: none;
+        opacity: 1;
+        filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px hsl(from var(--accent) h s l / 0.7));
     }
 
-    .sy-scene[data-sy-loading='ladder'] .sy-b::before {
+    .sy-scene[data-sy-loading='lanes'] .sy-load > .sy-g {
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
+        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 7px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sy-scene[data-sy-loading='lanes'] .sy-load > .sy-b {
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
+        filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px hsl(from var(--accent) h s l / 0.7));
+    }
+
+    /* 7 · The sun's stripes light up from the horizon: the sun's reflection in the floor, five stripes thickest at the line. */
+    .sy-scene[data-sy-loading='sun'] .sy-hz__floor::after {
+        content: '';
+        position: absolute;
+        inset: 7px auto auto 50%;
+        inline-size: min(40%, 20rem);
+        block-size: 1.5rem;
+        translate: -50% 0;
+        background: linear-gradient(180deg, var(--kp-sun-top), var(--primary) 55%, var(--kp-sun-bottom));
+        mask-image: linear-gradient(
+            to bottom,
+            #000 0 26%,
+            transparent 26% 32%,
+            #000 32% 52%,
+            transparent 52% 59%,
+            #000 59% 75%,
+            transparent 75% 83%,
+            #000 83% 94%,
+            transparent 94%
+        );
+        clip-path: inset(0 0 0 0);
+    }
+
+    .sy-scene[data-sy-loading='sun'] .sy-load > .sy-b {
+        display: block;
+        inset: auto 0.6rem 0.5rem auto;
+        inline-size: 3rem;
+        block-size: 1rem;
+    }
+
+    .sy-scene[data-sy-loading='sun'] .sy-b::before {
         inset: 0;
-        background: var(--sy-ramp-v);
+        background: linear-gradient(180deg, var(--kp-sun-top), var(--primary) 55%, var(--kp-sun-bottom));
         mask-image: linear-gradient(
             to bottom,
             #000 0 22%,
@@ -1257,118 +1677,70 @@
         clip-path: inset(0);
     }
 
-    /* 6 · The floor drives toward you. */
-    .sy-scene[data-sy-loading='floor'] .sy-load > .sy-b {
+    /* 8 · The surface is the bar: the ramp fills the floor behind the page and every part's face, a head at the front. */
+    .sy-scene[data-sy-loading='surface'] .sy-hz__head {
         display: block;
-        block-size: var(--sy-lh2);
-        border-block-start: 1px solid hsl(from var(--kp-pink-text) h s l / 0.7);
-        background:
-            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 0% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 16% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 38% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 66% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 100% / 100% 1px no-repeat,
-            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.5) 0 0.7deg, transparent 0.7deg 9deg),
-            var(--sidebar-background);
-        box-shadow: 0 -3px 10px hsl(from var(--primary) h s l / 0.3);
-    }
-
-    /* 7 · The scanner: a head with a ramp tail, there and back. */
-    .sy-scene[data-sy-loading='scanner'] .sy-load > .sy-b {
-        display: block;
-    }
-
-    .sy-scene[data-sy-loading='scanner'] .sy-b::before,
-    .sy-scene[data-sy-loading='scanner'] .sy-b::after {
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: 30%;
         opacity: 0;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
     }
 
-    .sy-scene[data-sy-loading='scanner'] .sy-b::before {
-        background:
-            linear-gradient(var(--kp-core) 0 0) 100% 0 / 2px 100% no-repeat,
-            linear-gradient(90deg, transparent, var(--primary) 65%, var(--kp-sun-top));
-        translate: 100cqi 0;
-    }
-
-    .sy-scene[data-sy-loading='scanner'] .sy-b::after {
-        background:
-            linear-gradient(var(--kp-core) 0 0) 0 0 / 2px 100% no-repeat,
-            linear-gradient(270deg, transparent, var(--primary) 65%, var(--kp-sun-top));
-        translate: -100% 0;
-    }
-
-    /* 8 · Headlights and tail lights. */
-    .sy-scene[data-sy-loading='highway'] .sy-load > :is(.sy-b, .sy-g) {
-        display: block;
-        block-size: calc(var(--sy-lh) / 2 + 1px);
-        box-shadow: none;
-    }
-
-    .sy-scene[data-sy-loading='highway'] .sy-load > .sy-g {
-        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
-        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 7px hsl(from var(--primary) h s l / 0.7));
-    }
-
-    .sy-scene[data-sy-loading='highway'] .sy-load > .sy-b {
-        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
-        filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px hsl(from var(--accent) h s l / 0.7));
-    }
-
-    /* 9 · The equaliser: five bars in the ramp, on the beat. */
-    .sy-scene[data-sy-loading='eq'] .sy-load > .sy-f {
-        display: block;
-        inset: auto 0.7rem 0.5rem auto;
-        inline-size: 1.4rem;
-        block-size: var(--sy-eqh, 1rem);
-        background:
-            var(--sy-ramp-v) 0 100% / 0.2rem 60% no-repeat,
-            var(--sy-ramp-v) 0.3rem 100% / 0.2rem 60% no-repeat,
-            var(--sy-ramp-v) 0.6rem 100% / 0.2rem 60% no-repeat,
-            var(--sy-ramp-v) 0.9rem 100% / 0.2rem 60% no-repeat,
-            var(--sy-ramp-v) 1.2rem 100% / 0.2rem 60% no-repeat;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.7));
-    }
-
-    .sy-scene[data-sy-loading='eq'] .sy-day.sy-waits {
-        --sy-eqh: 0.6rem;
-    }
-
-    .sy-scene[data-sy-loading='eq'] .sy-day .sy-load > .sy-f {
-        inset-inline-end: calc(50% - 0.7rem);
-        inset-block-end: 3px;
-    }
-
-    .sy-scene[data-sy-loading='eq'] .sy-skel__line .sy-load > .sy-f,
-    .sy-scene[data-sy-loading='eq'] .sy-meter-wait .sy-load > .sy-f,
-    .sy-scene[data-sy-loading='eq'] .kp-menu__item .sy-load > .sy-f {
-        inset-block-end: 50%;
-        translate: 0 50%;
-    }
-
-    /* 10 · The marquee in the ramp's colours, a lit bulb with a tail. */
-    .sy-scene[data-sy-loading='bulbs'] .sy-load > .sy-b {
-        display: block;
-        background: none;
-        box-shadow: none;
-        block-size: max(var(--sy-lh), 8px);
-    }
-
-    .sy-scene[data-sy-loading='bulbs'] .sy-b::before,
-    .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
+    .sy-scene[data-sy-loading='surface'] .sy-hz__floor::after {
+        content: '';
+        position: absolute;
         inset: 0;
+        background: var(--sy-bar-stripes), var(--sy-ramp);
+        opacity: 0.32;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    .sy-scene[data-sy-loading='surface'] .sy-load > .sy-f {
+        display: block;
+        background: var(--sy-bar-stripes), var(--sy-ramp);
+        opacity: 0.3;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    .sy-scene[data-sy-loading='surface'] .sy-load > .sy-g {
+        display: block;
+        inset: 0 auto 0 0;
+        inline-size: 2px;
+        block-size: auto;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+        opacity: 0;
+    }
+
+    /* 9 · The marquee runs on the tube, each bulb in its place on the ramp. */
+    .sy-scene[data-sy-loading='bulbs'] :is(.sy-hz__fx, .sy-load > .sy-g) {
+        display: block;
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-load > .sy-g {
+        block-size: 8px;
+        background: none;
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='bulbs'] .sy-hz__fx::after,
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::before,
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::after {
+        inset-inline: 0;
+        inset-block: -3px;
         background: var(--sy-ramp);
     }
 
-    .sy-scene[data-sy-loading='bulbs'] .sy-b::before {
-        opacity: 0.3;
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::before,
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::after {
+        inset-block: 0;
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-hz__fx::before,
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::before {
+        opacity: 0.32;
         mask: radial-gradient(circle, #000 0 2.2px, transparent 3px) 0 50% / 0.9rem 100% repeat-x;
     }
 
-    .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
+    .sy-scene[data-sy-loading='bulbs'] .sy-hz__fx::after,
+    .sy-scene[data-sy-loading='bulbs'] .sy-g::after {
         mask:
             radial-gradient(circle, #000 0 2.6px, transparent 3.4px) 0 50% / 0.9rem 100% repeat-x,
             linear-gradient(90deg, rgb(0 0 0 / 0.3) 0 0.9rem, rgb(0 0 0 / 0.65) 0.9rem 1.8rem, #000 1.8rem 2.7rem, transparent 2.7rem) 0 0 / 3.6rem
@@ -1377,8 +1749,117 @@
         filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
     }
 
-    /* ── Leaving and arriving (G12): the layers at rest ──────────────── */
+    /* 10 · The rows of the floor light up toward you: one lit band steps down the floor, and down each part's own floor band. */
+    .sy-scene[data-sy-loading='rows'] .sy-hz__floor::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        block-size: 25%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.5));
+        border-block-end: 2px solid var(--kp-core);
+        box-shadow: 0 2px 12px hsl(from var(--primary) h s l / 0.7);
+    }
 
+    .sy-scene[data-sy-loading='rows'] .sy-load > .sy-b {
+        display: block;
+        inset: auto 0 0;
+        block-size: var(--sy-floor, 1.35rem);
+        overflow: hidden;
+    }
+
+    .sy-scene[data-sy-loading='rows'] .sy-b::before {
+        inset: 0 0 auto;
+        block-size: 25%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.6));
+        border-block-end: 1px solid var(--kp-core);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .sy-scene[data-sy-loading='charge'] :is(.sy-hz__fx, .sy-g)::before {
+            animation: sy-load-fill calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
+        }
+
+        .sy-scene[data-sy-loading='charge'] :is(.sy-hz__fx, .sy-g)::after {
+            animation: sy-charge-head calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
+        }
+
+        .sy-scene[data-sy-loading='flow'] :is(.sy-hz__fx, .sy-g)::before {
+            animation: sy-flow calc(1800ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='road'] :is(.sy-hz__fx, .sy-g)::before {
+            animation: sy-road-run calc(600ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='drive'] .sy-hz__floor::before {
+            animation: sy-floor-run calc(900ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='drive'] .sy-waits > .sy-floor {
+            animation: sy-floor-drive calc(900ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='slice'] :is(.sy-hz__fx, .sy-g)::before {
+            animation: sy-slice calc(1800ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='lanes'] .sy-hz__fx::before,
+        .sy-scene[data-sy-loading='lanes'] .sy-load > .sy-g {
+            animation: sy-lane calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='lanes'] .sy-hz__far,
+        .sy-scene[data-sy-loading='lanes'] .sy-load > .sy-b {
+            animation: sy-lane-back calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='sun'] .sy-hz__floor::after {
+            animation: sy-ladder-down calc(1350ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='sun'] .sy-b::before {
+            animation: sy-ladder calc(1350ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='surface'] .sy-hz__floor::after,
+        .sy-scene[data-sy-loading='surface'] .sy-load > .sy-f {
+            animation: sy-fill-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='surface'] .sy-hz__head,
+        .sy-scene[data-sy-loading='surface'] .sy-load > .sy-g {
+            animation: sy-head-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='bulbs'] :is(.sy-hz__fx, .sy-g)::after {
+            animation: sy-bulbs-chase calc(900ms * var(--sy-slow, 1)) steps(4, end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='rows'] .sy-hz__floor::after {
+            animation: sy-rows calc(900ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='rows'] .sy-b::before {
+            animation: sy-rows calc(900ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+    }
+
+    /* ═══ 6 · Leaving and arriving (G12): the horizon takes it and gives it back ═══
+       Each leave is authored as its arrival (what the page's script plays
+       backwards to close it). The piece of the page tube over each part
+       answers while the part goes: a pulse (`.sy-seg`), at the time the
+       option says. */
+
+    .sy-scene[data-sy-leave] {
+        --sy-sun-v: linear-gradient(
+            180deg,
+            var(--kp-sun-top),
+            color-mix(in oklab, var(--kp-sun-top) 45%, var(--kp-sun-bottom)),
+            var(--kp-sun-bottom)
+        );
+    }
+
+    .sy-scene .sy-leaver__body,
     .sy-scene .sy-leaver__part {
         position: relative;
     }
@@ -1395,71 +1876,58 @@
         display: none;
     }
 
-    .sy-scene[data-sy-leave] {
-        --sy-sun-v: linear-gradient(
-            180deg,
-            var(--kp-sun-top),
-            color-mix(in oklab, var(--kp-sun-top) 45%, var(--kp-sun-bottom)),
-            var(--kp-sun-bottom)
-        );
-    }
-
-    /* 1 · The sun's slab: the sun's colours and stripes, resting below the horizon. */
-    .sy-scene[data-sy-leave='slab'] .sy-leaver__body,
-    .sy-scene[data-sy-leave='stripes'] .sy-leaver__body,
-    .sy-scene[data-sy-leave='ramp'] .sy-leaver__body {
+    .sy-scene .sy-leaver__body {
         overflow: hidden;
     }
 
+    /* 1 · The sun's slab, resting below the horizon. */
     .sy-scene[data-sy-leave='slab'] .sy-sun-over {
         display: block;
         background: var(--sy-sun-v);
         mask-image: var(--kp-sig-sw-cuts);
         translate: 0 101%;
     }
-
     /* 2 · The sun's stripes: five bands of the ramp, thick toward the horizon. */
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over {
         display: flex;
         flex-direction: column;
         translate: 0 101%;
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i {
         display: block;
         transform: scaleY(0);
         transform-origin: 50% 100%;
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(1) {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(1) {
         flex: 14 1 0;
         background: var(--kp-sun-top);
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(2) {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(2) {
         flex: 17 1 0;
         margin-block-start: 1px;
         background: color-mix(in oklab, var(--kp-sun-top) 75%, var(--kp-sun-bottom));
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(3) {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(3) {
         flex: 20 1 0;
         margin-block-start: 2px;
         background: color-mix(in oklab, var(--kp-sun-top) 50%, var(--kp-sun-bottom));
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(4) {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(4) {
         flex: 23 1 0;
         margin-block-start: 3px;
         background: color-mix(in oklab, var(--kp-sun-top) 25%, var(--kp-sun-bottom));
     }
 
-    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(5) {
+    .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(5) {
         flex: 26 1 0;
         margin-block-start: 4px;
         background: var(--kp-sun-bottom);
     }
-
     /* 3 · The bar's ramp, cut by its stripes, with the glowing head. */
     .sy-scene[data-sy-leave='ramp'] .sy-sun-over {
         display: block;
@@ -1488,74 +1956,270 @@
         opacity: 0;
     }
 
-    /* 5 · Five slats that close into neon lines. */
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i {
-        position: relative;
+    /* 5 · The floor takes it: the page's own floor rises over the part, its horizon line at its top edge. */
+    .sy-scene[data-sy-leave='floor'] .sy-sun-over {
         display: block;
-        flex: 1 1 0;
-        background: linear-gradient(var(--kp-core) 0 0) 0 50% / 100% 0 no-repeat;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9)) drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.6));
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.5) 0 1px, transparent 1px) 0 0 / 100% 33%,
+            repeating-conic-gradient(from 180deg at 50% -40%, hsl(from var(--primary) h s l / 0.45) 0 1deg, transparent 1deg 10deg),
+            var(--sidebar-background);
+        translate: 0 101%;
     }
 
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::before,
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::after {
+    .sy-scene[data-sy-leave='floor'] .sy-sun-over::before {
         content: '';
         position: absolute;
-        inset-inline: 0;
-        block-size: calc(50% - 1px);
-        background: var(--background);
-        transform: scaleY(0);
+        inset: 0 0 auto;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
     }
 
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::before {
-        inset-block-start: 0;
+    /* 6 · The sun's stripes alone: bars in the ground's colour, thick toward the foot, growing until nothing is left. */
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over {
+        display: flex;
+        flex-direction: column;
+        translate: 0 101%;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i {
+        display: block;
+        background: var(--background);
+        transform: scaleY(0);
+        transform-origin: 50% 100%;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(1) {
+        flex: 14 1 0;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(2) {
+        flex: 17 1 0;
+        margin-block-start: 1px;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(3) {
+        flex: 20 1 0;
+        margin-block-start: 2px;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(4) {
+        flex: 23 1 0;
+        margin-block-start: 3px;
+    }
+
+    .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(5) {
+        flex: 26 1 0;
+        margin-block-start: 4px;
+    }
+
+    /* 7 · It recedes into the page horizon: bars in the ground's colour, thick toward the tube, cut the part as it travels up; the clip is the tube's own line. */
+    .sy-scene[data-sy-leave='recede'] .sy-leaver__body {
+        overflow: visible;
+        clip-path: inset(calc(var(--sy-to, 0px) * -1) -6px 0 -6px);
+    }
+
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over {
+        display: flex;
+        flex-direction: column;
+        z-index: 5;
+    }
+
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i {
+        display: block;
+        background: var(--background);
+        transform: scaleY(0);
         transform-origin: 50% 0;
     }
 
-    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::after {
-        inset-block-end: 0;
-        transform-origin: 50% 100%;
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i:nth-child(1) {
+        flex: 26 1 0;
     }
 
-    /* 6 · The laser erases it: the beam is the horizon, anchored to the top. */
-    .sy-scene[data-sy-leave='laser'] .sy-leaver > .sy-horizon {
-        inset-block: -2px auto;
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i:nth-child(2) {
+        flex: 23 1 0;
+        margin-block-start: 1px;
     }
 
-    /* 7 · The marquee carries it off: bulbs along the top edge. */
-    .sy-scene[data-sy-leave='marquee'] .sy-leaver > .sy-cuts {
-        inset: -10px 0 auto;
-        block-size: 9px;
-        background: radial-gradient(circle, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2px, transparent 3.6px) 0 50% / 0.9rem 100%
-            repeat-x;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i:nth-child(3) {
+        flex: 20 1 0;
+        margin-block-start: 2px;
     }
 
-    .sy-scene[data-sy-leave='drive'] .sy-leaver__part,
-    .sy-scene[data-sy-leave='fold'] .sy-leaver__part {
-        transform-origin: 50% 100%;
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i:nth-child(4) {
+        flex: 17 1 0;
+        margin-block-start: 3px;
     }
 
-    /* 10 · Round 1's swallow, as it was: the disc grows from below. */
-    .sy-scene[data-sy-leave='swallow'] .sy-sun-over {
-        display: block;
-        background: linear-gradient(
-            180deg,
-            var(--chart-3),
-            color-mix(in oklab, var(--chart-3), var(--primary)) 35%,
-            var(--primary) 70%,
-            var(--chart-4)
-        );
-        mask: repeating-linear-gradient(180deg, var(--foreground) 0 8px, transparent 8px 12px);
-        clip-path: circle(0% at 50% 120%);
+    .sy-scene[data-sy-leave='recede'] .sy-sun-over > i:nth-child(5) {
+        flex: 14 1 0;
+        margin-block-start: 4px;
     }
 
-    /* ── The focus ring (G14, DI2): the marked parts stand focused ──── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The piece of the tube over each part answers while the part goes: a pulse, in a beat's multiple. */
+        .sy-scene[data-sy-leave]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-seg {
+            animation: sy-seg-pulse-a calc(900ms * var(--sy-slow, 1)) linear both;
+        }
+
+        .sy-scene[data-sy-leave][data-sy-phase='out'] .sy-seg {
+            animation: sy-seg-pulse-b calc(900ms * var(--sy-slow, 1)) linear both;
+        }
+
+        .sy-scene[data-sy-leave='recede']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-seg {
+            animation-name: sy-seg-late-a;
+        }
+
+        .sy-scene[data-sy-leave='recede'][data-sy-phase='out'] .sy-seg {
+            animation-name: sy-seg-late-b;
+        }
+
+        /* The ground's own leave (the 1 px horizon drawn and the part's stripes) for those that keep it. */
+        .sy-scene[data-sy-leave]:not([data-sy-leave='drain'], [data-sy-leave='dye'], [data-sy-leave='recede'], [data-sy-leave='centre']):is(
+                [data-sy-phase='in'],
+                [data-sy-phase='hold']
+            )
+            .sy-leaver
+            > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-sun) both;
+        }
+
+        /* 1 · slab: the sun's slab rises over the part, then retreats down to the horizon; 5 · floor is the same motion. */
+        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over,
+        .sy-scene[data-sy-leave='floor']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-slab-wipe calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part,
+        .sy-scene[data-sy-leave='floor']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* 2 · bands, 6 · slats. */
+        .sy-scene[data-sy-leave='bands']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over,
+        .sy-scene[data-sy-leave='slats']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-slab-up calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='bands']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i,
+        .sy-scene[data-sy-leave='slats']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
+            animation: sy-band calc(270ms * var(--sy-slow, 1)) calc((450ms + var(--sy-ci) * 45ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(1),
+        .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(1) {
+            --sy-ci: 0;
+        }
+
+        .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(2),
+        .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(2) {
+            --sy-ci: 1;
+        }
+
+        .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(3),
+        .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(3) {
+            --sy-ci: 2;
+        }
+
+        .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(4),
+        .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(4) {
+            --sy-ci: 3;
+        }
+
+        .sy-scene[data-sy-leave='bands'] .sy-sun-over > i:nth-child(5),
+        .sy-scene[data-sy-leave='slats'] .sy-sun-over > i:nth-child(5) {
+            --sy-ci: 4;
+        }
+
+        .sy-scene[data-sy-leave='bands']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part,
+        .sy-scene[data-sy-leave='slats']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* 3 · ramp. */
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-ramp-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over::after {
+            animation:
+                sy-head-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* 4 · dye: the part sets (the sunset), then the dye lifts. */
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
+            animation: sy-rise-body calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
+            animation: sy-horizon-in calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation: sy-cuts-close calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-dye-out calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* 7 · recede: the part comes out of the page horizon and settles; the bars cut it, thick toward the tube. */
+        .sy-scene[data-sy-leave='recede']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-recede calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='recede']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
+            animation: sy-band-r calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* 8 · centre: the part is drawn out from its middle to both ends. */
+        .sy-scene[data-sy-leave='centre']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-centre-in calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* 9 · beats: the ground's own sunset, in four hard steps. */
+        .sy-scene[data-sy-leave='beats']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
+            animation: sy-rise-body calc(900ms * var(--sy-slow, 1)) steps(4, jump-end) both;
+        }
+
+        .sy-scene[data-sy-leave='beats']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation: sy-cuts-close calc(900ms * var(--sy-slow, 1)) steps(4, jump-end) both;
+        }
+
+        /* 10 · drain: the part sets (the ground's sunset), its light comes back after it. */
+        .sy-scene[data-sy-leave='drain']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
+            animation: sy-rise-body calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='drain']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
+            animation: sy-horizon-in calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='drain']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation: sy-cuts-close calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='drain']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-light-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+    }
+
+    /* ═══ 7 · The focus ring (G14, DI2): a hand on the part, the piece of the tube over it ═══
+       Every focused part has its piece of the page tube lit (the hand is on
+       it), as wide as the part; the ring round it keeps DI2's two channels. */
+
+    .sy-scene[data-sy-focus] :is(.sy-in-tile, .sy-in-menu) {
+        overflow: visible;
+    }
 
     .sy-scene[data-sy-focus] .sy-focused {
         outline: none;
@@ -1595,83 +2259,68 @@
             0 0 12px hsl(from var(--primary) h s l / 0.5);
     }
 
-    .sy-scene[data-sy-focus='bulbs'] .sy-fring {
-        border: 3px dotted var(--kp-core);
-        box-shadow:
-            inset 0 0 0 2px var(--focus-ring-contrast),
-            0 0 0 2px var(--focus-ring-contrast);
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
-    }
-
-    .sy-scene[data-sy-focus='cut'] .sy-fring {
+    /* 2 · Two tubes, top and foot: a near-white tube with a dark channel beside it, the sides a lavender hairline. */
+    .sy-scene[data-sy-focus='rails'] .sy-fring {
         background:
-            linear-gradient(var(--kp-core) 0 0) 0 0 / 100% 2px no-repeat,
-            linear-gradient(var(--kp-core) 0 0) 0 100% / 100% 2px no-repeat,
-            linear-gradient(
-                    to bottom,
-                    var(--kp-core) 0 22%,
-                    transparent 22% 25%,
-                    var(--kp-core) 25% 52%,
-                    transparent 52% 57%,
-                    var(--kp-core) 57% 82%,
-                    transparent 82% 89%,
-                    var(--kp-core) 89%
-                )
-                0 0 / 2px 100% no-repeat,
-            linear-gradient(
-                    to bottom,
-                    var(--kp-core) 0 22%,
-                    transparent 22% 25%,
-                    var(--kp-core) 25% 52%,
-                    transparent 52% 57%,
-                    var(--kp-core) 57% 82%,
-                    transparent 82% 89%,
-                    var(--kp-core) 89%
-                )
-                100% 0 / 2px 100% no-repeat;
+            linear-gradient(var(--kp-core) 0 3px, var(--focus-ring-contrast) 3px 6px, transparent 6px) 0 0 / 100% 100% no-repeat,
+            linear-gradient(to top, var(--kp-core) 0 3px, var(--focus-ring-contrast) 3px 6px, transparent 6px) 0 0 / 100% 100% no-repeat;
         box-shadow:
-            0 0 0 2px var(--focus-ring-contrast),
-            0 0 12px hsl(from var(--primary) h s l / 0.5);
-        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.9));
+            inset 1px 0 0 hsl(from var(--focus-ring) h s l / 0.7),
+            inset -1px 0 0 hsl(from var(--focus-ring) h s l / 0.7),
+            0 0 12px hsl(from var(--primary) h s l / 0.6);
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.8));
     }
 
-    .sy-scene[data-sy-focus='ends'] .sy-fring {
-        box-shadow: inset 0 0 0 4px var(--focus-ring-contrast);
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
-    }
-
-    .sy-scene[data-sy-focus='ends'] .sy-fring::before,
-    .sy-scene[data-sy-focus='ends'] .sy-fring::after {
-        content: '';
-        position: absolute;
-    }
-
-    .sy-scene[data-sy-focus='ends'] .sy-fring::before {
-        inset: 0 -7px;
-        border-block: 2px solid var(--kp-core);
-    }
-
-    .sy-scene[data-sy-focus='ends'] .sy-fring::after {
-        inset: -7px 0;
-        border-inline: 2px solid var(--kp-core);
-    }
-
-    .sy-scene[data-sy-focus='horizon'] .sy-fring {
+    /* 3 · The horizon shouts, the ring whispers: the register's own ring; the piece is thicker and stronger. */
+    .sy-scene[data-sy-focus='quiet'] .sy-fring {
         box-shadow:
             inset 0 0 0 2px var(--focus-ring),
             inset 0 0 0 4px var(--focus-ring-contrast);
     }
 
-    .sy-scene[data-sy-focus='horizon'] .sy-fring::after {
-        content: '';
-        position: absolute;
-        inset: auto -0.4rem -9px;
-        block-size: 2px;
-        background: var(--kp-core);
-        box-shadow: var(--sy-laser-glow);
+    .sy-scene[data-sy-focus='quiet'] .sy-host.sy-lit > .sy-seg {
+        --sy-seg-h: 8px;
+        box-shadow:
+            0 0 3px var(--kp-core),
+            0 0 10px var(--primary),
+            0 0 26px hsl(from var(--primary) h s l / 0.8),
+            0 12px 30px hsl(from var(--primary) h s l / 0.7);
     }
 
-    /* ── The press (G14): the marked parts are pressed during `in` ───── */
+    /* 4 · The ramp: the ring and the piece in the bar's colours. */
+    .sy-scene[data-sy-focus='ramp'] .sy-host.sy-lit > .sy-seg {
+        background: var(--sy-ramp);
+    }
+
+    /* 5 · The light spills down from the piece: the register's ring and a wash from the part's top edge. */
+    .sy-scene[data-sy-focus='spill'] .sy-fring {
+        background: linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.4), transparent 62%);
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    /* 6 · The part stands on its own tube: the ring and a tube of its width under it, a dark gap above. */
+    .sy-scene[data-sy-focus='own'] .sy-fring {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .sy-scene[data-sy-focus='own'] .sy-fring::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 -9px;
+        block-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube);
+        outline: 2px solid var(--focus-ring-contrast);
+    }
+
+    /* ═══ 8 · The press (G14): the hand is on the part, the piece of the tube over it is what the press acts on ═══
+       The piece is lit at rest (the pointer is there); a press changes it, held
+       for a moment and released as the press played backwards. The part's
+       ground takes the pressed token, nothing moves. */
 
     .sy-scene[data-sy-press] .sy-press {
         isolation: isolate;
@@ -1681,39 +2330,24 @@
         display: block;
     }
 
-    /* Ramp: the bar's fill inside the part, start to end. */
-    .sy-scene[data-sy-press='ramp'] .sy-fx {
-        background:
-            linear-gradient(
-                to bottom,
-                transparent 0 74%,
-                var(--sidebar-background) 74% 80%,
-                transparent 80% 88%,
-                var(--sidebar-background) 88% 95%,
-                transparent 95%
-            ),
-            var(--sy-ramp);
-        clip-path: inset(0 100% 0 0);
+    /* 2 · The ramp fills the piece: a layer of the bar's ramp inside it, start to end. */
+    .sy-scene[data-sy-press='ramp'] .sy-host.sy-lit > .sy-seg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--sy-ramp);
+        clip-path: inset(-12px 100% -12px 0);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.8));
     }
 
-    /* Laser: drawn under the label, from the centre out. */
-    .sy-scene[data-sy-press='laser'] .sy-fx {
-        inset: auto 0.45rem 3px;
-        z-index: 2;
-        block-size: 2px;
-        background: var(--kp-core);
-        box-shadow: var(--sy-laser-glow);
-        transform: scaleX(0);
-    }
-
-    /* Sink: the light gathers along the foot. */
-    .sy-scene[data-sy-press='sink'] .sy-fx {
+    /* 3 · The light gathers under the part: a pool along its foot. */
+    .sy-scene[data-sy-press='pool'] .sy-fx {
         background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.7), transparent 72%);
         box-shadow: inset 0 -2px 0 var(--kp-core);
         opacity: 0;
     }
 
-    /* Gleam: a chrome line crosses the part from top to foot. */
+    /* 4 · A gleam crosses the part from its top to its foot. */
     .sy-scene[data-sy-press='gleam'] .sy-fx {
         inset: 0 0 auto;
         z-index: 2;
@@ -1723,421 +2357,20 @@
         opacity: 0;
     }
 
-    /* OSD: a cyan play symbol in the top-end corner. */
-    .sy-scene[data-sy-press='osd'] .sy-fx {
-        z-index: 2;
-        opacity: 0;
-    }
-
-    .sy-scene[data-sy-press='osd'] :is(.sy-day, .sy-key) .sy-fx::before {
-        inset-inline-end: 0.12rem;
-        font-size: 0.7rem;
-    }
-
-    .sy-scene[data-sy-press='osd'] .sy-fx::before {
+    /* 6 · The VCR acknowledges: a cyan play symbol under the start of the piece. */
+    .sy-scene[data-sy-press='play'] .sy-host.sy-lit > .sy-seg::after {
         content: '▶';
         position: absolute;
-        inset-block-start: 0.05rem;
-        inset-inline-end: 0.3rem;
+        inset: 8px auto auto 0.15rem;
         color: var(--accent);
         font-family: var(--theme-font-mono);
         font-size: 1rem;
         line-height: 1;
         text-shadow: var(--kp-tube-cyan);
+        opacity: 0;
     }
 
-    /* ── Motion ──────────────────────────────────────────────────────── */
-
     @media (prefers-reduced-motion: no-preference) {
-        /* Away during `gap`: whatever arrives, opens or leaves. */
-        .sy-scene[data-sy-phase='gap'] .sy-rise > :first-child {
-            visibility: hidden;
-        }
-
-        /* G4: an arrival or a leave is 4 beats, an opening 2. */
-        .sy-scene .sy-rise {
-            --sy-d: calc(900ms * var(--sy-slow, 1));
-        }
-
-        .sy-scene .sy-opens {
-            --sy-d: calc(450ms * var(--sy-slow, 1));
-        }
-
-        /* ·· The rise over the horizon, the ground (and round 1's option 1). */
-        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
-            animation: sy-rise-body var(--sy-d) var(--sy-curve) both;
-        }
-
-        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-horizon {
-            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
-        }
-
-        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-cuts {
-            animation: sy-cuts-close var(--sy-d) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-opening='rise'][data-sy-phase='in'] .sy-opens .sy-strip {
-            animation: sy-strike calc(450ms * var(--sy-slow, 1)) calc(160ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
-        /* ·· The curve: the bars fill to their mark; their reading comes with them. */
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar-row .sy-cap {
-            visibility: hidden;
-        }
-
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__fill {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__head {
-            transform: translateX(0);
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__fill {
-            animation: sy-fill-72 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__fill {
-            animation: sy-fill-48 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__fill {
-            animation: sy-fill-88 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__head {
-            animation: sy-head-72 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__head {
-            animation: sy-head-48 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__head {
-            animation: sy-head-88 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        /* Light leads: the head runs on the sunrise curve, the ramp follows one beat behind. */
-        .sy-scene[data-sy-curve='lead']:not([data-sy-phase='gap']) .sy-pbar[data-sy-v] .kp-progressbar__fill {
-            animation-delay: calc(225ms * var(--sy-slow, 1));
-        }
-
-        /* ·· Opening: the laser climbs. */
-        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-climb-body var(--sy-d) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
-            animation:
-                sy-climb-beam var(--sy-d) var(--sy-curve) both,
-                sy-climb-glow var(--sy-d) linear both;
-        }
-
-        .sy-scene[data-sy-opening='climb'][data-sy-phase='in'] .sy-opens .sy-strip {
-            animation: sy-strike calc(300ms * var(--sy-slow, 1)) calc(150ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
-        /* ·· Opening: the sun's blinds. */
-        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts > i {
-            animation: sy-blind calc(270ms * var(--sy-slow, 1)) calc(var(--sy-bd) * 45ms * var(--sy-slow, 1)) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(1) {
-            --sy-bd: 4;
-        }
-
-        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(2) {
-            --sy-bd: 3;
-        }
-
-        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(3) {
-            --sy-bd: 2;
-        }
-
-        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(4) {
-            --sy-bd: 1;
-        }
-
-        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(5) {
-            --sy-bd: 0;
-        }
-
-        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
-            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
-        }
-
-        /* ·· Opening: it stands up from the floor. */
-        .sy-scene[data-sy-opening='stand'] .sy-opens > :first-child {
-            transform-origin: 50% 100%;
-        }
-
-        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-stand var(--sy-d) var(--sy-curve) both;
-        }
-
-        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
-            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
-        }
-
-        /* ·· Opening: the marquee carries it on. */
-        .sy-scene[data-sy-opening='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-reveal-x var(--sy-d) steps(9, jump-none) both;
-        }
-
-        .sy-scene[data-sy-opening='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts {
-            animation:
-                sy-reveal-x var(--sy-d) steps(9, jump-none) both,
-                sy-bulbs-off calc(675ms * var(--sy-slow, 1)) steps(1, jump-end) both;
-        }
-
-        /* ·· Opening: round 1's strikes. */
-        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-strike-rim calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
-        .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens .sy-strip {
-            animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
-        /* ·· The tone: the mark strikes on once. */
-        .sy-scene[data-sy-tone][data-sy-phase='in'] [data-sy-kind] .sy-ring {
-            animation: sy-strike calc(450ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
-        /* ·· Leaving and arriving: each arrival is the leave backwards; the close is the arrival played backwards by the page's script. */
-        .sy-scene[data-sy-leave]:not(
-                [data-sy-leave='swallow'],
-                [data-sy-leave='blinds'],
-                [data-sy-leave='marquee'],
-                [data-sy-leave='laser'],
-                [data-sy-leave='dye']
-            ):is([data-sy-phase='in'], [data-sy-phase='hold'])
-            .sy-leaver
-            > .sy-horizon {
-            animation: sy-horizon-in var(--sy-d) var(--sy-sun) both;
-        }
-
-        /* 1 · slab: the sun's slab rises over the part, then retreats down to the horizon. */
-        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation:
-                sy-slab-up calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both,
-                sy-slab-wipe calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-part-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) steps(1, jump-start) both;
-        }
-
-        /* 2 · stripes. */
-        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation: sy-slab-up calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
-            animation: sy-band calc(270ms * var(--sy-slow, 1)) calc((450ms + var(--sy-ci) * 45ms) * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(1) {
-            --sy-ci: 0;
-        }
-
-        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(2) {
-            --sy-ci: 1;
-        }
-
-        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(3) {
-            --sy-ci: 2;
-        }
-
-        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(4) {
-            --sy-ci: 3;
-        }
-
-        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(5) {
-            --sy-ci: 4;
-        }
-
-        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-part-in calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) steps(1, jump-start) both;
-        }
-
-        /* 3 · ramp. */
-        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation:
-                sy-slab-up calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
-                sy-ramp-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over::after {
-            animation:
-                sy-head-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
-                sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
-        }
-
-        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
-        }
-
-        /* 4 · dye: the part sets (the sunset), then the dye lifts. */
-        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
-            animation: sy-rise-body calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
-            animation: sy-horizon-in calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
-            animation: sy-cuts-close calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation: sy-dye-out calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        /* 5 · blinds: the covers open (the last half), the lines have come on one by one before. */
-        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i::before,
-        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i::after {
-            animation: sy-blind calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
-            animation: sy-line-on calc((450ms - var(--sy-ld)) * var(--sy-slow, 1)) calc(var(--sy-ld) * var(--sy-slow, 1)) steps(1, jump-start)
-                backwards;
-        }
-
-        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(1) {
-            --sy-ld: 360ms;
-        }
-
-        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(2) {
-            --sy-ld: 270ms;
-        }
-
-        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(3) {
-            --sy-ld: 180ms;
-        }
-
-        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(4) {
-            --sy-ld: 90ms;
-        }
-
-        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(5) {
-            --sy-ld: 0ms;
-        }
-
-        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-part-in calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) steps(1, jump-start) both;
-        }
-
-        /* 6 · laser: the beam climbs, the part is uncovered under it. */
-        .sy-scene[data-sy-leave='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-climb-body var(--sy-d) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
-            animation:
-                sy-climb-beam var(--sy-d) var(--sy-sun) both,
-                sy-climb-glow var(--sy-d) linear both;
-        }
-
-        /* 7 · marquee: the part is brought back end to start under the lit bulbs. */
-        .sy-scene[data-sy-leave='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-reveal-e var(--sy-d) steps(5, jump-none) both;
-        }
-
-        .sy-scene[data-sy-leave='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
-            animation:
-                sy-reveal-e var(--sy-d) steps(5, jump-none) both,
-                sy-bulbs-off var(--sy-d) steps(1, jump-end) both;
-        }
-
-        /* 8 · drive, 9 · fold. */
-        .sy-scene[data-sy-leave='drive']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation:
-                sy-drive-in var(--sy-d) var(--sy-sun) both,
-                sy-fade-in calc(225ms * var(--sy-slow, 1)) linear both;
-        }
-
-        .sy-scene[data-sy-leave='fold']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
-            animation: sy-stand var(--sy-d) var(--sy-sun) both;
-        }
-
-        /* 10 · swallow, as round 1 had it: its own leave, its arrival the leave backwards. */
-        .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation: sy-swallow calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) reverse both;
-        }
-
-        .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
-            animation: sy-fade calc(750ms * var(--sy-slow, 1)) ease-in reverse both;
-        }
-
-        .sy-scene[data-sy-leave='swallow'][data-sy-phase='out'] .sy-sun-over {
-            animation: sy-swallow calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) both;
-        }
-
-        .sy-scene[data-sy-leave='swallow'][data-sy-phase='out'] .sy-leaver__body {
-            animation: sy-fade calc(750ms * var(--sy-slow, 1)) ease-in both;
-        }
-
-        /* ·· Loading: every picture loops, in whole beats. */
-        .sy-scene[data-sy-loading='charge'] .sy-b::before {
-            animation: sy-charge-fill calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
-        }
-
-        .sy-scene[data-sy-loading='charge'] .sy-b::after {
-            animation: sy-charge-head calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
-        }
-
-        .sy-scene[data-sy-loading='flow'] .sy-b::before {
-            animation: sy-flow calc(1800ms * var(--sy-slow, 1)) linear infinite;
-        }
-
-        .sy-scene[data-sy-loading='road'] .sy-b::before {
-            animation: sy-road-run calc(600ms * var(--sy-slow, 1)) linear infinite;
-        }
-
-        .sy-scene[data-sy-loading='fill'] .sy-load > .sy-f {
-            animation: sy-fill-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
-        }
-
-        .sy-scene[data-sy-loading='fill'] .sy-load > .sy-g {
-            animation: sy-head-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
-        }
-
-        .sy-scene[data-sy-loading='ladder'] .sy-b::before {
-            animation: sy-ladder calc(1350ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
-        }
-
-        .sy-scene[data-sy-loading='floor'] .sy-load > .sy-b {
-            animation: sy-floor-drive calc(900ms * var(--sy-slow, 1)) cubic-bezier(0.55, 0, 1, 0.45) infinite;
-        }
-
-        .sy-scene[data-sy-loading='scanner'] .sy-b::before {
-            animation: sy-scan-a calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
-        }
-
-        .sy-scene[data-sy-loading='scanner'] .sy-b::after {
-            animation: sy-scan-b calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
-        }
-
-        .sy-scene[data-sy-loading='highway'] .sy-load > .sy-g {
-            animation: sy-lane calc(1200ms * var(--sy-slow, 1)) linear infinite;
-        }
-
-        .sy-scene[data-sy-loading='highway'] .sy-load > .sy-b {
-            animation: sy-lane-back calc(1200ms * var(--sy-slow, 1)) linear infinite;
-        }
-
-        .sy-scene[data-sy-loading='eq'] .sy-load > .sy-f {
-            animation: sy-eq calc(1800ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
-        }
-
-        .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
-            animation: sy-bulbs-chase calc(900ms * var(--sy-slow, 1)) steps(4, end) infinite;
-        }
-
-        /* ·· The press: a beat to press, a beat to release (the press backwards). */
         .sy-scene[data-sy-press][data-sy-phase='in'] {
             --sy-pdir: normal;
         }
@@ -2158,55 +2391,49 @@
             animation-name: sy-press-ground-primary;
         }
 
-        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
-            animation:
-                sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
-                sy-press-ink var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
-        }
-
-        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
-            animation-name: sy-press-ground-primary, sy-press-ink;
-        }
-
-        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
-            animation: sy-press-ramp var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        /* 1 · The piece charges: its core turns white, the bloom doubles and spreads; the part's own top edge burns. */
+        .sy-scene[data-sy-press='charge']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-host.sy-lit > .sy-seg {
+            animation: sy-seg-charge var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
         }
 
         .sy-scene[data-sy-press='charge']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
             animation:
                 sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
-                sy-press-charge var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+                sy-press-edge var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
         }
 
         .sy-scene[data-sy-press='charge']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
-            animation-name: sy-press-ground-primary, sy-press-charge;
+            animation-name: sy-press-ground-primary, sy-press-edge;
         }
 
-        .sy-scene[data-sy-press='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
-            animation: sy-press-laser var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        /* 2 · ramp */
+        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-host.sy-lit > .sy-seg::before {
+            animation: sy-load-fill var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
         }
 
-        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
-            animation:
-                sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
-                sy-press-dim var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        /* 3 · pool: the piece dims, the pool fills. */
+        .sy-scene[data-sy-press='pool']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-host.sy-lit > .sy-seg {
+            animation: sy-seg-dim var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
         }
 
-        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
-            animation-name: sy-press-ground-primary, sy-press-dim;
-        }
-
-        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+        .sy-scene[data-sy-press='pool']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
             animation: sy-press-fade var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
         }
 
+        /* 4 · gleam */
         .sy-scene[data-sy-press='gleam']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
             animation:
                 sy-press-gleam-y var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
                 sy-press-fade var(--sy-pd) steps(1, jump-start) var(--sy-pdir) both;
         }
 
-        .sy-scene[data-sy-press='osd']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+        /* 5 · the piece draws in to its core. */
+        .sy-scene[data-sy-press='focus']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-host.sy-lit > .sy-seg {
+            animation: sy-seg-focus var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        /* 6 · play */
+        .sy-scene[data-sy-press='play']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-host.sy-lit > .sy-seg::after {
             animation: sy-press-fade var(--sy-pd) steps(1, jump-start) var(--sy-pdir) both;
         }
     }
@@ -2377,6 +2604,41 @@
         }
     }
 
+    @keyframes sy-reveal-x {
+        0% {
+            clip-path: inset(-20px 100% -20px 0);
+        }
+
+        99% {
+            clip-path: inset(-20px 0 -20px 0);
+        }
+
+        100% {
+            clip-path: none;
+        }
+    }
+
+    @keyframes sy-head-run {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: calc(100cqi - 3px) 0;
+        }
+    }
+
+    @keyframes sy-head-out {
+        0%,
+        92% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
     @keyframes sy-climb-body {
         0% {
             clip-path: inset(100% 0 0 0);
@@ -2419,6 +2681,30 @@
         }
     }
 
+    @keyframes sy-lower-body {
+        0% {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        99% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            clip-path: none;
+        }
+    }
+
+    @keyframes sy-lower-beam {
+        from {
+            inset-block-start: -2px;
+        }
+
+        to {
+            inset-block-start: calc(100% - 2px);
+        }
+    }
+
     @keyframes sy-blind {
         from {
             transform: scaleY(1);
@@ -2439,44 +2725,208 @@
         }
     }
 
-    @keyframes sy-reveal-x {
+    /* Loading. */
+    @keyframes sy-load-fill {
+        from {
+            clip-path: inset(-12px 100% -12px 0);
+        }
+
+        to {
+            clip-path: inset(-12px 0 -12px 0);
+        }
+    }
+
+    @keyframes sy-charge-head {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes sy-flow {
+        to {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes sy-road-run {
+        to {
+            background-position-x: 2.25rem;
+        }
+    }
+
+    @keyframes sy-floor-run {
+        from {
+            transform: rotateX(76deg) translateY(0);
+        }
+
+        to {
+            transform: rotateX(76deg) translateY(3.6cqi);
+        }
+    }
+
+    @keyframes sy-floor-drive {
+        from {
+            background-position:
+                0 0%,
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 130%,
+                0 0,
+                0 0;
+        }
+    }
+
+    @keyframes sy-slice {
+        from {
+            translate: -100% 0;
+        }
+
+        to {
+            translate: 100cqi 0;
+        }
+    }
+
+    @keyframes sy-lane {
+        to {
+            background-position-x: 2.1rem;
+        }
+    }
+
+    @keyframes sy-lane-back {
+        to {
+            background-position-x: -2.1rem;
+        }
+    }
+
+    @keyframes sy-ladder {
+        0% {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        16.6% {
+            clip-path: inset(96% 0 0 0);
+        }
+
+        33.3% {
+            clip-path: inset(74% 0 0 0);
+        }
+
+        50% {
+            clip-path: inset(51% 0 0 0);
+        }
+
+        66.6% {
+            clip-path: inset(27% 0 0 0);
+        }
+
+        83.3%,
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes sy-ladder-down {
+        0% {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        16.6% {
+            clip-path: inset(0 0 74% 0);
+        }
+
+        33.3% {
+            clip-path: inset(0 0 48% 0);
+        }
+
+        50% {
+            clip-path: inset(0 0 25% 0);
+        }
+
+        66.6% {
+            clip-path: inset(0 0 6% 0);
+        }
+
+        83.3%,
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes sy-fill-sweep {
         0% {
             clip-path: inset(0 100% 0 0);
         }
 
-        99% {
+        50% {
             clip-path: inset(0 0 0 0);
         }
 
         100% {
-            clip-path: none;
-        }
-    }
-
-    @keyframes sy-reveal-e {
-        0% {
             clip-path: inset(0 0 0 100%);
         }
-
-        99% {
-            clip-path: inset(0 0 0 0);
-        }
-
-        100% {
-            clip-path: none;
-        }
     }
 
-    @keyframes sy-bulbs-off {
-        from {
+    @keyframes sy-head-sweep {
+        0% {
+            translate: 0 0;
             opacity: 1;
         }
 
-        to {
+        49.9% {
+            translate: calc(100cqi - 2px) 0;
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            translate: calc(100cqi - 2px) 0;
             opacity: 0;
         }
     }
 
+    @keyframes sy-bulbs-chase {
+        to {
+            mask-position:
+                0 50%,
+                3.6rem 0;
+        }
+    }
+
+    @keyframes sy-rows {
+        0% {
+            translate: 0 0;
+        }
+
+        25% {
+            translate: 0 100%;
+        }
+
+        50% {
+            translate: 0 200%;
+        }
+
+        75% {
+            translate: 0 300%;
+        }
+    }
+
+    /* Leaving and arriving. */
     @keyframes sy-slab-up {
         from {
             translate: 0 101%;
@@ -2517,6 +2967,16 @@
         }
     }
 
+    @keyframes sy-band-r {
+        from {
+            transform: scaleY(1);
+        }
+
+        to {
+            transform: scaleY(0);
+        }
+    }
+
     @keyframes sy-ramp-back {
         from {
             clip-path: inset(0 0 0 0);
@@ -2547,304 +3007,91 @@
         }
     }
 
-    @keyframes sy-line-on {
+    @keyframes sy-light-in {
         from {
-            background-size: 100% 0;
+            filter: brightness(0.22) saturate(0);
         }
 
         to {
-            background-size: 100% 2px;
+            filter: brightness(1) saturate(1);
         }
     }
 
-    @keyframes sy-drive-in {
+    @keyframes sy-recede {
         from {
-            scale: 0.03;
+            translate: 0 calc(-100% - var(--sy-to, 4rem));
         }
 
         to {
-            scale: 1;
-        }
-    }
-
-    @keyframes sy-fade-in {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes sy-swallow {
-        from {
-            clip-path: circle(0% at 50% 120%);
-        }
-
-        70%,
-        to {
-            clip-path: circle(120% at 50% 120%);
-        }
-    }
-
-    @keyframes sy-fade {
-        0%,
-        60% {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 0;
-        }
-    }
-
-    /* Loading. */
-    @keyframes sy-charge-fill {
-        from {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        to {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    @keyframes sy-charge-head {
-        from {
-            transform: translateX(0);
-        }
-
-        to {
-            transform: translateX(100cqi);
-        }
-    }
-
-    @keyframes sy-flow {
-        to {
-            background-position:
-                0 0,
-                200% 0;
-        }
-    }
-
-    @keyframes sy-road-run {
-        to {
-            background-position-x: 2.25rem;
-        }
-    }
-
-    @keyframes sy-fill-sweep {
-        0% {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        50% {
-            clip-path: inset(0 0 0 0);
-        }
-
-        100% {
-            clip-path: inset(0 0 0 100%);
-        }
-    }
-
-    @keyframes sy-head-sweep {
-        0% {
             translate: 0 0;
-            opacity: 1;
-        }
-
-        49.9% {
-            translate: calc(100cqi - 2px) 0;
-            opacity: 1;
-        }
-
-        50%,
-        100% {
-            translate: calc(100cqi - 2px) 0;
-            opacity: 0;
         }
     }
 
-    @keyframes sy-ladder {
-        0% {
-            clip-path: inset(100% 0 0 0);
+    @keyframes sy-centre-in {
+        from {
+            clip-path: inset(0 50% 0 50%);
         }
 
-        16.6% {
-            clip-path: inset(96% 0 0 0);
-        }
-
-        33.3% {
-            clip-path: inset(74% 0 0 0);
-        }
-
-        50% {
-            clip-path: inset(51% 0 0 0);
-        }
-
-        66.6% {
-            clip-path: inset(27% 0 0 0);
-        }
-
-        83.3%,
-        100% {
+        to {
             clip-path: inset(0 0 0 0);
         }
     }
 
-    @keyframes sy-floor-drive {
-        from {
-            background-position:
-                0 0%,
-                0 16%,
-                0 38%,
-                0 66%,
-                0 100%,
-                0 0,
-                0 0;
-        }
-
-        to {
-            background-position:
-                0 16%,
-                0 38%,
-                0 66%,
-                0 100%,
-                0 130%,
-                0 0,
-                0 0;
-        }
-    }
-
-    @keyframes sy-scan-a {
+    @keyframes sy-seg-pulse-a {
         0% {
-            translate: -100% 0;
+            opacity: 0;
+        }
+
+        50% {
             opacity: 1;
         }
 
-        49.9% {
-            translate: 100cqi 0;
-            opacity: 1;
-        }
-
-        50%,
         100% {
-            translate: 100cqi 0;
             opacity: 0;
         }
     }
 
-    @keyframes sy-scan-b {
+    @keyframes sy-seg-pulse-b {
+        0% {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-seg-late-a {
         0%,
-        49.9% {
-            translate: 100cqi 0;
+        55% {
             opacity: 0;
         }
 
-        50% {
-            translate: 100cqi 0;
+        80% {
             opacity: 1;
         }
 
         100% {
-            translate: -100% 0;
-            opacity: 1;
+            opacity: 0;
         }
     }
 
-    @keyframes sy-lane {
-        to {
-            background-position-x: 2.1rem;
-        }
-    }
-
-    @keyframes sy-lane-back {
-        to {
-            background-position-x: -2.1rem;
-        }
-    }
-
-    @keyframes sy-eq {
+    @keyframes sy-seg-late-b {
         0% {
-            background-size:
-                0.2rem 30%,
-                0.2rem 70%,
-                0.2rem 50%,
-                0.2rem 90%,
-                0.2rem 40%;
+            opacity: 0;
         }
 
-        12.5% {
-            background-size:
-                0.2rem 60%,
-                0.2rem 40%,
-                0.2rem 80%,
-                0.2rem 50%,
-                0.2rem 70%;
+        20% {
+            opacity: 1;
         }
 
-        25% {
-            background-size:
-                0.2rem 90%,
-                0.2rem 60%,
-                0.2rem 40%,
-                0.2rem 70%,
-                0.2rem 30%;
-        }
-
-        37.5% {
-            background-size:
-                0.2rem 50%,
-                0.2rem 90%,
-                0.2rem 60%,
-                0.2rem 30%,
-                0.2rem 80%;
-        }
-
-        50% {
-            background-size:
-                0.2rem 70%,
-                0.2rem 50%,
-                0.2rem 90%,
-                0.2rem 40%,
-                0.2rem 60%;
-        }
-
-        62.5% {
-            background-size:
-                0.2rem 40%,
-                0.2rem 80%,
-                0.2rem 30%,
-                0.2rem 60%,
-                0.2rem 90%;
-        }
-
-        75% {
-            background-size:
-                0.2rem 80%,
-                0.2rem 30%,
-                0.2rem 70%,
-                0.2rem 90%,
-                0.2rem 50%;
-        }
-
-        87.5%,
+        45%,
         100% {
-            background-size:
-                0.2rem 50%,
-                0.2rem 60%,
-                0.2rem 50%,
-                0.2rem 70%,
-                0.2rem 40%;
-        }
-    }
-
-    @keyframes sy-bulbs-chase {
-        to {
-            mask-position:
-                0 50%,
-                3.6rem 0;
+            opacity: 0;
         }
     }
 
@@ -2861,50 +3108,36 @@
         }
     }
 
-    @keyframes sy-press-ink {
+    @keyframes sy-press-edge {
         to {
-            color: var(--sidebar-background);
-            text-shadow: none;
-        }
-    }
-
-    @keyframes sy-press-ramp {
-        from {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        to {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    @keyframes sy-press-charge {
-        to {
-            color: var(--kp-core);
-            text-shadow:
-                0 0 3px var(--kp-core),
-                0 0 9px var(--primary),
-                0 0 20px hsl(from var(--primary) h s l / 0.8);
             box-shadow:
-                inset 0 0 1.3em 0 hsl(from var(--primary) h s l / 0.8),
-                0 0 2.8em 0 hsl(from var(--primary) h s l / 0.8);
+                inset 0 2px 0 var(--kp-core),
+                0 -4px 14px hsl(from var(--primary) h s l / 0.8);
         }
     }
 
-    @keyframes sy-press-laser {
-        from {
-            transform: scaleX(0);
-        }
-
+    @keyframes sy-seg-charge {
         to {
-            transform: scaleX(1);
+            box-shadow:
+                0 0 3px var(--kp-core),
+                0 0 12px var(--primary),
+                0 0 30px hsl(from var(--primary) h s l / 0.9),
+                0 14px 32px hsl(from var(--primary) h s l / 0.75);
+            transform: scaleY(1.5);
         }
     }
 
-    @keyframes sy-press-dim {
+    @keyframes sy-seg-dim {
         to {
-            text-shadow: none;
+            opacity: 0.25;
             box-shadow: none;
+        }
+    }
+
+    @keyframes sy-seg-focus {
+        to {
+            clip-path: inset(-30px 25% -30px 25%);
+            transform: scaleY(1.5);
         }
     }
 
