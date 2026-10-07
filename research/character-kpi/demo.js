@@ -1219,8 +1219,8 @@ const IDEAS = {
         ],
         tone: [
             {
-                name: 'The CRT trace',
-                text: 'The change on its status plate; a warning or destructive figure shows the note in the label on the tone’s plate.',
+                name: 'The klaxon frame, on tape',
+                text: 'The change on its tone’s label tape, cut square; a warning or failed figure is framed all round, 3 px, in its tone’s ink, the figure in the plain ink; nothing moves.',
             },
             {
                 name: 'The indicator panel',
@@ -1238,7 +1238,7 @@ const IDEAS = {
             },
             {
                 name: 'The lamp lights',
-                text: 'As a link or a filter: an indicator lamp lights amber on hover, switches to green for focus, and clicks off the instant it is pressed.',
+                text: 'As a link or a filter: the lamp before the label lights in ink on hover on a ground one step lighter, focus is the two-channel ring with the lamp lit orange, a press turns the plate into a well.',
             },
             {
                 name: 'The console locks',

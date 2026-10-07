@@ -1314,8 +1314,8 @@ const IDEAS = {
                 text: 'The number and the line are there the moment loading ends, as both characters had them.',
             },
             {
-                name: 'Warmed up',
-                text: 'The line strikes on and off like a tube, then holds, in hard jumps; the number is typed in.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the tile as one picture from its top edge down, an eighth per 80 ms frame (640 ms): the number and the plot come in where they stand.',
             },
             {
                 name: 'Printed out',
@@ -1333,7 +1333,7 @@ const IDEAS = {
             },
             {
                 name: 'The klaxon',
-                text: 'The change as a lit lamp; a warning or destructive figure is framed all round in its colour, as the bridge alarm frames the screen.',
+                text: 'The change on its tone’s label tape, no glow; a warning or destructive figure is framed all round in its colour, as the bridge alarm frames the screen.',
             },
         ],
         live: [

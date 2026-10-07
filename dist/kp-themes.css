@@ -2306,12 +2306,12 @@
     --fx-signal-foreground: hsl(38, 30%, 90%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear(0 0%, 0 50%, 0.878 50%, 0.878 99.99%, 1 100%);
     --theme-font-display: 'Michroma', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(17, 74%, 38%);
     --fx-scanline: hsl(24, 12%, 15%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(24, 12%, 25%);
     --fx-hot-alarm: hsl(10, 80%, 30%);
     --fx-shadow-offset: 0px;
@@ -47328,7 +47328,22 @@
 
    The only loops on this page: none. The LED does not blink — the one
    thing the reference hardware did that this theme refuses — and every
-   reveal here plays once. Full inventory in reports/di5.md. */
+   reveal here plays once. Full inventory in reports/di5.md.
+
+   The grammar (Kenny, 07/10/2026 23:18, research/nostromo-character,
+   themes/nostromo/CHARACTER.md): the anchor is the raster, a picture
+   written row by row from the top. Motion runs on the ship's frame clock
+   of 80 ms (--fx-ease is the register's curve held per frame); contact is
+   2 frames, a panel drawn 4, a figure printed 8, a loop 20. What opens,
+   arrives or leaves is drawn and erased by the raster, every close its
+   open played backwards. Corners are moulded: plates --radius, keys
+   0.3rem, label tape 2px, glass 0.875rem; the focus ring keeps the part's
+   corner. Ink acts, the LED orange only lights. Every switch has its
+   lamp: unlit at rest, lit in ink under the pointer, full when pressed,
+   lit orange (the LED) on keyboard focus; a press turns the raised
+   moulding into a well and never moves the part. A warning sounds the
+   klaxon: its carrier framed 3px in the tone's ink. Label tape names,
+   Michroma counts. */
 
     [data-theme='nostromo'] {
         /* The month heatmap's nav goes on two rows below this width: the
@@ -47351,6 +47366,63 @@
         --kp-redact-ink: var(--foreground);
         --kp-underline: hsl(from var(--selected) h s l / 0.28);
         --kp-backdrop: hsl(from var(--foreground) h s l / 0.55);
+        /* The ship's frame clock [G1, G4]: one frame is 80 ms; contact is 2
+           frames (--fx-duration), a panel drawn by the raster 4, a figure
+           printed 8, a loop 20. A move runs on the register's curve
+           cubic-bezier(0.2, 0, 0, 1) held per frame (each frame shows the
+           curve's value at its start, so it lands in visible frames and stops
+           hard); --fx-ease is the 2-frame one. The raster draws in equal
+           bands, steps(n, end). */
+        --kp-sig-no-frame: 80ms;
+        --kp-sig-no-contact: 160ms;
+        --kp-sig-no-strike: 320ms;
+        --kp-sig-no-print: 640ms;
+        --kp-sig-no-loop: 1600ms;
+        --kp-sig-no-f2: linear(0 0%, 0 50%, 0.878 50%, 0.878 99.99%, 1 100%);
+        --kp-sig-no-f4: linear(0 0%, 0 25%, 0.607 25%, 0.607 50%, 0.878 50%, 0.878 75%, 0.975 75%, 0.975 99.99%, 1 100%);
+        --kp-sig-no-f8: linear(
+            0 0%,
+            0 12.5%,
+            0.256 12.5%,
+            0.256 25%,
+            0.607 25%,
+            0.607 37.5%,
+            0.778 37.5%,
+            0.778 50%,
+            0.878 50%,
+            0.878 62.5%,
+            0.939 62.5%,
+            0.939 75%,
+            0.975 75%,
+            0.975 87.5%,
+            0.994 87.5%,
+            0.994 99.99%,
+            1 100%
+        );
+        --kp-sig-no-frames: var(--kp-sig-no-f4);
+        /* js/motion.js reads its caps from the root: a close and a size glide
+           are one panel drawn, 4 frames (its defaults, 600 and 480 ms, are
+           other themes'). */
+        --kp-close-max: var(--kp-sig-no-strike);
+        --kp-size-max: var(--kp-sig-no-strike);
+        /* The moulded corners [G6]: plates --radius (0.75rem), keys and
+           controls 0.3rem, label tape 2 px, a screen's glass 0.875rem. */
+        --kp-sig-no-key: 0.3rem;
+        --kp-sig-no-tape: 2px;
+        --kp-sig-no-glass: 0.875rem;
+        --kp-radius-sm: var(--kp-sig-no-key);
+        /* The raster's beam: a bright edge with a fading phosphor tail,
+           riding the edge of what is written (research/nostromo-anchor). */
+        --kp-sig-no-beam: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--sidebar-primary) h s l / 0.35) 70%,
+            var(--sidebar-primary) 88%,
+            hsl(from var(--sidebar-primary) h s calc(l + 25)) 100%
+        );
+        /* How far past a drawn part its own shadow may show while it is
+           drawn. */
+        --kp-sig-no-reach: 16px;
     }
 
     /* ── Headings: sentence case, Michroma, correcting the pre-lift
@@ -47382,6 +47454,9 @@
 
     /* ── Focus: two channels always, DI2/AR30 ─────────────────────────── */
 
+    /* At the part's own corner (G6; Kenny, 2026-10-07 23:18, focus "led"):
+       the ring used to force calc(var(--radius) / 2), so a 12 px plate turned
+       6 px while focused. The switch's lamp is lit orange as well (below). */
     [data-theme='nostromo'] a:focus-visible,
     [data-theme='nostromo'] button:focus-visible,
     [data-theme='nostromo'] input:focus-visible,
@@ -47392,7 +47467,6 @@
         box-shadow:
             0 0 0 2px var(--background),
             0 0 0 4px var(--foreground);
-        border-radius: calc(var(--radius) / 2);
     }
 
     [data-theme='nostromo'] .kp-nav a:focus-visible,
@@ -47456,7 +47530,7 @@
 
     [data-theme='nostromo'] .kp-nav__link {
         color: var(--sidebar-foreground);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     /* The current item carries a filled LED dot no other item has [DI4];
@@ -47487,7 +47561,7 @@
     [data-theme='nostromo'] .kp-nav__link--cta {
         background: var(--selected);
         color: var(--primary-foreground);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         padding-inline: var(--kp-space-lg, 1rem);
     }
 
@@ -47502,7 +47576,7 @@
     [data-theme='nostromo'] .kp-nav__menu {
         background: var(--sidebar-background);
         border: 1px solid var(--sidebar-accent);
-        border-radius: 0.35rem;
+        border-radius: var(--radius);
         box-shadow: 0 8px 20px hsl(from var(--sidebar-background) h s l / 0.35);
     }
 
@@ -47529,7 +47603,7 @@
 
     [data-theme='nostromo'] .kp-nav__menu a {
         color: var(--sidebar-foreground);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     [data-theme='nostromo'] .kp-nav__menu a:hover,
@@ -47554,7 +47628,7 @@
     [data-theme='nostromo'] .kp-laurels li {
         border: 1px solid var(--border-strong);
         background: var(--card);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         min-width: 8rem;
         /* Room between the words and the plate's edge [scope-60]. */
         padding: 0.375rem 0.625rem;
@@ -47625,7 +47699,7 @@
 
     [data-theme='nostromo'] .kp-spec__swatch {
         aspect-ratio: 3 / 2;
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         border: 1px solid var(--border-strong);
     }
 
@@ -47636,7 +47710,7 @@
         justify-content: center;
         background: var(--background);
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         letter-spacing: normal;
         text-transform: none;
     }
@@ -47713,6 +47787,8 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
         border: 1px solid var(--border-strong);
+        /* A key, not a plate [G6]: it was --radius, as round as a card. */
+        border-radius: var(--kp-sig-no-key);
         background: var(--secondary);
         color: var(--secondary-foreground);
     }
@@ -47774,6 +47850,7 @@
 
     [data-theme='nostromo'] .kp-icon-button {
         border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
         background: transparent;
         color: var(--foreground);
     }
@@ -47886,7 +47963,7 @@
         color: var(--primary-foreground);
         background: var(--selected);
         border: 1px solid var(--primary);
-        border-radius: 0.15rem;
+        border-radius: var(--kp-sig-no-tape);
         padding: 0.25rem 0.55rem;
         transform: rotate(-5deg);
     }
@@ -47901,7 +47978,7 @@
     [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark {
         background: var(--kp-redact-ink);
         color: transparent;
-        border-radius: 0.15rem;
+        border-radius: var(--kp-sig-no-tape);
         box-shadow: none;
         padding: 0 0.15em;
     }
@@ -48041,18 +48118,15 @@
     [data-theme='nostromo'] .kp-badge,
     [data-theme='nostromo'] .kp-tag {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-tape);
         font-family: var(--theme-font-mono);
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
 
-    /* The badge is a pill, a radius of half its height also when its text
-       wraps onto two lines [scope-55, Kenny 2026-09-13]. Nostromo only for
-       now; the tag keeps its small corner. */
-    [data-theme='nostromo'] .kp-badge {
-        border-radius: var(--kp-radius-pill, 999px);
-    }
+    /* The badge was a pill [scope-55, 2026-09-13]; since the moulded corners
+       (Kenny, 2026-10-07 23:18, G6) a badge is label tape like the tag, cut
+       square at 2 px. */
 
     [data-theme='nostromo'] .kp-health {
         letter-spacing: 0.04em;
@@ -48107,7 +48181,7 @@
 
     [data-theme='nostromo'] .kp-copyable__button {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         background: transparent;
     }
 
@@ -48227,7 +48301,7 @@
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--muted-foreground);
-        border-radius: 0.2rem 0.2rem 0 0;
+        border-radius: var(--kp-sig-no-key) var(--kp-sig-no-key) 0 0;
     }
 
     [data-theme='nostromo'] .kp-tab[aria-selected='true'] {
@@ -48250,7 +48324,7 @@
     [data-theme='nostromo'] .kp-pagination [aria-current] {
         background: var(--selected);
         color: var(--primary-foreground);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     /* The plate marks the current page; the nav LED the base rules light in
@@ -48275,9 +48349,7 @@
     /* ── Pickers and palettes ──────────────────────────────────────────── */
 
     [data-theme='nostromo'] .kp-datepicker__day[aria-selected='true'] {
-        background: var(--selected);
-        color: var(--primary-foreground);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     [data-theme='nostromo'] .kp-datepicker__weekday,
@@ -48289,7 +48361,7 @@
 
     [data-theme='nostromo'] .kp-colorpicker__swatch {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     [data-theme='nostromo'] .kp-colorpicker__value {
@@ -48298,7 +48370,7 @@
 
     [data-theme='nostromo'] .kp-shortcuts__row kbd {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         background: var(--card);
         font-family: var(--theme-font-mono);
     }
@@ -48415,38 +48487,45 @@
         /* The headline: js/effects.js's `popdown` routine toggles this
        class (a new routine — the text never splits into glyphs or
        words, unlike every other headline routine); without it the class
-       never appears and the element stays at its rest opacity/clip. */
+       never appears and the element stays at its rest opacity/clip. Since
+       the raster grammar (Kenny, 2026-10-07 23:18) it is written from its
+       top edge down by the raster, a quarter per frame, 4 frames, with no
+       fade; the routine's own timer (TIMINGS['kp-popdown'], 340 ms) still
+       takes the class off after it. */
         [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='headline'].is-popping {
-            animation: kp-popdown 340ms var(--fx-ease) both;
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
         }
 
         /* The dossier stamp: a ::before pseudo-element, which JS can never
        select — gated on [data-kp-effects] presence directly, exactly as
-       the demo's own stylesheet gates it. */
+       the demo's own stylesheet gates it. Drawn by the raster as the
+       headline is. */
         [data-theme='nostromo'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
-            animation: kp-popdown 340ms var(--fx-ease) both;
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
             animation-delay: var(--kp-stamp-delay);
         }
 
+        /* The section rule is printed start to end in 4 frames [G2, G4]. */
         [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='rule'].is-in::after {
-            animation: kp-rule-in 280ms var(--fx-ease) both;
+            animation: kp-rule-in var(--kp-sig-no-strike) steps(4, end) both;
             animation-delay: var(--kp-rule-delay);
         }
 
         [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark {
             transition:
-                background 220ms var(--fx-ease),
-                color 220ms var(--fx-ease);
+                background var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='nostromo'] .kp-dialog[open] {
-            animation: kp-dialog-in 160ms var(--fx-ease) both;
-        }
+        /* The dialog's entrance is the raster's, in kp.signature below. */
     }
 
     /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-rule-in
    is the base layer's, shared with four other themes at their own
-   durations. kp-popdown and kp-dialog-in are new at this lift. */
+   durations. kp-popdown and kp-dialog-in are new at this lift; nostromo no
+   longer plays them (the raster draws instead, 2026-10-07), but they stay
+   declared here: the names are global, and grotesk names kp-dialog-in, so
+   in the bundle taking them out would change another register. */
     @keyframes kp-popdown {
         0% {
             clip-path: inset(0 0 100% 0);
@@ -48541,26 +48620,24 @@
         margin-block-start: -0.2rem;
         border-radius: 50%;
         background: var(--primary);
-        opacity: 0;
-        translate: -0.35rem 0;
+        opacity: 0.25;
     }
 
+    /* The lamp lights where it stands: it used to slide in 0.35rem from the
+       gutter, and a hover never moves anything in nostromo (G8, G14; Kenny,
+       2026-10-07 23:18, hover "lamp"). Unlit at rest, as every switch's. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='nostromo'] .kp-sidenav__link::before {
-            transition:
-                opacity var(--fx-duration, 180ms) var(--fx-ease, ease),
-                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+            transition: opacity var(--fx-duration) var(--fx-ease);
         }
     }
 
     [data-theme='nostromo'] .kp-sidenav__link:hover::before {
-        opacity: 0.45;
-        translate: 0 0;
+        opacity: 0.7;
     }
 
     [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
-        translate: 0 0;
     }
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
@@ -48568,13 +48645,13 @@
        a viewport with a caption stencilled under it. */
     [data-theme='nostromo'] .kp-to-top {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         font-family: var(--theme-font-mono);
     }
 
     [data-theme='nostromo'] .kp-media {
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
     }
 
     [data-theme='nostromo'] .kp-media-figure > figcaption {
@@ -48596,13 +48673,27 @@
        Dark at rest, lit under the pointer, full when pressed — a console
        where each switch has its own lamp. Same size and same gutter as
        the one in the navigation, so the theme becomes more recognisable
-       rather than busier. */
+       rather than busier.
+
+       Carried to every switch (Kenny, 2026-10-07 23:18, research/
+       nostromo-character: hover "lamp", focus "led", press "well",
+       composites "own"; G8, G14, G17): the button, the menu entry and the
+       key figure that is a link or a filter each carry the lamp at their
+       start. Unlit at rest (ink at 25 %), lit in ink under the pointer
+       (70 %), full when pressed; on keyboard focus it is lit as the LED, in
+       orange with its glow, beside DI2's two-channel ring. A key at rest is
+       raised moulding; pressed, it turns into a well (the shadow inside its
+       top edge, its ground one step into shadow) and never moves. A button
+       inside a header, a menu, a drawer, a tile or an alert is this button:
+       nothing here is scoped to a composite. */
     [data-theme='nostromo'] .kp-button {
         position: relative;
         padding-inline-start: 1.7rem;
     }
 
-    [data-theme='nostromo'] .kp-button::before {
+    /* Under :where(), so every state below (hover, press, focus, a rich
+       entry's place) outranks the lamp at rest. */
+    [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, a.kp-kpi .kp-kpi__label, .kp-kpi--toggle .kp-kpi__label)::before {
         content: '';
         position: absolute;
         inset-inline-start: 0.7rem;
@@ -48615,25 +48706,112 @@
         opacity: 0.25;
     }
 
+    [data-theme='nostromo'] .kp-menu__item {
+        position: relative;
+        padding-inline-start: 1.6rem;
+    }
+
+    [data-theme='nostromo'] .kp-menu__item::before {
+        inset-inline-start: 0.6rem;
+    }
+
+    /* A rich entry's lamp stands beside its label, not in the middle of the
+       label and its hint. */
+    [data-theme='nostromo'] .kp-menu--rich .kp-menu__item::before {
+        inset-block-start: calc(0.4375rem + 0.75em);
+    }
+
+    /* The key figure's lamp stands before its label, in the line. The label
+       clips what overflows it (css/components.css, for its ellipsis), which
+       cut the lit lamp's lens and glow flat on its start side: the label gets
+       half a rem of room on every side, given back by a negative margin, so
+       nothing beside it moves. */
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label {
+        margin: -0.5rem;
+        padding: 0.5rem;
+    }
+
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label::before {
+        position: relative;
+        inset: auto;
+        display: inline-block;
+        margin-block-start: 0;
+        margin-inline-end: 0.4rem;
+        vertical-align: 0.08em;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nostromo'] .kp-button::before {
-            transition: opacity var(--fx-duration, 180ms) var(--fx-ease, ease);
+        [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, a.kp-kpi .kp-kpi__label, .kp-kpi--toggle .kp-kpi__label)::before {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                background var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='nostromo'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
         }
     }
 
-    [data-theme='nostromo'] .kp-button:hover:not(:disabled)::before {
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
         opacity: 0.7;
     }
 
-    [data-theme='nostromo'] .kp-button:active:not(:disabled)::before {
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):active .kp-kpi__label::before,
+    [data-theme='nostromo'] .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__label::before {
         opacity: 1;
     }
 
-    /* ── The pressed state the register had been cancelling [fix-12] ───
-       A layer beats a state: this register's hover background sits in
-       kp.register, later than the kp.components rule that says what the
-       button looks like while it is held down, so pressing it changed
-       nothing. The base layer's own values, put back token for token. */
+    /* Keyboard focus lights the lamp as the LED: the lens in orange with its
+       glow (focus "led"). */
+    [data-theme='nostromo'] :is(.kp-button, .kp-menu__item):focus-visible::before,
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible .kp-kpi__label::before,
+    [data-theme='nostromo'] .kp-sidenav__link:focus-visible::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+        opacity: 1;
+    }
+
+    /* The key figure under the pointer: its ground one step lighter, as a
+       menu entry's; nothing moves. */
+    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        background: var(--popover);
+    }
+
+    /* The key at rest is raised moulding; the ghost and the icon button
+       lie flat in the case and only go in when pressed. */
+    [data-theme='nostromo'] .kp-button:not(.kp-button--ghost, :disabled) {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    /* Pressed, the key goes in: a well, its ground one step into shadow,
+       its lamp full; it does not move. */
+    [data-theme='nostromo']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true']) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo']
+        :is(.kp-button:not(.kp-button--primary, .kp-button--destructive), .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):active:not(
+            :disabled,
+            [aria-disabled='true']
+        ) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+    }
+
+    /* The pressed state the register's hover backgrounds would cancel [fix-12]:
+       a layer beats a state, so each button kind says again what it is while
+       held; the plain key goes into its well, the others keep their own ink. */
+    [data-theme='nostromo'] .kp-button:active:not(:disabled) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+    }
 
     [data-theme='nostromo'] .kp-button--primary:active:not(:disabled) {
         background: var(--primary-active);
@@ -48643,6 +48821,35 @@
     [data-theme='nostromo'] .kp-button--destructive:active:not(:disabled) {
         background: var(--destructive-active);
         border-color: var(--destructive-active);
+    }
+
+    /* Focused, the ring of DI2 at the part's own corner; a focused key keeps
+       its moulding inside the ring, and goes in under it when pressed. */
+    [data-theme='nostromo'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-button:not(.kp-button--ghost, :disabled):focus-visible {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):focus-visible:active:not(:disabled, [aria-disabled='true']) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-well);
+    }
+
+    /* The alarm's buttons are painted by the alarm; they stay flat. */
+    [data-theme='nostromo'] .kp-alarm .kp-button.kp-button:not(:focus-visible) {
+        box-shadow: none;
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */
@@ -48672,7 +48879,7 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
         border: 0;
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         background: none;
         color: var(--sidebar-foreground);
     }
@@ -48742,6 +48949,74 @@
     [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link:hover::before,
     [data-theme='nostromo'] .kp-sidenav__submenu .kp-sidenav__link[aria-current='page']::before {
         opacity: 1;
+    }
+
+    /* ── The case, its figures and its klaxon [Kenny, 2026-10-07 23:18,
+       research/nostromo-character: surface "both", type "michroma", tone
+       "klaxon", colour "indicate"; G5, G7, G13, G15] ─────────────────────
+       A plate of the case is raised moulding: a lit top edge and a shadow
+       under it (a screen is set into the case, dark glass, and keeps its own
+       bezel). The figures on the case are Michroma, the case's printed type,
+       at its one weight; labels are label tape (the mono in capitals, tracked
+       wide); the change sits on its tone's tape, cut square. A warning or a
+       failed carrier sounds the klaxon: framed all round, 3 px, in its tone's
+       ink, its figure in the plain ink; nothing jolts or moves. */
+    [data-theme='nostromo'] :is(.kp-card, .kp-kpi) {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='nostromo'] .kp-kpi__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='nostromo'] .kp-kpi__delta {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-kpi__delta[data-kp-tone] {
+        border-radius: var(--kp-sig-no-tape);
+    }
+
+    [data-theme='nostromo'] .kp-kpi[data-kp-tone='warning'] {
+        box-shadow:
+            inset 0 0 0 3px var(--warning),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-kpi[data-kp-tone='destructive'] {
+        box-shadow:
+            inset 0 0 0 3px var(--destructive),
+            var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    [data-theme='nostromo'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-menu__item--destructive:not(:focus-visible, :active) {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    /* A pick is the person's hand, so it is ink (colour "indicate"): the
+       picked day was the signal orange. */
+    [data-theme='nostromo'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
     }
 }
 
@@ -48840,6 +49115,8 @@
 
     [data-theme='nostromo'] {
         --kp-sig-no-led: var(--sidebar-primary);
+        /* The register's curve; it is shown in whole 80 ms frames
+           (--kp-sig-no-f2 … -f8, in kp.register above), never smooth. */
         --kp-sig-no-ease: cubic-bezier(0.2, 0, 0, 1);
         /* Moulded: a highlight along the top edge and a shadow under. */
         --kp-sig-no-raised:
@@ -48851,8 +49128,10 @@
         --kp-sig-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--kp-sig-no-led) 30%, var(--accent) 70%);
     }
 
+    /* The tape reel (G11): one turn per loop, 1600 ms, in 20 frames of 80 ms
+       (it was 1800 ms, smooth). */
     [data-theme='nostromo'] .kp-spinner {
-        --kp-sig-dur: 1800ms;
+        --kp-sig-dur: var(--kp-sig-no-loop);
         position: relative;
         border: 0;
         border-radius: 50%;
@@ -48964,7 +49243,7 @@
         block-size: 1.15rem;
         margin: 0;
         border: 1px solid var(--border-strong);
-        border-radius: 0.2rem;
+        border-radius: var(--kp-sig-no-key);
         background: var(--card);
     }
 
@@ -48972,9 +49251,11 @@
         box-shadow: var(--kp-sig-no-well);
     }
 
+    /* A tick is the person's pick, so it is ink (G5, colour "indicate"); it
+       was the signal orange. */
     [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked {
-        border-color: var(--selected);
-        background: var(--selected);
+        border-color: var(--primary);
+        background: var(--primary);
     }
 
     [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
@@ -49005,8 +49286,14 @@
         box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.6);
     }
 
+    /* What opens, arrives or leaves is drawn by the raster from its top edge
+       down in equal bands, one per 80 ms frame, and erased the same way
+       backwards (opening, leave "raster"; G2, G3, G12): a toast and a dialog
+       in 4 frames (320 ms, a panel), a tooltip in 2 (160 ms, a contact).
+       --kp-sig-no-n is the frame count of the part's draw. */
     [data-theme='nostromo'] .kp-toast {
-        --kp-sig-dur: 240ms;
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
         position: relative;
         padding-inline-start: 2rem;
         box-shadow: var(--kp-sig-no-raised);
@@ -49026,8 +49313,17 @@
             0 0 6px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
     }
 
+    /* js/motion.js learns the theme's time from an unopened dialog (a probe
+       it adds and takes off) and closes in two thirds of it: so an unopened
+       dialog is drawn over 480 ms and the open one in 320 ms (4 frames),
+       which is also its close and, opening as its close reversed, its
+       opening. Both in 4 bands: the probe's curve is the one motion.js folds
+       a disclosure on, in the size time (320 ms), so 4 bands keep that fold
+       on the 80 ms clock too. */
     [data-theme='nostromo'] .kp-dialog {
-        --kp-sig-dur: 260ms;
+        --kp-sig-dur: calc(var(--kp-sig-no-frame) * 6);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.2rem;
         --kp-sig-no-screw: radial-gradient(
             circle,
             hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
@@ -49045,6 +49341,30 @@
             0 12px 28px -14px hsl(from var(--foreground) h s l / 0.5);
     }
 
+    [data-theme='nostromo'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+    }
+
+    /* The beam rides the edge of what the raster has written: a bright line
+       with a fading phosphor tail. At rest it is away, so the reduced pose is
+       the finished dialog. A dialog in the page's flow (not a <dialog>, which
+       the browser places itself) holds it. */
+    [data-theme='nostromo'] .kp-dialog:not(dialog) {
+        position: relative;
+    }
+
+    [data-theme='nostromo'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+        block-size: var(--kp-sig-no-tail);
+        background: var(--kp-sig-no-beam);
+        opacity: 0;
+        pointer-events: none;
+    }
+
     [data-theme='nostromo'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
            over the theme's own on 2026-10-03 (research/dialog-title). */
@@ -49054,11 +49374,12 @@
     }
 
     [data-theme='nostromo'] .kp-tooltip {
-        --kp-sig-dur: 160ms;
+        --kp-sig-dur: var(--kp-sig-no-contact);
+        --kp-sig-no-n: 2;
         margin-inline-start: 0.5rem;
         padding: 0.2rem 0.6rem;
         border: 0;
-        border-radius: 2px;
+        border-radius: var(--kp-sig-no-tape);
         background: var(--foreground);
         color: var(--primary-foreground);
         box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
@@ -49081,7 +49402,7 @@
         inline-size: 1.7rem;
         block-size: 1.6rem;
         border: 1px solid var(--border-strong);
-        border-radius: 0.25rem;
+        border-radius: var(--kp-sig-no-key);
         background: var(--card);
         box-shadow: var(--kp-sig-no-raised);
         color: var(--foreground);
@@ -49164,7 +49485,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='nostromo'] .kp-spinner::before {
-            animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) linear infinite;
+            animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) steps(20, end) infinite;
         }
 
         [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
@@ -49179,12 +49500,14 @@
             animation-delay: 320ms;
         }
 
+        /* The radio's lens is a lamp: it switches on in one frame, never
+           bouncing (G1). The tick is printed start to end in 2 frames. */
         [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
-            animation: kp-sig-nostromo-no-strike var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+            animation: kp-sig-nostromo-lamp-on var(--kp-sig-no-frame) steps(1, end) backwards;
         }
 
         [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
-            animation: kp-sig-nostromo-no-punch var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+            animation: kp-sig-nostromo-no-punch var(--kp-sig-no-contact) steps(2, end) backwards;
         }
 
         [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
@@ -49196,37 +49519,67 @@
         }
 
         [data-theme='nostromo'] .kp-switch__input::before {
-            transition: transform 110ms var(--kp-sig-no-ease);
+            transition: transform var(--kp-sig-no-contact) var(--kp-sig-no-f2);
         }
 
-        [data-theme='nostromo'] .kp-toast,
-        [data-theme='nostromo'] .kp-dialog {
-            animation: kp-sig-nostromo-no-popdown var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        /* The raster draws them from the top edge down, a band per frame; the
+           toast's lamp is drawn with its plate (it no longer strikes on with
+           a bounce of its own). Closing is this played backwards: the dialog
+           by js/motion.js, the tooltip by playEntranceBackwards(), the toast
+           by its leave below, which is this draw reversed. */
+        [data-theme='nostromo'] :is(.kp-toast, .kp-dialog, .kp-tooltip) {
+            animation: kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
         }
 
-        [data-theme='nostromo'] .kp-toast::before {
-            animation: kp-sig-nostromo-no-strike 200ms var(--kp-sig-no-ease) var(--kp-sig-dur) both;
+        [data-theme='nostromo'] .kp-dialog::after {
+            animation: kp-sig-nostromo-beam var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
         }
 
-        [data-theme='nostromo'] .kp-tooltip {
-            animation: kp-sig-nostromo-no-stamp var(--kp-sig-dur) var(--kp-sig-no-ease) both;
+        /* The tour's card opens as a panel does, and the tour plays it
+           backwards when it closes (js/tour.js, playEntranceBackwards()). */
+        [data-theme='nostromo'] .kp-tour[open] {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards;
         }
     }
 
-    @keyframes kp-sig-nostromo-no-strike {
+    /* The raster (the anchor, research/nostromo-anchor): the part uncovered
+       from its top edge, a band per frame (the timing function's steps); its
+       own shadow may show past its edge while it is drawn. */
+    @keyframes kp-sig-nostromo-raster {
         from {
-            opacity: 0;
-            transform: scale(0.6);
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
         }
 
-        60% {
+        to {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1));
+        }
+    }
+
+    /* The beam riding the edge of what is written, its tail behind it; it
+       goes out on the last frame. */
+    @keyframes kp-sig-nostromo-beam {
+        from {
+            inset-block-start: calc(var(--kp-sig-no-tail) * -1);
             opacity: 1;
-            transform: scale(1.12);
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            inset-block-start: calc(100% - var(--kp-sig-no-tail));
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-lamp-on {
+        from {
+            opacity: 0;
         }
 
         to {
             opacity: 1;
-            transform: none;
         }
     }
 
@@ -49249,27 +49602,11 @@
 
     @keyframes kp-sig-nostromo-no-punch {
         from {
-            opacity: 0;
             clip-path: inset(0 100% 0 0);
         }
 
         to {
-            opacity: 1;
             clip-path: inset(0);
-        }
-    }
-
-    @keyframes kp-sig-nostromo-no-popdown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-    }
-
-    @keyframes kp-sig-nostromo-no-stamp {
-        from {
-            opacity: 0;
-            transform: scale(1.08);
         }
     }
 
@@ -49291,7 +49628,7 @@
         }
 
         [data-theme='nostromo'] [data-kp-arriving] {
-            animation: kp-sig-nostromo-size-scan 300ms steps(4, jump-end) backwards;
+            animation: kp-sig-nostromo-size-scan var(--kp-sig-no-strike) steps(4, jump-end) backwards;
         }
 
         @keyframes kp-sig-nostromo-size-scan {
@@ -49306,26 +49643,35 @@
        2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
        the exit, and in a row of leaves starts the next one halfway through this one. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── nostromo: it scrolls off the top of the monitor ── */
+        /* ── nostromo: erased by the raster (Kenny, 2026-10-07 23:18, leave
+           "raster"; it was a flare and a blur in place, 480 ms ease-in): the
+           part is the raster's draw played backwards, frame for frame, erased
+           from the bottom up in 4 frames of 80 ms. ── */
         /* Opening is closing turned around (Kenny's pick on research/open-reverse,
            2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
+           in the close's time, and lets what arrives play this leave backwards,
+           which makes every arrival the raster's draw. */
         [data-theme='nostromo'] {
             --kp-open: reverse-close;
         }
 
+        /* Its own name, so js/motion.js tells the leave from the entrance
+           (a toast's entrance is the raster's draw). Erasing full to empty
+           with the steps at the start of each frame is the draw played
+           backwards frame for frame: frame t of the leave is frame (T - t)
+           of the draw. */
         [data-theme='nostromo'] [data-kp-leaving] {
-            animation: kp-sig-nostromo-leave 480ms ease-in forwards;
+            animation: kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-erase {
+        from {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1));
         }
 
-        @keyframes kp-sig-nostromo-leave {
-            35% {
-                filter: brightness(1.8) blur(1px);
-            }
-            to {
-                filter: brightness(1.2) blur(3px);
-                opacity: 0;
-            }
+        to {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
         }
     }
 
@@ -49475,29 +49821,33 @@
         }
     }
 
-    /* ── how the share arrives: option 3 ── */
+    /* ── how the share arrives: option 3, on the frame clock ──
+       The share is printed start to end in 8 frames (640 ms, a print; it was
+       1600 ms on cubic-bezier(0.6, 0, 0.4, 1)). The glide to a new value
+       (the transition) is a live change, which Kenny has not decided yet
+       (research/nostromo-character, "live" reopened): it is left as it was. */
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-nostromo-meter-wipe-o 1600ms cubic-bezier(0.6, 0, 0.4, 1) backwards;
+            animation: kp-sig-nostromo-meter-wipe-o var(--kp-sig-no-print) steps(8, end) backwards;
             transition: inline-size 1600ms cubic-bezier(0.6, 0, 0.4, 1);
         }
     }
 
-    /* ── when the tone changes: option 2 ── */
+    /* ── when the tone changes: the klaxon (Kenny, 2026-10-07 23:18, tone
+       "klaxon"; it was option 2, the relay's jolt sideways) ──
+       A meter in warning or failure is framed all round in its tone's ink,
+       3 px outside its moulded edge; nothing moves. */
+    [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--warning);
+    }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-nostromo-meter-jolt-o 200ms steps(3);
-        }
-
-        [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-nostromo-meter-jolt-w 200ms steps(3);
-        }
-
-        [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-nostromo-meter-jolt-d 200ms steps(3);
-        }
+    [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--destructive);
     }
 
     /* ── the mark past the end: option 3 ── */
@@ -49532,84 +49882,6 @@
 
         100% {
             background-position: 140% 0;
-        }
-    }
-
-    @keyframes kp-sig-nostromo-meter-jolt-d {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-nostromo-meter-jolt-o {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-nostromo-meter-jolt-w {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
         }
     }
 

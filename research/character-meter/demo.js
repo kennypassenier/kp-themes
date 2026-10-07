@@ -1312,7 +1312,7 @@ const IDEAS = {
             },
             {
                 name: 'Warm-up',
-                text: 'The share is drawn in from the left slowing as it lands.',
+                text: 'The share is printed in from the left in 8 frames of 80 ms (640 ms), equal steps.',
             },
         ],
         tone: [
@@ -1321,8 +1321,8 @@ const IDEAS = {
                 text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
             },
             {
-                name: 'Relay clack',
-                text: 'A new tone jolts the meter sideways, in 3 hard steps.',
+                name: 'The klaxon',
+                text: 'The klaxon: a meter in warning or failure is framed all round in its tone’s ink; nothing moves.',
             },
             {
                 name: 'Warm-up',

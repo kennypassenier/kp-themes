@@ -29,7 +29,7 @@ export default {
             {
                 key: 'r3-br-shape-1',
                 name: 'The vent grille',
-                text: 'The plot a moulded dark vent, horizontal ribs embossed across it, the amber phosphor trace lit with its own glow, the label and the number in the ship’s mono.',
+                text: 'The plot a moulded dark vent set into the case behind rounded glass, horizontal ribs embossed across it, the amber phosphor trace lit with its own glow, the label in the ship’s mono and the number in Michroma.',
             },
             {
                 key: 'r3-br-shape-2',

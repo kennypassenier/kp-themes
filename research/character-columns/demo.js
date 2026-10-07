@@ -1279,7 +1279,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The readout bank',
-                text: 'A bank of screen readouts: each figure a segment of glass with corner brackets, its head on an inverse tape, all in the mono.',
+                text: 'A bank of readouts: each figure a segment with corner brackets, its head on an inverse tape, the figures in Michroma, the case’s printed type.',
             },
             {
                 name: 'The bulkhead',
@@ -1306,8 +1306,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Printed out',
-                text: 'Every figure is printed from the left, character by character, column after column.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the strip as one picture from its top edge down, an eighth per 80 ms frame (640 ms); what stands at the same height appears together.',
             },
             {
                 name: 'Glitched in',

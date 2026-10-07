@@ -1,0 +1,84 @@
+/* research/character-drawer, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Tokens and keyframes are the
+   package's (css/nostromo-register.css). Only nostromo's decided options
+   change: shape 2, openclose 2, highlight 2, card 1. Next (3, the replate)
+   is a live change and is left as it is: it is reopened. Linked after every
+   other drawer stylesheet.
+
+   - corners: the drawer and the tour card are plates, so they take the
+     plate's corner (0.75rem; they were square);
+   - colour "indicate": the warning yellow on the foot, the card's top rule
+     and the highlight warned of nothing; they are the case's ink;
+   - openclose: "it unlatches and swings" swung on a hinge with a 108 %
+     pop; the drawer is drawn by the raster from its top edge down, a
+     quarter per 80 ms frame (320 ms), and closing is that draw played
+     backwards, the beam climbing; nothing swings or overshoots;
+   - the buttons in it are nostromo's own (the register's). */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer {
+        --kp-sig-no-tail: 1.2rem;
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] [data-dt-shape='2'] .dt-drawer .kp-drawer__foot {
+        border-block-start-color: var(--primary);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='1'] .dt-tour {
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        border-block-start-color: var(--primary);
+    }
+
+    [data-theme='nostromo'] [data-dt-highlight='2'] [data-kp-tour-target] {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            0 0 0 100vmax hsl(from var(--background) h s l / 0.6);
+    }
+
+    /* Open and close: drawn and erased by the raster. Closed, it is the
+       draw's first frame: nothing written; never moved or turned. */
+    [data-theme='nostromo'] [data-dt-openclose='2'] .dt-drawer,
+    [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        translate: none;
+        rotate: none;
+    }
+
+    [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
+    }
+
+    [data-theme='nostromo'] [data-dt-openclose='2'] .dt-drawer::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-sig-no-tail, 1.2rem) * -1);
+        block-size: var(--kp-sig-no-tail, 1.2rem);
+        background: var(--kp-sig-no-beam);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) reverse both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer::after {
+            animation: kp-sig-nostromo-beam var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        [data-theme='nostromo'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer::after {
+            animation: kp-sig-nostromo-beam var(--kp-sig-no-strike) steps(4, end) reverse both;
+        }
+    }
+}

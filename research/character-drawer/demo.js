@@ -1269,7 +1269,7 @@ const IDEAS = {
             },
             {
                 name: 'The rivet tray',
-                text: 'A panel with a double row of rivet-dots along both long edges, a stencilled-looking head title, amber accents on the foot.',
+                text: 'A moulded plate with rivet-dots along its edge, a stencilled-looking head title, the foot ruled in the case’s ink.',
             },
             {
                 name: 'The stencilled hatch slab',
@@ -1282,8 +1282,8 @@ const IDEAS = {
                 text: 'The panel slides in along a visible rail groove at its edge with a mechanical, slightly uneven speed (fast then catching); closing slides back along the rail the same uneven way, reversed.',
             },
             {
-                name: 'It unlatches and swings',
-                text: 'The panel releases with a small outward pop before swinging into place on a hinge, like a hatch unlatching; closing swings it back then pops it shut, reversed.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the panel from its top edge down, a quarter per 80 ms frame, a bright beam at the edge of what is written (320 ms); closing is that draw backwards, the beam climbing; nothing swings or pops.',
             },
             {
                 name: 'It is cranked out by a winch',
@@ -1297,7 +1297,7 @@ const IDEAS = {
             },
             {
                 name: 'The stencil bracket',
-                text: 'Stencil-cut corner brackets (notched, utilitarian) in amber frame the target; the rest of the stage dims to dark grey.',
+                text: 'The target is framed 2 px in the case’s ink; the rest of the stage dims to dark grey.',
             },
             {
                 name: 'The warning-strobe halo',
@@ -1307,7 +1307,7 @@ const IDEAS = {
         card: [
             {
                 name: 'The manifest tag',
-                text: 'A grey card with an amber top rule and a stencilled-looking title, rivet-dot corners, the foot plain.',
+                text: 'A moulded card with a top rule in the case’s ink and a stencilled-looking title, the foot plain.',
             },
             {
                 name: 'The console card',

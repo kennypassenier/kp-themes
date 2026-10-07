@@ -1,0 +1,79 @@
+/* research/character-kpi, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Tokens are the package's
+   (css/nostromo-register.css). Only nostromo's decided options change:
+   shape r2-ns-shape-2, tone 1, interactive 2. Loading (2) and live (2) are
+   left as they are: both are reopened. Linked after every other key-figure
+   stylesheet.
+
+   - shape: the readout bank stays (the two heavy rules, the faint band),
+     raised moulding under it; the figure is the case's printed type,
+     Michroma at its one weight, with no glow (a glow is the screen's);
+   - tone: the klaxon: a warning or failed key figure is framed all round,
+     3 px, in its tone's ink, its figure in the plain ink; the change sits on
+     its tone's tape, cut square, in mono capitals;
+   - interactive "the lamp lights", drawn as its name says (proposal-23): the
+     lamp before the label lights in ink under the pointer on a ground one
+     step lighter; focus is the two-channel ring with the lamp lit orange; a
+     press turns the plate into a well. These are the register's own states,
+     handed back with revert-layer. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-kf-shape='r2-ns-shape-2'] .kp-kpi {
+        --kf-shadow: inset 0 3px 0 0 var(--border-strong), inset 0 -3px 0 0 var(--border-strong), var(--kp-sig-no-raised);
+        --kf-num-font: var(--theme-font-display);
+        --kf-num-weight: 400;
+        --kf-num-shadow: none;
+        --kf-label-font: var(--theme-font-mono);
+        --kf-label-track: 0.12em;
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-radius: var(--kp-sig-no-tape);
+        border: 0;
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-tone='good'] {
+        --kf-delta-bg: var(--success);
+        --kf-delta-ink: var(--success-foreground);
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        --kf-delta-bg: var(--destructive);
+        --kf-delta-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi[data-kp-tone] > .kp-kpi__value {
+        --kf-tone-bg: none;
+        --kf-tone-ink: inherit;
+        --kf-tone-pad: 0;
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-tone-shadow: inset 0 0 0 3px var(--warning);
+        box-shadow: var(--kf-tone-shadow), var(--kf-shadow, none);
+    }
+
+    [data-theme='nostromo'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-tone-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    /* Interactive 2 → the register's key figure: the frame stays, the ground
+       steps lighter, the ring of DI2 at the plate's corner, a well. */
+    [data-theme='nostromo'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        --kf-hover-border: var(--border-strong);
+        --kf-hover-plate: var(--popover);
+        --kf-press-plate: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+    }
+
+    [data-theme='nostromo'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kf-shadow, none);
+    }
+
+    [data-theme='nostromo'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        box-shadow: var(--kp-sig-no-well);
+    }
+}

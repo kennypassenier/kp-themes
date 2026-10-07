@@ -339,12 +339,15 @@ const IDEAS = {
         shape: [
             { name: 'The CRT dot', text: 'A small phosphor dot sits before the word, the word in mono capitals on no plate.' },
             { name: 'The indicator tag', text: 'A lit indicator lamp holds the word on embossed label tape.' },
-            { name: 'The panel chip', text: 'The dot and the word sit on one embossed window with scanlines over it.' },
+            { name: 'The panel chip', text: 'The dot (its lamp) and the word sit on one embossed key of the case, the key’s corner, clean plastic.' },
         ],
         tone: [
             { name: 'The phosphor colour only', text: 'Only the phosphor dot takes the state’s colour and glow; the word stays mono white.' },
             { name: 'The lamp colour', text: 'The indicator lamp takes the state’s colour and glow, the word kept on the label tape.' },
-            { name: 'The klaxon warning', text: 'A warning or failed state frames the panel chip in its colour, as the bridge alarm.' },
+            {
+                name: 'The klaxon warning',
+                text: 'A warning or failed state frames the panel chip all round, 3 px, in its colour, as the bridge alarm; the chip keeps its size.',
+            },
         ],
         change: [
             { name: 'A blip', text: 'The phosphor dot flares with light once, slowing as it lands.' },

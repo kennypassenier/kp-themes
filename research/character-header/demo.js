@@ -667,15 +667,15 @@ const IDEAS = {
         shape: [
             {
                 name: 'The CRT trace',
-                text: 'Scanlines over the header, the title in mono capitals with a phosphor glow, the actions as lit indicator lamps.',
+                text: 'The header is beige case, raised and clean (scanlines and glow are the screen’s), the title in Michroma, the actions nostromo’s own buttons with their lamps.',
             },
             { name: 'The indicator panel', text: 'The title on embossed label tape, the actions as lit indicator lamps on an embossed panel.' },
             { name: 'The MU-TH-UR screen', text: 'Scanlines over the whole header, the title in mono capitals, the actions ringed in green.' },
         ],
         menu: [
             {
-                name: 'Warmed up',
-                text: 'The menu strikes on like a tube, flickering once before it holds; it cuts off the same way in reverse to close.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the menu from its top edge down, a quarter per 80 ms frame, a bright beam at the edge of what is written (320 ms); closing is that draw backwards, the beam climbing.',
             },
             {
                 name: 'Printed out',
@@ -692,8 +692,8 @@ const IDEAS = {
                 text: 'Hover lights a button’s indicator lamp, focus rings it in green, press dims the lamp for the moment held.',
             },
             {
-                name: 'The klaxon',
-                text: 'Hover warms a button’s glow, focus frames it in the alarm colour, press flashes the lamp once before settling dim.',
+                name: 'Nostromo’s own button',
+                text: 'The actions hover, focus and press exactly as nostromo’s button: the lamp lights in ink under the pointer, focus is the two-channel ring with the lamp lit orange, a press turns the raised key into a well.',
             },
             { name: 'The sweep', text: 'Hover sweeps a faint light across a button, focus rings it, press stills the sweep while pressed.' },
         ],

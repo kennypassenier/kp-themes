@@ -809,7 +809,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The CRT trace',
-                text: 'Scanlines run over the plate, headings and entries in mono capitals, a phosphor-green rule between groups.',
+                text: 'The beige plate, clean (scanlines are the screen’s), headings and entries in mono capitals, the case’s edge as the rule between groups; every entry carries its lamp.',
             },
             { name: 'The indicator panel', text: 'Headings on embossed label tape, entries in an embossed window look, a lit rule between groups.' },
             { name: 'The MU-TH-UR screen', text: 'Scanlines over the whole plate, entries ringed in green, everything in mono capitals.' },
@@ -822,12 +822,15 @@ const IDEAS = {
         open: [
             { name: 'Warmed up', text: 'The menu strikes on and off like a tube, then holds; it strikes off the same way to close.' },
             { name: 'Printed out', text: 'The menu is drawn in from the left in hard steps like a printout, and retracts the same steps to close.' },
-            { name: 'Pinged', text: 'The menu rings open from the button like a tracker ping, and rings shut the same way to close.' },
+            {
+                name: 'Drawn by the raster',
+                text: 'The raster writes the menu from its top edge down, a quarter per 80 ms frame, a bright beam at the edge of what is written (320 ms); closing is that draw backwards, the beam climbing.',
+            },
         ],
         tone: [
             {
                 name: 'The klaxon',
-                text: 'The destructive entry is framed all round in its colour, as the bridge alarm frames the screen; the disabled reason reads behind scanlines.',
+                text: 'The destructive entry is framed all round, 3 px, in its colour, as the bridge alarm frames the screen; the disabled reason reads on clean plastic.',
             },
             {
                 name: 'The lit indicator lamp',
@@ -841,8 +844,8 @@ const IDEAS = {
         interact: [
             { name: 'A blip', text: 'A hovered or focused entry blips once like a tracker ping; a press holds the ring steady while pressed.' },
             {
-                name: 'The scanline sweeps',
-                text: 'A hovered or focused entry gets a scanline that sweeps across once; a press holds the sweep mid-way.',
+                name: 'The switch’s lamp lights',
+                text: 'A hovered entry lights its lamp in ink on a ground one step lighter; a focused one takes the two-channel ring and its lamp lit orange; a press turns it into a well; nothing sweeps or moves.',
             },
             {
                 name: 'The lamp lights',

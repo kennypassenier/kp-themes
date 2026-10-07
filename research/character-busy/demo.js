@@ -1339,8 +1339,8 @@ const IDEAS = {
                 text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
             },
             {
-                name: 'Warmed up',
-                text: 'The panel strikes on and off once like a CRT warming, then holds, in two hard jumps.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the panel from its top edge down, a quarter per 80 ms frame (320 ms), never squashed; it is erased the same way backwards when the table is done.',
             },
             {
                 name: 'Printed out',

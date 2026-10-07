@@ -1,0 +1,32 @@
+/* research/character-busy, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Keyframes and tokens are the
+   package's (css/nostromo-register.css). Only nostromo's decided options
+   change: arrival 2 and failure 1. The shape (MU/TH/UR's screen, a screen
+   set into the case, its cursor a screen's motif), loading (1) and the phone
+   (the reel) stay: loading is reopened. Linked after every other busy
+   stylesheet.
+
+   - arrival: "warmed up" squashed the words (scaleY 0 → 1 → 0 → 1); the
+     panel is drawn by the raster from its top edge down, a quarter per 80 ms
+     frame (320 ms), never scaled; it leaves as that draw played backwards
+     (nostromo.js puts the removed layer back for the leave);
+   - failure: the klaxon stands still: the failed alert no longer grows in
+     from 95 %. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: kp-sig-nostromo-raster;
+        --bo-arrival-dur: var(--kp-sig-no-strike);
+        --bo-arrival-ease: steps(4, end);
+    }
+
+    [data-theme='nostromo'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-from: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-bo-arrival='2'] .kp-datatable__busy-overlay[data-no-leaving] {
+            animation: kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) both;
+        }
+    }
+}

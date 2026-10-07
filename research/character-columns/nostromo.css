@@ -1,0 +1,37 @@
+/* research/character-columns, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Keyframes and tokens are the
+   package's (css/nostromo-register.css). Only nostromo's decided options
+   change: shape 1 (its figures) and arrival 1; tone 3 (the bracketed readout
+   on tape) is the grammar's reference and stays. Loading (1) and live (2)
+   are left as they are: both are reopened. Linked after every other columns
+   stylesheet.
+
+   - shape: the readout bank keeps its inverse tape heads and its brackets;
+     the figures are the case's printed type, Michroma, at its one weight
+     (type "michroma"; mono figures are titanium's and terminal's voice);
+   - arrival: "printed out" wiped every figure start to end in 600 ms,
+     column after column; the raster writes the strip as one picture from its
+     top edge down, an eighth per 80 ms frame (8 frames, 640 ms, a print), so
+     what stands at the same height appears together. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-cs-shape='1'] .kp-kpis {
+        --cl-num-font: var(--theme-font-display);
+    }
+
+    [data-theme='nostromo'] [data-cs-shape='1'] .kp-kpis > .kp-kpi > .kp-kpi__value {
+        font-weight: 400;
+    }
+
+    [data-theme='nostromo'] [data-cs-arrival='1'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: none;
+        --cl-arrive-stagger: 0ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-cs-arrival='1'] .kp-kpis[data-cs-moment='arrive'] {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-print) steps(8, end) backwards;
+        }
+    }
+}

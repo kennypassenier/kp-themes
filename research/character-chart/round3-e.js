@@ -83,8 +83,8 @@ export default {
             },
             {
                 key: 'r3-no-arr-3',
-                name: 'The phosphor trace',
-                text: 'The lines reveal left to right behind a travelling glow, the way a fresh phosphor trace is brighter than the lines that came before it.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the plot as one picture from its top edge down, an eighth per 80 ms frame (640 ms), a bright beam with a fading phosphor tail at the edge of what is written.',
             },
         ],
     },

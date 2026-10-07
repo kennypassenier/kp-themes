@@ -1,0 +1,39 @@
+/* research/character-trend, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Keyframes and tokens are the
+   package's (css/nostromo-register.css). Only nostromo's decided options
+   change: shape r3-br-shape-1, arrival 2 and tone 3. Loading (1) and live
+   (2) are left as they are: both are reopened. Linked after every other
+   trend stylesheet.
+
+   - shape: the vent grille is a screen set into the case, so its plot takes
+     the glass corner (0.875rem; it was 3 px); the number is the case's
+     printed type, Michroma at its one weight; the label stays the mono;
+   - arrival: "warmed up" flickered the line on and off from its end over
+     900 ms and typed the number; the raster writes the tile as one picture
+     from its top edge down, an eighth per 80 ms frame (8 frames, 640 ms, a
+     print): the number and the plot come in where they stand;
+   - tone: the klaxon frame stays; the change's green glow goes (a glow on
+     the case is the screen's, and green phosphor is terminal's). */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend {
+        --tr-num-font: var(--theme-font-display);
+        --tr-num-weight: 400;
+        --tr-plot-radius: var(--kp-sig-no-glass);
+    }
+
+    [data-theme='nostromo'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-shadow: none;
+    }
+
+    [data-theme='nostromo'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: none;
+        --tr-arr-num: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-print) steps(8, end) backwards;
+        }
+    }
+}

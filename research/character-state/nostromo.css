@@ -1,0 +1,21 @@
+/* research/character-state, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Only nostromo's decided options
+   change: shape 3, tone 3. The change (1, a blip) is a live update and is
+   left as it is: it is reopened. Linked after every other state stylesheet.
+
+   - shape: the panel chip is a key of the case, so it takes the key's
+     corner (0.3rem, not the plate's 12 px) and loses the scanlines (they are
+     the screen's mark, not the plastic's); its dot stays its lamp;
+   - tone: the klaxon frame at 3 px (it was 1 px), drawn inside the chip so
+     the chip keeps its size from state to state. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-sw-shape='3'] {
+        --sw-radius: var(--kp-sig-no-key);
+        --sw-plate: var(--card);
+    }
+
+    [data-theme='nostromo'] [data-sw-tone='3']:is([data-sw-kind='pending'], [data-sw-kind='bad']) {
+        --sw-plate-shadow: inset 0 0 0 2px var(--sw-accent2);
+    }
+}

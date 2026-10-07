@@ -606,7 +606,7 @@ const IDEAS = {
     nostromo: {
         shape: [
             { name: 'The CRT trace', text: 'A green-black screen in a beige bezel, scanlines, the mark a phosphor dot.' },
-            { name: 'The indicator panel', text: 'Embossed label tape for the title, the mark a lit indicator lamp.' },
+            { name: 'The indicator panel', text: 'Embossed label tape for the title, the mark a lit indicator lamp, the plate’s moulded corner.' },
             { name: 'The MU-TH-UR screen', text: 'Mono capitals throughout, scanlines over the whole tile, the mark a green ring dot.' },
         ],
         loading: [
@@ -616,7 +616,10 @@ const IDEAS = {
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Warmed up', text: 'The tile strikes on and off once like a tube, then holds.' },
+            {
+                name: 'Drawn by the raster',
+                text: 'The raster writes the tile from its top edge down, a quarter per 80 ms frame (320 ms); nothing is squashed or overshoots.',
+            },
             { name: 'Printed out', text: 'Tile after tile is drawn in from the left, in hard steps.' },
         ],
         tone: [
@@ -627,7 +630,10 @@ const IDEAS = {
         hover: [
             { name: 'The tube warms', text: 'The phosphor trace brightens; Open underlines in green; focus adds a scanline sweep ring.' },
             { name: 'The lamp blinks', text: 'The indicator lamp blinks once then holds lit; Open underlines; focus frames the tile in a lit ring.' },
-            { name: 'The console wakes', text: 'The scanlines sharpen; Open gains a green underline; focus traces the bezel in light.' },
+            {
+                name: 'The switch’s lamp lights',
+                text: 'Open is nostromo’s own button: its lamp lights in ink under the pointer on a ground one step lighter; focus is the two-channel ring with the lamp lit orange; no scanlines, no green.',
+            },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },

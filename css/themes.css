@@ -2301,12 +2301,12 @@
     --fx-signal-foreground: hsl(38, 30%, 90%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear(0 0%, 0 50%, 0.878 50%, 0.878 99.99%, 1 100%);
     --theme-font-display: 'Michroma', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(17, 74%, 38%);
     --fx-scanline: hsl(24, 12%, 15%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(24, 12%, 25%);
     --fx-hot-alarm: hsl(10, 80%, 30%);
     --fx-shadow-offset: 0px;

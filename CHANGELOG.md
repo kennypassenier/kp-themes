@@ -4,6 +4,35 @@
 
 - **Changed: solstice's pointing is the sun climbing its arc, its press the sun swelling inside the part** [2026-10-07, Kenny: both picks of research/solstice-character, replacing the rake of scope-12 and the restated `-active` faces of fix-12]. One grammar for every pressable part (buttons of every variant including primary, mirror and icon, menu items, calendar days, key figures that are links or toggles, chart legend keys): a real `:hover` raises a sun along its arc under the part with a dome of warm light and a lit foot edge (`::before` and `::after`), a real `:active` swells a half-sun from the middle of the foot, lights the foot edge and takes the ground half-way to its held face, the words lifting to cream. Two registered numbers (`--kp-sig-solstice-point`, `--kp-sig-solstice-press`) run 240 ms on `cubic-bezier(.37, 0, .63, 1)`, in and out identical (measured in Firefox, real mouse: t50 120 ms, t90 191 ms, both ways, all parts). The register paints no hover face any more; the alarm keeps its own paint. Reduced motion: the finished pose at once.
 
+- **Changed: nostromo's grammar, as Kenny decided it on research/nostromo-character**
+  [2026-10-07 23:18, sixteen of eighteen approved; themes/nostromo/CHARACTER.md].
+  The anchor is the raster. Motion runs on the ship's 80 ms frame clock:
+  nostromo's `--fx-ease` is the register's curve held per frame (a 2-frame
+  `linear()`), `--fx-lift` is 0, and the register declares the frame tokens
+  `--kp-sig-no-f2/-f4/-f8`, contact 160 ms, a panel 320 ms, a print 640 ms,
+  a loop 1600 ms, with `--kp-close-max` and `--kp-size-max` at 320 ms. The
+  dialog, the drawer, the toast, the tooltip and the tour card are drawn by
+  the raster from their top edge down in whole frames (`kp-sig-nostromo-raster`,
+  steps; the dialog with the beam on its `::after`), the headline, the stamp
+  and the section rule too; the leave is that draw played backwards
+  (`kp-sig-nostromo-erase`, 320 ms), so every arrival is the draw. The tape
+  reel turns once in 1600 ms in 20 frames; the radio's lens switches on in a
+  frame; the tick prints in 2 frames; the switch moves in 2. Corners are
+  moulded: buttons, icon buttons, menu entries and small controls 0.3rem,
+  badge and tag label tape 2 px (the badge is no longer a pill), and the
+  focus ring keeps the part's corner. Every switch has its lamp: the button,
+  the menu entry and the key figure that is a link or a filter; lit in ink
+  under the pointer, full when pressed, lit orange as the LED on keyboard
+  focus; a key at rest is raised and a press turns it into a well without
+  moving it; the side navigation's lamp no longer slides. Cards and key
+  figures are raised moulding; the key figure's figure is Michroma and its
+  label label tape; a warning or failed key figure, meter or destructive
+  menu entry is framed 3 px in its tone's ink (the meter's sideways jolt is
+  gone). A tick and a picked day are ink. The meter's share prints in 640 ms.
+  The live update and the loading pictures are unchanged (both reopened).
+  nostromo's picks in research/character-* are redrawn on the same grammar
+  (`nostromo.css` per demo, `research/character-busy/nostromo.js`).
+
 - **Changed: solstice's focus ring is a halo** [2026-10-07, Kenny: the halo of research/solstice-character, replacing the global two-channel ring]. A 3 px double rust outline 3 px off the part on every `:focus-visible`; the mirror button keeps only its highlight. The leave comment now names the morning mist, not an eclipse (css/solstice-register.css).
 
 - **Fixed: `.kp-skeleton--block` and `.kp-skeleton--circle` have their own size again** [2026-10-07, Kenny]. The base `.kp-skeleton` rule (1rem tall) came later in components.css than the two shape rules and won at equal specificity, so in every theme a block was a flat 1rem bar and a circle a flat ellipse. The shape rules now follow the base rule: a block is `--kp-skeleton-block` (6rem) tall, a circle `--kp-skeleton-circle` (3rem) wide and as tall as wide.

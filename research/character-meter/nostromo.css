@@ -1,0 +1,37 @@
+/* research/character-meter, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18), as the package draws them
+   (css/nostromo-register.css). Only nostromo's decided options change:
+   arrival 3 and tone 2. The backlit vents (shape 1) and the mark past the
+   end (3) stay. Loading (1) and the glide to a new value (a live change)
+   are left as they are: both are reopened. Linked after meters.css.
+
+   - arrival: the share is printed start to end along the vents in 8 frames
+     of 80 ms (640 ms, a print), in equal steps; it was 1600 ms on
+     cubic-bezier(0.6, 0, 0.4, 1);
+   - tone: the klaxon: a meter in warning or failure is framed all round in
+     its tone's ink, 3 px outside its moulded edge; the relay's sideways jolt
+     is gone (nothing moves). */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning'] {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--warning);
+    }
+
+    [data-theme='nostromo'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive'] {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            0 0 0 4px var(--destructive);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-cm-arrival='3'] .kp-meter::before {
+            animation: var(--cm-arr-o) var(--kp-sig-no-print) steps(8, end) backwards;
+        }
+
+        [data-theme='nostromo'] [data-cm-tone='2'] .kp-meter:is(:not([data-kp-loading], [data-kp-tone]), [data-kp-tone]:not([data-kp-loading])) {
+            animation: none;
+        }
+    }
+}

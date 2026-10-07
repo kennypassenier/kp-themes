@@ -213,7 +213,7 @@ const IDEAS = {
     nostromo: {
         a: {
             name: 'The amber CRT',
-            text: 'The plot is a dark CRT set into the beige case: rounded glass, a vignette and scanlines, the lines amber and cream phosphor with their glow, the tick labels in the mono. The crosshair is a block cursor. The tooltip is a phosphor readout boxed on the screen; the legend beige keys with an LED that lights when pressed. Loading warms the screen while the cursor blinks.',
+            text: 'The plot is a dark CRT set into the beige case: rounded glass, a vignette and scanlines, the lines amber and cream phosphor with their glow, the tick labels in the mono. The crosshair is a block cursor. The tooltip is a phosphor readout boxed on the screen; the legend raised beige keys with an LED that lights when the key is pressed into a well. Loading warms the screen while the cursor blinks.',
         },
         b: {
             name: 'The strip-chart recorder',

@@ -1332,8 +1332,8 @@ const IDEAS = {
                 text: 'Each key lights in reading order during the self test.',
             },
             {
-                name: 'CRT warm up',
-                text: 'Each row grows from a bright line, as a CRT warms.',
+                name: 'Drawn by the raster',
+                text: 'The raster writes the month as one picture from its top edge down, an eighth per 80 ms frame (640 ms), a bright beam at the edge of what is written.',
             },
             {
                 name: 'Teletype',
@@ -1357,7 +1357,7 @@ const IDEAS = {
         select: [
             {
                 name: 'The CRT duty roster: its pick',
-                text: 'Today sits over a block cursor; the picked day in a cream frame. New: the day pressed in on hover, the picked count boxed.',
+                text: 'Today sits over a block cursor; the picked day in a cream frame; a day under the pointer lights a step brighter and keeps its place; the picked count boxed.',
             },
             {
                 name: 'The indicator panel: its pick',

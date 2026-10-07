@@ -41,7 +41,7 @@ export default {
             {
                 key: 'r2-ns-shape-2',
                 name: 'The readout bank',
-                text: 'Two heavy panel rules run the full width top and foot like a bank of stacked readouts, a faint horizontal band pattern between them, the number in bold mono with a low phosphor glow — echoes the action columns’ "The readout bank."',
+                text: 'Two heavy panel rules run the full width top and foot like a bank of stacked readouts, a faint horizontal band pattern between them on raised moulding, the number in Michroma, the case’s printed type, with no glow — echoes the action columns’ "The readout bank."',
             },
             {
                 key: 'r2-ns-shape-3',

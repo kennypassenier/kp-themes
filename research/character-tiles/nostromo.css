@@ -1,0 +1,48 @@
+/* research/character-tiles, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). Tokens and keyframes are the
+   package's (css/nostromo-register.css). Only nostromo's decided options
+   change: shape 2, arrival 2, hover 3; tone 3 (the klaxon) is already the
+   grammar's reference and stays. Loading (1) and live (1) are left as they
+   are: both are reopened. Linked after every other tiles stylesheet.
+
+   - shape: the indicator panel keeps its well along the top and its lamp;
+     a tile is a plate, so its corner is the plate's (0.75rem, not 3 px);
+   - arrival: "warmed up" squashed the words (scaleY 0.02 → 1.04 → 1); the
+     tile is drawn by the raster from its top edge down, a quarter per 80 ms
+     frame, 4 frames (320 ms), never scaled, no overshoot;
+   - hover: no scanlines on the beige plate and no green; the Open link is
+     nostromo's own ghost button (composites "own"): its lamp lights in ink
+     under the pointer on a ground one step lighter, focus is the two-channel
+     ring with the lamp lit orange, a press is a well. The tile under the
+     pointer (the demo's simulated pointer) shows its Open link pointed at. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-ti-shape='2'] .kp-card {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] [data-ti-hover='3'] .kp-card:is(:hover, .tl-hover-sim, :has([data-tl-link]:focus-visible)) {
+        background-image: none;
+    }
+
+    [data-theme='nostromo'] [data-ti-hover='3'] [data-tl-link]:is(:hover, :focus-visible, :active) {
+        color: revert-layer;
+        text-decoration: revert-layer;
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+
+    [data-theme='nostromo'] [data-ti-hover='3'] .kp-card.tl-hover-sim [data-tl-link] {
+        background: var(--card);
+    }
+
+    [data-theme='nostromo'] [data-ti-hover='3'] .kp-card.tl-hover-sim [data-tl-link]::before {
+        opacity: 0.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+    }
+}

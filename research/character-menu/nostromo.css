@@ -1,0 +1,115 @@
+/* research/character-menu, nostromo: the decided picks on nostromo's
+   grammar (Kenny, 07/10/2026 23:18, research/nostromo-character;
+   themes/nostromo/CHARACTER.md G1-G18). The tokens and keyframes are the
+   package's own (css/nostromo-register.css: --kp-sig-no-*,
+   kp-sig-nostromo-raster, kp-sig-nostromo-beam). Only nostromo's decided
+   options change: shape 1, open 3, tone 1, interact 2. Loading
+   (r2-nos-load-2) is left as it is: loading is reopened. Linked after every
+   other menu stylesheet, so each rule here replaces the option's own.
+
+   - shape: no scanlines on the beige plate (the screen's mark, not the
+     case's); the rule between groups is the case's edge, not the orange;
+   - open: the raster draws the menu from its top edge down in 4 frames
+     (320 ms) with the beam at the edge of what is written; closing is that
+     draw played backwards, the beam climbing;
+   - tone: the klaxon frame at 3 px, the disabled reason on clean plastic;
+   - interact: nostromo's own entry (the package's): its lamp lights in ink
+     under the pointer on a ground one step lighter, the two-channel ring and
+     the lamp lit orange on focus, a well on a press; no sweep. */
+@layer kp.signature {
+    [data-theme='nostromo'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        --kp-sig-no-tail: 1rem;
+        background-image: none;
+    }
+
+    [data-theme='nostromo'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__group + .kp-menu__group {
+        border-block-start-color: var(--border-strong);
+    }
+
+    [data-theme='nostromo'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+
+    [data-theme='nostromo'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        background-image: none;
+    }
+
+    /* Interact 2 → the package's entry: revert-layer hands each state back
+       to css/nostromo-register.css. The demo's forced focus is drawn as the
+       real one. */
+    [data-theme='nostromo']
+        [data-mb-interact='2']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus], :active) {
+        background: revert-layer;
+        background-size: revert-layer;
+        animation: none;
+    }
+
+    [data-theme='nostromo'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item[data-mb-force-focus] {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    [data-theme='nostromo'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item[data-mb-force-focus]::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1px var(--foreground),
+            0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+        opacity: 1;
+    }
+
+    /* The beam the raster draws with, away at rest. */
+    [data-theme='nostromo'] [data-mb-open='3'] .kp-menu-button > .kp-menu::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-sig-no-tail, 1rem) * -1);
+        block-size: var(--kp-sig-no-tail, 1rem);
+        background: var(--kp-sig-no-beam);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            transform-origin: initial;
+            animation: kp-sig-nostromo-raster calc(var(--kp-sig-no-strike) / var(--mb-speed, 1)) steps(4, end) backwards;
+        }
+
+        [data-theme='nostromo'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden])::after {
+            animation: kp-sig-nostromo-beam calc(var(--kp-sig-no-strike) / var(--mb-speed, 1)) steps(4, end) backwards;
+        }
+
+        /* The close: the same draw backwards (demo.js restarts the menu's
+           animation; the beam takes a second name so it restarts too). */
+        [data-theme='nostromo'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-nostromo-raster;
+            animation-direction: reverse;
+            animation-fill-mode: both;
+        }
+
+        [data-theme='nostromo'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving]::after {
+            animation: nostromo-mb-beam-back calc(var(--kp-sig-no-strike) / var(--mb-speed, 1)) steps(4, end) reverse both;
+        }
+    }
+
+    @keyframes nostromo-mb-beam-back {
+        from {
+            inset-block-start: calc(var(--kp-sig-no-tail, 1rem) * -1);
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            inset-block-start: calc(100% - var(--kp-sig-no-tail, 1rem));
+            opacity: 0;
+        }
+    }
+}
