@@ -20281,7 +20281,7 @@
            1 px of its light on its top edge and the sides run down from the
            colours of the stripe they touch. */
         --kp-sw-floor: 1.35rem;
-        --kp-sw-floor-page: 3.5rem;
+        --kp-sw-floor-page: 8.5rem;
         --kp-sw-side: 3px;
         --kp-sw-rail: 3px;
         /* Focus is two tubes, top and foot, plus a hairline each side [G14,
@@ -21051,21 +21051,23 @@
        under its stripe), and, under a hand, a brighter piece of the tube
        exactly as wide as the part touched. The header draws all of it: the
        tube on its `::after`, the floor and the far cyan line on its `::before`
-       (a band under the tube, inside the header: a header is a layout
-       container, so a floor any deeper would paint over the plates below),
+       (8.5 rem deep under the tube, at z-index -1 inside the header's own
+       stacking context, so it lies BEHIND the plates: the header reserves
+       nothing and whatever follows it is positioned, at no specificity, so
+       it paints above the floor [Kenny, 2026-10-08 01:00]),
        the piece on the inner grid's `::after`, positioned by the hovered
        action through anchor positioning. Every action lights its piece, the
        popover's trigger included. ───────────────────────────────────────── */
 
     [data-theme='synthwave'] .kp-page-header {
         position: relative;
-        padding-block-end: calc(0.75rem + var(--kp-sw-floor-page));
+        padding-block-end: 0.75rem;
     }
 
     [data-theme='synthwave'] .kp-page-header::after {
         content: '';
         position: absolute;
-        inset: auto 0 var(--kp-sw-floor-page);
+        inset: auto 0 0;
         z-index: 1;
         block-size: 3px;
         background: var(--kp-core);
@@ -21076,15 +21078,19 @@
     [data-theme='synthwave'] .kp-page-header::before {
         content: '';
         position: absolute;
-        inset: auto 0 0;
+        inset: 100% 0 auto;
+        z-index: -1;
         block-size: var(--kp-sw-floor-page);
         background:
             linear-gradient(hsl(from var(--accent) h s l / 0.7) 0 0) 0 6px / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 0% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
-            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 1.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.31) 0 0) 0 6.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.33) 0 0) 0 14.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 25% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 39.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.37) 0 0) 0 56.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 76.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.4) 0 0) 0 100% / 100% 1px no-repeat,
             repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
         mask-image: linear-gradient(to bottom, var(--sidebar-background) 0, var(--sidebar-background) 20%, transparent 95%);
         pointer-events: none;
@@ -21126,10 +21132,13 @@
         from {
             background-position:
                 0 6px,
-                0 0%,
-                0 16%,
-                0 38%,
-                0 66%,
+                0 1.6%,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
                 0 100%,
                 0 0;
         }
@@ -21137,9 +21146,12 @@
         to {
             background-position:
                 0 6px,
-                0 16%,
-                0 38%,
-                0 66%,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
                 0 100%,
                 0 130%,
                 0 0;
@@ -21151,7 +21163,7 @@
         position: absolute;
         display: none;
         z-index: 2;
-        inset-block-end: calc(var(--kp-sw-floor-page) - 1px);
+        inset-block-end: -1px;
         block-size: 5px;
         background: var(--kp-core);
         box-shadow:
@@ -23730,6 +23742,19 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── What follows the page header [Kenny, 2026-10-08 01:00] ─────────────────
+   The floor is painted by the header at z-index -1, so whatever follows it
+   must be positioned to paint above it. This is in kp.base, the lowest layer,
+   at no specificity: every component, register and utility rule that says its
+   own position (fixed, sticky, absolute) wins over it, and the top-layer parts
+   (a dialog, a popover) are left out because the user agent's own fixed
+   position would lose to any author rule. ── */
+@layer kp.base {
+    :where([data-theme='synthwave'] .kp-page-header ~ :not(dialog, [popover])) {
+        position: relative;
+    }
+}
 
 @layer kp.register {
     /* @kp-soft/themes — css/phantom-register.css

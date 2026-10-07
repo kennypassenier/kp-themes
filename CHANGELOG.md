@@ -5,8 +5,10 @@
 - **Changed: synthwave's grammar, as Kenny decided it on research/synthwave-character
   and research/synthwave-anchor** [2026-10-07 21:21 to 23:54, themes/synthwave/CHARACTER.md
   §0]. Anchor: the page horizon. `.kp-page-header` draws one 3 px tube on its foot
-  (`::after`), the floor under it (`::before`, a 3.5 rem band inside the header: a
-  header is a layout container, so a deeper floor would paint over the plates below),
+  (`::after`), the floor under it (`::before`, 8.5 rem deep at `z-index: -1` inside the
+  header's own stacking context [Kenny, 2026-10-08 01:00: the floor is the page, behind
+  the plates]; the header reserves nothing, and whatever follows a `.kp-page-header` is
+  `position: relative` at no specificity so it paints above the floor),
   and, under a hand on a header action, a brighter piece of the tube exactly as wide as
   the action (anchor positioning on the action's own `::after`, so a popover's trigger
   with an inline `anchor-name`, such as More ▾, lights its piece too). Tokens (`css/themes.css`, from `themes/synthwave/tokens.json`): `--fx-duration`
