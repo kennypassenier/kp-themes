@@ -1,0 +1,83 @@
+/* research/character-chart, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape br1, loading r3c-bru-load-3, arrival drop, update
+   none, events bead, tip r3c-bru-tip-1); linked after every other chart
+   stylesheet.
+
+   - shape: the poster's frame is the slab's 3 px line (G7); the legend keys
+     are small brutalism buttons, a 2 px line on a 3 px shadow: pointed at,
+     inverted; pressed, driven onto the footprint on the yellow active plate;
+   - loading: the package's lintel hoisted in the plot's well (the plot is a
+     block skeleton) in place of the rivet gun's four rivets;
+   - arrival: the series falls onto its footprint along the shadow's
+     diagonal, 300 ms on the fall curve, in place of 120 px straight down;
+   - update: a new reading is slammed onto its yellow offset (G9), in place
+     of appearing at once;
+   - tip: a white slab in the ink line on a 3 px shadow, bold ink words (a
+     small part, G7); the red plate and its hazard corner are gone, tape
+     means danger only (G16). The beaded events wait for the port: a mark is
+     a circle in the package, and a square bolt needs it to be a rect. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-cc-shape='br1'] .kp-chart {
+        --cc-frame: 3px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cc-shape='br1'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border-width: 2px;
+    }
+
+    [data-theme='brutalism'] [data-cc-shape='br1'] :is(.kp-chart__source, .kp-chart__show-all):not([aria-pressed='true']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] [data-cc-shape='br1'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+        box-shadow: none;
+        transform: translate(3px, 3px);
+    }
+
+    /* Loading · the rivets are retired; the plot is the well. */
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::before,
+    [data-theme='brutalism'] [data-cc-loading='r3c-bru-load-3'] .kp-chart__state[data-kp-state='loading']::after {
+        content: none;
+        animation: none;
+    }
+
+    /* Arrival drop · along the diagonal, onto the footprint, 300 ms. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cc-arrival='drop'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+
+    [data-theme='brutalism'] [data-cc-arrival='drop'][data-cc-arriving] .kp-chart__series {
+        transform: translate(calc((var(--cca-k) - 1) * 1.5rem), calc((var(--cca-k) - 1) * 1.5rem));
+    }
+
+    /* Update none · slammed onto its offset. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cc-update='none'][data-cc-updating] .kp-chart__series {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+
+    /* Tip · a small slab. */
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-1'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 3px 3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-1'] .kp-chart__tip :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span, a):not(.kp-chart__delta[data-kp-direction]) {
+        color: var(--card-foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-cc-tip='r3c-bru-tip-1'] .kp-chart__tip::before {
+        content: none;
+    }
+}

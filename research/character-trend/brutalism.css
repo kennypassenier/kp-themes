@@ -1,0 +1,42 @@
+/* research/character-trend, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape r3-br-shape-1, loading r3-br-load-1, arrival
+   r3-br-arr-1, tone 3, live 1); linked after every other trend stylesheet.
+
+   - shape: the frame is the slab's 3 px line; the foot is ruled off by the
+     six-pixel bar, hazard tape only where the tile carries a tone (G16);
+   - loading: the lintel hoisted in the plot's own well, in place of the pour
+     that breathed;
+   - tone: the figure is printed on the tone's plate framed in ink on a 3 px
+     shadow, as it was; the change keeps its small slab;
+   - live: a new reading is slammed onto its yellow offset (G9), in place of
+     being redrawn at once. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend {
+        --tr-frame: 3px solid var(--foreground);
+        --tr-shadow: var(--kp-shadow);
+        --tr-pat: linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 6px no-repeat;
+    }
+
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend[data-kp-tone='warning'] {
+        --tr-pat: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--foreground) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
+    }
+
+    [data-theme='brutalism'] [data-ct-shape='r3-br-shape-1'] .kp-kpi--trend[data-kp-tone='destructive'] {
+        --tr-pat: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--foreground) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
+    }
+
+    [data-theme='brutalism'] [data-ct-loading='r3-br-load-1'] .kp-kpi--trend {
+        --tr-load:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--foreground) 0) 50% 100% / 76% 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 21% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 79% 100% / var(--kp-sig-br-cable) 200% no-repeat, var(--card);
+        --tr-load-anim: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+    }
+
+    [data-theme='brutalism'] [data-ct-live='1'] .kp-kpi--trend {
+        --tr-live-line: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        --tr-live-area: none;
+    }
+}

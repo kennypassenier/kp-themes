@@ -1,0 +1,49 @@
+/* research/character-header, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 1, menu 1, interactive 1); linked after the header
+   stylesheets.
+
+   - shape and interactive: the header's actions are brutalism's own buttons
+     (G17), not a header variant of them: the 3 px line on the 6 px shadow,
+     pointed at inverted, focused lifted under the two-channel ring, pressed
+     driven onto the footprint. Every property the header drew on them is
+     handed back to the register with `revert-layer`; the header's own slab
+     stays around them;
+   - menu: the panel is dropped onto its footprint from up-left, 300 ms on
+     the fall curve, no clip, no steps; closing is the same keyframes played
+     `reverse`. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-ph-shape='1'] .kp-page-header .kp-page-header__actions > .kp-button {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='brutalism'] [data-ph-interactive='1'] .kp-page-header .kp-page-header__actions > .kp-button:is(:hover, :focus-visible, :active):not(:disabled) {
+        outline: revert-layer;
+        box-shadow: revert-layer;
+        transform: revert-layer;
+        translate: revert-layer;
+    }
+
+    [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel] {
+        --ph-menu-frame: 3px solid var(--border-strong);
+        --ph-menu-shadow: 6px 6px 0 0 var(--border-strong);
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: 6px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall);
+        }
+
+        [data-theme='brutalism'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) reverse;
+        }
+    }
+}

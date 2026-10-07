@@ -1660,7 +1660,7 @@
     --fx-signal-foreground: hsl(0, 0%, 7%);
     --fx-notch: 0px;
     --fx-duration: 100ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: cubic-bezier(0.6, 0, 0.9, 0.5);
     --theme-font-display: 'Archivo Black', 'Archivo', Impact, Haettenschweiler, 'Arial Black', sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(48, 100%, 60%);
@@ -28366,6 +28366,23 @@
 }
 /* ── End of the signature ── */
 
+/* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
+   two registered copies, one on each mirror of the motion, so that a rise is
+   the picture's fall and a fall is that fall turned around; registered so
+   the transitions interpolate them. At the top level because Firefox does
+   not register an @property inside a layer. */
+@property --kp-sig-br-lag {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-br-lead {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/brutalism-register.css
    The brutalism register, 5.0.0 [S48, LIFT_PLAN row 5]: printed matter.
@@ -28384,14 +28401,22 @@
    with the lift and the drop; the wells; the dossier with its stamp and
    its bars; and one answer per component root (TH124). The reveals have
    their rest state here and their motion in js/effects.js; without the
-   script every one of them stands at rest. There is no arrival: printed
-   matter is simply there.
+   script every one of them stands at rest.
 
-   Colour discipline (DI9): nothing here names a colour; the hover step
-   off a plate is a relative colour of the plate. One line weight, one
-   shadow, no blur, no gradient that is not a flat fill, no transparency.
-   The only loop is the marquee — a transform inside a 46px band, rated in
-   TIMINGS; everything else runs once. */
+   The grammar of themes/brutalism/CHARACTER.md (G1-G18, decided by Kenny
+   on research/brutalism-character, 2026-10-07 23:44) is applied in two
+   places: the plates, hover, focus and press here, in kp.register; the
+   motion, the waiting and the tokens of the grammar (--kp-sig-br-*) in
+   kp.signature below. A box stands on its hard shadow; pointing inverts
+   it, focus lifts it under the two-channel ring, a press drives it onto
+   its footprint; what arrives falls onto the footprint from up-left and
+   what leaves is lifted off it.
+
+   Colour discipline (DI9): nothing here names a colour; ink builds, yellow
+   is the hand, lavender the second sheet, a status is paint under black
+   ink and never a line, a shadow or a glow. One ink in two line weights,
+   a hard shadow on the ground, no blur, no gradient that is not a flat
+   fill or the hazard tape, no transparency. */
 
     [data-theme='brutalism'] {
         /* The month heatmap's nav goes on two rows below this width: the
@@ -28399,12 +28424,13 @@
         --kp-calendar-nav-fit: 28.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
-        --kp-reveal-stagger: 320ms;
-        --kp-redact-stagger: 130ms;
+        /* Every duration counts the register's 100 ms [G4]. */
+        --kp-reveal-stagger: 300ms;
+        --kp-redact-stagger: 100ms;
         --kp-classified-delay: 700ms;
-        --kp-word-stagger: 60ms;
-        --kp-plate-in: 380ms;
-        --kp-bar: 620ms;
+        --kp-word-stagger: 100ms;
+        --kp-plate-in: 400ms;
+        --kp-bar: 600ms;
         --kp-marquee: 42000ms;
         --kp-line: 3px;
         --kp-drop: 6px;
@@ -28428,6 +28454,12 @@
         --kp-hatch-tile: 40px;
         --kp-hatch: repeating-linear-gradient(-45deg, var(--secondary) 0 6px, transparent 6px 28.2843px);
         --kp-hatch-alt: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, transparent 6px 28.2843px);
+        /* The voice [G15]: prose speaks at 500; every label, figure, date and
+           tag is 700 or heavier and never under 12 px. */
+        font-weight: 500;
+        /* Nothing is translucent [G7, proposal-29]: a busy part says so with
+           the lintel (G10), not with a dimmed ink. */
+        --kp-busy-opacity: 1;
     }
 
     /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
@@ -28623,12 +28655,19 @@
         text-decoration: none;
     }
 
-    [data-theme='brutalism'] .kp-nav__link:hover,
+    /* Pointing at it inverts it [G8, Kenny 2026-10-07 23:44]; the current
+       one and the one with focus are the yellow hand. */
     [data-theme='brutalism'] .kp-nav__link:focus-visible,
     [data-theme='brutalism'] .kp-nav__link[aria-current],
     [data-theme='brutalism'] .kp-nav__links > li:focus-within > .kp-nav__link {
         background: var(--secondary);
         color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link:hover {
+        background: var(--foreground);
+        color: var(--secondary);
         border-color: var(--border-strong);
     }
 
@@ -28649,7 +28688,8 @@
     }
 
     /* The call to action: the ink plate with the yellow ink and the shadow;
-       it lifts under the pointer and drops when pressed. */
+       pointed at it inverts (yellow plate, ink words), focus lifts it under
+       the ring, a press drives it onto its footprint [G8, G14]. */
     [data-theme='brutalism'] .kp-nav__link--cta {
         background: var(--primary);
         color: var(--primary-foreground);
@@ -28657,10 +28697,12 @@
         box-shadow: var(--kp-shadow);
     }
 
-    [data-theme='brutalism'] .kp-nav__link--cta:hover,
+    [data-theme='brutalism'] .kp-nav__link--cta:hover {
+        background: var(--primary-foreground);
+        color: var(--primary);
+    }
+
     [data-theme='brutalism'] .kp-nav__link--cta:focus-visible {
-        background: var(--primary);
-        color: var(--primary-foreground);
         translate: -2px -2px;
         box-shadow: var(--kp-shadow-up);
     }
@@ -28672,6 +28714,8 @@
     }
 
     [data-theme='brutalism'] .kp-nav__link--cta:active {
+        background: var(--primary-active);
+        color: var(--primary-foreground);
         translate: var(--kp-drop) var(--kp-drop);
         box-shadow: none;
     }
@@ -28702,7 +28746,7 @@
     [data-theme='brutalism'] .kp-nav__menu a {
         display: block;
         padding-inline: 0.9rem;
-        font-weight: 500;
+        font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--popover-foreground);
@@ -28710,18 +28754,24 @@
         border-radius: 0;
     }
 
-    [data-theme='brutalism'] .kp-nav__menu a:hover,
     [data-theme='brutalism'] .kp-nav__menu a:focus-visible {
         background: var(--secondary);
         color: var(--secondary-foreground);
     }
 
-    /* ── Buttons: a plate, the line, the shadow; the lift and the drop ── */
+    [data-theme='brutalism'] .kp-nav__menu a:hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
 
-    /* Gumroad's pair: :not(:active):hover lifts the box away from its
-       shadow, :active drops it onto the shadow (the base layer's own
-       brutalism gesture). The hover colour is BEIGE FORCE's step off the
-       plate itself, as a relative colour of the plate token. */
+    /* ── Buttons: a plate, the line, the shadow; inverted, lifted, driven in ──
+       Pointing at a plate inverts it: the ink takes the plate and the plate
+       becomes the ink, nothing moves and the shadow stays on the ground
+       [G8, Kenny 2026-10-07 23:44, "hover = invert"]. Focus lifts the box
+       off its footprint under the two-channel ring [G14]. A press drives it
+       onto its footprint, the shadow's own 6 px, in 1 unit on the fall
+       [G14]. A plate steps with --kp-plate and --kp-plate-ink, so every
+       variant inverts its own pair. */
     [data-theme='brutalism'] .kp-button {
         --kp-plate: var(--secondary);
         --kp-plate-ink: var(--secondary-foreground);
@@ -28753,18 +28803,21 @@
         padding-inline: 2rem;
     }
 
-    [data-theme='brutalism'] .kp-button:not(:active):hover,
-    [data-theme='brutalism'] .kp-button:focus-visible {
-        color: var(--kp-plate-ink);
-        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
+    /* Pointed at: inverted. */
+    [data-theme='brutalism'] .kp-button:not(:active, :disabled):hover {
+        color: var(--kp-plate);
+        background: var(--kp-plate-ink);
         border-color: var(--border-strong);
-        translate: -2px -2px;
-        box-shadow: var(--kp-shadow-up);
+        translate: none;
+        box-shadow: var(--kp-shadow);
     }
 
-    /* The two channels the base layer composes — the outline in the paper,
-       the inner ring in the ink — kept in front of the shadow (DI2, AR30). */
-    [data-theme='brutalism'] .kp-button:focus-visible {
+    /* Focused: lifted off its footprint, the two channels the base layer
+       composes (the outline in the paper, the inner ring in the ink) kept in
+       front of the shadow (DI2, AR30). */
+    [data-theme='brutalism'] .kp-button:not(:active, :disabled):focus-visible {
+        border-color: var(--border-strong);
+        translate: -2px -2px;
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
             var(--kp-shadow-up);
@@ -28779,17 +28832,13 @@
         --kp-plate-ink: var(--primary-foreground);
     }
 
-    [data-theme='brutalism'] .kp-button--primary:not(:active):hover,
-    [data-theme='brutalism'] .kp-button--primary:focus-visible {
-        background: oklch(from var(--kp-plate) calc(l - 0.06) calc(c + 0.1) h);
-    }
-
     [data-theme='brutalism'] .kp-button--destructive {
         --kp-plate: var(--destructive);
         --kp-plate-ink: var(--destructive-foreground);
     }
 
-    /* Ghost: no plate, no line, no shadow — until the pointer is on it. */
+    /* Ghost: no plate, no line, no shadow, until the pointer is on it; then
+       it is the inverted slab. */
     [data-theme='brutalism'] .kp-button--ghost {
         --kp-plate: transparent;
         --kp-plate-ink: var(--foreground);
@@ -28797,11 +28846,13 @@
         box-shadow: none;
     }
 
-    [data-theme='brutalism'] .kp-button--ghost:not(:active):hover,
-    [data-theme='brutalism'] .kp-button--ghost:focus-visible {
-        background: var(--muted);
-        border-color: var(--border-strong);
-        box-shadow: var(--kp-shadow-up);
+    [data-theme='brutalism'] .kp-button--ghost:not(:active, :disabled):hover {
+        color: var(--secondary);
+        background: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-button--ghost:not(:active, :disabled):focus-visible {
+        background: transparent;
     }
 
     [data-theme='brutalism'] .kp-button:disabled {
@@ -28811,10 +28862,13 @@
         box-shadow: var(--kp-shadow);
     }
 
+    /* Small parts are small slabs [G7]: a 2 px line on a 3 px shadow, and
+       they take the same three gestures at their own size. */
     [data-theme='brutalism'] .kp-icon-button {
-        border: var(--kp-line) solid var(--border-strong);
+        border: 2px solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
+        color: var(--foreground);
         box-shadow: 3px 3px 0 0 var(--border-strong);
     }
 
@@ -28824,6 +28878,7 @@
     [data-theme='brutalism'] .kp-toast .kp-icon-button {
         background: transparent;
         border-color: transparent;
+        box-shadow: none;
         color: inherit;
     }
 
@@ -28832,11 +28887,32 @@
     [data-theme='brutalism'] .kp-alert .kp-icon-button {
         background: transparent;
         border-color: transparent;
+        box-shadow: none;
         color: inherit;
     }
 
-    [data-theme='brutalism'] .kp-icon-button:hover {
-        background: var(--secondary);
+    /* A button inside a toast or an alert is brutalism's own [G17]: pointed
+       at it is the inverted slab, whatever plate it stands on. */
+    [data-theme='brutalism'] .kp-icon-button:not(:active, :disabled):hover,
+    [data-theme='brutalism'] :is(.kp-toast, .kp-alert) :is(.kp-icon-button, .kp-button--ghost):not(:active, :disabled):hover {
+        background: var(--foreground);
+        border-color: var(--border-strong);
+        color: var(--secondary);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-icon-button:not(:active, :disabled):focus-visible {
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
+            5px 5px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-icon-button:active:not(:disabled) {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+        translate: 3px 3px;
+        box-shadow: none;
     }
 
     /* ── Fields: white wells with the line and the shadow ─────────────── */
@@ -28886,13 +28962,21 @@
         color: var(--muted-foreground);
     }
 
+    /* A failed part is taped off [G13]: the line and the shadow stay the
+       ink, and the error is printed on the failure's plate beneath it. */
     [data-theme='brutalism'] .kp-field--invalid .kp-field__input {
-        border-color: var(--destructive);
-        box-shadow: var(--kp-drop) var(--kp-drop) 0 0 var(--destructive);
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-shadow);
     }
 
     [data-theme='brutalism'] .kp-field__error {
-        color: var(--destructive);
+        display: block;
+        align-self: start;
+        inline-size: fit-content;
+        padding-inline: 0.5rem;
+        border: 2px solid var(--border-strong);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
         font-weight: 700;
     }
 
@@ -29033,41 +29117,27 @@
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
        a later layer than kp.components, which swallowed every variant's
        plate; each is restated on the alert's token pair, as the severity
-       badge wears it. */
-    [data-theme='brutalism'] .kp-toast--success {
-        border-color: var(--success);
-    }
-
+       badge wears it. A status is paint under black ink [G5]: the plate
+       changes, the line stays the ink. */
     [data-theme='brutalism'] .kp-toast--info {
         background: var(--info);
         color: var(--info-foreground);
-        border-color: var(--info);
     }
 
     [data-theme='brutalism'] .kp-toast--warning {
         background: var(--warning);
         color: var(--warning-foreground);
-        border-color: var(--warning);
     }
 
     [data-theme='brutalism'] .kp-toast--destructive,
     [data-theme='brutalism'] .kp-toast--error {
         background: var(--destructive);
         color: var(--destructive-foreground);
-        border-color: var(--destructive);
     }
 
     [data-theme='brutalism']
         :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
         :is(.kp-button--ghost, .kp-icon-button) {
-        color: inherit;
-    }
-
-    /* A button hovered on a toast takes a shade of the toast's own plate
-       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
-       2026-09-13). Restated here because this layer repaints the hover. */
-    [data-theme='brutalism'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
-        background: var(--kp-toast-button-hover);
         color: inherit;
     }
 
@@ -29099,16 +29169,33 @@
         --kp-plate-ink: var(--destructive);
     }
 
-    [data-theme='brutalism'] .kp-menu .kp-menu__item:not(:active):hover,
-    [data-theme='brutalism'] .kp-menu .kp-menu__item:focus-visible {
-        background: var(--secondary);
-        color: var(--secondary-foreground);
+    /* An entry is brutalism's own element [G17]: pointed at it inverts, with
+       focus it is the yellow hand under the inner ring, a press drives it
+       onto the active plate. */
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:not(:active, [aria-disabled='true']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
         translate: none;
         box-shadow: none;
     }
 
-    [data-theme='brutalism'] .kp-menu .kp-menu__item:focus-visible {
+    [data-theme='brutalism'] .kp-menu .kp-menu__item--destructive:not(:active, [aria-disabled='true']):hover {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:not(:active):focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: none;
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='brutalism'] .kp-menu .kp-menu__item:active:not([aria-disabled='true']) {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+        translate: none;
+        box-shadow: none;
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -29128,6 +29215,29 @@
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-alert[class*='kp-alert--'] {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+
+    /* A warning or a failure is taped off [G13]: a band of 45 degree hazard
+       stripes along its foot, 0.5 rem, in the tone's paint and the ink. The
+       tape means danger and nothing else [G16]. */
+    [data-theme='brutalism'] .kp-alert--warning,
+    [data-theme='brutalism'] .kp-alert--destructive {
+        --kp-sig-br-tone: var(--warning);
+        padding-block-end: calc(0.75rem + 0.5rem);
+        background-image: repeating-linear-gradient(45deg, var(--kp-sig-br-tone) 0 6px, var(--border-strong) 6px 12px);
+        background-position: 0 100%;
+        background-size: 100% 0.5rem;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='brutalism'] .kp-alert--destructive {
+        --kp-sig-br-tone: var(--destructive);
     }
 
     [data-theme='brutalism'] .kp-alert__label {
@@ -29181,7 +29291,7 @@
     [data-theme='brutalism'] .kp-footer a {
         color: var(--sidebar-foreground);
         font-size: 0.85rem;
-        font-weight: 500;
+        font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         text-decoration: none;
@@ -29200,9 +29310,9 @@
         padding: 0.8rem 0 0;
         border-top: var(--kp-line) solid var(--sidebar-primary);
         color: var(--sidebar-foreground);
-        font-family: var(--theme-font-mono);
-        font-weight: 400;
-        letter-spacing: 0.08em;
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        letter-spacing: 0.1em;
         display: block;
     }
 
@@ -29212,7 +29322,7 @@
     [data-theme='brutalism'] .kp-tag {
         border-radius: 0;
         border: 2px solid var(--border-strong);
-        box-shadow: 2px 2px 0 0 var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -29229,15 +29339,14 @@
         border: 2px solid var(--border-strong);
     }
 
+    /* A skeleton is a well, the place the reading will stand [G10]: white in
+       the 2 px ink line on a 3 px shadow; the lintel is hoisted in it in
+       kp.signature. */
     [data-theme='brutalism'] .kp-skeleton {
-        background: repeating-linear-gradient(-45deg, var(--muted) 0 8px, var(--card) 8px 16px);
-        border: var(--kp-line) solid var(--border-strong);
+        background-color: var(--card);
+        border: 2px solid var(--border-strong);
         border-radius: 0;
-    }
-
-    [data-theme='brutalism'] .kp-spinner {
-        border-color: var(--border-strong);
-        border-top-color: var(--secondary);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
     }
 
     [data-theme='brutalism'] .kp-error {
@@ -29260,15 +29369,27 @@
         letter-spacing: 0.04em;
     }
 
+    /* Dates and identifiers are bold mono in ink, never the muted 400 [G15,
+       Kenny 2026-10-07: "some text is too thin, like the date"]. */
+    [data-theme='brutalism'] .kp-id,
+    [data-theme='brutalism'] .kp-url,
+    [data-theme='brutalism'] .kp-numeric,
+    [data-theme='brutalism'] .kp-timestamp,
+    [data-theme='brutalism'] .kp-masked,
+    [data-theme='brutalism'] .kp-copyable {
+        font-weight: 700;
+    }
+
     [data-theme='brutalism'] .kp-timestamp,
     [data-theme='brutalism'] .kp-id {
-        color: var(--muted-foreground);
+        color: var(--foreground);
+        font-size: max(0.75rem, 0.9375em);
     }
 
     [data-theme='brutalism'] .kp-copyable__button {
         border: 2px solid var(--border-strong);
         border-radius: 0;
-        box-shadow: 2px 2px 0 0 var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
     }
 
     /* The copy button's two states win over this register's own button
@@ -29276,15 +29397,16 @@
        in kp.components, so copied lost its success plate and a refused
        copy looked idle. Restated token for token. */
     [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copied] {
-        border-color: var(--success);
+        border-color: var(--border-strong);
         color: var(--success-foreground);
         background: var(--success);
     }
 
     [data-theme='brutalism'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
-        border-color: var(--destructive);
+        border-color: var(--border-strong);
         border-style: dashed;
-        color: var(--destructive);
+        color: var(--destructive-foreground);
+        background: var(--destructive);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -29339,8 +29461,10 @@
 
     [data-theme='brutalism'] .kp-datatable__status,
     [data-theme='brutalism'] .kp-datatable__page {
-        font-family: var(--theme-font-mono);
-        letter-spacing: 0.06em;
+        font-family: var(--theme-font-body);
+        font-size: max(0.75rem, 0.875em);
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
     }
 
@@ -29353,6 +29477,7 @@
 
     [data-theme='brutalism'] .kp-diff__line {
         font-family: var(--theme-font-mono);
+        font-weight: 700;
     }
 
     [data-theme='brutalism'] .kp-timeline {
@@ -29365,16 +29490,20 @@
         border-radius: 0;
     }
 
+    /* A time is a date: bold mono in ink [G15]. */
     [data-theme='brutalism'] .kp-timeline__when {
         font-family: var(--theme-font-mono);
-        letter-spacing: 0.06em;
+        font-size: max(0.75rem, 0.9375em);
+        font-weight: 700;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        color: var(--muted-foreground);
+        color: var(--foreground);
     }
 
     [data-theme='brutalism'] .kp-tree {
         font-weight: 500;
     }
+
 
     /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
     [data-theme='brutalism'] .kp-accordion__summary {
@@ -29476,9 +29605,10 @@
 
     [data-theme='brutalism'] .kp-shortcuts__row kbd {
         font-family: var(--theme-font-mono);
+        font-weight: 700;
         border: 2px solid var(--border-strong);
         border-radius: 0;
-        box-shadow: 2px 2px 0 0 var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
         background: var(--card);
         display: inline-block;
         padding: 0 0.4em;
@@ -29494,8 +29624,10 @@
     [data-theme='brutalism'] .kp-theme-menu__status,
     [data-theme='brutalism'] .kp-palette__status,
     [data-theme='brutalism'] .kp-combobox__status {
-        font-family: var(--theme-font-mono);
-        letter-spacing: 0.06em;
+        font-family: var(--theme-font-body);
+        font-size: max(0.75rem, 0.875em);
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
     }
 
@@ -29530,8 +29662,9 @@
         inset-inline-end: 0.4rem;
         inset-block-start: 4.5rem;
         writing-mode: vertical-rl;
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.75rem;
+        font-weight: 700;
         letter-spacing: 0.26em;
         text-transform: uppercase;
         color: var(--muted-foreground);
@@ -29586,8 +29719,9 @@
     [data-theme='brutalism'] .kp-platforms {
         margin-block-start: 2rem;
         gap: 0.5rem;
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.75rem;
+        font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--foreground);
@@ -29609,6 +29743,7 @@
         padding: 1.2rem 1.3rem 1.4rem;
         font-family: var(--theme-font-mono);
         font-size: 0.78rem;
+        font-weight: 700;
         line-height: 1.7;
     }
 
@@ -29629,6 +29764,7 @@
         border-radius: 0;
         box-shadow: var(--kp-shadow);
         font-family: var(--theme-font-mono);
+        font-weight: 700;
     }
 
     [data-theme='brutalism'] .kp-log__level {
@@ -29657,16 +29793,16 @@
        colour transition anywhere (KT8). */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] [data-kp-reveal='headline'].is-words [data-word] {
-            animation: kp-slam 260ms var(--fx-ease) both;
+            animation: kp-slam 300ms var(--fx-ease) both;
             animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
         }
 
         [data-theme='brutalism'] mark {
-            transition: background-size 380ms var(--fx-ease);
+            transition: background-size 400ms var(--fx-ease);
         }
 
         [data-theme='brutalism'] [data-kp-reveal='rule'].is-in::after {
-            animation: kp-rule-in 620ms var(--fx-ease) 1 both;
+            animation: kp-rule-in 600ms var(--fx-ease) 1 both;
         }
 
         [data-theme='brutalism'] [data-kp-divider]::before {
@@ -29678,7 +29814,7 @@
         }
 
         [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark::after {
-            transition: transform 380ms var(--fx-ease);
+            transition: transform 400ms var(--fx-ease);
         }
 
         [data-theme='brutalism'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
@@ -29695,12 +29831,17 @@
            the demo for this theme, and AR30's reader waits out
            --fx-duration after a theme switch rather than reading a ring
            mid-flight. */
-        [data-theme='brutalism'] .kp-button,
-        [data-theme='brutalism'] .kp-nav__link--cta {
+        [data-theme='brutalism'] :is(.kp-button, .kp-icon-button, .kp-nav__link--cta) {
             transition:
-                translate var(--fx-duration) var(--fx-ease),
-                box-shadow var(--fx-duration) var(--fx-ease),
-                background-color var(--fx-duration) var(--fx-ease);
+                translate var(--fx-duration) var(--kp-sig-br-up),
+                box-shadow var(--fx-duration) var(--kp-sig-br-up);
+        }
+
+        /* What is driven in or lifted into focus falls: one unit on the
+           fall curve, stopping dead [G1, G14]; released, it is lifted on
+           the same curve played back. */
+        [data-theme='brutalism'] :is(.kp-button, .kp-icon-button, .kp-nav__link--cta):is(:active, :focus-visible) {
+            transition-timing-function: var(--kp-sig-br-fall);
         }
     }
 
@@ -29798,13 +29939,19 @@
         [data-theme='brutalism'] .kp-sidenav__link,
         [data-theme='brutalism'] .kp-sidenav__category-toggle {
             transition:
-                translate var(--fx-duration, 120ms) var(--fx-ease, ease),
-                box-shadow var(--fx-duration, 120ms) var(--fx-ease, ease);
+                translate var(--fx-duration, 100ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 100ms) var(--fx-ease, ease);
         }
     }
 
-    [data-theme='brutalism'] .kp-sidenav__link:hover {
-        translate: -1px -1px;
+    /* Pointed at: inverted, the shadow staying on the ground [G8]. */
+    [data-theme='brutalism'] .kp-sidenav__link:not([aria-current='page']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link:not([aria-current='page']):focus-visible {
+        translate: -2px -2px;
         box-shadow: 5px 5px 0 var(--foreground);
     }
 
@@ -29821,11 +29968,11 @@
     [data-theme='brutalism'] .kp-to-top {
         border: 2px solid var(--foreground);
         border-radius: 0;
-        box-shadow: 4px 4px 0 var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
     }
 
     [data-theme='brutalism'] .kp-to-top:active {
-        translate: 4px 4px;
+        translate: 3px 3px;
         box-shadow: 0 0 0 var(--foreground);
     }
 
@@ -29894,12 +30041,15 @@
         position: absolute;
         inset-block-end: calc(100% + 0.3rem);
         inset-inline-start: 0;
-        font-size: 0.5rem;
-        letter-spacing: 0.2em;
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        line-height: 1.2;
         white-space: nowrap;
         background: var(--foreground);
         color: var(--background);
-        padding: 0.1rem 0.3rem;
+        padding: 0.1rem 0.35rem;
         opacity: 0;
         pointer-events: none;
     }
@@ -29947,11 +30097,28 @@
        blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
        fifteen of the twenty-five registers had it.
 
-       These restate the base layer's own pressed values, token for token.
-       Nothing new is decided here; what the components layer already said
-       is put back where the cascade can reach it. */
+       These restate the base layer's own pressed values, token for token,
+       and drive the box onto its footprint, the shadow's own offset [G14,
+       Kenny 2026-10-07 23:44, "press = ground"; the base layer's 4 px left
+       the box 2 px short of a 6 px shadow]. */
 
     [data-theme='brutalism'] .kp-button:active:not(:disabled) {
+        color: var(--kp-plate-ink);
+        background: var(--secondary-active);
+        translate: var(--kp-drop) var(--kp-drop);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+    }
+
+    [data-theme='brutalism'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+    }
+
+    [data-theme='brutalism'] .kp-button--ghost:active:not(:disabled) {
+        color: var(--foreground);
         background: var(--secondary-active);
     }
 
@@ -29987,10 +30154,15 @@
         color: var(--foreground);
     }
 
-    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover,
     [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
         background: var(--secondary);
         color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-nav__search .kp-nav__search-trigger:hover {
+        background: var(--foreground);
+        color: var(--secondary);
         border-color: var(--border-strong);
     }
 
@@ -30102,95 +30274,173 @@
    ported once from research/progress-signature/themes/brutalism.css and research/signature-elements/themes/brutalism.css
    and maintained here from now on. In kp.signature, which css/themes.css
    orders after kp.register, so it draws over the register exactly as the
-   approved demos did, whatever the weight of a register selector. */
+   approved demos did, whatever the weight of a register selector.
+
+   Since 2026-10-07 23:44 the layer speaks the grammar Kenny decided on
+   research/brutalism-character (themes/brutalism/CHARACTER.md, G1-G18):
+   everything that happens is something weight does. What arrives is dropped
+   onto its footprint from up-left and stops dead; what leaves is lifted off
+   it; what is pointed at is inverted; what waits is a lintel hoisted in
+   hard lifts; a new value is slammed onto its yellow offset; a warning is
+   taped off. The tokens below are the grammar's, once; every rule reads
+   them and names no number of its own. */
 @layer kp.signature {
-    /* The link signature is for links in running text; a link in a navigation,
-       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
-       (scope-93: no link colour in a navigation). */
-    /* A shadow or outline the signature draws on a focusable control yields to
-       the theme's focus ring while the control has focus (DI2). */
+    [data-theme='brutalism'] {
+        --kp-sig-br-drop: var(--kp-drop, 6px);
+        /* G1: gravity. What comes falls on the meter's own Thrown on curve
+           (it leaves at rest and lands at full speed); what goes is lifted
+           on the same curve played back (1 - f(1 - t), so a leave is its
+           arrival, frame for frame). */
+        --kp-sig-br-fall: cubic-bezier(0.6, 0, 0.9, 0.5);
+        --kp-sig-br-up: cubic-bezier(0.1, 0.5, 0.4, 1);
+        /* G4: durations count the register's 100 ms (--fx-duration). Contact
+           is 1 unit; a fall, an arrival and a leave 3; the dialog, the big
+           slab, 15; a loop 12; the progress bar's walk 8 and its loop 24.
+           Literals, because js/motion.js reads them as strings. */
+        --kp-sig-br-time: 300ms;
+        --kp-sig-br-dialog: 1500ms;
+        --kp-sig-br-loop: 1200ms;
+        --kp-sig-br-bar-time: 800ms;
+        --kp-sig-br-bar-loop: 2400ms;
+        /* js/motion.js: a close is its open turned around, so its time is the
+           dialog's; a box eases to a new size in a fall. */
+        --kp-close-max: var(--kp-sig-br-dialog);
+        --kp-size-max: var(--kp-sig-br-time);
+        /* G3, G12: how far a part is held up-left off its footprint, by size:
+           a plate falls from 1.5 rem, the big slab from 2.5 rem, a small
+           part from 0.75 rem, a row or a card lifted off from 1 rem. */
+        --kp-sig-br-h-plate: 1.5rem;
+        --kp-sig-br-h-slab: 2.5rem;
+        --kp-sig-br-h-part: 0.75rem;
+        --kp-sig-br-h-leave: 1rem;
+        /* G10: the lintel, three gradient layers (the beam, two cables) on a
+           picture twice the well's height; position-x 50%, 21%, 79%. */
+        --kp-sig-br-cable: max(2px, 0.16rem);
+        --kp-sig-br-lintel:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--border-strong) 0),
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong));
+        --kp-sig-br-lintel-size: 76% 200%, var(--kp-sig-br-cable) 200%, var(--kp-sig-br-cable) 200%;
+    }
+
+    /* ── The progress bar: Ruled and labelled, a lot slower [G10; Kenny,
+       2026-10-07 23:44, research/brutalism-character "progress = ruled-slowest"].
+       Ink ticks on the empty track, paper ticks cut through the ink fill,
+       tenth by tenth; the yellow head is the tip and prints the share in
+       Archivo Black. A share walks to its value in ten hard steps of 80 ms
+       (a rise on `steps(10, jump-end)`, a fall on its mirror `jump-start`,
+       so a shrink is the growth reversed); busy, the tip hops tick to tick
+       in ten hard steps of the 2400 ms loop and prints three dots. ── */
     [data-theme='brutalism'] .kp-progressbar {
         --kp-progressbar-height: calc(1.375rem * var(--kp-progressbar-scale, 1));
         --br-line: var(--kp-line, 3px);
         --br-drop: calc(4px * var(--kp-progressbar-scale, 1));
         --br-ink: var(--border-strong);
-        --br-block: calc(1.375rem * var(--kp-progressbar-scale, 1));
-        --br-pitch: calc(20px * var(--kp-progressbar-scale, 1)); /* horizontal repeat of a 45° stripe at 14.142px */
-        --br-stripe: calc(14.1421px * var(--kp-progressbar-scale, 1));
+        --br-u: calc(1px * var(--kp-progressbar-scale, 1));
+        --br-fs: calc(0.85rem * var(--kp-progressbar-scale, 1));
+        --br-hw: calc(3.7 * var(--br-fs) + 2 * var(--br-line));
+        /* Two copies of the value walk to it, one on each mirror of the steps;
+           the share is the lower of them: a rise follows the one that lags, a
+           fall the one that leads. */
+        --kp-sig-br-lag: var(--kp-value, 0);
+        --kp-sig-br-lead: var(--kp-value, 0);
+        --kp-sig-br-share: min(var(--kp-sig-br-lag), var(--kp-sig-br-lead));
     }
 
     [data-theme='brutalism'] .kp-progressbar__track {
         inset: 0 var(--br-drop) var(--br-drop) 0;
         border: var(--br-line) solid var(--br-ink);
         border-radius: 0;
-        background: var(--card);
+        background:
+            repeating-linear-gradient(90deg, transparent 0 calc(10% - 2 * var(--br-u)), var(--br-ink) calc(10% - 2 * var(--br-u)) 10%) 0 100% /
+                100% 40% no-repeat,
+            var(--card);
         box-shadow: var(--br-drop) var(--br-drop) 0 0 var(--br-ink);
     }
 
     [data-theme='brutalism'] .kp-progressbar__fill {
-        background:
-            repeating-linear-gradient(
-                -45deg,
-                var(--secondary) 0 calc(4.5px * var(--kp-progressbar-scale, 1)),
-                transparent calc(4.5px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
-            ),
-            var(--primary);
-        transition: clip-path var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        background: repeating-linear-gradient(90deg, var(--br-ink) 0 calc(10% - 2 * var(--br-u)), var(--card) calc(10% - 2 * var(--br-u)) 10%);
+        clip-path: inset(0 calc((1 - var(--kp-sig-br-share)) * 100%) 0 0);
+        transition: none;
     }
 
     [data-theme='brutalism'] .kp-progressbar__head {
         box-sizing: border-box;
-        inline-size: var(--br-block);
-        margin-inline-start: calc(-1 * var(--br-block));
+        display: grid;
+        place-items: center;
+        inline-size: var(--br-hw);
+        margin-inline-start: 0;
+        counter-reset: kp-sig-br-pct calc(var(--kp-sig-br-share) * 100);
         background: var(--secondary);
         border-inline: var(--br-line) solid var(--br-ink);
-        transition: transform var(--fx-duration, 100ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        color: var(--secondary-foreground);
+        font-family: var(--theme-font-display);
+        font-size: var(--br-fs);
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        white-space: nowrap;
+        /* The tip rides the share's edge, held inside the track so it is
+           never cut at 0 or at 100 %. */
+        transform: translateX(max(0px, calc(var(--kp-sig-br-share) * 100cqi - var(--br-hw))));
+        transition: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar__head::after {
+        content: counter(kp-sig-br-pct) '%';
     }
 
     [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
         inset: 0;
         inline-size: auto;
-        clip-path: none;
+        clip-path: inset(0 100% 0 0);
         animation: none;
-        background: none;
-        overflow: hidden;
-    }
-
-    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: calc(-1 * var(--br-pitch));
-        inline-size: calc(100% + var(--br-pitch));
-        background: repeating-linear-gradient(
-            -45deg,
-            var(--br-ink) 0 calc(3px * var(--kp-progressbar-scale, 1)),
-            transparent calc(3px * var(--kp-progressbar-scale, 1)) var(--br-stripe)
-        );
     }
 
     [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
-        display: block;
-        margin-inline-start: 0;
-        transform: translateX(calc(50cqi - 50%));
+        display: grid;
+        transform: none;
+    }
+
+    [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::after {
+        content: '…';
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-            animation: kp-progressbar-brutalism-tape 600ms linear infinite;
+        [data-theme='brutalism'] .kp-progressbar {
+            transition:
+                --kp-sig-br-lag var(--kp-sig-br-bar-time) steps(10, jump-end),
+                --kp-sig-br-lead var(--kp-sig-br-bar-time) steps(10, jump-start);
         }
 
         [data-theme='brutalism'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
-            animation: kp-progressbar-brutalism-shuttle 1600ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)) infinite alternate;
+            animation: kp-progressbar-brutalism-hop var(--kp-sig-br-bar-loop) linear infinite;
         }
     }
 
-    [data-theme='brutalism'] {
-        --kp-sig-br-drop: var(--kp-drop, 6px);
+    /* The tip hops tick to tick in ten hard steps over two thirds of the
+       loop, then is back at the start in one cut. */
+    @keyframes kp-progressbar-brutalism-hop {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(10, jump-end);
+        }
+
+        66.667% {
+            translate: calc(100cqi - var(--br-hw)) 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
     }
 
+    /* ── The spinner: the block tipped over [G11]. The yellow block is lifted
+       off its footprint, turned a quarter and set down: lifted on the
+       lifting curve, turned, set down on the fall, stopping dead; 12 units. ── */
     [data-theme='brutalism'] .kp-spinner {
-        --kp-sig-dur: 1400ms;
+        --kp-sig-dur: var(--kp-sig-br-loop);
         position: relative;
         border: 0;
         border-radius: 0;
@@ -30215,13 +30465,42 @@
         background: var(--secondary);
     }
 
+    /* ── Loading is the lintel hoisted [G10; Kenny, 2026-10-07 23:44,
+       "loading = hoist-lintel"]. While a part waits, the place its reading
+       will stand is a well in the ink line, and in it one beam as wide as
+       the well, on two cables, is hoisted in four hard lifts, held, let go
+       to fall free on the fall curve and left to rest: 12 units, 1200 ms.
+       The well is the skeleton itself, a loading meter's track, and a strip
+       at the foot of a busy panel, button, card, menu entry or calendar;
+       its words stand above it. The lintel is three gradient layers on a
+       picture twice the well's height, so a lift is one number: the
+       picture's vertical position, 100 % at rest (beam on the floor) to
+       161.6 % (the beam 61.6 % of the well up, as the demo's -280 % of a
+       22 % beam). Standing still it rests on the floor. ── */
+    [data-theme='brutalism'] .kp-skeleton,
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before,
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* The skeleton lines: a well of one line's height on a 3 px footprint,
+       two units apart. */
     [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 1500ms;
         position: relative;
         block-size: 1rem;
-        border-radius: 0;
-        background: none;
-        animation: none;
+        overflow: clip;
     }
 
     [data-theme='brutalism']
@@ -30230,31 +30509,121 @@
         margin-block-start: 0.75rem;
     }
 
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+    [data-theme='brutalism'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        overflow: clip;
+    }
+
+    /* A strip well at the foot of a busy part. */
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        ) {
+        --kp-sig-br-well: 1rem;
+        position: relative;
+    }
+
+    /* A small part takes a small well, so its words stay readable above it. */
+    [data-theme='brutalism'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        --kp-sig-br-well: 0.5rem;
+    }
+
+    /* A button is one line high and its label fills it: its well hangs under
+       it, on its own footprint, so no word is covered. */
+    [data-theme='brutalism'] .kp-button[aria-busy='true'] {
+        --kp-sig-br-well: 0.75rem;
+    }
+
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
         content: '';
         position: absolute;
-        inset: 0 4px 4px 0;
-    }
-
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-        background: var(--border-strong);
-        translate: 4px 4px;
-    }
-
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        inset: auto 0 0;
+        block-size: var(--kp-sig-br-well);
+        box-sizing: border-box;
         border: 2px solid var(--border-strong);
-        background: var(--secondary);
+        border-block-end: 0;
+        pointer-events: none;
     }
 
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n + 2)::after {
-        background: var(--accent);
+    [data-theme='brutalism'] .kp-button[aria-busy='true'][aria-busy='true'][aria-busy='true'][aria-busy='true']::before {
+        inset: calc(100% + 0.5rem) 0 auto;
+        border-block-end: 2px solid var(--border-strong);
     }
 
-    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n)::after {
-        background: var(--info);
+    /* The two plates that carry a busy spinner are slabs [G7], with room at
+       the foot for the well. */
+    [data-theme='brutalism'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        padding-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-sig-br-well));
     }
 
+    /* A loading meter is its own well: the track's blocks give way to it. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-meter-walls: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-skeleton,
+        [data-theme='brutalism']
+            :is(
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-button[aria-busy='true'],
+                .kp-card[aria-busy='true'],
+                .kp-calendar--busy-whole > .kp-calendar__busy
+            )::before,
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+
+        /* The lines of a skeleton stand two units apart. */
+        [data-theme='brutalism'] .kp-skeleton:nth-child(2) {
+            animation-delay: 200ms;
+        }
+
+        [data-theme='brutalism'] .kp-skeleton:nth-child(3) {
+            animation-delay: 400ms;
+        }
+    }
+
+    /* Four hard lifts in half the loop (the first at once), a unit's hold,
+       then let go to fall free on the fall curve, and rest. */
+    @keyframes kp-sig-brutalism-hoist {
+        0% {
+            background-position-y: 100%;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            background-position-y: 161.6%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        75%,
+        100% {
+            background-position-y: 100%;
+        }
+    }
+
+    /* ── The switch and the check [G7]: small slabs, a 2 px line on a 3 px
+       shadow. ── */
     [data-theme='brutalism'] .kp-switch {
         --kp-switch-border: 2px;
         --kp-switch-radius: 0;
@@ -30290,7 +30659,7 @@
     }
 
     [data-theme='brutalism'] .kp-field__check {
-        --kp-sig-dur: 260ms;
+        --kp-sig-dur: var(--kp-sig-br-time);
         appearance: none;
         display: inline-grid;
         place-content: center;
@@ -30303,7 +30672,7 @@
     }
 
     [data-theme='brutalism'] .kp-field__check:not(:focus-visible) {
-        box-shadow: 2px 2px 0 var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
     }
 
     [data-theme='brutalism'] .kp-field__check:checked {
@@ -30335,12 +30704,20 @@
         background: var(--border-strong);
     }
 
+    /* ── What opens is dropped onto its footprint [G3]: the toast, the dialog
+       and the tooltip. Their hard shadow is on the page from the first frame,
+       where the panel will stand; the panel falls onto it from up-left on
+       the fall curve and stops dead. A toast and the tooltip fall 3 units, the
+       dialog, the big slab, 15 (Kenny, 2026-10-03: "I prefer this at 1/4
+       speed"). No clip, no fade, no scale, no tilt. ── */
     [data-theme='brutalism'] .kp-toast {
-        --kp-sig-dur: 420ms;
-        border: 2px solid var(--border-strong);
+        --kp-sig-dur: var(--kp-sig-br-time);
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+        border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         color: var(--secondary-foreground);
-        box-shadow: var(--kp-sig-br-drop) var(--kp-sig-br-drop) 0 var(--border-strong);
+        box-shadow: var(--kp-shadow);
         font-weight: 700;
     }
 
@@ -30358,13 +30735,22 @@
     }
 
     [data-theme='brutalism'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
-        --kp-sig-dur: 1520ms;
+        /* js/motion.js measures the theme's time on an unopened probe and
+           takes a close as two thirds of what it reads: the unopened dialog
+           runs one and a half drops, the open one a drop, which is also its
+           close and its opening. */
+        --kp-sig-dur: calc(var(--kp-sig-br-dialog) * 1.5);
+        --kp-sig-br-h: var(--kp-sig-br-h-slab);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
         padding-block-start: 0;
-        border: 3px solid var(--border-strong);
+        border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         background: var(--card);
-        box-shadow: calc(var(--kp-sig-br-drop) + 4px) calc(var(--kp-sig-br-drop) + 4px) 0 var(--border-strong);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-br-dialog);
     }
 
     [data-theme='brutalism'] .kp-dialog__title {
@@ -30372,7 +30758,7 @@
            over the theme's own on 2026-10-03 (research/dialog-title). */
         margin-inline: calc(-1 * var(--kp-dialog-padding, 1.25rem));
         padding-inline: var(--kp-dialog-padding, 1.25rem);
-        border-block-end: 3px solid var(--border-strong);
+        border-block-end: var(--kp-line) solid var(--border-strong);
         background: var(--secondary);
         color: var(--secondary-foreground);
         font-family: var(--theme-font-display);
@@ -30381,7 +30767,9 @@
     }
 
     [data-theme='brutalism'] .kp-tooltip {
-        --kp-sig-dur: 240ms;
+        --kp-sig-dur: var(--kp-sig-br-time);
+        --kp-sig-br-h: var(--kp-sig-br-h-part);
+        --kp-sig-br-sh: 3px;
         margin-block-start: 0.6rem;
         margin-inline-start: 0.35rem;
         padding: 0.25rem 0.6rem;
@@ -30414,7 +30802,7 @@
     [data-theme='brutalism'] .kp-wizard__steps li {
         gap: 0.5rem;
         color: var(--foreground);
-        font-weight: 600;
+        font-weight: 700;
     }
 
     [data-theme='brutalism'] .kp-wizard__steps li:not(:last-child)::after {
@@ -30523,177 +30911,208 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
+        /* G11: lifted off its footprint on the lifting curve, turned, set
+           down on the fall. */
         [data-theme='brutalism'] .kp-spinner::after {
-            animation: kp-sig-brutalism-brutalism-turn var(--kp-sig-dur) var(--fx-ease) infinite;
-        }
-
-        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-brutalism-brutalism-press var(--kp-sig-dur) var(--fx-ease) infinite;
-        }
-
-        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 200ms;
-        }
-
-        [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 400ms;
+            animation: kp-sig-brutalism-tip var(--kp-sig-dur) infinite;
         }
 
         [data-theme='brutalism'] .kp-switch__input::before {
-            transition: transform 160ms var(--fx-ease);
+            transition: transform var(--fx-duration) var(--fx-ease);
         }
 
+        /* The tick is set down onto its box, not stamped in with a fade. */
         [data-theme='brutalism'] .kp-field__check:checked::before {
-            animation: kp-sig-brutalism-brutalism-stamp var(--kp-sig-dur) var(--fx-ease) both;
+            animation: kp-sig-brutalism-set var(--kp-sig-dur) var(--kp-sig-br-fall) both;
         }
 
-        [data-theme='brutalism'] .kp-toast {
-            animation: kp-sig-brutalism-brutalism-drop var(--kp-sig-dur) var(--fx-ease) both;
+        /* G3: dropped onto the footprint. */
+        [data-theme='brutalism'] :is(.kp-toast, .kp-dialog, .kp-tooltip) {
+            animation: kp-sig-brutalism-drop var(--kp-sig-dur) var(--kp-sig-br-fall) both;
         }
 
-        [data-theme='brutalism'] .kp-dialog {
-            animation: kp-sig-brutalism-brutalism-drop-big var(--kp-sig-dur) var(--fx-ease) both;
-        }
-
-        [data-theme='brutalism'] .kp-tooltip {
-            animation: kp-sig-brutalism-brutalism-drop var(--kp-sig-dur) var(--fx-ease) both;
+        /* Nothing fades (G1, proposal-29): the backdrop is solid lavender the
+           whole time the dialog is there, and js/motion.js, which fades a
+           backdrop that has no motion of its own, finds one that holds. */
+        [data-theme='brutalism'] .kp-dialog::backdrop {
+            animation: kp-sig-brutalism-hold var(--kp-sig-br-dialog) steps(1, end) both;
         }
     }
 
-    @keyframes kp-sig-brutalism-brutalism-turn {
+    /* The block is lifted off its footprint (quick, slowing at the top),
+       turned a quarter while held up, and set down on the fall, stopping
+       dead; a quarter turn is the same block, so the loop is seamless. */
+    @keyframes kp-sig-brutalism-tip {
         0% {
             transform: none;
+            animation-timing-function: var(--kp-sig-br-up);
         }
 
         25% {
             transform: translate(-3px, -3px);
+            animation-timing-function: linear;
         }
 
-        65% {
+        60% {
             transform: translate(-3px, -3px) rotate(90deg);
+            animation-timing-function: var(--kp-sig-br-fall);
         }
 
-        85%,
+        75%,
         100% {
             transform: rotate(90deg);
         }
     }
 
-    @keyframes kp-sig-brutalism-brutalism-press {
-        0%,
-        40%,
-        100% {
-            transform: none;
-        }
-
-        15%,
-        25% {
-            transform: translate(4px, 4px);
-        }
-    }
-
-    @keyframes kp-sig-brutalism-brutalism-stamp {
+    @keyframes kp-sig-brutalism-set {
         from {
-            opacity: 0;
-            scale: 1.8;
+            translate: -0.4rem -0.4rem;
         }
 
         to {
-            opacity: 1;
-            scale: 1;
+            translate: 0 0;
         }
     }
 
-    @keyframes kp-sig-brutalism-brutalism-drop {
-        0% {
-            opacity: 0;
-            transform: translate(-10px, -18px) rotate(-3deg);
-        }
-
-        30% {
-            opacity: 1;
-        }
-
-        70% {
-            transform: translate(-4px, -4px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
-    @keyframes kp-sig-brutalism-brutalism-drop-big {
-        0% {
-            opacity: 0;
-            transform: translate(-14px, -40px) rotate(-2deg);
-        }
-
-        25% {
-            opacity: 1;
-        }
-
-        70% {
-            transform: translate(-6px, -6px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
-    @keyframes kp-progressbar-brutalism-tape {
+    /* The part is held up-left of its footprint and falls onto it; the
+       shadow stays on the ground, so its offset shrinks as the part comes
+       down. --kp-sig-br-h is the height it falls from, --kp-sig-br-sh the
+       shadow's own offset at rest. */
+    @keyframes kp-sig-brutalism-drop {
         from {
-            transform: translateX(0);
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            box-shadow: calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) 0 0 var(--border-strong);
         }
+
         to {
-            transform: translateX(var(--br-pitch));
+            translate: 0 0;
+            box-shadow: var(--kp-sig-br-sh) var(--kp-sig-br-sh) 0 0 var(--border-strong);
         }
     }
 
-    @keyframes kp-progressbar-brutalism-shuttle {
-        from {
-            transform: translateX(0);
-        }
+    @keyframes kp-sig-brutalism-hold {
+        from,
         to {
-            transform: translateX(calc(100cqi - 100%));
+            visibility: visible;
         }
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    /* Leaving is being lifted off, arriving is being set down [G12; Kenny,
+       2026-10-07 23:44, "leave = lift"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. The part is lifted
+       1 rem up-left off its footprint on the lifting curve, its shadow
+       staying on the ground, and at the top it is gone in one cut: no fade,
+       no blur. js/motion.js plays an arrival as this leave backwards, which
+       on the lifting curve is the fall, so what arrives is dropped. The
+       slam to the left (240 ms, steps(2)) of 2026-10-04 is replaced. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── brutalism: slammed out to the left in two hard steps ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='brutalism'] {
             --kp-open: reverse-close;
         }
 
         [data-theme='brutalism'] [data-kp-leaving] {
-            animation: kp-sig-brutalism-leave 240ms steps(2, jump-end) forwards;
+            --kp-sig-br-h: var(--kp-sig-br-h-leave);
+            animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
         }
 
-        @keyframes kp-sig-brutalism-leave {
-            to {
-                transform: translateX(-60px);
-                opacity: 0;
-            }
+        /* A toast is lifted as far as it fell. */
+        [data-theme='brutalism'] .kp-toast[data-kp-leaving] {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        }
+
+        /* A slab's shadow stays on the ground while it is lifted. */
+        [data-theme='brutalism']
+            :is(
+                .kp-card,
+                .kp-alert,
+                .kp-toast,
+                .kp-popover,
+                .kp-menu,
+                .kp-datatable,
+                .kp-grid__tile,
+                .kp-split__pane,
+                .kp-wizard,
+                .kp-empty,
+                .kp-spec,
+                .kp-log,
+                .kp-diff,
+                .kp-media,
+                .kp-form__summary,
+                .kp-reorder
+            )[data-kp-leaving] {
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation-name: kp-sig-brutalism-leave-slab;
+        }
+
+        [data-theme='brutalism'] :is(.kp-badge, .kp-tag, .kp-tooltip)[data-kp-leaving] {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: 3px;
+            animation-name: kp-sig-brutalism-leave-slab;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-leave {
+        to {
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            visibility: hidden;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-leave-slab {
+        from {
+            translate: 0 0;
+            box-shadow: var(--kp-sig-br-sh) var(--kp-sig-br-sh) 0 0 var(--border-strong);
+        }
+
+        to {
+            translate: calc(-1 * var(--kp-sig-br-h)) calc(-1 * var(--kp-sig-br-h));
+            box-shadow: calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) calc(var(--kp-sig-br-sh) + var(--kp-sig-br-h)) 0 0 var(--border-strong);
+            visibility: hidden;
+        }
+    }
+
+    /* ── A new value is slammed onto its offset [G9; Kenny, 2026-10-07
+       23:44, "live = slam"]: the headline's slam (2026-09-08) as the live
+       update. js/update.js writes the new value at once and marks the host
+       `[data-kp-updating='slam']`: it appears 6 px up-left of its place and
+       falls onto it on the fall curve in 3 units, landing on a yellow copy of
+       itself 3 px down-right; the yellow offset stands for 12 units and is
+       struck off in one cut. The words never change, the box keeps its
+       space, and on a carrier without words (a state block, a trend line, a
+       tile's body) the carrier falls onto its yellow copy the same way. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] {
+            --kp-update: slam;
+        }
+
+        [data-theme='brutalism'] [data-kp-updating='slam'] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+
+    @keyframes kp-sig-brutalism-update-slam {
+        0% {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--secondary));
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        20%,
+        100% {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--secondary));
         }
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
-       research/character-meter, round 3, 2026-10-05: shape 1, while
-       loading 1, how the share arrives 1, when the tone changes 3,
-       the mark past the end 3]. The package's own markup and states
-       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
-       the sign past the end or the loading picture on ::after, the mark
-       `.kp-meter__mark`. Every animation and transition under
-       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+       research/character-meter, round 3, 2026-10-05: shape 1, how the share
+       arrives 1, the mark past the end 3; its tone is taped off and its
+       loading is the lintel since 2026-10-07 23:44]. The package's own
+       markup and states (setMeter(), js/kpi.js): the track on the meter,
+       the share on ::before, the sign past the end or the loading picture on
+       ::after, the mark `.kp-meter__mark`. Every animation and transition
+       under prefers-reduced-motion: no-preference; still frames otherwise. ── */
 
     /* The shared part: room past the end, loading without the pulse, the mark
        centred on its width, the package's signs cleared for the shape's own.
@@ -30770,6 +31189,10 @@
         border-radius: 0;
         background: var(--kp-sig-meter-walls), var(--card);
         box-shadow: 3px 3px 0 var(--foreground);
+        /* The share walks to its value on two copies, one on each mirror of
+           the curve; the lower of them is drawn (see the progress bar). */
+        --kp-sig-br-lag: var(--kp-value, 0);
+        --kp-sig-br-lead: var(--kp-value, 0);
     }
 
     [data-theme='brutalism'] .kp-meter--inline {
@@ -30779,6 +31202,7 @@
     [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
         border-radius: 0;
         background: var(--kp-sig-meter-walls), var(--kp-meter-fill-colour);
+        inline-size: calc(clamp(0, min(var(--kp-sig-br-lag), var(--kp-sig-br-lead)), 1) * 100%);
     }
 
     /* A yellow peg with a tab sticking up. */
@@ -30802,42 +31226,36 @@
             3px 3px 0 var(--foreground);
     }
 
-    /* ── while loading: option 1 ── */
+    /* ── while loading: the lintel (above), in the track's own well ── */
 
-    /* The blocks drop in one at a time. */
-    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        background: var(--kp-sig-meter-walls), hsl(from var(--accent) h s l / 0.35);
-    }
+    /* ── how the share arrives: option 1, Thrown on, onto its footprint
+       [G3]: the share falls into its groove from up-left on the fall curve,
+       3 units. A later change of the value walks there on the same curve
+       when it grows, and on its mirror when it shrinks. ── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-brutalism-meter-stack 2200ms steps(10, jump-start) infinite;
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter) {
+            transition:
+                --kp-sig-br-lag var(--kp-sig-br-time) var(--kp-sig-br-fall),
+                --kp-sig-br-lead var(--kp-sig-br-time) var(--kp-sig-br-up);
         }
-    }
 
-    /* ── how the share arrives: option 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-brutalism-meter-drop-o 300ms cubic-bezier(0.6, 0, 0.9, 0.5) backwards;
-            transition: inline-size 300ms cubic-bezier(0.6, 0, 0.9, 0.5);
+            animation: kp-sig-brutalism-meter-throw var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+            transition: none;
         }
     }
 
-    /* ── when the tone changes: option 3 ── */
+    /* ── when the tone changes: taped off [G13] ──
+       A warning or a failure is a band of 45 degree hazard stripes in the
+       tone's paint and the ink; it never swells or bumps. */
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-brutalism-meter-bump-o 200ms steps(2);
-        }
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading])::before {
+        background: var(--kp-sig-meter-walls), repeating-linear-gradient(45deg, var(--warning) 0 5px, var(--foreground) 5px 10px);
+    }
 
-        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-brutalism-meter-bump-w 200ms steps(2);
-        }
-
-        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-brutalism-meter-bump-d 200ms steps(2);
-        }
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading])::before {
+        background: var(--kp-sig-meter-walls), repeating-linear-gradient(45deg, var(--destructive) 0 5px, var(--foreground) 5px 10px);
     }
 
     /* ── the mark past the end: option 3 ── */
@@ -30857,69 +31275,19 @@
         rotate: -24deg;
     }
 
+    /* The mark moves in three counted steps (a whole thing is counted);
+       both jumps included, so its way back is its way there turned around. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-meter__mark {
             transition:
-                inset-inline-start 200ms steps(2),
-                rotate 200ms steps(2);
+                inset-inline-start var(--kp-sig-br-time) steps(3, jump-both),
+                rotate var(--kp-sig-br-time) steps(3, jump-both);
         }
     }
 
-    @keyframes kp-sig-brutalism-meter-stack {
+    @keyframes kp-sig-brutalism-meter-throw {
         0% {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        100% {
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    @keyframes kp-sig-brutalism-meter-bump-d {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-brutalism-meter-bump-o {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-brutalism-meter-bump-w {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-brutalism-meter-drop-o {
-        0% {
-            translate: 0 -160%;
+            translate: -0.75rem -100%;
         }
 
         100% {

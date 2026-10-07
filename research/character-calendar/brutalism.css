@@ -1,0 +1,87 @@
+/* research/character-calendar, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided by Kenny on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 1, loading 1, arrival 1, tone 1, select 3); this
+   stylesheet is linked after every other calendar stylesheet.
+
+   - shape: a day is a small slab, a 2 px line on a 3 px shadow (G7);
+   - loading: a day has no room for a lintel's whole well, so the well is the
+     day's own figure place, inset, and the days of a week hoist one unit
+     (100 ms) apart in place of the tape that ran along every day's foot;
+   - arrival: every day is dropped onto its footprint from up-left, row by
+     row, 300 ms on the fall curve, in place of the overshoot from above;
+   - tone: today is ruled off by the six-pixel bar along its top, no tape
+     (tape means danger only, G16);
+   - select: the pick is the yellow plate in the 5 px fat frame; pointing at
+     a day inverts it (G8) in place of the straight lift. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-cl-shape='1'] .kp-calendar {
+        --cl-edge-w: 2px;
+        --cl-shadow: 3px 3px 0 var(--foreground);
+        --cl-num-weight: 400;
+        --cl-count-weight: 700;
+    }
+
+    [data-theme='brutalism'] [data-cl-shape='1'] .kp-calendar__count {
+        font-size: max(0.75rem, 0.7em);
+    }
+
+    [data-theme='brutalism'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        position: absolute;
+        inset: 0.35rem;
+        z-index: 0;
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        transform: none;
+        box-shadow: none;
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        rotate: none;
+        z-index: -1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear calc(var(--cl-col, 0) * 100ms) infinite backwards;
+        }
+    }
+
+    /* Arrival 1 · dropped onto its footprint, row by row. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: 3px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) calc(var(--cl-row, 0) * 100ms) backwards;
+        }
+    }
+
+    /* Tone 1 · today is the six-pixel bar along its top. */
+    [data-theme='brutalism'] [data-cl-tone='1'] td:has(> .kp-calendar__day[data-kp-today])::after {
+        inset: -3px 0 auto;
+        block-size: 6px;
+        rotate: none;
+        background: var(--foreground);
+        box-shadow: none;
+    }
+
+    /* Select 3 · the pick is the yellow plate in the fat frame; a day under
+       the pointer is inverted, nothing moves. */
+    [data-theme='brutalism'] [data-cl-select='3'] .kp-calendar__day:hover {
+        translate: none;
+        --cl-bg: var(--foreground);
+        --cl-fg: var(--secondary);
+        --cl-ink: var(--secondary);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day {
+        --cl-bg: var(--secondary);
+        --cl-fg: var(--secondary-foreground);
+    }
+}

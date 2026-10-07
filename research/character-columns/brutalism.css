@@ -1,0 +1,58 @@
+/* research/character-columns, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 1, loading 1, arrival 2, tone 2, live 2); linked
+   after columns.css.
+
+   - loading: every column's reading is a well at its foot with the lintel
+     hoisted in it (the package's picture, css/brutalism-register.css), in
+     place of the bar that stamped down;
+   - arrival: every column is dropped onto its footprint from up-left, 100 ms
+     after the one before, 300 ms on the fall curve, in place of two hard
+     steps straight down;
+   - tone: the change's small slab takes the 3 px shadow of a small part;
+   - live: a changed figure is slammed onto its yellow offset (G9), in place
+     of the inversion. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--foreground) 0) 50% 100% / 76% 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 21% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 79% 100% / var(--kp-sig-br-cable) 200% no-repeat, var(--card);
+        --cl-load-anim: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+    }
+
+    [data-theme='brutalism'] [data-cs-loading='1'] .kp-kpis[aria-busy='true'] > .kp-kpi::after {
+        inset: auto 0.75rem 0.75rem;
+        block-size: 1.25rem;
+        box-sizing: border-box;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] [data-cs-arrival='2'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: cl-a-fall-brutalism var(--kp-sig-br-time) var(--kp-sig-br-fall);
+        --cl-arrive-stagger: 100ms;
+    }
+
+    [data-theme='brutalism'] [data-cs-tone='2'] .kp-kpis {
+        --cl-delta-shadow: 3px 3px 0 var(--cl-ink);
+    }
+
+    [data-theme='brutalism'] [data-cs-live='2'] .kp-kpis {
+        --cl-live-num: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        --cl-live-tile: none;
+    }
+
+    /* Held 1.5 rem up-left of its footprint, falling onto it. */
+    @keyframes cl-a-fall-brutalism {
+        from {
+            translate: -1.5rem -1.5rem;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+}

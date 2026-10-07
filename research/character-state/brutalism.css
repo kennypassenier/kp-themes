@@ -1,0 +1,40 @@
+/* research/character-state, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 1 stays; tone 3, change 2); linked after the state
+   stylesheets.
+
+   - tone: a pending or failed state is taped off (G13): the word is printed
+     on the tone's plate, framed in the ink line on a 3 px hard shadow, in
+     place of a ring in the tone's colour; a good or a muted one is framed in
+     ink. The shadow sits outside the box, so nothing shifts;
+   - change: the word is slammed onto its yellow offset (G9), in place of the
+     shadow jumping to the other side. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-dot: var(--foreground);
+        --sw-frame: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-dot: var(--foreground);
+        --sw-plate: var(--warning);
+        --sw-ink: var(--warning-foreground);
+        --sw-frame: 2px solid var(--foreground);
+        --sw-plate-shadow: 3px 3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-dot: var(--destructive-foreground);
+        --sw-plate: var(--destructive);
+        --sw-ink: var(--destructive-foreground);
+        --sw-frame: 2px solid var(--foreground);
+        --sw-plate-shadow: 3px 3px 0 0 var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-sw-change='2'][data-sw-playing] .kp-state-word {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+}

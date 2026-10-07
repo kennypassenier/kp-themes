@@ -1,0 +1,56 @@
+/* research/character-meter, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 1 stays; loading 1, arrival 1, tone 3, mark 3);
+   linked after meters.css.
+
+   - loading: the lintel hoisted in the track's own well, the package's
+     picture, in place of the blocks laid start to end;
+   - arrival: the share falls into its groove from up-left, 300 ms on the
+     fall curve, in place of the straight fall;
+   - tone: a warning or a failure is taped off, the share a band of 45 degree
+     hazard stripes in the tone's paint and the ink; it never swells;
+   - mark: the mark moves in three counted steps, both jumps included, so its
+     way back is its way there turned around. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-cm-loading='1'] .kp-meter[data-kp-loading] {
+        --cm-walls: none;
+    }
+
+    [data-theme='brutalism'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+
+        [data-theme='brutalism'] [data-cm-tone='3'] .kp-meter:is(:not([data-kp-loading], [data-kp-tone]), [data-kp-tone='warning'], [data-kp-tone='destructive']) {
+            animation: none;
+        }
+
+        [data-theme='brutalism'] [data-cm-arrival='1'] .kp-meter {
+            --cm-arr-o: kp-sig-brutalism-meter-throw;
+        }
+
+        [data-theme='brutalism'] [data-cm-mark='3'] .kp-meter__mark {
+            transition:
+                inset-inline-start var(--kp-sig-br-time) steps(3, jump-both),
+                rotate var(--kp-sig-br-time) steps(3, jump-both);
+        }
+    }
+
+    [data-theme='brutalism'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading])::before {
+        background: var(--cm-walls), repeating-linear-gradient(45deg, var(--warning) 0 5px, var(--foreground) 5px 10px);
+    }
+
+    [data-theme='brutalism'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading])::before {
+        background: var(--cm-walls), repeating-linear-gradient(45deg, var(--destructive) 0 5px, var(--foreground) 5px 10px);
+    }
+}

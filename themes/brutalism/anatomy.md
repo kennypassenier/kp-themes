@@ -29,8 +29,10 @@ other theme is flat by decision; this one is flat by exaggeration.
    `offset offset 0 0 var(--border-strong)` on buttons, cards and inputs
    in every theme, and the other themes answer 0px, which paints
    nothing. The register exaggerates it to six pixels (`--kp-drop`) and
-   adds the lift: a box under the pointer rises two pixels away from its
-   shadow, and drops onto it when pressed.
+   adds the gestures (decided 2026-10-07, themes/brutalism/CHARACTER.md): a
+   box under the pointer is inverted (the ink takes the plate), a focused
+   one rises two pixels away from its shadow under the two-channel ring, and
+   a pressed one is driven onto its footprint, the shadow's own six pixels.
 3. **Yellow is the default button, black is the primary.** The contrast
    gate holds `--primary` at 4.5:1 against the page as link text, which
    no yellow can pass on off-white — so the ink is primary (13.4:1 with
@@ -66,11 +68,14 @@ other theme is flat by decision; this one is flat by exaggeration.
 - **Accent.** Archivo Black in capitals with the yellow offset on the
   headline; the microlabel as a yellow plate with BEIGE FORCE's pixel
   outline (four box-shadows, no border).
-- **Arrival.** None. Printed matter is simply there; the demo had no boot
-  and the register declares no `--kp-arrival`.
+- **Arrival.** What arrives is dropped onto its footprint from up-left and
+  stops dead (gravity, 300 ms; the dialog 1500 ms); what leaves is lifted
+  off it. The page itself does not boot, and the register declares no
+  `--kp-arrival`.
 
-Every hover is the yellow plate with the line; the call to action lifts
-and drops; the dropdown snaps (white, the line, the shadow — no fade);
+Every hover is the inverted plate; the call to action drops onto its
+shadow when pressed; the dropdown is dropped, never faded (white, the line,
+the shadow);
 the buttons are plates whose hover colour is BEIGE FORCE's step off the
 plate itself, as a relative colour of the plate token; the checkbox is a
 small box with its own shadow, the ink with a yellow square when checked;
@@ -145,4 +150,5 @@ with one relative colour for the hover step.
   only the ink; white on it would be 1.4:1.
 - **No blur, no gradient, no transparency.** The moment the shadow
   softens, this is `light` with a shadow.
-- **No arrival.** A page of printed matter does not boot.
+- **No boot.** A page of printed matter does not boot; its parts fall onto
+  their footprints when they come, and nothing fades.

@@ -1,0 +1,62 @@
+/* research/character-menu, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 2, loading r2-bru-load-5, open 1, tone 1, interact
+   1); linked after every other menu stylesheet.
+
+   - shape: the panel is the white slab, the entries are flat on it (the
+     lavender tint and the outlined entries are gone); the headings stay in
+     Archivo Black;
+   - loading: the package's lintel hoisted in a well at the loading entry's
+     foot (css/brutalism-register.css) in place of the slamming shadow;
+   - open: the panel is dropped onto its footprint from up-left, 300 ms on
+     the fall curve, and closes as that drop reversed;
+   - tone: the reason an entry is disabled is boxed by the 2 px line;
+   - interact: entries are brutalism's own (G17): pointed at, inverted;
+     focused, the yellow hand under the inner ring; pressed, the active plate;
+     they never shove sideways. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-mb-shape='2'] .kp-menu-button > .kp-menu {
+        background-color: var(--popover);
+    }
+
+    [data-theme='brutalism'] [data-mb-shape='2'] .kp-menu-button > .kp-menu .kp-menu__item {
+        outline: none;
+    }
+
+    [data-theme='brutalism'] [data-mb-loading='r2-bru-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        box-shadow: none;
+        padding-block-end: 0.9rem;
+    }
+
+    [data-theme='brutalism'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        outline-width: 2px;
+    }
+
+    [data-theme='brutalism'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus], :active) {
+        transform: none;
+    }
+
+    [data-theme='brutalism'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item[data-mb-force-focus] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-mb-loading='r2-bru-load-5'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: none;
+        }
+
+        [data-theme='brutalism'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop calc(var(--kp-sig-br-time) / var(--mb-speed, 1)) var(--kp-sig-br-fall);
+        }
+
+        [data-theme='brutalism'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-brutalism-drop;
+            animation-direction: reverse;
+        }
+    }
+}

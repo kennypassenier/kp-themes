@@ -4,8 +4,11 @@ The reference for how brutalism looks and moves. Read the grammar before
 adding or changing any brutalism component; the inventory, families and
 outliers below it record where the decided picks (2026-09-08 … 2026-10-07)
 stand against that grammar, and the numbered proposals (proposal-1 …) are the
-plan to bring them in line. Nothing here is applied yet: Kenny fixes the
-grammar first, question by question, in `research/brutalism-character` (the
+plan to bring them in line. Kenny fixed the grammar question by question in
+`research/brutalism-character` and decided it on 2026-10-07 23:44 (nineteen
+of nineteen; see the "Applied 2026-10-07" notes under §5, which say what the
+package and the research demos now draw; the inventory below describes the
+state before that) (the
 titanium way, Kenny 2026-10-07 02:54: "waar jij eerst uitzoekt wat bij mekaar
 past, wat niet past en dan zo voorstellen doet"; brutalism sixth in the
 series, fourth in Kenny's order of 04:23: cyberpunk, synthwave, solstice,
@@ -409,6 +412,89 @@ proposal as its first option; nothing is applied before his verdicts.
 | proposal-25 | **Chart legend keys are small brutalism buttons**: the 2 px line on the 3 px shadow, the yellow plate when pressed (the `-active` face), driven in, no inversion.                                                                             | C5    |
 | proposal-26 | **A day under the pointer** lifts 2 px up-left off its footprint; the pick is the yellow plate in the 5 px fat frame (the fat frame kept, the plate added).                                                                                   | C6    |
 | proposal-27 | **A guard for G17**: the titanium guard (titanium's proposal-28) run for brutalism: per composite, the computed hover, focus and active styles of every inner `.kp-button`, `a` and `.kp-menu__item` against the same element standing alone. | G17   |
+
+**Applied 2026-10-07** (css/brutalism-register.css, `kp.register` and `kp.signature`,
+tokens `--kp-sig-br-*`; `--fx-ease` in themes/brutalism/tokens.json; Kenny's picks on
+research/brutalism-character, decided.json 23:44: curve gravity, direction diagonal,
+opening footprint, durations units, colour roles, corners square, surface slab, tone taped,
+live slam, loading hoist-lintel, progress ruled-slowest, spinner tip, leave lift,
+composites own, hover invert, focus ring, press ground, voice shout, motifs one):
+
+- **proposal-1, 8, 9 (grammar, durations, curve): applied.** `--fx-ease` is the fall
+  curve `cubic-bezier(0.6, 0, 0.9, 0.5)` (was `(0.2, 0, 0, 1)`), `--kp-sig-br-up` its
+  mirror `(0.1, 0.5, 0.4, 1)`; contact 100 ms (`--fx-duration`), a fall, an arrival and
+  a leave 300 ms, the dialog 1500 ms, a loop 1200 ms, the bar's walk 800 ms and loop
+  2400 ms; the hooks' knobs are whole units (the headline's slam 300 ms and 100 ms
+  apart, the mark's plate 400 ms, the six-pixel bar 600 ms). The root says
+  `--kp-close-max` 1500 ms and `--kp-size-max` 300 ms for `js/motion.js`.
+- **proposal-2, 3 (loading): applied** as the lintel hoisted (G10): one beam as wide as
+  its well (76 %) on two cables, hoisted in four hard lifts (150 ms apart), held a
+  unit, let go to fall free on the fall curve and left to rest, 1200 ms, drawn as three
+  gradient layers whose one animated number is the picture's vertical position
+  (`kp-sig-brutalism-hoist`, 100 % at rest to 161.6 %). On every waiting surface the
+  package has: skeleton lines (the line is the well, 200 ms apart), skeleton block and
+  circle (so the chart's loading plot and legend stubs), a loading meter's track, the
+  data table's busy panel, a loading menu entry, a busy button (its well hangs under
+  the button so no word is covered), a busy card and the busy calendar. Standing still
+  the beam rests on the floor. The hammers, stamps, tape and rivets are gone.
+- **proposal-4 (spinner): applied**, the block tipped over, 1200 ms (from 1400), lifted
+  on the lifting curve and set down on the fall.
+- **Progress bar: applied** as Ruled and labelled, a lot slower: ink ticks on the empty
+  track, paper ticks through the fill, the yellow tip prints the share in Archivo
+  Black; a share walks to its value in ten hard steps of 80 ms (800 ms), a rise on
+  `steps(10, jump-end)` and a fall on its mirror `jump-start`, from two registered
+  copies of the value of which the lower is drawn (`--kp-sig-br-lag`, `--kp-sig-br-lead`),
+  so a shrink is the growth reversed; busy, the tip hops tick to tick in ten hard
+  steps of the 2400 ms loop and prints three dots (the tape and the shuttle are gone).
+- **proposal-5, 6, 10 (openings, arrivals, leave): applied** to the dialog, the toast,
+  the tooltip, the meter's share and the leave of everything `js/motion.js` marks
+  `[data-kp-leaving]`: dropped onto its footprint from up-left (the shadow on the page
+  from the first frame, the box falling 1.5 rem, a small part 0.75 rem, the dialog
+  2.5 rem), no clip, no fade, no scale, no tilt; the leave is lifted off 1 rem up-left
+  on the lifting curve and gone in one cut, the arrival its reverse, frame for frame.
+  The unopened dialog runs one and a half drops so that the open one, its close and
+  its opening all take 1500 ms; the backdrop holds solid lavender.
+- **proposal-7 (live): applied** as `--kp-update: slam` (`kp-sig-brutalism-update-slam`,
+  1500 ms: 3 units of fall onto a yellow offset, 12 stand, struck off in one cut); no
+  change to `js/update.js` was needed.
+- **proposal-11 (tone): applied** to the alert (a band of 45 degree hazard tape along
+  the foot of a warning and a failure), the meter's share, the invalid field (ink line
+  and shadow, the error printed on the failure's plate) and the severity toasts (paint
+  under an ink line, never a coloured line).
+- **proposal-13, 14, 17 (slab, square, press): applied**: the dialog's shadow is the
+  slab's 6 px, small parts are 2 px on 3 px (badge, tag, icon button, check, copy
+  button, key cap, back to top), the press drives the box by the shadow's own offset
+  (`--kp-drop`, 6 px; 3 px on a small part) with the `-active` plate of its variant.
+- **Hover = invert, focus = ring, press = ground (G8, G14, G17): applied** to every
+  button, icon button, menu entry, navigation link, the call to action, the search
+  trigger and the side navigation's links; the ink takes the plate and the plate
+  becomes the ink, nothing moves; focus lifts under the two-channel ring; the
+  yellow plate stays the current and the focused menu entry. A button inside a toast
+  or an alert inverts too.
+- **proposal-19 (voice): applied**: prose 500, every label, date, figure, tag and
+  small text 700 or heavier and at least 12 px; the tag that names a control is 12 px
+  (was 8 px); dates and identifiers are bold mono in ink (never muted); the footer's
+  microlabel, the side note, the platforms, the datatable's status and page, and the
+  menus' status are Space Grotesk 700 capitals.
+- **Package-decided aspects that fit and were kept:** the button's plate, the field's
+  well, the card and panels' slab, the dossier's stamp, the headline's slam and the
+  mark, the six-pixel bar, the marquee divider, the wizard's lifted current step, the
+  empty state's stamped zero, the link's plate in its ink box, the alarm and the band.
+- **Waits for the port (no register hook in the package yet, nothing invented):** the
+  dashboard components' own parts: tiles, key figures (`.kp-kpi` loading and tone), the
+  trend tile, the action columns, the page header, the state word's tone, the chart's
+  events as square bolts (a mark is a circle) and its tip's hazard corner, the calendar's
+  today bar and day slabs, the drawer's and the tour's drop and veil, and the menu button's
+  panel drop; the toast and tooltip close asymmetries of research/PACKAGE_FINDINGS.md;
+  the busy overlay's leave (the package drops the layer at once); a table row's hover
+  keeps its muted step. The research demos draw these in each
+  `research/character-*/brutalism.css` (the network graph untouched, G18).
+- **Needs a shared file (listed for the port session):** a TIMINGS row in
+  `js/effects.js` and an OUT_OF_SCOPE line in `gates/check-motion.mjs` for the new
+  keyframes `kp-sig-brutalism-hoist`, `-tip`, `-set`, `-drop`, `-hold`, `-leave`,
+  `-leave-slab`, `-update-slam`, `-meter-throw` and `kp-progressbar-brutalism-hop` (the
+  stale rows of the old keyframes can go); `js/motion.js` cannot give a shrinking box
+  the lifting curve, so a meter's share is mirrored with two registered copies instead.
 
 **Package-decided aspects that fit as they stand:** the button's plate, line
 and shadow and its lift with the tag, the focus ring in the demo's order, the

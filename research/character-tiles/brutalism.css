@@ -1,0 +1,86 @@
+/* research/character-tiles, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape 2, loading 1, arrival 3, tone 1, hover 1, live 2);
+   linked after every other tiles stylesheet.
+
+   - shape: a white slab on the 6 px shadow (the lavender tint is gone), the
+     mark a small square slab in its lavender plate, no tilt;
+   - loading: the package's lintel in a well at the tile's foot
+     (css/brutalism-register.css) in place of the stamp;
+   - arrival: each tile is dropped onto its footprint from up-left, 100 ms
+     after the one before, 300 ms on the fall curve, in place of the shove
+     from the side;
+   - tone: the mark is painted in its tone under a 3 px ink shadow and a 2 px
+     ink line, never a coloured shadow (G5);
+   - hover: the tile is inverted, nothing moves; the Open link is brutalism's
+     own ghost button (G17): inverted, the two-channel ring lifted, driven in
+     when pressed;
+   - live: a changed tile is slammed onto its yellow offset (G9), in place
+     of the jolt. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-ti-shape='2'] .kp-card {
+        background: var(--card);
+    }
+
+    [data-theme='brutalism'] [data-ti-shape='2'] [data-tl-mark] {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        transform: none;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-ti-loading='1'] [data-kp-busy]::after {
+        content: none;
+        animation: none;
+    }
+
+    [data-theme='brutalism'] [data-ti-tone='1'] .kp-card[data-kp-tone] [data-tl-mark] {
+        border: 2px solid var(--border-strong);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-ti-hover='1'] .kp-card:is(:hover, .tl-hover-sim):not(:active) {
+        background: var(--foreground);
+        color: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-ti-hover='1'] .kp-card:is(:hover, .tl-hover-sim) :is(h2, h3, h4, p, span, small, b):not([data-tl-mark], [data-tl-mark] *) {
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] [data-ti-hover='1'] [data-tl-link]:is(:hover, :focus-visible, :active) {
+        background: revert-layer;
+        color: revert-layer;
+        padding-inline: revert-layer;
+        outline: revert-layer;
+        outline-offset: revert-layer;
+        box-shadow: revert-layer;
+        translate: revert-layer;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: 100ms;
+        }
+
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:nth-child(3):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: 200ms;
+        }
+
+        [data-theme='brutalism'] [data-ti-live='2'] [data-tl-flash] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+}

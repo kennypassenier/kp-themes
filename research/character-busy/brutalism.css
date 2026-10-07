@@ -1,0 +1,78 @@
+/* research/character-busy, brutalism: the decided picks on brutalism's
+   grammar (themes/brutalism/CHARACTER.md G1-G18, decided on
+   research/brutalism-character, 2026-10-07 23:44). Only brutalism's decided
+   options change (shape r2-br-shape-2, loading 2, arrival 2, failure 2,
+   phone 1); linked after every other busy stylesheet.
+
+   - shape: the ink panel keeps its paper words and stands on one 6 px hard
+     shadow (the doubled shadow is gone);
+   - loading: the lintel hoisted in a well at the panel's foot, the
+     package's picture, in place of the hammer;
+   - arrival: the panel is dropped onto its footprint from up-left, 300 ms on
+     the fall curve, in place of the scale from 70 %; the veil is there at
+     once;
+   - failure: the failed alert is the red slab in the ink line on its ink
+     shadow, dropped from up-left, taped off along its foot (G13), in place
+     of the cream line and the cream shadow. The overlay's removal stays the
+     package's (it drops the layer at once), so the leave waits for the port. */
+@layer kp.signature {
+    [data-theme='brutalism'] [data-bo-shape='r2-br-shape-2'] .kp-datatable__busy-panel {
+        --bo-panel-shadow: 6px 6px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        z-index: 0;
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        transform: none;
+        box-shadow: none;
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        border-block-end: 0;
+        inline-size: auto;
+        block-size: 0.75rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-bo-loading='2'] .kp-datatable__busy-panel::before {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear 0ms infinite backwards;
+        }
+    }
+
+    [data-theme='brutalism'] [data-bo-loading='2'] .kp-datatable__busy-panel {
+        --bo-clock-ink: var(--background);
+        gap: 0;
+        padding-block: 0.5rem 1.1rem;
+    }
+
+    [data-theme='brutalism'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-bo-arrival='2'] .kp-datatable__busy-panel {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: 6px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+
+    [data-theme='brutalism'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-border: 3px solid var(--border-strong);
+        --bo-fail-shadow: 6px 6px 0 0 var(--border-strong);
+        --bo-fail-from: translate(-0.75rem, -0.75rem);
+        padding-block-end: 1rem;
+        background-image: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px);
+        background-position: 0 100%;
+        background-size: 100% 0.5rem;
+        background-repeat: no-repeat;
+    }
+}

@@ -1655,7 +1655,7 @@
     --fx-signal-foreground: hsl(0, 0%, 7%);
     --fx-notch: 0px;
     --fx-duration: 100ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: cubic-bezier(0.6, 0, 0.9, 0.5);
     --theme-font-display: 'Archivo Black', 'Archivo', Impact, Haettenschweiler, 'Arial Black', sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(48, 100%, 60%);
