@@ -1,0 +1,26 @@
+{
+    "decided": "2026-10-07 23:54 Brussels, Kenny: 18 of 18 settled over five updates in the review dialog (research/synthwave-character/README.md); the anchor is the page horizon (research/synthwave-anchor/decided.json)",
+    "attributes": "data-sy-<question>=\"<key>\" on the .sy-scene, research/synthwave-character/options.css",
+    "picks": {
+        "synthwave": {
+            "direction": "horizon",
+            "durations": "beats",
+            "colour": "roles",
+            "surface": "floor",
+            "live": "laser",
+            "spinner": "sun",
+            "composites": "own",
+            "hover": "tube",
+            "type": "osd",
+            "motifs": "meaning",
+            "curve": "lead",
+            "opening": "climb",
+            "tone": "osd",
+            "focus": "rails",
+            "press": "charge",
+            "corners": "fall",
+            "leave": "setssink",
+            "loading": "combo"
+        }
+    }
+}
