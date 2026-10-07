@@ -1,34 +1,38 @@
-// What makes synthwave synthwave, round 3 (Kenny, 2026-10-07 21:21: the anchor is
-// the page horizon, and the anchor decides the whole theme).
+// What makes synthwave synthwave, round 4 (update 2). Round 3 re-derived the eight
+// questions from the anchor Kenny decided at 21:21 (the page horizon): one neon tube
+// for the page on the header's foot, the floor being the page below it, every part
+// carrying 1 px of its light, and, under a hand, a brighter piece of the tube exactly
+// as wide as the part touched (research/synthwave-anchor/decided.json;
+// themes/synthwave/CHARACTER.md section 0). Kenny judged it at 2026-10-07 23:00: five
+// questions are picked and locked (GROUND below), three come back with new options:
+// the corners (variations on "the light runs down the sides and fades", in the colours
+// of the stripe they touch), loading (mixes of "the ramp flows" and "the floor
+// drives", plus progress bars) and leaving (variations on "the sun sets through it" and
+// "the sun's slab").
 //
-// Round 2 was built in parallel with the anchor demo, so its eight options were
-// drawn on stages of their own. Round 3 re-derives the same eight questions
-// (curve, opening, corners, warning, loading, leave, focus, press) FROM the
-// anchor: one neon tube for the page on the header's foot, the floor being the
-// page below it, every component carrying 1 px of its light, and, under a hand,
-// a brighter piece of the tube exactly as wide as the component touched
-// (research/synthwave-anchor/decided.json; themes/synthwave/CHARACTER.md §0).
-//
-// A review-kit demo in aspect mode, synthwave only. Each ASPECT is one rule of
-// the grammar asked as a question; each OPTION is a REAL piece of page (a
+// A review-kit demo in aspect mode, synthwave only. Each ASPECT is one rule of the
+// grammar asked as a question; each OPTION is a REAL piece of page (a
 // `.kp-page-header` with the page tube on its foot, the floor below it, and the
 // component in question at its real size), with one attribute on the scene
-// (`data-sy-<aspect>="<key>"`) that options.css reads. The ten questions Kenny
-// approved in round 1 stay applied on every scene as the fixed ground (GROUND
-// below). The first option of every question is the recommendation. The page's
-// one clock (below) plays every scene that arrives, opens, presses, updates or
-// leaves; it only writes attributes and text, it never reads layout. The one
-// layout read in this file is `placePieces`: where each part stands against the
-// page tube, written once per size change as `--sy-to`, so a piece of the tube
-// can be drawn exactly as wide as the part and at the tube. The network graph
-// is in no scene: it changes in no theme (Kenny, 02:54).
+// (`data-sy-<aspect>="<key>"`) that options.css reads. The questions Kenny approved
+// stay applied on every scene as the fixed ground (GROUND below). The first option of
+// every question is the recommendation. The page's one clock (below) plays every
+// scene that arrives, opens, presses, updates or leaves; it only writes attributes
+// and text, it never reads layout. The one layout read in this file is `placePieces`:
+// where each part stands against the page tube, written once per size change as
+// `--sy-to`, so a piece of the tube can be drawn exactly as wide as the part and at
+// the tube. The network graph is in no scene: it changes in no theme (Kenny, 02:54).
 
 /* ----------------------------------------------------------- the ground */
 
 /**
- * The ten questions Kenny approved as recommended (decided.json, round 1),
- * written on every scene: options.css keys the parts at rest and the rise over
- * the horizon on them. They are not asked again.
+ * The fifteen questions Kenny approved (decided.json of round 1: ten; update.json of
+ * update 2: five more), written on every scene: options.css keys the parts at rest
+ * and the rise over the horizon on them. They are not asked again. The five of
+ * update 2 are the curve (the tube leads, the bodies follow), the opening (the beam
+ * climbs to the horizon), the tone of a warning (the VCR's symbols), the focus ring
+ * (two tubes, top and foot) and the press (the piece charges); their drawings stay in
+ * options.css, but no scene of the three questions below shows their parts.
  */
 const GROUND = {
     direction: 'horizon',
@@ -41,6 +45,11 @@ const GROUND = {
     hover: 'tube',
     type: 'osd',
     motifs: 'meaning',
+    curve: 'lead',
+    opening: 'climb',
+    tone: 'osd',
+    focus: 'rails',
+    press: 'charge',
 };
 const GROUND_ATTRS = Object.entries(GROUND)
     .map(([k, v]) => `data-sy-${k}="${v}"`)
@@ -56,17 +65,8 @@ const STRIP = `<span class="sy-strip" aria-hidden="true"></span><span class="sy-
 /** The grid floor under a reporting plate's horizon (G7). */
 const FLOOR = `<span class="sy-floor" aria-hidden="true"></span>`;
 
-/** The mark of a tone: three cells an option may draw a ring, a symbol or pips in. */
-const RING = `<span class="sy-ring" aria-hidden="true"><i></i><i></i><i></i></span>`;
-
 /** Every layer a loading picture may draw over a waiting part: top edge, foot edge, the whole face. */
 const LOAD = `<span class="sy-load" aria-hidden="true"><i class="sy-g"></i><i class="sy-b"></i><i class="sy-f"></i></span>`;
-
-/** The layer a press may draw in a pressed part. */
-const FX = `<span class="sy-fx" aria-hidden="true"></span>`;
-
-/** The ring of a focused part: an option draws it, inset in a framed control, outside a plate. */
-const FRING = `<span class="sy-fring" aria-hidden="true"></span>`;
 
 /** The sun that covers a leaving part: five bands (the sun's stripes, widest at the horizon). */
 const SUN = `<span class="sy-sun-over" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>`;
@@ -84,14 +84,9 @@ const chip = (text, dir = 'up', tone = 'good') =>
 const rise = (html, cls = '') =>
     `<div class="sy-rise ${cls}">${html}<span class="sy-cuts" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sy-horizon" aria-hidden="true"></span></div>`;
 
-const meter = (value = 0.62, mark = 0.8, extra = '') =>
-    `<div class="kp-meter sy-meter" role="meter" aria-label="Signal, ${Math.round(value * 100)} %" aria-valuenow="${Math.round(
-        value * 100,
-    )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}; --kp-mark: ${mark}" ${extra}><span class="kp-meter__mark"></span></div>`;
-
 /** A determinate progress bar, the package's own `.kp-progressbar` in synthwave. */
-const pbar = (value, label) =>
-    `<div class="kp-progressbar sy-bar sy-pbar" role="progressbar" aria-label="${label}, ${Math.round(
+const pbar = (value, label, modifier = '') =>
+    `<div class="kp-progressbar sy-bar sy-pbar ${modifier}" role="progressbar" aria-label="${label}, ${Math.round(
         value * 100,
     )} %" aria-valuenow="${Math.round(value * 100)}" aria-valuemin="0" aria-valuemax="100" data-sy-v="${Math.round(
         value * 100,
@@ -130,33 +125,6 @@ const cell = (html, cls = '') => `<div class="sy-part ${cls}">${html}</div>`;
 const ACTIONS = () => host(button('Export')) + host(button('Add a pump house', 'kp-button--primary'));
 
 const PART = {
-    dialog: () =>
-        rise(
-            `<div class="kp-dialog sy-dialog sy-panel" role="group" aria-label="A dialog opening">${STRIP}
-        <p class="kp-dialog__title sy-title">Close INC-4471?</p>
-        <p class="kp-dialog__description">The vendor is told at once.</p>
-        <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Close it', 'kp-button--sm kp-button--primary')}</div>
-    </div>`,
-            'sy-opens',
-        ),
-    /** The menu that hangs from the header's More button. */
-    drop: () =>
-        rise(
-            `<div class="kp-popover sy-pop sy-panel">${STRIP}<ul class="kp-menu" role="menu">
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete</button></li>
-        </ul></div>`,
-            'sy-opens',
-        ),
-    tile: (label = 'Node 01', body = '4.2 Gb/s · 12 ms', cls = 'sy-arrives') =>
-        rise(
-            `<div class="kp-card sy-plate sy-tile">${STRIP}${FLOOR}
-        <p class="kp-card__title sy-title">${label}</p>
-        <p class="kp-card__body">${body}</p>
-    </div>`,
-            cls,
-        ),
     plainTile: (label = 'Node 01', body = 'Uplink 71 %', cls = '') =>
         `<div class="kp-card sy-plate sy-tile ${cls}">${STRIP}${FLOOR}<p class="kp-card__title sy-title">${label}</p><p class="kp-card__body">${body}</p></div>`,
     kpi: (label = 'Traffic now', value = '412', foot = chip('6 %'), cls = '', extra = '') =>
@@ -165,19 +133,23 @@ const PART = {
         <span class="kp-kpi__value sy-figure sy-carrier" data-sy-num>${value}</span>
         <span class="kp-kpi__trend">${foot} on yesterday</span>
     </div>`,
-    pbars: () =>
-        `<div class="sy-pbars">${[
+    /**
+     * Determinate progress bars as the curve scene of update 1 drew them: a mono caption in the accent over each package
+     * `.kp-progressbar`. `rows` are [value, label, modifier class].
+     */
+    pbars: (
+        rows = [
             [0.72, 'Sync'],
             [0.48, 'Backup'],
             [0.88, 'Upload'],
-        ]
+        ],
+    ) =>
+        `<div class="sy-pbars">${rows
             .map(
-                ([v, l]) =>
-                    `<div class="sy-pbar-row"><span class="sy-cap">${l} ${Math.round(Number(v) * 100)} %</span>${pbar(Number(v), String(l))}</div>`,
+                ([v, l, mod]) =>
+                    `<div class="sy-pbar-row"><span class="sy-cap">${l} ${Math.round(Number(v) * 100)} %</span>${pbar(Number(v), String(l), String(mod || ''))}</div>`,
             )
             .join('')}</div>`,
-    state: (word = 'Running', kind = 'good') =>
-        `<span class="sy-state" data-sy-kind="${kind}">${RING}<span class="sy-state__dot sy-carrier sy-carrier--dot" aria-hidden="true"></span><span class="sy-state__word sy-carrier" data-sy-word>${word}</span></span>`,
     alert: (text = 'Node 04 is back online.') => `<div class="kp-alert sy-alert" role="status"><span class="kp-alert__body">${text}</span></div>`,
     bar: (label = 'Sync busy') =>
         `<div class="kp-progressbar sy-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`,
@@ -191,19 +163,6 @@ const PART = {
 };
 
 /* ------------------------------------------------------------ the scenes */
-
-/** The motion curve: the tube charges, three bars fill, a tile rises. */
-const CURVE = () => page(ACTIONS(), cell(PART.pbars(), 'sy-part--bars') + cell(PART.tile(), 'sy-part--tile'), 'sy-pg--curve');
-
-/** Opening: the dialog stands in the body, the menu hangs from the header's More button, both open together. */
-const OPENING = () =>
-    page(
-        host(button('Export')) +
-            host(button('Add a pump house', 'kp-button--primary')) +
-            host(`${button('More ▾', '', 'aria-haspopup="menu" aria-expanded="true"')}${cell(PART.drop(), 'sy-part--drop')}`, 'sy-trigger'),
-        cell(PART.dialog(), 'sy-part--dialog'),
-        'sy-pg--opening',
-    );
 
 const CORNERS = () =>
     page(
@@ -221,42 +180,9 @@ const CORNERS = () =>
         'sy-pg--corners',
     );
 
-const warnKpi = () =>
-    PART.kpi('Latency', '81 ms', chip('12 ms', 'down', 'bad'), 'sy-warn', 'data-sy-kind="warn"').replace(
-        '<span class="kp-kpi__label sy-label">',
-        `<span class="kp-kpi__label sy-label">${RING}`,
-    );
-
-/** The tone scene replays only the tone; its figures and words stay as written. */
-const steady = (html) => html.replace(/ data-sy-(num|word)/g, '');
-const TONE = () =>
-    steady(
-        page(
-            ACTIONS(),
-            cell(
-                `<div class="kp-kpis sy-kpi-row">${hostBlock(PART.kpi('Traffic now', '412'))}${hostBlock(warnKpi(), '', 'data-sy-kind="warn"')}</div>`,
-            ) +
-                cell(
-                    hostBlock(
-                        `<div class="kp-card sy-plate sy-tile sy-bad" data-sy-kind="bad">${STRIP}${FLOOR}<p class="kp-card__title sy-title">${RING}<span class="sy-toned">Node 03</span></p><p class="kp-card__body">No signal since 06:40</p></div>`,
-                        '',
-                        'data-sy-kind="bad"',
-                    ),
-                ) +
-                cell(host(PART.state('Failed', 'bad'), 'sy-host--word', 'data-sy-kind="bad"')) +
-                cell(
-                    hostBlock(
-                        `<div class="sy-meter-wrap sy-warn" data-sy-kind="warn">${RING}${meter(0.88, 0.8, 'data-kp-tone="warning"')}</div>`,
-                        '',
-                        'data-sy-kind="warn"',
-                    ),
-                ),
-            'sy-pg--tone',
-        ),
-    );
-
-/** The waiting parts at real size: a key figure, a table, and the progress bar's own busy road as the reference. */
-const LOADERS = () =>
+/** The mixes of "the ramp flows" and "the floor drives": the waiting parts at real size, and the progress bar's own busy road as the reference. */
+const MIXES = ['flowdrive', 'oncoming', 'floorfirst', 'tinted'];
+const WAITING = () =>
     page(
         ACTIONS(),
         cell(
@@ -271,6 +197,23 @@ const LOADERS = () =>
             ),
         'sy-pg--waits',
     );
+
+/** What the progress-bar options put in the wide cell: the bars of the curve scene of update 1, or a derivative of them. */
+const BARSET = {
+    bars: () => PART.pbars(),
+    busy: () => `<div class="sy-part-bar"><span class="sy-cap">Sync busy</span>${PART.bar('Sync busy')}</div>`,
+    weights: () =>
+        PART.pbars([
+            [0.72, 'Regular', ''],
+            [0.72, 'Medium', 'kp-progressbar--md'],
+            [0.72, 'Large', 'kp-progressbar--lg'],
+        ]),
+    beats: () => PART.pbars([[0.96, 'Sync']]),
+    tube: () => PART.pbars(),
+    road: () => PART.pbars(),
+};
+const BARS = (/** @type {string} */ key) => page(ACTIONS(), cell(BARSET[key](), 'sy-part--busy'), 'sy-pg--waits sy-pg--bars');
+const LOADERS = (/** @type {string} */ key) => (MIXES.includes(key) ? WAITING() : BARS(key));
 
 /** A part that leaves and arrives: the part, the sun that may cover it, then its stripes and its 1 px horizon. */
 const leaver = (html) => rise(`<div class="sy-leaver__body"><div class="sy-leaver__part">${html}</div>${SUN}</div>`, 'sy-leaver');
@@ -289,46 +232,6 @@ const LEAVE = () =>
         'sy-pg--leave',
     );
 
-const FOCUS = () =>
-    page(
-        host(button(`Export readings${FRING}`, 'sy-focused'), 'sy-lit') + host(button('Add a pump house', 'kp-button--primary')),
-        cell(
-            hostBlock(
-                `<div class="kp-kpis"><a class="kp-kpi sy-plate sy-kpi sy-in-kpi sy-focused" href="#sy-intro">${STRIP}${FLOOR}${FRING}<span class="kp-kpi__label sy-label">Traffic now</span><span class="kp-kpi__value sy-figure">412</span></a></div>`,
-                'sy-lit',
-            ),
-        ) +
-            cell(
-                `<div class="kp-popover sy-pop sy-pop--static sy-panel sy-in-menu">${STRIP}<ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item"><span class="sy-entry">Open incident</span></button></li><li role="none">${hostBlock(`<button type="button" role="menuitem" class="kp-menu__item sy-focused"><span class="sy-entry">Assign to…</span>${FRING}</button>`, 'sy-lit')}</li></ul></div>`,
-            ) +
-            cell(
-                `<div class="sy-days"><span class="sy-day"><span class="sy-day__num">13</span></span>${host(`<span class="sy-day sy-focused"><span class="sy-day__num">14</span>${FRING}</span>`, 'sy-lit')}<span class="sy-day"><span class="sy-day__num">15</span></span></div>`,
-            ) +
-            cell(
-                `<div class="kp-card sy-plate sy-tile sy-in-tile">${STRIP}${FLOOR}<p class="kp-card__title sy-title">Node 01</p>${host(`<a class="kp-button kp-button--ghost kp-button--sm sy-tile-link sy-focused" href="#sy-intro">Open${FRING}</a>`, 'sy-lit')}</div>`,
-            ),
-        'sy-pg--focus',
-    );
-
-const PRESS = () =>
-    page(
-        host(button(`Export readings${FX}`, 'sy-press'), 'sy-lit') + host(button(`Add a pump house${FX}`, 'kp-button--primary sy-press'), 'sy-lit'),
-        cell(
-            hostBlock(
-                `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle sy-plate sy-kpi sy-press" aria-pressed="false">${STRIP}${FLOOR}${FX}<span class="kp-kpi__label sy-label">Open incidents</span><span class="kp-kpi__value sy-figure">3</span></button></div>`,
-                'sy-lit',
-            ),
-        ) +
-            cell(`<div class="sy-days">${host(`<span class="sy-day sy-press"><span class="sy-day__num">14</span>${FX}</span>`, 'sy-lit')}</div>`) +
-            cell(
-                host(
-                    `<button type="button" class="sy-key sy-press" aria-pressed="false">${FX}<span class="sy-key__swatch" aria-hidden="true"></span>Node 01</button>`,
-                    'sy-lit',
-                ),
-            ),
-        'sy-pg--press',
-    );
-
 /* ------------------------------------------------------------ the aspects */
 
 const rec = (why) => `Recommended: this one, because ${why}`;
@@ -337,239 +240,67 @@ const not = (why) => `Not recommended, because ${why}`;
 /**
  * One question each. `kind`: 'cycle' scenes are replayed by the page's clock
  * (arrive, open, press, leave), 'loop' scenes loop in CSS, 'still' scenes do
- * not move. `options[0]` is the recommendation.
- * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: () => string,
+ * not move. `options[0]` is the recommendation. The scene gets the option's key
+ * (loading draws a different page for a mix and for a progress bar).
+ * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: (key: string) => string,
  *   options: { key: string, name: string, see: string, verdict: string }[] }[]}
  */
 const ASPECTS = [
-    {
-        id: 'curve',
-        label: 'The motion curve',
-        rule: 'G1',
-        question: 'How does synthwave move: who goes first, and how does a body travel, shown on the page tube and the progress bars?',
-        why: 'The anchor first: the page horizon is one tube, and the progress bars you like are the same tube at component scale. So each curve is drawn on the tube itself: a lit length charges along the header’s foot while three bars fill and a tile rises from the floor. Each option fixes who moves first and how light and bodies travel. None overshoots (a bounce is pastel’s) and none is the register’s quick curve (cyberpunk’s, nearly titanium’s).',
-        kind: 'cycle',
-        scene: CURVE,
-        options: [
-            {
-                key: 'lead',
-                name: 'The tube leads, the bodies follow',
-                see: 'The page tube charges from its start to its end on the sunrise curve (900 ms), a glowing head in front; the three bars fill and the tile rises on the same curve one beat (225 ms) behind it, so the light is always ahead of what it lights.',
-                verdict: rec(
-                    'it is how a neon sign behaves (the tube lights first), it makes the anchor the clock of the page, and no other theme lets light and body run apart: forest, nostromo and titanium move the body alone.',
-                ),
-            },
-            {
-                key: 'strike',
-                name: 'The tube strikes, the bodies glide',
-                see: 'The tube lights across its whole width in one hard step (a strike, 225 ms); the bars fill and the tile rises on the sunrise curve one beat later, 900 ms.',
-                verdict: not(
-                    'it is G1 to the letter (light switches, bodies glide) and the cleanest to read, but the horizon does not travel, so the tube says nothing about progress. Cyberpunk strikes too, but moves its bodies in ticks.',
-                ),
-            },
-            {
-                key: 'beats',
-                name: 'Four beats',
-                see: 'The tube, the bars and the tile move in four hard steps of one beat (225 ms) each, the head jumping with the fill; nothing glides.',
-                verdict: not(
-                    'pure marquee, and the steps are the page’s own beat; but a tile rises like a ladder, and held poses are cyberpunk’s, frames nostromo’s and line steps terminal’s.',
-                ),
-            },
-            {
-                key: 'passes',
-                name: 'The light passes, each body takes it',
-                see: 'The tube charges on the sunrise curve (900 ms); the bars fill with it from the start, and the tile waits until the light reaches its left edge, at half, then rises (450 ms): the page is lit start to end and every part takes the light as it passes.',
-                verdict: not(
-                    'the most horizon-like of the six (a place on the page decides when), a wave across the page; but the tile waits 450 ms, which is slow on a page with a dozen parts. Titanium and grotesk feed start to end too, without a light to follow.',
-                ),
-            },
-            {
-                key: 'release',
-                name: 'Charge, then release',
-                see: 'The tube charges slowly and speeds up (675 ms, ease in) while the bodies wait; then the bars and the tile are released together, 450 ms on the sunrise curve (1125 ms in all).',
-                verdict: not(
-                    'anticipation has character, a capacitor filling and then letting go, and nobody else stalls on purpose; but 675 ms with the body standing still is the longest wait of the six, and a bar that starts late looks stuck.',
-                ),
-            },
-            {
-                key: 'even',
-                name: 'An even pace, like a tape counter',
-                see: 'The tube, the bars and the tile travel at one even pace (900 ms, linear) and stop on their mark, like the counter of a tape.',
-                verdict: not(
-                    'calm and exact, the speed of the road; but an even pace is grotesk’s and titanium’s loop, blueprint’s plotter feed is nearly it, and a tile that stops dead is the opposite of a sunrise.',
-                ),
-            },
-        ],
-    },
-    {
-        id: 'opening',
-        label: 'Opening what drops from a button',
-        rule: 'G3',
-        question: 'How does a menu or a dialog open?',
-        why: 'The anchor first: the page horizon is where things come and go, and under a hand a brighter piece of it lights exactly as wide as the part touched. So every option lights the piece under the button, and what opens comes from that line: a menu hanging from More and a dialog standing under the header. You liked options 1 and 2 of round 1 (the rise over the horizon with its stripe striking on, and Neon strikes): they stay as options 5 and 6, now on the page horizon; the four new ones begin at the tube. Every close is its open played backwards.',
-        kind: 'cycle',
-        scene: OPENING,
-        options: [
-            {
-                key: 'climb',
-                name: 'The beam climbs to the horizon',
-                see: 'A near-white beam starts at the panel’s foot and climbs to its top in 2 beats (450 ms), the panel uncovered under it; where the beam arrives the stripe strikes on and the piece of tube under the button turns up, as the horizon answering. Closing: the same frames backwards.',
-                verdict: rec(
-                    'a menu opens as a scan line draws a picture, and the beam travels to the very line the button stands on; it is your laser family. Nobody else opens upward under a line of light: titanium cuts top-down, nostromo strikes from the middle, forest grows down from the anchor.',
-                ),
-            },
-            {
-                key: 'blinds',
-                name: 'The blinds are drawn up into the horizon',
-                see: 'The piece under the button is lit; the panel is covered by five bars in the sun’s stripe rhythm (thin at the top, thick at the foot) that draw up one after another, the bottom one first, until it stands bare, 450 ms.',
-                verdict: not(
-                    'only the sun’s stripes do the opening, so nothing but synthwave shows it; in a dialog it is dramatic, in a small menu the slats are quick. Grotesk’s flat colour bands also uncover a panel, but sweep sideways and print colour.',
-                ),
-            },
-            {
-                key: 'stand',
-                name: 'It stands up on the floor',
-                see: 'The piece under the button is lit; the panel lies flat on the floor behind its foot and stands up around it (perspective, 450 ms), like a billboard rising on the road, its horizon line glowing at the foot.',
-                verdict: not(
-                    'the floor is the page below the tube, so it is the most literal picture of the anchor; but it tips a body (G2 lets nothing fall or tip) and the text is foreshortened for a moment. No register uses perspective.',
-                ),
-            },
-            {
-                key: 'lower',
-                name: 'The horizon lets it down',
-                see: 'A beam leaves the piece under the button and runs down the panel to its foot in 2 beats (450 ms), the panel uncovered behind it from the top; the piece stays lit.',
-                verdict: not(
-                    'the most literal “drops from a button”, and it starts at the anchor; but it is a top-down cut, titanium’s, and what hangs grows downward like forest’s menu. Only the beam of light is synthwave’s.',
-                ),
-            },
-            {
-                key: 'rise',
-                name: 'Over the horizon, its stripe striking on (round 1’s 1)',
-                see: 'The piece under the button lights; the panel’s 1 px horizon is drawn from its centre outward along its foot, the panel rises 0.5 rem from behind it cut by the sun’s stripes that close as it rises, and its top stripe strikes on: 2 beats (450 ms).',
-                verdict: not('you like it, and it is the arrival family of every part, but a menu then adds nothing of its own to the page.'),
-            },
-            {
-                key: 'strike',
-                name: 'Neon strikes: there at once (round 1’s 2)',
-                see: 'The piece under the button strikes; the panel is there in one frame and its rim and stripe strike on pink, cyan, pink, cyan in hard steps (340 ms).',
-                verdict: not(
-                    'you like it and it is very neon, but nothing arrives, and a strike alone is cyberpunk’s trend pick and nostromo’s tube.',
-                ),
-            },
-        ],
-    },
     {
         id: 'corners',
         label: 'The corners',
         rule: 'G6',
         question: 'How do the corners of a panel look?',
-        why: 'The anchor first: every part carries 1 px of the page horizon’s light on its top edge, so a corner is where that light ends or starts. You like square the most but feel we can do better; square stays as the baseline (option 6). The new ideas stay strictly inside the grammar: radius 2 px, every cut horizontal, nothing notched or chamfered, no pills. Buttons, tags, chips and the tooltip keep their 2 px corner in every option; the panels change.',
+        why: 'You prefer “the light runs down the sides and fades” (option 3 of the last round), with one rule: the colours of the sides start with the colours they touch in the stripe along the top. The stripe runs pink at its left end to cyan at its right end (the register’s own `--kp-stripe`, the primary to the accent), so every left side starts pink and every right side starts cyan. The five new options keep that rule and differ in how the light travels and ends: a tube that fades out, the ramp toward laser yellow, a short drop of fixed length, a hairline, and sides that sink into the floor. The old option stays last for reference (its sides start white). Radius 2 px, nothing notched, nothing flickers. Buttons, tags, chips and the tooltip keep their 2 px corner; the panels change.',
         kind: 'still',
         scene: CORNERS,
         options: [
             {
-                key: 'tubes',
-                name: 'The light overshoots the corners',
-                see: 'The top stripe and a pink tube along the foot run past the plate’s sides by half a rem, like the tubes of a neon frame that cross at the corners; the sides stay a hairline.',
+                key: 'fall',
+                name: 'Pink down the left, cyan down the right, fading out',
+                see: 'The stripe on the top edge runs pink to cyan. At each top corner its own colour turns and runs down the side as a 3 px tube with a soft bloom in that colour: pink on the left, cyan on the right. It falls at half strength by the middle and fades to nothing at the foot. The hairline round the plate is gone; the light is the frame.',
                 verdict: rec(
-                    'the corner is the place where the horizon’s light ends and goes on past it, so the silhouette stays square and needs no notch; cyberpunk’s reticle and blueprint’s brackets mark corners with L-shapes, this has horizontal ends only (titanium’s tool-edge is a line on the top and stops at the corner).',
+                    'it is your sentence read literally: the side is the stripe turning the corner, so the two colours of the top become the two sides and the plate is one lit object; the fade says the light falls from the horizon above. Overlap: solstice lights a plate by one edge, its foot; nothing else draws two colours down two sides.',
                 ),
             },
             {
-                key: 'rules',
-                name: 'Only the top and foot rules',
-                see: 'Plates have no sides: a stripe along the top and a bright horizon rule along the foot, the dark ground between them; a corner is where a rule ends.',
+                key: 'ramp',
+                name: 'The sides run on through the ramp toward laser yellow',
+                see: 'Same corners, but the light does not just fade: the left side goes from the stripe’s pink through the bar’s ramp to laser yellow and then out, the right side from the stripe’s cyan to pink and then out. Each side shows two colours and a fade, 3 px.',
                 verdict: not(
-                    'clean and cinematic, a slab between two horizons, and strictly horizontal; but a card beside a card loses its frame and the key figure looks unfinished.',
+                    'it is the sun’s ramp falling down the plate, the most colourful; but laser yellow is the warning’s colour (G13) and yellow beside a title can read as a warning, and the right side changes hue twice on a 4 rem plate.',
+                ),
+            },
+            {
+                key: 'short',
+                name: 'A short drop of fixed length',
+                see: 'Both sides are a 3 px tube that stays full for 0.8 rem and fades out over the next 2 rem, 2.75 rem in all, whatever the plate’s height; below that the plate has no sides, only its foot hairline and floor.',
+                verdict: not(
+                    'the corner stays the same size on a tall dialog and a low key figure, which answers “fading sides look unfinished on a tall plate”; but a plate without sides below the drop is lighter than the page’s other plates, and it is close to cyberpunk’s corner brackets in size.',
+                ),
+            },
+            {
+                key: 'hair',
+                name: 'A hairline, not a tube',
+                see: 'Each side is a 1 px line in the stripe’s colour (pink left, cyan right) from the top to the foot, full at the top and still at 40 % of its strength at the foot, so the plate keeps a full frame that is lit from above.',
+                verdict: not(
+                    'the quietest and the most finished: nothing disappears, the frame is complete; but a hairline is the register’s own border (the plate was already a hairline), so the only news is the two colours, and it does not read as neon.',
+                ),
+            },
+            {
+                key: 'floor',
+                name: 'The sides sink into the floor',
+                see: 'The two sides fall from the stripe in their colours and fade out a little past the middle; at the foot they come back for the last 1.35 rem, where the plate’s floor is, as two vertical lines of the grid in the same colours, so the light that fell from the horizon is picked up by the floor.',
+                verdict: not(
+                    'the light is continuous from the page horizon through the plate to the floor, the most literal use of the anchor; but the sides then have two lit places and a dark middle, and the foot lines read as a second frame on a plate that already has a floor.',
                 ),
             },
             {
                 key: 'fade',
-                name: 'The light runs down the sides and fades',
-                see: 'The top edge is lit with the stripe; at each top corner the light turns and runs down the side, fading to nothing before the foot, as if the plate were lit from the horizon above it.',
+                name: 'The light runs down the sides and fades (the last round’s option 3)',
+                see: 'The top edge is lit with the stripe; at each top corner the light turns and runs down the side as a 3 px tube that starts near-white, turns pink and fades before the foot, the same on both sides.',
                 verdict: not(
-                    'the horizon is above every part, so light falls on tops and dies down the sides: the corner is where the light enters; quiet and new. But sides that fade look unfinished on a tall plate, and solstice also lights a plate by one edge (its foot).',
-                ),
-            },
-            {
-                key: 'float',
-                name: 'The stripe floats above the plate',
-                see: 'The stripe is lifted off the plate by a 2 px dark cut, so each top corner is where a tube ends above a square slab; the foot stays a hairline.',
-                verdict: not(
-                    'a horizontal cut at the corners, a tube lying on a slab; but a floating stripe on every panel breaks the tape card you approved, and at a glance it reads as a border fault.',
-                ),
-            },
-            {
-                key: 'pixel',
-                name: 'A corner pixel, like a VCR’s OSD',
-                see: 'A lit square pixel (0.4 rem) sits in the top-start and bottom-end corner of each panel, pink and cyan, as the registration marks of an on-screen display.',
-                verdict: not(
-                    'witty and tiny, and the OSD is a theme voice; but two squares do not make a corner, and they are close to cyberpunk’s corner brackets in purpose.',
-                ),
-            },
-            {
-                key: 'square',
-                name: 'Square panels, 2 px controls (round 1’s, the baseline)',
-                see: 'The card, the menu panel, the key figure and the dialog are square and carry the stripe along their top; the button, the tag, the chip and the tooltip take the 2 px corner.',
-                verdict: not('you like it most and it is the anatomy, but it is the corner of titanium, brutalism, grotesk and terminal too.'),
-            },
-        ],
-    },
-    {
-        id: 'tone',
-        label: 'A warning',
-        rule: 'G13',
-        question: 'How does a warning or a failure show?',
-        why: 'The anchor first: the page horizon is the one line every part carries a piece of, so a warning is that line changing tone exactly as wide as the part. Every option turns the piece of the tube over the warned part to laser yellow (a failure: red) and adds a second channel that is not colour (DI4): a symbol, a ring, a thickness, a count, a rail, the shape of the letters. Nothing flashes: the mark strikes on once and holds. Round 1’s plate and frame stay retired (terminal’s and nostromo’s).',
-        kind: 'cycle',
-        scene: TONE,
-        options: [
-            {
-                key: 'osd',
-                name: 'The VCR’s symbols, on a tube that turns',
-                see: 'The piece of tube over the part is laser yellow (red for a failure) and the part’s label carries the VCR’s own symbol where its ▶ was: pause (two bars) for a warning, stop (a square) for a failure; the figure or title glows in the tone.',
-                verdict: rec(
-                    'it extends the OSD voice you approved instead of adding a new motif, the shape tells a warning from a failure without colour, and the piece shows where on the page it is; cyberpunk’s and nostromo’s warnings are text tags, not symbols.',
-                ),
-            },
-            {
-                key: 'ring',
-                name: 'Your neon ring, on a tube that turns',
-                see: 'The piece over the part turns to the tone, and the hollow neon ring (round 1’s) stands before the title or figure, a near-white core with the tone’s bloom; the title or figure glows in the tone.',
-                verdict: not(
-                    'your family pick, quiet and approved; but a ring is the same shape for a warning and a failure, so only the colour tells them apart. Cyberpunk’s target brackets and blueprint’s flag are the competing marks.',
-                ),
-            },
-            {
-                key: 'swell',
-                name: 'The piece swells with the severity',
-                see: 'The piece over the part is as wide as the part and thicker as it gets worse: 5 px in laser yellow for a warning, 8 px in red for a failure (3 px at rest); the words glow in the tone.',
-                verdict: not(
-                    'nothing is added to the part, the line itself says it, and thickness is a second channel; but 8 px of red tube over a wide tile is loud, and the eye must travel from the line to the part. Grotesk’s warning is a 6 px bar down the start edge.',
-                ),
-            },
-            {
-                key: 'pips',
-                name: 'Three cells in the piece: two lit, three lit',
-                see: 'The piece over the part is cut into three cells by two dark gaps; a warning lights two of them in laser yellow, a failure all three in red; the words glow in the tone.',
-                verdict: not(
-                    'the count tells the severity without colour and it reads as an instrument; but it asks to be read where a symbol is seen, and nostromo’s lamp bank is also a count of lit cells.',
-                ),
-            },
-            {
-                key: 'rails',
-                name: 'The part between two tubes',
-                see: 'The piece over the part and a tube of the same width along its foot, both in the tone, bracket it; the words glow in the tone. Only horizontal lines.',
-                verdict: not(
-                    'strictly horizontal and it frames the whole part; but a plate that already has a stripe and a floor is crowded by two rules, and it is nostromo’s frame with the sides left out.',
-                ),
-            },
-            {
-                key: 'striped',
-                name: 'The words cut by the sun’s stripes',
-                see: 'The piece turns to the tone and the title, the figure and the state word take the tone’s colour and are cut by the sun’s stripes, widest at the foot, the way a sunset logo is drawn.',
-                verdict: not(
-                    'the classic synthwave letter, a shape you can see without colour; but cut letters are harder to read at the size of a figure, and the warning becomes louder than the page’s own titles.',
+                    'it is what you chose, kept for reference; its sides start white and are pink on both sides, so the colours of the stripe do not turn the corner.',
                 ),
             },
         ],
@@ -579,86 +310,88 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does everything that waits show?',
-        why: 'The anchor first: when the page waits, the page tube itself loads, and every waiting part carries the same picture at its own scale on its top edge (1 px of the page’s light, grown to 3 px while it waits). You said none of round 1’s was fancy enough and that you use the progress bars to measure the timings, so the ten attempts are the bar’s own parts on the tube: the sun’s ramp (pink to laser yellow) with its glowing head, the road, the stripes, plus the floor running toward the horizon. Nothing flickers: lights step by a beat or glide on a line, and every loop is a whole number of beats.',
+        why: 'You want a mix of “the ramp flows through the tube” and “the floor drives toward you”, and more progress bars, one of them the progress bar you used to measure the timings in step 1. Options 1 to 4 are mixes: the page tube carries the sun’s ramp flowing through it while the page’s floor drives toward you, and every waiting part does the same at its scale (the ramp on its top edge, its floor band driving). They differ in who leads, how fast and which way. Option 5 is the progress bars of the curve question (Sync, Backup and Upload, with their caption, the lit length charging on the page tube one beat ahead of them) looping; option 6 is the package’s busy bar, unchanged. Options 7 to 10 are progress bars derived from them. Nothing flickers: lights glide or step on the beat, and a determinate bar fills, holds and empties backwards instead of jumping back.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
-                key: 'charge',
-                name: 'The tube charges in five steps',
-                see: 'The page tube fills start to end with the sun’s ramp in five hard steps, a glowing head jumping in front, 5 beats (1125 ms), then starts again from empty; every waiting part does the same along its top edge.',
+                key: 'flowdrive',
+                name: 'The ramp flows, the floor drives',
+                see: 'The page tube is an unlit track with the sun’s ramp (pink, laser yellow, pink) flowing through it start to end, 8 beats (1800 ms) a period; under it the grid floor drives toward you, its lines born at the horizon and spreading at the bottom, 4 beats (900 ms). Each waiting part carries the ramp on its top edge and its floor band drives at the same pace.',
                 verdict: rec(
-                    'it is your progress bar made the page’s own: the ramp, the head and the beat are the signature, and the tube carries it across the whole page; the restart from empty is a hard cut, the one thing to judge.',
+                    'the straight mix of your two: colour moves along the line and the ground moves toward you, two directions at once, so the page reads as busy without a single hard cut; the periods are whole beats, the floor twice as fast as the ramp. The tube alone (the ramp) is titanium’s drift in colour; the floor under it is nobody else’s.',
                 ),
             },
             {
-                key: 'flow',
-                name: 'The ramp flows through the tube',
-                see: 'The page tube is lit all the time; the sun’s ramp scrolls through it, pink to laser yellow to pink, 8 beats (1800 ms) a period at a constant pace, like a barber pole in sunset colours; the parts’ top edges flow with it.',
+                key: 'oncoming',
+                name: 'The ramp flows against the drive',
+                see: 'The floor drives toward you as in option 1 (900 ms), but the ramp flows the other way, from the end of the tube to its start, 8 beats (1800 ms): the light comes at the road from the far side, like the lights of oncoming cars.',
                 verdict: not(
-                    'smooth and colourful; it never restarts, so nothing jumps, but it says “busy” rather than “waiting for a share”, and a constant drift is titanium’s bath.',
+                    'two opposed motions are the most road-like of the four and read as depth; but the ramp walking backwards is against the grammar (G2: walking goes start to end), and a reader may take the leftward flow for “going back”.',
+                ),
+            },
+            {
+                key: 'floorfirst',
+                name: 'The floor drives fast, the ramp trails',
+                see: 'The floor is the busy one: its lines drive toward you every 2 beats (450 ms) and are brighter; the ramp in the tube is dimmer and slow, 16 beats (3600 ms) a period, start to end. On a waiting part the floor band runs fast and the ramp edge is a quiet trail.',
+                verdict: not(
+                    'the ground leads and the line follows, the opposite of the curve you picked (the tube leads); it is the strongest sense of speed and the least mannered ramp. But 450 ms of floor under the whole page is a lot of motion, and the tube, the anchor, is the quiet part.',
+                ),
+            },
+            {
+                key: 'tinted',
+                name: 'The floor wears the ramp',
+                see: 'As option 1 (ramp 1800 ms, floor 900 ms), but the floor’s lines are not pink: they take the ramp’s colours across the page, pink at the left through to laser yellow at the right, and drive toward you in them, so the colour of the tube is carried down into the road.',
+                verdict: not(
+                    'the tube and the floor become one picture, the ramp is on the whole page, and the horizon is a sunset on a grid; but the lines on the right are laser yellow and a yellow floor reads as a warning, and the plates’ own floor bands stay pink.',
+                ),
+            },
+            {
+                key: 'bars',
+                name: 'The progress bars of the curve question, as measured',
+                see: 'The three bars of step 1 as the curve question drew them: Sync 72 %, Backup 48 %, Upload 88 %, each with its mono caption in cyan, the package’s own `.kp-progressbar` (the ramp cut by stripes, the glowing head). The page tube charges first with the ramp and a head, one beat later the bars fill on the sunrise curve, 900 ms, hold, and empty backwards, tube last; 4500 ms a period.',
+                verdict: not(
+                    'it is the thing you timed, unchanged, so it is the reference for the others; the tube leading is the curve you picked. But it is a demonstration of progress, not of waiting: a bar that fills and empties says “here is a share”, not “wait”.',
+                ),
+            },
+            {
+                key: 'busy',
+                name: 'The package’s progress bar, busy',
+                see: 'The package’s own busy bar at full size: the road, a 3 px lane of near-white dashes with a pink bloom, running start to end on the bar’s dark track, 600 ms a period, nothing else moving; the page tube stands lit.',
+                verdict: not(
+                    'it is the reference, unchanged, and says “busy” without claiming a share; but it is exactly the bar that exists, so nothing is new, and a 600 ms road is the fastest thing on the page.',
+                ),
+            },
+            {
+                key: 'weights',
+                name: 'The sun’s ramp at three weights',
+                see: 'Three determinate bars at the package’s three sizes, 18, 27 and 36 px (regular, medium, large), all at 72 %, each the sun’s ramp cut by stripes with a glowing head; they fill together on the sunrise curve (900 ms), hold and empty backwards, with the page tube charging one beat ahead; 4500 ms a period.',
+                verdict: not(
+                    'it shows that the bar scales: the stripes cut the same way at 36 px as at 18 and the head grows with it, so a wide table can have a heavy bar; but the three are the same picture, and the large one is loud.',
+                ),
+            },
+            {
+                key: 'beats',
+                name: 'The slats count the beats',
+                see: 'One bar whose fill is cut into eight slats with a 2 px gap; it fills one slat per beat (225 ms) in hard steps to 96 %, holds, and empties one slat per beat; the head and the lit length on the page tube step with it; 5400 ms a period.',
+                verdict: not(
+                    'it is the marquee’s step in the bar: you can count the beats, and nothing glides; but it looks like a stack of lamps (nostromo’s lamp bank) and a stepped bar of cells is terminal’s `[####----]`; here the cells carry the sun’s ramp.',
+                ),
+            },
+            {
+                key: 'tube',
+                name: 'The bar is the page tube, pulled down',
+                see: 'The bar is the page tube at the part’s scale: a 3 px tube, a dim track and the ramp as its lit length with a glowing head (no stripes, no frame), under the page tube, which shows the same lit length at the same moment; they charge together, hold and empty backwards; 4500 ms a period.',
+                verdict: not(
+                    'the anchor made literal: the page tube and the bar are the same object and a part is lit the way the page is; the thinnest, most neon of the bars. But without the stripes it is not the bar you timed, and a 3 px bar is hard to see at the size of a table cell.',
                 ),
             },
             {
                 key: 'road',
-                name: 'The road runs on the tube',
-                see: 'Lane dashes of near-white core with a pink bloom race along the page tube and along every waiting part’s top edge, start to end, 600 ms a period: the busy bar’s road, drawn on the horizon.',
-                verdict: not('exactly the bar you know, so nothing new; at 600 ms the dashes are the fastest thing on the page.'),
-            },
-            {
-                key: 'drive',
-                name: 'The floor drives toward you',
-                see: 'The page tube stands lit; the grid floor under it runs: its lines are born at the horizon and rush toward you, closing up near the line and spreading at the bottom, 900 ms; every plate’s own floor band drives too.',
+                name: 'The head leaves the road behind it',
+                see: 'A determinate bar whose fill is not a solid ramp but the road: lane dashes of near-white with a pink bloom lie where the head has been, and the head carries a short tail in the ramp’s colours (pink to laser yellow) in front of the dashes; it drives to the mark, holds, and drives back taking the road with it; 4500 ms a period.',
                 verdict: not(
-                    'the strongest picture of the theme and it moves the page forward; but a moving floor under a whole page is a lot of motion, and dark’s ticker also runs a line.',
-                ),
-            },
-            {
-                key: 'slice',
-                name: 'A slice of light runs the tube',
-                see: 'One slice of light, a glowing head with a short ramp tail, runs the page tube start to end at a constant pace, 8 beats (1800 ms), and every waiting part runs its own slice along its top edge; the slice is the only thing lit.',
-                verdict: not(
-                    'the anchor demo’s own loading, calm and exact; but one slice reads as “something is moving” more than “waiting for a share”, and a comet is every theme’s loading shape.',
-                ),
-            },
-            {
-                key: 'lanes',
-                name: 'Headlights and tail lights',
-                see: 'Pink lights run along the page tube start to end and cyan ones run back along its far line under it, short bright dashes with a bloom, a two-lane highway at night, 1200 ms; parts carry one lane on their top edge and one on their foot.',
-                verdict: not(
-                    'a whole road in one horizon, and it uses both neon colours; but cyan moves here where it should only read, and two lanes make a small part busy.',
-                ),
-            },
-            {
-                key: 'sun',
-                name: 'The sun’s stripes light up from the horizon',
-                see: 'Five stripes under the page tube, thickest at the line, light one after another from the horizon down in the ramp’s colours, a beat each, stay lit for a beat and go out together, 6 beats (1350 ms); parts carry five at their foot.',
-                verdict: not(
-                    'it is the sun’s reflection building itself in the floor, a ladder like an equaliser peak; but the all-out reset is the one hard cut, and five stripes need height a small part does not have.',
-                ),
-            },
-            {
-                key: 'surface',
-                name: 'The surface is the bar',
-                see: 'The ramp fills the floor under the tube behind the page (faint, with the stripes cut through it), a glowing head at its front edge, start to end, then empties start to end behind the head, 8 beats (1800 ms); every waiting part’s face does the same.',
-                verdict: not(
-                    'the boldest use of your bar: the surface itself is the progress; but a wash behind a table or a menu entry competes with the words.',
-                ),
-            },
-            {
-                key: 'bulbs',
-                name: 'The marquee runs on the tube, in the ramp’s colours',
-                see: 'Your marquee on the horizon: a row of bulbs along the page tube, each in its place on the ramp, pink at the start, laser yellow at the end; one in four lit, the light chasing a bulb per beat, 900 ms; parts carry the row on their top edge.',
-                verdict: not(
-                    'the decided picture with the bar’s colours and the page’s line, the safe one; it is not new, which is what you said is missing.',
-                ),
-            },
-            {
-                key: 'rows',
-                name: 'The rows of the floor light up toward you',
-                see: 'The tube stands lit; the grid floor’s four rows light one after another from the horizon toward you, a hard step each, then all go out, 4 beats (900 ms): the marquee, drawn in the floor; parts light the rows of their own floor band.',
-                verdict: not(
-                    'hard beats in the theme’s own ground, and it is the marquee’s step on the road; but the reset is a hard cut, and a lit row far from the part it belongs to can look like the page’s decoration.',
+                    'the bar’s road and the bar’s ramp in one: the share is the road travelled and the head is the car; but the dashes behind the head are the busy bar’s picture and the ramp only lives in the tail, so it asks the reader to know both.',
                 ),
             },
         ],
@@ -668,206 +401,72 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does a part leave the page, and how does it arrive?',
-        why: 'The anchor first: the horizon is where things come and go, and every part carries 1 px of it. You like “the sun swallows it” but it does not feel right yet, so it is back, five times, as the synthwave sun and not as an eclipse: the striped sun (laser yellow to pink, its stripes widening toward the foot, every cut horizontal) goes down behind the part’s foot, which is the page’s floor line, on the sunrise curve or on the beat. Round 1’s was a growing disc, cyan, pink and violet, with stripes all one width, that ended as a striped rectangle and read as solstice’s moon; none of these draws a circle. The other five are the best of round 3 that are not the sun’s shape. The piece of the page tube over the part answers while it goes. Arrival is the leave backwards.',
+        why: 'You like “the sun sets through it” and “the sun’s slab” and want three variations on each. Options 1 to 4 are the first family: the sun’s striped slab (laser yellow at the top, pink at the foot, its stripes widening toward the foot, every cut horizontal) passes down through the part and takes it with it: the original, then the same with a laser rim on its lower edge, with its stripes widening as it sets, and with the part sinking with it. Options 5 to 8 are the second family: the slab covers the part and takes it: the original, then with the horizon line leading, with a beat of standing still, and with the slab thinning into its stripes. Every leave is 4 beats (900 ms) and every arrival is the leave backwards, measured frame by frame. None draws a circle (solstice’s moon is an eclipse). The piece of the page tube over the part answers while the part goes.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
                 key: 'sets',
                 name: 'The sun sets through it',
-                see: 'The striped sun, laser yellow at the top and pink at the foot, its stripes widening toward the foot, comes down over the part from its top edge: the part is gone above the sun’s lower edge, so you see the cut travel down. The sun carries on below the part’s foot, behind its 1 px of horizon, and is gone. One move, 4 beats (900 ms), on the sunrise curve; the piece of the page tube over the part lights while the sun passes.',
+                see: 'The striped sun, laser yellow at the top and pink at the foot, its stripes widening toward the foot, comes down over the part from its top edge: the part is gone above the sun’s lower edge, so you see the cut travel down. The sun carries on below the part’s foot, behind its 1 px of horizon, and is gone. One move, 4 beats (900 ms), on the sunrise curve.',
                 verdict: rec(
-                    'it is the swallow you liked in the one picture the horizon allows: the sun goes down behind the line and takes the part with it, every cut horizontal, no disc. Arriving it is the sun rising out of the foot line with the part appearing behind its lower edge. Overlap: solstice’s leave is an eclipse, a dark moon crossing start to end with a corona; this sun goes down, wears stripes and has no round edge. It is also the nearest of the ten to the round-1 swallow, minus the disc.',
+                    'it is the swallow you liked in the one picture the horizon allows: the sun goes down behind the line and takes the part with it, every cut horizontal, no disc. Overlap: solstice’s leave is an eclipse, a dark moon crossing start to end with a corona; this sun goes down, wears stripes and has no round edge.',
                 ),
             },
             {
-                key: 'scan',
-                name: 'The sun rises behind it and cuts it into scanlines',
-                see: 'The sun’s slab rises behind the part from its foot while four slits open in the part itself, the lowest the widest, so you see the part cut into scanlines with the sun burning through the cuts; the slits close the part away completely, and the sun sets behind the foot. 4 beats (900 ms), sunrise curve.',
+                key: 'setsrim',
+                name: 'The sun sets through it, a laser rim on its lower edge',
+                see: 'The same move, 900 ms, but the sun’s lower edge is a 2 px near-white laser line with a pink bloom: you see the line travel down the part and the part gone above it, and the line leave under the foot.',
                 verdict: not(
-                    'it is the sun’s own stripes turned on the part (the scanline-cut, the way the sun is drawn), with the sun behind it as the real sunset has it, not over it. But a slit mask on a 2 rem alert is only a few pixels, and for the first half the sun is half hidden by the part. Overlap: none of the other themes cut a part into scanlines; nostromo’s collapse and cyberpunk’s slice are vertical or diagonal.',
+                    'the cut becomes a drawn line, the way a sun sinks behind a bright horizon, and the edge is easier to follow on a small alert; but a laser line passing down a part is a scan (cyberpunk’s slice, terminal’s sweep), and the rim is the first thing the eye sees instead of the sun.',
                 ),
             },
             {
-                key: 'beats',
-                name: 'The sun steps down through it, one beat a step',
-                see: 'Nothing for the first beat. Then a window of the sun (a third of the part’s height, its stripes widening toward the foot) lights on the part’s top third at 225 ms and steps down a third at 450 and 675 ms, the part gone behind it as it passes; at 900 ms the window is gone and so is the part.',
+                key: 'setswiden',
+                name: 'The sun sets through it, its stripes widening',
+                see: 'The same move, 900 ms, but the sun’s own cuts widen while it sets: at the top its stripes are thin, at the foot they are thick, as the sun is drawn when it touches the horizon, so the slab goes down and thins itself at once.',
                 verdict: not(
-                    'it is the sun going down on the beat, the marquee’s step on the sunset: nothing glides, the stripes change on each step. But hard steps are the terminal’s, cyberpunk’s and nostromo’s rhythm, and a part cut in steps can look like a loading bar. Overlap: those three themes’ stepped motion.',
+                    'it is the detail of the real picture: a synthwave sun’s gaps grow as it sinks; it is the most faithful to the sun and costs nothing. But on a 2 rem alert the widening is a few pixels, and on a tile it is subtle.',
                 ),
             },
             {
-                key: 'cascade',
-                name: 'The sun’s stripes take it, band by band',
-                see: 'Five bands of the sun (thin at the top, thick toward the foot, a hairline between them) close over the part one after the other from its top edge down, each 45 ms after the one above; the part is cut away behind them as they pass, and the bands then drain toward the foot in the same order. 4 beats (900 ms), sunrise curve.',
+                key: 'setssink',
+                name: 'The sun takes it down with it',
+                see: 'The same move, 900 ms, but the part is not only cut from the top: it also sinks 35 % of its height as the sun passes, so the part goes down behind its own foot with the sun, not only under the sun’s edge.',
                 verdict: not(
-                    'it is the sun drawn in its own stripes and it swallows from the top edge down, as you described it, with the hand of the tube above it. But five bars on a 2 rem alert are busy, and it is the round-3 bands turned upside down. Overlap: grotesk’s and cyberpunk’s bands wipe; here the bands are the sun’s ramp and widen toward the foot.',
-                ),
-            },
-            {
-                key: 'dye',
-                name: 'The sunset pours over it, then it sets',
-                see: 'The part is washed with the sunset gradient (laser yellow top, pink foot, with the stripes), its own colours dyed, then it sinks behind its foot cut by the sun’s stripes, 4 beats (900 ms).',
-                verdict: not(
-                    'the sun’s light swallows it without a shape over it; but a dye on text lowers contrast for a moment, and it is round 1’s sunset plus colour. Overlap: the ground’s own sunset leave, which Kenny decided on 2026-10-04.',
+                    'the sun pulls the part down, the ground’s own sunset (the part sets behind its foot) and the sun in one move, the most physical; but a part that moves and is cut at once is busier, and the sinking text is cut off at a slant of the eye.',
                 ),
             },
             {
                 key: 'slab',
                 name: 'The sun’s slab rises through it and sets with it',
-                see: 'A slab in the sun’s own colours (laser yellow at the top, pink at the foot, stripes widening toward the horizon) rises from the part’s foot over it, covering it, then sinks behind the foot taking it; the piece of tube above the part lights while the sun passes. 4 beats (900 ms).',
+                see: 'A slab in the sun’s own colours (laser yellow at the top, pink at the foot, stripes widening toward the horizon) rises from the part’s foot over it, covering it, then sinks behind the foot taking it. 4 beats (900 ms).',
                 verdict: not(
                     'it keeps your idea in the sun’s real colours and stripes, rises and sets on one horizon and has no circle; but it is a slab, a sun without its shape, and the part is switched off under it in one step.',
                 ),
             },
             {
-                key: 'ramp',
-                name: 'The progress bar’s ramp wipes it out',
-                see: 'The bar’s fill, the sun’s ramp cut by stripes, runs over the part start to end with the glowing head in front, covering it; then the filled bar sinks behind the foot, 4 beats (900 ms).',
+                key: 'slabrim',
+                name: 'The slab rises with the horizon line on its edge',
+                see: 'The same slab, 900 ms, but a 2 px near-white line with a pink bloom rides its top edge: it leads the slab up over the part and then goes down with it behind the foot.',
                 verdict: not(
-                    'it is the progress bar you like as a leave; but it travels sideways, the horizon is only the last step, and a part “completes” as it goes.',
+                    'the horizon line is the anchor, so the slab rises with the page’s own line on it and the part is taken by the horizon; but it is close to “the floor takes it” of the last round, and the line makes the slab read as a wipe.',
                 ),
             },
             {
-                key: 'floor',
-                name: 'The floor takes it from its foot up',
-                see: 'A near-white horizon line rises through the part from its foot to its top; below the line the part has turned into the grid floor, above it the part still stands; the floor sinks away, 4 beats (900 ms).',
+                key: 'slabhold',
+                name: 'The slab covers it, stands a beat, then sets',
+                see: 'The slab rises over the part in one beat (225 ms), stands full for one beat while its stripes widen, and sets behind the foot in two beats (450 ms): 1 – 1 – 2, 900 ms.',
                 verdict: not(
-                    'the horizon itself swallows it, and the part becomes the page it stood on; the most literal use of the anchor. But it is a bottom-up wipe with a bright line, which is close to a laser’s cut, and the grid on a 2 rem alert is a few pixels.',
+                    'the standing beat gives the sun its moment: for a beat the part is a sunset slab, and the rhythm is on the grid; but a pause in a leave makes the page slower to answer, and the quick cover is closer to a blink.',
                 ),
             },
             {
-                key: 'recede',
-                name: 'It recedes into the page horizon',
-                see: 'The part slides up toward the page tube, cut by the sun’s stripes whose gaps widen toward the tube, and is gone behind it; the piece of the tube over it blazes as it arrives there. Arriving, it comes out of the horizon and settles on the floor. 4 beats (900 ms).',
+                key: 'slabcut',
+                name: 'The slab thins into its stripes',
+                see: 'The slab rises over the part in 2 beats (360 ms); then its five stripes thin out one after another from the top, each toward its own foot, until only the part’s foot is left and that is gone, 540 ms more; 900 ms in all.',
                 verdict: not(
-                    'the horizon is where things come and go, and a part receding into it is the outrun picture (a road sign vanishing); but arriving it moves down from the line, which G2 forbids (nothing falls from above), and it travels the farthest of the ten.',
-                ),
-            },
-            {
-                key: 'drain',
-                name: 'The light drains out of it, then it sets',
-                see: 'No shape over the part: its colours drain to a dark grey first, then it sinks behind its foot cut by the sun’s stripes, 4 beats (900 ms); the piece of tube above it answers. Arriving, it rises dark and its light comes back.',
-                verdict: not(
-                    'the horizon takes the light and the part is left a shadow, the quietest of the ten; but a grey part for a moment is a disabled look, text contrast drops while it goes, and it is the ground’s own sunset with a filter.',
-                ),
-            },
-        ],
-    },
-    {
-        id: 'focus',
-        label: 'The focus ring',
-        rule: 'G14, DI2',
-        question: 'What does keyboard focus look like?',
-        why: 'The anchor first: focus is a hand on the part, so the piece of the page horizon lights over it exactly as wide as the part (as under the pointer), and the ring round the part keeps DI2’s two channels, a light line beside a dark one, so it reads on any ground and is never colour alone. Round 1’s three are dropped. Inside a framed control or an entry the ring is drawn inset, outside a plate or a day.',
-        kind: 'still',
-        scene: FOCUS,
-        options: [
-            {
-                key: 'twin',
-                name: 'Twin tubes with a dark gap',
-                see: 'A near-white tube, a dark gap and a pink tube round the part, like the double tube of a neon sign; the piece of the page tube over it is lit.',
-                verdict: rec(
-                    'three channels (core, dark, pink) so it reads on the pink face of a primary button and on the void; it is neon, and no other theme draws a double ring.',
-                ),
-            },
-            {
-                key: 'rails',
-                name: 'Two tubes, top and foot',
-                see: 'A near-white tube with a dark channel along the part’s top and along its foot, the sides a 2 px lavender hairline; the piece over the part is lit, so the part is framed between two lines of the horizon.',
-                verdict: not(
-                    'strictly horizontal, the world of the theme, and the part stands between two horizons; but the sides are the weak channel, and nostromo’s warning frame has the same two rails.',
-                ),
-            },
-            {
-                key: 'quiet',
-                name: 'The horizon shouts, the ring whispers',
-                see: 'The register’s own two-channel ring (lavender beside the void, inset 2 px) and a piece of tube over the part that is brighter and a little thicker than under the pointer.',
-                verdict: not(
-                    'the safest and the most anchor-led: the page tube says where the focus is; but a whisper ring is round 1’s ring with a brighter line, not new, and the piece is far from a part low on the page.',
-                ),
-            },
-            {
-                key: 'ramp',
-                name: 'The sun’s ramp as the ring',
-                see: 'A 3 px ring in the progress bar’s ramp, pink to laser yellow, with a dark ring against it, and the piece over the part in the ramp’s colours.',
-                verdict: not(
-                    'your bar as the focus; beautiful on dark, but a gradient ring reads weakly where the ground is pink (the primary button), and laser yellow beside a warning is a second meaning.',
-                ),
-            },
-            {
-                key: 'spill',
-                name: 'The light spills down from the piece',
-                see: 'The register’s two-channel hairline ring, and the part’s face lit by the horizon above it: a pink wash from its top edge fading to nothing by the middle; the piece over it is lit.',
-                verdict: not(
-                    'the most literal use of “each part carries its light”: the horizon lights the part; but a wash is a fill, and light’s and solstice’s hover are washes too; on a button it reads as a hover.',
-                ),
-            },
-            {
-                key: 'own',
-                name: 'The part stands on its own tube',
-                see: 'The two-channel ring and, under the part, a tube of the part’s width with a dark gap above it: the page tube repeated at the part’s foot; the piece over the part is lit.',
-                verdict: not(
-                    'two horizons, one above and one below, the part standing on the second; but the foot tube is the underline of a link and a hover’s line in other themes (grotesk, solstice), and it crowds the next row.',
-                ),
-            },
-        ],
-    },
-    {
-        id: 'press',
-        label: 'The press',
-        rule: 'G14',
-        question: 'What does a press look like?',
-        why: 'The anchor first: a press is a hand on the part, so the piece of the page horizon that is lit over a part under a hand is what the press acts on, as wide as the part. Round 1’s three (the tube dips, drops 1 px, the sun cut holds) are dropped. Each part is pressed every few seconds, held for a moment, and released as the press played backwards. Nothing moves the part’s words.',
-        kind: 'cycle',
-        scene: PRESS,
-        options: [
-            {
-                key: 'charge',
-                name: 'The piece charges',
-                see: 'The piece over the part overdrives: the core turns white, the bloom doubles and spreads down over the part, and the part’s own top edge burns near-white while it is held; the part does not move.',
-                verdict: rec(
-                    'a press lights the line that the hand is on, as wide as the part, and it is the opposite of round 1’s dip; a bloom on dark is easy to see here because the piece is already lit; light’s hover also brightens, but not along a horizon.',
-                ),
-            },
-            {
-                key: 'ramp',
-                name: 'The sun’s ramp fills the piece',
-                see: 'The progress bar’s ramp, cut by stripes, fills the piece over the part start to end in 1 beat (225 ms) with the glowing head in front, the part’s ground takes the pressed token; releasing, it empties the same way backwards.',
-                verdict: not(
-                    'your bar again, as the answer to a press: the line “charges”; it is loud on a wide tile, where the piece is far from the part and the fill is a long way off the finger.',
-                ),
-            },
-            {
-                key: 'pool',
-                name: 'The light gathers under the part',
-                see: 'The piece dims and a pool of pink light gathers along the part’s foot, as neon on wet asphalt; held, then released backwards.',
-                verdict: not(
-                    'a picture of the street at night and it is a light change, no motion; but it is close to dipping the tube, which you did not like.',
-                ),
-            },
-            {
-                key: 'gleam',
-                name: 'A gleam crosses the part',
-                see: 'A thin near-white line with a bloom runs over the part from its top to its foot in 1 beat (225 ms) and leaves it a little brighter while held; the piece stays lit.',
-                verdict: not(
-                    'the chrome of the title face; but a line crossing the label is what the sun cut does on hover, and it covers the words for a frame.',
-                ),
-            },
-            {
-                key: 'focus',
-                name: 'The piece draws in to its core',
-                see: 'The piece over the part contracts from the part’s width to its middle half, brighter and thicker, as a beam focusing, in 1 beat (225 ms); released, it spreads back.',
-                verdict: not(
-                    'a press is a hand on the line and the line concentrates; but a piece narrower than its part breaks the anchor’s rule that it is exactly as wide as the part, and it is the least visible on a small button.',
-                ),
-            },
-            {
-                key: 'play',
-                name: 'The VCR acknowledges: ▶ lights on the piece',
-                see: 'A cyan ▶ in the VCR’s display font lights under the start of the piece over the part for as long as it is held.',
-                verdict: not(
-                    'it uses the OSD voice for a confirmation and the glyph sits on the line; but a glyph is small, and a press should be felt at the part, not read.',
+                    'the sun is taken apart the way it is drawn, stripe by stripe, and nothing travels past the foot; but it is the venetian blind of the opening question, and the stagger of five stripes on a small alert is busy.',
                 ),
             },
         ],
@@ -875,80 +474,44 @@ const ASPECTS = [
 ];
 
 /**
- * What research/_review/measure-motion.mjs reads in Firefox (2026-10-07, 1600 px, each part's t50 / t90 in ms from the start of its
- * motion, the run in ms), added to what each option says. Every close is its arrival played backwards (the tool's "mirror").
- * Written from the tool's output of 2026-10-07 (loading loops are CSS loops, not measured by the tool: their periods are the CSS's).
+ * What research/_review/measure-motion.mjs reads in Firefox (1600 px, each part's t50 / t90 in ms from the start of its motion, the run in ms),
+ * added to what each option says. Every close is its arrival played backwards (the tool's "mirror"). Loading loops are CSS loops, not measured
+ * by the tool: their periods are the CSS's.
  * @type {Record<string, string>}
  */
 const MEASURED = {
-    'curve:lead':
-        'tube t50 440 / t90 640 over 910 ms; bars t50 680 / t90 870 over 1125 ms; tile t50 820 / t90 940 over 1125 ms; every close is its arrival backwards (mirror)',
-    'curve:strike':
-        'tube t50 50 / t90 50 over 230 ms; bars t50 680 / t90 870 over 1125 ms; tile t50 820 / t90 940 over 1125 ms; every close is its arrival backwards (mirror)',
-    'curve:beats':
-        'tube t50 450 / t90 900 over 900 ms; bars t50 450 / t90 900 over 900 ms; tile t50 740 / t90 900 over 900 ms; every close is its arrival backwards (mirror)',
-    'curve:passes':
-        'tube t50 440 / t90 640 over 900 ms; bars t50 450 / t90 640 over 900 ms; tile t50 750 / t90 810 over 900 ms; every close is its arrival backwards (mirror)',
-    'curve:release':
-        'tube t50 550 / t90 660 over 680 ms; bars t50 900 / t90 1000 over 1125 ms; tile t50 970 / t90 1040 over 1125 ms; every close is its arrival backwards (mirror), the head’s fade and the tile’s horizon now on gentle ramps',
-    'curve:even':
-        'tube t50 430 / t90 800 over 900 ms; bars t50 450 / t90 810 over 900 ms; tile t50 600 / t90 830 over 900 ms; every close is its arrival backwards (mirror)',
-    'opening:climb':
-        'menu t50 220 / t90 320 over 450 ms; dialog t50 220 / t90 320 over 450 ms; piece t50 340 / t90 390 over 450 ms; every close is its arrival backwards (mirror)',
-    'opening:blinds': 'piece t50 120 / t90 170 over 230 ms; every close is its arrival backwards (mirror)',
-    'opening:stand':
-        'menu t50 200 / t90 270 over 450 ms; dialog t50 200 / t90 270 over 450 ms; piece t50 120 / t90 170 over 230 ms; every close is its arrival backwards (mirror)',
-    'opening:lower':
-        'menu t50 220 / t90 320 over 450 ms; dialog t50 220 / t90 320 over 450 ms; piece t50 120 / t90 170 over 230 ms; every close is its arrival backwards (mirror)',
-    'opening:rise':
-        'menu t50 300 / t90 360 over 460 ms; dialog t50 300 / t90 360 over 460 ms; piece t50 120 / t90 170 over 230 ms; every close is its arrival backwards (mirror)',
-    'opening:strike':
-        'menu t50 340 / t90 340 over 340 ms; dialog t50 340 / t90 340 over 340 ms; piece t50 70 / t90 70 over 340 ms; every close is its arrival backwards (mirror)',
-    'tone:osd': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'tone:ring': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'tone:swell': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'tone:pips': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'tone:rails': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'tone:striped': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
     'leave:sets':
-        'sun t50 450 / t90 740 over 900 ms; part t50 230 / t90 320 (cut from the top, 60 to 450 ms); piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:scan':
-        'slits t50 320 / t90 450 over 630 ms; the sun rises and sets behind (a pulse, 900 ms); piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:beats':
-        'four hard steps at 225 / 450 / 675 / 900 ms (the sun’s window t50 450 / t90 900, the part t50 450 / t90 680); piece lit for 880 ms; every close is its arrival backwards (mirror), no FRONT flagged',
-    'leave:cascade':
-        'part t50 270 / t90 390 over 540 ms; five bands, each 720 ms and 45 ms after the one above (the first t50 360 / t90 590, the last t50 540 / t90 770); piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:dye':
-        'cover t50 210 / t90 290 over 400 ms, then the part t50 580 / t90 640; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+        'sun t50 450 / t90 740 (80 to 900 ms); part t50 230 / t90 320 on the close (60 to 450 ms); piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:setsrim':
+        'sun and rim t50 450 / t90 740 (80 to 900 ms); part t50 230 / t90 320 on the close; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:setswiden':
+        'sun t50 450 / t90 740; its stripes (mask-size) t50 460 / t90 650 over 130 to 900 ms; part t50 230 / t90 320 on the close; every close is its arrival backwards (mirror)',
+    'leave:setssink':
+        'sun t50 450 / t90 740; part (cut and sinking) t50 240 / t90 650 over 60 to 900 ms on the close; every close is its arrival backwards (mirror)',
     'leave:slab':
-        'cover t50 350 / t90 720 over 900 ms; part switched off at 410 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:ramp':
-        'cover t50 430 / t90 760 over 900 ms; part switched off at 500 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:floor':
-        'cover t50 350 / t90 720 over 900 ms; part switched off at 410 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:recede': 'part t50 450 / t90 650 over 900 ms; piece lit for 390 ms; every close is its arrival backwards (mirror)',
-    'leave:drain':
-        'part t50 210 / t90 290 over 400 ms after the cut (the sunset, t50 580 / t90 640); piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'press:charge':
-        'piece t50 120 / t90 170 over 225 ms; button t50 220 / t90 220 over 225 ms; day t50 220 / t90 220 over 225 ms; every close is its arrival backwards (mirror)',
-    'press:ramp':
-        'piece t50 120 / t90 160 over 225 ms; button t50 10 / t90 10 over 225 ms; day t50 120 / t90 170 over 225 ms; every close is its arrival backwards (mirror)',
-    'press:pool':
-        'piece t50 120 / t90 170 over 225 ms; button t50 10 / t90 10 over 225 ms; day t50 120 / t90 170 over 225 ms; every close is its arrival backwards (mirror)',
-    'press:gleam': 'button t50 10 / t90 10 over 225 ms; day t50 120 / t90 170 over 225 ms; every close is its arrival backwards (mirror)',
-    'press:focus':
-        'piece t50 120 / t90 150 over 225 ms; button t50 10 / t90 10 over 225 ms; day t50 120 / t90 170 over 225 ms; every close is its arrival backwards (mirror)',
-    'press:play': 'button t50 10 / t90 10 over 225 ms; day t50 120 / t90 170 over 225 ms; every close is its arrival backwards (mirror)',
-    'loading:charge': 'loop 1125 ms (5 beats), five hard steps of 225 ms; the page tube and every part carry it',
-    'loading:flow': 'loop 1800 ms (8 beats), constant pace',
-    'loading:road': 'loop 600 ms, constant pace (the bar’s own)',
-    'loading:drive': 'loop 900 ms (4 beats), the floor and every plate’s floor band run at a constant pace',
-    'loading:slice': 'loop 1800 ms (8 beats), constant pace',
-    'loading:lanes': 'loop 1200 ms, constant pace, pink one way and cyan back',
-    'loading:sun': 'loop 1350 ms (6 beats), one step per 225 ms',
-    'loading:surface': 'loop 1800 ms (8 beats): 900 ms to fill, 900 ms to empty, on the sunrise curve',
-    'loading:bulbs': 'loop 900 ms (4 beats), steps of 225 ms',
-    'loading:rows': 'loop 900 ms (4 beats), one row per 225 ms',
+        'slab t50 350 / t90 720 over 50 to 900 ms on the close; part switched off at 410 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:slabrim':
+        'slab t50 350 / t90 720 over 50 to 900 ms; the line t50 210 / t90 290 over 50 to 410 ms, then rides the slab; part switched off at 410 ms; every close is its arrival backwards (mirror)',
+    'leave:slabhold':
+        'slab t50 200 / t90 740 over 30 to 900 ms (cover 225, stand 225, set 450); its stripes t50 340 / t90 430 over 220 to 450 ms; part switched off at 230 ms; every close is its arrival backwards (mirror)',
+    'leave:slabcut':
+        'slab t50 180 / t90 260 over 50 to 360 ms; five stripes each 360 ms, 45 ms apart (the first t50 540 / t90 620, the last t50 720 / t90 800); part switched off at 360 ms; every close is its arrival backwards (mirror)',
+    'loading:flowdrive': 'loop: the ramp 1800 ms (8 beats), the floor 900 ms (4 beats), constant pace',
+    'loading:oncoming': 'loop: the ramp 1800 ms (8 beats) against the drive, the floor 900 ms (4 beats), constant pace',
+    'loading:floorfirst': 'loop: the floor 450 ms (2 beats), the ramp 3600 ms (16 beats), constant pace',
+    'loading:tinted': 'loop: the ramp 1800 ms (8 beats), the floor 900 ms (4 beats), constant pace',
+    'loading:bars': 'loop 4500 ms (20 beats): the tube 900 ms, the bars 900 ms one beat later, hold, then backwards, on the sunrise curve',
+    'loading:busy': 'loop 600 ms, constant pace (the package’s own)',
+    'loading:weights': 'loop 4500 ms (20 beats): fill 900 ms, hold, empty backwards, on the sunrise curve',
+    'loading:beats': 'loop 5400 ms (24 beats): eight steps of 225 ms up, hold, eight steps down',
+    'loading:tube': 'loop 4500 ms (20 beats): fill 900 ms, hold, empty backwards, on the sunrise curve',
+    'loading:road': 'loop 4500 ms (20 beats): fill 900 ms, hold, empty backwards, on the sunrise curve',
+    'corners:fall': 'still: sides 3 px, from the stripe’s end colour to half strength at the middle and nothing at the foot',
+    'corners:ramp': 'still: sides 3 px, pink to laser yellow (left), cyan to pink (right), out at the foot',
+    'corners:short': 'still: sides 3 px, 2.75 rem long, full for the first 30 %',
+    'corners:hair': 'still: sides 1 px, the whole height, 40 % at the foot',
+    'corners:floor': 'still: sides 3 px, out at 58 %, back for the last 1.35 rem',
+    'corners:fade': 'still: sides 3 px, near-white to pink, out at 95 %',
 };
 for (const a of ASPECTS)
     for (const o of a.options) {
@@ -979,7 +542,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', 'synthwave');
-lookLine.textContent = `${ASPECTS.length} questions, one rule of synthwave each, each option a real piece of page: the header’s foot with the page horizon on it, and the part in question at its real size. The first option of every question is the recommendation. The ten questions you approved on 07/10 and the anchor you decided at 21:21 (the page horizon) are the fixed ground of every scene. Pick the one that is synthwave to you, or “None of these” with a note.`;
+lookLine.textContent = `${ASPECTS.length} questions are open, one rule of synthwave each, each option a real piece of page: the header’s foot with the page horizon on it, and the part in question at its real size. The first option of every question is the recommendation. The fifteen questions you approved (ten on 07/10 at 20:41, five on 07/10 at 23:00) and the anchor you decided at 21:21 (the page horizon) are the fixed ground of every scene. Pick the one that is synthwave to you, or “None of these” with a note.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the rows */
@@ -1006,7 +569,7 @@ ASPECTS.forEach((a, n) => {
         col.innerHTML = `<p class="sy-label-row"><span class="sy-label-row__no">${at + 1}</span> <span class="sy-label-row__name"></span>${
             at === 0 ? ' <span class="sy-label-row__rec">Recommended</span>' : ''
         }</p><p class="sy-see"></p><p class="sy-verdict"></p>
-        <div class="sy-scene" data-sy-kind="${a.kind}" ${GROUND_ATTRS} data-sy-${a.id}="${o.key}" data-sy-phase="in">${a.scene()}</div>`;
+        <div class="sy-scene" data-sy-kind="${a.kind}" ${GROUND_ATTRS} data-sy-${a.id}="${o.key}" data-sy-phase="in">${a.scene(o.key)}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.sy-label-row__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.sy-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.sy-verdict'));

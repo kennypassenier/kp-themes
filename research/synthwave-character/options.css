@@ -831,13 +831,15 @@
     }
 
     /* ═══ 1 · The motion curve (G1): who goes first, and how a body travels ═══
+       Update 2: the curve is picked (the tube leads) and written on every scene, so the rules below
+       are scoped to the scene that holds the curve page (`.sy-pg--curve`); no other scene is moved by them.
        The page tube charges (a lit length with its glowing front), the three
        bars fill and the tile rises. Every option is a set of variables: the
        tube's curve, delay and duration (`--cv-run*`), the bodies' (`--cv-body*`)
        and the tile's own delay (`--cv-tile-*`). Every part that arrives ends
        when its own cell ends, so every close is its arrival backwards. */
 
-    .sy-scene[data-sy-curve] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve] {
         --cv-run: var(--sy-sun);
         --cv-run-d: 0ms;
         --cv-run-t: 900ms;
@@ -849,25 +851,25 @@
         --sy-curve: var(--cv-body);
     }
 
-    .sy-scene[data-sy-curve='strike'] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='strike'] {
         --cv-run: steps(1, end);
         --cv-run-t: 225ms;
     }
 
-    .sy-scene[data-sy-curve='beats'] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='beats'] {
         --cv-run: steps(4, jump-end);
         --cv-body: steps(4, jump-end);
         --cv-body-d: 0ms;
         --cv-tile-d: 0ms;
     }
 
-    .sy-scene[data-sy-curve='passes'] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='passes'] {
         --cv-body-d: 0ms;
         --cv-tile-d: 450ms;
         --cv-tile-t: 450ms;
     }
 
-    .sy-scene[data-sy-curve='release'] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='release'] {
         --cv-run: cubic-bezier(0.55, 0, 0.9, 0.4);
         --cv-run-t: 675ms;
         --cv-body-d: 675ms;
@@ -876,94 +878,94 @@
         --cv-tile-t: 450ms;
     }
 
-    .sy-scene[data-sy-curve='even'] {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='even'] {
         --cv-run: linear;
         --cv-body: linear;
         --cv-body-d: 0ms;
         --cv-tile-d: 0ms;
     }
 
-    .sy-scene[data-sy-curve] .kp-progressbar__fill,
-    .sy-scene[data-sy-curve] .kp-progressbar__head {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve] .kp-progressbar__fill,
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve] .kp-progressbar__head {
         transition: none;
     }
 
-    .sy-scene[data-sy-curve] .sy-hz__head {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve] .sy-hz__head {
         display: block;
     }
 
-    .sy-scene[data-sy-curve='strike'] .sy-hz__head {
+    .sy-scene:has(> .sy-pg--curve)[data-sy-curve='strike'] .sy-hz__head {
         display: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         /* Away during `gap`. */
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] :is(.sy-hz__tube, .sy-hz__head) {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve][data-sy-phase='gap'] :is(.sy-hz__tube, .sy-hz__head) {
             visibility: hidden;
         }
 
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar-row .sy-cap {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve][data-sy-phase='gap'] .sy-pbar-row .sy-cap {
             visibility: hidden;
         }
 
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__fill {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__fill {
             clip-path: inset(0 100% 0 0);
         }
 
-        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__head {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__head {
             transform: translateX(0);
         }
 
         /* The page tube charges: a lit length, start to end, its glowing front ahead of it. */
-        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
             animation: sy-reveal-x calc(var(--cv-run-t) * var(--sy-slow, 1)) var(--cv-run) calc(var(--cv-run-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__tube {
             animation: sy-strike calc(var(--cv-run-t) * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-curve='strike']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__head {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-curve='strike']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-hz__head {
             animation:
                 sy-head-run calc(var(--cv-run-t) * var(--sy-slow, 1)) var(--cv-run) calc(var(--cv-run-d) * var(--sy-slow, 1)) both,
                 sy-head-out calc(var(--cv-run-t) * var(--sy-slow, 1)) linear calc(var(--cv-run-d) * var(--sy-slow, 1)) both;
         }
 
         /* The bars fill to their mark; their reading comes with them. */
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__fill {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__fill {
             animation: sy-fill-72 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__fill {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__fill {
             animation: sy-fill-48 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__fill {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__fill {
             animation: sy-fill-88 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__head {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__head {
             animation: sy-head-72 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__head {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__head {
             animation: sy-head-48 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__head {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__head {
             animation: sy-head-88 calc(var(--cv-body-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-body-d) * var(--sy-slow, 1)) both;
         }
 
         /* The tile rises over its horizon (the ground), on the option's curve and from the option's moment. */
-        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
             animation: sy-rise-body calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-horizon {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-horizon {
             animation: sy-horizon-in calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
         }
 
-        .sy-scene[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-cuts {
+        .sy-scene:has(> .sy-pg--curve)[data-sy-curve]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-cuts {
             animation: sy-cuts-close calc(var(--cv-tile-t) * var(--sy-slow, 1)) var(--cv-body) calc(var(--cv-tile-d) * var(--sy-slow, 1)) both;
         }
     }
@@ -1261,6 +1263,140 @@
             0 0 14px hsl(from var(--accent) h s l / 0.45);
     }
 
+    /* Update 2, round 4 (Kenny, 23:00): option 3 ("the light runs down the sides and fades"), with the colours of
+       the sides starting with the colours they touch in the stripe along the top. The stripe is the register's
+       `--kp-stripe`: the primary (pink) at its left end to the accent (cyan) at its right end. So a plate's left
+       side starts at --primary and its right side at --accent, exactly the stripe's end colours, and runs down
+       from there. The hairline round the plate is set aside (the light is the frame); `.sy-corners::before` is the
+       left side and `::after` the right side, each lit by its own drop-shadow so the bloom follows the fade.
+       The sides are static, so nothing flickers. */
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        :is(.sy-plate, .sy-panel) {
+        border-inline-color: transparent;
+        border-block-end-color: transparent;
+    }
+
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        :is(.sy-plate, .sy-panel)
+        > .sy-corners {
+        --sy-cl: var(--primary);
+        --sy-cr: var(--accent);
+        --sy-side: 3px;
+        --sy-bloom: 4px;
+        display: block;
+    }
+
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        .sy-corners::before,
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        .sy-corners::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inline-size: var(--sy-side);
+    }
+
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        .sy-corners::before {
+        inset-inline-start: 0;
+        background: var(--sy-gl);
+        filter: drop-shadow(0 0 var(--sy-bloom) hsl(from var(--sy-cl) h s l / 0.75));
+    }
+
+    .sy-scene[data-sy-corners]:is(
+            [data-sy-corners='fall'],
+            [data-sy-corners='ramp'],
+            [data-sy-corners='short'],
+            [data-sy-corners='hair'],
+            [data-sy-corners='floor']
+        )
+        .sy-corners::after {
+        inset-inline-end: 0;
+        background: var(--sy-gr);
+        filter: drop-shadow(0 0 var(--sy-bloom) hsl(from var(--sy-cr) h s l / 0.75));
+    }
+
+    /* 1 · Pink down the left, cyan down the right, fading out before the foot. */
+    .sy-scene[data-sy-corners='fall'] .sy-corners {
+        --sy-gl: linear-gradient(to bottom, var(--sy-cl), hsl(from var(--sy-cl) h s l / 0.55) 50%, transparent 100%);
+        --sy-gr: linear-gradient(to bottom, var(--sy-cr), hsl(from var(--sy-cr) h s l / 0.55) 50%, transparent 100%);
+    }
+
+    /* 2 · On through the ramp: pink to laser yellow on the left, cyan to pink on the right. */
+    .sy-scene[data-sy-corners='ramp'] .sy-corners {
+        --sy-gl: linear-gradient(to bottom, var(--sy-cl), var(--kp-sun-top) 55%, transparent 100%);
+        --sy-gr: linear-gradient(to bottom, var(--sy-cr), var(--primary) 55%, transparent 100%);
+    }
+
+    /* 3 · A short drop of fixed length: 2.75 rem, a 3 px tube, whatever the plate's height. */
+    .sy-scene[data-sy-corners='short'] .sy-corners {
+        --sy-gl: linear-gradient(to bottom, var(--sy-cl) 30%, transparent);
+        --sy-gr: linear-gradient(to bottom, var(--sy-cr) 30%, transparent);
+    }
+
+    .sy-scene[data-sy-corners='short'] .sy-corners::before,
+    .sy-scene[data-sy-corners='short'] .sy-corners::after {
+        inset-block-end: auto;
+        block-size: 2.75rem;
+    }
+
+    /* 4 · A hairline: 1 px, the whole height, a quarter of its strength at the foot. */
+    .sy-scene[data-sy-corners='hair'] .sy-corners {
+        --sy-side: 1px;
+        --sy-bloom: 3px;
+        --sy-gl: linear-gradient(to bottom, var(--sy-cl), hsl(from var(--sy-cl) h s l / 0.4));
+        --sy-gr: linear-gradient(to bottom, var(--sy-cr), hsl(from var(--sy-cr) h s l / 0.4));
+    }
+
+    /* 5 · The sides sink into the floor: they fall and fade out by the middle, and come back as two lines of
+       the grid over the last 1.35 rem, where the plate's floor is. */
+    .sy-scene[data-sy-corners='floor'] .sy-corners {
+        --sy-gl: linear-gradient(
+            to bottom,
+            var(--sy-cl),
+            transparent 58%,
+            transparent calc(100% - var(--sy-floor, 1.35rem)),
+            hsl(from var(--sy-cl) h s l / 0.85) calc(100% - var(--sy-floor, 1.35rem))
+        );
+        --sy-gr: linear-gradient(
+            to bottom,
+            var(--sy-cr),
+            transparent 58%,
+            transparent calc(100% - var(--sy-floor, 1.35rem)),
+            hsl(from var(--sy-cr) h s l / 0.85) calc(100% - var(--sy-floor, 1.35rem))
+        );
+    }
+
     /* ═══ 4 · A warning (G13): the page tube changes tone at the warned part's width ═══ */
 
     .sy-scene [data-sy-kind='warn'] {
@@ -1516,7 +1652,7 @@
     }
 
     /* The tube waits unlit, as the bar's empty track, except where the floor is what moves. */
-    .sy-scene[data-sy-loading]:not([data-sy-loading='drive'], [data-sy-loading='rows']) .sy-hz__tube {
+    .sy-scene[data-sy-loading]:not([data-sy-loading='drive'], [data-sy-loading='rows'], [data-sy-loading='busy']) .sy-hz__tube {
         background: hsl(from var(--primary) h s l / 0.3);
         box-shadow: none;
     }
@@ -1841,6 +1977,242 @@
 
         .sy-scene[data-sy-loading='rows'] .sy-b::before {
             animation: sy-rows calc(900ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+    }
+
+    /* ═══ Update 2, round 4: loading, mixes and progress bars ═══════════════
+       Kenny, 23:00: "a mix of option 2 and 4" (the ramp flows through the tube, the floor drives toward you)
+       and "more progressbar options", one of them the bars of step 1 (the curve question's three bars). The
+       mixes run both at once; `--ld-flow` and `--ld-drive` are the periods (whole beats), `--ld-dir` the ramp's
+       direction. The progress-bar options loop a determinate bar: it fills, holds and empties backwards (no hard
+       cut), the page tube showing the same lit length; `--kp-value` of each bar is the mark it fills to. */
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted']) {
+        --ld-flow: 1800ms;
+        --ld-drive: 900ms;
+        --ld-dir: normal;
+        --ld-ramp-o: 1;
+        --ld-floor-b: 1;
+    }
+
+    .sy-scene[data-sy-loading='oncoming'] {
+        --ld-dir: reverse;
+    }
+
+    .sy-scene[data-sy-loading='floorfirst'] {
+        --ld-flow: 3600ms;
+        --ld-drive: 450ms;
+        --ld-ramp-o: 0.55;
+        --ld-floor-b: 1.7;
+    }
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        :is(.sy-hz__fx, .sy-load > .sy-g) {
+        display: block;
+    }
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        .sy-hz__fx::before,
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        .sy-g::before {
+        inset: 0;
+        background: var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        opacity: var(--ld-ramp-o);
+    }
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        .sy-load
+        > .sy-b {
+        display: none;
+    }
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        .sy-hz__far {
+        opacity: 0.8;
+    }
+
+    .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+        .sy-hz__floor::before {
+        filter: brightness(var(--ld-floor-b));
+    }
+
+    /* 4 · The floor wears the ramp: the grid's lines take the ramp's colours across the page (the plane is 220 % of the page wide, the page its middle 45 %). */
+    .sy-scene[data-sy-loading='tinted'] .sy-hz__floor::before {
+        background-image: linear-gradient(90deg, var(--kp-sun-bottom) 27%, var(--primary) 50%, var(--kp-sun-top) 73%);
+        background-size: auto;
+        mask-image: linear-gradient(#000 0 1px, transparent 1px), linear-gradient(90deg, #000 0 1px, transparent 1px);
+        mask-size: 3.6cqi 3.6cqi;
+        opacity: 0.7;
+    }
+
+    /* The bars: a determinate bar that fills, holds and empties backwards; the page tube shows the same lit length. */
+    .sy-scene:is(
+        [data-sy-loading='bars'],
+        [data-sy-loading='weights'],
+        [data-sy-loading='beats'],
+        [data-sy-loading='tube'],
+        [data-sy-loading='road']
+    ) {
+        --bl-t: 4500ms;
+    }
+
+    .sy-scene[data-sy-loading='beats'] {
+        --bl-t: 5400ms;
+    }
+
+    .sy-scene:is([data-sy-loading='bars'], [data-sy-loading='weights'], [data-sy-loading='beats'], [data-sy-loading='tube'], [data-sy-loading='road'])
+        .kp-progressbar__fill,
+    .sy-scene:is([data-sy-loading='bars'], [data-sy-loading='weights'], [data-sy-loading='beats'], [data-sy-loading='tube'], [data-sy-loading='road'])
+        .kp-progressbar__head {
+        transition: none;
+    }
+
+    .sy-scene:is([data-sy-loading='bars'], [data-sy-loading='weights'], [data-sy-loading='beats'], [data-sy-loading='tube'], [data-sy-loading='road'])
+        .sy-hz__fx {
+        display: block;
+    }
+
+    .sy-scene:is([data-sy-loading='bars'], [data-sy-loading='weights'], [data-sy-loading='beats'], [data-sy-loading='tube'], [data-sy-loading='road'])
+        .sy-hz__fx::before {
+        inset: 0;
+        background: var(--sy-ramp);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.8));
+    }
+
+    .sy-scene:is([data-sy-loading='bars'], [data-sy-loading='weights'], [data-sy-loading='beats'], [data-sy-loading='tube'], [data-sy-loading='road'])
+        .sy-hz__fx::after {
+        inset-block: -1px;
+        inset-inline-start: -2px;
+        inline-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+        opacity: 0;
+    }
+
+    /* 8 · The slats count the beats: the fill is cut into eight slats of 12 %, 2 px apart. */
+    .sy-scene[data-sy-loading='beats'] .kp-progressbar__fill {
+        -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 calc(12% - 2px), transparent calc(12% - 2px) 12%);
+        mask-image: repeating-linear-gradient(90deg, #000 0 calc(12% - 2px), transparent calc(12% - 2px) 12%);
+    }
+
+    /* 9 · The bar is the page tube pulled down: 3 px, a dim track, the ramp as its lit length, no stripes, no frame. */
+    .sy-scene[data-sy-loading='tube'] .sy-pbar {
+        --kp-progressbar-height: 3px;
+    }
+
+    .sy-scene[data-sy-loading='tube'] .kp-progressbar__track {
+        border-radius: 0;
+        background: hsl(from var(--primary) h s l / 0.3);
+    }
+
+    .sy-scene[data-sy-loading='tube'] .kp-progressbar__track::before,
+    .sy-scene[data-sy-loading='tube'] .kp-progressbar__track::after {
+        display: none;
+    }
+
+    .sy-scene[data-sy-loading='tube'] .kp-progressbar__fill {
+        background: var(--sy-ramp);
+    }
+
+    .sy-scene[data-sy-loading='tube'] .kp-progressbar__head {
+        inset-inline-start: -1px;
+        inline-size: 3px;
+    }
+
+    /* 10 · The head leaves the road behind it: lane dashes where it has been, a ramp tail in front of them. */
+    .sy-scene[data-sy-loading='road'] .kp-progressbar__fill {
+        background: linear-gradient(90deg, var(--kp-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 3px repeat-x;
+        filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
+    }
+
+    .sy-scene[data-sy-loading='road'] .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 2px;
+        inline-size: 3.5rem;
+        background: linear-gradient(90deg, transparent, var(--primary) 60%, var(--kp-sun-top));
+        opacity: 0.9;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+            :is(.sy-hz__fx, .sy-g)::before {
+            animation: sy-flow calc(var(--ld-flow) * var(--sy-slow, 1)) linear infinite var(--ld-dir);
+        }
+
+        .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+            .sy-hz__floor::before {
+            animation: sy-floor-run calc(var(--ld-drive) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene:is([data-sy-loading='flowdrive'], [data-sy-loading='oncoming'], [data-sy-loading='floorfirst'], [data-sy-loading='tinted'])
+            .sy-waits
+            > .sy-floor {
+            animation: sy-floor-drive calc(var(--ld-drive) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene:is(
+                [data-sy-loading='bars'],
+                [data-sy-loading='weights'],
+                [data-sy-loading='beats'],
+                [data-sy-loading='tube'],
+                [data-sy-loading='road']
+            ):not([data-sy-loading='beats'])
+            .sy-pbar
+            .kp-progressbar__fill {
+            animation: sy-bl-fill calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene:is(
+                [data-sy-loading='bars'],
+                [data-sy-loading='weights'],
+                [data-sy-loading='beats'],
+                [data-sy-loading='tube'],
+                [data-sy-loading='road']
+            ):not([data-sy-loading='beats'])
+            .sy-pbar
+            .kp-progressbar__head {
+            animation: sy-bl-head calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene:is(
+                [data-sy-loading='bars'],
+                [data-sy-loading='weights'],
+                [data-sy-loading='beats'],
+                [data-sy-loading='tube'],
+                [data-sy-loading='road']
+            ):not([data-sy-loading='beats'])
+            .sy-hz__fx::before {
+            animation: sy-bl-tube calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene:is(
+                [data-sy-loading='bars'],
+                [data-sy-loading='weights'],
+                [data-sy-loading='beats'],
+                [data-sy-loading='tube'],
+                [data-sy-loading='road']
+            ):not([data-sy-loading='beats'])
+            .sy-hz__fx::after {
+            animation: sy-bl-tube-head calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='beats'] .sy-pbar .kp-progressbar__fill {
+            animation: sy-bl-fill-b calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='beats'] .sy-pbar .kp-progressbar__head {
+            animation: sy-bl-head-b calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='beats'] .sy-hz__fx::before {
+            animation: sy-bl-tube-b calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='beats'] .sy-hz__fx::after {
+            animation: sy-bl-tube-head-b calc(var(--bl-t) * var(--sy-slow, 1)) linear infinite;
         }
     }
 
@@ -2229,6 +2601,195 @@
 
         .sy-scene[data-sy-leave='drain']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
             animation: sy-light-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+    }
+
+    /* ── Update 2, round 4: three variations on "the sun sets through it" and three on "the sun's slab" ──
+       The sun is drawn as a slab (`i:nth-child(1)`, the sun's ramp cut by its stripes) inside the moving
+       container, so a rim or a line (`i:nth-child(2)`) can ride its edge without the stripes' mask cutting it.
+       Authoring as the existing options: the sets family is the leave itself and the arrival plays it `reverse`;
+       the slab family is the arrival (rise, then wipe) and closeByReverse plays it backwards. Transforms,
+       clip-path and mask-size only. */
+
+    .sy-scene:is([data-sy-leave='setsrim'], [data-sy-leave='setswiden'], [data-sy-leave='setssink']) .sy-sun-over {
+        display: block;
+        translate: 0 101%;
+    }
+
+    .sy-scene:is(
+            [data-sy-leave='setsrim'],
+            [data-sy-leave='setswiden'],
+            [data-sy-leave='setssink'],
+            [data-sy-leave='slabrim'],
+            [data-sy-leave='slabhold']
+        )
+        .sy-sun-over
+        > i:nth-child(1) {
+        display: block;
+        position: absolute;
+        inset: 0;
+        background: var(--sy-sun-v);
+        mask-image: var(--kp-sig-sw-cuts);
+        mask-repeat: no-repeat;
+        mask-position: 0 100%;
+        mask-size: 100% 100%;
+    }
+
+    /* A laser rim on the sun's lower edge (2 px near-white, a pink bloom). */
+    .sy-scene[data-sy-leave='setsrim'] .sy-sun-over > i:nth-child(2) {
+        display: block;
+        position: absolute;
+        inset: auto 0 0;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+    }
+
+    .sy-scene:is([data-sy-leave='slabrim'], [data-sy-leave='slabhold']) .sy-sun-over {
+        display: block;
+        translate: 0 101%;
+    }
+
+    /* The horizon line riding the slab's top edge: a layer as tall as the part with the line on its top. */
+    .sy-scene[data-sy-leave='slabrim'] .sy-sun-over > i:nth-child(2) {
+        display: block;
+        position: absolute;
+        inset: 0;
+    }
+
+    .sy-scene[data-sy-leave='slabrim'] .sy-sun-over > i:nth-child(2)::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+    }
+
+    /* The slab thinning into its stripes: five bands in the sun's colours, thin at the top, thick toward the foot. */
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i {
+        display: block;
+        transform-origin: 50% 100%;
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(1) {
+        flex: 14 1 0;
+        background: var(--kp-sun-top);
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(2) {
+        flex: 17 1 0;
+        margin-block-start: 1px;
+        background: color-mix(in oklab, var(--kp-sun-top) 75%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(3) {
+        flex: 20 1 0;
+        margin-block-start: 2px;
+        background: color-mix(in oklab, var(--kp-sun-top) 50%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(4) {
+        flex: 23 1 0;
+        margin-block-start: 3px;
+        background: color-mix(in oklab, var(--kp-sun-top) 25%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(5) {
+        flex: 26 1 0;
+        margin-block-start: 4px;
+        background: var(--kp-sun-bottom);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* sets family: the sun and the part, as 1 · sets. */
+        .sy-scene:is([data-sy-leave='setsrim'], [data-sy-leave='setswiden'], [data-sy-leave='setssink']):is(
+                [data-sy-phase='in'],
+                [data-sy-phase='hold']
+            )
+            .sy-sun-over {
+            animation: sy-sets-sun var(--sy-d) var(--sy-sun) reverse both;
+        }
+
+        .sy-scene[data-sy-leave='setssink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-sets-sink var(--sy-d) var(--sy-sun) reverse both;
+        }
+
+        .sy-scene:is([data-sy-leave='setsrim'], [data-sy-leave='setswiden']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-sets-part var(--sy-d) var(--sy-sun) reverse both;
+        }
+
+        .sy-scene[data-sy-leave='setswiden']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i:nth-child(1) {
+            animation: sy-widen var(--sy-d) var(--sy-sun) reverse both;
+        }
+
+        /* slab rim: the slab rises (495 ms) and is wiped from the top (405 ms); the line rides its top edge and follows the wipe. */
+        .sy-scene[data-sy-leave='slabrim']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-slab-wipe calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='slabrim']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i:nth-child(2) {
+            animation: sy-line-wipe calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='slabrim']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* slab hold: 1 - 1 - 2 beats: covers in one, stands one (its stripes widen), sets in two. As an arrival: rise 450, stand 225, wipe 225. */
+        .sy-scene[data-sy-leave='slabhold']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-slab-wipe calc(225ms * var(--sy-slow, 1)) calc(675ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='slabhold']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i:nth-child(1) {
+            animation: sy-widen calc(225ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) linear reverse both;
+        }
+
+        .sy-scene[data-sy-leave='slabhold']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(225ms * var(--sy-slow, 1)) calc(675ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* slab cut: the slab is wiped from the top (360 ms after its stripes have grown back); each stripe grows from its foot 45 ms after the one above. */
+        .sy-scene[data-sy-leave='slabcut']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-slab-wipe calc(360ms * var(--sy-slow, 1)) calc(540ms * var(--sy-slow, 1)) var(--sy-sun) both;
+            translate: 0 0;
+        }
+
+        .sy-scene[data-sy-leave='slabcut']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
+            animation: sy-band-up calc(360ms * var(--sy-slow, 1)) calc((180ms - var(--sy-ci) * 45ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(1) {
+            --sy-ci: 0;
+        }
+
+        .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(2) {
+            --sy-ci: 1;
+        }
+
+        .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(3) {
+            --sy-ci: 2;
+        }
+
+        .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(4) {
+            --sy-ci: 3;
+        }
+
+        .sy-scene[data-sy-leave='slabcut'] .sy-sun-over > i:nth-child(5) {
+            --sy-ci: 4;
+        }
+
+        .sy-scene[data-sy-leave='slabcut']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(360ms * var(--sy-slow, 1)) calc(540ms * var(--sy-slow, 1)) steps(1, jump-start) both;
         }
     }
 
@@ -3293,6 +3854,257 @@
 
         to {
             inset-block-start: calc(100% - 2px);
+        }
+    }
+
+    /* Update 2: the looping determinate bars (fill 0 to the mark, hold, empty backwards; the tube leads by one beat). */
+    @keyframes sy-bl-fill {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        5% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        25% {
+            clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+            animation-timing-function: linear;
+        }
+
+        75% {
+            clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        95%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes sy-bl-head {
+        0% {
+            transform: translateX(0);
+        }
+
+        5% {
+            transform: translateX(0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        25% {
+            transform: translateX(calc(var(--kp-value) * 100cqi));
+            animation-timing-function: linear;
+        }
+
+        75% {
+            transform: translateX(calc(var(--kp-value) * 100cqi));
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        95%,
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes sy-bl-tube {
+        0% {
+            clip-path: inset(-12px 100% -12px 0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        20% {
+            clip-path: inset(-12px 0 -12px 0);
+            animation-timing-function: linear;
+        }
+
+        80% {
+            clip-path: inset(-12px 0 -12px 0);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        100% {
+            clip-path: inset(-12px 100% -12px 0);
+        }
+    }
+
+    @keyframes sy-bl-tube-head {
+        0% {
+            translate: 0 0;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        20% {
+            translate: calc(100cqi - 1px) 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        24% {
+            translate: calc(100cqi - 1px) 0;
+            opacity: 0;
+        }
+
+        76% {
+            translate: calc(100cqi - 1px) 0;
+            opacity: 0;
+        }
+
+        80% {
+            translate: calc(100cqi - 1px) 0;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        98% {
+            translate: 0 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The same on the beat: eight steps up, eight steps down, 5400 ms. */
+    @keyframes sy-bl-fill-b {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        33.33% {
+            clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+            animation-timing-function: linear;
+        }
+
+        66.67% {
+            clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes sy-bl-head-b {
+        0% {
+            transform: translateX(0);
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        33.33% {
+            transform: translateX(calc(var(--kp-value) * 100cqi));
+            animation-timing-function: linear;
+        }
+
+        66.67% {
+            transform: translateX(calc(var(--kp-value) * 100cqi));
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes sy-bl-tube-b {
+        0% {
+            clip-path: inset(-12px 100% -12px 0);
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        33.33% {
+            clip-path: inset(-12px 4% -12px 0);
+            animation-timing-function: linear;
+        }
+
+        66.67% {
+            clip-path: inset(-12px 4% -12px 0);
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        100% {
+            clip-path: inset(-12px 100% -12px 0);
+        }
+    }
+
+    @keyframes sy-bl-tube-head-b {
+        0% {
+            translate: 0 0;
+            opacity: 1;
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        33.33% {
+            translate: calc(96cqi - 1px) 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        66.67% {
+            translate: calc(96cqi - 1px) 0;
+            opacity: 1;
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    /* Update 2, leaving. */
+    @keyframes sy-sets-sink {
+        0% {
+            clip-path: inset(0 0 0 0);
+            translate: 0 0;
+        }
+
+        50% {
+            clip-path: inset(100% 0 0 0);
+            translate: 0 50%;
+        }
+
+        100% {
+            clip-path: inset(100% 0 0 0);
+            translate: 0 70%;
+        }
+    }
+
+    @keyframes sy-widen {
+        from {
+            mask-size: 100% 100%;
+        }
+
+        to {
+            mask-size: 100% 240%;
+        }
+    }
+
+    @keyframes sy-line-wipe {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 0 100%;
+        }
+    }
+
+    @keyframes sy-band-up {
+        from {
+            transform: scaleY(0);
+        }
+
+        to {
+            transform: scaleY(1);
         }
     }
 }
