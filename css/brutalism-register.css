@@ -2169,10 +2169,13 @@
         --kp-sig-br-well: 0.75rem;
     }
 
-    /* A button is one line high and its label fills it: its well hangs under
-       it, on its own footprint, so no word is covered. */
-    [data-theme='brutalism'] .kp-button[aria-busy='true'] {
-        --kp-sig-br-well: 0.75rem;
+    /* A button is one line high and its label fills it: its well is a strip
+       along the foot of its own box, inside the button's line, in the
+       padding under the capitals, so nothing hangs out of it, nothing
+       follows it differently and the button does not grow when it is busy;
+       the label stays uncovered. */
+    [data-theme='brutalism'] .kp-button.kp-button[aria-busy='true'][aria-busy='true'] {
+        --kp-sig-br-well: 0.5rem;
     }
 
     [data-theme='brutalism']
@@ -2191,11 +2194,6 @@
         border: 2px solid var(--border-strong);
         border-block-end: 0;
         pointer-events: none;
-    }
-
-    [data-theme='brutalism'] .kp-button[aria-busy='true'][aria-busy='true'][aria-busy='true'][aria-busy='true']::before {
-        inset: calc(100% + 0.5rem) 0 auto;
-        border-block-end: 2px solid var(--border-strong);
     }
 
     /* The two plates that carry a busy spinner are slabs [G7], with room at
@@ -2372,6 +2370,10 @@
     }
 
     [data-theme='brutalism'] .kp-dialog {
+        /* The drop starts 2.5 rem up-left of the footprint: on a narrow
+           screen the dialog leaves that much room on both sides, so no
+           frame of the drop is outside the window. */
+        max-inline-size: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2 * var(--kp-sig-br-h-slab))));
         /* js/motion.js measures the theme's time on an unopened probe and
            takes a close as two thirds of what it reads: the unopened dialog
            runs one and a half drops, the open one a drop, which is also its

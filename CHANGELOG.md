@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: brutalism at a phone width (390 px)**: the dialog stays inside the window on every
+  frame of its 2.5 rem drop (it leaves 2.5 rem of room on both sides at narrow widths:
+  `max-inline-size` `min(32rem, 100vw - 2 × --kp-sig-br-h-slab)`; the drop, its curve and its 1500 ms are
+  unchanged, 1280 px is unchanged), and a busy `.kp-button`'s lintel well is a 0.5 rem strip
+  along the foot of the button's own box, inside it, in place of one hanging under it (no
+  overlap with the next element, no layout shift, the label uncovered).
+
 - **Changed: synthwave's grammar, as Kenny decided it on research/synthwave-character
   and research/synthwave-anchor** [2026-10-07 21:21 to 23:54, themes/synthwave/CHARACTER.md
   §0]. Anchor: the page horizon. `.kp-page-header` draws one 3 px tube on its foot
