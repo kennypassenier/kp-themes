@@ -1,5 +1,7 @@
 # What makes blueprint blueprint
 
+**Decided (Kenny, 07/10/2026 23:41): sixteen of sixteen approved** over updates 1 and 2; the picks are in [decided.json](decided.json) and themes/blueprint/CHARACTER.md §0. Applied to `css/blueprint-register.css` and the character demos' blueprint picks.
+
 ## Round three / update 2 (2026-10-07 22:24 verdict, round marker `2026-10-07-r3`)
 
 **Kenny's verdict on update 1.** Approved and locked (no longer shown, in `update.json` `picks`): curve = the plotter's feed, colour = cyan

@@ -100,8 +100,6 @@ export const PAGES = [
             },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
-            // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
-            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             {
                 href: 'research/terminal-character/demo.html',
@@ -115,6 +113,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 23:41: Kenny approved the sixteen blueprint character picks (research/blueprint-character/decided.json).
+            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Decided 2026-10-07 23:18: Kenny approved solstice's grammar, every recommendation except the focus ring = a halo and the leave = the morning mist (research/solstice-character/decided.json); applied in css/solstice-register.css.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Decided 2026-10-07 21:23: Kenny picked out of register as grotesk's anchor element (research/grotesk-anchor/decided.json).

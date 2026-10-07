@@ -1,0 +1,24 @@
+{
+    "decided": "2026-10-07 23:41 Brussels, Kenny: 16 of 16 approved in the review dialog (research/blueprint-character/README.md), updates 1 and 2",
+    "attributes": "data-bw-<question>=\"<key>\" on the .bw-scene, research/blueprint-character/options.css",
+    "picks": {
+        "blueprint": {
+            "curve": "feed",
+            "arrival": "readout",
+            "opening": "trace",
+            "durations": "units",
+            "colour": "pen",
+            "surface": "axes",
+            "tone": "pointed",
+            "live": "read",
+            "loading": "outline",
+            "leave": "readout",
+            "composites": "own",
+            "hover": "read",
+            "focus": "ring",
+            "press": "below",
+            "voice": "lettering",
+            "motifs": "one"
+        }
+    }
+}
