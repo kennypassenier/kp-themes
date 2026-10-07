@@ -1,5 +1,7 @@
 # A meter of its own, per theme
 
+**Decided (Kenny, 2026-10-07 02:55): withdrawn, no longer relevant** ("doe de demos die nu nog openstaan weg, want die zijn niet meer relevant"); the per-theme character analysis replaces it, forest first.
+
 **Round 4 judged (2026-10-05 20:45).** Kenny approved all 22 themes. The seven reopened themes picked: dark 1/2/3/3/3 (arrival moved from 2 to 3), cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2, shade-dark 1/3/1/1/2, retro 1/2/1/2/2, grotesk 1/2/3/3/2 (shape 1 = the rule and its cursor). The fifteen others stand as in round three. The meter is decided in every theme; the seven move into the package next.
 
 **Round 3 judged (2026-10-05 20:03).** Kenny judged all 22 themes from To judge: 16 approved in full, 6 not approved with the ticked aspects kept. Picks (shape / while loading / how the share arrives / when the tone changes / the mark past the end):

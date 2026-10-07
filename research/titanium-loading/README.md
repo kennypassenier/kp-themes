@@ -1,5 +1,7 @@
 # Titanium loading: today and the anodising bath
 
+**Decided (Kenny, 2026-10-07 00:54): the anodising bath everywhere except the network graph; the spinner became the facing cut (01:33)** (applied in f637569f and 4d803304).
+
 **What.** One page, titanium only, with every loading element the package has, each as a pair: on the left **Today**, exactly as
 the package (and, where one is decided, the character demo in `research/character-*/decided.json`) draws it now; on the right
 **Anodising bath**, the same markup with the key figure's loading picture `r2-ti-load-1` applied to the element's own parts.

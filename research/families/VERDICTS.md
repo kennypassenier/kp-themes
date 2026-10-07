@@ -25,3 +25,7 @@ Picked per theme (family = component whose pick the whole theme speaks):
 | sepia         | Busy table            | Time chart       | Trend tile            | Menu button       | Meter            | Busy table       |
 
 Still open: blueprint, solstice, brutalism, deco, phantom, retro, grotesk, nostromo, titanium.
+
+Decided since:
+
+- cyberpunk · A live update = Count-down stutter (research/cyberpunk-live, 02:49)

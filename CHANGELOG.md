@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- **Changed: cyberpunk's live update is the count-down stutter** [Kenny on
+  research/cyberpunk-live, 2026-10-07 02:49]. `update()` in cyberpunk plays
+  `--kp-update: stutter` (was `glitch`): two unblurred neon copies of the
+  value, yellow `--primary` right and up, cyan `--accent` right and down,
+  tick home 6, 4, 2, 1 px in four hard steps over 480 ms (0.64 of the update
+  time, so `--kp-motion-scale` slows it too), the value sharp on top and
+  never moved (`kp-sig-cyberpunk-update-stutter`, a text-shadow; the glitch's
+  jitter and torn line are gone). Under reduced motion the copies stand 2 px
+  out for 1.2 s and go (`kp-sig-cyberpunk-update-still`). A spark in
+  cyberpunk takes its new point at once (`--kp-update: none` on the svg).
+- **Changed: `update()` marks every update of one task in one batch.** The
+  value is still written at the call; the marks go on together in one
+  microtask that reads every element's idea and display first, the theme's
+  timing once per theme, then writes every mark, then reads the animations,
+  so a dashboard that changes fifty values pays one style pass instead of a
+  forced layout per value. `markUpdating()` no longer forces a reflow of its
+  own; `updatePlays(idea)` is true whenever the register names an idea (a
+  register that names one under reduced motion plays a still version on its
+  own time). The idea is read on the element itself, so a spark's svg can
+  name none.
 - **Changed: titanium moves on one curve.** `--fx-ease` for titanium is
   `cubic-bezier(0.2, 0.8, 0.2, 1)` (was `cubic-bezier(0.3, 0.9, 0.3, 1)`),
   and the register's one-shot motions use it: button contact (60 ms, was

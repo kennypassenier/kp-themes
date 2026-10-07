@@ -591,10 +591,13 @@ export const TIMINGS = Object.freeze({
     // The steps are the opacity stops this gate parses (it reads no from/to).
     // formal's stamp: a frame that lands round the value and soaks in.
     'kp-sig-formal-update-stamp': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 0.9, 0.6] },
-    // cyberpunk's glitch: a bounded jitter with two drop-shadow copies, and a
-    // torn line on the overlay that shows for half the time and goes.
-    'kp-sig-cyberpunk-update-glitch': { durationMs: 750, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-sig-cyberpunk-update-tear': { durationMs: 750, cycles: 1, property: 'opacity', luminanceSteps: [1] },
+    // cyberpunk's count-down stutter [Kenny, research/cyberpunk-live,
+    // 2026-10-07 02:49]: two unblurred text-shadow copies (yellow up, cyan
+    // down) ticking home 6, 4, 2, 1 px in four hard steps, 0.64 of the
+    // update time (480 ms); under reduced motion the copies stand still 2 px
+    // out for 1.2 s and go.
+    'kp-sig-cyberpunk-update-stutter': { durationMs: 480, cycles: 1, property: 'text-shadow', luminanceSteps: [] },
+    'kp-sig-cyberpunk-update-still': { durationMs: 1200, cycles: 1, property: 'text-shadow', luminanceSteps: [] },
     // titanium's heat tint: a colour-blended band in, across and out.
     'kp-sig-titanium-update-anodise': { durationMs: 240, cycles: 1, property: 'opacity', luminanceSteps: [1, 1] },
     // The meter with a mark, each theme's way [Kenny's round-3 picks on

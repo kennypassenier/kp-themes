@@ -35,17 +35,18 @@ export declare function updateTiming(scope?: Element): {
     ease: string;
 };
 /**
- * Whether an update with this idea and timing plays anything.
- * @param {string} idea @param {{ duration: number }} timing
+ * Whether an update with this idea plays anything: whenever the register
+ * names one. Its timing may be 0 (reduced motion): a register that names an
+ * idea there plays a still version on its own time.
+ * @param {string} idea
  */
-export declare const updatePlays: (idea: string, timing: {
-    duration: number;
-}) => boolean;
+export declare const updatePlays: (idea: string) => boolean;
 /**
  * Put the mark on: the theme's timing as inline custom properties, an
  * inline host as an inline-block (a transform and an overlay need a box),
- * the attribute last. The mark is taken off first, and a reflow forced
- * between, so the same idea twice in a row starts again.
+ * the attribute last. No reflow of its own: a mark that was on came off
+ * before the batch read the host's style, so setting it again starts the
+ * keyframes again.
  * @param {HTMLElement} host
  * @param {string} idea
  * @param {{ duration: number, ease: string }} timing
@@ -64,11 +65,30 @@ export declare function markUpdating(host: HTMLElement, idea: string, timing: {
  * @param {Record<string, string>} before
  */
 export declare function unmarkUpdating(host: HTMLElement, before: Record<string, string>): void;
+export type SparkWrite = {
+    svg: SVGSVGElement;
+    parts: string;
+    from: {
+        line: string;
+        area: string;
+    };
+    to: {
+        line: string;
+        area: string;
+    };
+};
+export type UpdateJob = {
+    el: Element;
+    host: HTMLElement;
+    spark: SparkWrite | null;
+    resolve: (took: number) => void;
+};
 /**
- * Show `next` in `el` the theme's way. The value is written at the first
- * frame and stays readable throughout; any width the new value itself needs
- * is taken then, with the value, so nothing moves while the idea plays and
- * nothing moves when it ends.
+ * Show `next` in `el` the theme's way. The value is written at the call and
+ * stays readable throughout; any width the new value itself needs is taken
+ * then, with the value, so nothing moves while the idea plays and nothing
+ * moves when it ends. The mark goes on in the batch of this task (see
+ * flush()), before the next frame.
  * @param {Element} el a text element, a `.kp-state-word`, or a spark's svg
  * @param {string | number | readonly number[]} next
  * @returns {Promise<number>} how long it played, in ms; 0 when nothing played

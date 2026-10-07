@@ -2744,97 +2744,82 @@
         }
     }
 
-    /* Information that updates in place, this theme's way [picked by Kenny on
-       research/update-motion, 2026-10-05]. js/update.js writes the new value at
-       once and marks the element `[data-kp-updating]` with this register's
-       `--kp-update` while the keyframes play, at `--kp-update-duration`
-       (themeMotion()); a frame-like idea runs linear. The value is never hidden
-       or resized. */
+    /* Information that updates in place, this theme's way [Kenny, 2026-10-07
+       02:49 on research/cyberpunk-live: "Count-down stutter", replacing the
+       glitch and settle of research/update-motion]. js/update.js writes the
+       new value at once and marks the element `[data-kp-updating]` with this
+       register's `--kp-update` while the keyframes play. Two neon copies of
+       the value, yellow right and up, cyan right and down, stand behind it
+       and come home in four ticks (6, 4, 2, 1 px, then gone) over 480 ms;
+       the value itself stays sharp on top and never moves. The copies are
+       the value's own text-shadow, unblurred: the same glyphs, painted under
+       the text, so a state word keeps its width-holding ::after and a cell
+       its alignment, and no copy of the text is written anywhere. ── */
+    [data-theme='cyberpunk'] {
+        --kp-update: stutter;
+    }
+
+    /* A chart takes its new point at once: the split is the value's
+       (update() reads the idea on the svg). */
+    [data-theme='cyberpunk'] svg {
+        --kp-update: none;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-        /* ── cyberpunk: glitch and settle. Cyan and magenta copies tear off (the leave's colours), it jitters for a beat, a torn line runs through, it locks. ── */
-        [data-theme='cyberpunk'] {
-            --kp-update: glitch;
+        /* 480 ms at --kp-motion-scale 1: cyberpunk's update time (750 ms,
+           themeMotion()) × 0.64, so a page's slow motion slows it too. Hard
+           ticks, as every cyberpunk frame motion. */
+        [data-theme='cyberpunk'] [data-kp-updating='stutter'] {
+            animation: kp-sig-cyberpunk-update-stutter 480ms steps(1, end) both;
+            animation-duration: calc(var(--kp-update-duration, 750ms) * 0.64);
         }
 
-        [data-theme='cyberpunk'] [data-kp-updating='glitch'] {
-            position: relative;
-            animation: kp-sig-cyberpunk-update-glitch var(--kp-update-duration) linear;
-        }
-
-        [data-theme='cyberpunk'] [data-kp-updating='glitch']::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: linear-gradient(to bottom, transparent 47%, hsl(from var(--accent) h s l / 0.35) 47% 53%, transparent 53%) 0 0 / 100% 100%
-                no-repeat;
-            mix-blend-mode: screen;
-            /* 750 ms is cyberpunk's update time at --kp-motion-scale 1, the one
-               the DI5 test rates; the longhand plays it at the time js/update.js reads. */
-            animation: kp-sig-cyberpunk-update-tear 750ms steps(1, end) both;
-            animation-duration: var(--kp-update-duration);
-        }
-
-        /* A chart changes at its last point: the torn line runs over its last part. */
-        [data-theme='cyberpunk'] [data-kp-updating='glitch']:has(> svg)::before {
-            inset: -0.25rem -0.5rem -0.25rem 72%;
-        }
-
-        @keyframes kp-sig-cyberpunk-update-glitch {
+        /* The cyan copy is listed first, so it lies over the yellow where the
+           two cross, as in the demo. */
+        @keyframes kp-sig-cyberpunk-update-stutter {
             0% {
-                transform: translateX(2px) skewX(-8deg);
-                filter: drop-shadow(3px -2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-3px 2px 0 hsl(from var(--chart-3) h s l / 0.85));
+                text-shadow:
+                    6px 4px 0 var(--accent),
+                    6px -4px 0 var(--primary);
             }
 
-            12% {
-                transform: translateX(-2px);
-                filter: drop-shadow(-4px 1px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(4px -1px 0 hsl(from var(--chart-3) h s l / 0.85));
+            25% {
+                text-shadow:
+                    4px 3px 0 var(--accent),
+                    4px -3px 0 var(--primary);
             }
 
-            24% {
-                transform: translateX(3px) skewX(6deg);
-                filter: drop-shadow(2px 2px 0 hsl(from var(--accent) h s l / 0.85)) drop-shadow(-2px -2px 0 hsl(from var(--chart-3) h s l / 0.85));
+            50% {
+                text-shadow:
+                    2px 2px 0 var(--accent),
+                    2px -2px 0 var(--primary);
             }
 
-            36% {
-                transform: translateX(-1px);
-                filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.7)) drop-shadow(2px 0 0 hsl(from var(--chart-3) h s l / 0.7));
+            75% {
+                text-shadow:
+                    1px 1px 0 var(--accent),
+                    1px -1px 0 var(--primary);
             }
 
-            52% {
-                transform: translateX(1px);
-                filter: drop-shadow(1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(-1px 0 0 hsl(from var(--chart-3) h s l / 0.5));
-            }
-
-            64%,
             to {
-                transform: none;
-                filter: drop-shadow(0 0 0 hsl(from var(--accent) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--chart-3) h s l / 0));
+                text-shadow: none;
             }
         }
+    }
 
-        @keyframes kp-sig-cyberpunk-update-tear {
-            0% {
-                background-position-y: 20%;
-                opacity: 1;
-            }
+    /* Reduced motion: nothing moves. The copies stand 2 px right and 1 px up
+       and down, in the same colours, for 1.2 s and go; the value never moves. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] [data-kp-updating='stutter'] {
+            animation: kp-sig-cyberpunk-update-still 1200ms steps(1, end);
+        }
 
-            12% {
-                background-position-y: 80%;
-            }
-
-            24% {
-                background-position-y: 40%;
-            }
-
-            36% {
-                background-position-y: 65%;
-            }
-
-            52%,
+        @keyframes kp-sig-cyberpunk-update-still {
+            0%,
             to {
-                opacity: 0;
+                text-shadow:
+                    2px 1px 0 var(--accent),
+                    2px -1px 0 var(--primary);
             }
         }
     }

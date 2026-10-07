@@ -1,5 +1,7 @@
 # Every component's pick, family by family, per theme
 
+**Decided (Kenny, 2026-10-07 02:55): withdrawn, no longer relevant** ("doe de demos die nu nog openstaan weg, want die zijn niet meer relevant"); the per-theme character analysis replaces it, forest first.
+
 Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande laadschermen
 per thema te tonen, zodat ik dan bij andere thema's ook kan kiezen welke de
 beste zijn of eventueel nog eentje laten bijmaken. Hetzelfde doen we dan per

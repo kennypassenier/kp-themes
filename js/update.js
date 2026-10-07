@@ -1,6 +1,7 @@
 // Information that updates in place, the theme's way [picked by Kenny on
-// research/update-motion, 2026-10-05: formal a checked stamp, cyberpunk a
-// glitch that settles, titanium a heat tint].
+// research/update-motion, 2026-10-05: formal a checked stamp, titanium a
+// heat tint; cyberpunk's count-down stutter picked on research/cyberpunk-live,
+// 2026-10-07 02:49].
 //
 // Kenny, 2026-10-05 11:29: "think about an 'update' or 'refresh' type of
 // animation that updates info the 'theme way'". update(el, next) writes the
@@ -11,8 +12,11 @@
 // time and the curve are the theme's own, from themeMotion():
 // `--kp-update-duration` is max(size, close) × 1.25 (the stretch leave()
 // gives the fold of a space), `--kp-update-ease` the entrance's curve
-// without its overshoot. Reduced motion, a theme without motion or a
-// register without an idea: the value changes and nothing plays.
+// without its overshoot. A register without an idea: the value changes and
+// nothing plays. Under reduced motion the time is 0, and a register names an
+// idea there only when it has a still version that keeps its own time
+// (cyberpunk's copies stand still beside the value for 1.2 s); the others
+// declare theirs under `prefers-reduced-motion: no-preference` alone.
 //
 // The rules every idea keeps: the new value is in the DOM at the first frame
 // and readable throughout (overlays on `::before`, effects of colour,
@@ -20,6 +24,13 @@
 // (a width the new value itself needs is taken at the first frame, with the
 // value); every keyframe runs once, and a second update during the first
 // restarts it. Nothing plays on first paint: only a change is an update.
+//
+// Many values change at once on a dashboard, so update() never reads layout
+// or style beside a write of its own: it writes the value at the call, and
+// every update called in the same task is marked together in one microtask
+// that reads everything first (one style resolution serves all of them),
+// then writes every mark, then reads the animations. A page that updates
+// fifty cells pays for one style pass, not fifty forced layouts.
 //
 //   import { update } from '@kp-soft/themes/js/update';
 //
@@ -31,6 +42,9 @@
 // mark, and a register draws its overlay over the parent's last part when
 // the parent's child is the svg. Give the spark a box of its own (a `div`
 // round the svg) so the overlay sits on the chart, not on the whole tile.
+// The idea is read on the svg itself, so a register can let a chart take its
+// new point at once (`--kp-update: none` on the svg: cyberpunk's split is the
+// value's alone).
 
 import { themeMotion, withoutOvershoot } from './motion.js';
 import { SPARK, drawSparkline, sparkPaths } from './kpi.js';
@@ -78,16 +92,19 @@ export function updateTiming(scope = document.documentElement) {
 }
 
 /**
- * Whether an update with this idea and timing plays anything.
- * @param {string} idea @param {{ duration: number }} timing
+ * Whether an update with this idea plays anything: whenever the register
+ * names one. Its timing may be 0 (reduced motion): a register that names an
+ * idea there plays a still version on its own time.
+ * @param {string} idea
  */
-export const updatePlays = (idea, timing) => idea !== '' && timing.duration > 0;
+export const updatePlays = (idea) => idea !== '';
 
 /**
  * Put the mark on: the theme's timing as inline custom properties, an
  * inline host as an inline-block (a transform and an overlay need a box),
- * the attribute last. The mark is taken off first, and a reflow forced
- * between, so the same idea twice in a row starts again.
+ * the attribute last. No reflow of its own: a mark that was on came off
+ * before the batch read the host's style, so setting it again starts the
+ * keyframes again.
  * @param {HTMLElement} host
  * @param {string} idea
  * @param {{ duration: number, ease: string }} timing
@@ -101,8 +118,6 @@ export function markUpdating(host, idea, timing, { inline = false } = {}) {
     if (inline) host.style.setProperty('display', 'inline-block');
     host.style.setProperty('--kp-update-duration', `${timing.duration}ms`);
     host.style.setProperty('--kp-update-ease', timing.ease);
-    host.removeAttribute(UPDATING_ATTRIBUTE);
-    void host.offsetWidth;
     host.setAttribute(UPDATING_ATTRIBUTE, idea);
     return before;
 }
@@ -127,17 +142,20 @@ const running = new WeakMap();
 const isSvg = (el) => el.namespaceURI === SVG_NS && el.localName === 'svg';
 
 /**
+ * @typedef {{ svg: SVGSVGElement, parts: string, from: { line: string, area: string }, to: { line: string, area: string } }} SparkWrite
+ * @typedef {{ el: Element, host: HTMLElement, spark: SparkWrite | null, resolve: (took: number) => void }} UpdateJob
+ */
+
+/**
  * Write a spark's numbers. A spark that `attachSparklines()` watches is
  * redrawn from its `data-kp-spark`, so the attribute takes the numbers and
- * its own redraw runs first; one nobody watches is drawn here. With a
- * timing, the last point glides to its new place on the theme's curve: the
- * two paths morph (the same commands, so they interpolate).
+ * its own redraw runs first; one nobody watches is drawn here. Returns the
+ * two paths before and after, for glideSpark().
  * @param {SVGSVGElement} svg
  * @param {readonly number[]} values
- * @param {{ duration: number, ease: string } | null} timing
- * @returns {Promise<Animation[]>}
+ * @returns {Promise<SparkWrite>}
  */
-async function writeSpark(svg, values, timing) {
+async function writeSpark(svg, values) {
     const oldLine = svg.querySelector('[class$="-line"]');
     const parts = /(\S+)-line\b/.exec(oldLine?.getAttribute('class') ?? '')?.[1] ?? 'kp-kpi__spark';
     const from = { line: oldLine?.getAttribute('d') ?? '', area: svg.querySelector('[class$="-area"]')?.getAttribute('d') ?? '' };
@@ -148,7 +166,18 @@ async function writeSpark(svg, values, timing) {
     }
     const to = sparkPaths(values);
     if (svg.querySelector(`.${CSS.escape(parts)}-line`)?.getAttribute('d') !== to.line) drawSparkline(svg, values, { parts });
-    if (!timing || !from.line || !from.area) return [];
+    return { svg, parts, from, to };
+}
+
+/**
+ * The last point glides to its new place on the theme's curve: the two paths
+ * morph (the same commands, so they interpolate).
+ * @param {SparkWrite} spark
+ * @param {{ duration: number, ease: string }} timing
+ * @returns {Animation[]}
+ */
+function glideSpark({ svg, parts, from, to }, timing) {
+    if (!from.line || !from.area || timing.duration <= 0) return [];
     const line = svg.querySelector(`.${CSS.escape(parts)}-line`);
     const area = svg.querySelector(`.${CSS.escape(parts)}-area`);
     const options = { duration: timing.duration, easing: timing.ease };
@@ -163,11 +192,77 @@ async function writeSpark(svg, values, timing) {
     return out;
 }
 
+/** The updates written in this task, by host, waiting for the one flush. @type {Map<HTMLElement, UpdateJob>} */
+const pending = new Map();
+
+/** @param {UpdateJob} job */
+function enqueue(job) {
+    if (pending.size === 0) queueMicrotask(flush);
+    // The same host twice in one task: the later value is the one shown, and
+    // the earlier call played nothing.
+    pending.get(job.host)?.resolve(0);
+    pending.set(job.host, job);
+}
+
 /**
- * Show `next` in `el` the theme's way. The value is written at the first
- * frame and stays readable throughout; any width the new value itself needs
- * is taken then, with the value, so nothing moves while the idea plays and
- * nothing moves when it ends.
+ * Mark every update written in this task at once: all reads, then all
+ * writes, then the animations read back. Never a read between two writes.
+ */
+function flush() {
+    const jobs = [...pending.values()];
+    pending.clear();
+    const started = performance.now();
+    // Reads. The idea on the element itself (a spark's svg may name none),
+    // the host's display; then the theme's timing once per themed scope
+    // (themeMotion() reads a probe it adds and takes off: once per theme,
+    // not once per value).
+    const read = jobs.map((job) => {
+        const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
+        const inline = idea !== '' && getComputedStyle(job.host).display === 'inline';
+        return { job, idea, inline };
+    });
+    /** @type {Map<Element, { duration: number, ease: string }>} */
+    const timings = new Map();
+    const timingOf = (/** @type {HTMLElement} */ host) => {
+        const scope = host.closest('[data-theme]') ?? host.ownerDocument.documentElement;
+        let timing = timings.get(scope);
+        if (!timing) timings.set(scope, (timing = updateTiming(host)));
+        return timing;
+    };
+    const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: timingOf(r.job.host) }));
+    for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
+    // Writes: every mark.
+    const marked = plays.map((p) => ({ ...p, before: markUpdating(p.job.host, p.idea, p.timing, { inline: p.inline }) }));
+    // Reads: the register's keyframes on every host, before any glide is added.
+    const css = marked.map((m) =>
+        m.job.host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes('-update-')),
+    );
+    marked.forEach((m, at) => {
+        const glide = m.job.spark ? glideSpark(m.job.spark, m.timing) : [];
+        const { host, resolve } = m.job;
+        let done = false;
+        const end = () => {
+            if (done) return;
+            done = true;
+            unmarkUpdating(host, m.before);
+            for (const a of glide) a.cancel();
+            if (running.get(host) === end) running.delete(host);
+        };
+        running.set(host, end);
+        Promise.all([...css[at], ...glide].map((a) => a.finished.catch(() => undefined))).then(() => {
+            const took = performance.now() - started;
+            end();
+            resolve(took);
+        });
+    });
+}
+
+/**
+ * Show `next` in `el` the theme's way. The value is written at the call and
+ * stays readable throughout; any width the new value itself needs is taken
+ * then, with the value, so nothing moves while the idea plays and nothing
+ * moves when it ends. The mark goes on in the batch of this task (see
+ * flush()), before the next frame.
  * @param {Element} el a text element, a `.kp-state-word`, or a spark's svg
  * @param {string | number | readonly number[]} next
  * @returns {Promise<number>} how long it played, in ms; 0 when nothing played
@@ -176,29 +271,10 @@ export async function update(el, next) {
     // A spark is an svg, which has no pseudo-elements: its box carries the mark.
     const host = /** @type {HTMLElement} */ (isSvg(el) ? (el.parentElement ?? el) : el);
     running.get(host)?.();
-    const idea = updateIdea(getComputedStyle(host).getPropertyValue(UPDATE_PROPERTY));
-    const timing = idea ? updateTiming(host) : { duration: 0, ease: 'linear' };
-    const plays = updatePlays(idea, timing);
-    /** @type {Animation[]} */
-    let glide = [];
-    if (isSvg(el) && Array.isArray(next)) glide = await writeSpark(/** @type {SVGSVGElement} */ (el), next, plays ? timing : null);
+    /** @type {SparkWrite | null} */
+    let spark = null;
+    if (isSvg(el) && Array.isArray(next)) spark = await writeSpark(/** @type {SVGSVGElement} */ (el), next);
     else if (el.classList.contains('kp-state-word')) setStateWord(/** @type {HTMLElement} */ (el), String(next));
     else el.textContent = String(next);
-    if (!plays) return 0;
-    const started = performance.now();
-    const before = markUpdating(host, idea, timing, { inline: getComputedStyle(host).display === 'inline' });
-    const css = host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes('-update-'));
-    let done = false;
-    const end = () => {
-        if (done) return;
-        done = true;
-        unmarkUpdating(host, before);
-        for (const a of glide) a.cancel();
-        if (running.get(host) === end) running.delete(host);
-    };
-    running.set(host, end);
-    await Promise.all([...css, ...glide].map((a) => a.finished.catch(() => undefined)));
-    const took = performance.now() - started;
-    end();
-    return took;
+    return new Promise((resolve) => enqueue({ el, host, spark, resolve }));
 }

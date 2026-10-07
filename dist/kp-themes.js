@@ -2475,10 +2475,13 @@ var init_effects = __esm({
       // The steps are the opacity stops this gate parses (it reads no from/to).
       // formal's stamp: a frame that lands round the value and soaks in.
       "kp-sig-formal-update-stamp": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 0.9, 0.6] },
-      // cyberpunk's glitch: a bounded jitter with two drop-shadow copies, and a
-      // torn line on the overlay that shows for half the time and goes.
-      "kp-sig-cyberpunk-update-glitch": { durationMs: 750, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-cyberpunk-update-tear": { durationMs: 750, cycles: 1, property: "opacity", luminanceSteps: [1] },
+      // cyberpunk's count-down stutter [Kenny, research/cyberpunk-live,
+      // 2026-10-07 02:49]: two unblurred text-shadow copies (yellow up, cyan
+      // down) ticking home 6, 4, 2, 1 px in four hard steps, 0.64 of the
+      // update time (480 ms); under reduced motion the copies stand still 2 px
+      // out for 1.2 s and go.
+      "kp-sig-cyberpunk-update-stutter": { durationMs: 480, cycles: 1, property: "text-shadow", luminanceSteps: [] },
+      "kp-sig-cyberpunk-update-still": { durationMs: 1200, cycles: 1, property: "text-shadow", luminanceSteps: [] },
       // titanium's heat tint: a colour-blended band in, across and out.
       "kp-sig-titanium-update-anodise": { durationMs: 240, cycles: 1, property: "opacity", luminanceSteps: [1, 1] },
       // The meter with a mark, each theme's way [Kenny's round-3 picks on
@@ -6616,15 +6619,15 @@ function attachComboboxes(root = document, {
       onChoose: (_, option) => take(option),
       onDismiss: close
     });
-    let pending = 0;
+    let pending2 = 0;
     const onInput = () => {
-      clearTimeout(pending);
+      clearTimeout(pending2);
       const run = () => {
         const visible2 = filter();
         if (visible2 > 0 || showsEmpty && input.value.trim() !== "") open();
         else close();
       };
-      if (debounce > 0) pending = window.setTimeout(run, debounce);
+      if (debounce > 0) pending2 = window.setTimeout(run, debounce);
       else run();
     };
     const onKeyDown = (event) => {
@@ -6703,7 +6706,7 @@ function attachComboboxes(root = document, {
     handles3.set(box, handle);
     created.push(handle);
     cleanups.push(() => {
-      clearTimeout(pending);
+      clearTimeout(pending2);
       lower();
       listbox.destroy();
       input.removeEventListener("input", onInput);
@@ -10241,11 +10244,11 @@ function attachDataTables(root = document, {
         Promise.resolve().then(() => loadFn(params)).then(respond, fail);
       }
     };
-    let pending = 0;
+    let pending2 = 0;
     const onSearch = () => {
       query = search?.value ?? "";
-      clearTimeout(pending);
-      if (debounce > 0) pending = window.setTimeout(() => applyFilter(), debounce);
+      clearTimeout(pending2);
+      if (debounce > 0) pending2 = window.setTimeout(() => applyFilter(), debounce);
       else applyFilter();
     };
     const onScope = () => {
@@ -11092,7 +11095,7 @@ function attachDataTables(root = document, {
     created.push(handle);
     cleanups.push(() => {
       stopBusyClock();
-      clearTimeout(pending);
+      clearTimeout(pending2);
       controller?.abort();
       resize?.disconnect();
       cancelAnimationFrame(resizeFrame);
@@ -17322,18 +17325,18 @@ function attachAll(root = document) {
   const present = presentUnder(root);
   let detached = false;
   const modules = [];
-  const pending = [];
+  const pending2 = [];
   for (const need of NEEDS) {
     if (!carries(root, need.when)) continue;
     modules.push(need.name);
-    pending.push(
+    pending2.push(
       need.load().then((module) => {
         if (detached) return;
         detaches.push(...asOf(root, present, () => need.attach(module, root)));
       })
     );
   }
-  const ready = Promise.all(pending).then(() => void 0);
+  const ready = Promise.all(pending2).then(() => void 0);
   const mark = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
   const settled = mark ? settleAfter(mark, ready) : () => void 0;
   const detach = () => {
@@ -17974,15 +17977,13 @@ function updateTimingOf({ size, close, ease }) {
 function updateTiming(scope = document.documentElement) {
   return updateTimingOf(themeMotion(scope));
 }
-var updatePlays = (idea, timing) => idea !== "" && timing.duration > 0;
+var updatePlays = (idea) => idea !== "";
 function markUpdating(host, idea, timing, { inline = false } = {}) {
   const before = {};
   for (const name of UPDATE_STYLE) before[name] = host.style.getPropertyValue(name);
   if (inline) host.style.setProperty("display", "inline-block");
   host.style.setProperty("--kp-update-duration", `${timing.duration}ms`);
   host.style.setProperty("--kp-update-ease", timing.ease);
-  host.removeAttribute(UPDATING_ATTRIBUTE);
-  void host.offsetWidth;
   host.setAttribute(UPDATING_ATTRIBUTE, idea);
   return before;
 }
@@ -17995,7 +17996,7 @@ function unmarkUpdating(host, before) {
 }
 var running = /* @__PURE__ */ new WeakMap();
 var isSvg = (el2) => el2.namespaceURI === SVG_NS2 && el2.localName === "svg";
-async function writeSpark(svg, values, timing) {
+async function writeSpark(svg, values) {
   const oldLine = svg.querySelector('[class$="-line"]');
   const parts = /(\S+)-line\b/.exec(oldLine?.getAttribute("class") ?? "")?.[1] ?? "kp-kpi__spark";
   const from = { line: oldLine?.getAttribute("d") ?? "", area: svg.querySelector('[class$="-area"]')?.getAttribute("d") ?? "" };
@@ -18005,7 +18006,10 @@ async function writeSpark(svg, values, timing) {
   }
   const to = sparkPaths(values);
   if (svg.querySelector(`.${CSS.escape(parts)}-line`)?.getAttribute("d") !== to.line) drawSparkline(svg, values, { parts });
-  if (!timing || !from.line || !from.area) return [];
+  return { svg, parts, from, to };
+}
+function glideSpark({ svg, parts, from, to }, timing) {
+  if (!from.line || !from.area || timing.duration <= 0) return [];
   const line = svg.querySelector(`.${CSS.escape(parts)}-line`);
   const area = svg.querySelector(`.${CSS.escape(parts)}-area`);
   const options = { duration: timing.duration, easing: timing.ease };
@@ -18017,21 +18021,64 @@ async function writeSpark(svg, values, timing) {
   }
   return out;
 }
+var pending = /* @__PURE__ */ new Map();
+function enqueue(job) {
+  if (pending.size === 0) queueMicrotask(flush);
+  pending.get(job.host)?.resolve(0);
+  pending.set(job.host, job);
+}
+function flush() {
+  const jobs = [...pending.values()];
+  pending.clear();
+  const started2 = performance.now();
+  const read = jobs.map((job) => {
+    const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
+    const inline = idea !== "" && getComputedStyle(job.host).display === "inline";
+    return { job, idea, inline };
+  });
+  const timings = /* @__PURE__ */ new Map();
+  const timingOf = (host) => {
+    const scope = host.closest("[data-theme]") ?? host.ownerDocument.documentElement;
+    let timing = timings.get(scope);
+    if (!timing) timings.set(scope, timing = updateTiming(host));
+    return timing;
+  };
+  const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: timingOf(r.job.host) }));
+  for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
+  const marked = plays.map((p) => ({ ...p, before: markUpdating(p.job.host, p.idea, p.timing, { inline: p.inline }) }));
+  const css = marked.map(
+    (m) => m.job.host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes("-update-"))
+  );
+  marked.forEach((m, at) => {
+    const glide2 = m.job.spark ? glideSpark(m.job.spark, m.timing) : [];
+    const { host, resolve } = m.job;
+    let done = false;
+    const end = () => {
+      if (done) return;
+      done = true;
+      unmarkUpdating(host, m.before);
+      for (const a of glide2) a.cancel();
+      if (running.get(host) === end) running.delete(host);
+    };
+    running.set(host, end);
+    Promise.all([...css[at], ...glide2].map((a) => a.finished.catch(() => void 0))).then(() => {
+      const took = performance.now() - started2;
+      end();
+      resolve(took);
+    });
+  });
+}
 async function update(el2, next) {
   const host = (
     /** @type {HTMLElement} */
     isSvg(el2) ? el2.parentElement ?? el2 : el2
   );
   running.get(host)?.();
-  const idea = updateIdea(getComputedStyle(host).getPropertyValue(UPDATE_PROPERTY));
-  const timing = idea ? updateTiming(host) : { duration: 0, ease: "linear" };
-  const plays = updatePlays(idea, timing);
-  let glide2 = [];
-  if (isSvg(el2) && Array.isArray(next)) glide2 = await writeSpark(
+  let spark = null;
+  if (isSvg(el2) && Array.isArray(next)) spark = await writeSpark(
     /** @type {SVGSVGElement} */
     el2,
-    next,
-    plays ? timing : null
+    next
   );
   else if (el2.classList.contains("kp-state-word")) setStateWord(
     /** @type {HTMLElement} */
@@ -18039,23 +18086,7 @@ async function update(el2, next) {
     String(next)
   );
   else el2.textContent = String(next);
-  if (!plays) return 0;
-  const started2 = performance.now();
-  const before = markUpdating(host, idea, timing, { inline: getComputedStyle(host).display === "inline" });
-  const css = host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes("-update-"));
-  let done = false;
-  const end = () => {
-    if (done) return;
-    done = true;
-    unmarkUpdating(host, before);
-    for (const a of glide2) a.cancel();
-    if (running.get(host) === end) running.delete(host);
-  };
-  running.set(host, end);
-  await Promise.all([...css, ...glide2].map((a) => a.finished.catch(() => void 0)));
-  const took = performance.now() - started2;
-  end();
-  return took;
+  return new Promise((resolve) => enqueue({ el: el2, host, spark, resolve }));
 }
 
 // kp-themes-entry.js

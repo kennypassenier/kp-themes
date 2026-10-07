@@ -185,7 +185,7 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A key figure that changes</figcaption>
-                        <p class="kp-text-muted">update() writes the value, marks the element for as long as the theme’s update plays (once, in max(resize, close) × 1.25 of the theme’s motion) and takes the mark off. With reduced motion asked for, the value changes and nothing plays.</p>
+                        <p class="kp-text-muted">update() writes the value, marks the element for as long as the theme’s update plays (once, in max(resize, close) × 1.25 of the theme’s motion) and takes the mark off. With reduced motion asked for, the value changes and nothing moves (cyberpunk shows its two copies still for a moment). Every update called in the same task is marked in one batch: one style pass for a whole dashboard.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <span class="kp-kpi__value"><span id="pressure">3.26</span><small>bar</small></span>
                         </div>
@@ -220,15 +220,15 @@
                     <h2 class="kp-fw-semibold">Accessibility</h2>
                     <ul class="kp-stack">
                         <li>Built in — the new value is in the page at the first frame and readable throughout; no idea hides, scrambles or resizes it.</li>
-                        <li>Built in — a reader who asked for reduced motion gets the value without the motion.</li>
+                        <li>Built in — a reader who asked for reduced motion gets the value without the motion (cyberpunk: its copies stand still beside the value for 1.2 s).</li>
                         <li>Yours — a change a screen reader must hear goes in a live region; the motion is for the eye only.</li>
                     </ul>
                 </section>
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-updating</code></td><td>Written on the element while its update plays, with the register’s idea (`stamp`, `glitch`, `anodise`); on a spark it is the svg’s parent. Read it, do not set it.</td></tr>
-                            <tr><td><code>--kp-update</code></td><td>In a register: the idea it plays on an update. Formal `stamp`, cyberpunk `glitch`, titanium `anodise`; the other registers declare none.</td></tr>
+                            <tr><td><code>data-kp-updating</code></td><td>Written on the element while its update plays, with the register’s idea (`stamp`, `stutter`, `anodise`); on a spark it is the svg’s parent. Read it, do not set it.</td></tr>
+                            <tr><td><code>--kp-update</code></td><td>In a register: the idea it plays on an update. Formal `stamp`, cyberpunk `stutter`, titanium `anodise`; the other registers declare none. Read on the element itself, so `none` on a spark’s svg lets the chart take its new point at once (cyberpunk). A register that declares it outside `prefers-reduced-motion: no-preference` plays a still version under reduced motion (cyberpunk).</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

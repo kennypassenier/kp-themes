@@ -34,13 +34,13 @@ function standIn(style = {}) {
 
 test('the idea is the register’s --kp-update, trimmed; none or nothing is no idea', () => {
     assert.equal(updateIdea(' stamp'), 'stamp');
-    assert.equal(updateIdea('glitch '), 'glitch');
+    assert.equal(updateIdea('stutter '), 'stutter');
     assert.equal(updateIdea('none'), '');
     assert.equal(updateIdea(''), '');
     assert.equal(updateIdea(null), '');
 });
 
-test('the theme’s time is max(size, close) × 1.25 on its curve without overshoot; nothing plays without one or the other', () => {
+test('the theme’s time is max(size, close) × 1.25 on its curve without overshoot; an idea plays whenever the register names one', () => {
     assert.deepEqual(updateTimingOf({ size: 240, close: 200, ease: 'cubic-bezier(0.2, 0, 0, 1)' }), {
         duration: 300,
         ease: 'cubic-bezier(0.2, 0, 0, 1)',
@@ -48,16 +48,14 @@ test('the theme’s time is max(size, close) × 1.25 on its curve without oversh
     assert.equal(updateTimingOf({ size: 480, close: 600, ease: 'linear' }).duration, 750);
     assert.equal(updateTimingOf({ size: 0, close: 0, ease: 'linear' }).duration, 0);
     assert.equal(updateTimingOf({ size: 100, close: 100, ease: 'cubic-bezier(0.3, 1.6, 0.6, 1)' }).ease, 'cubic-bezier(0.3, 1, 0.6, 1)');
-    assert.equal(updatePlays('stamp', { duration: 300 }), true);
-    assert.equal(updatePlays('', { duration: 300 }), false, 'a register without an idea');
-    assert.equal(updatePlays('stamp', { duration: 0 }), false, 'reduced motion or a theme without motion');
+    assert.equal(updatePlays('stamp'), true);
+    assert.equal(updatePlays(''), false, 'a register without an idea');
 });
 
-test('the mark goes on after the timing, restarted by a reflow, and comes off leaving the element as it was', () => {
+test('the mark goes on after the timing with no reflow of its own, and comes off leaving the element as it was', () => {
     const el = standIn({ display: 'inline-block' });
-    el.attrs.set(UPDATING_ATTRIBUTE, 'stamp'); // a previous update still on
     const before = markUpdating(/** @type {any} */ (el), 'stamp', { duration: 300, ease: 'ease' }, { inline: false });
-    assert.deepEqual(el.log, [`remove ${UPDATING_ATTRIBUTE}`, 'reflow', `set ${UPDATING_ATTRIBUTE}=stamp`]);
+    assert.deepEqual(el.log, [`set ${UPDATING_ATTRIBUTE}=stamp`], 'a batch of updates pays for one style pass, not one layout per value');
     assert.equal(el.props.get('--kp-update-duration'), '300ms');
     assert.equal(el.props.get('--kp-update-ease'), 'ease');
     assert.equal(el.props.get('display'), 'inline-block', 'not inline: its display is left alone');
@@ -69,7 +67,7 @@ test('the mark goes on after the timing, restarted by a reflow, and comes off le
 
 test('an inline element plays as an inline-block and is inline again after', () => {
     const el = standIn();
-    const before = markUpdating(/** @type {any} */ (el), 'glitch', { duration: 750, ease: 'linear' }, { inline: true });
+    const before = markUpdating(/** @type {any} */ (el), 'stutter', { duration: 750, ease: 'linear' }, { inline: true });
     assert.equal(el.props.get('display'), 'inline-block');
     unmarkUpdating(/** @type {any} */ (el), before);
     assert.equal(el.props.size, 0);

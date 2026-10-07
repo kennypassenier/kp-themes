@@ -73,20 +73,6 @@ export const PAGES = [
         // once he has decided on it [scope-81].
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-06 14:56: a faster way to judge, "doe een paar pogingen": three prototypes of the review surface on the open trend and graph rounds.
-            { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
-            // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
-            { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
-            // Kenny, 2026-10-07 01:32: what the family picks do, every component as today and speaking its theme's picked family, ten themes.
-            { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
-            // Kenny, 2026-10-07 01:32: cyberpunk's live update rejected on research/families; six options of the chromatic split he described (two neon copies right, one up, one down), the recommendation first.
-            { href: 'research/cyberpunk-live/demo.html', label: "Cyberpunk's live update: the chromatic split" },
-            // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
-            { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
-            // Kenny, 2026-10-06 20:59 (form v39): every titanium loading element twice, as today and in the key figure's anodising bath (r2-ti-load-1).
-            { href: 'research/titanium-loading/demo.html', label: 'Titanium loading: today and the anodising bath' },
-            // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
-            { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
@@ -98,6 +84,21 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 02:49: Kenny picked the count-down stutter as cyberpunk's live update (research/cyberpunk-live/decided.json); ported into css/cyberpunk-register.css in place of the glitch and settle.
+            { href: 'research/cyberpunk-live/demo.html', label: "Cyberpunk's live update: the chromatic split" },
+            // Kenny, 2026-10-07 02:55: the demos still open are no longer relevant ("doe de demos die nu nog openstaan weg"); archived, files kept.
+            // Kenny, 2026-10-06 14:56: a faster way to judge, "doe een paar pogingen": three prototypes of the review surface on the open trend and graph rounds.
+            { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
+            // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
+            { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
+            // Kenny, 2026-10-07 01:32: what the family picks do, every component as today and speaking its theme's picked family, ten themes.
+            { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
+            // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
+            { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
+            // Kenny, 2026-10-06 20:59 (form v39): every titanium loading element twice, as today and in the key figure's anodising bath (r2-ti-load-1).
+            { href: 'research/titanium-loading/demo.html', label: 'Titanium loading: today and the anodising bath' },
+            // The character round's first component (form v18, 2026-10-05): two meters of its own per theme, all 22 in one demo.
+            { href: 'research/character-meter/demo.html', label: 'A meter of its own, per theme' },
             // Decided 2026-10-07 01:33: Kenny picked the facing cut as titanium's spinner (research/titanium-spinner/decided.json); ported into css/titanium-register.css in place of the drill.
             { href: 'research/titanium-spinner/demo.html', label: 'A spinner for titanium' },
             // Decided 2026-10-06 23:41: Kenny approved the data table's busy overlay in all 22 themes (research/character-busy/decided.json); it moves into the registers at the port.

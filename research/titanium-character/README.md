@@ -1,5 +1,7 @@
 # What makes titanium titanium
 
+**Decided (Kenny, 2026-10-07 00:51): every recommendation, except the motion curve = Eased** (applied in f637569f; see themes/titanium/CHARACTER.md §0).
+
 **Why.** Kenny, 2026-10-07 00:05, on the alignment proposal in
 [themes/titanium/CHARACTER.md](../../themes/titanium/CHARACTER.md): "ik wil eerst wel zelf evalueren wat de opties zijn, zodat ik
 kan zien wat het beste past" and "maak een demo die mij helpt om te kiezen wat Titanium nu echt Titanium maakt, met voorbeelden en

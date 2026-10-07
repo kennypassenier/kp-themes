@@ -40,7 +40,7 @@
         "formal": "ce0f1274d0d21aae",
         "light": "a7e764e10d3112e7",
         "dark": "e06477ba536e9587",
-        "cyberpunk": "7b8757f0a69eb261",
+        "cyberpunk": "78983685503bb97b",
         "synthwave": "13cd82cd8701becb",
         "pastel": "46fa1e7800d9fc12",
         "terminal": "395957332815e2ff",
@@ -581,13 +581,13 @@
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-glitching": "d1dfdcde28e4a53e",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "3f932c4da8280f36",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-tone])": "5cb601542c1b55b3",
-        "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='glitch']": "1775aa48b952bbcd",
+        "cyberpunk||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='stutter']": "e033b5873f238329",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark": "bdc5e4a8d800efc4",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(2)": "c8ddfdeab612d1b5",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(3)": "b73b1b40755107c3",
         "cyberpunk||@media (prefers-reduced-motion: no-preference)||mark:nth-of-type(4)": "15b3642efc99eaec",
-        "cyberpunk||@media (prefers-reduced-motion: no-preference)||svg)": "55f40262c2a83990",
         "cyberpunk||@media (prefers-reduced-motion: reduce)||[data-kp-reveal='rule']:not(.is-in)": "c643916cb28234d8",
+        "cyberpunk||@media (prefers-reduced-motion: reduce)||[data-kp-updating='stutter']": "b93c9bca40ccdf49",
         "cyberpunk||@media (prefers-reduced-motion: reduce)||mark:not(.is-cleared)": "e358826d37afbfb7",
         "cyberpunk||||)": "5d765fc70b7ab1b7",
         "cyberpunk||||-visible):not()": "4ac117a170e9612e",
@@ -784,6 +784,7 @@
         "cyberpunk||||mark:not(.is-cleared)": "cf4fbd9d1419646a",
         "cyberpunk||||select.kp-field__input::picker-icon": "703c71eb71ad99fe",
         "cyberpunk||||span": "22cff19b24dbce73",
+        "cyberpunk||||svg": "4bcb2e47c4b3f099",
         "cyberpunk||||td": "2970fd623026d5e0",
         "cyberpunk||||th": "63ddaccd5f99a362",
         "cyberpunk||||ul": "2970980735272155",
@@ -5781,7 +5782,7 @@
             ]
         },
         "data": {
-            "modules": "6b913d0e8826e956",
+            "modules": "ee2f395098ab93fd",
             "families": [
                 "data-kp-activation",
                 "data-kp-calendar",
@@ -6233,7 +6234,7 @@
             ]
         },
         "media": {
-            "modules": "076a3576d6bf2e3c",
+            "modules": "c2c9b7e6de6e5445",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -6341,8 +6342,8 @@
                 "kp-sig-cyberpunk-meter-knock-w",
                 "kp-sig-cyberpunk-meter-noise",
                 "kp-sig-cyberpunk-meter-slip-o",
-                "kp-sig-cyberpunk-update-glitch",
-                "kp-sig-cyberpunk-update-tear",
+                "kp-sig-cyberpunk-update-still",
+                "kp-sig-cyberpunk-update-stutter",
                 "kp-sig-dark-meter-bump-d",
                 "kp-sig-dark-meter-bump-o",
                 "kp-sig-dark-meter-bump-w",
@@ -6693,7 +6694,7 @@
             ]
         },
         "page-effects": {
-            "modules": "226bafe81be68399",
+            "modules": "0f38e1168de22bdb",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",
@@ -6780,8 +6781,8 @@
                 "kp-sig-cyberpunk-meter-knock-w",
                 "kp-sig-cyberpunk-meter-noise",
                 "kp-sig-cyberpunk-meter-slip-o",
-                "kp-sig-cyberpunk-update-glitch",
-                "kp-sig-cyberpunk-update-tear",
+                "kp-sig-cyberpunk-update-still",
+                "kp-sig-cyberpunk-update-stutter",
                 "kp-sig-dark-meter-bump-d",
                 "kp-sig-dark-meter-bump-o",
                 "kp-sig-dark-meter-bump-w",

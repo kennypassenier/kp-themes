@@ -1,5 +1,7 @@
 # Cyberpunk's live update: the chromatic split, six ways
 
+**Decided (Kenny, 2026-10-07 02:49): Count-down stutter** ("A live update in cyberpunk = Count-down stutter"), option 3: two neon copies, yellow `--primary` right and up, cyan `--accent` right and down, coming home 6, 4, 2, 1 px in four ticks over 480 ms, the value sharp on top. Ported into css/cyberpunk-register.css as `--kp-update: stutter` (`kp-sig-cyberpunk-update-stutter`, and `kp-sig-cyberpunk-update-still` under reduced motion), in place of the glitch and settle. In the package the copies are the value's own unblurred text-shadow rather than two pseudo-elements with `data-kp-text`: the same picture, without taking a state word's width-holding `::after` and without a copy of the text in the DOM. js/update.js marks every update of one task in one batch (all reads, then all writes), and a spark's svg declares `--kp-update: none`, so the trend line takes its new point at once.
+
 Kenny, 2026-10-07 01:32, rejecting cyberpunk's live update on
 research/families: "The glitch effect where one colour goes a bit to the
 right and up/down and another colour goes to the right and the opposite of

@@ -335,8 +335,10 @@ const OUT_OF_SCOPE = {
     'kp-sig-grotesk-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     // Information that updates in place [research/update-motion, 2026-10-05].
-    'kp-sig-cyberpunk-update-glitch':
-        'a changed value jittering by at most 3px with two drop-shadow copies, once per update for 750 ms; a transform and a filter on one value, far under 341x256 px',
+    'kp-sig-cyberpunk-update-stutter':
+        'two unblurred text-shadow copies of a changed value ticking home from 6px to nothing in four steps, once per update for 480 ms; the value itself keeps its colour and place, far under 341x256 px [research/cyberpunk-live]',
+    'kp-sig-cyberpunk-update-still':
+        'under reduced motion: two text-shadow copies of a changed value standing 2px out for 1.2 s, once, and going; nothing moves, far under 341x256 px [research/cyberpunk-live]',
 };
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */

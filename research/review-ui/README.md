@@ -1,5 +1,7 @@
 # Three faster ways to judge a demo
 
+**Decided (Kenny, 2026-10-07 02:55): withdrawn, no longer relevant** ("doe de demos die nu nog openstaan weg, want die zijn niet meer relevant"); the per-theme character analysis replaces it, forest first.
+
 Kenny, 2026-10-06 14:56: "En er moet een beter manier zijn om dit allemaal te
 beoordelen, nu is het nog altijd veel rondklikken en op knoppen die state
 veranderen klikken etc, doe een paar pogingen om iets beters te vinden qua UI

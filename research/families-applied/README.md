@@ -1,5 +1,7 @@
 # What the family picks do
 
+**Decided (Kenny, 2026-10-07 02:55): withdrawn, no longer relevant** ("doe de demos die nu nog openstaan weg, want die zijn niet meer relevant"); the per-theme character analysis replaces it, forest first.
+
 Kenny, 2026-10-07 01:32, after the families verdicts (research/families/VERDICTS.md): "toon al eens wat je met deze bevindingen
 kan doen vooraleer ik verder ga".
 
