@@ -101,7 +101,11 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
             { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
-            { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
+            {
+                href: 'research/terminal-character/demo.html',
+                label: 'What makes terminal terminal',
+                rework: 'update 2 in progress: loading in the heatmap days, the meter and the menu entry',
+            },
         ],
     },
     {
