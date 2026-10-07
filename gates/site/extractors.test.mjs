@@ -278,7 +278,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // register multiplies its bar by (--kp-progressbar-scale), the reading's
     // size beside it (--kp-progressbar-text) and the group's gaps
     // (--kp-progress-group-scale): 315 + 3.
-    assert.equal(result.expected, 318, 'AR21 counted the --kp-* properties in css/components.css');
+    // The skeleton circle's width, --kp-skeleton-circle (2026-10-07): 318 + 1.
+    assert.equal(result.expected, 319, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -329,7 +330,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // fix-99's --kp-kpi-trend-label-lines came and went: 311.
     // fix-101's --kp-kpi-border: 311 + 1. The progress bar's three sizes:
     // --kp-progressbar-scale, -text and --kp-progress-group-scale: 312 + 3.
-    assert.equal(result.readCount, 315);
+    // The skeleton circle's width knob (2026-10-07): 315 + 1.
+    assert.equal(result.readCount, 316);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);
