@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-07 23:44 Brussels, Kenny: all nineteen questions approved after three updates (research/brutalism-character/README.md); Loading = Hoisted as a lintel, The progress bar = Ruled and labelled, a lot slower (2x), Pointing at something = invert",
+    "attributes": "data-bc-<question>=\"<key>\" on the .bc-scene, research/brutalism-character/options.css",
+    "picks": {
+        "brutalism": {
+            "curve": "gravity",
+            "direction": "diagonal",
+            "opening": "footprint",
+            "durations": "units",
+            "colour": "roles",
+            "corners": "square",
+            "surface": "slab",
+            "tone": "taped",
+            "live": "slam",
+            "loading": "hoist-lintel",
+            "progress": "ruled-slowest",
+            "spinner": "tip",
+            "leave": "lift",
+            "composites": "own",
+            "hover": "invert",
+            "focus": "ring",
+            "press": "ground",
+            "voice": "shout",
+            "motifs": "one"
+        }
+    }
+}

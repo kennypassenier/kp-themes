@@ -93,10 +93,6 @@ export const PAGES = [
             },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
-            {
-                href: 'research/brutalism-character/demo.html',
-                label: 'What makes brutalism brutalism',
-            },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
         ],
     },
@@ -106,6 +102,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 23:44: Kenny approved all nineteen brutalism character questions after three updates; Loading = Hoisted as a lintel, the progress bar = Ruled and labelled a lot slower (research/brutalism-character/decided.json).
+            { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Decided 2026-10-07 23:43: Kenny approved all nineteen grotesk character questions after three updates (research/grotesk-character/decided.json).
             { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
             // Decided 2026-10-07 23:43: Kenny approved the sixteen terminal character picks, Loading = an htop row with the cursor its head (research/terminal-character/decided.json).

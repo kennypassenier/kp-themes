@@ -1,5 +1,7 @@
 # What makes brutalism brutalism
 
+**Decided (Kenny, 07/10/2026 23:44): all nineteen questions approved after three updates; Loading = Hoisted as a lintel, The progress bar = Ruled and labelled, a lot slower (2x), Pointing at something = invert** (research/brutalism-character/decided.json; see themes/brutalism/CHARACTER.md §0).
+
 **Round 1 verdict (Kenny, 07/10/2026 21:03): fourteen of eighteen questions approved as recommended (curve = gravity, direction = diagonal, opening = footprint, durations = units, colour = roles, corners = square, surface = slab, warning = taped, live = slam, spinner = tip, leave = lift, composites = own, focus = ring, press = ground); the other four (loading, pointing, voice, motifs) come back in round 2**; the machine-readable decided.json follows once all eighteen are settled (the gate treats a decided.json as a finished topic).
 
 **Update 1 verdict (Kenny, 07/10/2026 22:50): pointing = invert, voice = shout (dates in bold mono) and motifs = one approved; loading comes back with five variations of Hoisted and the progress bar becomes its own question with ten options (Update 2); the progress bar is then narrowed to four: the mix of Ruled and Labelled and three slower variations (Update 3).**
