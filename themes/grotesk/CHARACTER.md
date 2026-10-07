@@ -194,6 +194,8 @@ played backwards, for the red plate's waiting loop and for a part's leave**:
 
 ---
 
+**Decided (Kenny, 07/10/2026 23:43): all nineteen questions of research/grotesk-character approved after three updates, every recommendation except The press = the rule thickens (his scope-12)** (research/grotesk-character/decided.json; to be applied in css/grotesk-register.css; the anchor is Out of register, §0 and §0a; the clockwise loop and leave break the opposites rule on his word, §0b).
+
 ## 1. The grotesk grammar (proposed)
 
 The theme is **the timetable**: information set on a grid, running on time.

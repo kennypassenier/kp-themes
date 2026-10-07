@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-07 23:43 Brussels, Kenny: 19 of 19 approved in the review dialog (research/grotesk-character/README.md, Update 3): every recommendation except The press = the rule thickens (his scope-12), which he picked over the recommended slam",
+    "attributes": "data-gk-<question>=\"<key>\" on the .gk-scene, research/grotesk-character/options.css",
+    "picks": {
+        "grotesk": {
+            "curve": "ontime",
+            "direction": "plate",
+            "opening": "plate",
+            "durations": "units",
+            "colour": "signal",
+            "surface": "rule",
+            "tone": "index",
+            "live": "plate",
+            "loading": "register",
+            "composites": "own",
+            "focus": "ring",
+            "voice": "sentence",
+            "motifs": "one",
+            "slip": "cw",
+            "spinner": "turn",
+            "bars": "slab",
+            "leave": "cw",
+            "hover": "bar",
+            "press": "rule"
+        }
+    }
+}

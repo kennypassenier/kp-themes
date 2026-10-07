@@ -1,5 +1,7 @@
 # What makes grotesk grotesk
 
+**Decided (Kenny, 07/10/2026 23:43): all nineteen questions of research/grotesk-character approved after three updates, every recommendation except The press = the rule thickens (his scope-12)** (research/grotesk-character/decided.json; to be applied in css/grotesk-register.css; the anchor is Out of register, §0 and §0a; the clockwise loop and leave break the opposites rule on his word, §0b).
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk, blueprint;
 grotesk fifth in that order, the same way as titanium, forest, nostromo, cyberpunk, synthwave, solstice and brutalism (02:54: "waar jij
 eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet"). It also carries the grotesk-only loading demo Kenny asked

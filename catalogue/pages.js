@@ -98,7 +98,6 @@ export const PAGES = [
                 label: 'What makes brutalism brutalism',
             },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
-            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
         ],
     },
     {
@@ -107,6 +106,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 23:43: Kenny approved all nineteen grotesk character questions after three updates (research/grotesk-character/decided.json).
+            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
             // Decided 2026-10-07 23:43: Kenny approved the sixteen terminal character picks, Loading = an htop row with the cursor its head (research/terminal-character/decided.json).
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
             // Decided 2026-10-07 23:41: Kenny approved the sixteen blueprint character picks (research/blueprint-character/decided.json).
