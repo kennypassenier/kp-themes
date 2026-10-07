@@ -731,11 +731,19 @@
     [data-theme='blueprint'] .kp-datepicker__panel,
     [data-theme='blueprint'] .kp-combobox__list,
     [data-theme='blueprint'] .kp-palette,
-    [data-theme='blueprint'] .kp-theme-menu {
+    [data-theme='blueprint'] .kp-theme-menu__list {
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
         box-shadow: 0 12px 28px hsl(from var(--background) h s 0% / 0.45);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='blueprint'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

@@ -481,10 +481,18 @@
     [data-theme='formal'] .kp-datepicker__panel,
     [data-theme='formal'] .kp-combobox__list,
     [data-theme='formal'] .kp-palette,
-    [data-theme='formal'] .kp-theme-menu {
+    [data-theme='formal'] .kp-theme-menu__list {
         background: var(--card);
         border-color: var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='formal'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

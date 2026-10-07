@@ -445,8 +445,16 @@
     [data-theme='solstice'] .kp-datepicker__panel,
     [data-theme='solstice'] .kp-combobox__list,
     [data-theme='solstice'] .kp-palette,
-    [data-theme='solstice'] .kp-theme-menu {
+    [data-theme='solstice'] .kp-theme-menu__list {
         box-shadow: 0 24px 56px var(--kp-shadow-deep);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='solstice'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

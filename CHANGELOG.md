@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fixed: no register frames the theme picker's icon button** [2026-10-07, Kenny]. Sixteen registers (blueprint, brutalism, dark, deco, formal, grotesk, high-contrast, light, nostromo, pastel, retro, sepia, solstice, synthwave, terminal, titanium) listed `.kp-theme-menu`, the wrapper round the button, among the popover surfaces and drew a card border or shadow round it; the surface now belongs to `.kp-theme-menu__list`, the dropdown, and the wrapper takes none (as phantom's already did).
+
 - **Fixed: forest's theme picker no longer sits in a card frame** [2026-10-07, Kenny]. The register painted the card chrome (border and shadow) on `.kp-theme-menu`, the wrapper round the icon button, so the button had a square frame around it; the chrome now belongs to `.kp-theme-menu__list`, the dropdown the React switcher draws.
 
 - **Changed (research demos only): the busy overlay's leave in forest's demo

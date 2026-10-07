@@ -600,10 +600,18 @@
     [data-theme='grotesk'] .kp-datepicker__panel,
     [data-theme='grotesk'] .kp-combobox__list,
     [data-theme='grotesk'] .kp-palette,
-    [data-theme='grotesk'] .kp-theme-menu {
+    [data-theme='grotesk'] .kp-theme-menu__list {
         background: var(--popover);
         border: 3px solid var(--foreground);
         border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='grotesk'] .kp-theme-menu {
+        background: none;
+        border: 0;
         box-shadow: none;
     }
 

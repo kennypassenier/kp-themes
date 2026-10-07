@@ -1032,7 +1032,7 @@
     [data-theme='dark'] .kp-datepicker__panel,
     [data-theme='dark'] .kp-combobox__list,
     [data-theme='dark'] .kp-palette,
-    [data-theme='dark'] .kp-theme-menu {
+    [data-theme='dark'] .kp-theme-menu__list {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
@@ -1042,6 +1042,14 @@
            because `.kp-popover` is `overflow: auto` and clips a
            pseudo-element away — see --kp-halo. */
         box-shadow: var(--kp-halo);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='dark'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

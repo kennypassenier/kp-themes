@@ -16,35 +16,35 @@ the selectors and their order are identical, which is what
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
 | `css/_rules.css` | 29.7 kB | 10.8 kB | 64% |
-| `css/blueprint-register.css` | 92.0 kB | 47.4 kB | 48% |
-| `css/brutalism-register.css` | 90.5 kB | 49.4 kB | 45% |
+| `css/blueprint-register.css` | 92.2 kB | 47.5 kB | 48% |
+| `css/brutalism-register.css` | 90.8 kB | 49.5 kB | 45% |
 | `css/components.css` | 318.8 kB | 129.5 kB | 59% |
 | `css/cyberpunk-register.css` | 113.2 kB | 63.1 kB | 44% |
-| `css/dark-register.css` | 105.1 kB | 49.3 kB | 53% |
-| `css/deco-register.css` | 78.7 kB | 41.5 kB | 47% |
+| `css/dark-register.css` | 105.3 kB | 49.4 kB | 53% |
+| `css/deco-register.css` | 78.9 kB | 41.6 kB | 47% |
 | `css/fonts.css` | 23.5 kB | 17.6 kB | 25% |
 | `css/forest-register.css` | 101.0 kB | 52.1 kB | 48% |
-| `css/formal-register.css` | 74.1 kB | 37.8 kB | 49% |
-| `css/grotesk-register.css` | 84.0 kB | 41.9 kB | 50% |
-| `css/high-contrast-register.css` | 76.0 kB | 38.2 kB | 50% |
+| `css/formal-register.css` | 74.3 kB | 37.8 kB | 49% |
+| `css/grotesk-register.css` | 84.2 kB | 42.0 kB | 50% |
+| `css/high-contrast-register.css` | 76.2 kB | 38.3 kB | 50% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
-| `css/light-register.css` | 67.3 kB | 31.9 kB | 53% |
-| `css/nostromo-register.css` | 81.9 kB | 45.1 kB | 45% |
-| `css/pastel-register.css` | 87.1 kB | 44.6 kB | 49% |
+| `css/light-register.css` | 67.6 kB | 32.0 kB | 53% |
+| `css/nostromo-register.css` | 82.1 kB | 45.2 kB | 45% |
+| `css/pastel-register.css` | 87.4 kB | 44.6 kB | 49% |
 | `css/phantom-register.css` | 95.9 kB | 52.8 kB | 45% |
-| `css/retro-register.css` | 129.9 kB | 65.9 kB | 49% |
-| `css/sepia-register.css` | 92.2 kB | 45.1 kB | 51% |
-| `css/solstice-register.css` | 69.7 kB | 37.1 kB | 47% |
-| `css/synthwave-register.css` | 97.2 kB | 54.4 kB | 44% |
-| `css/terminal-register.css` | 90.8 kB | 48.6 kB | 47% |
+| `css/retro-register.css` | 130.1 kB | 66.0 kB | 49% |
+| `css/sepia-register.css` | 92.5 kB | 45.2 kB | 51% |
+| `css/solstice-register.css` | 69.9 kB | 37.2 kB | 47% |
+| `css/synthwave-register.css` | 97.4 kB | 54.5 kB | 44% |
+| `css/terminal-register.css` | 91.1 kB | 48.7 kB | 47% |
 | `css/themes.css` | 163.0 kB | 104.2 kB | 36% |
-| `css/titanium-register.css` | 103.7 kB | 50.5 kB | 51% |
+| `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2234.2 kB | 1136.4 kB | 49% |
+| `dist/kp-themes.css` | 2237.9 kB | 1137.7 kB | 49% |
 | `dist/kp-themes.js` | 708.0 kB | 383.2 kB | 46% |
 
-The loose stylesheets together weigh **2286.7 kB** authored and
-**1165.9 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **2290.4 kB** authored and
+**1167.2 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

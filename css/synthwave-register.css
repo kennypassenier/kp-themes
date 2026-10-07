@@ -854,13 +854,22 @@
     [data-theme='synthwave'] .kp-datepicker__panel,
     [data-theme='synthwave'] .kp-combobox__list,
     [data-theme='synthwave'] .kp-palette,
-    [data-theme='synthwave'] .kp-theme-menu {
+    [data-theme='synthwave'] .kp-theme-menu__list {
         background: var(--popover);
         border: 1px solid var(--kp-hairline);
         border-top: 4px solid transparent;
         border-image: var(--kp-stripe) 1;
         border-radius: 0;
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='synthwave'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        border-image: none;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in

@@ -641,12 +641,20 @@
     [data-theme='brutalism'] .kp-datepicker__panel,
     [data-theme='brutalism'] .kp-combobox__list,
     [data-theme='brutalism'] .kp-palette,
-    [data-theme='brutalism'] .kp-theme-menu {
+    [data-theme='brutalism'] .kp-theme-menu__list {
         background: var(--popover);
         color: var(--popover-foreground);
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='brutalism'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     [data-theme='brutalism'] .kp-toast {

@@ -616,8 +616,16 @@
     [data-theme='high-contrast'] .kp-datepicker__panel,
     [data-theme='high-contrast'] .kp-combobox__list,
     [data-theme='high-contrast'] .kp-palette,
-    [data-theme='high-contrast'] .kp-theme-menu {
+    [data-theme='high-contrast'] .kp-theme-menu__list {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='high-contrast'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     [data-theme='high-contrast'] .kp-toast {

@@ -766,11 +766,19 @@
     [data-theme='terminal'] .kp-datepicker__panel,
     [data-theme='terminal'] .kp-combobox__list,
     [data-theme='terminal'] .kp-palette,
-    [data-theme='terminal'] .kp-theme-menu {
+    [data-theme='terminal'] .kp-theme-menu__list {
         background: var(--secondary);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='terminal'] .kp-theme-menu {
+        background: none;
+        border: 0;
         box-shadow: none;
     }
 

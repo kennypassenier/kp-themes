@@ -598,11 +598,19 @@
     [data-theme='deco'] .kp-datepicker__panel,
     [data-theme='deco'] .kp-combobox__list,
     [data-theme='deco'] .kp-palette,
-    [data-theme='deco'] .kp-theme-menu {
+    [data-theme='deco'] .kp-theme-menu__list {
         background: var(--popover);
         color: var(--popover-foreground);
         border: 1px solid var(--border-strong);
         border-radius: 0;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='deco'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* The dialog backdrop: the demo's literal rewritten as a relative

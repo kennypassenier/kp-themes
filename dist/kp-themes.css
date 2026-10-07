@@ -17341,12 +17341,20 @@
 
     [data-theme='retro'] .kp-combobox__list,
     [data-theme='retro'] .kp-palette,
-    [data-theme='retro'] .kp-theme-menu {
+    [data-theme='retro'] .kp-theme-menu__list {
         background: var(--background);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-raised), var(--kp-drop);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='retro'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     [data-theme='retro'] .kp-toasts {
@@ -20182,13 +20190,22 @@
     [data-theme='synthwave'] .kp-datepicker__panel,
     [data-theme='synthwave'] .kp-combobox__list,
     [data-theme='synthwave'] .kp-palette,
-    [data-theme='synthwave'] .kp-theme-menu {
+    [data-theme='synthwave'] .kp-theme-menu__list {
         background: var(--popover);
         border: 1px solid var(--kp-hairline);
         border-top: 4px solid transparent;
         border-image: var(--kp-stripe) 1;
         border-radius: 0;
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='synthwave'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        border-image: none;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -25783,11 +25800,19 @@
     [data-theme='terminal'] .kp-datepicker__panel,
     [data-theme='terminal'] .kp-combobox__list,
     [data-theme='terminal'] .kp-palette,
-    [data-theme='terminal'] .kp-theme-menu {
+    [data-theme='terminal'] .kp-theme-menu__list {
         background: var(--secondary);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='terminal'] .kp-theme-menu {
+        background: none;
+        border: 0;
         box-shadow: none;
     }
 
@@ -28377,12 +28402,20 @@
     [data-theme='brutalism'] .kp-datepicker__panel,
     [data-theme='brutalism'] .kp-combobox__list,
     [data-theme='brutalism'] .kp-palette,
-    [data-theme='brutalism'] .kp-theme-menu {
+    [data-theme='brutalism'] .kp-theme-menu__list {
         background: var(--popover);
         color: var(--popover-foreground);
         border: var(--kp-line) solid var(--border-strong);
         border-radius: 0;
         box-shadow: var(--kp-shadow);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='brutalism'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     [data-theme='brutalism'] .kp-toast {
@@ -31126,12 +31159,20 @@
     [data-theme='titanium'] .kp-datepicker__panel,
     [data-theme='titanium'] .kp-combobox__list,
     [data-theme='titanium'] .kp-palette,
-    [data-theme='titanium'] .kp-theme-menu {
+    [data-theme='titanium'] .kp-theme-menu__list {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
         border-radius: calc(var(--radius) * 1.5);
         box-shadow: 0 12px 28px hsl(from var(--background) h s l / 0.45);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='titanium'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -33760,12 +33801,20 @@
     [data-theme='pastel'] .kp-datepicker__panel,
     [data-theme='pastel'] .kp-combobox__list,
     [data-theme='pastel'] .kp-palette,
-    [data-theme='pastel'] .kp-theme-menu {
+    [data-theme='pastel'] .kp-theme-menu__list {
         background: var(--card);
         color: var(--card-foreground);
         border: 1px solid var(--border-strong);
         border-radius: 1.1rem;
         box-shadow: 0 24px 48px hsl(from var(--foreground) h 40% 15% / 0.25);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='pastel'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -38698,11 +38747,19 @@
     [data-theme='deco'] .kp-datepicker__panel,
     [data-theme='deco'] .kp-combobox__list,
     [data-theme='deco'] .kp-palette,
-    [data-theme='deco'] .kp-theme-menu {
+    [data-theme='deco'] .kp-theme-menu__list {
         background: var(--popover);
         color: var(--popover-foreground);
         border: 1px solid var(--border-strong);
         border-radius: 0;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='deco'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* The dialog backdrop: the demo's literal rewritten as a relative
@@ -40796,8 +40853,16 @@
     [data-theme='light'] .kp-datepicker__panel,
     [data-theme='light'] .kp-combobox__list,
     [data-theme='light'] .kp-palette,
-    [data-theme='light'] .kp-theme-menu {
+    [data-theme='light'] .kp-theme-menu__list {
         box-shadow: var(--kp-shadow-md);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='light'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -42808,10 +42873,18 @@
     [data-theme='grotesk'] .kp-datepicker__panel,
     [data-theme='grotesk'] .kp-combobox__list,
     [data-theme='grotesk'] .kp-palette,
-    [data-theme='grotesk'] .kp-theme-menu {
+    [data-theme='grotesk'] .kp-theme-menu__list {
         background: var(--popover);
         border: 3px solid var(--foreground);
         border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='grotesk'] .kp-theme-menu {
+        background: none;
+        border: 0;
         box-shadow: none;
     }
 
@@ -45309,11 +45382,19 @@
     [data-theme='blueprint'] .kp-datepicker__panel,
     [data-theme='blueprint'] .kp-combobox__list,
     [data-theme='blueprint'] .kp-palette,
-    [data-theme='blueprint'] .kp-theme-menu {
+    [data-theme='blueprint'] .kp-theme-menu__list {
         background: var(--popover);
         border: 1px solid var(--border-strong);
         border-radius: 2px;
         box-shadow: 0 12px 28px hsl(from var(--background) h s 0% / 0.45);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='blueprint'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -47695,11 +47776,19 @@
     [data-theme='nostromo'] .kp-datepicker__panel,
     [data-theme='nostromo'] .kp-combobox__list,
     [data-theme='nostromo'] .kp-palette,
-    [data-theme='nostromo'] .kp-theme-menu {
+    [data-theme='nostromo'] .kp-theme-menu__list {
         background: var(--popover);
         color: var(--popover-foreground);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='nostromo'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -50414,7 +50503,7 @@
     [data-theme='dark'] .kp-datepicker__panel,
     [data-theme='dark'] .kp-combobox__list,
     [data-theme='dark'] .kp-palette,
-    [data-theme='dark'] .kp-theme-menu {
+    [data-theme='dark'] .kp-theme-menu__list {
         background: var(--card);
         color: var(--foreground);
         border: 1px solid var(--border-strong);
@@ -50424,6 +50513,14 @@
            because `.kp-popover` is `overflow: auto` and clips a
            pseudo-element away — see --kp-halo. */
         box-shadow: var(--kp-halo);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='dark'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -52615,10 +52712,18 @@
     [data-theme='formal'] .kp-datepicker__panel,
     [data-theme='formal'] .kp-combobox__list,
     [data-theme='formal'] .kp-palette,
-    [data-theme='formal'] .kp-theme-menu {
+    [data-theme='formal'] .kp-theme-menu__list {
         background: var(--card);
         border-color: var(--border);
         border-radius: var(--radius);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='formal'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -54940,11 +55045,19 @@
     [data-theme='sepia'] .kp-datepicker__panel,
     [data-theme='sepia'] .kp-combobox__list,
     [data-theme='sepia'] .kp-palette,
-    [data-theme='sepia'] .kp-theme-menu {
+    [data-theme='sepia'] .kp-theme-menu__list {
         background: var(--popover);
         border: 1px solid var(--border);
         border-radius: 0.6rem;
         box-shadow: 0 20px 50px -12px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='sepia'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -57175,8 +57288,16 @@
     [data-theme='solstice'] .kp-datepicker__panel,
     [data-theme='solstice'] .kp-combobox__list,
     [data-theme='solstice'] .kp-palette,
-    [data-theme='solstice'] .kp-theme-menu {
+    [data-theme='solstice'] .kp-theme-menu__list {
         box-shadow: 0 24px 56px var(--kp-shadow-deep);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='solstice'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
@@ -59309,8 +59430,16 @@
     [data-theme='high-contrast'] .kp-datepicker__panel,
     [data-theme='high-contrast'] .kp-combobox__list,
     [data-theme='high-contrast'] .kp-palette,
-    [data-theme='high-contrast'] .kp-theme-menu {
+    [data-theme='high-contrast'] .kp-theme-menu__list {
         border: 2px solid var(--border-strong);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='high-contrast'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     [data-theme='high-contrast'] .kp-toast {

@@ -398,8 +398,16 @@
     [data-theme='light'] .kp-datepicker__panel,
     [data-theme='light'] .kp-combobox__list,
     [data-theme='light'] .kp-palette,
-    [data-theme='light'] .kp-theme-menu {
+    [data-theme='light'] .kp-theme-menu__list {
         box-shadow: var(--kp-shadow-md);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='light'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
