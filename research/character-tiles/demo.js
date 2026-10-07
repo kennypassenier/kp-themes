@@ -191,7 +191,7 @@ const IDEAS = {
             { name: 'The arcade marquee', text: 'A pink frame with a glow, the mark a pink drop, VT323 throughout.' },
         ],
         loading: [
-            { name: 'The grid-floor horizon', text: 'The grid floor drives toward you.' },
+            { name: 'The oncoming tube and floor', text: 'The tile’s stripe is an unlit tube with the sun’s ramp flowing along it (1800 ms) while the floor lines drive toward you (900 ms), as the page tube and floor do.' },
             { name: 'The VCR display', text: 'A tracking band rolls down the body.' },
             { name: 'The sun rises', text: 'A striped sun swells up over the horizon and sinks again.' },
         ],
@@ -212,7 +212,7 @@ const IDEAS = {
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'The tracking jumps', text: 'The tile jolts once, as a needle does.' },
+            { name: 'The laser under the value', text: 'A laser line is drawn under the changed value, once, in 675 ms.' },
             { name: 'The laser flares', text: 'The tile flares with light once, slowing as it lands.' },
         ],
     },

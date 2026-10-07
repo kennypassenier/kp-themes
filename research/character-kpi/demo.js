@@ -1530,7 +1530,7 @@ const say = (/** @type {string} */ text) => {
 
 /** Every state button in the controls, toggled as a radio group within its own `role="group"`. */
 function wireRadioGroup(selectorAttr, apply) {
-    const buttons = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll(`[${selectorAttr}]`)]);
+    const buttons = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll(`button[${selectorAttr}]`)]);
     for (const button of buttons) {
         button.addEventListener('click', () => {
             for (const b of buttons) b.setAttribute('aria-pressed', String(b === button));
