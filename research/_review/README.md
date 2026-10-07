@@ -90,6 +90,10 @@ pairs, with no stored answer to clear by hand. Name pairs in `"reopen":
 "To judge" (catalogue/changed.html) then shows the demo as "Updated ·
 <themes>", naming the themes the round reopened; "Not started" is only for
 a demo never judged in that browser.
+Once every pair has its verdict again the demo moves under Decided at once,
+without waiting for its archiving. While a session rebuilds a round, it marks
+the demo's entry in `catalogue/pages.js` with `rework: '<why>'`; "To judge"
+leaves it out until the flag is removed with the new round.
 
 ## Choices to tick
 

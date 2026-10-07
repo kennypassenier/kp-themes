@@ -152,7 +152,10 @@ function mountHub() {
     const decided = /** @type {HTMLDetailsElement} */ (document.querySelector('[data-cat-hub-decided]'));
     const decidedList = /** @type {HTMLElement} */ (document.querySelector('[data-cat-hub-decided-list]'));
     const self = new URL('changed.html', import.meta.url);
-    const pages = PAGES.find((group) => group.group === 'Research to look at')?.pages ?? [];
+    const listed = PAGES.find((group) => group.group === 'Research to look at')?.pages ?? [];
+    // A round being rebuilt (`rework` in pages.js) waits for its new round, not for a verdict.
+    const pages = listed.filter((page) => !page.rework);
+    const inRework = listed.length - pages.length;
 
     /** @typedef {{ href: string, label: string, url: URL, shape: ReturnType<typeof shapeOf> | undefined, failed: boolean, row: HTMLLIElement }} Demo */
     /** @type {Demo[]} */
@@ -248,7 +251,9 @@ function mountHub() {
         const blocks = blocksLeft === null ? `catalogue blocks in ${theme}: gathering…` : `${blocksLeft} catalogue block(s) open in ${theme}`;
         totals.textContent = reading
             ? `Reading the research demos… ${blocks}.`
-            : `Left: ${waiting.length} of ${demos.length} demos (${themesLeft} theme step(s) in them) · ${blocks}.`;
+            : `Left: ${waiting.length} of ${demos.length} demos (${themesLeft} theme step(s) in them)${
+                  inRework ? ` · ${inRework} more in rework, back when their new round is out` : ''
+              } · ${blocks}.`;
         const items = waiting.length + (blocksLeft ?? 0);
         document.title = `${reading || blocksLeft === null ? '…' : items} to judge · kp-themes catalogue`;
 

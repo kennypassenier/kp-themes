@@ -3,7 +3,7 @@
 // gates/check-catalogue.mjs refuses a catalogue page or a research demo that
 // is missing here, and an entry here with no page behind it.
 
-/** @typedef {{ href: string, label: string, component?: boolean, review?: boolean }} Page */
+/** @typedef {{ href: string, label: string, component?: boolean, review?: boolean, rework?: string }} Page */
 
 /** @type {{ group: string, pages: Page[] }[]} */
 export const PAGES = [
@@ -70,26 +70,29 @@ export const PAGES = [
         // one per topic, and Kenny found three identical headings in his
         // navigation: "zie gewoon dat het niet meer gebeurt" [scope-126]. A
         // new demo joins this group's list; it moves to 'Archived research'
-        // once he has decided on it [scope-81].
+        // once he has decided on it [scope-81]. A demo whose round is being
+        // rebuilt carries `rework: '<why>'`: "To judge" leaves it out until the
+        // session that rebuilds it removes the flag with the new round
+        // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
-            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
+            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo', rework: 'reworked around its anchor' },
             // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
             { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
             // Kenny, 2026-10-07 04:23: what makes synthwave synthwave, the same way (the analysis in themes/synthwave/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fourth theme of the one-by-one series, after cyberpunk.
-            { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave' },
+            { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave', rework: 'round 2 is superseded by round 3' },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
-            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
+            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk', rework: 'reworked around its anchor' },
             // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
-            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
+            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint', rework: 'reworked around its anchor' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
         ],

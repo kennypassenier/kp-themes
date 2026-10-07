@@ -110,16 +110,17 @@ export function storedFor(id) {
  * @returns {DemoProgress}
  */
 export function progressOf(shape, stored = storedFor(shape.id)) {
-    const reopened = new Set();
-    // A round not yet opened in this browser: review.js reopens these on load.
+    /** Pairs a round not yet opened in this browser will reopen on load (review.js): open, whatever their verdict. */
+    const pending = new Set();
     if (shape.round?.round && stored.__round !== shape.round.round) {
-        for (const [key, entry] of Object.entries(stored)) if (entry?.verdict === 'rejected') reopened.add(key);
-        for (const key of shape.round.reopen ?? []) reopened.add(key);
-    } else if (Array.isArray(stored.__reopened)) {
-        // The round is open already: review.js listed what it reopened.
-        for (const key of stored.__reopened) reopened.add(key);
+        for (const [key, entry] of Object.entries(stored)) if (entry?.verdict === 'rejected') pending.add(key);
+        for (const key of shape.round.reopen ?? []) pending.add(key);
     }
-    const open = (key) => !stored[key]?.verdict || reopened.has(key);
+    // The pairs the round reopened, pending or already reopened (review.js
+    // lists those under `__reopened`): they name the themes an update is in,
+    // and a verdict given on one since closes it like any other pair.
+    const reopened = new Set(pending.size ? pending : Array.isArray(stored.__reopened) ? stored.__reopened : []);
+    const open = (key) => !stored[key]?.verdict || pending.has(key);
     const steps = shape.themes.map((theme) => shape.items.map((item) => `${theme}|${item}`));
     if (shape.extras.length) steps.push(shape.extras);
     const pairs = steps.flat();
