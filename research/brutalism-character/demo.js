@@ -320,21 +320,35 @@ const COMPOSITES = () =>
         `<div class="kp-kpis"><a class="kp-kpi bc-slab bc-kpi bc-in-kpi" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured today</span><span class="kp-kpi__value bc-figure">412</span><span class="kp-kpi__trend">since 07:00</span></a></div>`,
     );
 
+/** The pointer is the question: every part marked `bc-hov` answers a real :hover (options.css), so the scene is played by hand. */
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="bc-row">${button('Export loads', 'bc-pointed')}${button('Pour it', 'kp-button--primary')}</div>`) +
-    cell('Menu entries, the first pointed at', PART.menuStatic(['Open the log', 'Assign to…', 'Rename'])) +
+    `<p class="bc-point bc-part--wide" role="note"><span class="bc-point__mark" aria-hidden="true">↖</span> <b>Point at the parts.</b> Every part below answers your pointer; one in each row is held pointed for comparison. The ½ and ¼ speed buttons slow the lift.</p>` +
     cell(
-        'Tile with its Open link pointed at',
-        `<div class="kp-card bc-slab bc-tile"><p class="kp-card__title bc-title">Crane 02</p><a class="kp-button kp-button--ghost kp-button--sm bc-tile-link bc-pointed" href="#bc-intro">Open</a></div>`,
+        'Button: at rest, then held pointed',
+        `<div class="bc-row">${button('Export loads', 'bc-hov')}${button('Export loads', 'bc-hov bc-pointed')}</div>`,
+    ) +
+    cell('Primary button, at rest', `<div class="bc-row">${button('Pour it', 'kp-button--primary bc-hov')}</div>`) +
+    cell(
+        'Menu entries, the first held pointed',
+        `<div class="kp-popover bc-pop bc-pop--static bc-slab"><ul class="kp-menu" role="menu">${['Open the log', 'Assign to…', 'Rename']
+            .map(
+                (t, i) =>
+                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item bc-hov${i === 0 ? ' bc-pointed' : ''}">${t}</button></li>`,
+            )
+            .join('')}</ul></div>`,
     ) +
     cell(
-        'Key figures, the first pointed at',
-        `<div class="kp-kpis bc-kpi-row"><a class="kp-kpi bc-slab bc-kpi bc-pointed" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured</span><span class="kp-kpi__value bc-figure">412</span></a><a class="kp-kpi bc-slab bc-kpi" href="#bc-intro"><span class="kp-kpi__label bc-label">Cranes</span><span class="kp-kpi__value bc-figure">6</span></a></div>`,
+        'Tile with its Open link, held pointed',
+        `<div class="kp-card bc-slab bc-tile"><p class="kp-card__title bc-title">Crane 02</p><a class="kp-button kp-button--ghost kp-button--sm bc-tile-link bc-hov bc-pointed" href="#bc-intro">Open</a></div>`,
     ) +
     cell(
-        'Days of a month, one pointed at',
+        'Key figures, the first held pointed',
+        `<div class="kp-kpis bc-kpi-row"><a class="kp-kpi bc-slab bc-kpi bc-hov bc-pointed" href="#bc-intro"><span class="kp-kpi__label bc-label">Poured</span><span class="kp-kpi__value bc-figure">412</span></a><a class="kp-kpi bc-slab bc-kpi bc-hov" href="#bc-intro"><span class="kp-kpi__label bc-label">Cranes</span><span class="kp-kpi__value bc-figure">6</span></a></div>`,
+    ) +
+    cell(
+        'Days of a month, the second held pointed',
         `<div class="bc-days">${[12, 13, 14, 15]
-            .map((d) => `<span class="bc-day bc-small${d === 13 ? ' bc-pointed' : ''}"><span class="bc-day__num">${d}</span></span>`)
+            .map((d) => `<span class="bc-day bc-small bc-hov${d === 13 ? ' bc-pointed' : ''}"><span class="bc-day__num">${d}</span></span>`)
             .join('')}</div>`,
     );
 
@@ -378,52 +392,65 @@ const PRESS = () =>
         `<div class="bc-row"><button type="button" class="bc-key bc-small bc-press" aria-pressed="false"><span class="bc-key__swatch" aria-hidden="true"></span>Crane 01</button></div>`,
     );
 
+/**
+ * One tile with every kind of text a dashboard sets: a label, a title, prose,
+ * a figure with its unit, a strip of figures, a table of readings (a value
+ * with its unit, two dates in rule 52's dd/mm/yyyy HH:MM) and the actions.
+ * Every voice option restyles these same parts (`bc-type__*`, `bc-val`,
+ * `bc-unit`, `bc-stamp`), so the date and the "412 t" are always in view.
+ */
 const TYPE = () =>
     cell(
-        'A tile with its words and figures',
+        'A tile with its words, figures and dates',
         `<div class="kp-card bc-slab bc-type"><p class="bc-type__label">Level 3, east</p><p class="bc-type__head">Crane 02</p>
         <p class="bc-type__prose">The wind rose past the crane's limit at noon; the site checks it again at 14:30.</p>
-        <p class="bc-type__figure"><span class="bc-figure">61</span> <small>km/h</small> ${chip('12 km/h', 'up', 'bad')}</p>
+        <p class="bc-type__figure"><span class="bc-figure">61</span> <span class="bc-unit">km/h</span> ${chip('12 km/h', 'up', 'bad')}</p>
         <div class="bc-type__strip">${[
-            ['Load', '412'],
-            ['Poured', '18 240'],
-            ['Cranes', '6'],
+            ['Load', '412', 't'],
+            ['Poured', '18 240', 'm³'],
+            ['Cranes', '6', ''],
         ]
-            .map(([l, v]) => `<div><span class="bc-label">${l}</span><span class="bc-figure">${v}</span></div>`)
+            .map(([l, v, u]) => `<div><span class="bc-label">${l}</span><span class="bc-figure">${v}${u ? ` <span class="bc-unit">${u}</span>` : ''}</span></div>`)
             .join('')}</div>
-        <table class="bc-type__table"><tbody><tr><th scope="row">Load</th><td>412 t</td></tr><tr><th scope="row">Last reading</th><td><span class="kp-timestamp bc-stamp">2026-10-07 14:12</span></td></tr></tbody></table>
-        <p>${button('Open the log', 'kp-button--sm')} <span class="kp-badge bc-tagged">12 new</span></p></div>`,
+        <table class="bc-type__table"><tbody>
+            <tr><th scope="row">Load</th><td><span class="bc-val">412</span> <span class="bc-unit">t</span></td></tr>
+            <tr><th scope="row">Last reading</th><td><time class="kp-timestamp bc-stamp">07/10/2026 14:12</time></td></tr>
+            <tr><th scope="row">Next check</th><td><time class="kp-timestamp bc-stamp">07/10/2026 14:30</time></td></tr>
+        </tbody></table>
+        <p class="bc-type__actions">${button('Open the log', 'kp-button--sm')} <span class="kp-badge bc-tagged">12 new</span></p></div>`,
         'bc-part--wide',
     );
 
+/** The motifs, one specimen each, every one named for what it means (G16). */
 const MOTIFS = () =>
-    cell('Meter with its mark', meter(0.62, 0.8)) +
+    cell('Weight: the hard shadow', PART.plainTile('Crane 02', 'Hook 61 m', 'bc-motif-card') +
+            `<div class="bc-row">${chip('6 %', 'up', 'good')}${chip('3 %', 'down', 'bad')}</div><p class="bc-motif-note">Every slab, always; a change on a plain plate.</p>`,
+    ) +
     cell(
-        'Chart events on a plot',
+        'Danger: hazard tape',
+        `<div class="kp-card bc-slab bc-tile bc-motif-warn bc-warn" data-bc-kind="warn"><p class="kp-card__title bc-title">Crane 04</p><p class="kp-card__body">Wind 61 km/h</p>${TAPE}</div><p class="bc-motif-note">Only on a warning.</p>`,
+    ) +
+    cell(
+        'Fixed: bolts on a chart’s events',
         plot(
             'bc-events',
-            '<span class="bc-events__mark" style="--x: 37.5%; --y: 52%"></span><span class="bc-events__mark" style="--x: 75%; --y: 42%"></span>',
+            '<span class="bc-events__mark" style="--x: 37.5%; --y: 55%"></span><span class="bc-events__mark" style="--x: 62.5%; --y: 40%"></span><span class="bc-events__mark" style="--x: 87.5%; --y: 20%"></span>',
         ),
     ) +
     cell(
-        'A card and a warning card',
-        `<div class="bc-motif-pair">${PART.plainTile('Crane 02', 'Hook 61 m', 'bc-motif-card')}<div class="kp-card bc-slab bc-tile bc-motif-warn bc-warn" data-bc-kind="warn"><p class="kp-card__title bc-title">Crane 04</p><p class="kp-card__body">Wind 61 km/h</p>${TAPE}</div></div>`,
-        'bc-part--wide',
-    ) +
-    cell(
-        'Changes, today and the pick',
-        `<div class="bc-row">${chip('6 %', 'up', 'good')}${chip('3 %', 'down', 'bad')}</div><div class="bc-days bc-days--motif">${[12, 13, 14, 15]
+        'Today: the six-pixel bar. The pick: yellow',
+        `<div class="bc-days bc-days--motif">${[12, 13, 14, 15]
             .map(
                 (d) =>
                     `<span class="bc-day bc-small${d === 13 ? ' bc-today' : ''}${d === 14 ? ' bc-picked' : ''}"><span class="bc-day__num">${d}</span></span>`,
             )
-            .join('')}</div>`,
+            .join('')}</div><p class="bc-motif-note">13 is today, 14 is picked.</p>`,
     ) +
     cell(
-        'Empty state',
+        'Stamped: the empty state’s zero, askew',
         `<div class="kp-empty bc-motif-empty"><p class="kp-empty__title">No readings yet</p><p class="kp-empty__body">The first arrives at 07:00.</p></div>`,
     ) +
-    cell('A divider between two sections', `<p class="bc-cap">Cranes</p><div class="bc-divider" data-kp-divider></div><p class="bc-cap">Hoists</p>`);
+    cell('The divider: the marquee hatch', `<p class="bc-cap">Cranes</p><div class="bc-divider" data-kp-divider></div><p class="bc-cap">Hoists</p>`);
 
 /* ------------------------------------------------------------ the aspects */
 
@@ -724,17 +751,77 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does a waiting part show while it loads?',
-        why: 'Eleven loading pictures today: hammers (the busy table, the key figure), stamps (the tiles, the columns, the menu’s shadow), the chart’s rivet gun, the calendar’s tape, the meter’s blocks, the skeleton’s presses and the trend’s pour, which you picked again today. A strike is formal’s loading family (the seal pressed and lifted); running tape is high-contrast’s The tape runs.',
+        why: 'The pour is yours (the trend’s pick, and your favourite here, kept as the reference in second place), and eleven loading pictures are in the decided picks: hammers (the busy table, the key figure), stamps (the tiles, the columns, the menu’s shadow), the chart’s rivet gun, the calendar’s tape, the meter’s blocks, the skeleton’s presses and the pour. You asked for something much better, so ten more follow the pour, each a different piece of raw construction on the same well and the same 1200 ms clock: stacking, dropping, carrying, hoisting, tallying, joint-opening, bolting, staking out, scaffolding, quarrying. None strikes (a strike is formal’s seal), none runs or sweeps (running tape is high-contrast’s, a sun crossing solstice’s), none blinks or chases (a cursor is terminal’s, bulbs synthwave’s and nostromo’s). The first is the one I would pick, and why is under it. In each, the labels above stay readable; standing still it shows the finished picture.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
+                key: 'carry',
+                name: 'Carried: one block is lifted off its footprint and set down on the next',
+                see: 'Four ink footprints along the well’s floor; one block is lifted off the first, carried one place with a hard step and set down on the gravity curve, three times, start to end; then it is back on the first.',
+                verdict: rec(
+                    'it is the only picture made of the anchor itself: a block lifted off its footprint and set down (G8, G12), it travels start to end the way a reading is written, and it strikes, runs, fades and blinks nowhere; the pour stays the reference if you would rather keep your favourite.',
+                ),
+            },
+            {
                 key: 'pour',
                 name: 'The pour: the reading is cast in its own place',
                 see: 'Where the value will stand is a well in the ink line; ink is poured into it from its floor in four hard lifts, it holds full for one, and it is struck clean at once, 12 units (1200 ms). The labels stay readable above it.',
-                verdict: rec(
-                    'it is your trend’s pour carried to every part, casting is how brutalism makes a reading, and it travels nowhere, which no theme’s loading does.',
-                ),
+                verdict: not('it is your favourite and reads at every size, but it fills a level in place, which says progress more than waiting, and the trend tile already shows it.'),
+            },
+            {
+                key: 'drop',
+                name: 'Dropped: a slab falls onto the footprint that waits for it',
+                see: 'An ink footprint stands in the well all the time; a paper slab in the 2 px line falls onto it from above on the gravity curve, stops dead, stands, and is lifted off.',
+                verdict: not('it is the arrival physics (G3) as a loop, so a waiting part looks like a part arriving again and again.'),
+            },
+            {
+                key: 'stack',
+                name: 'Stacked: blocks fall in turn and build a stepped stack',
+                see: 'Three ink blocks, each narrower than the one under it, fall from above the well on the gravity curve, one after the other, and stop dead on the one below; the whole stack is then lifted off up and out, and the well is empty again.',
+                verdict: not('it builds a stack, which says progress, and at the meter’s 14 px it is three specks.'),
+            },
+            {
+                key: 'hoist',
+                name: 'Hoisted: a load climbs its cable in four hard lifts and is let go',
+                see: 'A block hangs from a cable at the well’s floor and is hoisted in four hard lifts to the top, hangs there, and is let go: it falls free on the gravity curve and stops dead.',
+                verdict: not('it is clear and falls well on the gravity curve, but the cable adds a line the grammar has no use for outside a crane.'),
+            },
+            {
+                key: 'scaffold',
+                name: 'Scaffolded: three posts rise, two rails are clamped across',
+                see: 'Three ink posts rise from the floor in two hard lifts each, start to end; two rails are clamped across them one after the other; the frame is struck.',
+                verdict: not('it is the most literally construction, but five parts in a 14 px well turn into a grid of hairlines, and it builds, which says progress.'),
+            },
+            {
+                key: 'quarry',
+                name: 'Quarried: a cast slab is cut in four and lifted off block by block',
+                see: 'The well is a solid cast slab cut in four; the blocks are lifted off up-left one after another, start to end, until the well stands empty; then it is cast again.',
+                verdict: not('it shows weight leaving, which is G12’s lift, but the well is solid ink for a third of the loop, which shouts, and it is the pour and the strike in one.'),
+            },
+            {
+                key: 'tally',
+                name: 'Tallied: four strokes are marked, the fifth strikes through',
+                see: 'Four ink strokes are marked one after another, start to end, in hard steps; the fifth is struck through them at once; the board is wiped clean.',
+                verdict: not('it reads at every size and is the rawest, but a tally says how many, so it promises a total that is not coming.'),
+            },
+            {
+                key: 'bolt',
+                name: 'Bolted: a square bolt is turned in and sinks flush',
+                see: 'A square-headed bolt stands proud of its footprint on its shadow and is turned four quarters, sinking each time, until it lies flush and its shadow is gone; then it is backed out at once.',
+                verdict: not('it is the clearest use of the footprint and the quarter turn, but the quarter turn is the spinner’s signature, and a bolt is the chart’s rivet gun’s object.'),
+            },
+            {
+                key: 'stake',
+                name: 'Staked out: three stakes are driven in and the string is snapped taut',
+                see: 'Three stakes fall into the ground along the well, start to end; a string line is snapped taut between their heads in one step; then all three are pulled.',
+                verdict: not('the string snapping taut is a good beat, but three thin stakes vanish in the small wells, and a survey is more site than slab.'),
+            },
+            {
+                key: 'form',
+                name: 'Parted: a cast slab opens its joint and slams shut',
+                see: 'The well is a solid cast slab with a seam through it; the two halves part, top and foot, in three hard steps and leave the well; then they fall together on the gravity curve and stop dead at the seam.',
+                verdict: not('it is a clean hard-step picture, but the closed seam is nearly the full pour, so it is a pour opening and shutting.'),
             },
             {
                 key: 'strike',
@@ -934,30 +1021,76 @@ const ASPECTS = [
         id: 'voice',
         label: 'The voice',
         rule: 'G15',
-        question: 'Which typeface says what?',
-        why: 'Archivo Black in capitals shouts the headlines, Space Grotesk speaks the body; your picks set labels in Space Grotesk 800 capitals (the columns, the state, the trend). Some register parts speak in mono capitals (the footer’s microlabel, the side note, the platforms, a table’s status), which is the dark themes’ label voice.',
+        question: 'Which typeface says what, and how heavy are the figures and dates?',
+        why: 'Archivo Black in capitals shouts the headlines, Space Grotesk speaks the body; your picks set labels in Space Grotesk 800 capitals (the columns, the state, the trend). You found the date and “412 t” too thin in the first version: they were the register’s timestamp (mono, weight 400, 13.6 px, muted grey) and a table value (Space Grotesk 400, 13.6 px), beside a 3 px ink line. In every option below no text is thin any more: figures, dates, units and labels are 700 or heavier and never under 12 px, in ink, and prose is 500 at 16 px. What differs is the face and the treatment of figures and dates, shown on the same tile.',
         kind: 'still',
         scene: TYPE,
         options: [
             {
                 key: 'shout',
-                name: 'Archivo Black shouts, Space Grotesk speaks in bold capitals',
-                see: 'Titles and figures in Archivo Black capitals; labels, buttons, tags and table heads in Space Grotesk 700 capitals, tracked; prose in Space Grotesk; the mono only for the timestamp.',
+                name: 'Archivo Black shouts, Space Grotesk speaks in bold capitals; dates in bold mono',
+                see: 'Titles and figures (the 412 t too) in Archivo Black; labels, buttons, tags and table heads in Space Grotesk 700 capitals, tracked; prose in Space Grotesk 500; the date in the mono at 700, in ink.',
                 verdict: rec(
-                    'it is the concept demo’s voice and your picks’, every face has one job, and it is told apart from grotesk’s Archivo in sentence case.',
+                    'it is the concept demo’s voice and your picks’, every face has one job (the mono only for what a machine wrote), the date and the figure now carry the weight of the line beside them, and it is told apart from grotesk’s Archivo in sentence case.',
                 ),
             },
             {
                 key: 'mono',
                 name: 'Mono capitals for labels (the dark themes’ label voice)',
-                see: 'Labels, tags and table heads in the mono, capitals, tracked wide.',
+                see: 'Labels, units, buttons and table heads in the mono, 700, capitals, tracked wide; figures stay Archivo Black.',
                 verdict: not('it looks technical, but tracked mono capitals are nostromo’s, cyberpunk’s, synthwave’s and titanium’s labels.'),
             },
             {
                 key: 'black',
                 name: 'Archivo Black for everything, prose too',
-                see: 'Labels, buttons, tags, table heads and the running text in Archivo Black.',
+                see: 'Labels, buttons, tags, table heads, dates, units and the running text in Archivo Black.',
                 verdict: not('it is loud everywhere, so nothing is louder than anything else, and a paragraph in Archivo Black is hard to read.'),
+            },
+            {
+                key: 'plated',
+                name: 'Figures and dates on plates',
+                see: 'The reading (412 t) sits on a small yellow slab in the 2 px line and 3 px shadow, each date on a small ink slab with paper digits; Space Grotesk 700, tabular.',
+                verdict: not(
+                    'the plates make the date and the figure impossible to miss and are pure brutalism, but a table of plates is heavy past three rows, and yellow already means “a hand”, not “a number”.',
+                ),
+            },
+            {
+                key: 'stamped',
+                name: 'Dates and readings stamped on, askew',
+                see: 'The reading and the dates in Archivo Black in a 2 px frame, each set 2° askew, as the dossier’s stamp is.',
+                verdict: not(
+                    'the stamp is yours (the dossier, the alarm, the empty zero) and it reads loud, but a stamp means “stamped once”, not a column of live dates, and a tilted number is harder to compare down a column.',
+                ),
+            },
+            {
+                key: 'family',
+                name: 'One family: Space Grotesk 700 for headings and figures',
+                see: 'No Archivo Black: the title, figures, units and dates in Space Grotesk 700, the figures set larger to make up the weight; prose 500.',
+                verdict: not(
+                    'one family is calm and the figures are bold enough, but it drops Archivo Black, the face of the concept demo and of every title you picked, and with it the shout.',
+                ),
+            },
+            {
+                key: 'caps',
+                name: 'Capitals everywhere, prose too',
+                see: 'Every line in Space Grotesk 700 capitals, tracked, the prose included; figures stay Archivo Black.',
+                verdict: not('it is as raw as a site sign, but a sentence in capitals is slow to read and nothing is left to shout.'),
+            },
+            {
+                key: 'ledger',
+                name: 'A ruled ledger: figures right-aligned between 3 px rules',
+                see: 'The table and the strip are ruled in 3 px ink, the row names on yellow, the readings and dates right-aligned in Space Grotesk 700, tabular.',
+                verdict: not(
+                    'it lines every number up and is the most honest about construction, but it is a table treatment, not a voice: it says nothing about the headings, and yellow row heads break “yellow is the hand”.',
+                ),
+            },
+            {
+                key: 'poster',
+                name: 'Poster figures: the number is the headline',
+                see: 'Figures set at 2.6 to 3.4 rem in Archivo Black, the reading and the dates large in Space Grotesk 700; labels stay small capitals.',
+                verdict: not(
+                    'a number you cannot miss is the poster idea, but only the one figure of a tile can be a headline: set on every row it shouts down the title.',
+                ),
             },
         ],
     },

@@ -35,14 +35,14 @@ says what you see and why it is or is not recommended, on the page and in its hi
 | 7   | The surface (G7)                      | the slab: white, one ink line, its hard shadow · the sticker sheet (pastel's sticker chart) · the poster stock                     |
 | 8   | A warning (G13)                       | taped off · the warning poster alone (near high-contrast's framed plate) · the askew sticker (pastel's)                            |
 | 9   | A live update (G9)                    | slammed onto its offset (the headline's slam) · inverted (high-contrast's) · at once (formal's Redrawn)                            |
-| 10  | Loading (G10)                         | the pour, cast in its own place · the hammer (near formal's seal) · the tape runs (near high-contrast's, cyberpunk's)              |
+| 10  | Loading (G10)                         | carried, lifted off its footprint and set down (recommended) · the pour (Kenny's favourite) · nine more raw-construction pictures (dropped, stacked, hoisted, scaffolded, quarried, tallied, bolted, staked out, parted) · the hammer · the tape runs |
 | 11  | The spinner (G11)                     | the block tipped over (the signature, on gravity) · a cube being poured · the package's ring                                       |
 | 12  | Leaving and arriving (G12)            | lifted off and gone; set down · slammed out to the left (Kenny's pick; near grotesk's) · driven into the ground                    |
 | 13  | Buttons inside composites (G17)       | exactly brutalism's own · as today · brutalism's own but quiet (ghosts inside a composite)                                         |
 | 14  | Pointing at something (G8)            | lifted off its footprint, and it names itself · kicked sideways · inverted (high-contrast's)                                       |
 | 15  | The focus ring (G14, DI2)             | the two-channel ring, lifted · one thick ink outline · the field's yellow fill, with the ring                                      |
 | 16  | The press (G14)                       | driven into its footprint · shoved sideways · reverse video (terminal's)                                                           |
-| 17  | The voice (G15)                       | Archivo Black shouts, Space Grotesk speaks in bold capitals · mono capitals (the dark themes') · Archivo Black for everything      |
+| 17  | The voice (G15)                       | Archivo Black shouts, Space Grotesk speaks in bold capitals, dates in bold mono · mono capitals · Archivo Black for everything · plated, stamped, one family, capitals, ledger, poster figures (nine in all; no text under 700 below 1 rem) |
 | 18  | Motifs (G16)                          | every motif means one thing · only the shadow · on everything                                                                      |
 
 **How.**
@@ -84,3 +84,5 @@ dimmed to 0.7 by the package's busy rule, which made the ink grey; the scenes se
 painted yellow words on a yellow plate; fixed. The voice's third option looked like the first; it now sets the prose in Archivo Black too.
 The warning figure wrapped on its tone plate; it is shorter. In the review dialog the copied scenes lost their ink line (the knobs lived on
 the page only); they are now declared on every scene.
+
+**Round after Kenny's first review (2026-10-07).** Loading: ten more pictures after the pour, each a different mechanism on the same well and the 1200 ms clock; the pour stays as the reference. Hover: the scene was frozen (the register's `:hover` moves nothing here, because the scene computes translate and shadow from the footprint's knobs); every part marked `bc-hov` now answers a real `:hover` through the same rules as the held `bc-pointed` part, in the page and in the dialog. Voice: the date and "412 t" were mono 400 / Space Grotesk 400 at 13.6 px; every option now holds figures, dates, units and labels at 700 or heavier, in ink, never under 12 px, prose at 500; dates are dd/mm/yyyy HH:MM (rule 52). Motifs: rebuilt as six named specimens at a size that survives the dialog's fit-to-height (the 2 px bar and 0.6 rem bolts were invisible).

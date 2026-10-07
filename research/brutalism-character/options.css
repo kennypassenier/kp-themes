@@ -1259,6 +1259,936 @@
         }
     }
 
+    /* ── 10 · ten more pictures of waiting (Kenny, 2026-10-07: "I like pour
+       best, but feel like we can do much better, give ten examples") ──────
+       Each is raw construction in the same well, on the same clock: one loop
+       is 12 units (1200 ms, `--bc-d`), the days of a week one unit apart and
+       the skeleton's lines two, as the pour. Whole things are counted with
+       `steps()`, what falls falls on G1's curve and stops dead, what is
+       taken off is lifted on its curve played back. The well's layers are the
+       three spans (`.bc-pour`, `.bc-hammer`, `.bc-tape`) and its two
+       pseudo-elements; sizes are shares of the well, so every picture draws
+       in the figure's well as in the meter's. Each stands, still or reduced,
+       in its finished pose. */
+    .bc-scene {
+        --bc-d: calc(var(--bc-loop) * var(--bc-slow, 1));
+    }
+
+    .bc-scene .bc-day.bc-waits {
+        --bc-stag: calc(var(--i, 0) * 100ms * var(--bc-slow, 1));
+    }
+
+    .bc-scene .bc-skel__line {
+        --bc-stag: calc(var(--i, 0) * 200ms * var(--bc-slow, 1));
+    }
+
+    .bc-scene:is(
+            [data-bc-loading='stack'],
+            [data-bc-loading='drop'],
+            [data-bc-loading='carry'],
+            [data-bc-loading='hoist'],
+            [data-bc-loading='tally'],
+            [data-bc-loading='form'],
+            [data-bc-loading='bolt'],
+            [data-bc-loading='stake'],
+            [data-bc-loading='scaffold'],
+            [data-bc-loading='quarry']
+        )
+        :is(.bc-pour, .bc-hammer, .bc-tape) {
+        position: absolute;
+        inset: auto;
+        display: none;
+        margin: 0;
+        transform: none;
+        translate: none;
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::before,
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::after,
+    .bc-scene[data-bc-loading='stake'] .bc-well::before {
+        content: '';
+        position: absolute;
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-loading='quarry'] .bc-well::before {
+        content: '';
+        position: absolute;
+        background: var(--bc-ink);
+    }
+
+    /* 1 · Stacked: three blocks, each narrower, fall in turn and build a
+       stepped stack; the stack is lifted off whole. */
+    .bc-scene[data-bc-loading='stack'] :is(.bc-pour, .bc-hammer, .bc-tape) {
+        display: block;
+        inset-inline: 0;
+        margin-inline: auto;
+        block-size: 30%;
+    }
+
+    .bc-scene[data-bc-loading='stack'] .bc-pour {
+        inset-block-end: 0;
+        inline-size: min(36cqi, 3rem);
+    }
+
+    .bc-scene[data-bc-loading='stack'] .bc-hammer {
+        inset-block-end: 33%;
+        inline-size: min(25cqi, 2.1rem);
+    }
+
+    .bc-scene[data-bc-loading='stack'] .bc-tape {
+        inset-block-end: 66%;
+        inline-size: min(14cqi, 1.2rem);
+    }
+
+    /* 2 · Dropped: a slab falls onto the footprint that waits for it, stands,
+       and is lifted off up-left. */
+    .bc-scene[data-bc-loading='drop'] :is(.bc-pour, .bc-hammer) {
+        --bc-w: min(26cqi, 2.2rem);
+        display: block;
+        inset-inline-start: 50%;
+        inline-size: var(--bc-w);
+        block-size: 58%;
+    }
+
+    .bc-scene[data-bc-loading='drop'] .bc-pour {
+        inset-block-end: 16%;
+        margin-inline-start: calc(var(--bc-w) / -2);
+        box-sizing: border-box;
+        border: 2px solid var(--bc-ink);
+        background: var(--card);
+    }
+
+    .bc-scene[data-bc-loading='drop'] .bc-hammer {
+        inset-block-end: calc(16% - 3px);
+        margin-inline-start: calc(var(--bc-w) / -2 + 3px);
+    }
+
+    /* 3 · Carried: one block is lifted off its footprint, carried one place
+       and set down, four footprints start to end. */
+    .bc-scene[data-bc-loading='carry'] .bc-tape {
+        display: block;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 16%;
+        background: linear-gradient(90deg, transparent 0 30%, var(--bc-ink) 30% 70%, transparent 70% 100%) 0 0 / 25% 100% repeat-x;
+    }
+
+    .bc-scene[data-bc-loading='carry'] .bc-pour {
+        display: block;
+        inset-block-end: 16%;
+        inset-inline-start: 7.5cqi;
+        inline-size: 10cqi;
+        block-size: 44%;
+    }
+
+    /* 4 · Hoisted: a load climbs its cable in four hard lifts, is let go and
+       falls free. */
+    .bc-scene[data-bc-loading='hoist'] .bc-pour {
+        display: block;
+        inset-block-end: 0;
+        inset-inline: 0;
+        margin-inline: auto;
+        inline-size: min(22cqi, 1.8rem);
+        block-size: 32%;
+    }
+
+    .bc-scene[data-bc-loading='hoist'] .bc-pour::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline: 0;
+        margin-inline: auto;
+        inline-size: max(2px, 0.16rem);
+        block-size: 400%;
+        background: var(--bc-ink);
+    }
+
+    /* 5 · Tallied: four strokes are marked in turn, the fifth is struck
+       through them, the board is wiped clean. */
+    .bc-scene[data-bc-loading='tally'] :is(.bc-pour, .bc-hammer) {
+        display: block;
+    }
+
+    .bc-scene[data-bc-loading='tally'] .bc-pour {
+        inset: 20% 14%;
+        background: repeating-linear-gradient(90deg, var(--bc-ink) 0 max(3px, 2.4cqi), transparent max(3px, 2.4cqi) 25%);
+    }
+
+    .bc-scene[data-bc-loading='tally'] .bc-hammer {
+        inset: 8% 8%;
+        background: linear-gradient(
+            to top left,
+            transparent calc(50% - max(1.5px, 0.8cqi)),
+            var(--bc-ink) calc(50% - max(1.5px, 0.8cqi)) calc(50% + max(1.5px, 0.8cqi)),
+            transparent calc(50% + max(1.5px, 0.8cqi))
+        );
+    }
+
+    /* 6 · Parted: a cast slab opens its joint: the two halves part, top and
+       foot, in three hard steps and leave the well; then they fall together
+       on the gravity curve and stop dead at the seam. */
+    .bc-scene[data-bc-loading='form'] :is(.bc-pour, .bc-hammer) {
+        display: block;
+        inset-inline: 0;
+        block-size: calc(50% - 1px);
+    }
+
+    .bc-scene[data-bc-loading='form'] .bc-pour {
+        inset-block-start: 0;
+    }
+
+    .bc-scene[data-bc-loading='form'] .bc-hammer {
+        inset-block-end: 0;
+    }
+
+    /* 7 · Bolted: a square-headed bolt stands proud of its footprint, is
+       turned four quarters and sinks flush onto it, then is backed out. The
+       footprint (the hard shadow's place) never moves or turns. */
+    .bc-scene[data-bc-loading='bolt'] :is(.bc-pour, .bc-hammer) {
+        display: block;
+        inset-block-start: 14%;
+        inset-inline-start: 50%;
+        block-size: 62%;
+        aspect-ratio: 1;
+        box-sizing: border-box;
+        translate: -50% 0;
+    }
+
+    .bc-scene[data-bc-loading='bolt'] .bc-hammer {
+        translate: calc(-50% + 3px) 3px;
+    }
+
+    .bc-scene[data-bc-loading='bolt'] .bc-pour {
+        z-index: 1;
+        transform-origin: 50% 50%;
+        border: 2px solid var(--bc-ink);
+        background: var(--card);
+        translate: calc(-50% + 3px) 3px;
+    }
+
+    .bc-scene[data-bc-loading='bolt'] .bc-pour::before {
+        content: '';
+        position: absolute;
+        inset: calc(50% - 1.5px) 14%;
+        background: var(--bc-ink);
+    }
+
+    /* 8 · Staked out: three stakes are driven in along the line, the string
+       is snapped taut between them, all are pulled. */
+    .bc-scene[data-bc-loading='stake'] :is(.bc-pour, .bc-hammer, .bc-tape) {
+        display: block;
+        inset-block-end: 0;
+        inline-size: max(3px, 0.2rem);
+        block-size: 72%;
+    }
+
+    .bc-scene[data-bc-loading='stake'] .bc-pour {
+        inset-inline-start: 10%;
+    }
+
+    .bc-scene[data-bc-loading='stake'] .bc-hammer {
+        inset-inline-start: calc(50% - max(1.5px, 0.1rem));
+    }
+
+    .bc-scene[data-bc-loading='stake'] .bc-tape {
+        inset-inline-end: 10%;
+    }
+
+    .bc-scene[data-bc-loading='stake'] .bc-well::before {
+        inset-inline: 10%;
+        inset-block-start: 29%;
+        block-size: max(2px, 0.14rem);
+    }
+
+    /* 9 · Scaffolded: three posts rise in two lifts each, two rails are
+       clamped across them, the frame is struck. */
+    .bc-scene[data-bc-loading='scaffold'] :is(.bc-pour, .bc-hammer, .bc-tape) {
+        display: block;
+        inset-block-end: 0;
+        inline-size: max(3px, 0.2rem);
+        block-size: 92%;
+        transform-origin: 50% 100%;
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-pour {
+        inset-inline-start: 12%;
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-hammer {
+        inset-inline-start: calc(50% - max(1.5px, 0.1rem));
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-tape {
+        inset-inline-end: 12%;
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::before,
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::after {
+        inset-inline: 12%;
+        block-size: max(2px, 0.14rem);
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::before {
+        inset-block-start: 26%;
+    }
+
+    .bc-scene[data-bc-loading='scaffold'] .bc-well::after {
+        inset-block-start: 60%;
+    }
+
+    /* 10 · Quarried: a cast slab is cut in four and the blocks are lifted
+       off up-left in turn, start to end, leaving the well empty. */
+    .bc-scene[data-bc-loading='quarry'] :is(.bc-pour, .bc-hammer, .bc-tape),
+    .bc-scene[data-bc-loading='quarry'] .bc-well::before {
+        display: block;
+        inset-block: 0;
+        inline-size: calc(25% - 2px);
+    }
+
+    .bc-scene[data-bc-loading='quarry'] .bc-pour {
+        inset-inline-start: 1px;
+    }
+
+    .bc-scene[data-bc-loading='quarry'] .bc-hammer {
+        inset-inline-start: calc(25% + 1px);
+    }
+
+    .bc-scene[data-bc-loading='quarry'] .bc-tape {
+        inset-inline-start: calc(50% + 1px);
+    }
+
+    .bc-scene[data-bc-loading='quarry'] .bc-well::before {
+        inset-inline-start: calc(75% + 1px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .bc-scene[data-bc-loading='stack'] .bc-pour {
+            animation: bc-stack-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stack'] .bc-hammer {
+            animation: bc-stack-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stack'] .bc-tape {
+            animation: bc-stack-c var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='drop'] .bc-pour {
+            animation: bc-drop-slab var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='carry'] .bc-pour {
+            animation: bc-carry var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist'] .bc-pour {
+            animation: bc-hoist var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='tally'] .bc-pour {
+            animation: bc-tally-marks var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='tally'] .bc-hammer {
+            animation: bc-tally-strike var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='form'] .bc-pour {
+            animation: bc-form-top var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='form'] .bc-hammer {
+            animation: bc-form-foot var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='bolt'] .bc-pour {
+            animation: bc-bolt var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stake'] .bc-pour {
+            animation: bc-stake-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stake'] .bc-hammer {
+            animation: bc-stake-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stake'] .bc-tape {
+            animation: bc-stake-c var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='stake'] .bc-well::before {
+            animation: bc-stake-string var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='scaffold'] .bc-pour {
+            animation: bc-scaffold-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='scaffold'] .bc-hammer {
+            animation: bc-scaffold-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='scaffold'] .bc-tape {
+            animation: bc-scaffold-c var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='scaffold'] .bc-well::before {
+            animation: bc-scaffold-rail-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='scaffold'] .bc-well::after {
+            animation: bc-scaffold-rail-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='quarry'] .bc-pour {
+            animation: bc-quarry-1 var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='quarry'] .bc-hammer {
+            animation: bc-quarry-2 var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='quarry'] .bc-tape {
+            animation: bc-quarry-3 var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='quarry'] .bc-well::before {
+            animation: bc-quarry-4 var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+    }
+
+    /* The clock is 12 units: 1 unit is 8.333 %. */
+
+    @keyframes bc-stack-a {
+        0% {
+            translate: 0 -340%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        16.667% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -340%;
+        }
+    }
+
+    @keyframes bc-stack-b {
+        0%,
+        20.833% {
+            translate: 0 -230%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        37.5% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -340%;
+        }
+    }
+
+    @keyframes bc-stack-c {
+        0%,
+        41.667% {
+            translate: 0 -120%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        58.333% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -340%;
+        }
+    }
+
+    @keyframes bc-drop-slab {
+        0%,
+        8.333% {
+            translate: -60% -240%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        25% {
+            translate: 0 0;
+        }
+
+        66.667% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        83.333%,
+        100% {
+            translate: -60% -240%;
+        }
+    }
+
+    @keyframes bc-carry {
+        0% {
+            translate: 0 0;
+        }
+
+        8.333% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        16.667% {
+            translate: 0 -80%;
+            animation-timing-function: steps(1, end);
+        }
+
+        25% {
+            translate: 25cqi -80%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        33.333% {
+            translate: 25cqi 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        41.667% {
+            translate: 25cqi -80%;
+            animation-timing-function: steps(1, end);
+        }
+
+        50% {
+            translate: 50cqi -80%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        58.333% {
+            translate: 50cqi 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        66.667% {
+            translate: 50cqi -80%;
+            animation-timing-function: steps(1, end);
+        }
+
+        75% {
+            translate: 75cqi -80%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        83.333%,
+        100% {
+            translate: 75cqi 0;
+        }
+    }
+
+    @keyframes bc-hoist {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50% {
+            translate: 0 -200%;
+        }
+
+        58.333% {
+            translate: 0 -200%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-tally-marks {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        8.333% {
+            clip-path: inset(0 75% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        16.667% {
+            clip-path: inset(0 50% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        25% {
+            clip-path: inset(0 25% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        33.333% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes bc-tally-strike {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        50% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes bc-form-top {
+        0%,
+        8.333% {
+            translate: 0 0;
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        41.667% {
+            translate: 0 -100%;
+        }
+
+        58.333% {
+            translate: 0 -100%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-form-foot {
+        0%,
+        8.333% {
+            translate: 0 0;
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        41.667% {
+            translate: 0 100%;
+        }
+
+        58.333% {
+            translate: 0 100%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-bolt {
+        0% {
+            rotate: 0deg;
+            translate: calc(-50% - 2px) -2px;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        66.667% {
+            rotate: 360deg;
+            translate: calc(-50% + 3px) 3px;
+            animation-timing-function: steps(1, end);
+        }
+
+        91.667%,
+        100% {
+            rotate: 0deg;
+            translate: calc(-50% - 2px) -2px;
+        }
+    }
+
+    @keyframes bc-stake-a {
+        0% {
+            translate: 0 -150%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        16.667% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -150%;
+        }
+    }
+
+    @keyframes bc-stake-b {
+        0%,
+        16.667% {
+            translate: 0 -150%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        33.333% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -150%;
+        }
+    }
+
+    @keyframes bc-stake-c {
+        0%,
+        33.333% {
+            translate: 0 -150%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        50% {
+            translate: 0 0;
+        }
+
+        75% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        91.667%,
+        100% {
+            translate: 0 -150%;
+        }
+    }
+
+    @keyframes bc-stake-string {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        54.167% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        75%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes bc-scaffold-a {
+        0% {
+            transform: scaleY(0.5);
+            animation-timing-function: steps(1, end);
+        }
+
+        6.25% {
+            transform: scaleY(1);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes bc-scaffold-b {
+        0% {
+            transform: scaleY(0);
+            animation-timing-function: steps(1, end);
+        }
+
+        12.5% {
+            transform: scaleY(0.5);
+            animation-timing-function: steps(1, end);
+        }
+
+        18.75% {
+            transform: scaleY(1);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes bc-scaffold-c {
+        0% {
+            transform: scaleY(0);
+            animation-timing-function: steps(1, end);
+        }
+
+        25% {
+            transform: scaleY(0.5);
+            animation-timing-function: steps(1, end);
+        }
+
+        31.25% {
+            transform: scaleY(1);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes bc-scaffold-rail-a {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        41.667% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes bc-scaffold-rail-b {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        50% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes bc-quarry-1 {
+        0%,
+        16.667% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        29.167%,
+        91.666% {
+            translate: -110% -110%;
+        }
+
+        91.667%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-quarry-2 {
+        0%,
+        29.167% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        41.667%,
+        91.666% {
+            translate: -110% -110%;
+        }
+
+        91.667%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-quarry-3 {
+        0%,
+        41.667% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        54.167%,
+        91.666% {
+            translate: -110% -110%;
+        }
+
+        91.667%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-quarry-4 {
+        0%,
+        54.167% {
+            translate: 0 0;
+            animation-timing-function: var(--bc-up);
+        }
+
+        66.667%,
+        91.666% {
+            translate: -110% -110%;
+        }
+
+        91.667%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
     /* ── 11 · Spinner ────────────────────────────────────────────────── */
 
     .bc-scene .bc-spin {
@@ -1428,9 +2358,13 @@
 
     /* ── 13 · Composites, 14 · hover, 15 · focus, 16 · press ─────────── */
 
-    /* The states, drawn on marked parts. G8: lifted off its footprint, the
-       plate a step, the tag above it. */
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-pointed:not(.kp-menu__item),
+    /* The states, drawn on marked parts (`.bc-pointed`, held) and on a real
+       pointer (`.bc-hov:hover`, the question's own parts): the same rules,
+       so what the pointer does is what the held part shows. The register's
+       own :hover moves nothing here, because the scene computes every
+       part's translate and shadow from the footprint's knobs. G8: lifted
+       off its footprint, the plate a step, the tag above it. */
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-pointed, .bc-hov:hover):not(.kp-menu__item),
     [data-bc-show='hover']
         .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet'])
         :is(.bc-alone, .bc-in-header, .bc-tile-link, .bc-in-drawer, .bc-in-kpi),
@@ -1438,13 +2372,13 @@
         --bc-lift: 2px;
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button.bc-pointed,
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button:is(.bc-pointed, .bc-hov:hover),
     [data-bc-show='hover'] .bc-scene[data-bc-composites] .bc-alone,
     [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='today']) :is(.bc-in-header, .bc-in-drawer) {
         background: oklch(from var(--kp-plate, var(--secondary)) calc(l - 0.06) calc(c + 0.1) h);
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button--ghost.bc-pointed,
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button--ghost:is(.bc-pointed, .bc-hov:hover),
     [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='today']) .kp-button--ghost.bc-in-drawer,
     [data-bc-show='hover'] .bc-scene[data-bc-composites='own'] .bc-tile-link,
     [data-bc-show='hover'] .bc-scene[data-bc-composites='quiet'] :is(.bc-in-header, .bc-in-drawer, .bc-tile-link) {
@@ -1454,25 +2388,25 @@
         color: var(--secondary-foreground);
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-pointed.kp-menu__item, .bc-day.bc-pointed),
-    .bc-scene[data-bc-hover='kick'] .bc-pointed,
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(:is(.bc-pointed, .bc-hov:hover).kp-menu__item, .bc-day:is(.bc-pointed, .bc-hov:hover)),
+    .bc-scene[data-bc-hover='kick'] :is(.bc-pointed, .bc-hov:hover),
     [data-bc-show='hover'] .bc-scene:is([data-bc-composites='own'], [data-bc-composites='quiet']) .bc-in-entry,
     [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-in-entry {
         background: var(--secondary);
         color: var(--secondary-foreground);
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-kpi.bc-pointed {
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-kpi:is(.bc-pointed, .bc-hov:hover) {
         background: var(--secondary);
     }
 
     /* The tag (scope-12): the part names itself. */
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button.bc-pointed::after,
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .kp-button:is(.bc-pointed, .bc-hov:hover)::after,
     [data-bc-show='hover'] .bc-scene[data-bc-composites] .bc-alone:first-child::after {
         opacity: 1;
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-kpi, .bc-day).bc-pointed::after {
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) :is(.bc-kpi, .bc-day):is(.bc-pointed, .bc-hov:hover)::after {
         content: var(--kp-label, 'KEY FIGURE');
         position: absolute;
         inset-block-end: calc(100% + 0.3rem);
@@ -1486,25 +2420,25 @@
         white-space: nowrap;
     }
 
-    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-day.bc-pointed::after {
+    .bc-scene:not([data-bc-hover='kick'], [data-bc-hover='invert']) .bc-day:is(.bc-pointed, .bc-hov:hover)::after {
         content: var(--kp-label, 'DAY');
     }
 
     /* 14 · kicked sideways. */
-    .bc-scene[data-bc-hover='kick'] .bc-pointed {
+    .bc-scene[data-bc-hover='kick'] :is(.bc-pointed, .bc-hov:hover) {
         translate: 4px 0;
     }
 
     /* 14 · inverted. */
-    .bc-scene[data-bc-hover='invert'] .bc-pointed,
+    .bc-scene[data-bc-hover='invert'] :is(.bc-pointed, .bc-hov:hover),
     [data-bc-show='hover'] .bc-scene[data-bc-composites='today'] .bc-tile-link {
         border-color: var(--bc-ink);
         background: var(--foreground);
         color: var(--secondary);
     }
 
-    .bc-scene[data-bc-hover='invert'] .bc-pointed .bc-label,
-    .bc-scene[data-bc-hover='invert'] .bc-pointed .bc-figure {
+    .bc-scene[data-bc-hover='invert'] :is(.bc-pointed, .bc-hov:hover) .bc-label,
+    .bc-scene[data-bc-hover='invert'] :is(.bc-pointed, .bc-hov:hover) .bc-figure {
         color: inherit;
     }
 
@@ -1682,25 +2616,61 @@
 
     /* ── 17 · Voice ──────────────────────────────────────────────────── */
 
+    /* The floor (Kenny, 2026-10-07: "some text is too thin, like the date and
+       412 t"). What he meant: the timestamp (the register's mono at 400,
+       13.6 px, `--muted-foreground`) and the table's value (Space Grotesk 400,
+       13.6 px), both beside a 3 px ink line and Archivo Black. Measured: a
+       400 stem at 13.6 px is about 1.2 px, a third of the line. So in every
+       voice option: figures, dates, units, labels, tags and anything under
+       1 rem are 700 or heavier, never under 0.75 rem, in ink (dates and
+       figures never muted); prose is 500 at 1 rem. Each option sets its own
+       faces through the knobs below and none of them goes under the floor. */
+    .bc-scene[data-bc-voice] {
+        --v-label-font: var(--theme-font-body);
+        --v-label-weight: 700;
+        --v-label-size: 0.75rem;
+        --v-label-track: 0.1em;
+        --v-label-case: uppercase;
+        --v-head-font: var(--theme-font-display);
+        --v-prose-font: var(--theme-font-body);
+        --v-prose-weight: 500;
+        --v-prose-case: none;
+        --v-prose-track: 0;
+        --v-fig-font: var(--theme-font-display);
+        --v-fig-weight: 400;
+        --v-val-size: 1.05rem;
+        --v-unit-font: var(--theme-font-body);
+        --v-unit-weight: 700;
+        --v-stamp-font: var(--theme-font-mono);
+        --v-stamp-weight: 700;
+        --v-stamp-size: 0.9375rem;
+        --v-stamp-track: 0.02em;
+        --v-btn-font: var(--theme-font-body);
+    }
+
     .bc-scene .bc-type {
-        gap: 0.45rem;
+        gap: 0.5rem;
     }
 
     .bc-scene .bc-type p {
         margin: 0;
     }
 
-    .bc-scene .bc-type__label {
+    .bc-scene .bc-type__label,
+    .bc-scene .bc-type__table th,
+    .bc-scene .bc-type__strip .bc-label {
         color: var(--muted-foreground);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-family: var(--v-label-font, var(--theme-font-body));
+        font-size: var(--v-label-size, 0.75rem);
+        font-weight: var(--v-label-weight, 700);
+        letter-spacing: var(--v-label-track, 0.1em);
+        text-transform: var(--v-label-case, uppercase);
     }
 
     .bc-scene .bc-type__head {
-        font-family: var(--theme-font-display);
+        font-family: var(--v-head-font, var(--theme-font-display));
         font-size: 1.6rem;
+        font-weight: var(--v-head-weight, 400);
         letter-spacing: -0.02em;
         line-height: 1.05;
         text-transform: uppercase;
@@ -1708,17 +2678,43 @@
 
     .bc-scene .bc-type__prose {
         max-inline-size: 52ch;
+        font-family: var(--v-prose-font, var(--theme-font-body));
+        font-size: 1rem;
+        font-weight: var(--v-prose-weight, 500);
+        letter-spacing: var(--v-prose-track, 0);
+        text-transform: var(--v-prose-case, none);
     }
 
     .bc-scene .bc-type__figure {
         display: flex;
+        flex-wrap: wrap;
         align-items: baseline;
         gap: 0.4rem;
     }
 
+    .bc-scene .bc-type :is(.bc-figure, .bc-val) {
+        font-family: var(--v-fig-font, var(--theme-font-display));
+        font-weight: var(--v-fig-weight, 400);
+        font-variant-numeric: tabular-nums;
+        color: var(--foreground);
+    }
+
+    .bc-scene .bc-type__table .bc-val {
+        font-size: var(--v-val-size, 1.05rem);
+    }
+
+    .bc-scene .bc-type .bc-unit {
+        font-family: var(--v-unit-font, var(--theme-font-body));
+        font-size: 0.8125rem;
+        font-weight: var(--v-unit-weight, 700);
+        letter-spacing: 0.04em;
+        color: var(--foreground);
+    }
+
     .bc-scene .bc-type__strip {
         display: flex;
-        gap: 1.5rem;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
     }
 
     .bc-scene .bc-type__strip > div {
@@ -1727,58 +2723,280 @@
 
     .bc-scene .bc-type__table {
         border-collapse: collapse;
-        font-size: 0.85rem;
+        inline-size: 100%;
+        font-size: 0.9375rem;
     }
 
     .bc-scene .bc-type__table :is(th, td) {
-        padding: 0.15rem 1rem 0.15rem 0;
+        padding: 0.3rem 1rem 0.3rem 0;
         border-block-end: 2px solid var(--bc-ink);
         text-align: start;
+        vertical-align: baseline;
     }
 
-    .bc-scene .bc-type__table th {
-        font-size: 0.72rem;
+    .bc-scene .bc-type__table td {
+        color: var(--foreground);
         font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
     }
 
-    .bc-scene .bc-stamp {
-        font-family: var(--theme-font-mono);
+    /* The date: ink, bold, never the register's muted 400. */
+    .bc-scene .bc-type .bc-stamp {
+        color: var(--foreground);
+        font-family: var(--v-stamp-font, var(--theme-font-mono));
+        font-size: var(--v-stamp-size, 0.9375rem);
+        font-weight: var(--v-stamp-weight, 700);
+        letter-spacing: var(--v-stamp-track, 0.02em);
+        white-space: nowrap;
     }
 
-    .bc-scene[data-bc-voice='mono'] :is(.bc-type__label, .bc-label, .bc-type__table th, .kp-badge, .bc-chip) {
-        font-family: var(--theme-font-mono);
-        font-weight: 400;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+    .bc-scene .bc-type__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
     }
 
-    .bc-scene[data-bc-voice='black'] :is(.bc-type__label, .bc-label, .bc-type__table :is(th, td), .kp-badge, .bc-chip, .kp-button, .bc-type__prose) {
+    .bc-scene .bc-type :is(.kp-button, .kp-badge, .bc-chip) {
+        font-family: var(--v-btn-font, var(--theme-font-body));
+        font-weight: 700;
+    }
+
+    /* 2 · mono capitals for labels (the dark themes'), held to the floor. */
+    .bc-scene[data-bc-voice='mono'] {
+        --v-label-font: var(--theme-font-mono);
+        --v-label-track: 0.14em;
+        --v-unit-font: var(--theme-font-mono);
+        --v-btn-font: var(--theme-font-mono);
+    }
+
+    /* 3 · Archivo Black for everything, prose too. */
+    .bc-scene[data-bc-voice='black'] {
+        --v-label-font: var(--theme-font-display);
+        --v-label-weight: 400;
+        --v-label-track: 0.02em;
+        --v-prose-font: var(--theme-font-display);
+        --v-prose-weight: 400;
+        --v-unit-font: var(--theme-font-display);
+        --v-unit-weight: 400;
+        --v-stamp-font: var(--theme-font-display);
+        --v-stamp-weight: 400;
+        --v-stamp-track: 0.03em;
+        --v-btn-font: var(--theme-font-display);
+    }
+
+    .bc-scene[data-bc-voice='black'] .bc-type__table td,
+    .bc-scene[data-bc-voice='black'] .bc-type .bc-val {
         font-family: var(--theme-font-display);
         font-weight: 400;
-        letter-spacing: 0.02em;
+    }
+
+    /* 4 · plated: every figure and date on its own small slab. */
+    .bc-scene[data-bc-voice='plated'] {
+        --v-fig-font: var(--theme-font-body);
+        --v-fig-weight: 700;
+        --v-stamp-font: var(--theme-font-body);
+        --v-stamp-size: 0.9375rem;
+        --v-stamp-track: 0.03em;
+    }
+
+    .bc-scene[data-bc-voice='plated'] .bc-type__table :is(.bc-val, .bc-stamp) {
+        display: inline-block;
+        padding: 0.1rem 0.5rem;
+        border: 2px solid var(--bc-ink);
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+        line-height: 1.3;
+    }
+
+    .bc-scene[data-bc-voice='plated'] .bc-type__table .bc-val {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-size: 1rem;
+    }
+
+    .bc-scene[data-bc-voice='plated'] .bc-type__table .bc-stamp {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    .bc-scene[data-bc-voice='plated'] .bc-type__table td {
+        padding-block: 0.5rem;
+    }
+
+    /* 5 · stamped: dates and readings struck on askew, in the display face. */
+    .bc-scene[data-bc-voice='stamped'] {
+        --v-stamp-font: var(--theme-font-display);
+        --v-stamp-weight: 400;
+        --v-stamp-size: 0.9rem;
+        --v-stamp-track: 0.06em;
+    }
+
+    .bc-scene[data-bc-voice='stamped'] .bc-type__table :is(.bc-val, .bc-stamp) {
+        display: inline-block;
+        padding: 0.05rem 0.45rem;
+        border: 2px solid var(--bc-ink);
+        rotate: -2deg;
+        line-height: 1.3;
+    }
+
+    .bc-scene[data-bc-voice='stamped'] .bc-type__table .bc-val {
+        font-size: 1rem;
+    }
+
+    .bc-scene[data-bc-voice='stamped'] .bc-type__table td {
+        padding-block: 0.45rem;
+    }
+
+    /* 6 · one family: Space Grotesk alone, 700 for every heading and figure. */
+    .bc-scene[data-bc-voice='family'] {
+        --v-head-font: var(--theme-font-body);
+        --v-head-weight: 700;
+        --v-fig-font: var(--theme-font-body);
+        --v-fig-weight: 700;
+        --v-stamp-font: var(--theme-font-body);
+        --v-stamp-size: 1rem;
+        --v-val-size: 1.1rem;
+    }
+
+    .bc-scene[data-bc-voice='family'] .bc-type__strip .bc-figure,
+    .bc-scene[data-bc-voice='family'] .bc-type__figure .bc-figure {
+        font-size: 2rem;
+        line-height: 1.05;
+    }
+
+    /* 7 · capitals everywhere, prose too (Space Grotesk 700, tracked). */
+    .bc-scene[data-bc-voice='caps'] {
+        --v-prose-weight: 700;
+        --v-prose-case: uppercase;
+        --v-prose-track: 0.04em;
+        --v-stamp-font: var(--theme-font-body);
+        --v-stamp-track: 0.06em;
+        --v-unit-weight: 700;
+    }
+
+    .bc-scene[data-bc-voice='caps'] .bc-type__prose {
+        font-size: 0.9375rem;
+        line-height: 1.5;
+    }
+
+    /* 8 · a ruled ledger: the tile set as an account, figures right-aligned. */
+    .bc-scene[data-bc-voice='ledger'] {
+        --v-stamp-font: var(--theme-font-body);
+        --v-stamp-size: 1rem;
+        --v-val-size: 1.2rem;
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__table {
+        border: 3px solid var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__table :is(th, td) {
+        padding: 0.4rem 0.75rem;
+        border-block-end-width: 3px;
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__table th {
+        inline-size: 45%;
+        border-inline-end: 3px solid var(--bc-ink);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__table td {
+        text-align: end;
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        border: 3px solid var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__strip > div {
+        padding: 0.4rem 0.75rem;
+        justify-items: end;
+    }
+
+    .bc-scene[data-bc-voice='ledger'] .bc-type__strip > div + div {
+        border-inline-start: 3px solid var(--bc-ink);
+    }
+
+    /* 9 · poster figures: the number is the headline. */
+    .bc-scene[data-bc-voice='poster'] {
+        --v-val-size: 2rem;
+        --v-stamp-font: var(--theme-font-body);
+        --v-stamp-size: 1.15rem;
+        --v-stamp-track: 0.02em;
+    }
+
+    .bc-scene[data-bc-voice='poster'] .bc-type__strip .bc-figure {
+        font-size: 2.6rem;
+        line-height: 1;
+        letter-spacing: -0.03em;
+    }
+
+    .bc-scene[data-bc-voice='poster'] .bc-type__figure .bc-figure {
+        font-size: 3.4rem;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+    }
+
+    .bc-scene[data-bc-voice='poster'] .bc-type__table td {
+        padding-block: 0.4rem;
     }
 
     /* ── 18 · Motifs ─────────────────────────────────────────────────── */
 
+    /* Every specimen is named for what its motif means and stands big enough
+       to see (the first version drew a 2 px bar and 0.6 rem bolts that
+       vanished into the plate beside them and a scene the dialog shrank to
+       0.4 under its height). */
+    .bc-scene[data-bc-motifs] {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.9rem 1.1rem;
+    }
+
+    .bc-scene[data-bc-motifs] .bc-part--wide {
+        grid-column: 1 / -1;
+    }
+
+    .bc-scene[data-bc-motifs] .bc-cap {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    .bc-scene .bc-motif-note {
+        margin: 0;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
     .bc-scene .bc-events {
         position: relative;
+        block-size: 5.5rem;
     }
 
     .bc-scene .bc-events__mark {
         position: absolute;
-        inset-inline-start: calc(var(--x) - 0.3rem);
-        inset-block-start: calc(var(--y) - 0.3rem);
-        inline-size: 0.6rem;
-        block-size: 0.6rem;
+        inset-inline-start: calc(var(--x) - 0.45rem);
+        inset-block-start: calc(var(--y) - 0.45rem);
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
     }
 
-    /* G16: square bolts with their own small shadow. */
+    /* G16: square bolts with their own small shadow, a slot cut across. */
     .bc-scene[data-bc-motifs='one'] .bc-events__mark {
         border: 2px solid var(--bc-ink);
-        background: var(--chart-2);
+        background: var(--secondary);
         box-shadow: 2px 2px 0 0 var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-motifs='one'] .bc-events__mark::after {
+        content: '';
+        position: absolute;
+        inset: calc(50% - 1px) 1px auto;
+        block-size: 2px;
+        background: var(--bc-ink);
     }
 
     .bc-scene[data-bc-motifs='shadow'] .bc-events__mark {
@@ -1791,29 +3009,38 @@
         background: var(--chart-2);
     }
 
-    /* G16: the six-pixel bar rules today off; the pick is yellow. */
+    /* G16: the six-pixel bar rules today off, standing clear above its day;
+       the pick is yellow. */
+    .bc-scene .bc-days--motif {
+        gap: 1.1rem 0.6rem;
+        padding-block-start: 0.9rem;
+    }
+
     .bc-scene .bc-days--motif .bc-day {
         position: relative;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
     }
 
     .bc-scene[data-bc-motifs='one'] .bc-today::before {
         content: '';
         position: absolute;
         inset-inline: -2px;
-        inset-block-start: -2px;
+        inset-block-start: calc(-6px - 5px);
         block-size: 6px;
         background: var(--bc-ink);
     }
 
     .bc-scene[data-bc-motifs='shadow'] .bc-today {
         text-decoration: underline 3px;
+        text-underline-offset: 3px;
     }
 
     .bc-scene[data-bc-motifs='all'] .bc-today::before {
         content: '';
         position: absolute;
-        inset: -4px -6px auto;
-        block-size: 10px;
+        inset: calc(-5px - 8px) -6px auto;
+        block-size: 12px;
         background: var(--bc-tape-site);
         box-shadow: 0 0 0 2px var(--bc-ink);
         rotate: -4deg;
@@ -1833,13 +3060,13 @@
         inset-inline: 0;
         inset-block-end: 0;
         display: block;
-        block-size: 0.5rem;
+        block-size: 0.6rem;
         border-block-start: 2px solid var(--bc-ink);
         background: var(--bc-tape-warn);
     }
 
     .bc-scene[data-bc-motifs='all'] .bc-motif-card {
-        padding-block-end: calc(0.5rem + 0.8rem);
+        padding-block-end: calc(0.6rem + 0.8rem);
     }
 
     .bc-scene[data-bc-motifs='all'] .bc-motif-card::before {
@@ -1866,6 +3093,18 @@
         rotate: -5deg;
     }
 
+    /* The stamped zero stands big enough for its tilt to read. */
+    .bc-scene .bc-motif-empty {
+        padding-block-start: 1rem;
+    }
+
+    .bc-scene .bc-motif-empty::before {
+        inline-size: 3.6rem;
+        block-size: 3.6rem;
+        font-size: 2.6rem;
+        rotate: -12deg;
+    }
+
     .bc-scene[data-bc-motifs='shadow'] .bc-motif-empty::before {
         display: none;
     }
@@ -1878,5 +3117,41 @@
 
     .bc-scene[data-bc-motifs='shadow'] .bc-divider::before {
         display: none;
+    }
+
+    /* Room above every part for the tag it names itself with. */
+    .bc-scene[data-bc-hover] {
+        gap: 1.6rem 1.4rem;
+    }
+
+    .bc-scene[data-bc-hover] .bc-part {
+        gap: 1.6rem;
+    }
+
+    .bc-scene .bc-point {
+        display: block;
+        margin: 0;
+        padding: 0.55rem 0.8rem;
+        border: 2px solid var(--bc-ink);
+        background: var(--secondary);
+        box-shadow: 3px 3px 0 0 var(--bc-ink);
+        color: var(--secondary-foreground);
+        font-size: 0.9375rem;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .bc-scene .bc-point__mark {
+        display: inline-block;
+        font-family: var(--theme-font-display);
+        font-size: 1.1rem;
+    }
+
+    .bc-scene .bc-hov {
+        cursor: pointer;
+    }
+
+    .bc-scene .bc-cap {
+        font-weight: 600;
     }
 }
