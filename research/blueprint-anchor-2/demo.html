@@ -1,0 +1,98 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="blueprint"
+    data-cat-theme="blueprint"
+    data-cat-theme-fixed
+    data-review="blueprint-anchor-2"
+    data-review-themes="blueprint"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what anchors blueprint, round two</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" data-kp-register="blueprint" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="ba2-page">
+            <header class="ba2-intro">
+                <h1>What anchors blueprint, round two</h1>
+                <p>
+                    Kenny, 2026-10-07 20:44: “I kind of like the measuring part of option 1 [the dimension line], but not the implementation itself,
+                    like I don't like the form. And I LOVE the plotter pen, so that should be a thing for sure. Come up with some more examples based
+                    on this feedback.” So the plotter pen is now the base: every option below is led by the same visible pen, and the measuring
+                    survives as something the pen does, not as a bar with arrowheads and a hatched fill (that form is not offered again). The colours
+                    stay as they were: cyan pen, amber annotation, Prussian ground.
+                </p>
+                <p>
+                    Six options that differ in what the pen does and how it measures, each playing by itself in the middle of its stage: the anchor as
+                    the loading picture, then its arrival complete, then its leave, which is the arrival played backwards. Pick the one from which you
+                    could derive how blueprint arrives, leaves, is pressed, waits and raises an alarm. The first option is the recommendation; the
+                    second is the plotter pen exactly as you saw it.
+                </p>
+                <p class="ba2-motion" data-ba2-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every stage shows its finished pose, which has to read
+                    on its own. Turn it off in the system settings to judge the motion.
+                </p>
+            </header>
+
+            <section class="ba2-lineup-sec" aria-labelledby="h-lineup">
+                <h2 id="h-lineup">The six side by side</h2>
+                <p>All six start together and run on the same clock, so what is slow and what is fast shows at a glance.</p>
+                <div class="ba2-lineup" data-ba2-lineup></div>
+            </section>
+
+            <section
+                class="ba2-sec"
+                data-review-item="blueprint"
+                data-review-mode="aspects"
+                data-review-rows="data-ba2-aspect"
+                data-review-components="blueprint-anchor-2"
+                data-review-title="What anchors blueprint, round two"
+                aria-labelledby="h-ba2"
+            >
+                <div class="ba2-sec__head">
+                    <h2 id="h-ba2">The anchor</h2>
+                    <p>
+                        One question, six options, the recommended one first. Each stage replays by itself: the loading picture runs, completes,
+                        stands, and leaves as the same picture played backwards. In the review dialog one option is shown at a time; the arrow keys
+                        flip between them, and the dialog's own Replay, Pause and speed buttons drive it.
+                    </p>
+                </div>
+                <div class="ba2-controls" data-review-controls>
+                    <div class="ba2-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-ba2-replay data-review-plays="anchor">Replay</button>
+                    </div>
+                    <div class="ba2-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ba2-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ba2-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ba2-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <section class="ba2-aspect" id="ba2-anchor" data-ba2-aspect="anchor" aria-labelledby="h-ba2-anchor">
+                    <div class="ba2-aspect__head">
+                        <h3 id="h-ba2-anchor">The anchor</h3>
+                        <p class="ba2-aspect__q" data-ba2-question></p>
+                    </div>
+                    <div class="ba2-grid" data-ba2-options></div>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

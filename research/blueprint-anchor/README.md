@@ -1,5 +1,7 @@
 # What anchors blueprint
 
+**Decided (Kenny, 07/10/2026 20:44): not approved, ""I kind of like the measuring part of option 1, but not the implementation itself, like I don't like the form. And I LOVE the plotter pen, so that should be a thing for sure. Come up with some more examples based on this feedback".** Round two, built on the plotter pen with the measuring kept and the dimension line's form dropped, is [research/blueprint-anchor-2](../blueprint-anchor-2/README.md).
+
 Kenny, 2026-10-07 15:55 and 16:13: forest's tree progress bar and titanium's new loading animation were the one element he
 could take every other decision of the theme from; he asked what each theme's anchor element will be, and for a blueprint demo
 with options. Colours are settled everywhere and are the base (cyan pen, amber annotation, Prussian ground).

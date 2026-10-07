@@ -94,8 +94,8 @@ export const PAGES = [
             { href: 'research/grotesk-anchor/demo.html', label: "What is grotesk's anchor element" },
             // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
             { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
-            // Kenny, 2026-10-07 15:55 and 16:13: the one anchor element every blueprint decision can be derived from (forest's tree bar, titanium's loading animation), six candidates of different kinds, the dimension line recommended.
-            { href: 'research/blueprint-anchor/demo.html', label: 'What anchors blueprint' },
+            // Kenny, 2026-10-07 20:44, on round one: "I kind of like the measuring part of option 1 [the dimension line], but not the implementation itself, like I don't like the form. And I LOVE the plotter pen, so that should be a thing for sure. Come up with some more examples based on this feedback." Round two: six options led by the plotter pen (it dimensions, plots, rules along a straightedge, inks what dividers step off, hatches, traces a curve), the plotter pen kept unchanged as the second.
+            { href: 'research/blueprint-anchor-2/demo.html', label: 'What anchors blueprint, round two' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
         ],
@@ -106,6 +106,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Not approved 2026-10-07 20:44: Kenny liked the measuring of the dimension line but not its form, and loved the plotter pen; round two is research/blueprint-anchor-2.
+            { href: 'research/blueprint-anchor/demo.html', label: 'What anchors blueprint' },
             // Decided 2026-10-07 20:10: Kenny picked the raster as nostromo's anchor element (research/nostromo-anchor/decided.json).
             { href: 'research/nostromo-anchor/demo.html', label: "Nostromo's anchor element" },
             // Decided 2026-10-07 02:49: Kenny picked the count-down stutter as cyberpunk's live update (research/cyberpunk-live/decided.json); ported into css/cyberpunk-register.css in place of the glitch and settle.
