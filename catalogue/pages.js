@@ -87,6 +87,7 @@ export const PAGES = [
             {
                 href: 'research/synthwave-character/demo.html',
                 label: 'What makes synthwave synthwave',
+                rework: 'update 2: corners, loading and leave are being reworked from your verdict',
             },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
