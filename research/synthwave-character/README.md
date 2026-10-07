@@ -1,5 +1,7 @@
 # What makes synthwave synthwave
 
+**Round 1 verdict (Kenny, 07/10/2026 20:41): ten of eighteen questions approved as recommended (direction, durations, colour, surface, live, spinner, composites, hover, voice, motifs); the other eight (curve, opening, corners, warning, loading, leave, focus, press) come back with new options in round 2**; the machine-readable decided.json follows once all eighteen are settled (the gate treats a decided.json as a finished topic).
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk,
 blueprint; synthwave second, the same way as titanium, forest, nostromo and cyberpunk (02:54: "waar jij eerst uitzoekt wat bij
 mekaar past, wat niet past en dan zo voorstellen doet"). The analysis is [themes/synthwave/CHARACTER.md](../../themes/synthwave/CHARACTER.md):

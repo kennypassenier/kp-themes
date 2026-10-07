@@ -137,18 +137,17 @@
     color: var(--muted-foreground);
 }
 
-/* The six options: two boards across on a wide page, one under the other
-   below that. In the review dialog one option is shown alone and large. */
+/* The attempts: one real page under the other, each at the width of the column
+   (a real page is wide). In the review dialog one attempt is shown alone. */
 .sa-six {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
     align-items: start;
 }
 
 @media (max-width: 88rem) {
-    .sa-story__grid,
-    .sa-six {
+    .sa-story__grid {
         grid-template-columns: minmax(0, 1fr);
     }
 }
@@ -206,89 +205,140 @@
     font-weight: 600;
 }
 
-/* The board: stage and loading pair on one row, the three chips under
-   them, all on 12 columns (UI principles 1 and 3). */
-.sa-scene {
-    container-type: inline-size;
-    padding: var(--kp-space-md, 1rem);
-    border: 1px solid var(--border);
-    background: var(--card);
-}
-
-.sa-board {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--kp-space-md, 1rem);
-    align-content: start;
-}
-
-.sa-part {
-    display: grid;
-    gap: 0.35rem;
-    align-content: start;
-    min-inline-size: 0;
-}
-
-.sa-part--stage {
-    grid-column: span 7;
-}
-
-.sa-part--loads {
-    grid-column: span 5;
-    grid-template-rows: 1fr 1fr;
-    gap: var(--kp-space-md, 1rem);
-}
-
-.sa-part--chip {
-    grid-column: span 4;
-}
-
-.sa-load {
-    display: grid;
-    gap: 0.35rem;
-    align-content: start;
-    min-inline-size: 0;
-}
-
-.sa-cap {
+.sa-rule {
     margin: 0;
-    font-size: 0.75rem;
-}
-
-.sa-cap b {
-    color: var(--foreground);
+    max-inline-size: 110ch;
+    font-size: var(--kp-text-sm, 0.875rem);
     font-weight: 600;
 }
 
-@container (max-width: 46rem) {
-    .sa-part--stage,
-    .sa-part--loads {
-        grid-column: 1 / -1;
-    }
-
-    .sa-part--loads {
-        grid-template-rows: none;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .sa-part--chip {
-        grid-column: span 4;
-    }
+.sa-measured {
+    margin: 0;
+    max-inline-size: 110ch;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.8125rem;
 }
 
-@container (max-width: 30rem) {
-    .sa-part--loads {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .sa-part--chip {
-        grid-column: 1 / -1;
-    }
-}
-
-/* In the review dialog the stage is the card already. */
+/* In the dialog the page is shown at the stage's width and the section is the card already. */
 .rv-dialog__stage .sa-sec {
     padding: 0;
     border: 0;
     background: none;
+}
+
+[data-rv-flip-trio] :is(.sa-label-row, .sa-see, .sa-verdict, .sa-rule) {
+    display: none;
+}
+
+.sa-rules {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.sa-story__parts .sa-cap {
+    margin: 0;
+}
+
+/* The page: the package's own components in a window. Unlayered, because the
+   package's layout layer comes after the signature layer and would beat it. */
+
+.sa-scene {
+    position: relative;
+    container-type: inline-size;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.sa-real {
+    --kp-page-max: 100%;
+    position: relative;
+    isolation: isolate;
+    min-block-size: 10rem;
+}
+
+.sa-real .kp-page {
+    padding-block-end: 5.5rem;
+}
+
+.sa-real .kp-page > * + * {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.sa-real .kp-page > .kp-page-header {
+    margin-block-end: var(--kp-space-lg, 1.5rem);
+}
+
+.sa-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+@container (max-width: 52rem) {
+    .sa-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sa-stack {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.sa-stack > p {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.sa-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sa-head .kp-card__title {
+    margin: 0;
+}
+
+.sa-wrap {
+    position: relative;
+    display: block;
+}
+
+.sa-wrap .kp-field__input {
+    inline-size: 100%;
+    box-sizing: border-box;
+}
+
+.sa-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+/* The toast is pinned to the corner of the window (the container contains fixed boxes). */
+.sa-real .kp-toasts {
+    position: absolute;
+    inset-block-end: 1rem;
+    inset-inline-end: 1rem;
+    max-inline-size: calc(100% - 2rem);
+}
+
+.sa-pct::after {
+    counter-reset: sa-pct round(calc(var(--sa-p) * 100), 1);
+    content: counter(sa-pct) ' %';
+}
+
+/* The package's own busy dim on a table, so the loading reads as loading. */
+.sa-real [data-sa-busy] .kp-table tbody {
+    opacity: 0.6;
 }
