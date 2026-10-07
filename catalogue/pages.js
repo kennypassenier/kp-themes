@@ -91,7 +91,11 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
-            { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
+            {
+                href: 'research/brutalism-character/demo.html',
+                label: 'What makes brutalism brutalism',
+                rework: 'update 2 in progress: loading (hoisted variations) and the progress bar',
+            },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             {
                 href: 'research/grotesk-character/demo.html',
