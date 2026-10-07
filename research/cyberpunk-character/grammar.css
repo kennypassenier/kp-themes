@@ -208,6 +208,29 @@
             }
         }
 
+        /* The target lock played backwards: the register's `kp-sig-cyberpunk-lock` (8, 3, 6, 3 px, three
+           ticks of 60 ms each, then held) in the other order, so brackets that closed with a part open
+           with it as it leaves. Play it over 360 ms, starting 120 ms into the part's own split-out, so
+           the brackets finish opening with the split. */
+        @keyframes cyg-lock-out {
+            0% {
+                --kp-cp-lk: 3px;
+            }
+
+            50% {
+                --kp-cp-lk: 6px;
+            }
+
+            66.67% {
+                --kp-cp-lk: 3px;
+            }
+
+            83.33%,
+            100% {
+                --kp-cp-lk: 8px;
+            }
+        }
+
         /* The same four poses for a drawn line or fill (an SVG path, a meter's share): two copies of its
            own shape, as a drop shadow. */
         @keyframes cyg-line-split {

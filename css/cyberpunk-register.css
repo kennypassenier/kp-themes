@@ -2243,6 +2243,71 @@
         }
     }
 
+    /* The tag of the lock: a mono word in the tone's ink, boxed, at the head's end. It is the free
+       `::after` of the label (the label's `::before` is the prefix), laid over the tile, so no markup
+       is added; a tile narrower than 15 rem has no room for it and drops it. */
+    [data-theme='cyberpunk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label::after,
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__label::after {
+        position: absolute;
+        inset-block-start: 0.45rem;
+        inset-inline-end: 1.2rem;
+        padding: 0 0.3rem;
+        border: 1px solid var(--kp-cp-tone);
+        color: var(--kp-cp-tone);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label::after {
+        content: 'CAUTION';
+        content: 'CAUTION' / '';
+    }
+
+    [data-theme='cyberpunk'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__label::after {
+        content: 'TARGET';
+        content: 'TARGET' / '';
+    }
+
+    @container kp-kpi (max-width: 15rem) {
+        [data-theme='cyberpunk'] .kp-kpi[data-kp-tone] .kp-kpi__label::after {
+            display: none;
+        }
+    }
+
+    /* The same lock on a meter that stands alone (the one in a locked tile is framed by the tile):
+       four brackets 3 px outside its track, in the fill's tone, on the meter's free `::after`. While
+       the meter is past its end or measures, that pseudo-element belongs to the sign or the word and
+       the fill's tone alone speaks. */
+    [data-theme='cyberpunk'] .kp-meter:is([data-kp-tone='warning'], [data-kp-tone='destructive']):not([data-kp-over], [data-kp-loading])::after {
+        content: '';
+        position: absolute;
+        inset: -6px -8px;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 7px 2px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) var(--kp-cp-lk) var(--kp-cp-lk) / 2px 7px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 7px 2px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) calc(100% - var(--kp-cp-lk)) var(--kp-cp-lk) / 2px 7px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 7px 2px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 7px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 7px 2px no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 7px no-repeat;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-meter:is([data-kp-tone='warning'], [data-kp-tone='destructive']):not([data-kp-over], [data-kp-loading]) {
+            animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
+        }
+    }
+
     /* Pointing, focus and press never move a part [G8, G14]: the lift of the register and the
        kick of the key figure are gone. */
     [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
@@ -2255,7 +2320,8 @@
        along the foot, 5, 4, 3 px and then 2 px while the pointer rests, drawn on the part's
        own cut (a ring between the cut and the cut moved in), open at the start edge.
        A square part (a menu entry) takes the same two lines as inset shadows. */
-    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle) {
+    [data-theme='cyberpunk']
+        :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
         --kp-cp-t: 4;
         --kp-cp-p: 0;
         --kp-cp-ft: 4;
@@ -2287,25 +2353,32 @@
         --kp-cp-cb: var(--kp-button-notch);
     }
 
-    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle) {
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
         --kp-cp-ct: var(--kp-cp-notch);
         position: relative;
     }
 
     [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
-    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):hover {
         --kp-cp-t: 0;
         --kp-cp-p: 1;
     }
 
     [data-theme='cyberpunk'] .kp-button:focus-visible,
-    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+    [data-theme='cyberpunk']
+        :is(
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        ):focus-visible {
         --kp-cp-ft: 0;
         --kp-cp-fp: 1;
         outline: none;
     }
 
-    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle)::after {
+    [data-theme='cyberpunk']
+        :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']))::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -2345,7 +2418,13 @@
     /* ── Target brackets: focus [Kenny: focus = brackets] ─────────────────────
        Four corners close on the part from 9 px in: the focus ring colour outside, the
        contrast colour inside it (DI2's two channels), so the ring reads on any ground. */
-    [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle)::before,
+    [data-theme='cyberpunk']
+        :is(
+            .kp-button,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        )::before,
     [data-theme='cyberpunk'] .kp-menu__item::after {
         content: '';
         position: absolute;
@@ -2361,6 +2440,24 @@
 
     [data-theme='cyberpunk'] .kp-button:focus-visible {
         box-shadow: none;
+    }
+
+    /* The tag of a destructive entry: the word TARGET, boxed, in the place of its dash prefix. An
+       entry hugs its text and its `::after` is the focus brackets, so the tag is the entry's
+       `::before` (inline, before the label) and moves with the label whatever the entry's width. */
+    [data-theme='cyberpunk'] .kp-menu__item--destructive::before {
+        content: 'TARGET';
+        content: 'TARGET' / '';
+        margin-inline-end: 0.6em;
+        padding: 0 0.3rem;
+        border: 1px solid var(--destructive);
+        color: var(--destructive);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        vertical-align: 0.1em;
     }
 
     /* ── The closed circuit: press [Kenny: press = closed] ────────────────────
@@ -2410,7 +2507,8 @@
         --kp-btn-ground: var(--secondary);
     }
 
-    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):active {
         --kp-cp-grid-a: 0.6;
         --kp-cp-ground: var(--secondary);
     }
@@ -2421,10 +2519,54 @@
             repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px), var(--secondary);
     }
 
+    /* A calendar day that is a button takes the same split edge and the same closed circuit as a
+       menu entry (square, so two inset shadows). The today ring stays under them; a day that
+       cannot be picked (disabled, loading) does not answer the pointer. */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-day-low: var(--destructive);
+        --kp-cp-day-today: 0 0 transparent;
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--kp-cp-day-low) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent),
+            var(--kp-cp-day-today);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-today] {
+        --kp-cp-day-today: inset 0 0 0 2px currentColor;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-tone='bad'] {
+        --kp-cp-day-low: var(--destructive-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:active:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+        background-image:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         /* In: the pose arrives in four ticks (3, 2, 1, 0 left); out: the same four the
            other way round, and only then does the part count as at rest. */
-        [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-menu__item) {
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ) {
             transition:
                 --kp-cp-t 180ms steps(4, jump-end),
                 --kp-cp-p 0s 180ms,
@@ -2432,8 +2574,26 @@
                 --kp-cp-fp 0s 180ms;
         }
 
+        [data-theme='cyberpunk'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s;
+        }
+
         [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
-        [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):hover {
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover {
             transition:
                 --kp-cp-t 180ms steps(4, jump-start),
                 --kp-cp-p 0s,
@@ -2441,7 +2601,14 @@
                 --kp-cp-fp 0s 180ms;
         }
 
-        [data-theme='cyberpunk'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):focus-visible {
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):focus-visible {
             transition:
                 --kp-cp-t 180ms steps(4, jump-end),
                 --kp-cp-p 0s 180ms,
@@ -2450,7 +2617,13 @@
         }
 
         [data-theme='cyberpunk'] .kp-button:hover:not(:disabled):focus-visible,
-        [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-menu__item):hover:focus-visible {
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover:focus-visible {
             transition:
                 --kp-cp-t 180ms steps(4, jump-start),
                 --kp-cp-p 0s,

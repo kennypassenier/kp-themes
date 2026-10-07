@@ -79,6 +79,17 @@
         [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden])::after {
             animation: kp-sig-cyberpunk-lock 360ms steps(1, end);
         }
+
+        /* Leave · the alert's split reversed, its brackets opening again over the last 360 ms of it;
+           cyberpunk.js leaves a ghost of the alert, because [hidden] cannot be overridden. */
+        [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed][data-cyg-ghost] {
+            pointer-events: none;
+            animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] [data-bo-failure='1'] [data-kp-datatable-failed][data-cyg-ghost]::after {
+            animation: cyg-lock-out 360ms steps(1, end) calc(var(--cyg-time) - 360ms) both;
+        }
     }
 
     [data-theme='cyberpunk'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {

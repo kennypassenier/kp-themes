@@ -27,3 +27,28 @@ new MutationObserver((records) => {
         }
     }
 }).observe(document.body, { childList: true, subtree: true });
+
+// The failure alert's leave. The alert is hidden with `hidden`, which the base
+// layer pins to `display: none !important`, so a ghost of it (a clone that is
+// not hidden, inert and unheard) plays `cyg-split-out` and its brackets open
+// again (cyberpunk.css), then goes; a fresh alert removes the ghost at once.
+const ALERT = '[data-kp-datatable-failed]';
+
+new MutationObserver((records) => {
+    if (document.documentElement.getAttribute('data-theme') !== 'cyberpunk') return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    for (const record of records) {
+        const alert = /** @type {HTMLElement} */ (record.target);
+        if (!alert.matches(ALERT) || alert.hasAttribute('data-cyg-ghost') || !alert.closest('[data-bo-failure="1"]')) continue;
+        for (const ghost of alert.parentElement?.querySelectorAll(`:scope > ${ALERT}[data-cyg-ghost]`) ?? []) ghost.remove();
+        if (!alert.hidden || record.oldValue !== null) continue;
+        const ghost = /** @type {HTMLElement} */ (alert.cloneNode(true));
+        ghost.hidden = false;
+        ghost.setAttribute('data-cyg-ghost', '');
+        ghost.setAttribute('aria-hidden', 'true');
+        ghost.removeAttribute('role');
+        ghost.inert = true;
+        ghost.addEventListener('animationend', (event) => event.target === ghost && ghost.remove());
+        alert.after(ghost);
+    }
+}).observe(document.body, { attributes: true, attributeFilter: ['hidden'], attributeOldValue: true, subtree: true });

@@ -123,9 +123,9 @@
             animation: cyg-split var(--cyg-time) steps(1, end) backwards;
         }
 
-        /* The tooltip's close is its open reversed: cyberpunk.js keeps it for one split. */
-        [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip[hidden][data-cyg-leaving] {
-            display: grid;
+        /* The tooltip's close is its open reversed: cyberpunk.js leaves a ghost of it for one split. */
+        [data-theme='cyberpunk'] [data-cc-tip='a'] .kp-chart__tip[data-cyg-ghost] {
+            pointer-events: none;
             animation: cyg-split-out var(--cyg-time) steps(1, end) forwards;
         }
     }
