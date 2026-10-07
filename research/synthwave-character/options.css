@@ -13,7 +13,9 @@
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
-    .sy-page {
+    :is(.sy-page, .rv-dialog__stage) {
+        /* The review dialog moves the sections out of the page into its
+           stage, so the tokens must be defined there too. */
         /* G1: bodies on the sunrise curve; the register's quick curve
            (cyberpunk's register too) and the picks' spring, for the options. */
         --sy-sun: cubic-bezier(0.65, 0, 0.35, 1);
