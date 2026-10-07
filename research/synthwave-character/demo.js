@@ -668,24 +668,56 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does a part leave the page, and how does it arrive?',
-        why: 'The anchor first: the horizon is where things come and go, and every part carries 1 px of it. You like “the sun swallows it” but it does not feel right yet (round 1’s is not shown again: its growing disc cannot be played backwards exactly). In the CSS: its disc is cyan, pink and violet (not the sun’s laser yellow to pink); its stripes are all the same width (the sun’s widen toward the horizon); the part fades under it, so a half-covered grey shows; it ends as a full striped rectangle that vanishes in one frame; and a circle growing from the foot is solstice’s moon and dome. The new ones keep the sun taking the part, in its real colours and stripes, none draws a growing circle, and the piece of the page tube over the part answers while it goes. Arrival is the leave backwards.',
+        why: 'The anchor first: the horizon is where things come and go, and every part carries 1 px of it. You like “the sun swallows it” but it does not feel right yet, so it is back, five times, as the synthwave sun and not as an eclipse: the striped sun (laser yellow to pink, its stripes widening toward the foot, every cut horizontal) goes down behind the part’s foot, which is the page’s floor line, on the sunrise curve or on the beat. Round 1’s was a growing disc, cyan, pink and violet, with stripes all one width, that ended as a striped rectangle and read as solstice’s moon; none of these draws a circle. The other five are the best of round 3 that are not the sun’s shape. The piece of the page tube over the part answers while it goes. Arrival is the leave backwards.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
-                key: 'slab',
-                name: 'The sun’s slab rises through it and sets with it',
-                see: 'A slab in the sun’s own colours (laser yellow at the top, pink at the foot, stripes widening toward the horizon) rises from the part’s foot over it, covering it, then sinks behind the foot taking it; the piece of tube above the part lights while the sun passes. 4 beats (900 ms).',
+                key: 'sets',
+                name: 'The sun sets through it',
+                see: 'The striped sun, laser yellow at the top and pink at the foot, its stripes widening toward the foot, comes down over the part from its top edge: the part is gone above the sun’s lower edge, so you see the cut travel down. The sun carries on below the part’s foot, behind its 1 px of horizon, and is gone. One move, 4 beats (900 ms), on the sunrise curve; the piece of the page tube over the part lights while the sun passes.',
                 verdict: rec(
-                    'it keeps your idea (the sun covers it) in the sun’s real colours and stripes, rises and sets on one horizon, ends clean and has no circle; arriving it comes up covered and the sun sinks away to show it.',
+                    'it is the swallow you liked in the one picture the horizon allows: the sun goes down behind the line and takes the part with it, every cut horizontal, no disc. Arriving it is the sun rising out of the foot line with the part appearing behind its lower edge. Overlap: solstice’s leave is an eclipse, a dark moon crossing start to end with a corona; this sun goes down, wears stripes and has no round edge. It is also the nearest of the ten to the round-1 swallow, minus the disc.',
                 ),
             },
             {
-                key: 'bands',
-                name: 'The sun’s stripes close over it',
-                see: 'Five bands of the sun’s ramp grow over the part, bottom band first, each thicker than the one above, until they cover it; then the bands sink behind the foot, 4 beats (900 ms).',
+                key: 'scan',
+                name: 'The sun rises behind it and cuts it into scanlines',
+                see: 'The sun’s slab rises behind the part from its foot while four slits open in the part itself, the lowest the widest, so you see the part cut into scanlines with the sun burning through the cuts; the slits close the part away completely, and the sun sets behind the foot. 4 beats (900 ms), sunrise curve.',
                 verdict: not(
-                    'the stripes are the sun, shown as bars rather than a disc; it is livelier than the slab, but five bars on a 2 rem alert are busy.',
+                    'it is the sun’s own stripes turned on the part (the scanline-cut, the way the sun is drawn), with the sun behind it as the real sunset has it, not over it. But a slit mask on a 2 rem alert is only a few pixels, and for the first half the sun is half hidden by the part. Overlap: none of the other themes cut a part into scanlines; nostromo’s collapse and cyberpunk’s slice are vertical or diagonal.',
+                ),
+            },
+            {
+                key: 'beats',
+                name: 'The sun steps down through it, one beat a step',
+                see: 'Nothing for the first beat. Then a window of the sun (a third of the part’s height, its stripes widening toward the foot) lights on the part’s top third at 225 ms and steps down a third at 450 and 675 ms, the part gone behind it as it passes; at 900 ms the window is gone and so is the part.',
+                verdict: not(
+                    'it is the sun going down on the beat, the marquee’s step on the sunset: nothing glides, the stripes change on each step. But hard steps are the terminal’s, cyberpunk’s and nostromo’s rhythm, and a part cut in steps can look like a loading bar. Overlap: those three themes’ stepped motion.',
+                ),
+            },
+            {
+                key: 'cascade',
+                name: 'The sun’s stripes take it, band by band',
+                see: 'Five bands of the sun (thin at the top, thick toward the foot, a hairline between them) close over the part one after the other from its top edge down, each 45 ms after the one above; the part is cut away behind them as they pass, and the bands then drain toward the foot in the same order. 4 beats (900 ms), sunrise curve.',
+                verdict: not(
+                    'it is the sun drawn in its own stripes and it swallows from the top edge down, as you described it, with the hand of the tube above it. But five bars on a 2 rem alert are busy, and it is the round-3 bands turned upside down. Overlap: grotesk’s and cyberpunk’s bands wipe; here the bands are the sun’s ramp and widen toward the foot.',
+                ),
+            },
+            {
+                key: 'dye',
+                name: 'The sunset pours over it, then it sets',
+                see: 'The part is washed with the sunset gradient (laser yellow top, pink foot, with the stripes), its own colours dyed, then it sinks behind its foot cut by the sun’s stripes, 4 beats (900 ms).',
+                verdict: not(
+                    'the sun’s light swallows it without a shape over it; but a dye on text lowers contrast for a moment, and it is round 1’s sunset plus colour. Overlap: the ground’s own sunset leave, which Kenny decided on 2026-10-04.',
+                ),
+            },
+            {
+                key: 'slab',
+                name: 'The sun’s slab rises through it and sets with it',
+                see: 'A slab in the sun’s own colours (laser yellow at the top, pink at the foot, stripes widening toward the horizon) rises from the part’s foot over it, covering it, then sinks behind the foot taking it; the piece of tube above the part lights while the sun passes. 4 beats (900 ms).',
+                verdict: not(
+                    'it keeps your idea in the sun’s real colours and stripes, rises and sets on one horizon and has no circle; but it is a slab, a sun without its shape, and the part is switched off under it in one step.',
                 ),
             },
             {
@@ -697,14 +729,6 @@ const ASPECTS = [
                 ),
             },
             {
-                key: 'dye',
-                name: 'The horizon’s light pours over it, then it sets',
-                see: 'The part is washed with the sunset gradient (laser yellow top, pink foot, with the stripes), its own colours dyed, then it sinks behind its foot cut by the sun’s stripes, 4 beats (900 ms).',
-                verdict: not(
-                    'the sun’s light swallows it without a shape over it; but a dye on text lowers contrast for a moment, and it is round 1’s sunset plus colour.',
-                ),
-            },
-            {
                 key: 'floor',
                 name: 'The floor takes it from its foot up',
                 see: 'A near-white horizon line rises through the part from its foot to its top; below the line the part has turned into the grid floor, above it the part still stands; the floor sinks away, 4 beats (900 ms).',
@@ -713,35 +737,11 @@ const ASPECTS = [
                 ),
             },
             {
-                key: 'slats',
-                name: 'It is cut away by the sun’s stripes',
-                see: 'No sun and no colour: the sun’s stripes alone open in the part, the gaps widening toward the foot until nothing is left but slats that sink behind the foot, 4 beats (900 ms).',
-                verdict: not(
-                    'the sunset’s cut, pure; the part is eaten by the stripes. But without the sun’s colours it is just a blind closing, and it is the arrival’s own rise played backwards, so it adds nothing to it.',
-                ),
-            },
-            {
                 key: 'recede',
                 name: 'It recedes into the page horizon',
                 see: 'The part slides up toward the page tube, cut by the sun’s stripes whose gaps widen toward the tube, and is gone behind it; the piece of the tube over it blazes as it arrives there. Arriving, it comes out of the horizon and settles on the floor. 4 beats (900 ms).',
                 verdict: not(
                     'the horizon is where things come and go, and a part receding into it is the outrun picture (a road sign vanishing); but arriving it moves down from the line, which G2 forbids (nothing falls from above), and it travels the farthest of the ten.',
-                ),
-            },
-            {
-                key: 'centre',
-                name: 'It closes toward its centre, the tube with it',
-                see: 'The part is wiped from both ends toward its centre in one fluent move, 4 beats (900 ms), and the piece of the tube over it shrinks the same way, to a point of light that goes out; arriving, the point is drawn out to both ends and the part with it.',
-                verdict: not(
-                    'the horizon’s own gesture (drawn from its centre out, both ways) turned into a leave, and it is horizontal; but a wipe to the centre is a curtain, which grotesk’s and cyberpunk’s bands and nostromo’s collapse are close to.',
-                ),
-            },
-            {
-                key: 'beats',
-                name: 'It sets in four beats',
-                see: 'The part sinks behind its foot in four hard steps of one beat, cut by the sun’s stripes at each step, 900 ms; the piece of tube above it steps down with it.',
-                verdict: not(
-                    'the marquee’s step on a leave, nothing glides; but hard steps are terminal’s and cyberpunk’s rhythm, and a part that sinks in steps feels like a loading bar.',
                 ),
             },
             {
@@ -890,7 +890,7 @@ const MEASURED = {
     'curve:passes':
         'tube t50 440 / t90 640 over 900 ms; bars t50 450 / t90 640 over 900 ms; tile t50 750 / t90 810 over 900 ms; every close is its arrival backwards (mirror)',
     'curve:release':
-        'tube t50 550 / t90 660 over 680 ms; bars t50 900 / t90 1000 over 1125 ms; tile t50 970 / t90 1040 over 1125 ms; close mirrors except 2 part(s) within 11 %',
+        'tube t50 550 / t90 660 over 680 ms; bars t50 900 / t90 1000 over 1125 ms; tile t50 970 / t90 1040 over 1125 ms; every close is its arrival backwards (mirror), the head’s fade and the tile’s horizon now on gentle ramps',
     'curve:even':
         'tube t50 430 / t90 800 over 900 ms; bars t50 450 / t90 810 over 900 ms; tile t50 600 / t90 830 over 900 ms; every close is its arrival backwards (mirror)',
     'opening:climb':
@@ -910,22 +910,25 @@ const MEASURED = {
     'tone:pips': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
     'tone:rails': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
     'tone:striped': 'the piece is drawn from its centre and the mark strikes on once (450 ms) and holds',
-    'leave:slab':
-        'cover t50 500 / t90 760 over 900 ms; part t50 500 / t90 500 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:bands':
-        'cover t50 230 / t90 330 over 460 ms; part t50 450 / t90 450 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:ramp':
-        'cover t50 410 / t90 730 over 900 ms; part t50 410 / t90 410 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:sets':
+        'sun t50 450 / t90 740 over 900 ms; part t50 230 / t90 320 (cut from the top, 60 to 450 ms); piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:scan':
+        'slits t50 320 / t90 450 over 630 ms; the sun rises and sets behind (a pulse, 900 ms); piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:beats':
+        'four hard steps at 225 / 450 / 675 / 900 ms (the sun’s window t50 450 / t90 900, the part t50 450 / t90 680); piece lit for 880 ms; every close is its arrival backwards (mirror), no FRONT flagged',
+    'leave:cascade':
+        'part t50 270 / t90 390 over 540 ms; five bands, each 720 ms and 45 ms after the one above (the first t50 360 / t90 590, the last t50 540 / t90 770); piece lit for 880 ms; every close is its arrival backwards (mirror)',
     'leave:dye':
-        'cover t50 700 / t90 790 over 900 ms; part t50 330 / t90 400 over 500 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+        'cover t50 210 / t90 290 over 400 ms, then the part t50 580 / t90 640; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:slab':
+        'cover t50 350 / t90 720 over 900 ms; part switched off at 410 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:ramp':
+        'cover t50 430 / t90 760 over 900 ms; part switched off at 500 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
     'leave:floor':
-        'cover t50 500 / t90 760 over 900 ms; part t50 500 / t90 500 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:slats':
-        'cover t50 230 / t90 330 over 460 ms; part t50 450 / t90 450 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+        'cover t50 350 / t90 720 over 900 ms; part switched off at 410 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
     'leave:recede': 'part t50 450 / t90 650 over 900 ms; piece lit for 390 ms; every close is its arrival backwards (mirror)',
-    'leave:centre': 'part t50 440 / t90 620 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:beats': 'part t50 740 / t90 900 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
-    'leave:drain': 'part t50 700 / t90 790 over 900 ms; piece lit for 880 ms; every close is its arrival backwards (mirror)',
+    'leave:drain':
+        'part t50 210 / t90 290 over 400 ms after the cut (the sunset, t50 580 / t90 640); piece lit for 880 ms; every close is its arrival backwards (mirror)',
     'press:charge':
         'piece t50 120 / t90 170 over 225 ms; button t50 220 / t90 220 over 225 ms; day t50 220 / t90 220 over 225 ms; every close is its arrival backwards (mirror)',
     'press:ramp':

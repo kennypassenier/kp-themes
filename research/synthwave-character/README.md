@@ -45,7 +45,7 @@ not recommended, its honest overlap with another theme's CHARACTER.md, and what 
 | 3   | The corners (G6)                      | the light overshoots the corners · only the top and foot rules · the light runs down the sides and fades · the stripe floats above the plate · a corner pixel · square (the baseline)                                                                                                                                                                       |
 | 4   | A warning (G13)                       | the VCR's symbols on a tube that turns · your neon ring on a tube that turns · the piece swells with the severity · three cells in the piece · the part between two tubes · the words cut by the sun's stripes                                                                                                                                              |
 | 5   | Loading (G10)                         | the tube charges in five steps · the ramp flows through the tube · the road runs on the tube · the floor drives toward you · a slice of light runs the tube · headlights and tail lights · the sun's stripes light up from the horizon · the surface is the bar · the marquee on the tube in the ramp's colours · the rows of the floor light up toward you |
-| 6   | Leaving and arriving (G12)            | the sun's slab · the sun's stripes close over it · the progress bar's ramp wipes it · the horizon's light pours over it · the floor takes it from its foot up · it is cut away by the sun's stripes · it recedes into the page horizon · it closes toward its centre · it sets in four beats · the light drains out of it                                   |
+| 6   | Leaving and arriving (G12)            | the sun sets through it · the sun rises behind it and cuts it into scanlines · the sun steps down through it on the beat · the sun's stripes take it band by band · the sunset pours over it · the sun's slab · the progress bar's ramp wipes it · the floor takes it from its foot up · it recedes into the page horizon · the light drains out of it      |
 | 7   | The focus ring (G14, DI2)             | twin tubes · two tubes, top and foot · the horizon shouts, the ring whispers · the sun's ramp as the ring · the light spills down from the piece · the part stands on its own tube                                                                                                                                                                          |
 | 8   | The press (G14)                       | the piece charges · the sun's ramp fills the piece · the light gathers under the part · a gleam crosses the part · the piece draws in to its core · the VCR acknowledges: ▶ lights on the piece                                                                                                                                                             |
 
@@ -56,14 +56,13 @@ not recommended, its honest overlap with another theme's CHARACTER.md, and what 
 3. Corners: a corner is where the horizon's light (1 px on a part's top edge) ends or starts: overshooting the sides, only top and foot rules, running down the sides and fading, a stripe lifted off the slab, a pixel. Dropped: the sun-stripe slots (a grille) and the horizon slit (a rendering fault).
 4. Warning: the piece of the tube over the warned part changes tone (laser yellow, red for a failure) exactly as wide as the part, and a second channel that is not colour carries the level: a symbol, the ring, the piece's thickness, three cells, a rail at the foot, cut letters. Dropped: the sun going down (the sun is the clock) and round 2's three-pip level before the title (it moved onto the piece).
 5. Loading: when the page waits its tube is the unlit track of the bar and the picture lights it; every waiting part carries the same picture on its top edge. The floor options keep the tube lit and move the floor. Dropped: the scanner (back and forth, G10), the equaliser (a widget, not the horizon), the fill, ladder and bulbs of round 2 as drawn on parts alone.
-6. Leave: the horizon takes a part and gives it back, the piece of tube over the part answering while it goes (a pulse). Round 1's swallow, a growing disc, is not shown again (its close cannot be played backwards exactly, see below); the ten are the sun's slab and bands in its real colours, the ramp, the dye, the floor, the stripes alone, the recession into the page tube, the closing to the centre, four hard beats and the drain of light. None draws a growing circle.
+6. Leave (update 1, after Kenny's round-1 words "I like the sun swallows it, but it doesn't feel quite right yet"): the sun swallows it is back, five times, as the synthwave sun and not an eclipse. The striped sun (laser yellow to pink, stripes widening toward the foot, horizontal cuts only) goes down behind the part's foot, the page's floor line, on the sunrise curve or on the beat: it sets through the part (a slab from the top edge to the foot, the part gone above its lower edge); it rises behind the part while four slits cut the part into scanlines and sets; it steps down through the part in four hard beats (225, 450, 675, 900 ms); five bands take the part from its top edge down and drain toward the foot; the sunset dyes it and it sets. The other five are round 3's best that are not the sun's shape: the slab, the bar's ramp, the floor, the recession into the page horizon and the draining light. The piece of tube over the part answers while it goes (a pulse). None draws a growing circle.
 7. Focus: the piece of the page tube lights over the focused part, as under the pointer; the ring round it keeps DI2's two channels in every option.
 8. Press: the piece lit over a hovered part is what the press acts on (charges, fills with the ramp, dims while light pools under the part, a gleam crosses, draws in, shows ▶).
 
-What was wrong with the swallow, found in the CSS: the disc was cyan, pink and violet (the sun is laser yellow to pink), its stripes
+What was wrong with round 1's swallow, found in the CSS: the disc was cyan, pink and violet (the sun is laser yellow to pink), its stripes
 all one width (the sun's widen toward the horizon), the part faded under it, it ended as a whole striped rectangle that vanished in one
-frame, and a circle growing from the foot is solstice's moon and dome. The new leaves keep "the sun takes it" in the sun's real colours
-and stripes, end clean and are authored as arrivals (the leave is the arrival played backwards by the page's script).
+frame, and a circle growing from the foot is solstice's moon and dome (solstice's G12 is an eclipse, a charcoal moon crossing start to end with an amber corona). The swallows now keep "the sun takes it" in the sun's real colours and stripes, go down instead of across, end clean, and are authored as the leave itself: their keyframes read forward as what you see leaving, the arrival plays them `reverse` (the page's script then plays the arrival backwards for the close, so the close is the leave again). Only transforms, `clip-path: inset()` and `mask-size` move (no circle), so the tool can compare every frame.
 
 **How.**
 
@@ -98,20 +97,26 @@ New overlaps named on the page: the tube-leads curve (none), hard beats (termina
 titanium, blueprint), the lowering beam (titanium's top-down cut, forest's menu), the swelling piece (grotesk's 6 px bar), pips
 (nostromo's lamp bank), rails (nostromo's frame), the drain (the ground's sunset with a filter).
 
-**Measured** (Firefox, 1600 px, `node research/_review/measure-motion.mjs research/synthwave-character --base http://127.0.0.1:8750`,
-mirror everywhere, no FRONT except the hard steps: 15 s for the whole demo, 56 options): every part that arrives closes as its
-arrival reversed ("mirror", 138 parts) except two parts of curve option 5, "charge, then release" (the head's opacity 9 % and the
-tile's horizon 11 % off at the first 40 to 60 ms of the close, over the tool's 8 % tolerance; the ease-in tube curve is not
-symmetrical). FRONT appears only where a hard step is the idea (the tube strike, the stripe strikes, the piece's strike and the
-press). In the dialog (clicking `[data-rv-open]`, flipping with the arrow keys) the tokens are defined in `.rv-dialog__stage`, the
-column's zoom is 1 and the animations run on every cycle and loop option; no option overflows sideways. See the verification list
-under "What could not be made true" for the sizes.
+**Measured** (Firefox, 1600 px, `node research/_review/measure-motion.mjs research/synthwave-character --base http://127.0.0.1:8752`,
+15 s for the whole demo): every part that arrives closes as its arrival reversed ("mirror", 136 part lines), no BLINK, CUT-IN or CUT-OUT and no
+part off the 8 % tolerance. FRONT appears only where a hard step is the idea (the tube strike, the stripe strikes, the piece's strike and
+the press). Update 1: (a) the five sun leaves and the five kept ones measure "mirror" on every part (`--aspect leave`): the sun sets
+through it (sun t50 450 / t90 740, part t50 230 / t90 320 on the close, 900 ms), scanlines (slits t50 320 / t90 450 over 630 ms), the
+beat steps (four steps, no FRONT flagged), the band cascade (five bands 45 ms apart, each 720 ms), the sunset dye, the slab, the ramp, the
+floor, the recession and the drain. (b) Curve option 5, "charge, then release", had two parts off the tolerance (the tube head's
+opacity 9 % off at 40 ms of the close, the tile's horizon 11 % off at 60 ms). The mirror itself was exact (the close's head translation equals the arrival's at the
+mirrored time to 0.2 px); the tool compares against its 10 ms samples and a fade that is steep (the head's last 8 % of 675 ms, the
+horizon's scale-in on the sunrise curve) swings 8 to 11 % across one sample. The fades are now gentle (the head fades over its last 30 %,
+the horizon's draw and fade are linear within their intervals), and the whole demo measures without a flag. In the dialog (clicking
+`[data-rv-open]`, flipping with the arrow keys) the tokens are defined in `.rv-dialog__stage`, the column's zoom is 1 and the animations
+run on every cycle and loop option; no option overflows sideways.
 
 **What could not be made true.**
 
-- Round 1's swallow is not shown as it was: a growing disc's `clip-path: circle()` area changes too steeply for the measuring tool's
-  one-frame tolerance, so no authoring of it measured as an exact mirror (82 to 98 % off at the steepest frames, though the radius
-  values are exact mirrors at 75 ms steps). The tenth leave option is therefore the drain instead.
+- The swallow is not round 1's disc: it is the sun's stripes going down behind the part's foot, because a growing circle cannot be measured
+  as an exact reverse and reads as solstice's moon. The scene's parts are 2 to 6 rem tall, so the sun is a rectangle of stripes (a sun
+  with its round edge would need a part as tall as it is wide); the beats option's steps and the scanlines on the 2 rem alert are a few
+  pixels.
 - The press options act on the piece of the page tube, which stands up to 8 rem above a part low on the page (a legend key, a day):
   the part's own top edge carries the other half of the press so the two read together, but the distance is real.
 - The pieces over parts in the header stand on the tube; over parts in the body they sit above them across the gap (1.25 rem): the
