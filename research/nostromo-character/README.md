@@ -80,3 +80,71 @@ from the smooth curve; it now runs at 80 ms frames and holds each frame's starti
 focus question first offered "the ring alone", which differed from the recommendation only by an ink dot; it now offers the lamp lit
 orange. The press first differed from titanium's 1 px drop only by a faint shadow; a key now rests raised and falls into a shadowed
 well.
+
+## Round 2 (anchor: the raster)
+
+**Why.** Kenny decided on 07/10/2026 at 20:10 that nostromo's anchor, the one element every decision about the theme departs from, is
+**the raster** (research/nostromo-anchor, option 6): a CRT picture drawn row by row from the top, with scanlines and a phosphor
+persistence tail. The lamps on the case stay as decided (scope-12: a lamp on every switch and reading; G8, G9). This is the next round of
+the same demo (round id `2026-10-07-r2`, every verdict reopened), reworked so the screen is drawn by the raster and the case keeps its lamps.
+
+**The building blocks are the anchor's own**, not a second raster: the part uncovered from its top edge in whole 80 ms frames
+(`nc-raster`, `steps(n, end)`), the beam riding the edge of what is written with a fading tail (`nc-beam`, the same gradient), the hum band
+rolling down the glass in steps (`nc-roll`, `nc-hum`), the scanlines (`--nc-scan`). One clock for every raster-led option: a panel is written
+in **4 frames** (320 ms), a screen or a figure in **8** (640 ms), a waiting screen loops in **20** (1600 ms). A close is the arrival played
+backwards by `demo.js` (`closeByReverse`), so the raster's close erases from the bottom up under a climbing beam.
+
+### Every question: kept, changed or replaced
+
+| #   | Question         | Verdict                     | Why, in one line                                                                                                                                                             |
+| --- | ---------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Motion curve     | kept, scene redrawn         | The frame clock is the raster's clock; its panels are now drawn by the raster in frames (smooth = the same draw gliding).                                                    |
+| 2   | Direction        | changed                     | The raster is now the explicit leading rule (one picture, rows from the top, beam and tail); feed (titanium) and as today stay.                                              |
+| 3   | Opening          | changed (cut replaced)      | Raster first, the tube strike second, the ping third; the cut from the top (titanium's) went, as the raster without beam and frames is the same picture.                     |
+| 4   | Durations        | kept, scene redrawn         | The numbers are the raster's frame counts (2, 4, 8, 20); dialog, figure and loop now show the raster.                                                                        |
+| 5   | Colour           | kept                        | Ink acts, lamp indicates, screen amber: the raster is amber on dark glass.                                                                                                   |
+| 6   | Corners          | kept                        | Nothing in the raster changes a corner.                                                                                                                                      |
+| 7   | Surface          | changed (option 3 replaced) | The screen is drawn by the raster and hums once drawn; "only the case" contradicts the anchor and became "scanlines on the plastic too".                                     |
+| 8   | Warning          | kept                        | The klaxon frame is the case and the screen both; the raster adds nothing.                                                                                                   |
+| 9   | Live update      | changed (blip replaced)     | The reading is redrawn under the beam and its lamp lights (screen and case in one); the lamp alone is option 2; dark's and synthwave's blip went.                            |
+| 10  | Loading          | changed (scan replaced)     | A waiting part is a small screen that redraws; the lamp bank stays as the case-side option; synthwave's marquee scan went.                                                   |
+| 11  | Spinner          | changed (ping replaced)     | A round glass scope redraws (recommended); the reel (case-side, already decided as the busy phone window) and the ring of lamps stay; the tracker's ping went.               |
+| 12  | Leave and arrive | changed (scroll replaced)   | Drawn and erased by the raster (the close is the draw backwards); the tube switched off stays second; "scrolls off the top" went (rising is light's, pastel's, phantom's).   |
+| 13  | Composites       | kept                        | A button is a switch of the case wherever it sits: lamp, ring, well.                                                                                                         |
+| 14  | Pointing         | kept, option 2 reworked     | The lamp stays the recommendation (the case is what you touch); the old orange sweep is now a pass of the raster's beam, a transition so the way out is the way in reversed. |
+| 15  | Focus ring       | kept                        | A system constant plus the lit lamp.                                                                                                                                         |
+| 16  | Press            | kept                        | The key goes in: the case.                                                                                                                                                   |
+| 17  | Voice            | kept                        | The screen already reads out in phosphor mono.                                                                                                                               |
+| 18  | Motifs           | kept                        | Scanlines, beam and hum are the screen's motifs; the question already says "only on a screen".                                                                               |
+
+### The recommendations of 2, 3, 9, 10 and 12 read as one grammar
+
+Same drawing idea (the part is written from the top, a band per frame), same row order (top to bottom; a close bottom to top), same tail
+(the anchor's beam gradient, 0.7 to 1.6 rem by part), same frame clock (80 ms; 4 frames a panel; 8 a screen; 20 a loop). Question 9 uses
+the beam as the front of a veil of not-yet-refreshed phosphor over a value that is already there; question 10 and 11 loop the draw (12
+frames writing, 6 standing, 2 blank) with the hum band; question 12 is question 3's draw backwards.
+
+### Measured as seen (`measure-motion.mjs`, Firefox, 1600 px, ms from the start of the motion)
+
+| Row                                | in t50 / t90         | out t50 / t90        | Mirror |
+| ---------------------------------- | -------------------- | -------------------- | ------ |
+| 3 raster: dialog, menu             | 160 / 320            | 170 / 250            | yes    |
+| 3 raster: beam                     | 300 / 320            | 20 / 250             | yes    |
+| 2 raster: week of days, list, tile | 160 / 240-320        | 170 / 250            | yes    |
+| 2 raster: the screen's picture     | 320 / 560            | 330 / 570            | yes    |
+| 4 frames: dialog; figure           | 160 / 320; 240 / 480 | 170 / 250; 330 / 570 | yes    |
+| 7 screen: the plot's picture       | 320 / 560            | 330 / 570            | yes    |
+| 12 raster: alert, card, key figure | 160 / 240-320        | 170 / 250            | yes    |
+| 9 raster: veil / beam (no close)   | 160 / 320; 300 / 320 | not an arrival       | n/a    |
+
+Not in the tool: the loops of 10 and 11 (infinite, no arrival), and the pointer of 14 (a transition played by the review dialog's own
+pointer loop, 3 frames each way). The measured `out` run starts at 0 and ends at 250 while `in` runs 70 to 320: the same four frames, the
+close having no first blank frame.
+
+### Not solved
+
+- The chart's decided arrival (the phosphor trace, start to end) is a different order from the raster's; question 2 names it.
+- Terminal prints a menu a line at a time under a block cursor: the raster's bands, beam and tail tell them apart, but they are neighbours.
+- The word COMPUTING at 0.62 rem in dim amber on dark glass is below WCAG 2.2 AA for small text; it is decoration beside the busy part's own label.
+- The raster's close shows its tail ahead of the climbing beam (it is the arrival backwards), not a lingering afterglow.
+- CHARACTER.md (G2, G3, G9, G10, G11, G12) is not edited; it follows Kenny's verdict.

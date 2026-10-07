@@ -11,20 +11,38 @@
 // that arrives, opens, presses, updates or leaves, so the rule is seen in
 // action. The network graph is in no scene: it changes in no theme (Kenny,
 // 02:54), so it is a source of the grammar here, never a target.
+//
+// Round 2 (Kenny, 2026-10-07 20:10): the anchor of the theme is the raster, a
+// CRT picture drawn row by row from the top with scanlines and a phosphor
+// persistence tail (research/nostromo-anchor, option 6). The screen is drawn
+// by it, the case keeps its lamps (scope-12). Questions 1 to 4, 7, 9, 10, 11,
+// 12 and 14 were reworked around it; the raster's building blocks are the
+// anchor demo's: the clip that uncovers a part from the top in whole frames
+// (`nc-raster`), the beam that rides its edge with a fading tail (`nc-beam`),
+// the rolling hum band, the scanlines. The README holds the table of what was
+// kept, changed and replaced.
 
 /* ----------------------------------------------------------- the parts */
 
-const button = (label, modifier = '', extra = '') => `<button type="button" class="kp-button ${modifier}" ${extra}>${label}</button>`;
+/** The raster's beam: a bright edge with a fading phosphor tail, riding the leading edge of a part drawn from the top (options.css shows it only where an option draws by the raster). */
+const BEAM = '<span class="nc-beam" aria-hidden="true"></span>';
+
+const button = (label, modifier = '', extra = '') =>
+    `<button type="button" class="kp-button ${modifier}" ${extra}>${label}${modifier.includes('nc-pointed') ? BEAM : ''}</button>`;
 
 /** A switch's or a reading's lamp (scope-12): unlit at rest; the options light it. */
 const LAMP = '<span class="nc-lamp" aria-hidden="true"></span>';
+
+/** A small screen that redraws itself while something waits: dark glass, scanlines, the hum band, a line of phosphor text drawn row by row. */
+const RAS = (cls = '', pic = 'COMPUTING') =>
+    `<span class="nc-ras ${cls}" aria-hidden="true"><span class="nc-ras__pic${pic ? '' : ' nc-ras__pic--rows'}">${pic}</span><span class="nc-ras__beam"></span></span>`;
 
 /** The lamp bank: the progress bar's LED window, computing (the recommendation), or the lamps scanning (option 2). */
 const bank = (cls = '') =>
     `<span class="nc-bank ${cls}" aria-hidden="true"><span class="nc-bank__window"><span class="nc-bank__lit"></span></span></span>`;
 
 /** Every loading picture an option may draw at the foot of (or over) a waiting part; options.css shows one. */
-const LOAD = `<span class="nc-load" aria-hidden="true">${bank('nc-load__bank')}<span class="nc-load__today"></span></span>`;
+const LOAD = `<span class="nc-load" aria-hidden="true">${RAS('nc-load__ras')}${bank('nc-load__bank')}<span class="nc-load__today"></span></span>`;
 
 /** The change on label tape, ‹▲ 6 %›, in its tone. */
 const tape = (text, dir = 'up', tone = 'good') =>
@@ -36,31 +54,37 @@ const meter = (value = 0.62, mark = 0.8, extra = '') =>
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}; --kp-mark: ${mark}" ${extra}><span class="kp-meter__mark"></span></div>`;
 
 /** A small amber screen set into the case: the chart's plot, with its trace. */
-const screen = (cls = '') => `<div class="nc-screen ${cls}" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none">
-        <polyline class="nc-screen__trace" points="0,36 20,30 40,33 60,22 80,26 100,16 120,20 140,12 160,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" pathLength="1"/></svg><span class="nc-screen__read">FLOW 412</span></div>`;
+const screen = (
+    cls = '',
+) => `<div class="nc-screen ${cls}" aria-hidden="true"><span class="nc-screen__pic nc-draw nc-draw--screen"><svg viewBox="0 0 160 48" preserveAspectRatio="none">
+        <polyline class="nc-screen__trace" points="0,36 20,30 40,33 60,22 80,26 100,16 120,20 140,12 160,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" pathLength="1"/></svg><span class="nc-screen__read">FLOW 412</span>${BEAM}</span></div>`;
 
 const PART = {
-    dialog: () => `<div class="kp-dialog nc-dialog nc-arrives nc-strikes" role="group" aria-label="A dialog opening">
+    dialog: () => `<div class="kp-dialog nc-dialog nc-arrives nc-strikes nc-draw" role="group" aria-label="A dialog opening">
         <p class="kp-dialog__title nc-title">Close INC-4471?</p>
         <p class="kp-dialog__description">The vendor is told at once.</p>
-        <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Close it', 'kp-button--sm kp-button--primary')}</div>
+        <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Close it', 'kp-button--sm kp-button--primary')}</div>${BEAM}
     </div>`,
     menu: () => `<div class="nc-menu-wrap">
         ${button('More ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}
-        <div class="kp-popover nc-pop nc-arrives nc-strikes"><ul class="kp-menu" role="menu">
+        <div class="kp-popover nc-pop nc-arrives nc-strikes nc-draw"><ul class="kp-menu" role="menu">
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">${LAMP}Open incident</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item">${LAMP}Assign to…</button></li>
             <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">${LAMP}Delete</button></li>
-        </ul></div>
+        </ul>${BEAM}</div>
     </div>`,
-    tile: (label = 'Pump house 1', body = '4.2 bar · 412 m³/h') => `<div class="kp-card nc-tile nc-arrives">
+    tile: (
+        label = 'Pump house 1',
+        body = '4.2 bar · 412 m³/h',
+        arrives = true,
+    ) => `<div class="kp-card nc-tile${arrives ? ' nc-arrives nc-draw' : ''}">
         <p class="kp-card__title nc-title">${LAMP}${label}</p>
-        <p class="kp-card__body">${body}</p>
+        <p class="kp-card__body">${body}</p>${BEAM}
     </div>`,
     kpi: (label = 'Flow now', value = '412', foot = tape('6 %')) => `<div class="kp-kpi nc-kpi">
         <span class="kp-kpi__label">${LAMP}${label}</span>
         <span class="kp-kpi__value nc-figure nc-carrier" data-nc-num>${value}</span>
-        <span class="kp-kpi__trend">${foot} on yesterday</span>
+        <span class="kp-kpi__trend">${foot} on yesterday</span>${BEAM}
     </div>`,
     tracks: () => `<div class="nc-tracks" aria-hidden="true">
         <span class="nc-tracks__groove"><span class="nc-track" data-nc-r="1"></span></span>
@@ -68,13 +92,13 @@ const PART = {
         <span class="nc-tracks__groove"><span class="nc-track" data-nc-r="3"></span></span>
     </div>`,
     days: (n = 7, from = 12) =>
-        `<div class="nc-days" aria-hidden="true">${[...Array(n).keys()]
+        `<div class="nc-days nc-draw" aria-hidden="true">${[...Array(n).keys()]
             .map((i) => `<span class="nc-day nc-arrives" style="--i: ${i}">${LAMP}${from + i}</span>`)
-            .join('')}</div>`,
+            .join('')}${BEAM}</div>`,
     rows: () =>
-        `<div class="nc-rows" aria-hidden="true">${['NORTH 4 · 412', 'SOUTH 2 · 398', 'EAST 1 · 451']
+        `<div class="nc-rows nc-draw" aria-hidden="true">${['NORTH 4 · 412', 'SOUTH 2 · 398', 'EAST 1 · 451']
             .map((t, i) => `<span class="nc-row-line nc-arrives" style="--i: ${i}">${t}</span>`)
-            .join('')}</div>`,
+            .join('')}${BEAM}</div>`,
     chip: (word = 'Running', kind = 'good') =>
         `<span class="nc-state" data-nc-kind="${kind}"><span class="nc-state__dot nc-lamp nc-lamp--state" aria-hidden="true"></span><span class="nc-state__word nc-carrier" data-nc-word>${word}</span></span>`,
     alert: (text = 'Pump house 4 is back online.') =>
@@ -86,18 +110,18 @@ const PART = {
     skeleton: () =>
         `<div class="nc-skel" aria-hidden="true"><span class="kp-skeleton nc-skel__line"></span><span class="kp-skeleton nc-skel__line"></span><span class="kp-skeleton nc-skel__line"></span>${bank(
             'nc-skel__bank',
-        )}${bank('nc-skel__bank')}${bank('nc-skel__bank')}</div>`,
+        )}${bank('nc-skel__bank')}${bank('nc-skel__bank')}${RAS('nc-ras--skel nc-skel__ras', '')}</div>`,
     bar: (label = 'Export busy') =>
         `<div class="nc-bar-wrap"><div class="kp-progressbar nc-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>${bank(
             'nc-bar-bank',
-        )}</div>`,
+        )}${RAS('nc-bar-ras')}</div>`,
     field: () =>
         `<label class="kp-field nc-field"><span class="kp-field__label">Pump house</span><input class="kp-field__input" value="North 4" /></label>`,
     menuStatic: (items = ['Open incident', 'Assign to…'], cls = '') =>
         `<div class="kp-popover nc-pop nc-pop--static ${cls}"><ul class="kp-menu" role="menu">${items
             .map(
                 (t, i) =>
-                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === 0 ? ' nc-pointed' : ''}">${LAMP}${t}</button></li>`,
+                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === 0 ? ' nc-pointed' : ''}">${LAMP}${t}${i === 0 ? BEAM : ''}</button></li>`,
             )
             .join('')}</ul></div>`,
 };
@@ -126,10 +150,10 @@ const DURATION = () =>
     cell('Contact: a press', `<div class="nc-row">${button('Export readings', 'nc-tap')}</div><p class="nc-readout" data-nc-readout="contact"></p>`) +
     cell('A strike: a dialog opens', PART.dialog() + '<p class="nc-readout" data-nc-readout="strike"></p>') +
     cell(
-        'Printing: a figure is printed',
+        'Printing: a figure is drawn',
         `<div class="kp-kpis">${PART.kpi('Readings', '18 240')}</div><p class="nc-readout" data-nc-readout="print"></p>`,
     ) +
-    cell('A loop: the lamp bank computes', PART.bar('Loading') + '<p class="nc-readout" data-nc-readout="loop"></p>');
+    cell('A loop: the waiting screen redraws', PART.bar('Loading') + '<p class="nc-readout" data-nc-readout="loop"></p>');
 
 const COLOUR = () =>
     cell(
@@ -157,7 +181,7 @@ const COLOUR = () =>
     cell('A meter', meter(0.62, 0.8));
 
 const CORNERS = () =>
-    cell('Card', PART.tile('Reservoir North', 'Level 71 %').replace(' nc-arrives', '')) +
+    cell('Card', PART.tile('Reservoir North', 'Level 71 %', false)) +
     cell('Menu panel', PART.menuStatic(['Open incident', 'Assign to…']).replace(' nc-pointed', '')) +
     cell('Key figure with its change', `<div class="kp-kpis">${PART.kpi('Flow now', '412')}</div>`) +
     cell(
@@ -168,7 +192,7 @@ const CORNERS = () =>
     cell('A screen', screen());
 
 const SURFACE = () =>
-    cell('Card', PART.tile('Reservoir North', 'Level 71 %').replace(' nc-arrives', '')) +
+    cell('Card', PART.tile('Reservoir North', 'Level 71 %', false)) +
     cell('Key figure', `<div class="kp-kpis">${PART.kpi('Readings', '18 240')}</div>`) +
     cell('The plot of a chart', screen()) +
     cell('Meter', meter(0.62, 0.8)) +
@@ -250,10 +274,10 @@ const SPINNERS = () =>
     );
 
 /** A part that leaves and arrives. */
-const leaver = (html) => `<div class="nc-leaver">${html}</div>`;
+const leaver = (html) => `<div class="nc-leaver nc-draw">${html}${BEAM}</div>`;
 const LEAVE = () =>
     cell('An alert', leaver(PART.alert().replace(' nc-arrives', ''))) +
-    cell('A card', leaver(PART.tile('Reservoir North', 'Level 71 %').replace(' nc-arrives', ''))) +
+    cell('A card', leaver(PART.tile('Reservoir North', 'Level 71 %', false))) +
     cell(
         'A key figure',
         leaver(
@@ -295,15 +319,15 @@ const HOVER = () =>
     cell('Menu entries, the first pointed at', PART.menuStatic(['Open incident', 'Assign to…', 'Rename'])) +
     cell(
         'Tile with its Open link pointed at',
-        `<div class="kp-card nc-tile"><p class="kp-card__title nc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm nc-tile-link nc-pointed" href="#nc-intro">Open</a></div>`,
+        `<div class="kp-card nc-tile"><p class="kp-card__title nc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm nc-tile-link nc-pointed" href="#nc-intro">Open${BEAM}</a></div>`,
     ) +
     cell(
         'Key figures, the first pointed at',
-        `<div class="kp-kpis nc-kpi-row"><a class="kp-kpi nc-kpi nc-pointed" href="#nc-intro"><span class="kp-kpi__label">${LAMP}Flow now</span><span class="kp-kpi__value nc-figure">412</span></a><a class="kp-kpi nc-kpi" href="#nc-intro"><span class="kp-kpi__label">${LAMP}Pressure</span><span class="kp-kpi__value nc-figure">3.1</span></a></div>`,
+        `<div class="kp-kpis nc-kpi-row"><a class="kp-kpi nc-kpi nc-pointed" href="#nc-intro"><span class="kp-kpi__label">${LAMP}Flow now</span><span class="kp-kpi__value nc-figure">412</span>${BEAM}</a><a class="kp-kpi nc-kpi" href="#nc-intro"><span class="kp-kpi__label">${LAMP}Pressure</span><span class="kp-kpi__value nc-figure">3.1</span></a></div>`,
     ) +
     cell(
         'Days of a month, one pointed at',
-        `<div class="nc-days">${[12, 13, 14, 15].map((d) => `<span class="nc-day${d === 13 ? ' nc-pointed' : ''}">${LAMP}${d}</span>`).join('')}</div>`,
+        `<div class="nc-days">${[12, 13, 14, 15].map((d) => `<span class="nc-day${d === 13 ? ' nc-pointed' : ''}">${LAMP}${d}${d === 13 ? BEAM : ''}</span>`).join('')}</div>`,
     );
 
 const FOCUS = () =>
@@ -383,7 +407,7 @@ const not = (why) => `Not recommended, because ${why}`;
  * (arrive, open, press, update, leave), 'loop' scenes loop in CSS, 'still'
  * scenes do not move. `options[0]` is the recommendation.
  * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still', scene: () => string,
- *   options: { key: string, name: string, see: string, verdict: string }[] }[]}
+ *   options: { key: string, name: string, see: string, verdict: string, raster?: boolean }[] }[]}
  */
 const ASPECTS = [
     {
@@ -391,23 +415,27 @@ const ASPECTS = [
         label: 'The motion curve',
         rule: 'G1',
         question: 'How does nostromo move: frame by frame like a 1979 screen, smoothly on its register’s curve, or as each pick does today?',
-        why: 'A theme exists to be distinct (your rule of 03:37). Nostromo’s register curve, cubic-bezier(0.2, 0, 0, 1), is also formal’s, light’s, brutalism’s and grotesk’s. Your nostromo picks already move in hard steps more than anything else (printed out, warmed up, inverted, the lamps, the relay clack), and today the theme runs on eleven curves at once.',
+        why: 'A theme exists to be distinct (your rule of 03:37). Nostromo’s register curve, cubic-bezier(0.2, 0, 0, 1), is also formal’s, light’s, brutalism’s and grotesk’s. Round 2: the raster is now the anchor, and it draws in whole frames of 80 ms, so a part that arrives in this question is drawn by the raster in every option that has a clock of its own; only the clock differs. Today the theme runs on eleven curves at once.',
         kind: 'cycle',
         scene: MOVING,
         options: [
             {
                 key: 'frames',
                 name: 'The ship’s frame clock',
-                see: 'Every motion follows the register’s curve but is shown in whole frames of 80 ms, 12.5 a second, the way the ship’s computer redraws its screen: the three readouts jump to their mark in eight visible frames and stop hard; the dialog, the menu and the tile strike on in 4 frames, most of the panel lit by the second (the register’s curve starts fast), and close in the same 4 frames backwards; the key figure’s lamp switches on and off in one frame each.',
+                raster: true,
+                see: 'Every motion runs in whole frames of 80 ms, 12.5 a second, the way the ship’s computer redraws its screen: the three readouts jump to their mark in eight visible frames and stop hard (the register’s decelerating curve, one held value per frame); the dialog, the menu and the tile are drawn by the raster, a band of the part from the top each frame, in 4 frames (320 ms), a bright beam at the edge of what is drawn; they close the same 4 frames backwards; the key figure’s lamp switches on and off in one frame each.',
                 verdict: rec(
-                    'it is the console’s own rhythm (a screen that redraws, relays that switch), it gathers the steps your picks already use into one clock, and no other theme moves like it: terminal only jumps twice, on and off.',
+                    'it is the console’s own rhythm (a screen that redraws, relays that switch), it is the clock the raster draws on, and no other theme moves like it: terminal only jumps twice, on and off.',
                 ),
             },
             {
                 key: 'smooth',
                 name: 'Smooth, on the register’s curve (formal’s, light’s, brutalism’s, grotesk’s)',
-                see: 'The same pictures on cubic-bezier(0.2, 0, 0, 1), with no frames: the readouts glide to their mark and settle, the panels open in one smooth movement.',
-                verdict: not('it is calm and modern, but it is the curve of four other themes: nostromo would move like formal and grotesk.'),
+                raster: true,
+                see: 'The same pictures on cubic-bezier(0.2, 0, 0, 1), with no frames: the readouts glide to their mark and settle, and the panels are drawn from the top in one smooth movement, the beam gliding with them.',
+                verdict: not(
+                    'it is calm and modern, but it is the curve of four other themes, and a raster that glides is no longer a screen redrawing: nostromo would move like formal and grotesk.',
+                ),
             },
             {
                 key: 'mix',
@@ -422,23 +450,24 @@ const ASPECTS = [
         label: 'The direction',
         rule: 'G2',
         question: 'Which way does motion travel when something arrives or is printed?',
-        why: 'A screen is written in rows from the top, each row from where you start reading to where you stop (left to right here, mirrored in right-to-left languages); a tube is switched on from its middle line. Titanium feeds everything start → end, forest grows things up from their line. Today the days shrink in from a line on titanium’s curve, the tile flickers, the line flickers on and off from its end.',
+        why: 'Round 2: the anchor is the raster, so the question is now whether the raster leads. A CRT writes its picture in rows from the top, and whatever lies at the same height appears together; a bright beam rides the edge of what is written and a phosphor tail fades behind it. Titanium feeds everything start → end, forest grows things up from their line, and terminal prints a line at a time under a block cursor. Today the days shrink in from a line on titanium’s curve, the tile flickers, the line flickers on and off from its end.',
         kind: 'cycle',
         scene: DIRECTION,
         options: [
             {
                 key: 'raster',
-                name: 'The raster: rows from the top, each row start → end',
-                see: 'The days print one after another in reading order, each struck on from its middle line; the list prints row by row from the top, each row left to right; the tile strikes on from its middle; the line is drawn left to right.',
+                name: 'The raster: one picture, written row by row from the top',
+                raster: true,
+                see: 'Each part is written as a CRT writes: a band of it per frame from the top (4 frames, 320 ms), and what lies at the same height appears together: the whole week of days at once, then the list row by row, the tile top to bottom, each with a bright beam at the edge of what is written and a fading tail behind it. The line on the screen is drawn the same way, in 8 frames, top to bottom, not along its length.',
                 verdict: rec(
-                    'it is the order a 1979 screen draws in, so every part arrives where the eye expects the next one, and the strike from the middle is nostromo’s alone.',
+                    'it is the anchor you chose, one order for everything and the order a 1979 screen really draws in; the beam with its tail is nostromo’s alone (terminal prints whole lines under a cursor, titanium feeds start → end). One cost: a time series is not read from its top, so the chart’s decided phosphor trace (start → end) would change to this draw.',
                 ),
             },
             {
                 key: 'feed',
                 name: 'Everything start → end (titanium’s)',
                 see: 'One axis for everything: the days, every row of the list and the tile are uncovered from their left edge at once, the line drawn left to right.',
-                verdict: not('tidy, but nothing is printed or switched on any more: it is titanium’s machine feed exactly.'),
+                verdict: not('tidy, and right for a time series, but nothing is written any more: it is titanium’s machine feed exactly.'),
             },
             {
                 key: 'mix',
@@ -453,16 +482,25 @@ const ASPECTS = [
         label: 'Opening what drops from a button',
         rule: 'G3',
         question: 'How does a menu or a dialog open?',
-        why: 'Seven openings live in nostromo today for one gesture; two on the dialog alone (it rises 6 px in the register and drops 10 px in the signature). Your arrival picks chose the warm-up every time it was offered: busy, tiles, trend, the month and the header’s menu.',
+        why: 'Seven openings live in nostromo today for one gesture; two on the dialog alone (it rises 6 px in the register and drops 10 px in the signature). Your arrival picks chose the warm-up every time it was offered: busy, tiles, trend, the month and the header’s menu. Round 2: the anchor is the raster, so the first option is now the raster drawing the panel, and the tube striking on (the first round’s recommendation) is the second.',
         kind: 'cycle',
         scene: OPENING,
         options: [
             {
+                key: 'raster',
+                name: 'The raster draws it open',
+                raster: true,
+                see: 'The menu and the dialog are written from their top edge down in 4 frames (320 ms): a quarter of the panel per frame, a bright beam at the edge of what is written and a fading tail behind it. Closing is the same 4 frames backwards: the beam climbs and the panel is erased from the bottom up.',
+                verdict: rec(
+                    'it is your anchor applied to what opens, it never squashes a letter (the panel is uncovered, not scaled), and the bands are a quarter of the panel whatever it holds; terminal prints a menu a whole line per step under a block cursor and titanium cuts it open smoothly, without the beam.',
+                ),
+            },
+            {
                 key: 'strike',
                 name: 'The tube strikes on',
                 see: 'A bright line appears across the middle of the menu and the dialog and opens to their full height in 4 frames (320 ms), the panel overbright for the first frames and settling; closing is the strike played backwards: in the same 4 frames it collapses to its line, overbright again, and is gone.',
-                verdict: rec(
-                    'it is your warm-up pick made into one rule, it never squashes a letter (the panel is uncovered, not scaled), and no other theme opens like a tube.',
+                verdict: not(
+                    'it is your warm-up pick and nostromo’s alone, but it is how the tube switches on, not how it draws; one opening should be one picture, and the anchor is the raster. It stays the picture for switching a whole screen on.',
                 ),
             },
             {
@@ -473,12 +511,6 @@ const ASPECTS = [
                     'it is the name of your menu pick made literal, but a circle opening is close to solstice’s eclipse played backwards, and a dialog opened from a corner reads as a menu.',
                 ),
             },
-            {
-                key: 'cut',
-                name: 'Cut open from the top (the register’s popdown, titanium’s)',
-                see: 'The menu and the dialog are uncovered from their top edge down in one movement, as the register’s headline popdown does today.',
-                verdict: not('clear and calm, but it is titanium’s opening exactly; the strike is what makes it nostromo.'),
-            },
         ],
     },
     {
@@ -486,14 +518,15 @@ const ASPECTS = [
         label: 'How long things take',
         rule: 'G4',
         question: 'How long does a contact, a strike, a print and a loading loop take?',
-        why: 'The recommended times count whole 80 ms frames: 160 ms is the register’s own contact (2 frames), 320 ms a strike (4), 640 ms a print (8), 1600 ms the loop (20), which is also the busy table’s trace you picked. Today nostromo runs at twenty different one-shot durations and eight loop periods.',
+        why: 'The recommended times count whole 80 ms frames, the raster’s frames: 160 ms is the register’s own contact (2 frames), 320 ms a strike (4: a panel drawn), 640 ms a print (8: a figure drawn), 1600 ms the loop (20: one redraw of the waiting screen). Today nostromo runs at twenty different one-shot durations and eight loop periods.',
         kind: 'cycle',
         scene: DURATION,
         options: [
             {
                 key: 'frames',
                 name: 'Frame counts: 160 · 320 · 640 · 1600 ms',
-                see: 'A press answers in 2 frames; the dialog strikes on in 4; a figure is printed in 8; the lamp bank shows a new pattern every 4 frames, 1.6 seconds a cycle.',
+                raster: true,
+                see: 'A press answers in 2 frames; the dialog is drawn in 4; a figure is drawn in 8; the waiting screen redraws itself every 20 frames, 1.6 seconds a cycle.',
                 verdict: rec(
                     'every number is a whole count of frames, and the pace is a ship’s console: quick to answer, never hurried, never sluggish.',
                 ),
@@ -501,13 +534,15 @@ const ASPECTS = [
             {
                 key: 'brisk',
                 name: 'Brisk: 80 · 160 · 320 · 960 ms',
-                see: 'Everything twice as fast: a press in 1 frame, the dialog strikes in 2, a figure prints in 4, the bank changes about every 2 frames.',
-                verdict: not('it answers fast, but the strike becomes a blink and the bank flickers; the console reads nervous.'),
+                raster: true,
+                see: 'Everything twice as fast: a press in 1 frame, the dialog drawn in 2 frames, a figure in 4, the waiting screen redraws every 12 frames.',
+                verdict: not('it answers fast, but the draw becomes a blink and the loop flickers; the console reads nervous.'),
             },
             {
                 key: 'slow',
                 name: 'Slow: 240 · 480 · 960 · 2400 ms',
-                see: 'Everything half again as slow: a press takes 240 ms to answer, the dialog 480 ms to strike, a figure almost a second to print, the bank 2.4 seconds a cycle.',
+                raster: true,
+                see: 'Everything half again as slow: a press takes 240 ms to answer, the dialog 480 ms to draw, a figure almost a second, the waiting screen 2.4 seconds a cycle.',
                 verdict: not('atmospheric once, tiring on the tenth dialog; a press that lags 240 ms feels broken.'),
             },
         ],
@@ -581,27 +616,36 @@ const ASPECTS = [
         label: 'The surface',
         rule: 'G7',
         question: 'What is the beige case and what is the screen?',
-        why: 'Your meter and tiles chose the case (backlit vents, an indicator panel); your chart, month and busy panel chose the screen (an amber CRT set into the case). Today the header, the menu, the state chip and the tile’s hover draw scanlines on the beige plastic, and two figures glow on it.',
-        kind: 'still',
+        why: 'Round 2: the raster lives on the screen, the lamps live on the case (scope-12). Your meter and tiles chose the case (backlit vents, an indicator panel); your chart, month and busy panel chose the screen (an amber CRT set into the case). The screen is drawn by the raster, row by row from the top, with scanlines and, once drawn, a faint hum band rolling down it. Today the header, the menu, the state chip and the tile’s hover draw scanlines on the beige plastic too, and two figures glow on it.',
+        kind: 'cycle',
         scene: SURFACE,
         options: [
             {
                 key: 'both',
                 name: 'The case and the screen, each its own',
-                see: 'Cards, key figures, buttons, the meter and the field are moulded beige: a lit top edge, a shadow under, the vent ribs of the page. The chart’s plot is a dark amber screen in a thick bezel, with its scanlines. No scanlines and no glow on the plastic.',
-                verdict: rec('the screen reads as a screen because it is set into the case, and the words you act on stay on clean plastic.'),
+                raster: true,
+                see: 'Cards, key figures, buttons, the meter and the field are moulded beige: a lit top edge, a shadow under, the vent ribs of the page, no scanlines and no glow. The chart’s plot is a dark amber screen in a thick bezel: it is drawn row by row from the top in 8 frames (640 ms) with its beam and tail, and then a faint hum band rolls down it.',
+                verdict: rec(
+                    'the screen reads as a screen because it is set into the case and drawn by the raster, and the words you act on stay on clean plastic with their lamps.',
+                ),
             },
             {
                 key: 'screen',
                 name: 'A screen on everything',
-                see: 'Every card, key figure and field is a dark amber screen with scanlines; the buttons are lit keys around them.',
-                verdict: not('dramatic, but it is terminal in amber: the beige case, the vents and the tape disappear.'),
+                raster: true,
+                see: 'Every card, key figure and field is a dark amber screen with scanlines, and each is drawn by the raster in turn; the buttons are lit keys around them.',
+                verdict: not(
+                    'dramatic, and the raster everywhere, but it is terminal in amber: the beige case, the vents and the tape disappear and every page redraws itself.',
+                ),
             },
             {
-                key: 'case',
-                name: 'Only the case',
-                see: 'No screens: the chart’s plot is a beige recess with a dark trace, the figures printed on plastic.',
-                verdict: not('quiet, but it throws away four of your picks (the amber CRT, the duty roster, the busy screen, the vent grille).'),
+                key: 'plastic',
+                name: 'Scanlines on the plastic too (as the header and menu are today)',
+                raster: true,
+                see: 'The screen as in the first option, and the beige plates take its scanlines as well: the card and the key figure carry the 1 px every 3 px lines at 16 %, and the key figure’s figure glows.',
+                verdict: not(
+                    'it ties the case to the screen, but scanlines on beige read as the vent ribs drawn twice and a glow on plastic as a blurred print: the screen stops being a place.',
+                ),
             },
         ],
     },
@@ -641,24 +685,24 @@ const ASPECTS = [
         label: 'A live update',
         rule: 'G9',
         question: 'What happens to a value that changes in place?',
-        why: 'Three of your live picks are A blip: the figure flares and dims. Dark’s and synthwave’s live family is the same picture (The trace flares, The laser flares). Your network graph, which stays as it is, answers a change with a lamp that blinks; scope-12 gave every switch its lamp. Today nostromo also inverts a figure, flashes a ring round a tile, and the package plays nothing at all.',
+        why: 'Round 2: a value that changes on a CRT is simply written again, so the anchor offers a redraw: the new value is on screen at once, dimmed like phosphor not yet refreshed, and the beam rewrites it from the top. Your network graph, which stays as it is, answers a change with a lamp that blinks; scope-12 gave every switch and reading its lamp (the case). Dark’s and synthwave’s live family is a flare, which no option here uses any more. Today nostromo also inverts a figure, flashes a ring round a tile, and the package plays nothing at all.',
         kind: 'cycle',
         scene: LIVE,
         options: [
             {
-                key: 'lamp',
-                name: 'The reading’s lamp lights',
-                see: 'The lamp beside the label of what changed switches on in LED orange in one frame, holds, and goes out: 640 ms, once. The figure, the word and the line themselves do not move, glow or invert.',
+                key: 'raster',
+                name: 'The reading is redrawn, and its lamp lights',
+                see: 'The new value is there at once, dimmed to about a third; the raster rewrites it from the top in 4 frames (320 ms), the dimmed part shrinking under a bright beam with a fading tail until the value stands at full strength; the lamp beside the label switches on in the LED orange in one frame, holds, and goes out after 8 frames (640 ms). It never moves, glows or inverts.',
                 verdict: rec(
-                    'it is your graph’s answer carried to every reading, it is nostromo’s own (no theme lights a lamp beside a value), and the new value is never covered by the effect.',
+                    'it is the anchor on the screen half and the lamp on the case half, in one picture: a change is a redraw that you can see and a lamp that tells you what changed. The cost is that the value reads at a third strength for up to three frames; the second option has no cost and no raster.',
                 ),
             },
             {
-                key: 'blip',
-                name: 'A blip on every carrier (dark’s and synthwave’s flare)',
-                see: 'What changed flares once and dims back: the figure and the word glow, the state dot brightens, the line thickens and glows, 640 ms.',
+                key: 'lamp',
+                name: 'The reading’s lamp lights alone',
+                see: 'The lamp beside the label of what changed switches on in LED orange in one frame, holds, and goes out: 640 ms, once. The figure, the word and the line themselves do not move, glow, dim or invert.',
                 verdict: not(
-                    'it is today’s pick on every carrier and it reads well, but it is dark’s and synthwave’s live picture almost exactly: three themes would answer a change the same way.',
+                    'it is your graph’s answer carried to every reading and the new value is never touched, but it leaves the screen out: the anchor is not in it. Choose it if a value must read at full strength from the first frame.',
                 ),
             },
             {
@@ -674,24 +718,24 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does everything that waits show?',
-        why: 'Today ten loading pictures run in nostromo, in three directions, three colours (green, red, orange) and nine speeds, and the busy progress bar never moves at all (every other LED lit, standing still). The theme’s own signature progress bar is an LED bargraph; your meter, month and key figure loading picks all light lamps in turn.',
+        why: 'Round 2: is the loading the lamp bank or the raster redrawing? The raster is the anchor, and a waiting part is a small screen that keeps redrawing: dark glass, scanlines, the word COMPUTING written row by row under the beam, a hum band rolling down. The lamp bank (the progress bar’s LED window, first round’s recommendation) is the case-side answer and stays as an option. Today ten loading pictures run in nostromo, in three directions, three colours (green, red, orange) and nine speeds, and the busy progress bar never moves at all.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
-                key: 'bank',
-                name: 'The lamp bank computes',
-                see: 'Every waiting part gets the progress bar’s LED window along its foot, and its LEDs switch in a fixed, unordered pattern on the frame clock (a new pattern every 320 ms, 1.6 s a cycle): the ship’s computer thinking. No sweep, no direction. The busy bar itself computes; a day lights its own corner lamp with the others.',
+                key: 'raster',
+                name: 'The screen redraws',
+                see: 'Every waiting part gets a small amber screen along its foot (a day becomes a glass cell, the chart’s plot redraws itself): the word COMPUTING is written row by row from the top in 12 frames under a bright beam with a fading tail, stands for 6 frames, is blanked for 2, and starts again; a hum band rolls down the glass in 10 steps; 20 frames, 1.6 seconds a cycle. The busy bar is the same screen; the skeleton is a glass of three lines being written.',
                 verdict: rec(
-                    'it is the theme’s own signature bar, it gathers your lamp picks into one picture, it never covers the words, and no other theme loads like a computer’s lamp panel.',
+                    'it is the anchor doing what a screen does while it works, it is the same draw, beam and tail as the openings and the live update, it never covers the part’s words, and no other theme loads like a redrawn CRT (terminal waits on a blinking cursor, cyberpunk hunts with a reticle).',
                 ),
             },
             {
-                key: 'scan',
-                name: 'The lamps scan start → end (synthwave’s marquee)',
-                see: 'The same LED window on every waiting part, but a group of three lit LEDs steps from left to right, lamp by lamp, and starts again.',
+                key: 'bank',
+                name: 'The lamp bank computes',
+                see: 'Every waiting part gets the progress bar’s LED window along its foot, and its LEDs switch in a fixed, unordered pattern on the frame clock (a new pattern every 320 ms, 1.6 s a cycle): the ship’s computer thinking. No sweep, no direction. The busy bar itself computes; a day lights its own corner lamp with the others.',
                 verdict: not(
-                    'it is close to your meter’s power-up, but it is synthwave’s loading picture (the marquee chases: lit cells in sequence, left to right) almost exactly.',
+                    'it is the theme’s own signature bar and the honest picture for the case (a key figure, a table row, a menu entry), but it is the lamps’ answer, not the raster’s: the anchor is not in it.',
                 ),
             },
             {
@@ -707,27 +751,31 @@ const ASPECTS = [
         label: 'The spinner',
         rule: 'G11',
         question: 'What does nostromo’s spinner show?',
-        why: 'The spinner is the one loading part too small for a lamp bank. Today it is the register’s tape reel: a dark tape pack, a three-spoke hub turning, the LED lens at its centre; your busy table’s phone pick (the reel window) put it in a lit window.',
+        why: 'The spinner is the one loading part too small for a strip of text. Round 2: the raster’s version is a round glass scope that redraws its picture, row by row, in the same cycle as every other waiting screen; the tape reel (the register’s, and your busy table’s phone pick) is the case-side answer, a part that turns. Both keep the 1600 ms cycle.',
         kind: 'loop',
         scene: SPINNERS,
         options: [
             {
+                key: 'raster',
+                name: 'The scope redraws',
+                see: 'A round dark glass in a thin bezel with its picture in amber lines: the lines are written row by row from the top in 12 frames under a bright beam, stand for 6 frames, are blanked for 2 and start again, 20 frames, 1.6 seconds a cycle. It does not turn.',
+                verdict: rec(
+                    'it is the same redraw as the waiting screens, so everything that waits looks like one machine; the cost is that it does not turn, which some read as a stuck image at 1 rem, where the beam is a few pixels.',
+                ),
+            },
+            {
                 key: 'reel',
                 name: 'The tape reel',
                 see: 'The register’s cassette reel, kept: the hub turns once per 1.6 seconds, in frames, the LED lit at its centre.',
-                verdict: rec('it is the cassette in cassette futurism, it already stands in your busy panel’s window, and no other theme has it.'),
+                verdict: not(
+                    'it is the cassette in cassette futurism, it already stands in your busy panel’s window and it reads as busy at any size, but it belongs to the case and the lamps; the raster is not in it.',
+                ),
             },
             {
                 key: 'lamps',
                 name: 'A ring of lamps computes',
                 see: 'Eight small lamps in a ring, switching in the bank’s unordered pattern every 320 ms.',
                 verdict: not('it matches the lamp bank, but at 1 rem the eight lamps blur into a dotted ring and it no longer reads as busy.'),
-            },
-            {
-                key: 'ping',
-                name: 'The tracker pings',
-                see: 'A ring pings out from the centre and fades, as the motion tracker does, once per 1.6 seconds, in frames.',
-                verdict: not('very Alien, but a ring that grows and vanishes reads as “found something”, not “still working”.'),
             },
         ],
     },
@@ -736,29 +784,34 @@ const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G12',
         question: 'How does a part leave the page, and how does it arrive?',
-        why: 'What leaves plays the register’s leave; what arrives plays that leave backwards (you approved that pairing on 2026-10-05). Today the leave is an overbright blur that fades in place, and its comment promises it “scrolls off the top of the monitor”; arriving is that blur backwards, which is not the warm-up you picked five times.',
+        why: 'What leaves plays the arrival backwards (you approved that pairing on 2026-10-05). Round 2: with the raster as the anchor, the arrival is the raster drawing the part and the leave is the picture erased the way it was drawn, from the bottom up, the beam climbing; the tube switched off (a line, a dot, a lingering spot) stays as the picture for switching a whole screen off. Today the leave is an overbright blur that fades in place, and its comment promises it “scrolls off the top of the monitor”.',
         kind: 'cycle',
         scene: LEAVE,
         options: [
             {
+                key: 'raster',
+                name: 'Drawn by the raster, erased by the raster',
+                raster: true,
+                see: 'Arriving, the part is written from its top edge down in 4 frames (320 ms), a bright beam at the edge of what is written with a fading tail behind it. Leaving plays that backwards, frame for frame: the beam climbs from the bottom, the rows ahead of it flare as they are caught, and the part is erased from the bottom up.',
+                verdict: rec(
+                    'one picture for both ways and the same draw as the openings, the live update and the waiting screen; no other theme erases from the bottom up under a beam. The tail is the draw’s: it trails behind the beam going in and runs ahead of it going out.',
+                ),
+            },
+            {
                 key: 'off',
                 name: 'Switched off, struck on',
                 see: 'Leaving, the part collapses to a bright line through its middle, the line shrinks to a dot, and the dot goes out: 480 ms, in frames. Arriving plays it backwards: a dot, a line, the tube struck on, which is the warm-up you picked.',
-                verdict: rec('one picture for both ways, the arrival it gives is your warm-up, and no other theme leaves into a line and a dot.'),
+                verdict: not(
+                    'it is the tube’s power, a good picture for a whole screen, but it is not the raster and no other part of the round uses it; the dot goes out at once, so nothing lingers as phosphor.',
+                ),
             },
             {
                 key: 'flare',
                 name: 'The flare (today)',
                 see: 'Leaving, the part flares overbright, blurs and fades in place, 480 ms, easing in; arriving, the same backwards.',
                 verdict: not(
-                    'a soft leave, but it is close to dark’s and phantom’s fades, and the arrival it gives is a blur clearing, not a tube warming.',
+                    'a soft leave, but it is close to dark’s and phantom’s fades, and the arrival it gives is a blur clearing, not a tube drawing.',
                 ),
-            },
-            {
-                key: 'scroll',
-                name: 'Scrolls off the top',
-                see: 'Leaving, the part scrolls up off the top line by line and is gone, as the register’s comment promises; arriving, it scrolls in from below.',
-                verdict: not('it is the comment kept literally, but rising away is light’s, pastel’s and phantom’s leave.'),
             },
         ],
     },
@@ -796,7 +849,7 @@ const ASPECTS = [
         label: 'Pointing at something',
         rule: 'G8',
         question: 'How does nostromo show what you point at?',
-        why: 'Scope-12 (your quirk of 2026-09-11): every switch carries its own lamp, dark at rest, lit under the pointer, full when pressed; today only the button has one. The menu sweeps an orange band, the tile greys under heavy scanlines, the header rings in orange. In every scene below the first part is shown pointed at.',
+        why: 'Scope-12 (your quirk of 2026-09-11): every switch carries its own lamp, dark at rest, lit under the pointer, full when pressed; today only the button has one. The case is what you touch, so the lamp stays the first option. Round 2: the raster offers a pass of its beam as the second: the screen’s way of pointing, on parts that are plastic. In the review dialog the pointer arrives and leaves by itself, so you see both ways; on the page the first part of each scene is shown pointed at.',
         kind: 'still',
         scene: HOVER,
         options: [
@@ -807,10 +860,12 @@ const ASPECTS = [
                 verdict: rec('it is your own quirk carried to every switch, it is unmistakable and small, and no other theme points with a lamp.'),
             },
             {
-                key: 'sweep',
-                name: 'A scanline sweeps (the menu’s pick, on everything)',
-                see: 'What you point at gets a band of orange light across it, as the menu’s entries do today.',
-                verdict: not('lively, but it is the screen’s mark drawn on the plastic, and the orange band makes the indicator act.'),
+                key: 'beam',
+                name: 'The beam passes over it (the raster, on everything)',
+                see: 'What you point at gets a pass of the raster’s beam: a bright line with a fading tail sweeps down it in 3 frames (240 ms) and leaves its ground one shade lighter; when the pointer leaves, the beam sweeps back up the same way. The lamps are gone.',
+                verdict: not(
+                    'bold and in the anchor’s own picture, but the beam is the screen’s mark drawn on plastic (the case has lamps), a sweep on every hover is a lot of motion, and it takes the lamp from the switch that scope-12 gave it.',
+                ),
             },
             {
                 key: 'mix',
@@ -995,7 +1050,7 @@ ASPECTS.forEach((a, n) => {
         col.innerHTML = `<p class="nc-label"><span class="nc-label__no">${at + 1}</span> <span class="nc-label__name"></span>${
             at === 0 ? ' <span class="nc-label__rec">Recommended</span>' : ''
         }</p><p class="nc-see"></p><p class="nc-verdict"></p>
-        <div class="nc-scene" data-nc-kind="${a.kind}" data-nc-${a.id}="${o.key}" data-nc-phase="in">${a.scene()}</div>`;
+        <div class="nc-scene" data-nc-kind="${a.kind}" data-nc-${a.id}="${o.key}"${o.raster ? ' data-nc-raster' : ''} data-nc-phase="in">${a.scene()}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.nc-label__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.nc-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.nc-verdict'));

@@ -7,7 +7,17 @@
    of the "today" options are the ones measured in
    themes/nostromo/CHARACTER.md §2. The LED window is the signature progress
    bar's own (css/nostromo-register.css, `--kp-np-*`), drawn again here as
-   the lamp bank because the register declares it on the bar only. */
+   the lamp bank because the register declares it on the bar only.
+
+   Round 2 (Kenny, 2026-10-07 20:10): the anchor is the raster, as drawn in
+   research/nostromo-anchor (option 6): a picture written row by row from the
+   top in whole frames of 80 ms (`nc-raster`, steps(n, end)), a bright beam at
+   the edge of what is written with a fading phosphor tail (`nc-beam`), the
+   scanlines, a hum band rolling down the glass. The screen is drawn by it;
+   the case keeps its lamps (scope-12). One clock for every raster-led
+   option: panels are written in 4 frames, screens and figures in 8, a loop
+   is 20 frames. A close is its arrival played backwards by demo.js
+   (`closeByReverse`), so the raster's close erases from the bottom up. */
 
 @property --nc-a {
     syntax: '<angle>';
@@ -93,6 +103,7 @@
         );
         /* The register's smooth curve, shared with formal, light, brutalism
            and grotesk; titanium's quick one for the calendar as decided. */
+        --nc-fr: calc(80ms * var(--nc-slow, 1));
         --nc-smooth: cubic-bezier(0.2, 0, 0, 1);
         --nc-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
         /* One LED: a rounded-off lens in its pitch, as the progress bar's. */
@@ -280,11 +291,10 @@
     .nc-scene:is(
             [data-nc-curve='mix'],
             [data-nc-direction],
-            [data-nc-live='blip'],
             [data-nc-live='mix'],
             [data-nc-loading='mix'],
             [data-nc-tone='mix'],
-            [data-nc-hover='sweep'],
+            [data-nc-hover='beam'],
             [data-nc-hover='mix'],
             [data-nc-focus='mix'],
             [data-nc-press='mix'],
@@ -417,8 +427,18 @@
         content: '';
         position: absolute;
         inset: 0;
+        z-index: 3;
         background: var(--nc-scan);
         pointer-events: none;
+    }
+
+    /* The picture on the glass: what the raster writes. The bezel and the
+       scanlines are hardware and stay; only this is drawn. */
+    .nc-screen__pic {
+        position: absolute;
+        inset: 0;
+        display: block;
+        padding: 0.6rem 0.5rem 0.4rem;
     }
 
     .nc-screen svg {
@@ -597,11 +617,6 @@
         inset: 2px 0;
     }
 
-    /* The scanning lamps (option 2): one block of three lit LEDs. */
-    .nc-scene[data-nc-loading='scan'] .nc-bank__lit {
-        background: linear-gradient(var(--nc-lit), var(--nc-lit)) calc(var(--nc-pitch) * -3) 0 / calc(var(--nc-pitch) * 3) 100% no-repeat;
-    }
-
     /* Where the loading picture sits: at the foot of the waiting part. */
     .nc-waits {
         position: relative;
@@ -632,6 +647,177 @@
         display: none;
     }
 
+    /* The waiting screen is taller than the bank, so the part it waits in
+       leaves more room at its foot (the default; the bank and today keep
+       their own). */
+    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) :is(.kp-kpi, .kp-card).nc-waits {
+        padding-block-end: 2.6rem;
+    }
+
+    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .kp-menu__item.nc-waits {
+        padding-block-end: 2.4rem;
+    }
+
+    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .nc-table {
+        padding-block-end: 2.6rem;
+    }
+
+    .nc-scene:not([data-nc-loading='bank'], [data-nc-loading='mix']) .nc-meter-wait {
+        padding-block-end: 2.6rem;
+    }
+
+    /* Each loader shows in its own option: the screen (the default), the
+       bank, or today's pictures. */
+    .nc-scene:is([data-nc-loading='bank'], [data-nc-loading='mix']) :is(.nc-load__ras, .nc-bar-ras, .nc-skel__ras) {
+        display: none;
+    }
+
+    .nc-scene:not([data-nc-loading='bank']) :is(.nc-load__bank, .nc-bar-bank, .nc-skel__bank) {
+        display: none;
+    }
+
+    /* The raster's waiting screen: dark glass in a thin bezel, scanlines,
+       the hum band rolling down it, a line of phosphor written row by row
+       under the beam (the anchor's own parts, drawn small). */
+    .nc-ras {
+        position: relative;
+        display: block;
+        block-size: 1.5rem;
+        overflow: hidden;
+        border: 3px solid var(--secondary);
+        border-radius: 0.3rem;
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 10px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--nc-lit);
+    }
+
+    .nc-ras::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: var(--nc-scan);
+        pointer-events: none;
+    }
+
+    .nc-ras::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        z-index: 2;
+        block-size: 40%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--nc-lit) h s l / 0.22) 60%, transparent);
+        translate: 0 -100%;
+        pointer-events: none;
+    }
+
+    .nc-ras__pic {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        padding-inline: 0.55rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        line-height: 1;
+        text-shadow: 0 0 4px hsl(from var(--nc-lit) h s l / 0.7);
+    }
+
+    /* The skeleton's glass: three lines of phosphor to be written. */
+    .nc-ras--skel {
+        block-size: 3.6rem;
+    }
+
+    .nc-ras__pic--rows {
+        padding: 0.45rem 0.55rem;
+        background:
+            linear-gradient(var(--nc-lit), var(--nc-lit)) 0.55rem 0.5rem / 78% 3px no-repeat,
+            linear-gradient(var(--nc-lit), var(--nc-lit)) 0.55rem 50% / 58% 3px no-repeat,
+            linear-gradient(var(--nc-lit), var(--nc-lit)) 0.55rem calc(100% - 0.5rem) / 66% 3px no-repeat;
+        filter: drop-shadow(0 0 2px hsl(from var(--nc-lit) h s l / 0.7));
+    }
+
+    .nc-ras__beam {
+        --nc-tail: 0.7rem;
+        position: absolute;
+        z-index: 4;
+        inset-inline: 0;
+        inset-block-start: calc(var(--nc-tail) * -1);
+        block-size: var(--nc-tail);
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--nc-lit) h s l / 0.35) 70%,
+            var(--nc-lit) 88%,
+            hsl(from var(--nc-lit) h s calc(l + 25)) 100%
+        );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .nc-ras--skel .nc-ras__beam {
+        --nc-tail: 1.1rem;
+    }
+
+    /* A waiting screen that is already a screen (the chart's plot) is the
+       glass itself: the word is written in its middle. */
+    .nc-screen .nc-load {
+        inset: 0;
+    }
+
+    .nc-screen .nc-ras {
+        block-size: 100%;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .nc-screen .nc-ras::after {
+        content: none;
+    }
+
+    .nc-screen .nc-ras__pic {
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    /* A day that waits is a cell of glass. */
+    .nc-scene[data-nc-loading='raster'] .nc-day {
+        overflow: hidden;
+        border-color: var(--secondary);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        color: var(--nc-lit);
+        text-shadow: 0 0 4px hsl(from var(--nc-lit) h s l / 0.7);
+    }
+
+    .nc-scene[data-nc-loading='raster'] .nc-day .nc-lamp {
+        display: none;
+    }
+
+    .nc-scene[data-nc-loading='raster'] .nc-day::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        block-size: 40%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--nc-lit) h s l / 0.3) 60%, transparent);
+        translate: 0 -100%;
+    }
+
+    .nc-scene[data-nc-loading='raster'] .nc-day::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--nc-scan);
+        pointer-events: none;
+    }
+
     /* A day has no room for a row: its own lamp joins the bank. */
     .nc-day > .nc-load {
         display: none;
@@ -642,7 +828,7 @@
         visibility: hidden;
     }
 
-    .nc-scene[data-nc-loading='mix'] .nc-bar-wrap > .nc-bank {
+    .nc-scene[data-nc-loading='mix'] .nc-bar-wrap > :is(.nc-bank, .nc-ras) {
         visibility: hidden;
     }
 
@@ -660,16 +846,11 @@
         inline-size: 60%;
     }
 
-    .nc-scene:not([data-nc-loading='mix']) .nc-skel > .kp-skeleton,
-    .nc-scene[data-nc-loading='mix'] .nc-skel > .nc-skel__bank {
+    .nc-scene:not([data-nc-loading='mix']) .nc-skel > .kp-skeleton {
         display: none;
     }
 
     /* ── As today, the loading pictures (question 10, option 3) ───────── */
-
-    .nc-scene[data-nc-loading='mix'] .nc-load__bank {
-        display: none;
-    }
 
     .nc-scene[data-nc-loading='mix'] .nc-load__today {
         display: block;
@@ -846,8 +1027,17 @@
 
     /* ── 7 The surface ───────────────────────────────────────────────── */
 
-    .nc-scene[data-nc-surface='both'] :is(.kp-card, .kp-kpi) {
+    .nc-scene:is([data-nc-surface='both'], [data-nc-surface='plastic']) :is(.kp-card, .kp-kpi) {
         box-shadow: var(--kp-sig-no-raised);
+    }
+
+    /* Option 3: the screen's scanlines and glow drawn on the plastic too. */
+    .nc-scene[data-nc-surface='plastic'] :is(.kp-card, .kp-kpi) {
+        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.16) 0 1px, transparent 1px 3px), var(--card);
+    }
+
+    .nc-scene[data-nc-surface='plastic'] .kp-kpi__value {
+        text-shadow: 0 0 6px hsl(from var(--foreground) h s l / 0.45);
     }
 
     .nc-scene[data-nc-surface='screen'] :is(.kp-card, .kp-kpi, .kp-field__input) {
@@ -873,25 +1063,17 @@
         border-radius: 0.5rem;
     }
 
-    .nc-scene[data-nc-surface='case'] .nc-screen {
-        border: 1px solid var(--border-strong);
-        border-radius: 0.3rem;
-        background: var(--muted);
-        box-shadow: var(--kp-sig-no-well);
-        color: var(--foreground);
-    }
-
-    .nc-scene[data-nc-surface='case'] .nc-screen::after {
-        content: none;
-    }
-
-    .nc-scene[data-nc-surface='case'] .nc-screen svg {
-        filter: none;
-    }
-
-    .nc-scene[data-nc-surface='case'] .nc-screen__read {
-        color: var(--foreground);
-        text-shadow: none;
+    /* The hum band that rolls down a screen once it is drawn (the anchor's). */
+    .nc-scene[data-nc-surface] .nc-screen::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        z-index: 2;
+        block-size: 35%;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--sidebar-primary) h s l / 0.1) 60%, transparent);
+        translate: 0 -100%;
+        pointer-events: none;
     }
 
     /* ── 8 A warning ─────────────────────────────────────────────────── */
@@ -980,11 +1162,11 @@
         opacity: 0.7;
     }
 
-    .nc-scene[data-nc-hover='lamp'] .kp-button.nc-pointed {
+    .nc-scene:is([data-nc-hover='lamp'], [data-nc-hover='beam']) .kp-button.nc-pointed {
         background: var(--muted);
     }
 
-    .nc-scene[data-nc-hover='lamp'] .kp-button--ghost.nc-pointed {
+    .nc-scene:is([data-nc-hover='lamp'], [data-nc-hover='beam']) .kp-button--ghost.nc-pointed {
         background: var(--card);
     }
 
@@ -992,12 +1174,25 @@
         background: var(--card);
     }
 
-    .nc-scene[data-nc-hover='lamp'] :is(.kp-kpi, .nc-day).nc-pointed {
+    .nc-scene:is([data-nc-hover='lamp'], [data-nc-hover='beam']) :is(.kp-kpi, .nc-day).nc-pointed {
         background: var(--popover);
     }
 
-    .nc-scene[data-nc-hover='sweep'] :is(.kp-button, .kp-menu__item, .kp-kpi, .nc-day).nc-pointed {
-        background: linear-gradient(90deg, transparent 0%, hsl(from var(--accent) h s l / 0.3) 50%, transparent 100%);
+    /* The beam's pass: the part holds its beam parked below it; pointing
+       moves it down through the part, and leaving moves it back up the same
+       way (a transition, so the way back is the way in reversed). */
+    .nc-scene[data-nc-hover='beam'] :is(.kp-button, .kp-menu__item, .kp-kpi, .nc-day):has(> .nc-beam) {
+        overflow: hidden;
+    }
+
+    .nc-scene[data-nc-hover='beam'] :is(.kp-button, .kp-menu__item, .kp-kpi, .nc-day) > .nc-beam {
+        --nc-tail: 0.9rem;
+        display: block;
+        opacity: 1;
+    }
+
+    .nc-scene[data-nc-hover='beam'] .nc-pointed > .nc-beam {
+        inset-block-start: 100%;
     }
 
     .nc-scene[data-nc-hover='mix'] .kp-button.nc-pointed:not(.nc-tile-link) {
@@ -1506,11 +1701,11 @@
         gap: 0.75rem;
     }
 
-    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='ping']) .nc-spin::before {
+    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='raster']) .nc-spin::before {
         content: none;
     }
 
-    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='ping']) .nc-spin__ring {
+    .nc-scene:is([data-nc-spinner='lamps'], [data-nc-spinner='raster']) .nc-spin__ring {
         position: absolute;
         inset: 0;
         display: block;
@@ -1544,16 +1739,160 @@
         mask-composite: intersect;
     }
 
-    /* The tracker: a dark scope, a ring pinging out from its centre. */
-    .nc-scene[data-nc-spinner='ping'] .nc-spin__ring {
-        border: 2px solid var(--sidebar-primary);
-        box-shadow: 0 0 4px var(--nc-glow);
-        scale: 0.9;
+    /* The scope: a round glass in a thin bezel with its picture in amber
+       lines, written row by row under the beam (the waiting screen, round). */
+    .nc-scene[data-nc-spinner='raster'] .nc-spin {
+        overflow: hidden;
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong),
+            inset 0 0 6px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--nc-lit);
+    }
+
+    .nc-scene[data-nc-spinner='raster'] .nc-spin::after {
+        content: '';
+        inset: 0;
+        z-index: 3;
+        border-radius: 50%;
+        background: var(--nc-scan);
+        box-shadow: none;
+    }
+
+    .nc-scene[data-nc-spinner='raster'] .nc-spin__ring {
+        inset: 12%;
+        background: repeating-linear-gradient(to bottom, currentColor 0 14%, transparent 14% 28%);
+        filter: drop-shadow(0 0 2px hsl(from var(--nc-lit) h s l / 0.7));
+    }
+
+    .nc-scene[data-nc-spinner='raster'] .nc-spin__ring::after {
+        --nc-tail: 45%;
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--nc-tail) * -1);
+        block-size: var(--nc-tail);
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--nc-lit) h s l / 0.35) 70%,
+            var(--nc-lit) 88%,
+            hsl(from var(--nc-lit) h s calc(l + 25)) 100%
+        );
+        opacity: 0;
+    }
+
+    /* ── The raster's beam (the anchor's na-beam): a bright edge with a
+       phosphor tail fading behind it, riding the leading edge of what is
+       written. A part carries it as a child, a text carrier as its
+       ::before; it is shown only where an option draws by the raster, and
+       at rest it is away (opacity 0), so the reduced pose is the finished
+       picture. ──────────────────────────────────────────────────────── */
+
+    .nc-beam,
+    .nc-carrier::before {
+        --nc-tail: 1.2rem;
+        content: '';
+        position: absolute;
+        z-index: 4;
+        inset-inline: 0;
+        inset-block-start: calc(var(--nc-tail) * -1);
+        block-size: var(--nc-tail);
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            hsl(from var(--nc-lit) h s l / 0.35) 70%,
+            var(--nc-lit) 88%,
+            hsl(from var(--nc-lit) h s calc(l + 25)) 100%
+        );
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .nc-carrier::before {
+        --nc-tail: 0.9rem;
+    }
+
+    .nc-beam {
+        display: none;
+    }
+
+    .nc-leaver {
+        position: relative;
+    }
+
+    .nc-days,
+    .nc-rows {
+        position: relative;
+    }
+
+    .nc-pop > .nc-beam {
+        --nc-tail: 1rem;
+    }
+
+    .nc-tile > .nc-beam,
+    .nc-leaver > .nc-beam {
+        --nc-tail: 1.1rem;
+    }
+
+    .nc-days > .nc-beam,
+    .nc-rows > .nc-beam {
+        --nc-tail: 0.8rem;
+    }
+
+    .nc-screen__pic > .nc-beam {
+        --nc-tail: 1.4rem;
+    }
+
+    /* Parts the raster writes: 4 frames for a panel, 8 for a screen. */
+    .nc-draw {
+        --nc-n: 4;
+    }
+
+    .nc-draw--screen {
+        --nc-n: 8;
+    }
+
+    .nc-scene[data-nc-raster] .nc-draw > .nc-beam {
+        display: block;
+    }
+
+    /* The redraw of a live reading: the part of the value the beam has not
+       reached yet is still the old, dim phosphor (a veil on the new value). */
+    .nc-scene[data-nc-live='raster'] .nc-carrier {
+        clip-path: inset(0);
+    }
+
+    .nc-scene[data-nc-live='raster'] .nc-carrier::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: hsl(from var(--card) h s l / 0.66);
+        opacity: 0;
+        pointer-events: none;
     }
 
     /* ── The motion ──────────────────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
+        /* The raster writes a part from the top in whole frames (the
+           anchor's na-raster and na-beam): a band of the part per frame, the
+           beam on the edge of what is written. A close is this played
+           backwards by demo.js. */
+        .nc-scene[data-nc-raster][data-nc-phase='gap'] .nc-draw {
+            visibility: hidden;
+        }
+
+        .nc-scene[data-nc-raster]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-draw {
+            animation: nc-raster calc(var(--nc-n) * var(--nc-fr)) steps(var(--nc-n), end) both;
+        }
+
+        .nc-scene[data-nc-raster]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-draw > .nc-beam {
+            animation: nc-beam calc(var(--nc-n) * var(--nc-fr)) steps(var(--nc-n), end) both;
+        }
+
         .nc-scene:is([data-nc-curve], [data-nc-direction], [data-nc-opening], [data-nc-durations])[data-nc-phase='gap'] :is(.nc-arrives, .nc-track),
         .nc-scene[data-nc-durations][data-nc-phase='gap'] .kp-kpi__value,
         .nc-scene[data-nc-direction][data-nc-phase='gap'] .nc-walk polyline,
@@ -1588,9 +1927,9 @@
             animation: nc-track calc(640ms * var(--nc-slow, 1)) cubic-bezier(0.3, 1.35, 0.5, 1) both;
         }
 
-        .nc-scene:is([data-nc-curve='frames'], [data-nc-curve='smooth']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes,
-        .nc-scene:is([data-nc-curve='frames'], [data-nc-curve='smooth']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile {
-            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-e8) both;
+        /* The same raster draw on the register's curve, with no frames. */
+        .nc-scene[data-nc-curve='smooth']:is([data-nc-phase='in'], [data-nc-phase='hold']) :is(.nc-draw, .nc-draw > .nc-beam) {
+            animation-timing-function: var(--nc-smooth);
         }
 
         .nc-scene[data-nc-curve='frames'][data-nc-phase='in'] .nc-kpi .nc-lamp::after {
@@ -1618,20 +1957,10 @@
             animation: nc-blip calc(450ms * var(--nc-slow, 1)) ease-out;
         }
 
-        /* 2 The direction. */
-        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-day {
-            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) calc(var(--i) * 80ms * var(--nc-slow, 1)) both;
-        }
-
-        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-row-line {
-            animation: nc-print calc(320ms * var(--nc-slow, 1)) var(--nc-f4) calc(var(--i) * 320ms * var(--nc-slow, 1)) both;
-        }
-
-        .nc-scene[data-nc-direction='raster']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-tile.nc-arrives {
-            animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
-        }
-
-        .nc-scene:is([data-nc-direction='raster'], [data-nc-direction='feed']):is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-walk polyline {
+        /* 2 The direction. The raster is the generic draw above: the days,
+           the list, the tile and the screen's picture are each written
+           from the top. */
+        .nc-scene[data-nc-direction='feed']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-walk polyline {
             stroke-dasharray: 1;
             animation: nc-draw calc(640ms * var(--nc-slow, 1)) var(--nc-f8) both;
         }
@@ -1657,18 +1986,14 @@
         }
 
         /* 3 The opening. Each closes as its opening played backwards
-           (demo.js, closeByReverse): the strike back to its line, the ping
-           back into the button, the cut back up to the top edge. */
+           (demo.js, closeByReverse): the raster erased from the bottom up,
+           the strike back to its line, the ping back into the button. */
         .nc-scene[data-nc-opening='strike']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
             animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
         }
 
         .nc-scene[data-nc-opening='ping']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
             animation: nc-ping-open calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
-        }
-
-        .nc-scene[data-nc-opening='cut']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
-            animation: nc-cut calc(320ms * var(--nc-slow, 1)) var(--nc-smooth) both;
         }
 
         .nc-scene[data-nc-opening][data-nc-phase='gap'] .nc-strikes {
@@ -1679,31 +2004,25 @@
         .nc-scene[data-nc-durations='frames'] {
             --nc-contact: 160ms;
             --nc-ec: var(--nc-f2);
-            --nc-strike: 320ms;
-            --nc-es: var(--nc-f4);
-            --nc-print: 640ms;
-            --nc-ep: var(--nc-f8);
-            --nc-loop: 1600ms;
+            --nc-n-strike: 4;
+            --nc-n-print: 8;
+            --nc-n-loop: 20;
         }
 
         .nc-scene[data-nc-durations='brisk'] {
             --nc-contact: 80ms;
             --nc-ec: var(--nc-f1);
-            --nc-strike: 160ms;
-            --nc-es: var(--nc-f2);
-            --nc-print: 320ms;
-            --nc-ep: var(--nc-f4);
-            --nc-loop: 960ms;
+            --nc-n-strike: 2;
+            --nc-n-print: 4;
+            --nc-n-loop: 12;
         }
 
         .nc-scene[data-nc-durations='slow'] {
             --nc-contact: 240ms;
             --nc-ec: var(--nc-f3);
-            --nc-strike: 480ms;
-            --nc-es: var(--nc-f6);
-            --nc-print: 960ms;
-            --nc-ep: var(--nc-f12);
-            --nc-loop: 2400ms;
+            --nc-n-strike: 6;
+            --nc-n-print: 12;
+            --nc-n-loop: 30;
         }
 
         .nc-scene[data-nc-durations] .nc-tap {
@@ -1722,33 +2041,54 @@
             opacity: 1;
         }
 
-        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-dialog {
-            animation: nc-strike calc(var(--nc-strike) * var(--nc-slow, 1)) var(--nc-es) both;
+        .nc-scene[data-nc-durations] .nc-dialog {
+            --nc-n: var(--nc-n-strike);
         }
 
+        /* The figure is drawn by the raster too: its own pseudo is the beam. */
         .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-kpi__value {
-            animation: nc-print calc(var(--nc-print) * var(--nc-slow, 1)) var(--nc-ep) both;
+            animation: nc-raster calc(var(--nc-n-print) * var(--nc-fr)) steps(var(--nc-n-print), end) both;
         }
 
-        .nc-scene[data-nc-durations] .nc-bank__lit {
-            animation: nc-compute calc(var(--nc-loop) * var(--nc-slow, 1)) steps(1, end) infinite;
+        .nc-scene[data-nc-durations]:is([data-nc-phase='in'], [data-nc-phase='hold']) .kp-kpi__value::before {
+            animation: nc-beam calc(var(--nc-n-print) * var(--nc-fr)) steps(var(--nc-n-print), end) both;
         }
 
-        /* 5, 7, 8 and the parts of 10: the bank computes wherever it stands. */
-        .nc-scene:not([data-nc-durations], [data-nc-loading='scan']) .nc-bank__lit {
+        .nc-scene[data-nc-durations] {
+            --nc-loopn: var(--nc-n-loop);
+        }
+
+        /* 5, 7, 8 and the parts of 10: the lamp bank computes wherever it stands. */
+        .nc-scene .nc-bank__lit {
             animation: nc-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) infinite;
-        }
-
-        .nc-scene[data-nc-loading='scan'] .nc-bank__lit {
-            animation: nc-scan calc(1600ms * var(--nc-slow, 1)) steps(63, end) infinite;
         }
 
         .nc-scene[data-nc-loading='bank'] .nc-day .nc-lamp::after {
             animation: nc-day-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * -560ms * var(--nc-slow, 1)) infinite;
         }
 
-        .nc-scene[data-nc-loading='scan'] .nc-day .nc-lamp::after {
-            animation: nc-day-scan calc(1600ms * var(--nc-slow, 1)) steps(1, end) calc(var(--i) * 320ms * var(--nc-slow, 1)) infinite;
+        /* 7 The surface: the screen is drawn by the generic raster draw
+           above (its picture, in 8 frames), then the hum band rolls down it;
+           where a screen is on everything, the cards and key figures are
+           drawn in turn as well. */
+        .nc-scene[data-nc-surface]:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-screen::before {
+            animation: nc-hum calc(40 * var(--nc-fr)) calc(8 * var(--nc-fr)) steps(20, end) infinite both;
+        }
+
+        .nc-scene[data-nc-surface='screen'][data-nc-phase='gap'] :is(.kp-card, .kp-kpi) {
+            visibility: hidden;
+        }
+
+        .nc-scene[data-nc-surface='screen']:is([data-nc-phase='in'], [data-nc-phase='hold']) :is(.kp-card, .kp-kpi) {
+            animation: nc-raster calc(4 * var(--nc-fr)) steps(4, end) both;
+        }
+
+        .nc-scene[data-nc-surface='screen'] :is(.kp-card, .kp-kpi) > .nc-beam {
+            display: block;
+        }
+
+        .nc-scene[data-nc-surface='screen']:is([data-nc-phase='in'], [data-nc-phase='hold']) :is(.kp-card, .kp-kpi) > .nc-beam {
+            animation: nc-beam calc(4 * var(--nc-fr)) steps(4, end) both;
         }
 
         /* 8 A warning: as today, the meter jolts when it turns. */
@@ -1761,26 +2101,23 @@
             box-shadow: none;
         }
 
-        /* 9 A live update. */
-        .nc-scene[data-nc-live='lamp'][data-nc-phase='in'] .nc-lamp:not(.nc-lamp--state)::after {
-            animation: nc-led-on calc(640ms * var(--nc-slow, 1)) steps(1, end);
+        /* 9 A live update. The lamp of the reading lights in both of the
+           first two options (one frame, 640 ms); the raster also rewrites
+           the value from the top in 4 frames under its beam. */
+        .nc-scene:is([data-nc-live='lamp'], [data-nc-live='raster'])[data-nc-phase='in'] .nc-lamp:not(.nc-lamp--state)::after {
+            animation: nc-led-on calc(8 * var(--nc-fr)) steps(1, end);
         }
 
-        .nc-scene[data-nc-live='lamp'][data-nc-phase='in'] .nc-lamp--state {
-            animation: nc-state-lamp calc(640ms * var(--nc-slow, 1)) steps(1, end);
+        .nc-scene:is([data-nc-live='lamp'], [data-nc-live='raster'])[data-nc-phase='in'] .nc-lamp--state {
+            animation: nc-state-lamp calc(8 * var(--nc-fr)) steps(1, end);
         }
 
-        .nc-scene[data-nc-live='blip'][data-nc-phase='in']
-            :is(.kp-kpi__value.nc-carrier, .nc-column__num, .nc-live-tile .nc-carrier, .nc-state__word) {
-            animation: nc-blip calc(640ms * var(--nc-slow, 1)) ease-out;
+        .nc-scene[data-nc-live='raster'][data-nc-phase='in'] .nc-carrier::before {
+            animation: nc-beam calc(4 * var(--nc-fr)) steps(4, end) both;
         }
 
-        .nc-scene[data-nc-live='blip'][data-nc-phase='in'] .nc-lamp--state {
-            animation: nc-dot-flare calc(640ms * var(--nc-slow, 1)) ease-out;
-        }
-
-        .nc-scene[data-nc-live='blip'][data-nc-phase='in'] .nc-spark polyline {
-            animation: nc-line-flare calc(640ms * var(--nc-slow, 1)) ease-out;
+        .nc-scene[data-nc-live='raster'][data-nc-phase='in'] .nc-carrier::after {
+            animation: nc-veil calc(4 * var(--nc-fr)) steps(4, end) both;
         }
 
         .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .kp-kpi__value.nc-carrier {
@@ -1801,6 +2138,36 @@
 
         .nc-scene[data-nc-live='mix'][data-nc-phase='in'] .nc-live-tile {
             animation: nc-ring-today calc(500ms * var(--nc-slow, 1)) ease-out;
+        }
+
+        /* 10 Loading: the waiting screen redraws, 20 frames a cycle (12
+           frames of drawing under the beam, 6 standing, 2 blank), the hum
+           band rolling in 10 steps; the same cycle on the busy bar, the
+           skeleton, the chart's plot and the scope of the spinner. */
+        .nc-ras__pic,
+        .nc-ras__beam,
+        .nc-ras::before {
+            --nc-cycle: calc(var(--nc-loopn, 20) * var(--nc-fr));
+        }
+
+        .nc-ras__pic {
+            animation: nc-redraw var(--nc-cycle) linear infinite;
+        }
+
+        .nc-ras__beam {
+            animation: nc-redraw-beam var(--nc-cycle) linear infinite;
+        }
+
+        .nc-ras::before {
+            animation: nc-roll var(--nc-cycle) steps(10, end) infinite;
+        }
+
+        .nc-scene[data-nc-loading='raster'] .nc-day::before {
+            animation: nc-roll var(--nc-cycle) steps(10, end) calc(var(--i) * -2 * var(--nc-fr)) infinite;
+        }
+
+        .nc-scene[data-nc-loading='raster'] .nc-day {
+            --nc-cycle: calc(20 * var(--nc-fr));
         }
 
         /* 10 Loading, as today: each picture its own clock. */
@@ -1830,18 +2197,26 @@
 
         /* 11 The spinner. */
         .nc-scene[data-nc-spinner='reel'] .nc-spin::before {
-            animation: kp-sig-nostromo-no-reel calc(1600ms * var(--nc-slow, 1)) steps(20, end) infinite;
+            animation: kp-sig-nostromo-no-reel calc(20 * var(--nc-fr)) steps(20, end) infinite;
         }
 
         .nc-scene[data-nc-spinner='lamps'] .nc-spin__ring {
-            animation: nc-ring-compute calc(1600ms * var(--nc-slow, 1)) steps(1, end) infinite;
+            animation: nc-ring-compute calc(20 * var(--nc-fr)) steps(1, end) infinite;
         }
 
-        .nc-scene[data-nc-spinner='ping'] .nc-spin__ring {
-            animation: nc-ping calc(1600ms * var(--nc-slow, 1)) steps(20, end) infinite;
+        .nc-scene[data-nc-spinner='raster'] .nc-spin__ring {
+            --nc-cycle: calc(20 * var(--nc-fr));
+            animation: nc-redraw var(--nc-cycle) linear infinite;
         }
 
-        /* 12 Leaving and arriving. */
+        .nc-scene[data-nc-spinner='raster'] .nc-spin__ring::after {
+            --nc-cycle: calc(20 * var(--nc-fr));
+            animation: nc-redraw-beam var(--nc-cycle) linear infinite;
+        }
+
+        /* 12 Leaving and arriving. The raster's leave is its arrival played
+           backwards by demo.js (the generic draw above); the other two draw
+           their own leave, and play it reversed to arrive. */
         .nc-scene[data-nc-leave='off'][data-nc-phase='in'] .nc-leaver {
             animation: nc-off calc(480ms * var(--nc-slow, 1)) linear reverse both;
         }
@@ -1858,12 +2233,10 @@
             animation: nc-flare calc(480ms * var(--nc-slow, 1)) ease-in both;
         }
 
-        .nc-scene[data-nc-leave='scroll'][data-nc-phase='in'] .nc-leaver {
-            animation: nc-scroll calc(480ms * var(--nc-slow, 1)) steps(4, end) reverse both;
-        }
-
-        .nc-scene[data-nc-leave='scroll'][data-nc-phase='out'] .nc-leaver {
-            animation: nc-scroll calc(480ms * var(--nc-slow, 1)) steps(4, end) both;
+        /* 14 Pointing: the beam parked below the part sweeps down through it
+           when it is pointed at, and back up when the pointer leaves. */
+        .nc-scene[data-nc-hover='beam'] :is(.kp-button, .kp-menu__item, .kp-kpi, .nc-day) > .nc-beam {
+            transition: inset-block-start calc(3 * var(--nc-fr)) steps(3, end);
         }
 
         /* 16 The press, by the clock. */
@@ -1935,6 +2308,112 @@
     }
 
     /* ── The keyframes ───────────────────────────────────────────────── */
+
+    /* The raster (the anchor's na-raster and na-beam): the part uncovered
+       from its top edge, the beam riding the edge of what is uncovered. The
+       end box is a little larger than the part so its shadow is kept. */
+    @keyframes nc-raster {
+        from {
+            clip-path: inset(-12px -12px 100% -12px);
+        }
+
+        to {
+            clip-path: inset(-12px);
+        }
+    }
+
+    @keyframes nc-beam {
+        from {
+            inset-block-start: calc(var(--nc-tail) * -1);
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        to {
+            inset-block-start: calc(100% - var(--nc-tail));
+            opacity: 0;
+        }
+    }
+
+    /* A live reading: the veil of not-yet-refreshed phosphor retreats down
+       the value as the beam writes it. */
+    @keyframes nc-veil {
+        from {
+            opacity: 1;
+            clip-path: inset(0);
+        }
+
+        to {
+            opacity: 1;
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* The waiting screen: written in 12 frames, standing for 6, blank for
+       2, in a cycle of 20 (the keyframe percentages are 60 % and 90 %). */
+    @keyframes nc-redraw {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            animation-timing-function: steps(12, end);
+        }
+
+        60% {
+            clip-path: inset(0);
+            animation-timing-function: steps(1, end);
+        }
+
+        89.99% {
+            clip-path: inset(0);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes nc-redraw-beam {
+        0% {
+            inset-block-start: calc(var(--nc-tail, 0.7rem) * -1);
+            opacity: 1;
+            animation-timing-function: steps(12, end);
+        }
+
+        59.99% {
+            inset-block-start: calc(100% - var(--nc-tail, 0.7rem));
+            opacity: 1;
+        }
+
+        60%,
+        100% {
+            inset-block-start: calc(100% - var(--nc-tail, 0.7rem));
+            opacity: 0;
+        }
+    }
+
+    /* The hum band: a dim bar rolling down the glass in 10 steps. */
+    @keyframes nc-roll {
+        from {
+            translate: 0 -100%;
+        }
+
+        to {
+            translate: 0 260%;
+        }
+    }
+
+    @keyframes nc-hum {
+        from {
+            translate: 0 -100%;
+        }
+
+        to {
+            translate: 0 300%;
+        }
+    }
 
     @keyframes nc-track {
         from {
@@ -2017,18 +2496,6 @@
         }
     }
 
-    @keyframes nc-cut {
-        from {
-            clip-path: inset(0 0 100% 0);
-            opacity: 0;
-        }
-
-        to {
-            clip-path: inset(-8px -8px -8px -8px);
-            opacity: 1;
-        }
-    }
-
     @keyframes nc-led-on {
         from,
         to {
@@ -2082,16 +2549,6 @@
         }
     }
 
-    @keyframes nc-scan {
-        from {
-            background-position-x: calc(var(--nc-pitch) * -3);
-        }
-
-        to {
-            background-position-x: calc(var(--nc-pitch) * 60);
-        }
-    }
-
     /* A day's lamp in the bank: on in two of the five patterns. */
     @keyframes nc-day-compute {
         0%,
@@ -2110,18 +2567,6 @@
         }
 
         80%,
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @keyframes nc-day-scan {
-        0%,
-        19.99% {
-            opacity: 1;
-        }
-
-        20%,
         100% {
             opacity: 0;
         }
@@ -2150,18 +2595,6 @@
         }
     }
 
-    @keyframes nc-ping {
-        from {
-            opacity: 1;
-            scale: 0.1;
-        }
-
-        to {
-            opacity: 0;
-            scale: 0.9;
-        }
-    }
-
     /* The leave as today: overbright, blurred, faded in place. */
     @keyframes nc-flare {
         35% {
@@ -2171,18 +2604,6 @@
         to {
             filter: brightness(1.2) blur(3px);
             opacity: 0;
-        }
-    }
-
-    @keyframes nc-scroll {
-        from {
-            clip-path: inset(-8px -8px -8px -8px);
-            translate: 0 0;
-        }
-
-        to {
-            clip-path: inset(100% -8px -8px -8px);
-            translate: 0 -100%;
         }
     }
 
