@@ -1,0 +1,228 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="cyberpunk"
+    data-cat-theme="cyberpunk"
+    data-cat-theme-fixed
+    data-review="cyberpunk-character"
+    data-review-themes="cyberpunk"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what makes cyberpunk cyberpunk</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" data-kp-register="cyberpunk" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="cy-page">
+            <header class="cy-intro" id="cy-intro">
+                <h1>What makes cyberpunk cyberpunk</h1>
+                <p>
+                    Kenny, 2026-10-07 04:23: after nostromo, the rest one by one, cyberpunk first. The same way as titanium, forest and nostromo:
+                    first find out what belongs together and what does not, then propose. Eighteen questions, each one rule of the theme. Every option
+                    is a live scene built from the package's own components in cyberpunk, so you see the rule at work; the first option of each
+                    question is the recommendation, and each option says what you see and why it is or is not recommended. Pick per question in the
+                    review dialog (one question per page, the arrow keys flip between the options).
+                </p>
+                <p>
+                    Every recommendation is cyberpunk's alone (your rule of 03:37: "een thema bestaat om distinct te zijn"). Where a first idea turned
+                    out to be another theme's (the register's smooth curve is synthwave's exactly, the 1 px press and the cut from the top are
+                    titanium's, the dialog's line opening and the full warning frame are nostromo's, the soft 0.3 rem corner is dark's and
+                    synthwave's, figures in mono are titanium's and terminal's), it is still on the page as an option, named after the theme it
+                    belongs to.
+                </p>
+                <p class="cy-motion" data-cy-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
+                    system settings to judge the motion questions (1 to 4, 8 to 12 and 16).
+                </p>
+            </header>
+
+            <section class="cy-story" aria-labelledby="h-story">
+                <h2 id="h-story">What cyberpunk is</h2>
+                <div class="cy-story__grid">
+                    <div class="cy-story__text">
+                        <p>
+                            Cyberpunk is <b>the netrunner's HUD over Night City</b>: signal yellow on the void, cyan read-outs, blood red where
+                            something is wrong, violet only in a glitch. The ground is the void; every plate on it is a <b>holo card</b> (a yellow
+                            neon rim, diagonal scan lines, a cut corner); over a part the system draws its <b>HUD</b>: the reticle that locks on, mono
+                            read-outs with their prefixes, the red and cyan copies of a signal that changes.
+                        </p>
+                        <p>
+                            So everything that happens is something a hacked signal does: it is <b>glitched in</b> (opening, arriving),
+                            <b>decoded</b> start to end, <b>hunted and locked on</b> (loading, a warning), lit like a <b>circuit</b> (where you
+                            point), <b>stuttered home</b> (a live change), <b>torn out</b> (leaving). It moves in hard ticks of 60 ms, and when it is
+                            off, it is off to the side. Nothing eases, glides, floats, grows or falls.
+                        </p>
+                        <p>
+                            Already decided by you: Signal Yellow (2026-09-08), the signature (the data stream in the bar, the dialog at a quarter
+                            speed), the classic glitch as the leave, and on 2026-10-07 the family picks: the lock-on (loading), Glitch in (arrival),
+                            the circuit lights (hover, focus, press), Target locked (tone), the holo card (shape), the count-down stutter (live). The
+                            network graph changes in no theme. The full analysis (every decided pick measured, the families, seventeen outliers and
+                            the proposals) is in
+                            <a href="https://github.com/kennypassenier/kp-themes/blob/main/themes/cyberpunk/CHARACTER.md"
+                                >themes/cyberpunk/CHARACTER.md</a
+                            >.
+                        </p>
+                    </div>
+                    <div class="cy-story__parts" aria-label="Cyberpunk's own parts, as the package draws them">
+                        <div class="cy-row">
+                            <button type="button" class="kp-button">Export</button>
+                            <button type="button" class="kp-button kp-button--primary">Jack in</button>
+                            <span class="kp-badge">Draft</span>
+                        </div>
+                        <div class="kp-alert" role="status"><span class="kp-alert__body">The sync runs at 02:00 from Monday.</span></div>
+                        <div class="cy-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar cy-story__bar" role="progressbar" aria-label="Waiting for the sync" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar cy-story__bar"
+                            role="progressbar"
+                            aria-label="Sync, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div
+                            class="kp-meter"
+                            role="meter"
+                            aria-label="Uplink, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62; --kp-mark: 0.8"
+                        >
+                            <span class="kp-meter__mark"></span>
+                        </div>
+                    </div>
+                </div>
+                <details class="cy-gallery" data-cy-gallery>
+                    <summary>The decided cyberpunk components as they are today (opens six live demos)</summary>
+                    <div class="cy-gallery__grid">
+                        <figure>
+                            <figcaption>Menu button: the lock-on (your loading family)</figcaption>
+                            <iframe
+                                title="Menu button loading, cyberpunk as decided"
+                                data-src="../character-menu/demo.html?embed=loading&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Menu button: Glitch in (your arrival family)</figcaption>
+                            <iframe
+                                title="Menu button opening, cyberpunk as decided"
+                                data-src="../character-menu/demo.html?embed=open&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Menu button: Target locked (your tone family)</figcaption>
+                            <iframe
+                                title="Menu button tone, cyberpunk as decided"
+                                data-src="../character-menu/demo.html?embed=tone&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Dashboard tiles: the holo card and the circuit (your shape and hover families)</figcaption>
+                            <iframe
+                                title="Dashboard tiles, cyberpunk as decided"
+                                data-src="../character-tiles/demo.html?embed=hover&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Time chart (the black ice)</figcaption>
+                            <iframe
+                                title="Time chart, cyberpunk as decided"
+                                data-src="../character-chart/demo.html?embed=shape&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Network graph (the target lock; never changes)</figcaption>
+                            <iframe
+                                title="Network graph, cyberpunk as decided"
+                                data-src="../character-graph/demo.html?embed=focus&amp;theme=cyberpunk"
+                            ></iframe>
+                        </figure>
+                    </div>
+                </details>
+            </section>
+
+            <section
+                class="cy-sec"
+                data-review-item="cyberpunk"
+                data-review-mode="aspects"
+                data-review-rows="data-cy-aspect"
+                data-review-components="cyberpunk-character"
+                data-review-title="What makes cyberpunk cyberpunk"
+                data-cy-show="rest"
+                aria-labelledby="h-cy"
+            >
+                <div class="cy-sec__head">
+                    <h2 id="h-cy">Eighteen questions</h2>
+                    <p>
+                        Each row is one question, its options side by side, the recommended one first. The scenes replay by themselves every few
+                        seconds; Replay starts them together, the speed buttons slow every motion down, and State shows every button in the composites
+                        scene as hovered, focused or pressed (question 13).
+                    </p>
+                    <ol class="cy-toc" data-cy-toc></ol>
+                </div>
+                <div class="cy-controls" data-review-controls>
+                    <div class="cy-actions" role="group" aria-label="State of every button">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-state="rest" aria-pressed="true">Rest</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cy-state="hover"
+                            aria-pressed="false"
+                            data-review-plays="composites"
+                        >
+                            Hover
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-state="focus" aria-pressed="false">Focus</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-state="press" aria-pressed="false">Press</button>
+                    </div>
+                    <div class="cy-actions" role="group" aria-label="Replay">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-cy-replay
+                            data-review-plays="curve direction opening durations tone live leave press"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="cy-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cy-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="cy-aspects" data-cy-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

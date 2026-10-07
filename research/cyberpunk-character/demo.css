@@ -1,0 +1,311 @@
+/* research/cyberpunk-character: the page only. A centred column; the story
+   at the top, then one section of eighteen rows, each row a question with
+   its three options side by side on a desk and stacked on a phone. Every
+   option's own drawing is in options.css. */
+.cy-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.cy-intro,
+.cy-story,
+.cy-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cy-intro :is(h1, p),
+.cy-story :is(h2, p),
+.cy-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.cy-intro p,
+.cy-story__text p,
+.cy-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.cy-motion {
+    color: var(--muted-foreground);
+}
+
+.cy-story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.cy-story__text {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cy-story__parts {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.cy-story__bar {
+    flex: 1 1 10rem;
+}
+
+.cy-story__skel {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.cy-gallery summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cy-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.cy-gallery figure {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.cy-gallery figcaption {
+    font-weight: 600;
+}
+
+.cy-gallery iframe {
+    inline-size: 100%;
+    block-size: 14rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.cy-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.cy-sec__head p,
+.cy-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.cy-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.cy-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cy-actions,
+.cy-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-cy-state][aria-pressed='true'],
+[data-cy-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.cy-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.cy-aspect {
+    /* A row far off screen is not rendered, so its loops cost nothing until
+       it scrolls near. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 60rem;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.cy-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.cy-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.cy-aspect__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-inline-end: 0.35rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.85rem;
+}
+
+.cy-aspect__rule {
+    margin-inline-start: 0.35rem;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.cy-aspect__q {
+    font-weight: 600;
+}
+
+/* The options in a subgrid, so the names, the words and the scenes line up
+   across the row whatever their length (three per row, four for the warning);
+   one under the other below 64rem. */
+.cy-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.cy-trio[data-cy-n='4'] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cy-col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+@media (max-width: 64rem) {
+    .cy-story__grid,
+    .cy-trio,
+    .cy-trio[data-cy-n='4'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cy-col {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+}
+
+.cy-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.cy-label-row__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.cy-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cy-see,
+.cy-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.cy-verdict {
+    color: var(--muted-foreground);
+}
+
+.cy-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The scene: a small dashboard of parts, the same parts in every option of
+   a row. */
+.cy-scene {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    min-block-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.cy-part {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.cy-part--wide {
+    grid-column: 1 / -1;
+}
+
+.cy-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+.cy-readout {
+    margin: 0;
+    font-family: var(--theme-font-mono);
+    font-size: 0.8rem;
+}
+
+/* In the review dialog one option is shown alone and large: its scene gets
+   the room of the stage. */
+[data-rv-flip-trio] .cy-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+/* A control in a part keeps its own width; plates and strips take the part's. */
+.cy-part > :is(.kp-button, .kp-badge, .cy-tip, .cy-spark, a) {
+    justify-self: start;
+}
+
+.cy-part > .cy-spark {
+    justify-self: stretch;
+}

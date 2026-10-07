@@ -80,6 +80,8 @@ export const PAGES = [
             { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
             { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
+            // Kenny, 2026-10-07 04:23: what makes cyberpunk cyberpunk, the same way (the analysis in themes/cyberpunk/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the third theme of the one-by-one series.
+            { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
         ],
     },
     {

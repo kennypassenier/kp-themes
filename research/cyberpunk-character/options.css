@@ -1,0 +1,2643 @@
+/* research/cyberpunk-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.cy-scene[data-cy-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --cy-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the ones measured in
+   themes/cyberpunk/CHARACTER.md §2. Parts at rest are drawn as the
+   recommended grammar has them (the holo plate, the notch, the prefixed
+   mono, the lock-on), so each question changes only its own rule. */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    .cy-page {
+        /* The notches (G6): 14 px on a plate at its dossier corner, 8 px on a
+           control at its end corner, the pair on the dialog. */
+        --cy-clip-plate: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+        --cy-clip-ctl: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+        --cy-clip-pair: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        /* The holo (G7): the rim along the notch's cut, the 135° scan lines. */
+        --cy-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 / 14px
+            14px no-repeat;
+        --cy-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        --cy-rim: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        /* The circuit (G8): a 14 px grid in the primary at 30 %, at 60 % when
+           a press closes it. */
+        --cy-grid-30:
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 1px, transparent 1px) 0 0 / 14px 14px,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.3) 1px, transparent 1px) 0 0 / 14px 14px;
+        --cy-grid-60:
+            linear-gradient(hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 0 0 / 14px 14px,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.6) 1px, transparent 1px) 0 0 / 14px 14px;
+        /* The reticle's corners: four 9 px tiles of a 2 px frame. */
+        --cy-corners:
+            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 9px 9px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 9px 9px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 9px 9px no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 100% / 9px 9px no-repeat;
+        --cy-hazard: repeating-linear-gradient(-45deg, var(--cy-tone, var(--primary)) 0 4px, transparent 4px 8px);
+        /* The register's smooth curve (synthwave's too) and titanium's. */
+        --cy-smooth: cubic-bezier(0.2, 0.9, 0.2, 1);
+        --cy-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .cy-scene {
+        --cy-end-clip: none;
+        --cy-line-clip: inset(calc(50% - 1px) 0);
+        --cy-top-clip: inset(0 0 100% 0);
+        --cy-start-clip: inset(0 100% 0 0);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .cy-scene .cy-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .cy-glow {
+        filter: drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.45));
+    }
+
+    /* The holo plate (G7), cut at its dossier corner. */
+    .cy-scene .cy-plate {
+        --cy-end-clip: var(--cy-clip-plate);
+        --cy-line-clip: polygon(0 calc(50% - 1px), calc(100% - 14px) calc(50% - 1px), 100% calc(50% - 1px), 100% calc(50% + 1px), 0 calc(50% + 1px));
+        --cy-top-clip: polygon(0 0, calc(100% - 14px) 0, 100% 0, 100% 0, 0 0);
+        --cy-start-clip: polygon(0 0, 0 0, 0 14px, 0 100%, 0 100%);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        clip-path: var(--cy-clip-plate);
+        background: var(--cy-grid, none), var(--cy-notch-line), var(--cy-scan), var(--card);
+        box-shadow: var(--cy-ring, 0 0 transparent), var(--cy-rim);
+        color: var(--card-foreground);
+    }
+
+    .cy-scene .kp-card.cy-plate {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .cy-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .cy-scene .kp-dialog {
+        --cy-end-clip: var(--cy-clip-pair);
+        --cy-line-clip: polygon(
+            0 calc(50% - 1px),
+            calc(100% - 18px) calc(50% - 1px),
+            100% calc(50% - 1px),
+            100% calc(50% + 1px),
+            18px calc(50% + 1px),
+            0 calc(50% + 1px)
+        );
+        --cy-top-clip: polygon(0 0, calc(100% - 18px) 0, 100% 0, 100% 0, 18px 0, 0 0);
+        --cy-start-clip: polygon(0 0, 0 0, 0 18px, 0 100%, 0 100%, 0 calc(100% - 18px));
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .cy-scene .kp-dialog::after {
+        animation: none;
+    }
+
+    .cy-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .cy-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .cy-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .cy-scene .cy-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .cy-scene .cy-pop {
+        position: relative;
+        inset: auto;
+        padding: 0.35rem 0.25rem 0.5rem;
+        overflow: visible;
+    }
+
+    .cy-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        list-style: none;
+    }
+
+    .cy-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .cy-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .cy-scene .cy-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cy-scene .kp-kpi.cy-plate {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.75rem 1rem;
+        color: inherit;
+        text-decoration: none;
+        text-align: start;
+    }
+
+    /* The machine's voice (G15): prefixed mono capitals name, the condensed
+       display counts. */
+    .cy-scene .cy-label {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .cy-scene .cy-label::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    .cy-scene .cy-figure {
+        font-family: var(--theme-font-display);
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+    }
+
+    .cy-carrier {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+    }
+
+    .cy-faint {
+        opacity: 0.45;
+    }
+
+    .cy-prose {
+        margin: 0;
+    }
+
+    /* The change on a square mono chip with the package's arrows. */
+    .cy-scene .cy-chip {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+    }
+
+    .cy-scene .kp-badge,
+    .cy-scene .kp-tag {
+        --cy-end-clip: var(--cy-clip-ctl);
+        clip-path: var(--cy-clip-ctl);
+    }
+
+    .cy-scene .kp-tooltip {
+        position: relative;
+        inset: auto;
+        justify-self: start;
+        clip-path: var(--cy-clip-ctl);
+        animation: none;
+    }
+
+    /* The readouts of question 1: a void groove and a yellow tab. */
+    .cy-tracks {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .cy-groove {
+        position: relative;
+        display: block;
+        block-size: 1rem;
+        background:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.25) 0 6px, transparent 6px) 0 50% / 10px 1px repeat-x,
+            var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
+        container-type: inline-size;
+    }
+
+    .cy-track {
+        position: absolute;
+        inset-block: 2px;
+        inset-inline-start: 0;
+        inline-size: 10px;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    }
+
+    .cy-track[data-cy-r='1'] {
+        --cy-to: 0.72;
+    }
+
+    .cy-track[data-cy-r='2'] {
+        --cy-to: 0.45;
+    }
+
+    .cy-track[data-cy-r='3'] {
+        --cy-to: 0.9;
+    }
+
+    .cy-scene[data-cy-phase='hold'] .cy-track,
+    .cy-scene[data-cy-phase='out'] .cy-track {
+        translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+    }
+
+    /* Days of a month: square plates, the figure in the display face. */
+    .cy-days {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 4px;
+    }
+
+    .cy-days--pick,
+    .cy-days--wait {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .cy-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: 2.4rem;
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border);
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .cy-day.cy-picked {
+        box-shadow: inset 0 0 0 2px var(--primary);
+    }
+
+    .cy-rows {
+        display: grid;
+        gap: 0.2rem;
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+    }
+
+    .cy-row-line {
+        display: block;
+        padding: 0.15rem 0.4rem;
+        background: var(--card);
+        box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    /* The chart's black ice. */
+    .cy-plot {
+        position: relative;
+        display: block;
+        min-block-size: 5rem;
+        overflow: hidden;
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.28) 1px, transparent 1px) 0 0 / 100% 25%,
+            var(--background);
+        box-shadow: inset 0 0 0 1px var(--accent);
+        color: var(--primary);
+    }
+
+    .cy-plot svg {
+        position: absolute;
+        inset: 0.5rem 0.5rem 1.4rem;
+        inline-size: calc(100% - 1rem);
+        block-size: calc(100% - 1.9rem);
+        overflow: visible;
+        filter: drop-shadow(1px 0 0 hsl(from var(--accent) h s l / 0.7)) drop-shadow(-1px 0 0 hsl(from var(--primary) h s l / 0.5));
+    }
+
+    .cy-plot__read {
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-end: 0.3rem;
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+    }
+
+    .cy-plot--wait {
+        min-block-size: 5rem;
+    }
+
+    .cy-spark-wrap,
+    .cy-column {
+        display: grid;
+        gap: 0.2rem;
+    }
+
+    .cy-spark {
+        display: block;
+        block-size: 2.2rem;
+        color: var(--primary);
+    }
+
+    .cy-spark svg {
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .cy-column__num {
+        font-size: 1.6rem;
+    }
+
+    /* The state word: a square data light and the word in mono. */
+    .cy-state {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        justify-self: start;
+        padding: 0.25rem 0.55rem;
+        background: var(--card);
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .cy-state__dot {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        background: var(--success-foreground);
+    }
+
+    .cy-state[data-cy-kind='bad'] {
+        padding: 0.4rem 0.75rem;
+    }
+
+    .cy-state[data-cy-kind='bad'] .cy-state__dot {
+        background: var(--destructive);
+    }
+
+    .cy-table {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.3rem 1rem;
+        padding: 0.75rem 1rem 1.6rem;
+        font-size: 0.85rem;
+    }
+
+    .cy-table > span:nth-child(-n + 2) {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .cy-word {
+        position: absolute;
+        inset-inline-end: 0.6rem;
+        inset-block-end: 0.35rem;
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+    }
+
+    .cy-word::before {
+        content: 'TARGET ACQUIRED';
+    }
+
+    .cy-skel {
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .cy-skel__line {
+        position: relative;
+        display: block;
+    }
+
+    .cy-skel__line:nth-child(2) {
+        inline-size: 85%;
+    }
+
+    .cy-skel__line:nth-child(3) {
+        inline-size: 60%;
+    }
+
+    .cy-meter-wait,
+    .cy-meter-wrap {
+        position: relative;
+        padding: 6px;
+    }
+
+    .cy-meter-wait .kp-meter {
+        margin-block: 4px;
+    }
+
+    .cy-spark-wrap .cy-label,
+    .cy-column .cy-label {
+        justify-self: start;
+    }
+
+    .cy-key {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        clip-path: var(--cy-clip-ctl);
+    }
+
+    .cy-key__swatch {
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        background: var(--primary);
+    }
+
+    .cy-header,
+    .cy-header-mini {
+        margin: 0;
+        padding: 0.75rem 1rem;
+        background: repeating-linear-gradient(0deg, hsl(from var(--accent) h s l / 0.1) 0 1px, transparent 1px 4px), var(--card);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    .cy-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .cy-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .cy-header .kp-page-header__actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .cy-busy-panel {
+        grid-auto-flow: column;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .cy-busy-button {
+        gap: 0.5rem;
+    }
+
+    .cy-motif-list {
+        display: grid;
+        gap: 0.2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* The type tile (question 17). */
+    .cy-type {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .cy-type > p {
+        margin: 0;
+    }
+
+    .cy-type__label {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .cy-type__label::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+
+    .cy-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.3rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .cy-type__prose {
+        max-inline-size: 60ch;
+    }
+
+    .cy-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+    }
+
+    .cy-type__figure .cy-figure {
+        font-size: 2.8rem;
+    }
+
+    .cy-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem 1rem;
+        margin: 0;
+    }
+
+    .cy-type__strip > div {
+        display: grid;
+        gap: 0.1rem;
+    }
+
+    .cy-type__strip .cy-figure {
+        font-size: 1.9rem;
+    }
+
+    .cy-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .cy-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .cy-type__table th {
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .cy-surge {
+        display: none;
+    }
+
+    .cy-scene .cy-tile-link {
+        justify-self: start;
+    }
+
+    .cy-scene .cy-spark.cy-carrier {
+        display: block;
+        justify-self: stretch;
+    }
+
+    .cy-scene .kp-kpi.cy-plate:is(button, a) {
+        box-sizing: border-box;
+        inline-size: 100%;
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+    }
+
+    /* ── The target lock (G13) and its alternatives, at rest ─────────── */
+
+    .cy-scene .cy-warn,
+    .cy-scene [data-kp-tone='warning'] {
+        --cy-tone: var(--warning-foreground);
+        --cy-frame: var(--warning);
+    }
+
+    .cy-scene .cy-bad,
+    .cy-scene [data-cy-kind='bad'] {
+        --cy-tone: var(--destructive);
+        --cy-frame: var(--destructive);
+    }
+
+    .cy-bracket,
+    .cy-tag,
+    .cy-band {
+        display: none;
+    }
+
+    .cy-bracket {
+        position: absolute;
+        inset: 3px;
+        z-index: 1;
+        border: 2px solid var(--cy-tone);
+        mask: var(--cy-corners);
+        pointer-events: none;
+    }
+
+    .cy-tag {
+        position: absolute;
+        inset-block-start: 0.45rem;
+        inset-inline-end: 1.2rem;
+        z-index: 1;
+        padding: 0 0.3rem;
+        border: 1px solid var(--cy-tone);
+        color: var(--cy-tone);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+    }
+
+    .cy-scene .kp-kpi.cy-plate {
+        container-type: inline-size;
+    }
+
+    @container (max-width: 15rem) {
+        .cy-scene .cy-plate.cy-kpi > .cy-tag.cy-tag {
+            display: none;
+        }
+    }
+
+    .cy-scene[data-cy-tone] .cy-kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cy-state .cy-tag {
+        position: static;
+        margin-inline-start: 0.3rem;
+    }
+
+    .kp-menu__item .cy-tag {
+        inset-block-start: 50%;
+        inset-inline-end: 0.6rem;
+        translate: 0 -50%;
+    }
+
+    .cy-meter-wrap .cy-tag {
+        inset-block-start: auto;
+        inset-block-end: calc(100% + 2px);
+        inset-inline-end: 0;
+    }
+
+    .cy-band {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 1;
+        block-size: 5px;
+        background: repeating-linear-gradient(-45deg, var(--cy-tone) 0 4px, transparent 4px 8px);
+        pointer-events: none;
+    }
+
+    /* Outside the tone question a warning is the recommended lock. */
+    .cy-scene:not([data-cy-tone]) :is(.cy-warn, .cy-bad, [data-cy-kind='bad']) > :is(.cy-bracket, .cy-tag),
+    .cy-scene:is([data-cy-tone='lock'], [data-cy-tone='twitch']) :is(.cy-warn, .cy-bad, [data-cy-kind='bad']) > :is(.cy-bracket, .cy-tag) {
+        display: block;
+    }
+
+    .cy-scene[data-cy-tone='band'] :is(.cy-warn, .cy-bad) > .cy-band {
+        display: block;
+    }
+
+    .cy-scene[data-cy-tone='band'] .cy-state[data-cy-kind='bad'] {
+        box-shadow: inset 0 3px 0 var(--cy-tone);
+    }
+
+    .cy-scene[data-cy-tone='frame'] :is(.cy-warn, .cy-bad).cy-plate,
+    .cy-scene[data-cy-tone='frame'] .kp-menu__item.cy-bad,
+    .cy-scene[data-cy-tone='frame'] .cy-state[data-cy-kind='bad'],
+    .cy-scene[data-cy-tone='frame'] .cy-meter-wrap {
+        box-shadow: inset 0 0 0 3px var(--cy-frame);
+    }
+
+    .cy-scene[data-cy-colour='mix'] .cy-warn.cy-plate {
+        box-shadow: inset 0 0 0 2px var(--warning);
+    }
+
+    /* ── Loading (G10) at rest: one drawing shown per option ─────────── */
+
+    .cy-waits {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cy-load {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .cy-load > *,
+    .cy-word {
+        display: none;
+    }
+
+    .cy-ret {
+        position: absolute;
+        inset-block: 3px;
+        inset-inline-start: 3px;
+        inline-size: calc(100% - 6px);
+        border: 2px solid var(--accent);
+        mask: var(--cy-corners);
+    }
+
+    .cy-stream {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 2px;
+        block-size: 6px;
+        background:
+            linear-gradient(90deg, transparent 0 18px, var(--accent) 18px 24px, transparent 24px) 0 4px / 54px 2px repeat-x,
+            linear-gradient(
+                    90deg,
+                    hsl(from var(--primary) h s l / 0.6) 0 10px,
+                    transparent 10px 14px,
+                    hsl(from var(--primary) h s l / 0.6) 14px 30px,
+                    transparent 30px 36px
+                )
+                0 0 / 36px 2px repeat-x;
+    }
+
+    .cy-scene:not([data-cy-loading], [data-cy-colour='mix']) .cy-ret,
+    .cy-scene[data-cy-colour='mix'] .cy-today,
+    .cy-scene[data-cy-loading='lock'] .cy-ret,
+    .cy-scene[data-cy-loading='lock'] .cy-word,
+    .cy-scene[data-cy-loading='stream'] .cy-stream,
+    .cy-scene[data-cy-loading='mix'] .cy-today {
+        display: block;
+    }
+
+    /* The skeleton and the meter keep the register's own pictures only as
+       they are today. */
+    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .cy-skel__line .kp-skeleton {
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .cy-skel__line .kp-skeleton::after,
+    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .kp-meter[data-kp-loading]::after {
+        content: none;
+    }
+
+    .cy-scene[data-cy-loading='mix'] .cy-skel__line .cy-load,
+    .cy-scene[data-cy-loading='mix'] .cy-meter-wait .cy-load {
+        display: none;
+    }
+
+    /* Today's pictures, one per carrier. */
+    .cy-today {
+        position: absolute;
+        inset: 0;
+    }
+
+    .cy-kpi .cy-today,
+    .cy-scene[data-cy-colour='mix'] .cy-tile .cy-today {
+        inset-block-start: -20%;
+        inset-inline-start: 65%;
+        inline-size: 2px;
+        block-size: 30%;
+        background: color-mix(in oklch, var(--success) 80%, transparent);
+    }
+
+    .cy-table .cy-today {
+        inset-block: auto 0;
+        block-size: 2px;
+        background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--accent) 75%, transparent) 50%, transparent) -55% 0 / 45% 100%
+            no-repeat;
+    }
+
+    .kp-menu__item .cy-today {
+        inset-block: 3px;
+        inset-inline-start: 3px;
+        inline-size: calc(100% - 6px);
+        border: 2px solid var(--accent);
+        mask: var(--cy-corners);
+    }
+
+    .cy-day .cy-today {
+        inset-block-end: auto;
+        block-size: 5px;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.7) 0 4px, transparent 4px 8px) 0 0 / 11.3137px 100% repeat-x;
+    }
+
+    .cy-plot .cy-today {
+        background:
+            radial-gradient(circle, var(--accent) 1.6px, transparent 2px) 0 0 / 11px 18px,
+            repeating-linear-gradient(90deg, hsl(from var(--accent) h s l / 0.16) 0 2px, transparent 2px 11px);
+    }
+
+    .cy-tile .cy-today {
+        background: linear-gradient(115deg, transparent 30%, color-mix(in oklch, var(--primary) 55%, white) 48%, transparent 66%) -120% 0 / 220% 100%
+            no-repeat;
+    }
+
+    /* ── The spinner (G11): one of three drawings per option ─────────── */
+
+    .cy-spin {
+        --cy-spin: 1.25rem;
+        position: relative;
+        display: inline-grid;
+        flex: none;
+        inline-size: var(--cy-spin);
+        block-size: var(--cy-spin);
+        color: var(--accent);
+    }
+
+    .cy-spin > * {
+        display: none;
+        grid-area: 1 / 1;
+    }
+
+    .cy-spin__ret {
+        position: relative;
+    }
+
+    .cy-spin__ret::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px solid currentColor;
+        mask:
+            linear-gradient(#000, #000) 0 0 / 35% 35% no-repeat,
+            linear-gradient(#000, #000) 100% 0 / 35% 35% no-repeat,
+            linear-gradient(#000, #000) 0 100% / 35% 35% no-repeat,
+            linear-gradient(#000, #000) 100% 100% / 35% 35% no-repeat;
+    }
+
+    .cy-spin__ret::after {
+        content: '';
+        position: absolute;
+        inset: 38%;
+        background: var(--accent);
+    }
+
+    .cy-spin__scan {
+        --kp-spinner-size: var(--cy-spin);
+        inline-size: var(--cy-spin);
+        block-size: var(--cy-spin);
+    }
+
+    .cy-spin__glyph {
+        place-self: center;
+        font-family: var(--kp-mono);
+        font-size: calc(var(--cy-spin) * 0.95);
+        line-height: 1;
+    }
+
+    .cy-spin__glyph::before {
+        content: '▚';
+    }
+
+    .kp-button .cy-spin {
+        --cy-spin: 1rem;
+        color: currentColor;
+    }
+
+    .kp-button .cy-spin__ret::after {
+        background: currentColor;
+    }
+
+    .cy-scene[data-cy-spinner='reticle'] .cy-spin__ret,
+    .cy-scene[data-cy-spinner='glyph'] .cy-spin__glyph {
+        display: block;
+    }
+
+    .cy-scene[data-cy-spinner='scan'] .cy-spin__scan {
+        display: inline-block;
+    }
+
+    .cy-spins {
+        align-items: center;
+        gap: 1.25rem;
+    }
+
+    /* ── Colour (G5) ─────────────────────────────────────────────────── */
+
+    .cy-scene .kp-button.cy-pointed::before,
+    .cy-scene[data-cy-durations] .kp-button.cy-tap::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        z-index: -1;
+        background:
+            linear-gradient(hsl(from var(--kp-btn-fg) h s l / var(--cy-grid-a, 0.3)) 1px, transparent 1px) 0 0 / 14px 14px,
+            linear-gradient(90deg, hsl(from var(--kp-btn-fg) h s l / var(--cy-grid-a, 0.3)) 1px, transparent 1px) 0 0 / 14px 14px;
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-colour='cyan'] .kp-button--primary {
+        --kp-btn-fill: var(--accent);
+        --kp-btn-frame: var(--accent);
+        --kp-btn-fg: var(--accent-foreground);
+    }
+
+    .cy-scene[data-cy-colour='cyan'] .kp-button.cy-pointed {
+        --kp-btn-frame: var(--accent);
+        --kp-btn-fg: var(--accent);
+    }
+
+    .cy-scene[data-cy-colour='cyan'] .cy-plate {
+        --cy-rim: inset 0 0 0 1px var(--accent), inset 0 0 10px hsl(from var(--accent) h s l / 0.35);
+        --cy-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--accent) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 / 14px
+            14px no-repeat;
+    }
+
+    .cy-scene[data-cy-colour='cyan'] .cy-glow {
+        filter: drop-shadow(0 0 5px hsl(from var(--accent) h s l / 0.45));
+    }
+
+    .cy-scene:is([data-cy-colour='cyan'], [data-cy-colour='mix']) .cy-day.cy-picked {
+        box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    .cy-scene[data-cy-colour='cyan'] a {
+        text-decoration: underline solid var(--accent);
+        color: var(--accent);
+    }
+
+    /* Today: the header's cyan beam button, pointed with its cyan glow. */
+    .cy-scene[data-cy-colour='mix'] .kp-button.cy-pointed,
+    .cy-scene[data-cy-composites='today'] .cy-in-header,
+    .cy-scene[data-cy-composites='beam'] .cy-in-header,
+    .cy-scene[data-cy-focus='mix'] .cy-in-header {
+        --kp-btn-frame: var(--accent);
+        --kp-btn-fg: var(--accent);
+        --kp-btn-fill: color-mix(in oklch, var(--accent) 12%, var(--card));
+        --kp-btn-ground: color-mix(in oklch, var(--accent) 12%, var(--card));
+    }
+
+    .cy-scene[data-cy-colour='mix'] .kp-button.cy-pointed::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-colour='mix'] .kp-button.cy-pointed {
+        box-shadow:
+            0 0 0 1px var(--accent),
+            0 0 12px -2px color-mix(in oklch, var(--accent) 70%, transparent);
+    }
+
+    .cy-scene[data-cy-colour='mix'] .cy-warn > :is(.cy-bracket, .cy-tag) {
+        display: none;
+    }
+
+    /* ── Corners (G6) ────────────────────────────────────────────────── */
+
+    .cy-scene[data-cy-corners='soft'] :is(.cy-plate, .kp-dialog, .kp-badge, .kp-tag, .kp-tooltip, .kp-button) {
+        border-radius: 0.3rem;
+        clip-path: none;
+    }
+
+    .cy-scene[data-cy-corners='soft'] .cy-plate {
+        --cy-notch-line: linear-gradient(transparent, transparent);
+    }
+
+    .cy-scene[data-cy-corners='soft'] .kp-button {
+        overflow: hidden;
+    }
+
+    .cy-scene:is([data-cy-corners='soft'], [data-cy-corners='pair']) .kp-button {
+        background-image: linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size: calc(100% - 4px) calc(100% - 4px);
+        background-position: 2px 2px;
+    }
+
+    .cy-scene[data-cy-corners='pair'] :is(.cy-plate, .kp-dialog, .kp-badge, .kp-tag, .kp-tooltip, .kp-button) {
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    }
+
+    .cy-scene[data-cy-corners='pair'] .cy-plate {
+        --cy-notch-line:
+            linear-gradient(135deg, transparent 50%, var(--primary) 50% calc(50% + 1.5px), transparent calc(50% + 1.5px)) 0 0 / 10px 10px no-repeat,
+            linear-gradient(135deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 100% / 10px 10px
+                no-repeat;
+    }
+
+    /* ── Surface (G7) ────────────────────────────────────────────────── */
+
+    .cy-scene[data-cy-surface='dossier'] .cy-glow {
+        filter: none;
+    }
+
+    .cy-scene[data-cy-surface='dossier'] .cy-plate {
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.22);
+    }
+
+    .cy-scene[data-cy-surface='dossier'] .cy-plot {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.22);
+    }
+
+    .cy-scene[data-cy-surface='neon'] :is(.cy-row, .cy-field) {
+        filter: drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .cy-scene[data-cy-surface='neon'] :is(.cy-title, .cy-figure, .kp-card__body, .kp-kpi__trend, .cy-label, .kp-field__label) {
+        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.85);
+    }
+
+    .cy-scene[data-cy-surface='neon'] .cy-plot {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            inset 0 0 14px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
+
+    /* The circuit on a plate, a menu entry and a day. */
+    .cy-scene:not([data-cy-hover='charge'], [data-cy-colour='mix']) :is(.cy-plate.cy-pointed, .cy-pointed-tile),
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi,
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi,
+    .cy-scene[data-cy-focus]:not([data-cy-focus='mix']) .cy-plate.cy-focused {
+        --cy-grid: var(--cy-grid-30);
+    }
+
+    .cy-scene:not([data-cy-hover='charge']) :is(.kp-menu__item, .cy-day).cy-pointed,
+    .cy-sec[data-cy-show='hover'] .cy-scene:is([data-cy-composites='own'], [data-cy-composites='beam']) .kp-menu__item,
+    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) :is(.kp-menu__item, .cy-day).cy-focused {
+        background: var(--cy-grid-30), var(--muted);
+    }
+
+    .cy-scene[data-cy-hover='mix'] .kp-menu__item.cy-pointed {
+        background: var(--muted);
+        box-shadow:
+            inset 2px 0 0 var(--primary),
+            0 0 0.6rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .cy-scene[data-cy-hover='mix'] .cy-day.cy-pointed {
+        background: var(--card);
+        translate: 3px 0;
+    }
+
+    .cy-scene[data-cy-hover='mix'] .cy-kpi.cy-pointed {
+        --cy-grid: none;
+    }
+
+    .cy-scene[data-cy-hover='mix'] .cy-kpi.cy-pointed .cy-figure {
+        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
+    }
+
+    .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed:not(.cy-tile-link) {
+        translate: 0 -1px;
+    }
+
+    .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed:not(.cy-tile-link)::before,
+    .cy-scene[data-cy-hover='charge'] .kp-button.cy-pointed::before {
+        content: none;
+    }
+
+    .cy-scene:is([data-cy-hover], [data-cy-composites]) .cy-tile-link.cy-pointed,
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites] .cy-tile-link {
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+    }
+
+    /* The charge band of option 2 on every part. */
+    .cy-scene[data-cy-hover='charge'] :is(.cy-plate, .kp-menu__item, .cy-day).cy-pointed::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(105deg, transparent 0 40%, hsl(from var(--accent) h s l / 0.5) 45% 55%, transparent 60% 100%);
+        transform: translateX(-120%);
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-hover='charge'] .cy-pointed {
+        overflow: hidden;
+    }
+
+    /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
+
+    .cy-scene[data-cy-focus] .cy-focused,
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) :is(.kp-button, .kp-menu__item, .cy-in-kpi) {
+        --cy-ring:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    .cy-scene[data-cy-focus] :is(.kp-button, .kp-menu__item, .cy-day).cy-focused,
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) :is(.kp-button, .kp-menu__item) {
+        box-shadow: var(--cy-ring);
+        outline: none;
+    }
+
+    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) .kp-button.cy-focused,
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button {
+        --cy-grid-a: 0.3;
+    }
+
+    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) .kp-button.cy-focused::before,
+    .cy-sec:is([data-cy-show='focus'], [data-cy-show='hover']) .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button::before,
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        z-index: -1;
+        background:
+            linear-gradient(hsl(from var(--kp-btn-fg) h s l / var(--cy-grid-a, 0.3)) 1px, transparent 1px) 0 0 / 14px 14px,
+            linear-gradient(90deg, hsl(from var(--kp-btn-fg) h s l / var(--cy-grid-a, 0.3)) 1px, transparent 1px) 0 0 / 14px 14px;
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-focus='slant'] .cy-focused {
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+
+    /* Today: the key figure's single warning line (its own 0.3 rem plate,
+       unclipped, as picked), the menu entry and the day with the package's
+       outline, the tile link cut slanted. */
+    .cy-scene[data-cy-focus='mix'] .cy-focused {
+        --cy-ring: 0 0 transparent;
+    }
+
+    .cy-scene[data-cy-focus='mix'] .kp-button.cy-focused:not(.cy-tile-link),
+    .cy-scene[data-cy-focus='mix'] .cy-in-header.cy-focused {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .cy-scene[data-cy-focus='mix'] .cy-kpi.cy-focused {
+        border-radius: 0.3rem;
+        clip-path: none;
+        outline: 2px solid var(--warning);
+        outline-offset: 2px;
+    }
+
+    .cy-scene[data-cy-focus='mix'] :is(.kp-menu__item, .cy-day).cy-focused {
+        box-shadow: none;
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .cy-scene[data-cy-focus='mix'] .cy-tile-link.cy-focused {
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    /* ── Composites (G17): the State buttons ─────────────────────────── */
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='today'] .cy-part:first-child .kp-button {
+        translate: 0 -1px;
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='today'] .cy-in-header {
+        box-shadow:
+            0 0 0 1px var(--accent),
+            0 0 12px -2px color-mix(in oklch, var(--accent) 70%, transparent);
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='today'] .kp-menu__item {
+        background: var(--muted);
+        box-shadow:
+            inset 2px 0 0 var(--primary),
+            0 0 0.6rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='today'] .cy-in-kpi .cy-figure {
+        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='today'] :is(.kp-button, .kp-menu__item) {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='today'] .cy-tile-link {
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='today'] .cy-in-kpi {
+        border-radius: 0.3rem;
+        clip-path: none;
+        outline: 2px solid var(--warning);
+        outline-offset: 2px;
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button {
+        --cy-grid-a: 0.6;
+        --kp-btn-ground: var(--secondary);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button--primary {
+        --kp-btn-fill: var(--primary-active);
+        --kp-btn-frame: var(--primary-active);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-menu__item {
+        background: var(--cy-grid-60), var(--secondary);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi {
+        --cy-grid: var(--cy-grid-60);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='today'] .kp-button:not(.cy-in-header) {
+        translate: 0 1px;
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='today'] .cy-in-header {
+        --kp-btn-fill: color-mix(in oklch, var(--secondary) 80%, black);
+        --kp-btn-ground: color-mix(in oklch, var(--secondary) 80%, black);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='today'] .cy-in-kpi {
+        translate: 2px 0;
+    }
+
+    /* ── The voice (G15) ─────────────────────────────────────────────── */
+
+    .cy-scene[data-cy-type='mono'] :is(.cy-figure, .cy-type__table td) {
+        font-family: var(--kp-mono);
+    }
+
+    .cy-scene[data-cy-type='mono'] .cy-type__figure .cy-figure {
+        font-size: 2.1rem;
+        font-weight: 700;
+    }
+
+    .cy-scene[data-cy-type='mono'] .cy-type__strip .cy-figure {
+        font-size: 1.45rem;
+        font-weight: 700;
+    }
+
+    .cy-scene[data-cy-type='mono'] :is(.cy-type__label, .cy-label)::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-type='plain'] :is(.cy-type__label, .cy-type__table th, .kp-badge, .cy-chip, .cy-label) {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.85rem;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .cy-scene[data-cy-type='plain'] :is(.cy-type__label, .cy-label)::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-type='plain'] :is(.cy-figure, .cy-type__head) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        text-transform: none;
+    }
+
+    /* ── Motifs (G16) ────────────────────────────────────────────────── */
+
+    .cy-events__mark {
+        position: absolute;
+        inset-inline-start: calc(var(--x) - 8px);
+        inset-block-start: calc(var(--y) - 8px);
+        inline-size: 16px;
+        block-size: 16px;
+    }
+
+    .cy-events__mark::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border: 2px solid var(--accent);
+        mask:
+            linear-gradient(#000, #000) 0 0 / 5px 5px no-repeat,
+            linear-gradient(#000, #000) 100% 0 / 5px 5px no-repeat,
+            linear-gradient(#000, #000) 0 100% / 5px 5px no-repeat,
+            linear-gradient(#000, #000) 100% 100% / 5px 5px no-repeat;
+    }
+
+    .cy-events__mark::after {
+        content: '';
+        position: absolute;
+        inset: 5px;
+        background: var(--warning-foreground);
+    }
+
+    .cy-scene .cy-divider {
+        block-size: 28px;
+    }
+
+    .cy-scene .cy-motif-list .cy-label::before {
+        content: '— ';
+        color: var(--primary);
+    }
+
+    .cy-scene[data-cy-motifs='none'] .kp-meter {
+        background: var(--muted);
+    }
+
+    .cy-scene[data-cy-motifs='none'] .kp-meter::before {
+        background: var(--primary);
+        clip-path: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .kp-meter__mark {
+        background: var(--foreground);
+        box-shadow: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .kp-meter__mark::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-events__mark::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-events__mark::after {
+        inset: 3px;
+        border-radius: 50%;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-plate {
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-glow {
+        filter: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-motif-list .cy-label {
+        color: var(--foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.9rem;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-motif-list .cy-label::before,
+    .cy-scene[data-cy-motifs='none'] .kp-empty__title::before {
+        content: none;
+    }
+
+    .cy-scene[data-cy-motifs='none'] .kp-empty {
+        background: var(--card);
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-divider {
+        block-size: 1px;
+        background: var(--border-strong);
+    }
+
+    .cy-scene[data-cy-motifs='none'] .cy-divider::before,
+    .cy-scene[data-cy-motifs='none'] .cy-divider::after {
+        content: none;
+    }
+
+    .cy-scene[data-cy-motifs='all'] :is(.cy-label, .cy-title, .kp-empty__title, .kp-card__body) {
+        text-shadow:
+            2px 0 0 hsl(from var(--accent) h s l / 0.6),
+            -2px 0 0 hsl(from var(--destructive) h s l / 0.6);
+    }
+
+    .cy-scene[data-cy-motifs='all'] .cy-motif-list .cy-label::before {
+        content: '/// ';
+    }
+
+    .cy-scene[data-cy-motifs='all'] .cy-motif-card {
+        background:
+            var(--cy-hazard) 0 0 / 100% 6px no-repeat,
+            var(--cy-notch-line),
+            var(--cy-scan),
+            var(--card);
+    }
+
+    .cy-scene[data-cy-motifs='all'] .cy-motif-button::before {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        z-index: -1;
+        border: 2px solid var(--accent);
+        mask: var(--cy-corners);
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-motifs='all'] :is(.cy-motif-card, .kp-empty)::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        border: 2px solid var(--accent);
+        mask: var(--cy-corners);
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-motifs='all'] .kp-empty {
+        position: relative;
+    }
+
+    .cy-scene[data-cy-motifs='all'] .cy-divider {
+        background: var(--cy-hazard);
+    }
+
+    .cy-scene[data-cy-motifs='all'] .cy-divider::before,
+    .cy-scene[data-cy-motifs='all'] .cy-divider::after {
+        content: none;
+    }
+
+    /* ── The press (G14): the marked parts are pressed during `in` ───── */
+
+    .cy-scene[data-cy-press][data-cy-phase='in'] .cy-press {
+        --cy-grid-a: 0.6;
+    }
+
+    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] .kp-button.cy-press::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        z-index: -1;
+        background:
+            linear-gradient(hsl(from var(--kp-btn-fg) h s l / 0.6) 1px, transparent 1px) 0 0 / 14px 14px,
+            linear-gradient(90deg, hsl(from var(--kp-btn-fg) h s l / 0.6) 1px, transparent 1px) 0 0 / 14px 14px;
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] .cy-plate.cy-press {
+        --cy-grid: var(--cy-grid-60);
+    }
+
+    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
+        background: var(--cy-grid-60), var(--secondary);
+    }
+
+    .cy-scene[data-cy-press][data-cy-phase='in'] .kp-button.cy-press {
+        --kp-btn-ground: var(--secondary);
+    }
+
+    .cy-scene[data-cy-press][data-cy-phase='in'] .kp-button--primary.cy-press {
+        --kp-btn-fill: var(--primary-active);
+        --kp-btn-frame: var(--primary-active);
+    }
+
+    .cy-scene[data-cy-press]:not([data-cy-press='closed'])[data-cy-phase='in'] :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
+        background: var(--secondary);
+    }
+
+    .cy-scene[data-cy-press='drop'][data-cy-phase='in'] .cy-press {
+        translate: 0 1px;
+    }
+
+    .cy-scene[data-cy-press='kick'][data-cy-phase='in'] .cy-press {
+        translate: 2px 0;
+    }
+
+    /* The durations row: the press closes the circuit for one contact; at
+       rest the grid is drawn at nothing. */
+    .cy-scene[data-cy-durations] .cy-tap {
+        --cy-grid-a: 0;
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .cy-scene[data-cy-durations='ticks'] {
+            --cy-c: 180ms;
+            --cy-g: 360ms;
+            --cy-l: 480ms;
+            --cy-loop: 1800ms;
+        }
+
+        .cy-scene[data-cy-durations='brisk'] {
+            --cy-c: 120ms;
+            --cy-g: 240ms;
+            --cy-l: 360ms;
+            --cy-loop: 1200ms;
+        }
+
+        .cy-scene[data-cy-durations='slow'] {
+            --cy-c: 300ms;
+            --cy-g: 600ms;
+            --cy-l: 720ms;
+            --cy-loop: 2400ms;
+        }
+
+        /* What arrives is away in the gap. */
+        .cy-scene:is([data-cy-curve], [data-cy-direction], [data-cy-opening], [data-cy-durations])[data-cy-phase='gap'] .cy-arrives,
+        .cy-scene[data-cy-direction][data-cy-phase='gap'] .cy-walk svg,
+        .cy-scene[data-cy-leave][data-cy-phase='gap'] .cy-leaver {
+            visibility: hidden;
+        }
+
+        /* Q1, the curve. */
+        .cy-scene[data-cy-curve='jitter']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-track-jitter calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='smooth']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-track-glide calc(360ms * var(--cy-slow, 1)) var(--cy-smooth) both;
+        }
+
+        .cy-scene[data-cy-curve='steps']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-track-glide calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
+        }
+
+        .cy-scene[data-cy-curve='jitter']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives,
+        .cy-scene[data-cy-opening='glitch']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens,
+        .cy-scene[data-cy-leave='torn']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver,
+        .cy-scene[data-cy-direction='sideways']:is([data-cy-phase='in'], [data-cy-phase='hold'], [data-cy-phase='out']) .cy-tile.cy-arrives {
+            animation: cy-glitch-in calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='jitter'][data-cy-phase='out'] .cy-opens,
+        .cy-scene[data-cy-opening='glitch'][data-cy-phase='out'] .cy-opens,
+        .cy-scene[data-cy-leave='torn'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-glitch-out calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='smooth']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-rise calc(360ms * var(--cy-slow, 1)) var(--cy-smooth) both;
+        }
+
+        .cy-scene[data-cy-curve='smooth'][data-cy-phase='out'] .cy-opens {
+            animation: cy-rise-out calc(360ms * var(--cy-slow, 1)) var(--cy-smooth) both;
+        }
+
+        .cy-scene[data-cy-curve='steps']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-uncover calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
+        }
+
+        .cy-scene[data-cy-curve='steps'][data-cy-phase='out'] .cy-opens {
+            animation: cy-uncover-out calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
+        }
+
+        .cy-scene[data-cy-curve='jitter'][data-cy-phase='in'] .cy-carrier {
+            animation: cy-stutter calc(480ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-curve='smooth'][data-cy-phase='in'] .cy-carrier {
+            animation: cy-stutter calc(480ms * var(--cy-slow, 1)) var(--cy-smooth);
+        }
+
+        .cy-scene[data-cy-curve='steps'][data-cy-phase='in'] .cy-carrier {
+            animation: cy-stutter-even calc(480ms * var(--cy-slow, 1)) steps(6, end);
+        }
+
+        /* Q2, the direction. */
+        .cy-scene[data-cy-direction='sideways']:not([data-cy-phase='gap']) .cy-day {
+            animation: cy-glitch-cell calc(420ms * var(--cy-slow, 1)) calc(var(--i) * 60ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-direction='sideways']:not([data-cy-phase='gap']) .cy-row-line {
+            animation: cy-decode calc(360ms * var(--cy-slow, 1)) calc(var(--i) * 360ms * var(--cy-slow, 1)) steps(6, end) both;
+        }
+
+        .cy-scene[data-cy-direction='sideways']:not([data-cy-phase='gap']) .cy-walk svg {
+            animation: cy-decode calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
+        }
+
+        .cy-scene[data-cy-direction='feed']:not([data-cy-phase='gap']) :is(.cy-day, .cy-row-line, .cy-walk svg) {
+            animation: cy-decode calc(360ms * var(--cy-slow, 1)) var(--cy-quick) both;
+        }
+
+        .cy-scene[data-cy-direction='feed']:not([data-cy-phase='gap']) .cy-tile.cy-arrives {
+            animation: cy-uncover calc(360ms * var(--cy-slow, 1)) var(--cy-quick) both;
+        }
+
+        .cy-scene[data-cy-direction='top']:not([data-cy-phase='gap']) :is(.cy-day, .cy-walk svg) {
+            animation: cy-drop calc(240ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        .cy-scene[data-cy-direction='top']:not([data-cy-phase='gap']) .cy-row-line {
+            animation: cy-drop calc(240ms * var(--cy-slow, 1)) calc(var(--i) * 240ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        .cy-scene[data-cy-direction='top']:not([data-cy-phase='gap']) .cy-tile.cy-arrives {
+            animation: cy-cut calc(240ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        /* Q3, the opening. */
+        .cy-scene[data-cy-opening='crt']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-crt calc(1520ms * var(--cy-slow, 1)) cubic-bezier(0.3, 0, 0.2, 1) both;
+        }
+
+        .cy-scene[data-cy-opening='crt'][data-cy-phase='out'] .cy-opens {
+            animation: cy-crt-out calc(600ms * var(--cy-slow, 1)) cubic-bezier(0.3, 0, 0.2, 1) both;
+        }
+
+        .cy-scene[data-cy-opening='cut']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-cut calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        .cy-scene[data-cy-opening='cut'][data-cy-phase='out'] .cy-opens {
+            animation: cy-cut-out calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        /* Q4, the durations. */
+        .cy-scene[data-cy-durations][data-cy-phase='in'] .cy-tap {
+            animation: cy-press-flash calc(var(--cy-c) * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-durations]:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-dialog {
+            animation: cy-glitch-in calc(var(--cy-g) * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-durations][data-cy-phase='in'] .cy-carrier {
+            animation: cy-stutter calc(var(--cy-l) * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-durations] .cy-ret {
+            animation-duration: calc(var(--cy-loop) * var(--cy-slow, 1));
+        }
+
+        /* Q8, the warning: the brackets close as the part turns. */
+        .cy-scene:is([data-cy-tone='lock'], [data-cy-tone='twitch'])[data-cy-phase='in'] .cy-bracket {
+            animation: cy-lock calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-tone='twitch']:not([data-cy-phase='in']) .cy-bracket {
+            animation: cy-twitch calc(1600ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        /* Q9, the live update. */
+        .cy-scene:is([data-cy-live='shape'], [data-cy-live='text'])[data-cy-phase='in'] .cy-carrier:not(.cy-carrier--dot, .cy-carrier--line) {
+            animation: cy-stutter calc(480ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-live='shape'][data-cy-phase='in'] .cy-carrier--dot {
+            animation: cy-stutter-box calc(480ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-live='shape'][data-cy-phase='in'] .cy-carrier--line svg {
+            animation: cy-stutter-line calc(480ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-live='mix'][data-cy-phase='in'] .cy-kpi .cy-carrier {
+            animation: cy-burn calc(550ms * var(--cy-slow, 1)) ease-out;
+        }
+
+        .cy-scene[data-cy-live='mix'][data-cy-phase='in'] .cy-carrier--dot {
+            animation: cy-bright calc(500ms * var(--cy-slow, 1)) ease-out;
+        }
+
+        .cy-scene[data-cy-live='mix'][data-cy-phase='in'] .cy-carrier--line svg {
+            animation: cy-flare calc(700ms * var(--cy-slow, 1)) ease-out;
+        }
+
+        .cy-scene[data-cy-live='mix'][data-cy-phase='in'] .cy-column .cy-carrier {
+            animation: cy-shake calc(400ms * var(--cy-slow, 1)) steps(6, end);
+        }
+
+        .cy-scene[data-cy-live='mix'] .cy-surge {
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: -10%;
+            z-index: 2;
+            display: block;
+            block-size: 3px;
+            background: var(--primary);
+            box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 80%, transparent);
+            opacity: 0;
+        }
+
+        .cy-scene[data-cy-live='mix'][data-cy-phase='in'] .cy-surge {
+            animation: cy-surge calc(500ms * var(--cy-slow, 1)) ease-out;
+        }
+
+        /* Q10, loading: the reticle hunts and locks; a day locks in place. */
+        .cy-ret {
+            animation: cy-hunt calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-days--wait .cy-ret {
+            animation: cy-lock-on calc(1800ms * var(--cy-slow, 1)) calc(var(--i) * 60ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-skel__line .cy-ret {
+            animation-delay: calc(var(--i) * 360ms * var(--cy-slow, 1));
+        }
+
+        .cy-word::before {
+            animation: cy-word calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-stream {
+            animation: cy-stream calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-kpi .cy-today,
+        .cy-scene[data-cy-colour='mix'] .cy-tile .cy-today {
+            animation: cy-rain calc(800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-table .cy-today {
+            animation: cy-trace calc(1300ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .kp-menu__item .cy-today {
+            animation: cy-hunt calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-day .cy-today {
+            animation: cy-hazard calc(900ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-plot .cy-today {
+            animation: cy-code calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-scene:not([data-cy-colour='mix']) .cy-tile .cy-today {
+            animation: cy-gloss calc(1300ms * var(--cy-slow, 1)) ease-in-out infinite;
+        }
+
+        /* Q11, the spinner. */
+        .cy-spin__ret::before {
+            animation: cy-spin-lock calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-spin__glyph::before {
+            animation: cy-glyph calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        /* Q12, leaving and arriving: what arrives plays the leave backwards. */
+        .cy-scene[data-cy-leave='today']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver {
+            animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear reverse both;
+        }
+
+        .cy-scene[data-cy-leave='today'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear both;
+        }
+
+        .cy-scene[data-cy-leave='tube']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver {
+            animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='tube'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        /* Q14, the button's charge runs while pointed (shown as a loop). */
+        .cy-scene:is([data-cy-hover='circuit'], [data-cy-hover='charge']) .kp-button.cy-pointed::after {
+            animation: cy-charge calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed::after {
+            animation: cy-charge-smooth calc(1800ms * var(--cy-slow, 1)) infinite;
+        }
+
+        .cy-scene[data-cy-hover='charge'] :is(.cy-plate, .kp-menu__item, .cy-day).cy-pointed::after {
+            animation: cy-charge calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+    }
+
+    /* ── Keyframes ───────────────────────────────────────────────────── */
+
+    /* The glitch-in (G3): six ticks of horizontal bands thrown sideways
+       with a cyan and a red copy, smaller each tick, then the part's own
+       cut. The menu's pick, on the theme's 60 ms tick. */
+    @keyframes cy-glitch-in {
+        0% {
+            clip-path: inset(46% -10px 46% -10px);
+            translate: -18px 0;
+            filter: drop-shadow(-6px 0 0 var(--accent)) drop-shadow(6px 0 0 var(--destructive));
+        }
+
+        16.67% {
+            clip-path: inset(8% -10px 64% -10px);
+            translate: 12px 0;
+            filter: drop-shadow(-5px 0 0 var(--accent)) drop-shadow(5px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            clip-path: inset(55% -10px 8% -10px);
+            translate: -8px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        50% {
+            clip-path: inset(0 -10px 36% -10px);
+            translate: 5px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            clip-path: inset(20% -10px 26% -10px);
+            translate: -3px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            clip-path: var(--cy-end-clip);
+            translate: 1px 0;
+            filter: none;
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes cy-glitch-out {
+        0% {
+            clip-path: var(--cy-end-clip);
+            translate: 1px 0;
+            filter: none;
+        }
+
+        16.67% {
+            clip-path: inset(20% -10px 26% -10px);
+            translate: -3px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            clip-path: inset(0 -10px 36% -10px);
+            translate: 5px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        50% {
+            clip-path: inset(55% -10px 8% -10px);
+            translate: -8px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            clip-path: inset(8% -10px 64% -10px);
+            translate: 12px 0;
+            filter: drop-shadow(-5px 0 0 var(--accent)) drop-shadow(5px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            clip-path: inset(46% -10px 46% -10px);
+            translate: -18px 0;
+            filter: drop-shadow(-6px 0 0 var(--accent)) drop-shadow(6px 0 0 var(--destructive));
+        }
+
+        100% {
+            clip-path: inset(50% 0 50% 0);
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* A small cell's glitch: one tick away first, so a cell waiting for its
+       turn shows nothing. */
+    @keyframes cy-glitch-cell {
+        0% {
+            clip-path: inset(50% 0 50% 0);
+        }
+
+        14.29% {
+            clip-path: inset(10% -6px 55% -6px);
+            translate: -6px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        28.57% {
+            clip-path: inset(45% -6px 5% -6px);
+            translate: 5px 0;
+        }
+
+        42.86% {
+            clip-path: inset(0 -6px 30% -6px);
+            translate: -3px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        57.14% {
+            clip-path: inset(15% -6px 0 -6px);
+            translate: 2px 0;
+        }
+
+        71.43%,
+        100% {
+            clip-path: inset(0);
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes cy-track-jitter {
+        0% {
+            translate: 0 0;
+        }
+
+        16.67% {
+            translate: calc(var(--cy-to) * 100cqi - 5px + 18px) 0;
+        }
+
+        33.33% {
+            translate: calc(var(--cy-to) * 100cqi - 5px - 12px) 0;
+        }
+
+        50% {
+            translate: calc(var(--cy-to) * 100cqi - 5px + 8px) 0;
+        }
+
+        66.67% {
+            translate: calc(var(--cy-to) * 100cqi - 5px - 4px) 0;
+        }
+
+        83.33% {
+            translate: calc(var(--cy-to) * 100cqi - 5px + 1px) 0;
+        }
+
+        100% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+        }
+    }
+
+    @keyframes cy-track-glide {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+        }
+    }
+
+    @keyframes cy-rise {
+        from {
+            translate: 0 10px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes cy-rise-out {
+        to {
+            translate: 0 10px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes cy-uncover {
+        from {
+            clip-path: var(--cy-start-clip);
+        }
+
+        to {
+            clip-path: var(--cy-end-clip);
+        }
+    }
+
+    @keyframes cy-uncover-out {
+        from {
+            clip-path: var(--cy-end-clip);
+        }
+
+        to {
+            clip-path: var(--cy-start-clip);
+        }
+    }
+
+    @keyframes cy-decode {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes cy-drop {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes cy-cut {
+        from {
+            clip-path: var(--cy-top-clip);
+        }
+
+        to {
+            clip-path: var(--cy-end-clip);
+        }
+    }
+
+    @keyframes cy-cut-out {
+        from {
+            clip-path: var(--cy-end-clip);
+        }
+
+        to {
+            clip-path: var(--cy-top-clip);
+        }
+    }
+
+    /* The register's dialog entrance at the quarter speed Kenny chose: a
+       line across the middle holds, then opens; overbright while it is a
+       line. */
+    @keyframes cy-crt {
+        0%,
+        45% {
+            clip-path: var(--cy-line-clip);
+            box-shadow: inset 0 0 0 100vmax var(--primary);
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+        }
+    }
+
+    @keyframes cy-crt-out {
+        0% {
+            clip-path: var(--cy-end-clip);
+        }
+
+        55%,
+        100% {
+            clip-path: var(--cy-line-clip);
+            box-shadow: inset 0 0 0 100vmax var(--primary);
+        }
+    }
+
+    /* The count-down stutter, as decided: cyan right and down, yellow right
+       and up, 6, 4, 2, 1 px, then gone. */
+    @keyframes cy-stutter {
+        0% {
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+
+        to {
+            text-shadow: none;
+        }
+    }
+
+    @keyframes cy-stutter-even {
+        from {
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        to {
+            text-shadow:
+                0 0 0 var(--accent),
+                0 0 0 var(--primary);
+        }
+    }
+
+    @keyframes cy-stutter-box {
+        0% {
+            box-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            box-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            box-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            box-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+
+        to {
+            box-shadow: none;
+        }
+    }
+
+    @keyframes cy-stutter-line {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+        }
+
+        to {
+            filter: none;
+        }
+    }
+
+    /* Today's live pictures. */
+    @keyframes cy-burn {
+        35% {
+            text-shadow: 0 0 18px color-mix(in oklch, var(--primary) 95%, transparent);
+        }
+    }
+
+    @keyframes cy-bright {
+        35% {
+            filter: brightness(2.4);
+        }
+    }
+
+    @keyframes cy-flare {
+        30% {
+            filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor);
+        }
+    }
+
+    @keyframes cy-shake {
+        20% {
+            translate: -3px 0;
+        }
+
+        40% {
+            translate: 3px 0;
+        }
+
+        60% {
+            translate: -2px 0;
+        }
+
+        80% {
+            translate: 2px 0;
+        }
+    }
+
+    @keyframes cy-surge {
+        0% {
+            inset-block-start: -10%;
+            opacity: 1;
+        }
+
+        100% {
+            inset-block-start: 110%;
+            opacity: 1;
+        }
+    }
+
+    /* The target lock: the brackets close twice, then hold. */
+    @keyframes cy-lock {
+        0% {
+            inset: 8px;
+        }
+
+        16.67% {
+            inset: 3px;
+        }
+
+        33.33% {
+            inset: 6px;
+        }
+
+        50%,
+        100% {
+            inset: 3px;
+        }
+    }
+
+    /* The menu's pick as it is: twitching for as long as it stands. */
+    @keyframes cy-twitch {
+        0%,
+        100% {
+            inset: 3px;
+        }
+
+        50% {
+            inset: 5px 6px;
+        }
+
+        58% {
+            inset: 3px;
+        }
+
+        66% {
+            inset: 5px 6px;
+        }
+
+        74% {
+            inset: 3px;
+        }
+    }
+
+    /* The lock-on (G10, §6): the menu's mb-r3-cy-lock on the waiting part's
+       own box; it hunts from the inline end and blinks its lock. */
+    @keyframes cy-hunt {
+        0% {
+            inset-inline-start: calc(100% - 3rem);
+            inline-size: 3rem;
+            border-color: hsl(from var(--accent) h s l / 0.6);
+        }
+
+        10% {
+            inset-inline-start: 62%;
+        }
+
+        20% {
+            inset-inline-start: 40%;
+            inline-size: 3.5rem;
+        }
+
+        30% {
+            inset-inline-start: 20%;
+        }
+
+        40% {
+            inset-inline-start: 3%;
+            inline-size: min(6rem, 90%);
+        }
+
+        48% {
+            inset-inline-start: 0;
+            inline-size: 100%;
+            border-color: var(--accent);
+        }
+
+        54%,
+        64%,
+        74%,
+        84%,
+        100% {
+            inset-inline-start: 3px;
+            inline-size: calc(100% - 6px);
+            border-color: var(--accent);
+        }
+
+        59%,
+        69%,
+        79% {
+            inset-inline-start: 3px;
+            inline-size: calc(100% - 6px);
+            border-color: var(--primary);
+        }
+    }
+
+    @keyframes cy-lock-on {
+        0%,
+        30% {
+            inset: 0;
+            inline-size: auto;
+            border-color: hsl(from var(--accent) h s l / 0.5);
+        }
+
+        40%,
+        60%,
+        80%,
+        100% {
+            inset: 3px;
+            inline-size: auto;
+            border-color: var(--accent);
+        }
+
+        50%,
+        70% {
+            inset: 3px;
+            inline-size: auto;
+            border-color: var(--primary);
+        }
+    }
+
+    @keyframes cy-word {
+        0% {
+            content: 'SCANNING';
+            opacity: 0.7;
+        }
+
+        54%,
+        100% {
+            content: 'TARGET ACQUIRED';
+            opacity: 1;
+        }
+    }
+
+    @keyframes cy-stream {
+        to {
+            background-position:
+                54px 4px,
+                36px 0;
+        }
+    }
+
+    @keyframes cy-rain {
+        from {
+            inset-block-start: -20%;
+        }
+
+        to {
+            inset-block-start: 110%;
+        }
+    }
+
+    @keyframes cy-trace {
+        to {
+            background-position: 160% 0;
+        }
+    }
+
+    @keyframes cy-hazard {
+        to {
+            background-position-x: 11.3137px;
+        }
+    }
+
+    @keyframes cy-code {
+        to {
+            background-position:
+                0 36px,
+                0 0;
+        }
+    }
+
+    @keyframes cy-gloss {
+        0% {
+            background-position: -120% 0;
+        }
+
+        100% {
+            background-position: 120% 0;
+        }
+    }
+
+    /* The spinner's reticle: closes on the core in ticks, blinks the lock,
+       opens again. */
+    @keyframes cy-spin-lock {
+        0% {
+            inset: 0;
+            color: hsl(from var(--accent) h s l / 0.6);
+        }
+
+        10% {
+            inset: 8%;
+        }
+
+        20% {
+            inset: 16%;
+        }
+
+        30%,
+        50%,
+        70% {
+            inset: 22%;
+            color: var(--accent);
+        }
+
+        40%,
+        60% {
+            inset: 22%;
+            color: var(--primary);
+        }
+
+        80% {
+            inset: 10%;
+            color: var(--accent);
+        }
+
+        90%,
+        100% {
+            inset: 0;
+            color: hsl(from var(--accent) h s l / 0.6);
+        }
+    }
+
+    .kp-button .cy-spin__ret::before {
+        color: currentColor;
+        animation-name: cy-spin-lock-ink;
+    }
+
+    @keyframes cy-spin-lock-ink {
+        0%,
+        90%,
+        100% {
+            inset: 0;
+        }
+
+        10%,
+        80% {
+            inset: 8%;
+        }
+
+        20% {
+            inset: 16%;
+        }
+
+        30%,
+        70% {
+            inset: 22%;
+        }
+    }
+
+    @keyframes cy-glyph {
+        0% {
+            content: '▚';
+        }
+
+        16.67% {
+            content: '▞';
+        }
+
+        33.33% {
+            content: '▙';
+        }
+
+        50% {
+            content: '▜';
+        }
+
+        66.67% {
+            content: '▟';
+        }
+
+        83.33% {
+            content: '█';
+        }
+    }
+
+    /* The register's leave as it is today (kp-sig-cyberpunk-leave, 650 ms,
+       every frame tweened). */
+    @keyframes cy-leave-today {
+        0% {
+            text-shadow: none;
+        }
+
+        12% {
+            color: var(--accent-hover);
+            text-shadow:
+                4px -3px 0 hsl(from var(--accent) h s l / 0.85),
+                4px 3px 0 hsl(from var(--chart-3) h s l / 0.85);
+            transform: translateX(2px);
+        }
+
+        24% {
+            text-shadow:
+                7px -5px 0 hsl(from var(--accent) h s l / 0.85),
+                7px 5px 0 hsl(from var(--chart-3) h s l / 0.85);
+            transform: translateX(-2px);
+        }
+
+        36% {
+            text-shadow:
+                3px -2px 0 hsl(from var(--accent) h s l / 0.85),
+                3px 2px 0 hsl(from var(--chart-3) h s l / 0.85);
+            transform: translateX(3px);
+            clip-path: inset(0 0 0 0);
+        }
+
+        50% {
+            color: var(--accent-hover);
+            text-shadow:
+                10px -6px 0 hsl(from var(--accent) h s l / 0.9),
+                10px 6px 0 hsl(from var(--chart-3) h s l / 0.9);
+            clip-path: inset(20% 0 35% 0);
+            transform: translateX(-4px);
+        }
+
+        65% {
+            clip-path: inset(55% 0 10% 0);
+            transform: translateX(6px);
+        }
+
+        80% {
+            clip-path: inset(5% 0 75% 0);
+            transform: translateX(-3px);
+        }
+
+        to {
+            color: var(--accent-hover);
+            clip-path: inset(50% 0 50% 0);
+            transform: translateX(8px);
+            opacity: 0;
+        }
+    }
+
+    /* Nostromo's proposed switch-off: a line, a dot, gone. */
+    @keyframes cy-tube {
+        0% {
+            clip-path: inset(0);
+            filter: none;
+        }
+
+        16.67% {
+            clip-path: inset(calc(50% - 1px) 0);
+            filter: brightness(2);
+        }
+
+        66.67% {
+            clip-path: inset(calc(50% - 1px) calc(50% - 3px));
+            filter: brightness(2);
+        }
+
+        83.33%,
+        100% {
+            clip-path: inset(50% 50%);
+            filter: none;
+        }
+    }
+
+    @keyframes cy-press-flash {
+        0%,
+        99.99% {
+            --cy-grid-a: 0.6;
+            --kp-btn-ground: var(--secondary);
+        }
+    }
+
+    /* The button's charge, crossing once and then away; in ticks (option 1
+       and 2) or on the register's curve (today). */
+    @keyframes cy-charge {
+        0% {
+            transform: translateX(-120%);
+        }
+
+        5% {
+            transform: translateX(-60%);
+        }
+
+        10% {
+            transform: translateX(0);
+        }
+
+        15% {
+            transform: translateX(60%);
+        }
+
+        20%,
+        100% {
+            transform: translateX(120%);
+        }
+    }
+
+    @keyframes cy-charge-smooth {
+        0% {
+            transform: translateX(-120%);
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+        }
+
+        29%,
+        100% {
+            transform: translateX(120%);
+        }
+    }
+}
