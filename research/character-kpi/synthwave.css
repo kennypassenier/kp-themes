@@ -14,7 +14,17 @@
    live 3 "The laser flares" drawn as the laser (G9): a 2 px near-white line
    with a pink bloom is drawn under the figure from its centre out in the
    first beat, flares and burns down, three beats (675 ms); the figure never
-   glows or moves. */
+   glows or moves.
+   number (G15): the figure is set in the chrome display face, a near-white
+   core with the pink tube, as the register sets it.
+   loading 1: the oncoming tube and floor at the scale of the plate, the
+   register's (`aria-busy='true'`): the stripe unlit with the sun's ramp
+   flowing through it, 1800 ms, the floor lines driving toward you, 900 ms.
+   press (charge, G14): a toggle or link tile that is held, or a toggle that is
+   on, charges: its top edge burns near-white, the bloom gathers above it, the
+   ground takes the pressed token; a toggle that is on also shows the VCR's
+   play symbol before its label and the horizon of its floor lit (a second
+   channel that is not colour, DI2). The register's. */
 @layer kp.signature {
     [data-theme='synthwave'] [data-kf] .kp-kpi {
         border: revert-layer;
@@ -28,8 +38,21 @@
         all: revert-layer;
     }
 
+    /* The number is counted in the chrome display face (G15, the voice: the
+       OSD names, the chrome counts): a near-white core with the pink tube, the
+       register's. The demo's own face, colour and pink drop are handed back. */
     [data-theme='synthwave'] [data-kf] .kp-kpi > .kp-kpi__value {
-        text-shadow: none;
+        font-family: revert-layer;
+        font-weight: revert-layer;
+        letter-spacing: revert-layer;
+        color: revert-layer;
+        text-shadow: revert-layer;
+    }
+
+    /* loading 1 (the oncoming tube and floor): the register's, at the scale of
+       the plate; the pink dashes along the foot are retired. */
+    [data-theme='synthwave'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        all: revert-layer;
     }
 
     [data-theme='synthwave'] [data-kf] :is(a.kp-kpi, .kp-kpi--toggle):is(:hover, :focus-visible, :active) {

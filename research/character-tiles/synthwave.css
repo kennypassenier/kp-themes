@@ -13,7 +13,18 @@
    tone (the VCR's symbols on a tube that turns): the mark is the VCR's symbol
    (a play triangle for ok, a pause for a warning, a stop square for a
    failure) in the tone's ink, the title glows in the tone, and the plate's
-   stripe turns to the tone's ink. */
+   stripe turns to the tone's ink.
+   loading 1 (the oncoming tube and floor, Kenny 2026-10-07 23:54, the page's
+   loading at the scale of a tile): a waiting tile (`aria-busy='true'`) is the
+   register's: its stripe the tube unlit with the sun's ramp flowing through
+   it, 1800 ms, and the lines of its floor driving toward you, 900 ms. The old
+   pick (pink dashes along the foot, drawn on the plate's `::after` over the
+   floor) is retired: the demo's own rule hands the pseudo-element back to the
+   register (`all: revert-layer`).
+   live 2 (the laser, G9): the changed reading gets a 2 px near-white line with
+   a pink bloom drawn under it from its centre out in the first beat, flares
+   and burns down, three beats (675 ms), once; nothing jolts. The tile's body
+   carries it (the register's `kp-sig-synthwave-update-laser`). */
 @layer kp.signature {
     [data-theme='synthwave'] [data-ti-shape='3'] .kp-card {
         border: revert-layer;
@@ -77,5 +88,34 @@
         --kp-stripe-from: var(--destructive);
         --kp-stripe-to: var(--destructive);
         --kp-stripe: linear-gradient(to right, var(--destructive), var(--destructive));
+    }
+
+    [data-theme='synthwave'] [data-ti-loading='1'] [data-kp-busy]::after {
+        all: revert-layer;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-ti-live='2'] [data-tl-flash] {
+            animation: none;
+        }
+
+        [data-theme='synthwave'] [data-ti-live='2'] [data-tl-flash] [data-tl-body] {
+            position: relative;
+            inline-size: fit-content;
+            max-inline-size: 100%;
+        }
+
+        [data-theme='synthwave'] [data-ti-live='2'] [data-tl-flash] [data-tl-body]::after {
+            content: '';
+            position: absolute;
+            inset: auto 0 -3px;
+            block-size: 2px;
+            background: var(--kp-core);
+            box-shadow: var(--kp-sw-laser);
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleX(0);
+            animation: kp-sig-synthwave-update-laser calc(3 * var(--kp-sw-beat, 225ms)) linear both;
+        }
     }
 }

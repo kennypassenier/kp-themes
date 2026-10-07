@@ -52,7 +52,24 @@
   or an ancestor is `aria-busy='true'` the tube is a track with the sun's ramp flowing
   through it (1800 ms) and the floor drives toward you (900 ms); a `.kp-progressbar`
   with a share fills from nothing on the sunrise curve in four beats, a beat behind the
-  tube. Retired: the headline's tracking bands and RGB fringe (the reveal is the tube
+  tube. The same loading at the scale of a tile: a `.kp-card` or `.kp-kpi` that is
+  `aria-busy='true'` (or sits in a `.kp-tiles` or `.kp-kpis` that is) has its stripe as the
+  unlit tube with the sun's ramp flowing through it (1800 ms) and the lines of its floor
+  driving toward you (900 ms), at full light (`--kp-busy-opacity: 1`, the package's 0.7 dim
+  would dull the tube). A tile whose value changes draws the laser too: on the value
+  (`[data-kp-updating='laser']`, a `.kp-kpi__value`'s line as wide as the figure) or, when the
+  whole plate is marked, under the plate (`::before`; a dossier card keeps its label there and
+  draws none). The key figure's number is counted in the chrome display face
+  (`--theme-font-display`, a near-white core with the pink tube; its unit and note go back to
+  the body face; a figure on a warning or destructive plate keeps the plate's ink, no glow).
+  A key figure that is a toggle or a link charges when pressed (`:active`) and a toggle that
+  is on (`button.kp-kpi--toggle[aria-pressed='true']`) stays charged: the stripe and the sides
+  burn near-white, the bloom gathers above, the ground takes `--secondary-active`, and a second
+  channel that is not colour [DI2]: the VCR's play symbol in the tile's padding before the
+  label (out of the flow, so no sibling moves) and the horizon of its floor lit near-white.
+  The demos `research/character-tiles` (loading 1, live 2) and `research/character-kpi`
+  (number, loading 1, press) carry the same pictures in their `synthwave.css`, replacing the
+  pink dashes along the foot and the tiles' tracking jump. Retired: the headline's tracking bands and RGB fringe (the reveal is the tube
   striking on, then the shine), the meter's spring and bump, the check's tween, the
   tooltip's typing, the plates' glowing rims, the nav's drop (it rises). The network
   graph, the skeleton, the busy road, the busy table's loading and the boot screen are
