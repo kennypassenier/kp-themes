@@ -257,19 +257,31 @@ const reduced = () => reducedQuery.matches || root.getAttribute('data-cl-motion'
 function liveUpdate() {
     const at = step % 4;
     step += 1;
+    // Reads first, then writes, then one reflow for all: reading layout per
+    // value between writes forced a full layout ~60 times per update, which
+    // froze the page (Kenny, 2026-10-07 02:39: "alles reageert super traag").
+    /** @type {{ el: Element, next: string, ms: number }[]} */
+    const changed = [];
+    /** @type {Map<Element, number>} */
+    const msOf = new Map();
     for (const el of section.querySelectorAll('.cl-v')) {
         const key = /** @type {keyof typeof VALUES} */ (el.getAttribute('data-cl-key'));
         const next = VALUES[key]?.[at];
         if (!next || next === el.textContent) continue;
+        const card = el.closest('.cl-opt');
+        if (card && !msOf.has(card)) msOf.set(card, parseFloat(getComputedStyle(card).getPropertyValue('--cl-ms')) || 600);
+        changed.push({ el, next, ms: reduced() ? 1200 : (card && msOf.get(card)) || 600 });
+    }
+    for (const { el, next } of changed) {
         el.textContent = next;
         el.setAttribute('data-cl-text', next);
         // A second update during the first starts it again from its first frame.
         el.removeAttribute('data-cl-hit');
-        void (/** @type {HTMLElement} */ (el).offsetWidth);
+    }
+    if (changed.length) void section.offsetWidth;
+    for (const { el, ms } of changed) {
         el.setAttribute('data-cl-hit', '');
         clearTimeout(clearing.get(el));
-        const card = el.closest('.cl-opt');
-        const ms = reduced() ? 1200 : parseFloat(card ? getComputedStyle(card).getPropertyValue('--cl-ms') : '600') || 600;
         clearing.set(
             el,
             window.setTimeout(() => el.removeAttribute('data-cl-hit'), (ms + 80) * slow),
