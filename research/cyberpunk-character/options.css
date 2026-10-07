@@ -12,7 +12,9 @@
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
-    .cy-page {
+    :is(.cy-page, .rv-dialog__stage) {
+        /* The review dialog moves the scenes into its stage, so the tokens
+           must be defined there too. */
         /* The notches (G6): 14 px on a plate at its dossier corner, 8 px on a
            control at its end corner, the pair on the dialog. */
         --cy-clip-plate: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
