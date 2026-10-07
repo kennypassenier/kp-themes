@@ -32,7 +32,9 @@
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
-    .fc-page {
+    :is(.fc-page, .rv-dialog__stage) {
+        /* The review dialog moves the sections out of the page into its
+           stage, so the options must be styled there too. */
         /* Forest grows (Kenny, 2026-10-07 15:15: "iets dat van beneden naar
            boven groeit … ik wil het element zien groeien"). The growth curve
            is a tree's: the Gompertz curve of plant growth, y = exp(-5.57 e^(-5.05 t))
