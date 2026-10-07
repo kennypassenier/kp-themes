@@ -626,11 +626,11 @@
     --fx-signal: hsl(341, 100%, 64%);
     --fx-signal-foreground: hsl(263, 89%, 7%);
     --fx-notch: 0px;
-    --fx-duration: 220ms;
-    --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+    --fx-duration: 225ms;
+    --fx-ease: cubic-bezier(0.65, 0, 0.35, 1);
     --fx-overprint: hsl(179, 94%, 59%);
     --fx-scanline: hsl(260, 100%, 91%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(260, 100%, 80%);
     --fx-hot-alarm: hsl(356, 99%, 75%);
     --fx-shadow-offset: 0px;

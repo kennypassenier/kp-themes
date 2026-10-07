@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+- **Changed: synthwave's grammar, as Kenny decided it on research/synthwave-character
+  and research/synthwave-anchor** [2026-10-07 21:21 to 23:54, themes/synthwave/CHARACTER.md
+  §0]. Anchor: the page horizon. `.kp-page-header` draws one 3 px tube on its foot
+  (`::after`), the floor under it (`::before`, a 3.5 rem band inside the header: a
+  header is a layout container, so a deeper floor would paint over the plates below),
+  and, under a hand on a header action, a brighter piece of the tube exactly as wide as
+  the button (anchor positioning; a trigger with an inline `anchor-name` keeps only its
+  own edge). Tokens (`css/themes.css`, from `themes/synthwave/tokens.json`): `--fx-duration`
+  225 ms (one beat), `--fx-ease` the sunrise curve `cubic-bezier(0.65, 0, 0.35, 1)`,
+  `--fx-lift` 0 (nothing lifts or drops); the root says `--kp-close-max` and
+  `--kp-size-max` 450 ms. Durations are beats of 225 ms: an opening 2, a live change 3,
+  an arrival or a leave 4, the spinner 8 (1800 ms). Surface: plates (`.kp-card`,
+  `.kp-kpi`) are chrome over the floor (3 px stripe, a lit line under it, a shaded foot,
+  the grid floor in the lower part), panels the same without the floor, square; the
+  corners fall (pink down the left side, cyan down the right, fading out, starting in
+  the colour of the stripe end they touch). Colour roles: icon and copy buttons and the
+  section rule are pink (laser yellow stays for a warning). Type: identifiers and the
+  data faces speak in VT323 (`--kp-mono` is the OSD face, sized by x-height).
+  Hover turns the tube up (no lift); press charges the part (its top edge burns, the
+  ground takes the pressed token, the header's piece charges); focus is two tubes, top
+  and foot, plus a hairline each side (button, icon button, field, key-figure link,
+  menu entry). Tone: the VCR's symbols (a pause for a warning, a stop for a failure) in
+  the part's own ink before a key figure's figure or an alert's label, the stripe and
+  sides turning to the tone's ink. Live: `--kp-update: laser`, a 2 px laser drawn under
+  the changed value from its centre out, 675 ms. Opening: the beam climbs to the
+  horizon: the dialog, popovers, tooltips and the menu button's menu are uncovered from
+  their foot upward behind a 2 px beam, 450 ms, and the popovers and menus close as that
+  climb reversed (transitions). Leave: the sun sets through it, the part sinking with
+  the sun, 900 ms (`[data-kp-leaving]`, replacing the striped circle); a toast and what
+  arrives play it backwards; new rows rise over the horizon instead of racing in
+  skewed. Loading (the oncoming tube and floor, the bars as they were): while a header
+  or an ancestor is `aria-busy='true'` the tube is a track with the sun's ramp flowing
+  through it (1800 ms) and the floor drives toward you (900 ms); a `.kp-progressbar`
+  with a share fills from nothing on the sunrise curve in four beats, a beat behind the
+  tube. Retired: the headline's tracking bands and RGB fringe (the reveal is the tube
+  striking on, then the shine), the meter's spring and bump, the check's tween, the
+  tooltip's typing, the plates' glowing rims, the nav's drop (it rises). The network
+  graph, the skeleton, the busy road, the busy table's loading and the boot screen are
+  unchanged. Research demos: the synthwave picks of the busy table (shape), trend tile
+  (arrival), key figure (live) and dashboard tiles (hover, tone) are redrawn in
+  `research/character-*/synthwave.css`.
+
 - **Changed: solstice's pointing is the sun climbing its arc, its press the sun swelling inside the part** [2026-10-07, Kenny: both picks of research/solstice-character, replacing the rake of scope-12 and the restated `-active` faces of fix-12]. One grammar for every pressable part (buttons of every variant including primary, mirror and icon, menu items, calendar days, key figures that are links or toggles, chart legend keys): a real `:hover` raises a sun along its arc under the part with a dome of warm light and a lit foot edge (`::before` and `::after`), a real `:active` swells a half-sun from the middle of the foot, lights the foot edge and takes the ground half-way to its held face, the words lifting to cream. Two registered numbers (`--kp-sig-solstice-point`, `--kp-sig-solstice-press`) run 240 ms on `cubic-bezier(.37, 0, .63, 1)`, in and out identical (measured in Firefox, real mouse: t50 120 ms, t90 191 ms, both ways, all parts). The register paints no hover face any more; the alarm keeps its own paint. Reduced motion: the finished pose at once.
 
 - **Changed: nostromo's grammar, as Kenny decided it on research/nostromo-character**

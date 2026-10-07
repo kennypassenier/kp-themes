@@ -1,0 +1,69 @@
+/* research/character-tiles, synthwave: hover 3 and tone r2-sw-tone-3 on the
+   decided grammar.
+   hover (the tube turns up): the plate's top edge burns near-white with the
+   bloom above it, the link's words light as a tube; no drop after the word,
+   nothing moves; focus is the two tubes, top and foot.
+   tone (the VCR's symbols on a tube that turns): the mark is the VCR's symbol
+   (a play triangle for ok, a pause for a warning, a stop square for a
+   failure) in the tone's ink, the title glows in the tone, and the plate's
+   stripe turns to the tone's ink. */
+@layer kp.signature {
+    [data-theme='synthwave'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='synthwave'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
+    [data-theme='synthwave'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            inset 0 2px 0 0 var(--kp-core),
+            0 -4px 14px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='synthwave'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        color: var(--kp-core);
+        text-shadow: var(--kp-sw-tube-up);
+    }
+
+    [data-theme='synthwave'] [data-ti-hover='3'] [data-tl-link]:hover::after,
+    [data-theme='synthwave'] [data-ti-hover='3'] [data-tl-link]:focus-visible::after {
+        content: none;
+    }
+
+    [data-theme='synthwave'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 var(--kp-sw-rail, 3px) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail, 3px) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail, 3px) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail, 3px) * -2) 0 0 var(--focus-ring-contrast);
+    }
+
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone] [data-tl-mark] {
+        --tl-ink: var(--warning-foreground);
+        background: var(--tl-ink);
+        box-shadow: none;
+        filter: drop-shadow(0 0 4px var(--tl-ink));
+        clip-path: polygon(0 0, 34% 0, 34% 100%, 0 100%, 0 0, 66% 0, 100% 0, 100% 100%, 66% 100%, 66% 0);
+    }
+
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='ok'] [data-tl-mark] {
+        --tl-ink: var(--success-foreground);
+        clip-path: polygon(10% 0, 100% 50%, 10% 100%);
+    }
+
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='destructive'] [data-tl-mark] {
+        --tl-ink: var(--destructive);
+        clip-path: inset(10%);
+    }
+
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='warning'] {
+        --kp-stripe-from: var(--warning-foreground);
+        --kp-stripe-to: var(--warning-foreground);
+        --kp-stripe: linear-gradient(to right, var(--warning-foreground), var(--warning-foreground));
+    }
+
+    [data-theme='synthwave'] [data-ti-tone='r2-sw-tone-3'] .kp-card[data-kp-tone='destructive'] {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+        --kp-stripe: linear-gradient(to right, var(--destructive), var(--destructive));
+    }
+}

@@ -1,0 +1,28 @@
+/* research/character-kpi, synthwave: live 3 "The laser flares" drawn as the
+   laser (G9): a 2 px near-white line with a pink bloom is drawn under the
+   figure from its centre out in the first beat, flares and burns down, three
+   beats (675 ms); the figure never glows or moves. */
+@layer kp.signature {
+    [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: none;
+        }
+
+        [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::after {
+            content: '';
+            position: absolute;
+            inset: auto 0 -3px;
+            block-size: 2px;
+            background: var(--kp-core);
+            box-shadow: var(--kp-sw-laser);
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleX(0);
+            animation: kp-sig-synthwave-update-laser calc(3 * var(--kp-sw-beat, 225ms)) linear both;
+        }
+    }
+}

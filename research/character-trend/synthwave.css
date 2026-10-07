@@ -1,0 +1,10 @@
+/* research/character-trend, synthwave: arrival 2 "Over the horizon" on the
+   decided grammar: four beats (900 ms) on the sunrise curve (no longer light's
+   Sunrise on titanium's curve), the line and the figure rising from their
+   baseline; the arrival is the leave reversed. */
+@layer kp.signature {
+    [data-theme='synthwave'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-rise 900ms var(--kp-sw-sun, cubic-bezier(0.65, 0, 0.35, 1)) both;
+        --tr-arr-num: tr-n-rise 900ms var(--kp-sw-sun, cubic-bezier(0.65, 0, 0.35, 1)) 225ms both;
+    }
+}

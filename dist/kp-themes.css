@@ -631,11 +631,11 @@
     --fx-signal: hsl(341, 100%, 64%);
     --fx-signal-foreground: hsl(263, 89%, 7%);
     --fx-notch: 0px;
-    --fx-duration: 220ms;
-    --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+    --fx-duration: 225ms;
+    --fx-ease: cubic-bezier(0.65, 0, 0.35, 1);
     --fx-overprint: hsl(179, 94%, 59%);
     --fx-scanline: hsl(260, 100%, 91%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(260, 100%, 80%);
     --fx-hot-alarm: hsl(356, 99%, 75%);
     --fx-shadow-offset: 0px;
@@ -19431,7 +19431,7 @@
         --kp-tube-laser: 0 0 2px var(--sidebar-background), 0 0 8px hsl(from var(--warning-foreground) h s l / 0.6);
         --kp-core: hsl(from var(--foreground) h 20% 98%);
         /* The stripe of the '84 active tab: pink to cyan, 4px. */
-        --kp-stripe: linear-gradient(to right, var(--primary), var(--accent));
+        --kp-stripe: linear-gradient(to right, var(--kp-stripe-from), var(--kp-stripe-to));
         /* The sky, the sun and the chrome, derived from the tokens. Every
            stop of the sky is dark enough for lavender text (4.5:1 and up),
            because the hero's ground is measured on the rendered page. */
@@ -19460,6 +19460,70 @@
             );
         --fx-texture-size: 100% 2px, 3px 100%;
         --fx-texture-opacity: 1;
+
+        /* The decided grammar [Kenny, 2026-10-07, research/synthwave-character
+           and research/synthwave-anchor; themes/synthwave/CHARACTER.md §0].
+           Durations are beats of 225 ms: contact 1, an opening 2, a live
+           change 3, an arrival or a leave 4, the spinner 8. Bodies glide on
+           the sunrise curve (the tube leads, the bodies follow a beat behind);
+           light switches in hard steps. */
+        --kp-sw-beat: 225ms;
+        --kp-sw-sun: cubic-bezier(0.65, 0, 0.35, 1);
+        /* js/motion.js reads its caps from the root: a close of two beats and
+           a size glide of two beats are not cut short (its defaults, 600 and
+           480 ms, are other themes'). */
+        --kp-close-max: 450ms;
+        --kp-size-max: 450ms;
+        /* The page horizon [the anchor, 2026-10-07 21:21]: one tube for the
+           page on the header's foot, the floor under it; every plate carries
+           1 px of its light on its top edge and the sides run down from the
+           colours of the stripe they touch. */
+        --kp-sw-floor: 1.35rem;
+        --kp-sw-floor-page: 3.5rem;
+        --kp-sw-side: 3px;
+        --kp-sw-rail: 3px;
+        --kp-stripe-from: var(--primary);
+        --kp-stripe-to: var(--accent);
+        --kp-sw-tube: 0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.6), 0 0 14px hsl(from var(--primary) h s l / 0.3);
+        --kp-sw-tube-up:
+            0 0 2px var(--sidebar-background), 0 0 7px hsl(from var(--primary) h s l / 0.95), 0 0 18px hsl(from var(--primary) h s l / 0.65),
+            0 0 34px hsl(from var(--primary) h s l / 0.4);
+        --kp-sw-laser: 0 0 4px var(--primary), 0 0 10px hsl(from var(--primary) h s l / 0.8), 0 0 22px hsl(from var(--primary) h s l / 0.45);
+        /* The sun's ramp as the bar draws it, looping: pink, laser yellow, pink. */
+        --kp-sw-ramp-loop: linear-gradient(
+            90deg,
+            var(--kp-sun-bottom),
+            var(--primary) 25%,
+            var(--kp-sun-top) 50%,
+            var(--primary) 75%,
+            var(--kp-sun-bottom)
+        );
+        /* The sun's slab, its stripes bands in the void's colour. */
+        --kp-sw-void: var(--sidebar-background);
+        --kp-sw-sun-v: linear-gradient(
+            180deg,
+            var(--kp-sun-top),
+            color-mix(in oklab, var(--kp-sun-top) 45%, var(--kp-sun-bottom)),
+            var(--kp-sun-bottom)
+        );
+        --kp-sw-sun-cuts: linear-gradient(
+            to bottom,
+            transparent 0 52%,
+            var(--kp-sw-void) 52% 58%,
+            transparent 58% 68%,
+            var(--kp-sw-void) 68% 76%,
+            transparent 76% 84%,
+            var(--kp-sw-void) 84% 93%,
+            transparent 93%
+        );
+        /* The grid floor under a plate's horizon: lines closing toward the
+           horizon and lines converging on its centre (G7). */
+        --kp-sw-floor-lines:
+            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -19543,9 +19607,7 @@
 
     [data-theme='synthwave'] [data-kp-reveal='headline']::before {
         -webkit-text-fill-color: var(--kp-core);
-        text-shadow:
-            2px 0 hsl(from var(--chart-4) h s l / 0.5),
-            -2px 0 hsl(from var(--primary) h s l / 0.35);
+        text-shadow: var(--kp-tube-pink);
     }
 
     [data-theme='synthwave'] [data-kp-reveal='headline']::after {
@@ -19566,8 +19628,10 @@
         display: block;
         height: var(--kp-rule-weight);
         margin-top: 0.5rem;
-        background: linear-gradient(to right, transparent, var(--warning-foreground) 20%, var(--warning-foreground) 80%, transparent);
-        box-shadow: 0 0 8px hsl(from var(--warning-foreground) h s l / 0.6);
+        /* The laser is the pink of a signal [G5, colour = roles]: laser yellow
+           stays for a warning and inside the sun's ramp. */
+        background: linear-gradient(to right, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.6);
         transform-origin: center;
     }
 
@@ -19942,16 +20006,24 @@
             0 0 0.5em 0 var(--kp-glow);
     }
 
+    /* Pointing turns the tube up [G8, hover = tube; Kenny, 2026-10-07]: the
+       bloom widens in one step and the sun cut crosses once. Nothing lifts. */
     [data-theme='synthwave'] .kp-button:hover {
         background: transparent;
         box-shadow:
             inset 0 0 0.7em 0 var(--kp-glow),
             0 0 1.6em 0 var(--kp-glow);
-        transform: translateY(-1px);
     }
 
-    [data-theme='synthwave'] .kp-button:active {
-        transform: translateY(1px);
+    /* A press charges the piece [G14, press = charge]: the part's own top
+       edge burns near-white with the bloom gathered above it, and its ground
+       takes the pressed token; nothing moves. Held for as long as the press
+       lasts. The focus ring below wins when the key is what presses. */
+    [data-theme='synthwave'] .kp-button:active:not(:disabled) {
+        background-color: var(--secondary-active);
+        box-shadow:
+            inset 0 2px 0 0 var(--kp-core),
+            0 -4px 14px 0 hsl(from var(--primary) h s l / 0.8);
     }
 
     /* The demo's call-to-action row: wide buttons, as in the reference. A
@@ -19960,13 +20032,21 @@
         min-width: 13rem;
     }
 
-    /* The focus ring lives inside the frame, two channels, inset, so the
-       glow below never covers a half of it (AR30, DI2). */
+    /* The focus ring is two tubes, top and foot [G14, focus = rails]: a
+       near-white tube with a dark channel beside it above and below, the
+       sides a hairline of the ring's colour. Two channels (the light and the
+       dark, the rails themselves), never colour alone (DI2). It lives inside
+       the frame, so the glow outside never covers a half of it (AR30). */
     [data-theme='synthwave'] .kp-button:focus-visible {
         outline: none;
         box-shadow:
-            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
-            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            inset 1px 0 0 0 var(--focus-ring),
+            inset -1px 0 0 0 var(--focus-ring),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
     }
 
     /* The sun cut: two horizontal slits in the ground's colour cross the
@@ -20027,7 +20107,6 @@
 
     [data-theme='synthwave'] .kp-button:disabled {
         opacity: 0.45;
-        transform: none;
     }
 
     [data-theme='synthwave'] .kp-button--sm {
@@ -20035,10 +20114,12 @@
         padding-inline: 1rem;
     }
 
+    /* Pink acts [G5, colour = roles]: an icon button is something a person
+       presses, so it takes the pink that reads; cyan is for what is read out. */
     [data-theme='synthwave'] .kp-icon-button {
         border: 2px solid var(--kp-hairline);
         border-radius: var(--radius);
-        color: var(--accent);
+        color: var(--kp-pink-text);
     }
 
     /* On an alert the close button sits on the alert's own plate, in the
@@ -20050,8 +20131,20 @@
     }
 
     [data-theme='synthwave'] .kp-icon-button:hover {
-        border-color: var(--accent);
-        box-shadow: 0 0 0.6em hsl(from var(--accent) h s l / 0.4);
+        border-color: var(--primary);
+        box-shadow: 0 0 0.6em hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-icon-button:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            inset 1px 0 0 0 var(--focus-ring),
+            inset -1px 0 0 0 var(--focus-ring),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
     }
 
     /* ── Fields ───────────────────────────────────────────────────────── */
@@ -20077,12 +20170,17 @@
         caret-color: var(--accent);
     }
 
+    /* The same two tubes round the field [G14, DI2]: it is a part like any
+       other, so its ring is the button's. */
     [data-theme='synthwave'] .kp-field__input:focus-visible {
         outline: none;
-        border-color: var(--accent);
+        border-color: var(--focus-ring);
         box-shadow:
-            0 0 0 1px var(--accent),
-            0 0 14px hsl(from var(--accent) h s l / 0.35);
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            0 0 14px hsl(from var(--primary) h s l / 0.35);
     }
 
     [data-theme='synthwave'] select.kp-field__input::picker-icon {
@@ -20143,15 +20241,215 @@
         background: var(--card);
     }
 
+    /* ── The page horizon [the anchor, Kenny, 2026-10-07 21:21] ───────────
+       One neon tube for the page on the header's foot, the floor under it,
+       every plate carrying 1 px of its light on its top edge (the lit line
+       under its stripe), and, under a hand, a brighter piece of the tube
+       exactly as wide as the part touched. The header draws all of it: the
+       tube on its `::after`, the floor and the far cyan line on its `::before`
+       (a band under the tube, inside the header: a header is a layout
+       container, so a floor any deeper would paint over the plates below),
+       the piece on the inner grid's `::after`, positioned by the hovered
+       action through anchor positioning. A part without an anchor name of its
+       own (a button that is not a popover's trigger) lights its piece; the
+       others keep their own top edge's light. ──────────────────────────── */
+
+    [data-theme='synthwave'] .kp-page-header {
+        position: relative;
+        padding-block-end: calc(0.75rem + var(--kp-sw-floor-page));
+    }
+
+    [data-theme='synthwave'] .kp-page-header::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 var(--kp-sw-floor-page);
+        z-index: 1;
+        block-size: 3px;
+        background: var(--kp-core);
+        box-shadow: var(--kp-sw-tube);
+        pointer-events: none;
+    }
+
+    [data-theme='synthwave'] .kp-page-header::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        block-size: var(--kp-sw-floor-page);
+        background:
+            linear-gradient(hsl(from var(--accent) h s l / 0.7) 0 0) 0 6px / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 0% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+        mask-image: linear-gradient(to bottom, var(--sidebar-background) 0, var(--sidebar-background) 20%, transparent 95%);
+        pointer-events: none;
+    }
+
+    /* ── The page waits [G10, loading = the oncoming tube and floor, the bars
+       as they were; Kenny, 2026-10-07 23:54]. While the page or the part it
+       sits in is busy (`aria-busy='true'` on the header or an ancestor), the
+       tube is an unlit track with the sun's ramp (pink, laser yellow, pink)
+       flowing through it from its start to its end, 8 beats (1800 ms) a
+       period, while the floor drives toward you, 4 beats (900 ms) a period:
+       the lines are born at the horizon and spread to the foot, one line a
+       step. Nothing flickers: every light glides. The bars under them fill as
+       they are (the signature below). Standing still, the tube shows the ramp
+       and the floor its lines, which says "busy" and claims no share. ─── */
+    [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::after {
+        background: var(--kp-sw-ramp-loop) 0 0 / 200% 100% repeat-x;
+        box-shadow: none;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::after {
+            animation: kp-sw-flow calc(8 * var(--kp-sw-beat)) linear infinite reverse;
+        }
+
+        [data-theme='synthwave'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::before {
+            animation: kp-sw-floor-drive calc(4 * var(--kp-sw-beat)) linear infinite;
+        }
+    }
+
+    @keyframes kp-sw-flow {
+        to {
+            background-position: 200% 0;
+        }
+    }
+
+    @keyframes kp-sw-floor-drive {
+        from {
+            background-position:
+                0 6px,
+                0 0%,
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 6px,
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 130%,
+                0 0;
+        }
+    }
+
+    [data-theme='synthwave'] .kp-page-header__inner::after {
+        content: '';
+        position: absolute;
+        display: none;
+        z-index: 2;
+        inset-block-end: calc(var(--kp-sw-floor-page) - 1px);
+        block-size: 5px;
+        background: var(--kp-core);
+        box-shadow:
+            var(--kp-sw-tube-up),
+            0 8px 18px hsl(from var(--primary) h s l / 0.5);
+        pointer-events: none;
+    }
+
+    @supports (anchor-name: --a) {
+        [data-theme='synthwave'] .kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active) {
+            anchor-name: --kp-sw-hand;
+        }
+
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active))
+            .kp-page-header__inner::after {
+            display: block;
+            left: anchor(--kp-sw-hand left);
+            right: anchor(--kp-sw-hand right);
+        }
+
+        /* A press charges the piece: its bloom doubles and spreads and it
+           thickens, for as long as the press is held. */
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > :is(.kp-button, .kp-icon-button):active:not(:disabled))
+            .kp-page-header__inner::after {
+            box-shadow:
+                0 0 3px var(--kp-core),
+                0 0 12px var(--primary),
+                0 0 30px hsl(from var(--primary) h s l / 0.9),
+                0 14px 32px hsl(from var(--primary) h s l / 0.75);
+            transform: scaleY(1.5);
+        }
+    }
+
     /* ── Cards, surfaces and containers: the tape with the stripe ─────── */
 
-    [data-theme='synthwave'] .kp-card {
-        background: var(--card);
-        border: 1px solid var(--kp-hairline);
-        border-top: 4px solid transparent;
-        border-image: var(--kp-stripe) 1;
+    /* A reporting plate is chrome over the floor [G7, surface = floor; the
+       shape family of 2026-10-07 01:32 carried to the horizon]: the tape, the
+       pink to cyan stripe along its top with a lit line under it (the 1 px of
+       the page tube's light every plate carries), a shaded foot, and in its
+       lower part the grid floor, lines closing toward a pink horizon and
+       lines converging on its centre, faded before the words. The corners
+       fall [Kenny, 2026-10-07 23:00]: the left side runs down in the colour of
+       the stripe's left end, the right side in its right end, both fading out;
+       the hairline round the plate is set aside, the light is the frame.
+       Square, never glowing on its rim (the glow belongs to tubes). */
+    /* The corners fall [Kenny, 2026-10-07 23:00]: pink down the left side,
+       cyan down the right, fading out; each side starts in the colour of the
+       top corner it touches, so a part that changes its stripe's ends (a
+       tone) changes its sides with it. */
+    [data-theme='synthwave']
+        :is(
+            .kp-card,
+            .kp-kpi,
+            .kp-dialog,
+            .kp-popover,
+            .kp-menu:not(.kp-popover .kp-menu),
+            .kp-confirm,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list
+        ) {
+        --kp-stripe: linear-gradient(to right, var(--kp-stripe-from), var(--kp-stripe-to));
+        --kp-sw-fall-l: linear-gradient(to bottom, var(--kp-stripe-from), hsl(from var(--kp-stripe-from) h s l / 0.55) 50%, transparent 100%);
+        --kp-sw-fall-r: linear-gradient(to bottom, var(--kp-stripe-to), hsl(from var(--kp-stripe-to) h s l / 0.55) 50%, transparent 100%);
+    }
+
+    [data-theme='synthwave'] :is(.kp-card, .kp-kpi) {
+        position: relative;
+        isolation: isolate;
+        background:
+            var(--kp-stripe) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--card);
+        background-origin: border-box;
+        border: 1px solid transparent;
+        border-block-start: calc(var(--kp-sw-side) + 1px) solid transparent;
+        border-image: none;
         border-radius: 0;
-        box-shadow: 0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+        padding-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-sw-floor) + 0.55rem);
+    }
+
+    [data-theme='synthwave'] :is(.kp-card, .kp-kpi)::after {
+        content: '';
+        position: absolute;
+        grid-area: auto;
+        inset: auto 0 0;
+        z-index: -1;
+        block-size: var(--kp-sw-floor);
+        border-block-start: 1px solid hsl(from var(--kp-pink-text) h s l / 0.6);
+        background: var(--kp-sw-floor-lines);
+        box-shadow: 0 -2px 12px hsl(from var(--primary) h s l / 0.3);
+        clip-path: inset(-14px 0 0 0);
+        pointer-events: none;
     }
 
     [data-theme='synthwave'] .kp-card__title {
@@ -20203,20 +20501,36 @@
         text-shadow: var(--kp-tube-cyan);
     }
 
+    /* A panel that opens is the tape with the stripe, without the floor
+       [G7]: the same stripe, the lit line and the sides that fall as a plate's. */
     [data-theme='synthwave'] .kp-dialog,
     [data-theme='synthwave'] .kp-popover,
-    [data-theme='synthwave'] .kp-menu,
-    [data-theme='synthwave'] .kp-toast,
-    [data-theme='synthwave'] .kp-tooltip,
+    [data-theme='synthwave'] .kp-menu:not(.kp-popover .kp-menu),
     [data-theme='synthwave'] .kp-confirm,
     [data-theme='synthwave'] .kp-datepicker__panel,
     [data-theme='synthwave'] .kp-combobox__list,
     [data-theme='synthwave'] .kp-palette,
     [data-theme='synthwave'] .kp-theme-menu__list {
+        background:
+            var(--kp-stripe) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--popover);
+        background-origin: border-box;
+        border: 1px solid transparent;
+        border-block-start: calc(var(--kp-sw-side) + 1px) solid transparent;
+        border-image: none;
+        border-radius: 0;
+        box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The toast is a plate in its own tone and the tooltip a line of the OSD:
+       the toast's stripe is its own (below), the tooltip has none. */
+    [data-theme='synthwave'] .kp-toast,
+    [data-theme='synthwave'] .kp-tooltip {
         background: var(--popover);
         border: 1px solid var(--kp-hairline);
-        border-top: 4px solid transparent;
-        border-image: var(--kp-stripe) 1;
         border-radius: 0;
         box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
     }
@@ -20459,7 +20773,7 @@
     [data-theme='synthwave'] .kp-copyable__button {
         border: 1px solid var(--kp-hairline);
         border-radius: var(--radius);
-        color: var(--accent);
+        color: var(--kp-pink-text);
     }
 
     /* The copy button's two states win over this register's own button
@@ -20895,7 +21209,7 @@
        from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-tracking::before {
-            animation: kp-tracking 700ms steps(6, end) 1;
+            animation: kp-tracking 700ms steps(1, end) 1;
         }
 
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-shine::after {
@@ -20962,27 +21276,32 @@
     /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
 
     /* Every keyframe here has its row in TIMINGS (js/effects.js). */
+    /* The headline's reveal, its first part: the tube strikes on [G16, motifs =
+       meaning: VHS is a still texture and a voice, never a tracking glitch,
+       which is cyberpunk's]. The bands that jumped sideways with an RGB fringe
+       are gone; the copy of the text in the near-white core lights, dips once
+       and goes out in hard steps, and the chrome shine follows. The name and
+       the 700 ms stay: js/effects.js waits that long before the shine. */
     @keyframes kp-tracking {
         0% {
+            opacity: 0;
+        }
+
+        20% {
             opacity: 1;
-            clip-path: polygon(0 20%, 100% 20%, 100% 34%, 0 34%);
-            transform: translateX(-8px);
         }
 
-        33% {
-            clip-path: polygon(0 48%, 100% 48%, 100% 58%, 0 58%);
-            transform: translateX(7px);
+        34% {
+            opacity: 0.35;
         }
 
-        66% {
-            clip-path: polygon(0 70%, 100% 70%, 100% 78%, 0 78%);
-            transform: translateX(-5px);
+        48%,
+        72% {
+            opacity: 1;
         }
 
         100% {
             opacity: 0;
-            clip-path: polygon(0 0, 0 0, 0 0, 0 0);
-            transform: none;
         }
     }
 
@@ -21038,7 +21357,7 @@
 
     @keyframes kp-bar-in {
         0% {
-            transform: translateY(-10px);
+            transform: translateY(10px);
             opacity: 0;
         }
 
@@ -21271,6 +21590,114 @@
     [data-theme='synthwave'] .kp-sidenav__submenu .kp-sidenav__link {
         --kp-sidenav-submenu-mark: '●';
     }
+
+    /* ── The OSD names, the chrome counts [G15, type = osd; Kenny,
+       2026-10-07 20:41] ─────────────────────────────────────────────────────
+       Identifiers, timestamps and the data faces speak in the OSD (VT323);
+       KP Tech Mono, the register's data face until now, is cyberpunk's label
+       face and leaves synthwave. VT323 stands small on its em, so every
+       surface that takes it from `--kp-mono` is sized by its x-height. */
+    [data-theme='synthwave'] {
+        --kp-mono: var(--kp-osd);
+    }
+
+    [data-theme='synthwave']
+        :is(
+            .kp-id,
+            .kp-url,
+            .kp-numeric,
+            .kp-timestamp,
+            .kp-masked,
+            .kp-copyable,
+            .kp-truncate,
+            .kp-cell-break,
+            .kp-cell-truncate,
+            .kp-diff__line,
+            .kp-tree,
+            .kp-colorpicker__value,
+            .kp-spec,
+            .kp-log
+        ) {
+        font-size-adjust: 0.5;
+    }
+
+    /* ── The VCR's symbols [G13, tone = osd; Kenny, 2026-10-07 23:00] ───────
+       A warning is a pause (two tubes), a failure a stop (a square), drawn in
+       the part's own ink before its figure or its label: the second channel
+       that is not colour. The part's top edge turns to the tone's ink, the
+       stripe and the sides that fall from it with it (the tube turns). The
+       plate and its ink stay the status pair the package guarantees. ───── */
+    [data-theme='synthwave'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-stripe-from: var(--warning-foreground);
+        --kp-stripe-to: var(--warning-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+    }
+
+    [data-theme='synthwave']
+        :is(.kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value, .kp-alert--warning, .kp-alert--destructive)::before {
+        content: '';
+        flex: none;
+        align-self: center;
+        filter: drop-shadow(0 0 3px currentColor);
+    }
+
+    [data-theme='synthwave'] :is(.kp-kpi[data-kp-tone='warning'] .kp-kpi__value, .kp-alert--warning)::before {
+        inline-size: 0.5em;
+        block-size: 0.6em;
+        background: linear-gradient(90deg, currentColor 0 34%, transparent 34% 66%, currentColor 66%);
+    }
+
+    [data-theme='synthwave'] :is(.kp-kpi[data-kp-tone='destructive'] .kp-kpi__value, .kp-alert--destructive)::before {
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        background: currentColor;
+    }
+
+    [data-theme='synthwave'] :is(.kp-alert--warning, .kp-alert--destructive)::before {
+        font-size: 1.1rem;
+    }
+
+    /* The focus of a key figure or a menu entry that is a link or a toggle is
+       the same two tubes as a button's; hovering turns its tube up [G17: an
+       element inside a composite is the theme's own element]. */
+    [data-theme='synthwave'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        border-color: transparent;
+        --kp-stripe-from: var(--kp-pink-text);
+        --kp-stripe-to: var(--kp-core);
+    }
+
+    [data-theme='synthwave'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__value {
+        color: var(--kp-core);
+        text-shadow: var(--kp-sw-tube-up);
+    }
+
+    [data-theme='synthwave'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-menu__item:is(:hover, :focus-visible) {
+        color: var(--kp-core);
+        text-shadow: var(--kp-sw-tube);
+    }
+
+    [data-theme='synthwave'] .kp-menu__item:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast);
+    }
 }
 
 /* ── Signature [scope-140] ─────────────────────────────────────────────── */
@@ -21288,6 +21715,11 @@
     /* A shadow or outline the signature draws on a focusable control yields to
        the theme's focus ring while the control has focus (DI2). */
     [data-theme='synthwave'] .kp-progressbar {
+        /* The bars fill as they were [loading = combo, Kenny, 2026-10-07 23:54]:
+           four beats on the sunrise curve, the head with the fill, the bar
+           following the page tube a beat behind (below). */
+        --kp-progressbar-duration: calc(4 * var(--kp-sw-beat));
+        --kp-progressbar-ease: var(--kp-sw-sun);
         --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
         --kp-sw-road: calc(2.25rem * var(--kp-progressbar-scale, 1));
         --kp-sw-void: var(--sidebar-background);
@@ -21340,7 +21772,7 @@
                 var(--primary) 45%,
                 var(--kp-sun-top, var(--warning-foreground))
             );
-        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+        transition-timing-function: var(--kp-sw-sun);
     }
 
     [data-theme='synthwave'] .kp-progressbar__head {
@@ -21352,7 +21784,7 @@
             0 0 3px hsl(from var(--primary) h s l / 0.9),
             0 0 8px hsl(from var(--primary) h s l / 0.7),
             0 0 16px hsl(from var(--primary) h s l / 0.45);
-        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+        transition-timing-function: var(--kp-sw-sun);
     }
 
     [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
@@ -21383,6 +21815,29 @@
         [data-theme='synthwave'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
             animation: kp-sw-road 600ms linear infinite;
         }
+
+        /* A bar with a share is drawn from nothing to its mark when it arrives:
+           the tube leads, the bar follows one beat behind, then it fills, on
+           the sunrise curve, in four beats. */
+        [data-theme='synthwave'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__fill {
+            animation: kp-sw-bar-fill calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) var(--kp-sw-beat) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__head {
+            animation: kp-sw-bar-head calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) var(--kp-sw-beat) backwards;
+        }
+    }
+
+    @keyframes kp-sw-bar-fill {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes kp-sw-bar-head {
+        from {
+            transform: translateX(0);
+        }
     }
 
     [data-theme='synthwave'] {
@@ -21403,7 +21858,9 @@
     }
 
     [data-theme='synthwave'] .kp-spinner {
-        --kp-sig-dur: 2800ms;
+        /* The sun sets and rises, on the beat [G11, spinner = sun; G4]: one
+           cycle in eight beats, each half on the sunrise curve. */
+        --kp-sig-dur: calc(8 * var(--kp-sw-beat));
         position: relative;
         overflow: hidden;
         border: 0;
@@ -21489,7 +21946,8 @@
     }
 
     [data-theme='synthwave'] .kp-field__check {
-        --kp-sig-dur: 620ms;
+        /* The tube strikes on in hard steps [G1: light switches]: three beats. */
+        --kp-sig-dur: calc(3 * var(--kp-sw-beat));
         appearance: none;
         display: inline-grid;
         place-content: center;
@@ -21537,9 +21995,11 @@
     }
 
     [data-theme='synthwave'] .kp-toast {
-        --kp-sig-dur: 620ms;
+        /* A toast arrives as its leave played backwards [G12, leave = the sun
+           takes it down with it; `--kp-open: reverse-close`]: four beats. */
+        --kp-sig-dur: calc(4 * var(--kp-sw-beat));
         position: relative;
-        border-radius: 2px;
+        border-radius: 0;
     }
 
     [data-theme='synthwave'] .kp-toast::before {
@@ -21564,17 +22024,39 @@
             hsl(from var(--sidebar-background) h s l / 0.7);
     }
 
+    /* The dialog opens as the beam climbs to the horizon [G3, opening = climb;
+       Kenny, 2026-10-07 23:00]: the panel is uncovered from its foot upward
+       behind a 2 px near-white beam that ends on its top edge, the stripe,
+       and goes out. Two beats. js/motion.js reads the unopened dialog's time
+       and takes the close as two thirds of it, so the unopened one runs three
+       beats and the open one, which is also its close, two. Its rim no longer
+       glows (a plate never glows on its rim). */
     [data-theme='synthwave'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
-        --kp-sig-dur: calc(4 * var(--kp-wipe, 720ms));
-        border-radius: 2px;
+        --kp-sig-dur: calc(3 * var(--kp-sw-beat));
+        border-radius: 0;
         box-shadow:
             inset 0 2px 0 var(--primary),
-            0 0 24px hsl(from var(--primary) h s l / 0.25);
+            0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] .kp-dialog[open] {
+        --kp-sig-dur: calc(2 * var(--kp-sw-beat));
+    }
+
+    [data-theme='synthwave'] :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu, .kp-tooltip)::after {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto;
+        z-index: 3;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--kp-sw-laser);
+        opacity: 0;
+        pointer-events: none;
     }
 
     [data-theme='synthwave'] .kp-tooltip {
-        --kp-sig-dur: 280ms;
+        --kp-sig-dur: calc(2 * var(--kp-sw-beat));
         margin-inline-start: 0.5rem;
         padding: 0.3rem 0.65rem;
         border: 1px solid var(--kp-hairline);
@@ -21717,7 +22199,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] .kp-spinner::before {
-            animation: kp-sig-synthwave-sw-set var(--kp-sig-dur) ease-in-out infinite;
+            animation: kp-sig-synthwave-sw-set var(--kp-sig-dur) var(--kp-sw-sun) infinite;
         }
 
         [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
@@ -21733,27 +22215,95 @@
         }
 
         [data-theme='synthwave'] .kp-switch__input::before {
-            transition: transform 260ms var(--kp-sig-sw-ease);
+            transition: transform var(--kp-sw-beat) var(--kp-sw-sun);
         }
 
         [data-theme='synthwave'] .kp-field__check:checked {
-            animation: kp-sig-synthwave-sw-tube var(--kp-sig-dur) linear both;
+            animation: kp-sig-synthwave-sw-tube var(--kp-sig-dur) steps(1, end) both;
         }
 
+        /* A toast arrives as its leave played backwards: the sun rises behind
+           it and gives it back [G12]; its stripe is drawn from the centre once
+           it is there. */
         [data-theme='synthwave'] .kp-toast {
-            animation: kp-sig-synthwave-sw-rise var(--kp-sig-dur) var(--kp-sig-sw-ease) backwards;
+            animation: kp-sig-synthwave-sink var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
         }
 
         [data-theme='synthwave'] .kp-toast::before {
-            animation: kp-sig-synthwave-sw-horizon calc(var(--kp-sig-dur) * 0.6) var(--kp-sig-sw-ease) both;
+            animation: kp-sig-synthwave-sw-horizon calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) calc(2 * var(--kp-sw-beat)) both;
         }
 
+        [data-theme='synthwave'] .kp-toast::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: var(--kp-sw-sun-cuts), var(--kp-sw-sun-v);
+            pointer-events: none;
+            translate: 0 101%;
+            visibility: hidden;
+            animation: kp-sig-synthwave-sun var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
+        }
+
+        /* The beam climbs to the horizon [G3, opening = climb]. */
         [data-theme='synthwave'] .kp-dialog {
-            animation: kp-sig-synthwave-sw-rise var(--kp-sig-dur) var(--kp-sig-sw-ease) 640ms backwards;
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
         }
 
-        [data-theme='synthwave'] .kp-tooltip {
-            animation: kp-sig-synthwave-sw-osd var(--kp-sig-dur) steps(8, jump-end) backwards;
+        [data-theme='synthwave'] .kp-dialog::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
+        }
+
+        /* What drops from a button climbs the same way, and, being a popover or
+           a menu that is shown and hidden, closes as that climb reversed: the
+           transitions run to the open state and back, and the curve is the
+           sunrise one, which is its own reverse. The beam fades as it
+           arrives; closing, it fades in as the panel goes (the same frames
+           backwards). */
+        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu[hidden]) {
+            clip-path: inset(100% -4rem -4rem -4rem);
+            transition:
+                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                display calc(2 * var(--kp-sw-beat)) allow-discrete,
+                overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
+        }
+
+        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu[hidden])::after {
+            inset-block-start: calc(100% - 2px);
+            opacity: 1;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
+        }
+
+        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden])) {
+            clip-path: inset(-4rem);
+            transition:
+                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                display calc(2 * var(--kp-sw-beat)) allow-discrete,
+                overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
+        }
+
+        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden]))::after {
+            inset-block-start: 0;
+            opacity: 0;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+        }
+
+        @starting-style {
+            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden])) {
+                clip-path: inset(100% -4rem -4rem -4rem);
+            }
+
+            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden]))::after {
+                inset-block-start: calc(100% - 2px);
+                opacity: 1;
+            }
         }
     }
 
@@ -21779,6 +22329,7 @@
         }
     }
 
+    /* At most two dips as it strikes (the anatomy's tube), each held. */
     @keyframes kp-sig-synthwave-sw-tube {
         0% {
             opacity: 0.3;
@@ -21788,32 +22339,53 @@
             opacity: 1;
         }
 
-        40% {
+        45% {
             opacity: 0.55;
         }
 
-        60% {
-            opacity: 1;
-        }
-
-        75% {
-            opacity: 0.75;
-        }
-
+        70%,
         100% {
             opacity: 1;
         }
     }
 
-    @keyframes kp-sig-synthwave-sw-rise {
+    /* The panel is uncovered from its foot upward, its lower edge the beam. */
+    @keyframes kp-sig-synthwave-climb {
         from {
-            transform: translateY(8px);
-            clip-path: inset(100% -2rem -2rem -2rem);
+            clip-path: inset(100% -4rem -4rem -4rem);
         }
 
         to {
-            transform: none;
-            clip-path: inset(-2rem);
+            clip-path: inset(-4rem);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-beam {
+        from {
+            inset-block-start: calc(100% - 2px);
+        }
+
+        to {
+            inset-block-start: 0;
+        }
+    }
+
+    /* The beam is struck from its centre, holds, and goes out as it arrives. */
+    @keyframes kp-sig-synthwave-glow {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        12%,
+        85% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
         }
     }
 
@@ -21824,16 +22396,6 @@
 
         to {
             transform: scaleX(1);
-        }
-    }
-
-    @keyframes kp-sig-synthwave-sw-osd {
-        from {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        to {
-            clip-path: inset(0);
         }
     }
 
@@ -21850,82 +22412,159 @@
        on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
        `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── synthwave: neon. The edge burns pink and cyan, and new rows race
-           in from the left, leaning into the speed. ─────────────────────── */
+        /* ── synthwave: neon. The edge burns pink and cyan while the box glides;
+           new rows rise over the horizon (the sunrise curve, four beats, no
+           race and no skew: the world is horizontal, G2). ───────────────── */
         [data-theme='synthwave'] [data-kp-resizing] {
             outline: 1px solid var(--primary);
             outline-offset: 3px;
             filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 18px var(--accent));
         }
 
-        [data-theme='synthwave'] [data-kp-arriving] {
-            animation: kp-sig-synthwave-size-race 380ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        [data-theme='synthwave'] [data-kp-arriving]:not(.kp-toast) {
+            animation: kp-sig-synthwave-size-rise calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
         }
 
-        @keyframes kp-sig-synthwave-size-race {
+        @keyframes kp-sig-synthwave-size-rise {
             from {
-                opacity: 0;
-                transform: translateX(-28px) skewX(-18deg);
-                filter: drop-shadow(-12px 0 6px var(--primary));
+                translate: 0 0.5rem;
+                clip-path: inset(100% 0 0.5rem 0);
+            }
+
+            to {
+                translate: 0 0;
+                clip-path: inset(0);
             }
         }
     }
 
     /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+       2026-10-04; the sun takes it down with it, Kenny, 2026-10-07 23:00:
+       leave = setssink on research/synthwave-character]. js/motion.js marks what
+       leaves `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. The sun's slab, its
+       stripes bands of the void, sets through the part from its top edge to its
+       foot while the part sinks with it, half its height by the time the slab
+       covers it and on to seven tenths as the slab goes out through the
+       foot: four beats on the sunrise curve. The part is clipped to the box it
+       leaves, so nothing shows below its foot, and to the slab and what lies
+       under its lower edge, so nothing of it shows above. Opening is closing
+       turned around (Kenny's pick on research/open-reverse, 2026-10-05):
+       js/motion.js opens the dialog as its close played backwards, in the
+       close's time, and lets what arrives play this leave backwards, so the
+       arrival is the leave reversed. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── synthwave: sunset: the striped retro sun rises behind it from below until it is gone in the glow ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='synthwave'] {
             --kp-open: reverse-close;
         }
 
         [data-theme='synthwave'] [data-kp-leaving] {
             position: relative;
-            overflow: clip;
-            animation: kp-sig-synthwave-leave 750ms ease-in forwards;
+            animation: kp-sig-synthwave-sink calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) forwards;
         }
 
         [data-theme='synthwave'] [data-kp-leaving]::after {
             content: '';
             position: absolute;
             inset: 0;
-            pointer-events: none;
             z-index: 2;
-            background: linear-gradient(
-                180deg,
-                var(--chart-3),
-                color-mix(in oklab, var(--chart-3), var(--primary)) 35%,
-                var(--primary) 70%,
-                var(--chart-4)
-            );
-            mask: repeating-linear-gradient(180deg, black 0 8px, transparent 8px 12px);
-            animation: kp-sig-synthwave-leave-2 750ms cubic-bezier(0.3, 0, 0.3, 1) forwards;
+            block-size: auto;
+            border: 0;
+            background: var(--kp-sw-sun-cuts), var(--kp-sw-sun-v);
+            box-shadow: none;
+            clip-path: none;
+            pointer-events: none;
+            translate: 0 101%;
+            animation: kp-sig-synthwave-sun calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) forwards;
         }
 
-        @keyframes kp-sig-synthwave-leave {
-            0%,
-            60% {
-                opacity: 1;
+        @keyframes kp-sig-synthwave-sink {
+            0% {
+                translate: 0 0;
+                clip-path: inset(0 -1rem 0 -1rem);
             }
 
-            to {
-                opacity: 0;
+            50% {
+                translate: 0 50%;
+                clip-path: inset(-50% -1rem 50% -1rem);
+            }
+
+            100% {
+                translate: 0 70%;
+                clip-path: inset(31% -1rem 70% -1rem);
             }
         }
 
-        @keyframes kp-sig-synthwave-leave-2 {
-            from {
-                clip-path: circle(0% at 50% 120%);
+        @keyframes kp-sig-synthwave-sun {
+            0% {
+                translate: 0 -101%;
+                visibility: visible;
             }
 
-            70%,
-            to {
-                clip-path: circle(120% at 50% 120%);
+            50% {
+                translate: 0 -50%;
+                visibility: visible;
             }
+
+            100% {
+                translate: 0 31%;
+                visibility: visible;
+            }
+        }
+    }
+
+    /* ── A live change draws the laser [G9, live = laser; Kenny, 2026-10-07
+       20:41: the laser drawn under a live update]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='laser']`; a 2 px
+       near-white line with a pink bloom is drawn under it from its centre out in
+       the first beat, flares, and burns down: three beats, once. The value never
+       moves, flips or glows. A state word keeps its width-holding `::after`, so
+       its line is drawn on `::before`; a spark's line is drawn under its parent's
+       box. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] {
+            --kp-update: laser;
+        }
+
+        [data-theme='synthwave'] [data-kp-updating='laser'] {
+            position: relative;
+        }
+
+        [data-theme='synthwave'] [data-kp-updating='laser']:not(.kp-state-word)::after,
+        [data-theme='synthwave'] .kp-state-word[data-kp-updating='laser']::before {
+            content: '';
+            position: absolute;
+            inset: auto 0 -3px;
+            block-size: 2px;
+            background: var(--kp-core);
+            box-shadow: var(--kp-sw-laser);
+            opacity: 0;
+            pointer-events: none;
+            transform: scaleX(0);
+            animation: kp-sig-synthwave-update-laser calc(3 * var(--kp-sw-beat)) linear both;
+        }
+    }
+
+    @keyframes kp-sig-synthwave-update-laser {
+        0% {
+            transform: scaleX(0);
+            opacity: 1;
+            animation-timing-function: var(--kp-sw-sun);
+        }
+
+        33.33% {
+            transform: scaleX(1);
+            opacity: 1;
+            box-shadow:
+                0 0 6px var(--primary),
+                0 0 16px hsl(from var(--primary) h s l / 0.9),
+                0 0 34px hsl(from var(--primary) h s l / 0.6);
+            animation-timing-function: var(--kp-sw-sun);
+        }
+
+        100% {
+            transform: scaleX(1);
+            opacity: 0;
         }
     }
 
@@ -22084,31 +22723,19 @@
         }
     }
 
-    /* ── how the share arrives: option 2 ── */
+    /* ── how the share arrives: option 2, on the sunrise curve and the beat
+       (the spring is gone [G1, proposal-6]: four beats, no overshoot) ── */
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-synthwave-meter-grow-o 600ms cubic-bezier(0.3, 1.6, 0.5, 1) backwards;
-            transition: inline-size 600ms cubic-bezier(0.3, 1.6, 0.5, 1);
+            animation: kp-sig-synthwave-meter-grow-o calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+            transition: inline-size calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun);
             transform-origin: 0 50%;
         }
     }
 
-    /* ── when the tone changes: option 2 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='synthwave'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-synthwave-meter-bump-o 400ms ease-out;
-        }
-
-        [data-theme='synthwave'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-synthwave-meter-bump-w 400ms ease-out;
-        }
-
-        [data-theme='synthwave'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-synthwave-meter-bump-d 400ms ease-out;
-        }
-    }
+    /* ── when the tone changes: no bump [G13: a tone is the symbol and the tube
+       that turns, never a jolt of the part]; the fill takes the tone's colour. ── */
 
     /* ── the mark past the end: option 1 ── */
 
@@ -22119,50 +22746,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] .kp-meter__mark {
             transition:
-                inset-inline-start 800ms ease-in-out,
-                rotate 800ms ease-in-out;
-        }
-    }
-
-    @keyframes kp-sig-synthwave-meter-bump-d {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-synthwave-meter-bump-o {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-synthwave-meter-bump-w {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
+                inset-inline-start calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                rotate calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun);
         }
     }
 
