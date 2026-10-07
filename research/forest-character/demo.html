@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-theme="forest" data-cat-theme="forest" data-cat-theme-fixed data-review="forest-character" data-review-themes="forest">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what makes forest forest</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" data-kp-register="forest" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="fc-page">
+            <header class="fc-intro" id="fc-intro">
+                <h1>What makes forest forest</h1>
+                <p>
+                    Kenny, 2026-10-07 02:54: "Kunnen we het op dezelfde manier aanpakken als we met titanium gedaan hebben? waar jij eerst uitzoekt
+                    wat bij mekaar past, wat niet past en dan zo voorstellen doet?" Seventeen questions, each one rule of the theme. Every option is a
+                    live scene built from the package's own components in forest, so you see the rule at work; the first option of each question is
+                    the recommendation, and each option says what you see and why it is or is not recommended. Pick per question in the review dialog
+                    (one question per page, the arrow keys flip between the options).
+                </p>
+                <p>
+                    Every recommendation is forest's alone (your rule of 03:37: "een thema bestaat om distinct te zijn"). Where a first idea turned
+                    out to be another theme's (the quick curve and the 1 px press are titanium's, the swell is light's), it is still on the page as an
+                    option, named after the theme it belongs to.
+                </p>
+                <p class="fc-motion" data-fc-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
+                    system settings to judge the motion questions (1 to 4, 8 to 11 and 15).
+                </p>
+            </header>
+
+            <section class="fc-story" aria-labelledby="h-story">
+                <h2 id="h-story">What forest is</h2>
+                <div class="fc-story__grid">
+                    <div class="fc-story__text">
+                        <p>
+                            Forest is a <b>ranger's field kit</b>. The ground is a map on kraft paper: contour lines, the trail with its painted
+                            <b>blazes</b> and its <b>trig points</b>. What stands on that ground is the wood the map describes: trees, wood grain,
+                            rings.
+                        </p>
+                        <p>
+                            So everything that happens on screen is something that happens in a wood: it is <b>planted</b> (loading, the progress bar
+                            below), it <b>grows</b> up from its own ground line (arriving), it is <b>walked</b> from start to end (a line, a pass), it
+                            is <b>blazed</b> where you point, it gets a new <b>growth ring</b> when it changes, it <b>withers</b> when it leaves.
+                            Nothing is cut, stamped, glitched or bounced, and nothing falls.
+                        </p>
+                        <p>
+                            Already decided by you: arrival = <i>Growing</i> (the key-figure strip), live = <i>Growth ring</i> (the trend tile), hover
+                            = <i>Blazed</i> (the network graph), tone = <i>the field note</i> (the strip), shape = <i>the wooden gauge</i> (the
+                            meter), loading = <i>the trees being planted</i> (the progress bar), and the network graph itself changes in no theme. The
+                            questions below turn those picks into rules for every other component. The full analysis (every decided pick measured, the
+                            families, the twenty outliers and the proposals) is in
+                            <a href="https://github.com/kennypassenier/kp-themes/blob/main/themes/forest/CHARACTER.md">themes/forest/CHARACTER.md</a>.
+                        </p>
+                    </div>
+                    <div class="fc-story__parts" aria-label="Forest's own parts, as the package draws them">
+                        <div class="fc-row">
+                            <button type="button" class="kp-button">Export</button>
+                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                            <span class="kp-badge">Draft</span>
+                        </div>
+                        <div class="kp-alert" role="status"><span class="kp-alert__body">The export runs at 02:00 from Monday.</span></div>
+                        <div class="fc-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar fc-story__bar" role="progressbar" aria-label="Waiting for the export" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar fc-story__bar"
+                            role="progressbar"
+                            aria-label="Export, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="fc-story__skel" aria-hidden="true">
+                            <span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span>
+                        </div>
+                    </div>
+                </div>
+                <details class="fc-gallery" data-fc-gallery>
+                    <summary>The decided forest components as they are today (opens six live demos)</summary>
+                    <div class="fc-gallery__grid">
+                        <figure>
+                            <figcaption>Key-figure strip (the arrival and tone families)</figcaption>
+                            <iframe
+                                title="Key-figure strip, forest as decided"
+                                data-src="../character-columns/demo.html?embed=shape&amp;theme=forest"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Trend tile (the live family)</figcaption>
+                            <iframe
+                                title="Trend tile, forest as decided"
+                                data-src="../character-trend/demo.html?embed=shape&amp;theme=forest"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Network graph (the hover family; never changes)</figcaption>
+                            <iframe
+                                title="Network graph, forest as decided"
+                                data-src="../character-graph/demo.html?embed=focus&amp;theme=forest"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Key figure</figcaption>
+                            <iframe title="Key figure, forest as decided" data-src="../character-kpi/demo.html?embed=shape&amp;theme=forest"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Month heatmap</figcaption>
+                            <iframe
+                                title="Month heatmap, forest as decided"
+                                data-src="../character-calendar/demo.html?embed=shape&amp;theme=forest"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Page header</figcaption>
+                            <iframe
+                                title="Page header, forest as decided"
+                                data-src="../character-header/demo.html?embed=shape&amp;theme=forest"
+                            ></iframe>
+                        </figure>
+                    </div>
+                </details>
+            </section>
+
+            <section
+                class="fc-sec"
+                data-review-item="forest"
+                data-review-mode="aspects"
+                data-review-rows="data-fc-aspect"
+                data-review-components="forest-character"
+                data-review-title="What makes forest forest"
+                data-fc-show="rest"
+                aria-labelledby="h-fc"
+            >
+                <div class="fc-sec__head">
+                    <h2 id="h-fc">Seventeen questions</h2>
+                    <p>
+                        Each row is one question, its three options side by side, the recommended one first. The scenes replay by themselves every few
+                        seconds; Replay starts them together, the speed buttons slow every motion down, and State shows every button in the composites
+                        scene as hovered, focused or pressed (question 12).
+                    </p>
+                    <ol class="fc-toc" data-fc-toc></ol>
+                </div>
+                <div class="fc-controls" data-review-controls>
+                    <div class="fc-actions" role="group" aria-label="State of every button">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-state="rest" aria-pressed="true">Rest</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-fc-state="hover"
+                            aria-pressed="false"
+                            data-review-plays="composites"
+                        >
+                            Hover
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-state="focus" aria-pressed="false">Focus</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-state="press" aria-pressed="false">Press</button>
+                    </div>
+                    <div class="fc-actions" role="group" aria-label="Replay">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-fc-replay
+                            data-review-plays="curve direction opening durations live leave press"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="fc-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fc-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="fc-aspects" data-fc-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

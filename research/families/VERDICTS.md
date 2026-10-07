@@ -29,3 +29,5 @@ Still open: blueprint, solstice, brutalism, deco, phantom, retro, grotesk, nostr
 Decided since:
 
 - cyberpunk · A live update = Count-down stutter (research/cyberpunk-live, 02:49)
+- forest · While loading = the signature progress bar with the planted trees (Kenny, 02:54)
+- Every theme: the network graph does not change (Kenny, 02:54)

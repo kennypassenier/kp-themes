@@ -76,6 +76,8 @@ export const PAGES = [
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
+            // Kenny, 2026-10-07 02:54: what makes forest forest, the titanium way (the analysis in themes/forest/CHARACTER.md), seventeen rules of its grammar as questions, each option a live scene, the recommendation first; the first theme of the one-by-one series.
+            { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
         ],
     },
     {
@@ -91,7 +93,7 @@ export const PAGES = [
             { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
             { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
-            // Kenny, 2026-10-07 01:32: what the family picks do, every component as today and speaking its theme's picked family, ten themes.
+            // Kenny, 2026-10-07 02:54: did not work as a way to choose; replaced by a per-theme character analysis, forest first
             { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
             { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },

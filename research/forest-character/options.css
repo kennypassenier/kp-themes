@@ -1,0 +1,2036 @@
+/* research/forest-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.fc-scene[data-fc-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --fc-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the ones measured in
+   themes/forest/CHARACTER.md §2. The trees are the signature progress bar's
+   own drawings (css/forest-register.css, `--kp-fo-*`), copied here because
+   the register declares them on the bar only. */
+
+@property --fc-n {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 99;
+}
+
+@property --fc-arc {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    .fc-page {
+        /* Forest's own curve (the register's --fx-ease): slow to break the
+           ground, then up, then a long settle. The quick one is titanium's,
+           shown only in question 1. The wither is forest's curve mirrored,
+           so an arrival played as the leave reversed is forest's curve. */
+        --fc-forest: cubic-bezier(0.33, 0, 0.15, 1);
+        --fc-quick: cubic-bezier(0.2, 0.8, 0.2, 1);
+        --fc-wither: cubic-bezier(0.85, 0, 0.67, 1);
+        --fc-wood: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px);
+        --fc-routed:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3), inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+        --fc-stain:
+            radial-gradient(ellipse 5px 2px at 30% 55%, hsl(from var(--background) h s l / 0.25), transparent),
+            repeating-linear-gradient(178deg, transparent 0 2px, hsl(from var(--primary-foreground) h s l / 0.14) 2px 3px);
+        --fc-trees: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='15' cy='10.4' rx='4.5' ry='5.2'/%3E%3Crect x='14.3' y='10.4' width='1.4' height='9.6'/%3E%3Cpolygon points='25.0,4.4 27.5,8.5 26.4,8.5 28.3,12.7 26.8,12.7 29.0,16.8 21.0,16.8 23.2,12.7 21.7,12.7 23.6,8.5 22.5,8.5'/%3E%3Crect x='24.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='35.0,1.2 37.5,5.1 36.4,5.1 38.0,9.0 36.7,9.0 38.6,12.9 37.0,12.9 39.2,16.8 30.8,16.8 33.0,12.9 31.4,12.9 33.3,9.0 32.0,9.0 33.6,5.1 32.5,5.1'/%3E%3Crect x='34.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='45.0,2.6 48.1,7.3 46.7,7.3 49.0,12.1 47.2,12.1 49.9,16.8 40.1,16.8 42.8,12.1 41.0,12.1 43.3,7.3 41.9,7.3'/%3E%3Crect x='44.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='55' cy='11.1' rx='3.9' ry='4.5'/%3E%3Crect x='54.3' y='11.1' width='1.4' height='8.9'/%3E%3Cpolygon points='65.0,0.6 67.5,4.6 66.4,4.6 68.1,8.7 66.7,8.7 68.7,12.7 67.0,12.7 69.3,16.8 60.7,16.8 63.0,12.7 61.3,12.7 63.3,8.7 61.9,8.7 63.6,4.6 62.5,4.6'/%3E%3Crect x='64.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+        --fc-seedling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3C/svg%3E");
+        --fc-sapling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5,5.2 7.2,9.2 6.1,9.2 8.0,13.2 6.7,13.2 8.8,17.4 1.2,17.4 3.3,13.2 2.0,13.2 3.9,9.2 2.8,9.2'/%3E%3Crect x='4.45' y='17' width='1.1' height='3'/%3E%3C/svg%3E");
+        --fc-pine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+        --fc-mound: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cellipse cx='5' cy='20' rx='4.2' ry='1.7'/%3E%3C/svg%3E");
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .fc-scene .fc-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+    }
+
+    .fc-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .fc-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .fc-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .fc-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .fc-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .fc-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .fc-scene .fc-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .fc-scene .fc-pop--static {
+        position: relative;
+        inset: auto;
+    }
+
+    .fc-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .fc-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .fc-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .fc-scene .fc-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fc-scene .kp-kpi {
+        position: relative;
+    }
+
+    .fc-carrier {
+        position: relative;
+        display: inline-block;
+        transform-origin: 0 60%;
+    }
+
+    .fc-scene .kp-kpi__value.fc-carrier {
+        justify-self: start;
+    }
+
+    /* The field note (Kenny's tone family): the change on a square tag,
+       italic, with ↑ and ↓, in its tone's plate and ink. */
+    .fc-scene .fc-note {
+        border-radius: 0;
+        font-style: italic;
+        padding-inline: 0.35em;
+    }
+
+    .fc-scene .fc-note[data-kp-direction='up']::before {
+        content: '↑\00a0';
+    }
+
+    .fc-scene .fc-note[data-kp-direction='down']::before {
+        content: '↓\00a0';
+    }
+
+    .fc-stems {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .fc-stems__ground {
+        position: relative;
+        display: block;
+        block-size: 4rem;
+        overflow: clip;
+        border-block-end: 1px solid var(--border-strong);
+    }
+
+    .fc-stem {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: calc(50% - 1rem);
+        inline-size: 2rem;
+        block-size: 4rem;
+        background: var(--primary);
+        mask: var(--fc-pine) 50% 100% / 100% 100% no-repeat;
+    }
+
+    .fc-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    /* A day is a cross-cut log, as the month's decided shape draws it. */
+    .fc-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.6rem;
+        block-size: 2.6rem;
+        overflow: hidden;
+        border: 3px solid hsl(from var(--border-strong) h s l / 0.45);
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .fc-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        inline-size: fit-content;
+    }
+
+    .fc-state__dot {
+        inline-size: 0.55em;
+        block-size: 0.55em;
+        border-radius: 50%;
+        background: var(--success-foreground);
+        transform-origin: 50% 50%;
+    }
+
+    .fc-state__word {
+        font: italic 500 0.95em var(--theme-font-display);
+    }
+
+    .fc-spark,
+    .fc-walk {
+        display: block;
+        color: var(--primary);
+    }
+
+    .fc-spark svg,
+    .fc-walk svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .fc-column {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+        transform-origin: 50% 100%;
+    }
+
+    .fc-column__num {
+        font-family: var(--theme-font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .fc-scene .fc-bar {
+        max-inline-size: none;
+    }
+
+    /* The planting strip: the bar's own busy picture at 1 rem (a 0.5 rem
+       planting slot), at the foot of a waiting part. */
+    .fc-scene .fc-strip {
+        --kp-progressbar-scale: 0.8;
+        max-inline-size: none;
+    }
+
+    .fc-waits {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .fc-faint {
+        opacity: 0.45;
+    }
+
+    .fc-load {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .fc-load > * {
+        display: none;
+    }
+
+    .fc-load__strip.kp-progressbar {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+    }
+
+    .fc-scene .fc-waits:not(.fc-day) {
+        padding-block-end: 1.5rem;
+    }
+
+    .fc-scene .kp-menu__item.fc-waits {
+        padding-block-end: 1.6rem;
+    }
+
+    .fc-table {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+        font-size: 0.8rem;
+    }
+
+    .fc-table > span:nth-child(-n + 2) {
+        color: var(--muted-foreground);
+        font-style: italic;
+    }
+
+    .fc-plot {
+        position: relative;
+        block-size: 5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--chart-3) h s l / 0.2) 19px 20px), var(--card);
+    }
+
+    .fc-meter-wait {
+        position: relative;
+        padding-block: 0.4rem;
+    }
+
+    .fc-scene .fc-meter-wait.fc-waits {
+        padding-block-end: 0.4rem;
+        overflow: visible;
+    }
+
+    .fc-skel {
+        display: grid;
+        gap: 0.95rem;
+    }
+
+    .fc-skel > .fc-skel__strip {
+        display: none;
+    }
+
+    .fc-scene .kp-tooltip.fc-tip {
+        position: relative;
+        inline-size: fit-content;
+        margin: 0.5rem 0 0;
+        animation: none;
+    }
+
+    .fc-scene .fc-tag {
+        inline-size: fit-content;
+    }
+
+    .fc-scene .fc-tile-link {
+        justify-self: start;
+    }
+
+    .fc-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .fc-header-mini {
+        padding: 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    .fc-scene .fc-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .fc-scene .fc-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .fc-scene .fc-header .kp-page-header__description {
+        font-style: italic;
+        color: var(--muted-foreground);
+    }
+
+    .fc-scene .fc-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.5rem;
+    }
+
+    .fc-scene .fc-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    .fc-scene .fc-in-kpi,
+    .fc-scene .kp-kpi--toggle {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .fc-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .fc-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .fc-spins {
+        gap: 1.5rem;
+    }
+
+    .fc-spin > span {
+        display: none;
+    }
+
+    .fc-leaver {
+        position: relative;
+    }
+
+    /* The type sample. */
+    .fc-type {
+        gap: 0.4rem;
+    }
+
+    .fc-type :is(p, table) {
+        margin: 0;
+    }
+
+    .fc-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    .fc-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .fc-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    .fc-type__figure small {
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .fc-type__figure .fc-note {
+        font-family: var(--theme-font-body);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .fc-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .fc-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .fc-type__table th {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .fc-type__ticks {
+        display: flex;
+        justify-content: space-between;
+        max-inline-size: 16rem;
+        border-block-start: 1px solid var(--border-strong);
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    /* The motifs sample. */
+    .fc-events {
+        position: relative;
+        color: var(--primary);
+    }
+
+    .fc-events svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 3rem;
+    }
+
+    .fc-events__line {
+        stroke: var(--muted-foreground);
+        stroke-width: 1;
+        opacity: 0.6;
+    }
+
+    .fc-events__mark {
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: calc(var(--x) - 0.35rem);
+        inline-size: 0.7rem;
+        block-size: 0.6rem;
+        background: radial-gradient(circle at 50% 70%, var(--card) 0 1.2px, transparent 1.6px), var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .fc-motif-list {
+        margin: 0.5rem 0 0;
+        padding-inline-start: 1.25rem;
+    }
+
+    .fc-scene .fc-motif-empty {
+        padding: 1rem 0.75rem;
+    }
+
+    .fc-divider {
+        block-size: 1px;
+        margin: 0.4rem 0;
+        border: 0;
+        background: var(--border-strong);
+    }
+
+    /* ── 2, 9 and the scenes that show loading: the pictures ────────── */
+
+    /* Every scene but the loading question shows the recommended picture,
+       the planting strip; the loading question shows each option's. */
+    .fc-scene:not([data-fc-loading]) .fc-load__strip,
+    .fc-scene[data-fc-loading='strip'] .fc-load__strip {
+        display: block;
+    }
+
+    .fc-scene[data-fc-loading='stand'] .fc-load__stand,
+    .fc-scene[data-fc-loading='mix'] .fc-load__today,
+    .fc-scene[data-fc-direction='mix'] .fc-load__today,
+    .fc-scene[data-fc-colour='leaves'] .fc-load__today {
+        display: block;
+    }
+
+    .fc-scene:is([data-fc-direction='mix'], [data-fc-colour='leaves']) .fc-load__strip {
+        display: none;
+    }
+
+    /* A day has room for one tree, not a row: it plants one, as the
+       spinner does (CHARACTER.md §6). */
+    .fc-scene[data-fc-loading='strip'] .fc-day .fc-load__strip {
+        display: none;
+    }
+
+    .fc-scene[data-fc-loading='strip'] .fc-day .fc-load__plant {
+        display: block;
+        position: absolute;
+        inset: 16% 28% 12%;
+        color: var(--primary);
+    }
+
+    .fc-scene[data-fc-loading='strip'] .fc-day.fc-waits {
+        color: hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    /* The skeleton: the treeline is planted; the register's lines step aside. */
+    .fc-scene[data-fc-loading='strip'] .fc-skel > .fc-skel__line,
+    .fc-scene[data-fc-loading='stand'] .fc-skel > .fc-skel__line {
+        display: none;
+    }
+
+    .fc-scene[data-fc-loading='strip'] .fc-skel > .fc-skel__strip {
+        display: block;
+    }
+
+    .fc-scene[data-fc-loading='strip'] .fc-skel {
+        gap: 0.6rem;
+    }
+
+    .fc-scene[data-fc-loading='stand'] .fc-skel > .fc-skel__strip {
+        display: block;
+    }
+
+    /* The meter's groove is planted: the strip takes its place. */
+    .fc-scene[data-fc-loading='strip'] .fc-meter-wait .fc-meter {
+        visibility: hidden;
+    }
+
+    .fc-scene[data-fc-loading='strip'] .fc-meter-wait .fc-load__strip {
+        inset-block: 0;
+        margin-block: auto;
+    }
+
+    /* A stand behind the content: big trees planted slot by slot. */
+    .fc-load__stand {
+        position: absolute;
+        inset: 0;
+        background: hsl(from var(--primary) h s l / 0.3);
+        /* Whole trees only: the stand is cut on a slot boundary, never
+           through a tree, and grows one whole slot at a time (an integer). */
+        --fc-slot: 1.25rem;
+        mask: var(--fc-trees) 0 100% / calc(var(--fc-slot) * 7) calc(var(--fc-slot) * 2) repeat-x;
+        clip-path: inset(0 calc(100% - min(var(--fc-n) * var(--fc-slot), round(down, 100%, var(--fc-slot)))) 0 0);
+    }
+
+    .fc-scene[data-fc-loading='stand'] .fc-day .fc-load__stand {
+        --fc-slot: 0.6rem;
+    }
+
+    .fc-scene[data-fc-loading='stand'] .fc-skel .fc-skel__strip .kp-progressbar__fill {
+        animation: none;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    /* Today's pictures, one per part. */
+    .fc-scene[data-fc-loading='mix'] .fc-kpi .fc-load__today {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(100deg, transparent 20%, hsl(from var(--primary) h s l / 0.12) 50%, transparent 80%);
+    }
+
+    .fc-scene:is([data-fc-loading='mix'], [data-fc-direction='mix']) :is(.fc-table, .fc-tile) .fc-load__today {
+        position: absolute;
+        inset: auto 0.75rem 0.4rem;
+        block-size: 3px;
+        background: repeating-linear-gradient(to right, var(--primary) 0 3px, transparent 3px 12px);
+    }
+
+    .fc-scene[data-fc-loading='mix'] .fc-day .fc-load__today {
+        position: absolute;
+        inset: 0.3rem 0.35rem auto auto;
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        border-radius: 0 85% 0 85%;
+        rotate: 20deg;
+        background: hsl(from var(--border-strong) h s l / 0.6);
+    }
+
+    .fc-scene[data-fc-loading='mix'] .fc-plot .fc-load__today {
+        position: absolute;
+        inset: 0;
+        background:
+            repeating-radial-gradient(
+                circle at 20% 30%,
+                transparent 0 10px,
+                hsl(from var(--foreground) h s l / 0.32) 10px 11px,
+                transparent 11px 22px
+            ),
+            repeating-radial-gradient(
+                circle at 78% 68%,
+                transparent 0 13px,
+                hsl(from var(--foreground) h s l / 0.32) 13px 14px,
+                transparent 14px 28px
+            );
+        clip-path: inset(0 45% 0 0);
+    }
+
+    .fc-scene[data-fc-loading='mix'] .fc-meter-wait .fc-load__today {
+        position: absolute;
+        inset: 0.4rem 0;
+        block-size: 0.625rem;
+        background: linear-gradient(var(--chart-2), var(--chart-2)) 0 50% / 7px 100% no-repeat;
+    }
+
+    .fc-scene[data-fc-colour='leaves'] .fc-tile .fc-load__today {
+        position: absolute;
+        inset: 0;
+        block-size: auto;
+        background:
+            radial-gradient(circle, hsl(from var(--warning) h s l / 0.8) 0 2.5px, transparent 5px) 0 30% / 50% 50% no-repeat,
+            radial-gradient(circle, hsl(from var(--warning) h s l / 0.8) 0 2.5px, transparent 5px) 100% 80% / 50% 50% no-repeat;
+    }
+
+    /* ── 10 The spinner ──────────────────────────────────────────────── */
+
+    .fc-spin {
+        color: var(--primary);
+    }
+
+    .kp-button--primary .fc-spin {
+        color: var(--primary-foreground);
+    }
+
+    .fc-scene:is([data-fc-spinner='tree'], [data-fc-spinner='rings']) .kp-spinner.fc-spin {
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    .fc-scene:is([data-fc-spinner='tree'], [data-fc-spinner='rings']) .kp-spinner.fc-spin::after {
+        content: none;
+        animation: none;
+    }
+
+    .fc-scene:is([data-fc-spinner='tree'], [data-fc-spinner='rings']) .fc-spin > span {
+        display: block;
+        position: absolute;
+    }
+
+    /* A tree is planted: the mound, then the tree in three whole stages
+       (three fixed drawings, one shown at a time: a mask is never animated). */
+    .fc-scene[data-fc-spinner='tree'] .fc-spin::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        opacity: 0.6;
+        mask: var(--fc-mound) 50% 100% / 100% 100% no-repeat;
+    }
+
+    .fc-scene[data-fc-spinner='tree'] .fc-spin > span {
+        inset: 0 25% 4%;
+    }
+
+    .fc-plant {
+        position: relative;
+    }
+
+    .fc-plant > span {
+        position: absolute;
+        inset: 0;
+    }
+
+    .fc-scene[data-fc-spinner='tree'] .fc-spin__a,
+    .fc-plant__a {
+        background: currentColor;
+        opacity: 0.7;
+        mask: var(--fc-seedling) 50% 100% / 100% 100% no-repeat;
+        visibility: hidden;
+    }
+
+    .fc-scene[data-fc-spinner='tree'] .fc-spin__b,
+    .fc-plant__b {
+        background: currentColor;
+        opacity: 0.85;
+        mask: var(--fc-sapling) 50% 100% / 100% 100% no-repeat;
+        visibility: hidden;
+    }
+
+    .fc-scene[data-fc-spinner='tree'] .fc-spin__c,
+    .fc-plant__c {
+        background: currentColor;
+        mask: var(--fc-pine) 50% 100% / 100% 100% no-repeat;
+    }
+
+    /* Growth rings: three rings round a pith, each drawn a full turn. */
+    .fc-scene[data-fc-spinner='rings'] .fc-spin::before {
+        content: '';
+        position: absolute;
+        inset: 44%;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .fc-scene[data-fc-spinner='rings'] .fc-spin > span {
+        border: max(1.5px, 0.09em) solid currentColor;
+        border-radius: 50%;
+        mask: conic-gradient(#000 var(--fc-arc), transparent 0);
+    }
+
+    .fc-scene[data-fc-spinner='rings'] .fc-spin__a {
+        inset: 26%;
+    }
+
+    .fc-scene[data-fc-spinner='rings'] .fc-spin__b {
+        inset: 12%;
+    }
+
+    .fc-scene[data-fc-spinner='rings'] .fc-spin__c {
+        inset: 0;
+    }
+
+    /* ── 5 Colour ────────────────────────────────────────────────────── */
+
+    .fc-scene[data-fc-colour] .fc-today::after {
+        content: '';
+        position: absolute;
+        inset: 1px 1px auto auto;
+        inline-size: 9px;
+        block-size: 9px;
+        border-radius: 50% 50% 50% 0;
+        rotate: -45deg;
+        background: radial-gradient(circle, var(--card) 0 1.5px, transparent 2px), var(--chart-2);
+    }
+
+    .fc-scene[data-fc-colour] .fc-days--today .fc-day {
+        overflow: visible;
+    }
+
+    .fc-scene[data-fc-colour='trail'] .fc-picked,
+    .fc-scene[data-fc-colour='ink'] .fc-picked {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fc-scene[data-fc-colour='leaves'] .fc-picked {
+        outline: 3px dotted var(--accent-foreground);
+        outline-offset: 3px;
+    }
+
+    .fc-scene[data-fc-colour='leaves'] .fc-kpi--warn {
+        border-inline-start: 4px solid var(--warning);
+        box-shadow: inset 4px 0 6px -4px var(--warning);
+    }
+
+    .fc-scene[data-fc-colour='leaves'] .kp-card:not(.fc-waits) {
+        box-shadow: inset 0 0 1.5rem hsl(from var(--success) h s l / 0.6);
+    }
+
+    .fc-scene[data-fc-colour='leaves'] .kp-badge,
+    .fc-scene[data-fc-colour='leaves'] .fc-state__dot {
+        background: var(--success);
+    }
+
+    .fc-scene[data-fc-colour='ink'] .fc-today::after {
+        background: radial-gradient(circle, var(--card) 0 1.5px, transparent 2px), var(--primary);
+    }
+
+    .fc-scene[data-fc-colour='ink'] .fc-kpi--warn {
+        box-shadow: none;
+    }
+
+    .fc-scene[data-fc-colour='ink'] .fc-kpi--warn .kp-kpi__value {
+        background: transparent;
+        color: var(--foreground);
+        padding-inline: 0;
+    }
+
+    .fc-scene[data-fc-colour='ink'] .fc-note {
+        background: transparent;
+        color: var(--foreground);
+        padding-inline: 0;
+    }
+
+    .fc-scene[data-fc-colour='ink'] .fc-state__dot {
+        background: var(--primary);
+    }
+
+    .fc-scene[data-fc-colour='ink'] .kp-meter[data-kp-over]::after {
+        background: var(--primary);
+    }
+
+    /* ── 6 Corners ───────────────────────────────────────────────────── */
+
+    .fc-scene[data-fc-corners='two'] :is(.kp-card, .kp-popover, .kp-kpi) {
+        border-radius: var(--radius);
+    }
+
+    .fc-scene[data-fc-corners='two'] :is(.fc-tag, .fc-chip, .fc-tip),
+    .fc-scene[data-fc-corners='two'] .kp-meter,
+    .fc-scene[data-fc-corners='two'] .kp-meter::before,
+    .fc-scene[data-fc-corners='cut'] :is(.kp-card, .kp-popover, .kp-menu, .kp-kpi, .fc-tag, .fc-chip, .fc-tip, .kp-button),
+    .fc-scene[data-fc-corners='cut'] .kp-meter,
+    .fc-scene[data-fc-corners='cut'] .kp-meter::before,
+    .fc-scene[data-fc-corners='leaf'] .kp-meter,
+    .fc-scene[data-fc-corners='leaf'] .kp-meter::before {
+        border-radius: 3px;
+    }
+
+    .fc-scene[data-fc-corners='leaf'] :is(.kp-card, .kp-popover, .kp-kpi) {
+        border-radius: 0 1.25rem;
+    }
+
+    .fc-scene[data-fc-corners='leaf'] .kp-menu {
+        border-radius: 0 1rem;
+    }
+
+    .fc-scene[data-fc-corners='leaf'] :is(.fc-tag, .fc-chip, .fc-tip, .fc-note, .kp-button) {
+        border-radius: 0 0.6em;
+    }
+
+    .fc-scene[data-fc-corners] .fc-tag {
+        border: 1px solid var(--border-strong);
+        background: var(--secondary);
+    }
+
+    /* ── 7 The surface ───────────────────────────────────────────────── */
+
+    .fc-scene[data-fc-surface='kit'] .fc-tag,
+    .fc-scene[data-fc-surface='wood'] :is(.kp-card, .kp-kpi, .kp-button:not(.kp-button--primary), .fc-tag, .kp-field__input) {
+        border-color: transparent;
+        border-radius: 3px;
+        background-color: var(--muted);
+        background-image: var(--fc-wood);
+        box-shadow: var(--fc-routed);
+        color: var(--foreground);
+    }
+
+    .fc-scene[data-fc-surface='wood'] .kp-button--primary {
+        border-radius: 3px;
+        background-image: var(--fc-stain);
+    }
+
+    .fc-scene[data-fc-surface='paper'] .kp-meter {
+        background: var(--muted);
+        box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .fc-scene[data-fc-surface='paper'] .kp-meter::before {
+        background: var(--primary);
+        box-shadow: none;
+    }
+
+    .fc-scene[data-fc-surface='paper'] .fc-tag {
+        border: 1px solid var(--border-strong);
+        border-radius: 3px;
+        background: var(--secondary);
+    }
+
+    /* ── 13 Pointing at something (still: the pointed part is marked) ── */
+
+    .fc-scene[data-fc-hover] .kp-button:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .fc-scene[data-fc-hover='blaze'] :is(.fc-pointed, .kp-button:hover, .kp-menu__item:hover, .kp-kpi:hover, .fc-day:hover) {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fc-scene[data-fc-hover='blaze'] .kp-menu__item.fc-pointed,
+    .fc-scene[data-fc-hover='blaze'] .kp-menu__item:hover {
+        outline-offset: -3px;
+    }
+
+    /* A painted blaze: a short straight bar inside the start edge, whatever
+       the part's corner. */
+    .fc-scene[data-fc-hover='mark'] :is(.fc-pointed, .kp-button:hover, .kp-menu__item:hover, .kp-kpi:hover, .fc-day:hover) {
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-position: 0.4rem 50%;
+        background-size: 3px 55%;
+    }
+
+    .fc-scene[data-fc-hover='mark'] .kp-kpi.fc-pointed {
+        background-position: 0.5rem 50%;
+        background-size: 4px 60%;
+    }
+
+    .fc-scene[data-fc-hover='lift'] :is(.fc-pointed, .kp-button:hover, .kp-kpi:hover, .fc-day:hover) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
+    }
+
+    .fc-scene[data-fc-hover='lift'] .kp-menu__item.fc-pointed {
+        background: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    /* ── 14 Focus (still: the focused part is marked) ────────────────── */
+
+    .fc-scene[data-fc-focus='di2'] .fc-focused,
+    .fc-scene[data-fc-focus='blazed'] .fc-focused {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .fc-scene[data-fc-focus='blazed'] .fc-focused {
+        outline: 2px dashed var(--primary);
+        outline-offset: 6px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .fc-scene[data-fc-focus='mix'] .kp-button.fc-focused:not(.fc-in-header, .fc-tile-link),
+    .fc-scene[data-fc-focus='mix'] .fc-day.fc-focused {
+        transform: translateY(-2px);
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .fc-scene[data-fc-focus='mix'] .fc-in-header.fc-focused {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    .fc-scene[data-fc-focus='mix'] .fc-in-kpi.fc-focused {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        border-radius: 0.75rem;
+    }
+
+    .fc-scene[data-fc-focus='mix'] .kp-menu__item.fc-focused {
+        transform: rotate(-1deg);
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .fc-scene[data-fc-focus='mix'] .fc-tile-link.fc-focused {
+        outline: 2px solid var(--success);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 5px hsl(from var(--success) h s l / 0.25);
+        text-shadow: 0 0 6px hsl(from var(--success) h s l / 0.6);
+    }
+
+    /* ── 12 Composites (the State buttons force a state on every button) ── */
+
+    /* Forest's own button, as the grammar has it: hover blazes, focus is the
+       two-channel ring, a press closes the blaze in. */
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites]:not([data-fc-composites='today']) :is(.kp-button, .kp-menu__item, .fc-in-kpi),
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] .fc-part:first-child .kp-button {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] .fc-part:first-child .kp-button {
+        outline: 0;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites] .kp-menu__item {
+        outline-offset: -3px;
+    }
+
+    .fc-sec[data-fc-show='focus'] .fc-scene[data-fc-composites] :is(.kp-button, .kp-menu__item, .fc-in-kpi) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .fc-sec[data-fc-show='press'] .fc-scene[data-fc-composites]:not([data-fc-composites='today']) :is(.kp-button, .kp-menu__item, .fc-in-kpi) {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .fc-sec[data-fc-show='press'] .fc-scene[data-fc-composites='today'] .kp-button:not(.fc-in-header) {
+        transform: translateY(-2px);
+        background: var(--secondary-active);
+    }
+
+    /* Today: the header's wooden tags, the menu's tilt, the tile's glow, the
+       key figure's single line. */
+    .fc-scene[data-fc-composites='today'] .fc-in-header {
+        border: 1px solid var(--primary);
+        border-radius: 0.25rem;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 -3px 0 0 var(--primary);
+    }
+
+    .fc-scene[data-fc-composites='today'] .fc-in-header.kp-button--primary {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] .fc-in-header {
+        transform: translateY(-2px);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    .fc-sec[data-fc-show='focus'] .fc-scene[data-fc-composites='today'] .fc-in-header {
+        outline: 2px dotted var(--ring);
+        box-shadow: inset 0 -3px 0 0 var(--primary);
+    }
+
+    .fc-sec[data-fc-show='press'] .fc-scene[data-fc-composites='today'] .fc-in-header {
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+
+    .fc-sec:is([data-fc-show='hover'], [data-fc-show='focus']) .fc-scene[data-fc-composites='today'] .kp-menu__item {
+        transform: rotate(-1deg);
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] .kp-menu__item {
+        outline: 0;
+        background: var(--secondary);
+    }
+
+    .fc-sec:is([data-fc-show='hover'], [data-fc-show='focus']) .fc-scene[data-fc-composites='today'] .fc-tile-link {
+        outline: 0;
+        text-shadow: 0 0 6px hsl(from var(--success) h s l / 0.6);
+    }
+
+    .fc-sec[data-fc-show='focus'] .fc-scene[data-fc-composites='today'] .fc-tile-link {
+        outline: 2px solid var(--success);
+        box-shadow: 0 0 0 5px hsl(from var(--success) h s l / 0.25);
+    }
+
+    .fc-sec[data-fc-show='focus'] .fc-scene[data-fc-composites='today'] .fc-in-kpi {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    .fc-scene[data-fc-composites='today'] .fc-in-kpi {
+        border-radius: 0.75rem;
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] :is(.fc-drawer .kp-button, .fc-in-kpi) {
+        outline: 0;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
+    }
+
+    .fc-sec[data-fc-show='hover'] .fc-scene[data-fc-composites='today'] .fc-in-kpi {
+        transform: none;
+        box-shadow: none;
+        background: color-mix(in oklab, var(--primary) 6%, var(--card));
+    }
+
+    /* The accent: forest's button, the header's green foot added. */
+    .fc-scene[data-fc-composites='accent'] .fc-in-header:not(.kp-button--primary) {
+        box-shadow: inset 0 -3px 0 0 var(--primary);
+    }
+
+    /* ── 16 The voice of a note ──────────────────────────────────────── */
+
+    .fc-scene[data-fc-type='notes'] :is(.fc-type__label, .fc-type__prose, .fc-type__ticks, .fc-type__table th, .fc-tag) {
+        font-style: italic;
+    }
+
+    .fc-scene[data-fc-type='notes'] .fc-tag {
+        font-family: var(--theme-font-body);
+        border-radius: 0;
+    }
+
+    .fc-scene[data-fc-type='notes'] .fc-type__label {
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+    }
+
+    .fc-scene[data-fc-type='mono'] :is(.fc-type__label, .fc-type__ticks, .fc-type__table th, .fc-note) {
+        font-family: var(--theme-font-mono);
+        font-style: normal;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    .fc-scene[data-fc-type='mono'] .fc-type__prose {
+        font-style: italic;
+    }
+
+    .fc-scene[data-fc-type='serif'] :is(.fc-type__label, .fc-type__head, .fc-type__prose, .fc-type__ticks, .fc-note, .fc-tag) {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-style: italic;
+    }
+
+    /* ── 17 Motifs ───────────────────────────────────────────────────── */
+
+    .fc-scene[data-fc-motifs='none'] .kp-meter__mark::before {
+        content: none;
+    }
+
+    .fc-scene[data-fc-motifs='none'] .fc-events__mark {
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--foreground);
+        clip-path: none;
+    }
+
+    .fc-scene[data-fc-motifs='none'] .kp-empty::before {
+        content: none;
+    }
+
+    .fc-scene[data-fc-motifs='all'] .fc-motif-card {
+        background: repeating-radial-gradient(ellipse at 90% 110%, transparent 0 7px, hsl(from var(--primary) h s l / 0.14) 7px 8px), var(--card);
+    }
+
+    .fc-scene[data-fc-motifs='all'] .fc-motif-button::before {
+        content: '';
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        margin-inline-end: 0.35rem;
+        border-radius: 0 85% 0 85%;
+        background: var(--primary);
+    }
+
+    .fc-scene[data-fc-motifs='all'] .fc-motif-list {
+        list-style: none;
+        padding-inline-start: 0.25rem;
+    }
+
+    .fc-scene[data-fc-motifs='all'] .fc-motif-list li::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.4rem;
+        background: var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .fc-scene[data-fc-motifs='all'] .fc-divider {
+        block-size: 1.25rem;
+        background: var(--primary);
+        mask: var(--fc-trees) 0 100% / 4.375rem 1.25rem space no-repeat;
+    }
+
+    /* ── The motion ──────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fc-scene:is([data-fc-curve], [data-fc-direction], [data-fc-opening], [data-fc-durations])[data-fc-phase='gap'] :is(.fc-arrives, .fc-stem),
+        .fc-scene[data-fc-durations][data-fc-phase='gap'] .kp-kpi__value,
+        .fc-scene[data-fc-direction][data-fc-phase='gap'] .fc-walk,
+        .fc-scene[data-fc-leave][data-fc-phase='gap'] .fc-leaver {
+            visibility: hidden;
+        }
+
+        /* 1 The curve. One easing per option, the same pictures. */
+        .fc-scene[data-fc-curve='growth'] {
+            --fc-ease: var(--fc-quick);
+            --fc-swing: ease-in-out;
+        }
+
+        .fc-scene[data-fc-curve='register'] {
+            --fc-ease: var(--fc-forest);
+            --fc-swing: ease-in-out;
+        }
+
+        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):not([data-fc-phase='gap']) .fc-stem {
+            animation: fc-rise calc(900ms * var(--fc-slow, 1)) var(--fc-ease) both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='1'] {
+            animation: fc-rise calc(900ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='2'] {
+            animation: fc-rise calc(900ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:not([data-fc-phase='gap']) .fc-stem[data-fc-r='3'] {
+            animation: fc-rise calc(900ms * var(--fc-slow, 1)) cubic-bezier(0.3, 1.35, 0.5, 1) both;
+        }
+
+        .fc-scene[data-fc-curve='growth'] {
+            --fc-fold-name: fc-unfold-quick;
+        }
+
+        .fc-scene[data-fc-curve='register'] {
+            --fc-fold-name: fc-unfold;
+        }
+
+        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
+            animation: var(--fc-fold-name) calc(520ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
+            animation: var(--fc-fold-name) calc(320ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile {
+            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-ease) both;
+        }
+
+        .fc-scene:is([data-fc-curve='growth'], [data-fc-curve='register']):is([data-fc-phase='in'], [data-fc-phase='hold'])
+            .kp-kpi__value.fc-carrier {
+            animation: fc-swell calc(1000ms * var(--fc-slow, 1)) var(--fc-swing) both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
+            animation: fc-squash calc(520ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
+            transform-origin: top center;
+            animation: fc-unfurl calc(300ms * var(--fc-slow, 1)) ease-out both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile {
+            animation: fc-walk-in calc(450ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-curve='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .kp-kpi__value.fc-carrier {
+            animation: fc-swell-big calc(500ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        /* 2 The direction. */
+        .fc-scene[data-fc-direction='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
+            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-forest) calc(var(--i) * 80ms * var(--fc-slow, 1)) both;
+        }
+
+        .fc-scene[data-fc-direction='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
+            animation: fc-grow calc(800ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene:is([data-fc-direction='grow'], [data-fc-direction='feed']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-walk polyline {
+            stroke-dasharray: 1;
+            animation: fc-draw calc(1000ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-direction='feed']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
+            animation: fc-wipe calc(400ms * var(--fc-slow, 1)) var(--fc-forest) calc(var(--i) * 80ms * var(--fc-slow, 1)) both;
+        }
+
+        .fc-scene[data-fc-direction='feed']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
+            animation: fc-wipe calc(800ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-day {
+            animation: fc-swing-in calc(520ms * var(--fc-slow, 1)) ease-out calc(var(--i) * 40ms * var(--fc-slow, 1)) both;
+        }
+
+        .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-tile.fc-arrives {
+            animation: fc-walk-in calc(450ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-direction='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-walk polyline {
+            stroke-dasharray: 1;
+            animation: fc-draw calc(1600ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-direction='mix'] .fc-tile .fc-load__today {
+            animation: fc-footsteps calc(1600ms * var(--fc-slow, 1)) steps(4, end) infinite alternate;
+        }
+
+        /* 3 Opening. */
+        .fc-scene[data-fc-opening='unfold']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
+            animation: fc-unfold calc(520ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene[data-fc-opening='unfold']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
+            animation: fc-unfold calc(320ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene[data-fc-opening='unfold'][data-fc-phase='out'] .fc-fold {
+            animation: fc-unfold calc(320ms * var(--fc-slow, 1)) linear reverse both;
+        }
+
+        .fc-scene[data-fc-opening='grow']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-fold {
+            animation: fc-drop calc(320ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-opening='grow'][data-fc-phase='out'] .fc-fold {
+            animation: fc-drop calc(320ms * var(--fc-slow, 1)) var(--fc-forest) reverse both;
+        }
+
+        .fc-scene[data-fc-opening='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
+            animation: fc-squash calc(520ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-opening='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-pop {
+            transform-origin: top center;
+            animation: fc-unfurl calc(300ms * var(--fc-slow, 1)) ease-out both;
+        }
+
+        .fc-scene[data-fc-opening='mix'][data-fc-phase='out'] .fc-dialog {
+            animation: fc-squash calc(347ms * var(--fc-slow, 1)) var(--fc-forest) reverse both;
+        }
+
+        .fc-scene[data-fc-opening='mix'][data-fc-phase='out'] .fc-pop {
+            transform-origin: top center;
+            animation: fc-unfurl calc(300ms * var(--fc-slow, 1)) ease-out reverse both;
+        }
+
+        /* 4 Durations: contact, fold, growth and one loop per option. */
+        .fc-scene[data-fc-durations='picks'] {
+            --fc-contact: 200ms;
+            --fc-fold: 520ms;
+            --fc-growth: 800ms;
+            --fc-loop: 3200ms;
+        }
+
+        .fc-scene[data-fc-durations='brisk'] {
+            --fc-contact: 120ms;
+            --fc-fold: 200ms;
+            --fc-growth: 480ms;
+            --fc-loop: 2000ms;
+        }
+
+        .fc-scene[data-fc-durations='slow'] {
+            --fc-contact: 300ms;
+            --fc-fold: 780ms;
+            --fc-growth: 1200ms;
+            --fc-loop: 4800ms;
+        }
+
+        .fc-scene[data-fc-durations] .fc-tap {
+            transition:
+                translate calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest),
+                outline-color calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest);
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+
+        .fc-scene[data-fc-durations][data-fc-phase='in'] .fc-tap {
+            animation: fc-close-in calc(var(--fc-contact) * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-durations]:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-dialog {
+            animation: fc-unfold calc(var(--fc-fold) * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene[data-fc-durations]:is([data-fc-phase='in'], [data-fc-phase='hold']) .kp-kpi__value {
+            animation: fc-grow calc(var(--fc-growth) * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-durations] .fc-bar .kp-progressbar__fill,
+        .fc-scene[data-fc-durations] .fc-bar .kp-progressbar__head {
+            animation-duration: calc(var(--fc-loop) * var(--fc-slow, 1));
+        }
+
+        /* 8 A live update. */
+        .fc-scene[data-fc-live='swell']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-carrier:not(.fc-carrier--svg, .fc-state__dot) {
+            animation: fc-swell calc(1000ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-live='swell']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-state__dot {
+            animation: fc-swell-dot calc(1000ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene:is([data-fc-live='swell'], [data-fc-live='mix']):is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-spark polyline {
+            animation: fc-stroke calc(1000ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        /* A growth ring is laid round what changed: drawn once round it,
+           clockwise from the top, then it fades into the grain. */
+        .fc-scene[data-fc-live='ring'] .fc-carrier:not(.fc-state__word)::after {
+            content: '';
+            position: absolute;
+            inset: -4px -8px;
+            border: 1.5px solid var(--primary);
+            border-radius: 999px;
+            mask: conic-gradient(#000 var(--fc-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .fc-scene[data-fc-live='ring'] .fc-spark.fc-carrier::after {
+            inset: -12% -3% auto auto;
+            inline-size: 1.5rem;
+            block-size: 1.5rem;
+            border-radius: 50%;
+        }
+
+        .fc-scene[data-fc-live='ring'] .fc-state__dot::after {
+            inset: -5px;
+            border-radius: 50%;
+        }
+
+        .fc-scene[data-fc-live='ring']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-carrier::after {
+            animation: fc-ring calc(1000ms * var(--fc-slow, 1)) linear both;
+        }
+
+        .fc-scene[data-fc-live='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .kp-kpi__value.fc-carrier {
+            animation: fc-swell-big calc(500ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-live='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-state__word {
+            transform-origin: 0 50%;
+            animation: fc-swing-word calc(600ms * var(--fc-slow, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .fc-scene[data-fc-live='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-column {
+            animation: fc-post calc(800ms * var(--fc-slow, 1)) ease-in-out both;
+        }
+
+        .fc-scene[data-fc-live='mix']:is([data-fc-phase='in'], [data-fc-phase='hold']) .fc-live-tile {
+            animation: fc-dip calc(500ms * var(--fc-slow, 1)) cubic-bezier(0.3, 0.7, 0.4, 1) both;
+        }
+
+        /* 9 Loading: the stand and today's pictures (the strip is the bar's own). */
+        .fc-scene[data-fc-loading='strip'] .fc-day .fc-plant__a {
+            animation: fc-stage-1 calc(1600ms * var(--fc-slow, 1)) step-end calc(var(--i, 0) * 150ms) infinite;
+        }
+
+        .fc-scene[data-fc-loading='strip'] .fc-day .fc-plant__b {
+            animation: fc-stage-2 calc(1600ms * var(--fc-slow, 1)) step-end calc(var(--i, 0) * 150ms) infinite;
+        }
+
+        .fc-scene[data-fc-loading='strip'] .fc-day .fc-plant__c {
+            animation: fc-stage-3 calc(1600ms * var(--fc-slow, 1)) step-end calc(var(--i, 0) * 150ms) infinite;
+        }
+
+        .fc-scene[data-fc-loading='strip'] .fc-skel__strip:nth-child(5) :is(.kp-progressbar__fill, .kp-progressbar__head) {
+            animation-delay: -400ms;
+        }
+
+        .fc-scene[data-fc-loading='strip'] .fc-skel__strip:nth-child(6) :is(.kp-progressbar__fill, .kp-progressbar__head) {
+            animation-delay: -800ms;
+        }
+
+        .fc-scene[data-fc-loading='stand'] .fc-load__stand {
+            animation: fc-stand calc(3200ms * var(--fc-slow, 1)) linear infinite;
+        }
+
+        .fc-scene[data-fc-loading='mix'] .fc-kpi .fc-load__today {
+            animation: fc-daylight calc(2400ms * var(--fc-slow, 1)) ease-in-out infinite;
+        }
+
+        .fc-scene[data-fc-loading='mix'] .fc-table .fc-load__today {
+            animation: fc-footsteps calc(1600ms * var(--fc-slow, 1)) steps(4, end) infinite alternate;
+        }
+
+        .fc-scene[data-fc-loading='mix'] .kp-menu__item.fc-waits {
+            transform-origin: bottom center;
+            animation: fc-post-loop calc(1600ms * var(--fc-slow, 1)) ease-in-out infinite;
+        }
+
+        .fc-scene[data-fc-loading='mix'] .fc-day .fc-load__today {
+            animation: fc-leaf calc(2600ms * var(--fc-slow, 1)) ease-in-out infinite;
+            animation-delay: calc(var(--i, 0) * -300ms);
+        }
+
+        .fc-scene[data-fc-loading='mix'] .fc-plot .fc-load__today {
+            animation: fc-map-ink calc(2800ms * var(--fc-slow, 1)) steps(12, end) infinite;
+        }
+
+        .fc-scene[data-fc-loading='mix'] .fc-meter-wait .fc-load__today {
+            animation: fc-blaze-hop calc(2400ms * var(--fc-slow, 1)) steps(12) infinite;
+        }
+
+        .fc-scene[data-fc-colour='leaves'] .fc-tile .fc-load__today {
+            animation: fc-fireflies calc(2600ms * var(--fc-slow, 1)) ease-in-out infinite alternate;
+        }
+
+        /* 10 The spinner. */
+        .fc-scene[data-fc-spinner='tree'] .fc-spin__a {
+            animation: fc-stage-1 calc(1600ms * var(--fc-slow, 1)) step-end infinite;
+        }
+
+        .fc-scene[data-fc-spinner='tree'] .fc-spin__b {
+            animation: fc-stage-2 calc(1600ms * var(--fc-slow, 1)) step-end infinite;
+        }
+
+        .fc-scene[data-fc-spinner='tree'] .fc-spin__c {
+            animation: fc-stage-3 calc(1600ms * var(--fc-slow, 1)) step-end infinite;
+        }
+
+        .fc-scene[data-fc-spinner='rings'] .fc-spin__a {
+            animation: fc-arc-1 calc(2400ms * var(--fc-slow, 1)) linear infinite;
+        }
+
+        .fc-scene[data-fc-spinner='rings'] .fc-spin__b {
+            animation: fc-arc-2 calc(2400ms * var(--fc-slow, 1)) linear infinite;
+        }
+
+        .fc-scene[data-fc-spinner='rings'] .fc-spin__c {
+            animation: fc-arc-3 calc(2400ms * var(--fc-slow, 1)) linear infinite;
+        }
+
+        /* 11 Leaving and arriving: `out` leaves, `in` arrives as its reverse. */
+        .fc-scene[data-fc-leave='wither'][data-fc-phase='out'] .fc-leaver {
+            animation: fc-wither calc(560ms * var(--fc-slow, 1)) var(--fc-wither) both;
+        }
+
+        .fc-scene[data-fc-leave='wither'][data-fc-phase='in'] .fc-leaver {
+            animation: fc-wither calc(560ms * var(--fc-slow, 1)) var(--fc-wither) reverse both;
+        }
+
+        .fc-scene[data-fc-leave='today'][data-fc-phase='out'] .fc-leaver {
+            animation: fc-autumn calc(560ms * var(--fc-slow, 1)) ease-in both;
+        }
+
+        .fc-scene[data-fc-leave='today'][data-fc-phase='in'] .fc-leaver {
+            animation: fc-autumn calc(560ms * var(--fc-slow, 1)) ease-in reverse both;
+        }
+
+        .fc-scene[data-fc-leave='wind'][data-fc-phase='out'] .fc-leaver {
+            animation: fc-wind calc(560ms * var(--fc-slow, 1)) ease-in both;
+        }
+
+        .fc-scene[data-fc-leave='wind'][data-fc-phase='in'] .fc-leaver {
+            animation: fc-wind calc(560ms * var(--fc-slow, 1)) ease-in reverse both;
+        }
+
+        /* 15 The press: pressed while `in`, let go at `hold`. */
+        .fc-scene[data-fc-press] .fc-press {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            transition:
+                translate calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
+                scale calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
+                box-shadow calc(200ms * var(--fc-slow, 1)) var(--fc-forest),
+                outline-color calc(200ms * var(--fc-slow, 1)) var(--fc-forest);
+        }
+
+        .fc-scene[data-fc-press='close'][data-fc-phase='in'] .fc-press {
+            animation: fc-close-in calc(200ms * var(--fc-slow, 1)) var(--fc-forest) both;
+        }
+
+        .fc-scene[data-fc-press='settle'][data-fc-phase='in'] .fc-press {
+            translate: 0 1px;
+            outline-color: var(--primary);
+        }
+
+        .fc-scene[data-fc-press='shrink'][data-fc-phase='in'] .fc-press {
+            scale: 0.98;
+        }
+    }
+
+    /* Reduced motion: every scene its finished pose; a spinner its grown tree
+       or its full log. */
+    @media (prefers-reduced-motion: reduce) {
+        .fc-scene[data-fc-spinner='rings'] .fc-spin > span {
+            mask: none;
+        }
+    }
+
+    /* The press: the blaze closes in onto the part and turns solid. */
+    @keyframes fc-close-in {
+        from {
+            outline: 2px dashed var(--primary);
+            outline-offset: 5px;
+        }
+
+        to {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
+        }
+    }
+
+    @keyframes fc-rise {
+        from {
+            translate: 0 100%;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    /* Growing (the strip's arrival 1): up from under its own line, clipped there. */
+    @keyframes fc-grow {
+        from {
+            translate: 0 40%;
+            clip-path: inset(-1rem -1rem 40% -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem -1rem -1rem -1rem);
+        }
+    }
+
+    /* The map unfolds: the top panel across, then the rest down; the paper
+       is uncovered, never squashed. */
+    @keyframes fc-unfold {
+        0% {
+            clip-path: inset(0 100% calc(100% - 2.2rem) 0);
+            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
+        }
+
+        40% {
+            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* The same fold on the quick curve, titanium's (question 1, option 2). */
+    @keyframes fc-unfold-quick {
+        0% {
+            clip-path: inset(0 100% calc(100% - 2.2rem) 0);
+            animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        40% {
+            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+            animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes fc-drop {
+        from {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* Today's dialog (kp-sig-forest-forest-unfold) and menu (mb-forest-unfurl). */
+    @keyframes fc-squash {
+        0% {
+            opacity: 0;
+            transform: scale(0.5, 0.34);
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1, 0.34);
+        }
+
+        100% {
+            transform: none;
+        }
+    }
+
+    @keyframes fc-unfurl {
+        from {
+            transform: scaleY(0.05) rotate(-6deg);
+        }
+
+        to {
+            transform: scaleY(1) rotate(0deg);
+        }
+    }
+
+    @keyframes fc-walk-in {
+        from {
+            transform: translateX(-1rem);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fc-wipe {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes fc-swing-in {
+        from {
+            rotate: -14deg;
+            scale: 0.6;
+        }
+
+        to {
+            rotate: 0deg;
+            scale: 1;
+        }
+    }
+
+    @keyframes fc-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    /* The growth ring (the trend tile's live 3): a swell once, eased both ways. */
+    @keyframes fc-swell {
+        30% {
+            scale: 1.08;
+        }
+    }
+
+    @keyframes fc-swell-big {
+        45% {
+            scale: 1.1;
+        }
+    }
+
+    @keyframes fc-swell-dot {
+        30% {
+            scale: 1.3;
+        }
+    }
+
+    @keyframes fc-stroke {
+        30% {
+            stroke-width: 5;
+        }
+    }
+
+    @keyframes fc-ring {
+        0% {
+            --fc-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.33, 0, 0.15, 1);
+        }
+
+        55% {
+            --fc-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            --fc-arc: 360deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fc-swing-word {
+        30% {
+            rotate: -9deg;
+        }
+
+        60% {
+            rotate: 5deg;
+        }
+    }
+
+    @keyframes fc-post {
+        25% {
+            rotate: -2deg;
+        }
+
+        75% {
+            rotate: 2deg;
+        }
+    }
+
+    @keyframes fc-dip {
+        50% {
+            translate: 0 0.3rem;
+        }
+    }
+
+    /* One tree, planted in three whole stages: seedling, sapling, tree. */
+    @keyframes fc-stage-1 {
+        0% {
+            visibility: visible;
+        }
+
+        22%,
+        100% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes fc-stage-2 {
+        0% {
+            visibility: hidden;
+        }
+
+        22% {
+            visibility: visible;
+        }
+
+        45%,
+        100% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes fc-stage-3 {
+        0%,
+        22% {
+            visibility: hidden;
+        }
+
+        45%,
+        100% {
+            visibility: visible;
+        }
+    }
+
+    @keyframes fc-arc-1 {
+        0% {
+            --fc-arc: 0deg;
+        }
+
+        30%,
+        100% {
+            --fc-arc: 360deg;
+        }
+    }
+
+    @keyframes fc-arc-2 {
+        0%,
+        30% {
+            --fc-arc: 0deg;
+        }
+
+        60%,
+        100% {
+            --fc-arc: 360deg;
+        }
+    }
+
+    @keyframes fc-arc-3 {
+        0%,
+        60% {
+            --fc-arc: 0deg;
+        }
+
+        90%,
+        100% {
+            --fc-arc: 360deg;
+        }
+    }
+
+    @keyframes fc-stand {
+        0% {
+            --fc-n: 0;
+        }
+
+        85% {
+            --fc-n: 30;
+            opacity: 1;
+        }
+
+        100% {
+            --fc-n: 30;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fc-daylight {
+        0%,
+        100% {
+            transform: translateX(-6%) skewX(-2deg);
+        }
+
+        50% {
+            transform: translateX(6%) skewX(2deg);
+        }
+    }
+
+    @keyframes fc-footsteps {
+        to {
+            background-position: 12px 0;
+        }
+    }
+
+    @keyframes fc-post-loop {
+        0%,
+        100% {
+            transform: rotate(-2deg);
+        }
+
+        50% {
+            transform: rotate(2deg);
+        }
+    }
+
+    @keyframes fc-leaf {
+        0% {
+            translate: 0 0;
+            rotate: 20deg;
+            opacity: 0;
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        50% {
+            translate: -0.6rem 0.6rem;
+            rotate: -30deg;
+        }
+
+        85% {
+            opacity: 1;
+        }
+
+        100% {
+            translate: -1.2rem 1.4rem;
+            rotate: 40deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fc-map-ink {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes fc-blaze-hop {
+        from {
+            background-position: 0% 50%;
+        }
+
+        to {
+            background-position: 100% 50%;
+        }
+    }
+
+    @keyframes fc-fireflies {
+        to {
+            background-position-x: 100%, 0%;
+        }
+    }
+
+    /* Leaving. */
+    @keyframes fc-wither {
+        from {
+            translate: 0 0;
+            clip-path: inset(-1rem -1rem -1rem -1rem);
+            filter: none;
+        }
+
+        to {
+            translate: 0 100%;
+            clip-path: inset(-1rem -1rem 100% -1rem);
+            filter: sepia(1) saturate(0.6);
+        }
+    }
+
+    @keyframes fc-autumn {
+        to {
+            filter: sepia(1) saturate(0.6);
+            transform: scale(0.94);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fc-wind {
+        to {
+            translate: 3rem -0.4rem;
+            rotate: 4deg;
+            opacity: 0;
+        }
+    }
+}
