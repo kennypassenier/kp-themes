@@ -18,7 +18,9 @@
 @layer kp.signature {
     /* ── The theme's pieces ──────────────────────────────────────────── */
 
-    .nc-page {
+    :is(.nc-page, .rv-dialog__stage) {
+        /* The review dialog moves the sections out of the page into its
+           stage, so the variables must be declared there too. */
         /* The frame clock (G1): the register's curve cubic-bezier(0.2, 0, 0,
            1) sampled in whole frames, one held value per frame; the number
            is the count of 80 ms frames in the motion (f4 = 320 ms). Each
