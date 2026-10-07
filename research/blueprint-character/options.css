@@ -1,0 +1,1653 @@
+/* research/blueprint-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.bw-scene[data-bw-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --bw-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "as picked" options are the ones measured in
+   themes/blueprint/CHARACTER.md §2. Parts at rest are drawn as the
+   recommended grammar has them (a measured part on the sheet: four corner
+   brackets, no fill, no closed frame; the draughtsman's lettering), so each
+   question changes only its own rule.
+
+   The construction (G2, G3): a part is hidden (`visibility`) while the pen
+   traces its outline on `.bw-trace`, which keeps `visibility: visible`; at
+   three quarters the part is inked at once, and the trace is lifted at the
+   end. Each side of the outline is its own keyframe segment, so the
+   plotter's feed (a ramp, an even feed, a ramp) plays on every stroke.
+   The revision (G9): a scalloped cloud on `.bw-cloud::before`, uncovered
+   clockwise by a polygon swept from the carrier's centre. The section
+   (G10): the signature skeleton's drawing, two rules, two ticks and a cyan
+   45° hatch on `.bw-section::after`, cut start → end. Every clip animation
+   writes both ends: an inset toward a part's own `none` flips at half time,
+   which is exactly the fault in the register's resize plot and the
+   columns' Lettered. */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    /* On the scene as well as the page: the review dialog shows a copy of
+       a scene outside the page. */
+    .bw-page,
+    .bw-scene {
+        --bw-pen: var(--primary);
+        --bw-note: var(--accent);
+        --bw-line: var(--border-strong);
+        --bw-ink: var(--foreground);
+        --bw-warn: hsl(from var(--warning) h s 62%);
+        --bw-bad: var(--destructive);
+        /* G1: the stepper plotter's trapezoid: a fifth to reach the feed,
+           three fifths at it, a fifth to stop. */
+        --bw-feed: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+        --bw-arm: 0.75rem;
+    }
+
+    .bw-scene {
+        position: relative;
+        /* A witness line or a cloud may reach a few pixels past a part. */
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* G1, G4: every scene runs on the recommended curve and units; the
+           curve and duration questions change these. */
+        --bw-in: var(--bw-feed);
+        --bw-contact: 160ms;
+        --bw-dimt: 320ms;
+        --bw-set: 480ms;
+        --bw-panel: 800ms;
+        --bw-rev: 960ms;
+        --bw-leave: 1120ms;
+        --bw-loop: 2880ms;
+        --bw-step: 80ms;
+        --bw-arrive: construct;
+        /* G7: nothing is translucent; the section says busy, so layout.css's
+           busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .bw-scene[data-bw-curve='linear'] {
+        --bw-in: linear;
+    }
+
+    .bw-scene[data-bw-curve='steps'] {
+        --bw-in: steps(4, jump-end);
+    }
+
+    .bw-scene[data-bw-durations='picks'] {
+        --bw-dimt: 0ms;
+        --bw-set: 500ms;
+        --bw-panel: 300ms;
+        --bw-loop: 1500ms;
+    }
+
+    .bw-scene[data-bw-durations='instant'] {
+        --bw-dimt: 0ms;
+        --bw-set: 0ms;
+        --bw-panel: 0ms;
+        --bw-rev: 0ms;
+    }
+
+    .bw-scene[data-bw-arrival='uncover'] {
+        --bw-arrive: uncover;
+    }
+
+    .bw-scene[data-bw-arrival='rise'] {
+        --bw-arrive: rise;
+    }
+
+    .bw-scene[data-bw-colour='cyan'] {
+        --bw-note: var(--primary);
+    }
+
+    .bw-scene[data-bw-colour='amber'] {
+        --bw-pen: var(--accent);
+        --bw-line: var(--accent);
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .bw-scene .kp-button {
+        position: relative;
+    }
+
+    .bw-scene :is(.bw-title, .kp-card__title, .kp-dialog__title, .kp-page-header__title) {
+        margin: 0;
+        color: var(--bw-ink);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 600;
+        font-style: normal;
+        letter-spacing: 0;
+        line-height: 1.2;
+        text-transform: none;
+    }
+
+    .bw-scene :is(.kp-card__body, .kp-page-header__description, .kp-dialog__description) {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+    }
+
+    /* G15: the draughtsman's lettering names: mono capitals sloped 15°
+       (ISO 3098 type B), barely tracked. */
+    .bw-scene :is(.bw-label, .kp-badge, .kp-tag, .bw-change, .bw-flag) {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        font-weight: 500;
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        line-height: 1.3;
+        text-transform: uppercase;
+    }
+
+    .bw-scene .bw-label {
+        color: var(--muted-foreground);
+    }
+
+    /* G15: the sans counts, upright, tabular. */
+    .bw-scene .bw-figure {
+        color: var(--bw-ink);
+        font-family: var(--theme-font-display);
+        font-size: 1.75rem;
+        font-weight: 600;
+        font-style: normal;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    .bw-scene .bw-faint {
+        color: var(--muted-foreground);
+    }
+
+    /* The change, set with its sign, on no plate (G13). */
+    .bw-scene .bw-change {
+        color: var(--bw-ink);
+    }
+
+    /* G7: a plate is a measured part on the sheet: no fill, no closed
+       frame, four corner brackets. */
+    .bw-scene .bw-plate {
+        position: relative;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0.8rem 0.9rem;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        color: var(--bw-ink);
+    }
+
+    .bw-scene .kp-card.bw-plate {
+        display: grid;
+        gap: 0.3rem;
+        align-content: start;
+    }
+
+    .bw-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+    }
+
+    .bw-scene .bw-kpi {
+        gap: 0.25rem 0.5rem;
+    }
+
+    .bw-scene :is(.bw-frame, .bw-trace, .bw-wit, .bw-dim, .bw-x, .bw-cloud) {
+        position: absolute;
+        pointer-events: none;
+    }
+
+    /* The package's key figure places every child in its grid's area; a
+       drawn mark is placed on the plate's own box instead. */
+    .bw-scene .bw-plate > :is(.bw-frame, .bw-trace, .bw-wit, .bw-dim, .bw-x) {
+        grid-area: auto;
+    }
+
+    .bw-scene .bw-tile-link {
+        justify-self: start;
+    }
+
+    .bw-scene .bw-frame {
+        inset: 0;
+        background-image:
+            linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0), linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0),
+            linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0), linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0),
+            linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0), linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0),
+            linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0), linear-gradient(var(--bw-bracket, var(--bw-line)) 0 0);
+        background-repeat: no-repeat;
+        background-size:
+            var(--bw-arm) 1px,
+            1px var(--bw-arm),
+            var(--bw-arm) 1px,
+            1px var(--bw-arm),
+            var(--bw-arm) 1px,
+            1px var(--bw-arm),
+            var(--bw-arm) 1px,
+            1px var(--bw-arm);
+        background-position:
+            left top,
+            left top,
+            right top,
+            right top,
+            left bottom,
+            left bottom,
+            right bottom,
+            right bottom;
+    }
+
+    /* The construction line: four sides, drawn one after another (G2). */
+    .bw-scene .bw-trace {
+        inset: 0;
+        z-index: 2;
+        visibility: visible;
+        background-image:
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen)),
+            linear-gradient(var(--bw-pen), var(--bw-pen)), linear-gradient(var(--bw-pen), var(--bw-pen));
+        background-repeat: no-repeat;
+        background-position:
+            left top,
+            right top,
+            right bottom,
+            left bottom;
+        background-size:
+            0 1px,
+            1px 0,
+            0 1px,
+            1px 0;
+    }
+
+    /* The witness lines a part takes under the hand (G8): two amber lines
+       at its ends, overhanging its top and foot. */
+    .bw-scene .bw-wit {
+        inset-block: -0.4rem;
+        inset-inline: 0.35rem;
+        opacity: 0;
+        background:
+            linear-gradient(var(--bw-note), var(--bw-note)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--bw-note), var(--bw-note)) right top / 1px 100% no-repeat;
+    }
+
+    /* The dimension a press draws between them (G14): a line with an
+       arrowhead at each end, across the foot. */
+    .bw-scene .bw-dim {
+        inset-inline: 0.35rem;
+        inset-block-end: 3px;
+        block-size: 7px;
+        opacity: 0;
+        background: linear-gradient(var(--bw-note), var(--bw-note)) center / 100% 1px no-repeat;
+    }
+
+    .bw-scene .bw-dim::before,
+    .bw-scene .bw-dim::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inline-size: 6px;
+        background: var(--bw-note);
+    }
+
+    .bw-scene .bw-dim::before {
+        inset-inline-start: 0;
+        clip-path: polygon(0 50%, 100% 0, 100% 100%);
+    }
+
+    .bw-scene .bw-dim::after {
+        inset-inline-end: 0;
+        clip-path: polygon(100% 50%, 0 0, 0 100%);
+    }
+
+    /* The demolition hatch a part is hatched out with (G12). */
+    .bw-scene .bw-x {
+        inset: 0;
+        z-index: 2;
+        clip-path: inset(0 100% 0 0);
+        border: 1px dashed var(--bw-pen);
+        background: repeating-linear-gradient(45deg, var(--bw-pen) 0 1.5px, transparent 1.5px 9px);
+    }
+
+    /* The revision cloud and its letter (G9). */
+    .bw-scene .bw-carrier {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+    }
+
+    .bw-scene .bw-carrier--line {
+        display: block;
+        justify-self: stretch;
+    }
+
+    /* The value a carrier holds keeps its own box, so a live picture that
+       moves it (the options' rise and flip) moves nothing beside it. */
+    .bw-scene .bw-carrier > :first-child {
+        display: inline-block;
+    }
+
+    .bw-scene .bw-carrier--line > :first-child {
+        display: block;
+    }
+
+    .bw-scene .bw-cloud {
+        inset: -5px -9px;
+        z-index: 2;
+    }
+
+    .bw-scene .bw-cloud::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        background:
+            radial-gradient(circle at 50% 100%, transparent 3.7px, var(--bw-note) 4px 5px, transparent 5.3px) 0 0 / 10px 6px repeat-x,
+            radial-gradient(circle at 50% 0, transparent 3.7px, var(--bw-note) 4px 5px, transparent 5.3px) 0 100% / 10px 6px repeat-x,
+            radial-gradient(circle at 100% 50%, transparent 3.7px, var(--bw-note) 4px 5px, transparent 5.3px) 0 0 / 6px 10px repeat-y,
+            radial-gradient(circle at 0 50%, transparent 3.7px, var(--bw-note) 4px 5px, transparent 5.3px) 100% 0 / 6px 10px repeat-y;
+    }
+
+    /* The revision letter stands beside the cloud's top-end corner, where
+       a flush-left value leaves the line empty, so it never sits on a word. */
+    .bw-scene .bw-cloud__rev {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(100% + 0.2rem);
+        opacity: 0;
+        color: var(--bw-note);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    /* Round a line that spans its part, the letter stands above its end. */
+    .bw-scene .bw-carrier--line .bw-cloud__rev {
+        inset-block-start: -1.2rem;
+        inset-inline: auto 0;
+    }
+
+    /* A cloud drawn and standing, in the still scenes that show one. */
+    .bw-scene .bw-revised .bw-cloud::before,
+    .bw-scene .bw-revised .bw-cloud__rev {
+        opacity: 1;
+    }
+
+    /* The flag note (G13): △ for a warning, ▲ for a failure, and the word. */
+    .bw-scene .bw-flag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        color: var(--bw-tone, var(--bw-warn));
+        white-space: nowrap;
+    }
+
+    .bw-scene .bw-flag__mark::before {
+        content: '△';
+        font-style: normal;
+    }
+
+    .bw-scene .bw-flag[data-bw-kind='bad'] .bw-flag__mark::before {
+        content: '▲';
+    }
+
+    .bw-scene [data-bw-kind='warn'] {
+        --bw-tone: var(--bw-warn);
+        --bw-tone-plate: var(--warning);
+        --bw-tone-on: var(--warning-foreground);
+    }
+
+    .bw-scene [data-bw-kind='bad'] {
+        --bw-tone: var(--bw-bad);
+        --bw-tone-plate: var(--destructive);
+        --bw-tone-on: var(--destructive-foreground);
+    }
+
+    .bw-scene .bw-toned__line {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.2rem 0.5rem;
+    }
+
+    /* Days: the calendar's title block, cells parted by drawn rules. */
+    .bw-scene .bw-days {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(2.6rem, 1fr));
+        gap: 0;
+    }
+
+    .bw-scene .bw-day {
+        position: relative;
+        display: grid;
+        place-items: start;
+        min-block-size: 2.4rem;
+        padding: 0.25rem 0.35rem;
+        border-inline-end: 1px solid hsl(from var(--bw-line) h s l / 0.6);
+        border-block-end: 1px solid hsl(from var(--bw-line) h s l / 0.6);
+        color: var(--bw-ink);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .bw-scene .bw-day .bw-frame {
+        display: none;
+    }
+
+    .bw-scene .bw-day__num {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    /* G5: today stands in cyan brackets; the pick is cyan. */
+    .bw-scene .bw-today .bw-frame {
+        display: block;
+        --bw-bracket: var(--bw-pen);
+        --bw-arm: 0.5rem;
+    }
+
+    .bw-scene .bw-picked .bw-day__num {
+        color: var(--bw-pen);
+        text-decoration: underline 2px var(--bw-pen);
+        text-underline-offset: 3px;
+    }
+
+    .bw-scene .bw-rows {
+        display: grid;
+    }
+
+    .bw-scene .bw-row-line {
+        position: relative;
+        padding: 0.35rem 0.4rem;
+        border-block-end: 1px solid hsl(from var(--bw-line) h s l / 0.5);
+        font-size: 0.85rem;
+    }
+
+    /* The strip: the columns' dimension chain, a rule with end ticks. */
+    .bw-scene .bw-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        padding-block-start: 0.6rem;
+        background:
+            linear-gradient(var(--bw-line), var(--bw-line)) 0 0.25rem / 100% 1px no-repeat,
+            linear-gradient(var(--bw-line), var(--bw-line)) 0 0 / 1px 0.55rem no-repeat,
+            linear-gradient(var(--bw-line), var(--bw-line)) 100% 0 / 1px 0.55rem no-repeat;
+    }
+
+    .bw-scene .bw-strip__col {
+        position: relative;
+        display: grid;
+        gap: 0.15rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .bw-scene .bw-column {
+        display: grid;
+        gap: 0.2rem;
+        justify-self: start;
+        min-inline-size: 8rem;
+    }
+
+    .bw-scene .bw-plot {
+        position: relative;
+        block-size: 4rem;
+        color: var(--bw-pen);
+    }
+
+    .bw-scene .bw-plot svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    /* G7: under data, the millimetre paper (the chart's pick). */
+    .bw-scene .bw-plot--paper {
+        background:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px) 0 0 / 20px 20px,
+            linear-gradient(hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px) 0 0 / 20px 20px,
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.07) 1px, transparent 1px) 0 0 / 4px 4px,
+            linear-gradient(hsl(from var(--primary) h s l / 0.07) 1px, transparent 1px) 0 0 / 4px 4px;
+    }
+
+    .bw-scene .bw-spark {
+        display: block;
+        block-size: 2rem;
+        color: var(--bw-ink);
+    }
+
+    .bw-scene .bw-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    .bw-scene .bw-spark-wrap {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .bw-scene .bw-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.85rem;
+    }
+
+    .bw-scene .bw-state__dot {
+        display: block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        background: var(--success-foreground);
+    }
+
+    .bw-scene .bw-state[data-bw-kind='bad'] .bw-state__dot {
+        background: var(--bw-bad);
+    }
+
+    .bw-scene .bw-state-plate {
+        justify-self: start;
+    }
+
+    .bw-scene .bw-meter-plate {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .bw-scene .bw-meter {
+        margin-inline-end: 1rem;
+    }
+
+    /* What floats over the drawing is an overlay sheet: one 1 px frame, no
+       shadow (G7). */
+    .bw-scene .bw-float {
+        position: relative;
+        inset: auto;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--popover);
+        box-shadow: none;
+    }
+
+    .bw-scene .bw-pop {
+        overflow: visible;
+        max-block-size: none;
+        inline-size: max-content;
+        max-inline-size: 100%;
+    }
+
+    /* The menu inside an overlay sheet is the sheet's list, not a second
+       window (the register frames and shadows every .kp-menu). */
+    .bw-scene .bw-pop .kp-menu {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .bw-scene .bw-menu-wrap {
+        display: grid;
+        justify-items: start;
+        gap: 0.35rem;
+    }
+
+    .bw-scene .bw-dialog {
+        max-inline-size: 100%;
+        padding: 1rem;
+        border-color: var(--bw-pen);
+    }
+
+    .bw-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-block-start: 0.75rem;
+    }
+
+    .bw-scene .kp-menu__item {
+        position: relative;
+        display: flex;
+        inline-size: 100%;
+    }
+
+    .bw-scene .bw-header {
+        display: block;
+    }
+
+    .bw-scene .bw-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    /* The actions keep their own size and order (the package's narrow
+       header puts the primary first and stretches it). */
+    .bw-scene .bw-header .kp-page-header__actions {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem;
+    }
+
+    .bw-scene .bw-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        order: 0;
+    }
+
+    .bw-scene .bw-header-mini {
+        justify-self: start;
+    }
+
+    .bw-scene .bw-table {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        gap: 0.45rem 0.75rem;
+    }
+
+    .bw-scene .bw-table .bw-wait {
+        grid-column: 1 / -1;
+    }
+
+    .bw-scene .bw-motif-pair,
+    .bw-scene .bw-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .bw-scene .bw-prose {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .bw-scene .bw-type {
+        gap: 0.5rem;
+    }
+
+    .bw-scene .bw-type :is(p, table) {
+        margin: 0;
+    }
+
+    .bw-scene .bw-type__head {
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    .bw-scene .bw-type__prose {
+        max-inline-size: 60ch;
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
+    }
+
+    .bw-scene .bw-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .bw-scene .bw-type__strip > div {
+        display: grid;
+    }
+
+    .bw-scene .bw-type__table th {
+        padding-inline-end: 1rem;
+        text-align: start;
+    }
+
+    .bw-scene .bw-type__table td {
+        font-size: 0.88rem;
+    }
+
+    .bw-scene .bw-stamp {
+        font-style: normal;
+        text-transform: none;
+    }
+
+    /* ── G5: where the colour goes ───────────────────────────────────── */
+
+    .bw-scene[data-bw-colour='cyan'] .kp-button::before,
+    .bw-scene[data-bw-colour='cyan'] .kp-button::after {
+        background: var(--primary);
+    }
+
+    .bw-scene[data-bw-colour='cyan'] .kp-meter__mark {
+        background: var(--primary);
+    }
+
+    .bw-scene[data-bw-colour='cyan'] .kp-meter__mark::before {
+        border-color: var(--primary);
+    }
+
+    .bw-scene[data-bw-colour='amber'] .kp-button--primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .bw-scene[data-bw-colour='amber'] a {
+        color: var(--accent);
+    }
+
+    .bw-scene[data-bw-colour='amber'] .kp-badge,
+    .bw-scene[data-bw-colour='amber'] .kp-tag {
+        border-color: var(--accent);
+    }
+
+    .bw-scene[data-bw-colour='amber'] .kp-meter::before {
+        background: var(--accent);
+    }
+
+    /* The pointed button of the colour row stands with its witness lines. */
+    .bw-scene[data-bw-colour] .kp-button.bw-pointed {
+        border-color: var(--bw-pen);
+    }
+
+    .bw-scene[data-bw-colour] .kp-button.bw-pointed::before,
+    .bw-scene[data-bw-colour] .kp-button.bw-pointed::after {
+        opacity: 1;
+    }
+
+    /* ── G7: the surface ─────────────────────────────────────────────── */
+
+    .bw-scene:is([data-bw-surface='section'], [data-bw-surface='paper']) .bw-plate .bw-frame {
+        display: none;
+    }
+
+    .bw-scene[data-bw-surface='section'] .bw-plate {
+        border: 1px dashed var(--border-strong);
+        background: repeating-linear-gradient(45deg, hsl(from var(--border-strong) h s l / 0.16) 0 1px, transparent 1px 9px), var(--card);
+    }
+
+    .bw-scene[data-bw-surface='paper'] .bw-plate {
+        border: 1px solid var(--border-strong);
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+            var(--card);
+    }
+
+    .bw-scene[data-bw-surface='paper'] .bw-pop {
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.14) 1px, transparent 1px) 0 0 / 12px 12px,
+            var(--popover);
+    }
+
+    /* ── G13: a warning ──────────────────────────────────────────────── */
+
+    .bw-scene:is([data-bw-tone='flag'], :not([data-bw-tone])) .bw-toned {
+        --bw-bracket: var(--bw-tone);
+    }
+
+    .bw-scene:is([data-bw-tone='frame'], [data-bw-tone='hatch']) .bw-toned .bw-flag {
+        display: none;
+    }
+
+    .bw-scene:is([data-bw-tone='frame'], [data-bw-tone='hatch']) .bw-toned .bw-frame {
+        display: none;
+    }
+
+    .bw-scene[data-bw-tone='frame'] .bw-toned {
+        border: 2px solid var(--bw-tone);
+    }
+
+    .bw-scene[data-bw-tone='frame'] .bw-toned .bw-toned__figure {
+        padding-inline: 0.25rem;
+        background: var(--bw-tone-plate);
+        color: var(--bw-tone-on);
+    }
+
+    .bw-scene[data-bw-tone='hatch'] .bw-toned {
+        border: 1px dashed var(--bw-tone);
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--bw-tone) h s l / 0.28) 0 2px, transparent 2px 7px);
+    }
+
+    /* ── G15: the voice ──────────────────────────────────────────────── */
+
+    .bw-scene[data-bw-voice='mono'] :is(.bw-label, .kp-badge, .kp-tag, .bw-change, .bw-flag) {
+        font-style: normal;
+        letter-spacing: 0.12em;
+    }
+
+    .bw-scene[data-bw-voice='sans'] :is(.bw-label, .kp-badge, .kp-tag, .bw-change, .bw-flag) {
+        font-family: var(--theme-font-body);
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-style: normal;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    /* ── G16: the motifs ─────────────────────────────────────────────── */
+
+    .bw-scene[data-bw-motifs='line'] .bw-frame,
+    .bw-scene[data-bw-motifs='line'] .bw-flag__mark,
+    .bw-scene[data-bw-motifs='line'] .kp-empty::before {
+        display: none;
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-plate {
+        border: 1px solid var(--border-strong);
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-plot--paper {
+        background: none;
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-today .bw-day__num {
+        font-weight: 800;
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-picked .bw-day__num {
+        color: var(--bw-ink);
+    }
+
+    .bw-scene[data-bw-motifs='line'] .bw-divider::before,
+    .bw-scene[data-bw-motifs='line'] .bw-divider::after {
+        background-image: none;
+        background-color: var(--border-strong);
+    }
+
+    .bw-scene[data-bw-motifs='all'] .bw-plate {
+        border: 1px dashed var(--border-strong);
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--border-strong) h s l / 0.16) 0 1px, transparent 1px 9px),
+            linear-gradient(hsl(from var(--foreground) h s l / 0.1) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.1) 1px, transparent 1px) 0 0 / 12px 12px,
+            var(--card);
+    }
+
+    .bw-scene[data-bw-motifs='all'] .bw-plate .bw-frame {
+        display: none;
+    }
+
+    .bw-scene[data-bw-motifs='all'] :is(.bw-today, .bw-picked) {
+        outline: 2px dashed var(--accent);
+        outline-offset: -3px;
+    }
+
+    .bw-scene[data-bw-motifs='all'] .bw-cloud--still {
+        inset: -6px;
+    }
+
+    .bw-scene[data-bw-motifs='all'] .bw-cloud--still::before {
+        opacity: 1;
+    }
+
+    /* ── G8: pointing at something (shown still on .bw-pointed) ───────── */
+
+    .bw-scene:is([data-bw-hover='witness'], [data-bw-focus='ring']) :is(.kp-button.bw-pointed, .kp-button.bw-focused) {
+        border-color: var(--bw-pen);
+    }
+
+    .bw-scene:is([data-bw-hover='witness'], [data-bw-focus='ring']) :is(.kp-button.bw-pointed, .kp-button.bw-focused)::before,
+    .bw-scene:is([data-bw-hover='witness'], [data-bw-focus='ring']) :is(.kp-button.bw-pointed, .kp-button.bw-focused)::after,
+    .bw-scene:is([data-bw-hover='witness'], [data-bw-focus='ring']) :is(.bw-pointed, .bw-focused) > .bw-wit {
+        opacity: 1;
+    }
+
+    .bw-scene[data-bw-hover='witness'] .kp-menu__item.bw-pointed {
+        background: var(--kp-menu-wash);
+    }
+
+    .bw-scene[data-bw-hover='grid'] .bw-pointed {
+        background-image:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.22) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.22) 1px, transparent 1px);
+        background-size: 8px 8px;
+    }
+
+    .bw-scene[data-bw-hover='ring'] .bw-pointed {
+        outline: 2px dashed var(--ring);
+        outline-offset: -5px;
+    }
+
+    /* ── DI2: the focus ring (shown still on .bw-focused) ─────────────── */
+
+    .bw-scene[data-bw-focus='ring'] .bw-focused {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .bw-scene[data-bw-focus='dashed'] .bw-focused {
+        outline: 1px dashed var(--ring);
+        outline-offset: 3px;
+    }
+
+    .bw-scene[data-bw-focus='thin'] .bw-focused {
+        outline: 1px solid var(--primary);
+        outline-offset: 3px;
+    }
+
+    /* ── G14: the press (the clock presses .bw-press while `in`) ──────── */
+
+    .bw-scene:is([data-bw-press], [data-bw-durations])[data-bw-phase='in'] .bw-press:not(.kp-button--primary) {
+        background: var(--secondary-active);
+        color: var(--foreground);
+    }
+
+    .bw-scene:is([data-bw-press], [data-bw-durations])[data-bw-phase='in'] .kp-button--primary.bw-press {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+    }
+
+    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .bw-press :is(.bw-dim, .bw-wit),
+    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .kp-button.bw-press::before,
+    .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .kp-button.bw-press::after {
+        opacity: 1;
+    }
+
+    .bw-scene[data-bw-press='inset'][data-bw-phase='in'] .bw-press {
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+
+    /* ── G17: buttons inside composites (forced by the State buttons) ── */
+
+    .bw-scene[data-bw-composites='today'] .bw-in-header {
+        border: 2px solid var(--border-strong);
+        background: transparent;
+    }
+
+    .bw-scene[data-bw-composites='today'] .bw-in-header.kp-button--primary {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    /* Own: the theme's own hover, ring and press, inside and alone. */
+    [data-bw-show='hover'] .bw-scene[data-bw-composites] .bw-alone,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link),
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-drawer,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='quiet'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link) {
+        border-color: var(--bw-pen);
+    }
+
+    [data-bw-show='hover'] .bw-scene[data-bw-composites] .bw-alone::before,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites] .bw-alone::after,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::before,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::after,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='own'] :is(.bw-in-entry, .bw-in-kpi) > .bw-wit,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-drawer::before,
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-drawer::after {
+        opacity: 1;
+    }
+
+    [data-bw-show='hover'] .bw-scene:is([data-bw-composites='own'], [data-bw-composites='quiet']) .bw-in-entry {
+        background: var(--kp-menu-wash);
+    }
+
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-header {
+        translate: 0 -1px;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-entry {
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-tile-link .kp-button__label {
+        text-decoration: underline;
+    }
+
+    [data-bw-show='hover'] .bw-scene[data-bw-composites='today'] .bw-in-kpi {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.14) 0 1px, transparent 1px 7px);
+    }
+
+    [data-bw-show='focus'] .bw-scene[data-bw-composites] .bw-alone,
+    [data-bw-show='focus']
+        .bw-scene:is([data-bw-composites='own'], [data-bw-composites='quiet'])
+        :is(.bw-in-header, .bw-in-drawer, .bw-tile-link, .bw-in-entry, .bw-in-kpi),
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='today'] :is(.bw-in-drawer, .bw-in-entry) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-bw-show='focus'] .bw-scene[data-bw-composites] .bw-alone::before,
+    [data-bw-show='focus'] .bw-scene[data-bw-composites] .bw-alone::after,
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::before,
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::after,
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='own'] :is(.bw-in-entry, .bw-in-kpi) > .bw-wit {
+        opacity: 1;
+    }
+
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='today'] .bw-in-header {
+        outline: 1px dashed var(--ring);
+        outline-offset: 3px;
+    }
+
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='today'] .bw-tile-link {
+        outline: 2px dashed var(--border-strong);
+        outline-offset: 3px;
+    }
+
+    [data-bw-show='focus'] .bw-scene[data-bw-composites='today'] .bw-in-kpi {
+        outline: 1px solid var(--primary);
+        outline-offset: 3px;
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites] .bw-alone:not(.kp-button--primary),
+    [data-bw-show='press']
+        .bw-scene[data-bw-composites]:not([data-bw-composites='today'])
+        :is(.bw-in-header, .bw-in-drawer, .bw-tile-link, .bw-in-entry, .bw-in-kpi):not(.kp-button--primary),
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-drawer:not(.kp-button--primary) {
+        background: var(--secondary-active);
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites] .bw-alone.kp-button--primary,
+    [data-bw-show='press'] .bw-scene[data-bw-composites]:not([data-bw-composites='today']) :is(.bw-in-header, .bw-in-drawer).kp-button--primary,
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-drawer.kp-button--primary {
+        border-color: var(--primary-active);
+        background: var(--primary-active);
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites] .bw-alone :is(.bw-dim),
+    [data-bw-show='press'] .bw-scene[data-bw-composites] .bw-alone::before,
+    [data-bw-show='press'] .bw-scene[data-bw-composites] .bw-alone::after,
+    [data-bw-show='press']
+        .bw-scene[data-bw-composites='own']
+        :is(.bw-in-header, .bw-in-drawer, .bw-tile-link, .bw-in-entry, .bw-in-kpi)
+        :is(.bw-dim, .bw-wit),
+    [data-bw-show='press'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::before,
+    [data-bw-show='press'] .bw-scene[data-bw-composites='own'] :is(.bw-in-header, .bw-in-drawer, .bw-tile-link)::after,
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-drawer :is(.bw-dim),
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-drawer::before,
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-drawer::after {
+        opacity: 1;
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-header {
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-entry {
+        background: hsl(from var(--primary) h s l / 0.06);
+    }
+
+    [data-bw-show='press'] .bw-scene[data-bw-composites='today'] .bw-in-kpi {
+        scale: 0.99;
+    }
+
+    /* ── G10: the waiting parts ──────────────────────────────────────── */
+
+    .bw-scene .bw-wait {
+        position: relative;
+        display: block;
+        block-size: 0.9rem;
+        inline-size: 100%;
+    }
+
+    .bw-scene .bw-wait--figure {
+        block-size: 1.5rem;
+        inline-size: min(100%, 6.5rem);
+        margin-block: 0.1rem;
+    }
+
+    .bw-scene .bw-wait--body {
+        inline-size: 90%;
+        margin-block-start: 0.35rem;
+    }
+
+    .bw-scene .bw-wait--body + .bw-wait--body {
+        inline-size: 62%;
+    }
+
+    .bw-scene .bw-wait--row {
+        block-size: 0.8rem;
+    }
+
+    .bw-scene .bw-wait--entry {
+        inline-size: 6rem;
+        block-size: 0.75rem;
+        margin-block-start: 0.35rem;
+    }
+
+    .bw-scene .bw-wait--day {
+        block-size: 1rem;
+        inline-size: 1.6rem;
+    }
+
+    .bw-scene .bw-wait--meter {
+        block-size: 0.6rem;
+    }
+
+    .bw-scene .bw-entry-wait {
+        display: grid;
+        justify-items: start;
+    }
+
+    .bw-scene .bw-wait > span {
+        position: absolute;
+        inset: 0;
+        display: none;
+    }
+
+    /* The section: two rules, a tick at each end, the cyan hatch. */
+    .bw-scene:is([data-bw-loading='section'], :not([data-bw-loading])) .bw-section {
+        display: block;
+        border-block: 1px solid hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    .bw-scene .bw-section::before {
+        content: '';
+        position: absolute;
+        inset-block: -5px;
+        inset-inline: -1px;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    .bw-scene .bw-section::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(45deg, hsl(from var(--bw-pen) h s l / 0.6) 0 1px, transparent 1px 6px);
+    }
+
+    .bw-scene[data-bw-loading='run'] .bw-run {
+        display: block;
+        background: linear-gradient(var(--bw-pen), var(--bw-pen)) -50% 100% / 30% 2px no-repeat;
+    }
+
+    .bw-scene[data-bw-loading='ants'] .bw-ants {
+        display: block;
+        background:
+            linear-gradient(90deg, var(--bw-pen) 50%, transparent 0) 0 0 / 8px 1px repeat-x,
+            linear-gradient(90deg, var(--bw-pen) 50%, transparent 0) 0 100% / 8px 1px repeat-x,
+            linear-gradient(0deg, var(--bw-pen) 50%, transparent 0) 0 0 / 1px 8px repeat-y,
+            linear-gradient(0deg, var(--bw-pen) 50%, transparent 0) 100% 0 / 1px 8px repeat-y;
+    }
+
+    /* The package's own loading parts keep the register's look. */
+    .bw-scene .bw-story__bar,
+    .bw-story__bar {
+        flex: 1 1 10rem;
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The register's own dialog entrance (the sheet) is the package's;
+           here the dialog plays only what its question asks. */
+        .bw-scene .bw-dialog {
+            animation: none;
+        }
+
+        /* G2: what arrives is constructed, then drawn (or the arrival
+           question's other ways); hidden in the gap. */
+        .bw-scene[data-bw-phase='gap'] :is(.bw-arrives, .bw-opens, .bw-leaves) {
+            visibility: hidden;
+        }
+
+        .bw-scene[data-bw-phase='gap'] .bw-plot--draws svg {
+            visibility: hidden;
+        }
+
+        /* Constructed: the part stays hidden while its outline is traced,
+           and is inked at three quarters. */
+        .bw-scene:not([data-bw-arrival='uncover'], [data-bw-arrival='rise'])[data-bw-phase='in'] .bw-arrives {
+            animation: bw-ink calc(var(--bw-set) * var(--bw-slow, 1)) linear calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        }
+
+        .bw-scene:not([data-bw-arrival='uncover'], [data-bw-arrival='rise'])[data-bw-phase='in'] .bw-arrives > .bw-trace {
+            animation: bw-trace calc(var(--bw-set) * var(--bw-slow, 1)) var(--bw-in) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        }
+
+        /* A line in time is plotted along itself (every option of the
+           arrival question but the rise). */
+        .bw-scene:not([data-bw-arrival='rise'])[data-bw-phase='in'] .bw-plot--draws svg {
+            animation: bw-uncover calc(var(--bw-panel) * var(--bw-slow, 1)) var(--bw-in) backwards;
+        }
+
+        /* Uncovered from the start (the picks; titanium's feed). */
+        .bw-scene[data-bw-arrival='uncover'][data-bw-phase='in'] .bw-arrives {
+            animation: bw-uncover calc(500ms * var(--bw-slow, 1)) linear calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        }
+
+        /* Risen in four hard steps (the busy panel's Plotted). */
+        .bw-scene[data-bw-arrival='rise'][data-bw-phase='in'] :is(.bw-arrives, .bw-plot--draws svg) {
+            animation: bw-rise calc(400ms * var(--bw-slow, 1)) steps(4, jump-end) calc(var(--i, 0) * var(--bw-step) * var(--bw-slow, 1)) backwards;
+        }
+
+        /* G3: what opens is drawn the same way; closing is the ink lifted
+           and the outline untraced. */
+        .bw-scene:not([data-bw-opening='top'], [data-bw-opening='unroll'])[data-bw-phase='in'] .bw-opens {
+            animation: bw-ink calc(var(--bw-panel) * var(--bw-slow, 1)) linear backwards;
+        }
+
+        .bw-scene:not([data-bw-opening='top'], [data-bw-opening='unroll'])[data-bw-phase='in'] .bw-opens > .bw-trace {
+            animation: bw-trace calc(var(--bw-panel) * var(--bw-slow, 1)) var(--bw-in) backwards;
+        }
+
+        .bw-scene:not([data-bw-opening='top'], [data-bw-opening='unroll'])[data-bw-phase='out'] .bw-opens {
+            animation: bw-hide calc(var(--bw-panel) * var(--bw-slow, 1)) linear forwards;
+        }
+
+        .bw-scene:not([data-bw-opening='top'], [data-bw-opening='unroll'])[data-bw-phase='out'] .bw-opens > .bw-trace {
+            animation: bw-untrace calc(var(--bw-panel) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        }
+
+        /* Opening, as picked: drafted from the top (titanium's cut). */
+        .bw-scene[data-bw-opening='top'][data-bw-phase='in'] .bw-opens {
+            animation: bw-top calc(300ms * var(--bw-slow, 1)) linear backwards;
+        }
+
+        .bw-scene[data-bw-opening='top'][data-bw-phase='out'] .bw-opens {
+            animation: bw-top calc(300ms * var(--bw-slow, 1)) linear reverse forwards;
+        }
+
+        /* Opening, the drawer's pick: unrolled from the tube at its start
+           edge, slowing as it lands. */
+        .bw-scene[data-bw-opening='unroll'][data-bw-phase='in'] .bw-opens {
+            transform-origin: 0 50%;
+            animation: bw-unroll calc(300ms * var(--bw-slow, 1)) ease-out backwards;
+        }
+
+        .bw-scene[data-bw-opening='unroll'][data-bw-phase='out'] .bw-opens {
+            transform-origin: 0 50%;
+            animation: bw-unroll calc(280ms * var(--bw-slow, 1)) ease-in reverse forwards;
+        }
+
+        /* G9: a change is revised (the moving and duration scenes too). */
+        .bw-scene:is([data-bw-live='revise'], [data-bw-curve], [data-bw-durations])[data-bw-phase='in'] .bw-cloud::before {
+            animation: bw-cloud calc(var(--bw-rev) * var(--bw-slow, 1)) linear both;
+        }
+
+        .bw-scene:is([data-bw-live='revise'], [data-bw-curve], [data-bw-durations])[data-bw-phase='in'] .bw-cloud__rev {
+            animation: bw-rev calc(var(--bw-rev) * var(--bw-slow, 1)) linear both;
+        }
+
+        /* Retraced in ink (the key figure's pick): the value rises 10 %. */
+        .bw-scene[data-bw-live='retrace'][data-bw-phase='in'] .bw-carrier > :first-child {
+            animation: bw-retrace calc(500ms * var(--bw-slow, 1)) linear;
+        }
+
+        /* Turned over (the columns' pick): a flip about the x axis. */
+        .bw-scene[data-bw-live='turn'][data-bw-phase='in'] .bw-carrier > :first-child {
+            animation: bw-turn calc(500ms * var(--bw-slow, 1)) ease-in-out;
+        }
+
+        /* G14: the dimension is drawn between the witness lines. */
+        .bw-scene:is([data-bw-press='dimension'], [data-bw-durations])[data-bw-phase='in'] .bw-press .bw-dim {
+            animation: bw-draw calc(var(--bw-dimt) * var(--bw-slow, 1)) var(--bw-in) both;
+        }
+
+        /* G10: the section is hatched, stands, and is lifted. */
+        .bw-scene:is([data-bw-loading='section'], :not([data-bw-loading])) .bw-section::after {
+            animation: bw-hatch calc(var(--bw-loop) * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite backwards;
+        }
+
+        .bw-scene[data-bw-loading='run'] .bw-run {
+            animation: bw-run calc(1500ms * var(--bw-slow, 1)) linear calc(var(--i, 0) * 240ms * var(--bw-slow, 1)) infinite;
+        }
+
+        .bw-scene[data-bw-loading='ants'] .bw-ants {
+            animation: bw-ants calc(700ms * var(--bw-slow, 1)) linear infinite;
+        }
+
+        /* G12: leaving and arriving. Hatched out and lifted off; set down
+           and the hatch taken away, backwards. */
+        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='out'] .bw-leaves {
+            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        }
+
+        .bw-scene:is([data-bw-leave='hatch'], :not([data-bw-leave]))[data-bw-phase='out'] .bw-leaves > .bw-x {
+            animation: bw-hatch-out calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        }
+
+        .bw-scene[data-bw-leave='hatch'][data-bw-phase='in'] .bw-leaves {
+            animation: bw-lift calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
+        }
+
+        .bw-scene[data-bw-leave='hatch'][data-bw-phase='in'] .bw-leaves > .bw-x {
+            animation: bw-hatch-out calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) reverse both;
+        }
+
+        /* Untraced: the ink lifted at once, the outline run back. */
+        /* (The three leaves take the leave's 7 units, so they compare.) */
+        .bw-scene[data-bw-leave='untrace'][data-bw-phase='out'] .bw-leaves {
+            animation: bw-hide calc(var(--bw-leave) * var(--bw-slow, 1)) linear forwards;
+        }
+
+        .bw-scene[data-bw-leave='untrace'][data-bw-phase='out'] .bw-leaves > .bw-trace {
+            animation: bw-untrace calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) forwards;
+        }
+
+        .bw-scene[data-bw-leave='untrace'][data-bw-phase='in'] .bw-leaves {
+            animation: bw-ink calc(var(--bw-leave) * var(--bw-slow, 1)) linear backwards;
+        }
+
+        .bw-scene[data-bw-leave='untrace'][data-bw-phase='in'] .bw-leaves > .bw-trace {
+            animation: bw-trace calc(var(--bw-leave) * var(--bw-slow, 1)) var(--bw-in) backwards;
+        }
+
+        /* Erased from the start (round six's option 1; titanium's cut). */
+        .bw-scene[data-bw-leave='erase'][data-bw-phase='out'] .bw-leaves {
+            animation: bw-erase calc(var(--bw-leave) * var(--bw-slow, 1)) linear forwards;
+        }
+
+        .bw-scene[data-bw-leave='erase'][data-bw-phase='in'] .bw-leaves {
+            animation: bw-erase calc(var(--bw-leave) * var(--bw-slow, 1)) linear reverse both;
+        }
+
+        @keyframes bw-ink {
+            0%,
+            74.9% {
+                visibility: hidden;
+            }
+
+            75%,
+            100% {
+                visibility: visible;
+            }
+        }
+
+        @keyframes bw-hide {
+            from,
+            to {
+                visibility: hidden;
+            }
+        }
+
+        /* The outline in four strokes: along the top (35 % of the
+           drawing), down the end (15 %), back along the foot (35 %), up the
+           start (15 %); the drawing takes three quarters, the outline stands
+           for the last. */
+        @keyframes bw-trace {
+            0% {
+                background-size:
+                    0 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
+
+            26.25% {
+                background-size:
+                    100% 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
+
+            37.5% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    0 1px,
+                    1px 0;
+            }
+
+            63.75% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    100% 1px,
+                    1px 0;
+            }
+
+            75%,
+            100% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    100% 1px,
+                    1px 100%;
+            }
+        }
+
+        @keyframes bw-untrace {
+            0%,
+            25% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    100% 1px,
+                    1px 100%;
+            }
+
+            36.25% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    100% 1px,
+                    1px 0;
+            }
+
+            62.5% {
+                background-size:
+                    100% 1px,
+                    1px 100%,
+                    0 1px,
+                    1px 0;
+            }
+
+            73.75% {
+                background-size:
+                    100% 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
+
+            100% {
+                background-size:
+                    0 1px,
+                    1px 0,
+                    0 1px,
+                    1px 0;
+            }
+        }
+
+        @keyframes bw-uncover {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes bw-rise {
+            from {
+                translate: 0 0.8rem;
+            }
+
+            to {
+                translate: 0 0;
+            }
+        }
+
+        @keyframes bw-top {
+            from {
+                clip-path: inset(0 0 100% 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes bw-unroll {
+            from {
+                scale: 0.04 1;
+            }
+
+            to {
+                scale: 1 1;
+            }
+        }
+
+        /* The cloud: drawn clockwise from the top-start corner (45 %),
+           standing (to 85 %), lifted at once. Each wedge of the sweep is
+           its own segment, so it feeds like a pen. */
+        @keyframes bw-cloud {
+            0% {
+                opacity: 1;
+                clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            15% {
+                clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            22.5% {
+                clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            37.5% {
+                clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            45%,
+            85% {
+                opacity: 1;
+                clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+            }
+
+            85.1%,
+            100% {
+                opacity: 0;
+                clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+            }
+        }
+
+        @keyframes bw-rev {
+            0%,
+            44.9% {
+                opacity: 0;
+            }
+
+            45%,
+            85% {
+                opacity: 1;
+            }
+
+            85.1%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes bw-retrace {
+            from {
+                translate: 0 10%;
+            }
+
+            to {
+                translate: 0 0;
+            }
+        }
+
+        @keyframes bw-turn {
+            50% {
+                rotate: x 90deg;
+            }
+        }
+
+        @keyframes bw-draw {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        /* The section: hatched in 7 of 18 units on the feed, standing 7,
+           lifted at once and empty for 4. */
+        @keyframes bw-hatch {
+            0% {
+                clip-path: inset(0 100% 0 0);
+                animation-timing-function: linear(0, 0.031 10%, 0.125 20%, 0.875 80%, 0.969 90%, 1);
+            }
+
+            38.9%,
+            77.8% {
+                clip-path: inset(0);
+            }
+
+            77.9%,
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes bw-run {
+            from {
+                background-position: -50% 100%;
+            }
+
+            to {
+                background-position: 150% 100%;
+            }
+        }
+
+        @keyframes bw-ants {
+            to {
+                background-position:
+                    8px 0,
+                    -8px 100%,
+                    0 -8px,
+                    100% 8px;
+            }
+        }
+
+        /* Kenny's leave: the drift toward the top-end corner over the
+           whole time, gone from 70 %. */
+        @keyframes bw-lift {
+            0% {
+                translate: 0 0;
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                translate: 6px -6px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes bw-hatch-out {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            60%,
+            100% {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes bw-erase {
+            from {
+                clip-path: inset(0);
+            }
+
+            to {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+    }
+
+    /* Reduced motion: the finished picture (G18). The section stands
+       hatched; the scenes stand at hold. */
+    @media (prefers-reduced-motion: reduce) {
+        .bw-scene .bw-section::after {
+            clip-path: none;
+        }
+    }
+}

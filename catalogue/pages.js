@@ -90,6 +90,8 @@ export const PAGES = [
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
+            // Kenny, 2026-10-07 04:23: what makes blueprint blueprint, the same way (the analysis in themes/blueprint/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the last theme of the one-by-one series, after grotesk.
+            { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
         ],
     },
     {

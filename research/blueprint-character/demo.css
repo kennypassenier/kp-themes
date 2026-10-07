@@ -1,11 +1,10 @@
-/* research/brutalism-character: the page only. A centred column; the story
-   at the top, then one section of eighteen rows, each row a question with
+/* research/blueprint-character: the page only. A centred column; the story
+   at the top, then one section of sixteen rows, each row a question with
    its three options side by side on a desk and stacked on a phone. Every
    option's own drawing is in options.css. */
-.bc-page {
+.bw-page {
     display: grid;
-    /* One track that never grows past the column: the marquee divider's
-       strip would otherwise widen it. */
+    /* One track that never grows past the column. */
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
     max-inline-size: 96rem;
@@ -13,42 +12,42 @@
     padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
 }
 
-.bc-intro,
-.bc-story,
-.bc-sec__head {
+.bw-intro,
+.bw-story,
+.bw-sec__head {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.bc-intro :is(h1, p),
-.bc-story :is(h2, p),
-.bc-sec__head :is(h2, p) {
+.bw-intro :is(h1, p),
+.bw-story :is(h2, p),
+.bw-sec__head :is(h2, p) {
     margin: 0;
 }
 
-.bc-intro p,
-.bc-story__text p,
-.bc-sec__head p {
+.bw-intro p,
+.bw-story__text p,
+.bw-sec__head p {
     max-inline-size: 78ch;
 }
 
-.bc-motion {
+.bw-motion {
     color: var(--muted-foreground);
 }
 
-.bc-story__grid {
+.bw-story__grid {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     gap: var(--kp-space-lg, 1.5rem);
     align-items: start;
 }
 
-.bc-story__text {
+.bw-story__text {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.bc-story__parts {
+.bw-story__parts {
     display: grid;
     gap: var(--kp-space-md, 1rem);
     padding: var(--kp-space-md, 1rem);
@@ -57,49 +56,48 @@
     background: var(--card);
 }
 
-.bc-story__bar {
+.bw-story__bar {
     flex: 1 1 10rem;
 }
 
-.bc-story__divider {
+.bw-story__skel {
+    display: grid;
+}
+
+.bw-story__divider {
     margin-block-start: var(--kp-space-sm, 0.5rem);
 }
 
-.bc-story__skel {
-    display: grid;
-    gap: 0.4rem;
-}
-
-.bc-gallery summary {
+.bw-gallery summary {
     cursor: pointer;
     font-weight: 600;
 }
 
-.bc-gallery__grid {
+.bw-gallery__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
     gap: var(--kp-space-md, 1rem);
     margin-block-start: var(--kp-space-md, 1rem);
 }
 
-.bc-gallery figure {
+.bw-gallery figure {
     display: grid;
     gap: 0.25rem;
     margin: 0;
 }
 
-.bc-gallery figcaption {
+.bw-gallery figcaption {
     font-weight: 600;
 }
 
-.bc-gallery iframe {
+.bw-gallery iframe {
     inline-size: 100%;
     block-size: 14rem;
     border: 1px solid var(--border);
     background: var(--background);
 }
 
-.bc-sec {
+.bw-sec {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
@@ -110,34 +108,34 @@
     color: var(--card-foreground);
 }
 
-.bc-sec__head p,
-.bc-aspect__why {
+.bw-sec__head p,
+.bw-aspect__why {
     color: var(--muted-foreground);
 }
 
-.bc-toc {
+.bw-toc {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     gap: 0.15rem var(--kp-space-md, 1rem);
     margin: 0;
     padding-inline-start: 1.5rem;
 }
 
-.bc-controls {
+.bw-controls {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.bc-actions,
-.bc-row {
+.bw-actions,
+.bw-row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-[data-bc-state][aria-pressed='true'],
-[data-bc-speed][aria-pressed='true'] {
+[data-bw-state][aria-pressed='true'],
+[data-bw-speed][aria-pressed='true'] {
     background: var(--primary);
     color: var(--primary-foreground);
 }
@@ -146,13 +144,13 @@
     margin: 0;
 }
 
-.bc-aspects {
+.bw-aspects {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
 }
 
-.bc-aspect {
+.bw-aspect {
     /* A row far off screen is not rendered, so its loops cost nothing until
        it scrolls near. */
     content-visibility: auto;
@@ -161,35 +159,34 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
     padding-block-start: var(--kp-space-lg, 1.5rem);
-    border-block-start: 1px solid var(--border);
+    border-block-start: 1px dashed var(--border-strong);
     scroll-margin-block-start: 1rem;
 }
 
-.bc-aspect__head {
+.bw-aspect__head {
     display: grid;
     gap: 0.35rem;
 }
 
-.bc-aspect__head :is(h3, p) {
+.bw-aspect__head :is(h3, p) {
     max-inline-size: 90ch;
     margin: 0;
 }
 
-.bc-aspect__no {
+.bw-aspect__no {
     display: inline-grid;
     place-items: center;
     min-inline-size: 1.75rem;
     block-size: 1.75rem;
     margin-inline-end: 0.35rem;
-    border: 2px solid var(--foreground);
-    background: var(--secondary);
-    color: var(--secondary-foreground);
-    box-shadow: 3px 3px 0 0 var(--foreground);
-    font-family: var(--theme-font-display);
-    font-size: 1.1rem;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-family: var(--theme-font-mono);
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
-.bc-aspect__rule {
+.bw-aspect__rule {
     margin-inline-start: 0.35rem;
     color: var(--muted-foreground);
     font-family: var(--theme-font-display);
@@ -198,24 +195,24 @@
     white-space: nowrap;
 }
 
-.bc-aspect__q {
+.bw-aspect__q {
     font-weight: 600;
 }
 
 /* The options in a subgrid, so the names, the words and the scenes line up
    across the row whatever their length; one under the other below 64rem. */
-.bc-trio {
+.bw-trio {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
     align-items: start;
 }
 
-.bc-trio[data-bc-n='4'] {
+.bw-trio[data-bw-n='4'] {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.bc-col {
+.bw-col {
     display: grid;
     grid-row: span 4;
     grid-template-rows: subgrid;
@@ -224,41 +221,41 @@
 }
 
 @media (max-width: 64rem) {
-    .bc-story__grid,
-    .bc-trio,
-    .bc-trio[data-bc-n='4'] {
+    .bw-story__grid,
+    .bw-trio,
+    .bw-trio[data-bw-n='4'] {
         grid-template-columns: minmax(0, 1fr);
     }
 
     /* Stacked, an option is a plain column: as a grid, its scene's row
-       left out the scene's padding and border (44 px), and the scene ran
-       onto the next option's heading (fixed as grotesk's demo fixed it). */
-    .bc-col {
+       left out the scene's padding and border (44 px) and the scene ran
+       onto the next option's heading. */
+    .bw-col {
         display: flex;
         flex-direction: column;
         grid-row: auto;
     }
 
-    .bc-col > * {
+    .bw-col > * {
         flex-shrink: 0;
     }
 
-    .bc-scene {
+    .bw-scene {
         min-block-size: 0;
     }
 }
 
-.bc-label-row {
+.bw-label-row {
     margin: 0;
     font-weight: 700;
 }
 
-.bc-label-row__no {
+.bw-label-row__no {
     font-family: var(--theme-font-display);
     color: var(--muted-foreground);
 }
 
-.bc-label-row__rec {
+.bw-label-row__rec {
     display: inline-block;
     margin-inline-start: 0.25rem;
     padding: 0.05rem 0.45rem;
@@ -270,68 +267,77 @@
     white-space: nowrap;
 }
 
-.bc-see,
-.bc-verdict {
+.bw-see,
+.bw-verdict {
     margin: 0;
     font-size: var(--kp-text-sm, 0.875rem);
 }
 
-.bc-verdict {
+.bw-verdict {
     color: var(--muted-foreground);
 }
 
-.bc-verdict--rec {
+.bw-verdict--rec {
     color: var(--foreground);
     font-weight: 600;
 }
 
 /* The scene: a small dashboard of parts, the same parts in every option of
    a row. */
-.bc-scene {
+.bw-scene {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
-    gap: var(--kp-space-md, 1rem);
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1rem);
     align-content: start;
+    /* Border-box, so the scene fills its row and never runs past it (the
+       grotesk and brutalism scenes ran 44 px past theirs: their padding and
+       border on top of the row's height). */
+    box-sizing: border-box;
     min-block-size: 100%;
-    padding: 1.1rem 1.4rem 1.4rem 1.1rem;
-    border: 2px solid var(--border);
-    background: var(--background);
+    padding: 1.25rem 1.4rem 1.4rem 1.25rem;
+    border: 1px solid var(--border-strong);
+    /* The ruled sheet the plates stand on (the register's own texture). */
+    background-color: var(--background);
+    background-image: var(--fx-texture);
+    background-size: var(--fx-texture-size);
 }
 
-.bc-part {
+.bw-part {
     display: grid;
     gap: 0.4rem;
     align-content: start;
     min-inline-size: 0;
 }
 
-.bc-part--wide {
+.bw-part--wide {
     grid-column: 1 / -1;
 }
 
-.bc-cap {
+.bw-cap {
     margin: 0;
     color: var(--muted-foreground);
     font-size: 0.75rem;
 }
 
-.bc-readout {
+.bw-readout {
     margin: 0;
-    font-family: var(--theme-font-display);
-    font-size: 1.15rem;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
 }
 
 /* In the review dialog one option is shown alone and large: its scene gets
    the room of the stage. */
-[data-rv-flip-trio] .bc-col:not([hidden]) {
+[data-rv-flip-trio] .bw-col:not([hidden]) {
     grid-column: 1 / -1;
 }
 
 /* A control in a part keeps its own width; plates and strips take the part's. */
-.bc-part > :is(.kp-button, .kp-badge, .bc-tip, .bc-spark, .bc-state, a, .bc-meter-wait) {
+.bw-part > :is(.kp-button, .kp-badge, .bw-tip, .bw-spark, .bw-state, a, .bw-meter-wait) {
     justify-self: start;
 }
 
-.bc-part > :is(.bc-spark, .bc-meter-wait) {
+.bw-part > :is(.bw-spark, .bw-meter-wait) {
     justify-self: stretch;
 }
