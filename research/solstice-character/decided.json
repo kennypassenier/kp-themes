@@ -1,0 +1,26 @@
+{
+    "decided": "2026-10-07 23:18 Brussels, Kenny: 18 of 18 approved in the review dialog over two updates (research/solstice-character/README.md): every recommendation except The focus ring = a halo (the calendar's pick) and Leaving and arriving = the morning mist (his pick of 2026-10-04); Pointing at something = the sun climbs its arc and The press = the sun swells inside it (dimmer on the buttons, update 2)",
+    "attributes": "data-so-<question>=\"<key>\" on the .so-scene, research/solstice-character/options.css",
+    "picks": {
+        "solstice": {
+            "curve": "sine",
+            "direction": "up",
+            "opening": "dome",
+            "durations": "units",
+            "colour": "roles",
+            "corners": "soft",
+            "surface": "below",
+            "tone": "sky",
+            "live": "risen",
+            "loading": "sun",
+            "spinner": "arc",
+            "leave": "mist",
+            "composites": "own",
+            "hover": "sun",
+            "focus": "halo",
+            "press": "swell",
+            "voice": "serif",
+            "motifs": "one"
+        }
+    }
+}

@@ -1,3 +1,19 @@
+/* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
+   rest, 1 at the end of the unit. Registered so the browser can transition
+   them, at the top level because Firefox does not register an @property
+   inside a layer. */
+@property --kp-sig-solstice-point {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-solstice-press {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/solstice-register.css
    The solstice register, 5.0.0 [S48, S49]: warm dark, no neon. The
@@ -268,31 +284,18 @@
         color: inherit;
     }
 
-    [data-theme='solstice'] .kp-button--primary:hover {
-        background: hsl(from var(--primary) h s calc(l + 8));
-    }
-
-    [data-theme='solstice'] .kp-button--secondary:hover {
-        background: hsl(from var(--secondary) h s calc(l + 4));
-    }
-
+    /* Pointing and pressing are not painted here: every pressable part
+       answers to the same two numbers, drawn once in the signature layer
+       (the sun climbs its arc under the pointer, the sun swells inside a
+       press), so no variant has a hover face of its own. Rest only. */
     [data-theme='solstice'] .kp-button--ghost {
         border-color: var(--border-strong);
-    }
-
-    [data-theme='solstice'] .kp-button--ghost:hover {
-        background: var(--muted);
     }
 
     [data-theme='solstice'] .kp-button--destructive {
         background: transparent;
         color: var(--destructive);
         border-color: var(--destructive);
-    }
-
-    [data-theme='solstice'] .kp-button--destructive:hover {
-        background: var(--destructive);
-        color: var(--destructive-foreground);
     }
 
     /* The demo's answer to "mirror" [S49, A7]: a thin calibration-bar
@@ -496,21 +499,8 @@
         color: inherit;
     }
 
-    /* A button hovered on a toast takes a shade of the toast's own plate
-       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
-       2026-09-13). Restated here because this layer repaints the hover. */
-    [data-theme='solstice'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
-        background: var(--kp-toast-button-hover);
-        color: inherit;
-    }
-
     [data-theme='solstice'] .kp-toasts {
         gap: var(--kp-space-sm);
-    }
-
-    [data-theme='solstice'] .kp-menu__item:hover {
-        background: var(--muted);
-        color: var(--primary);
     }
 
     [data-theme='solstice'] .kp-alert {
@@ -1018,68 +1008,11 @@
         color: var(--primary);
     }
 
-    /* ── The low sun rakes across [scope-12, approved 2026-09-11] ──────
-       A low sun is the whole picture of this theme, and a low sun moves.
-       Touching a control draws a warm band across it once, from the
-       leading edge to the far one. Once, never in a loop: a loop would be
-       an animation demanding attention rather than light falling on a
-       thing. */
-    [data-theme='solstice'] .kp-button {
-        position: relative;
-        overflow: hidden;
-    }
-
-    [data-theme='solstice'] .kp-button::after {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: -60%;
-        inline-size: 45%;
-        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.5), transparent);
-        pointer-events: none;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='solstice'] .kp-button:hover:not(:disabled)::after {
-            animation: kp-rake 620ms ease-out both;
-        }
-    }
-
-    @keyframes kp-rake {
-        0% {
-            translate: 0 0;
-        }
-
-        100% {
-            translate: 340% 0;
-        }
-    }
-
-    /* ── The pressed state the register had been cancelling [fix-12] ───
-       `kp.register` sits after `kp.components`, and a layer beats a state:
-       a register writing `.kp-button:hover { background: ... }` outranks
-       the base layer's `.kp-button:active`, so pressing the button changed
-       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
-       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
-       fifteen of the twenty-five registers had it.
-
-       These restate the base layer's own pressed values, token for token.
-       Nothing new is decided here; what the components layer already said
-       is put back where the cascade can reach it. */
-
-    [data-theme='solstice'] .kp-button:active:not(:disabled) {
-        background: var(--secondary-active);
-    }
-
-    [data-theme='solstice'] .kp-button--primary:active:not(:disabled) {
-        background: var(--primary-active);
-        border-color: var(--primary-active);
-    }
-
-    [data-theme='solstice'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--destructive-active);
-        border-color: var(--destructive-active);
-    }
+    /* ── The low sun, pointed at and pressed [Kenny, 2026-10-07] ───────
+       Replaces the rake of scope-12 and the pressed faces restated for
+       fix-12: both are drawn in the signature layer below, on one pair of
+       numbers (see "Pointing and pressing"). Nothing in this layer paints a
+       hover or a pressed ground, so nothing here cancels the press. */
 
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
 
@@ -1968,6 +1901,216 @@
 
         100% {
             background-position: var(--kp-sig-meter-l1);
+        }
+    }
+
+    /* ── Pointing and pressing [Kenny, 2026-10-07, research/solstice-character] ──
+       Pointing at something: the sun climbs its arc under it. Pressing:
+       the sun swells inside it. One grammar for every part that can be
+       pointed at or pressed: buttons (secondary, primary, ghost,
+       destructive, mirror, icon), menu items, calendar days, key figures
+       that are links or toggles, chart legend keys. Each answers to two
+       numbers, --kp-sig-solstice-point (0 to 1 under the real pointer) and
+       --kp-sig-solstice-press (0 to 1 while held), which run 240 ms on the
+       curve that is its own mirror (a sine in and out), so a part is
+       half-way and nine tenths of the way at the same moment going and
+       coming (t50 120 ms, t90 200 ms, the way back is the way there).
+       Every layer is a function of those numbers: nothing is switched, so
+       nothing can stop half-way. The pointer draws on the part's ::before
+       (the sun) and ::after (the lit foot); the press draws on the part's
+       own background-image (the swell, the foot edge, the half-way ground),
+       so the two never hide each other. The part keeps its own ground and
+       ink at rest and in a hover: the register paints no hover face. The
+       alarm keeps the plate and paint of its own screen [scope-94]. */
+
+    [data-theme='solstice'] {
+        --kp-sig-solstice-touch: cubic-bezier(0.37, 0, 0.63, 1);
+        --kp-sig-solstice-contact: 240ms;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+        /* How far the sun stands above the foot line at noon: a small part
+           keeps it under its words. */
+        --kp-sig-solstice-rise: 0.4rem;
+        --kp-sig-solstice-sun: var(--primary);
+        --kp-sig-solstice-cream: hsl(from var(--foreground) h s 97%);
+        /* A part is a plate for its own light, clipped to its own corners. */
+        contain: paint;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--sm, .kp-chart__source, .kp-chart__show-all, .kp-icon-button) {
+        --kp-sig-solstice-rise: 0.28rem;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle) {
+        --kp-sig-solstice-rise: 0.9rem;
+    }
+
+    /* On an amber face the sun is the same amber lifted to 90 %: amber on
+       amber is not seen, and a dark glow would darken the ground under the
+       dark words. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--primary) {
+        --kp-sig-solstice-sun: hsl(from var(--primary) h s 90%);
+        --kp-sig-solstice-warm: 0.6;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--destructive) {
+        --kp-sig-solstice-held: hsl(from var(--destructive) h s l / 0.4);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--primary) {
+        --kp-sig-solstice-held: var(--primary-active);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button:not(.kp-button--primary, .kp-button--destructive, .kp-button--ghost)) {
+        --kp-sig-solstice-held: var(--secondary-active);
+        --kp-sig-solstice-ink: var(--secondary-foreground);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--ghost, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all) {
+        --kp-sig-solstice-held: var(--muted);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-chart__source, .kp-chart__show-all) {
+        --kp-sig-solstice-ink: var(--muted-foreground);
+    }
+
+    /* The two numbers: 1 under the real pointer, 1 while held. A disabled
+       part answers to neither. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):hover:not(:disabled, [aria-disabled='true']) {
+        --kp-sig-solstice-point: 1;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):active:not(:disabled, [aria-disabled='true']) {
+        --kp-sig-solstice-press: 1;
+    }
+
+    /* The sun climbs its arc: x is 1 - cos and y is sin of a quarter turn,
+       so it rises along a circle's edge from the start side to the middle
+       and stands above the foot line at the end. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-inline-start: calc(6% + (1 - cos(var(--kp-sig-solstice-point) * 90deg)) * 44%);
+        inset-block-end: calc(-0.8rem + sin(var(--kp-sig-solstice-point) * 90deg) * var(--kp-sig-solstice-rise));
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+        margin-inline-start: -0.4rem;
+        border-radius: 50%;
+        background: var(--kp-sig-solstice-sun);
+        box-shadow: 0 0 0.5rem 0.1rem hsl(from var(--kp-sig-solstice-sun) h s l / 0.55);
+        opacity: min(1, calc(var(--kp-sig-solstice-point) * 6));
+        pointer-events: none;
+    }
+
+    /* A dome of warm light grows round the sun and the foot edge lights. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *)::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        border-radius: inherit;
+        background:
+            linear-gradient(var(--kp-sig-solstice-sun), var(--kp-sig-solstice-sun)) 0 100% / 100% 2px no-repeat,
+            radial-gradient(
+                ellipse 80% 130% at calc(6% + (1 - cos(var(--kp-sig-solstice-point) * 90deg)) * 44%) 100%,
+                hsl(from var(--kp-sig-solstice-sun) h s l / 0.36),
+                hsl(from var(--kp-sig-solstice-sun) h s l / 0.12) 55%,
+                transparent 80%
+            ),
+            linear-gradient(hsl(from var(--kp-sig-solstice-sun) h s l / 0.06), hsl(from var(--kp-sig-solstice-sun) h s l / 0.06));
+        opacity: min(1, calc(var(--kp-sig-solstice-point) * 2));
+        pointer-events: none;
+    }
+
+    /* The sun swells inside it: a half-sun grows from the middle of the foot
+       and fills the part, the foot edge lights hot and the ground goes
+       half-way to its held face (the whole way was a pale flash on the amber
+       one), all on the same number. A warm lift, not a flash: on the amber
+       face the lifted sun is paler than the face, so it is held lower. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+        background-image:
+            linear-gradient(
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(var(--kp-sig-solstice-press) * 0.6)),
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(var(--kp-sig-solstice-press) * 0.6))
+            ),
+            radial-gradient(
+                ellipse 70% 105% at 50% 100%,
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.16 * var(--kp-sig-solstice-warm, 1) * min(1, var(--kp-sig-solstice-press) * 3))),
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.055 * var(--kp-sig-solstice-warm, 1) * min(1, var(--kp-sig-solstice-press) * 3))) 42%,
+                transparent 72%
+            ),
+            linear-gradient(
+                hsl(from var(--kp-sig-solstice-held, var(--muted)) h s l / calc(var(--kp-sig-solstice-press) * 0.5 * alpha)),
+                hsl(from var(--kp-sig-solstice-held, var(--muted)) h s l / calc(var(--kp-sig-solstice-press) * 0.5 * alpha))
+            );
+        background-position:
+            0 100%,
+            50% 100%,
+            0 0;
+        background-size:
+            100% 2px,
+            calc((0.08 + 1.1 * var(--kp-sig-solstice-press)) * 100%) calc((0.08 + 1.1 * var(--kp-sig-solstice-press)) * 100%),
+            100% 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* The words of a pressed part lift to cream on the same number as the
+       light: the tint is amber and the plain ink fell to 3.9 to 4.5:1 there.
+       A part whose ink is a pair with its face (the primary and destructive
+       buttons, a toned day) keeps it. A dusk-dark halo under the words keeps
+       them clear of the brightest part of the light. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):not(.kp-button--primary, .kp-button--destructive, [data-kp-tone]) {
+        color: color-mix(in oklch, var(--kp-sig-solstice-ink, currentColor) calc((1 - var(--kp-sig-solstice-press)) * 100%), var(--kp-sig-solstice-cream));
+        text-shadow: 0 0 0.45rem hsl(from var(--background) h s l / calc(var(--kp-sig-solstice-press) * 0.85));
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle):not([data-kp-tone]) .kp-kpi__label {
+        color: color-mix(in oklch, var(--muted-foreground) calc((1 - var(--kp-sig-solstice-press)) * 100%), var(--kp-sig-solstice-cream));
+    }
+
+    /* The grounds the base layer changes under a pointer or a finger go back
+       to the part's rest: the register's pointing is the sun, not a face. A
+       part keeps its rest border, its rest ground and does not lift. */
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
+        translate: none;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button:is(:hover, :active):not(:disabled) {
+        background-color: var(--secondary);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button--primary:is(:hover, :active):not(:disabled) {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--ghost, .kp-icon-button, .kp-menu__item):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
+        background-color: transparent;
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button--destructive:is(:hover, :active):not(:disabled) {
+        background-color: transparent;
+        border-color: var(--destructive);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle):hover:not([aria-pressed='true']) {
+        border-color: var(--border);
+    }
+
+    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-chart__source, .kp-chart__show-all):hover:not(:focus-visible, [aria-pressed='true']) {
+        border-color: transparent;
+        color: var(--muted-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The way back is the way there, per frame: one curve that is its
+           own mirror for both directions. */
+        [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+            transition:
+                --kp-sig-solstice-point var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch),
+                --kp-sig-solstice-press var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
         }
     }
 }

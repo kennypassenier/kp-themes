@@ -93,7 +93,6 @@ export const PAGES = [
                 label: 'What makes synthwave synthwave',
             },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
-            { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             {
                 href: 'research/brutalism-character/demo.html',
@@ -116,6 +115,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 23:18: Kenny approved solstice's grammar, every recommendation except the focus ring = a halo and the leave = the morning mist (research/solstice-character/decided.json); applied in css/solstice-register.css.
+            { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
             // Decided 2026-10-07 21:23: Kenny picked out of register as grotesk's anchor element (research/grotesk-anchor/decided.json).
             { href: 'research/grotesk-anchor/demo.html', label: "What is grotesk's anchor element" },
             // Decided 2026-10-07 21:21: Kenny picked the page horizon as synthwave's anchor element (research/synthwave-anchor/decided.json).
