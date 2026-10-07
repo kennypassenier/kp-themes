@@ -77,8 +77,8 @@ export const PAGES = [
             { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
             { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
-            // Kenny, 2026-10-07 00:54: six new titanium spinners and the drill as today, each shown where the spinner appears, the recommendation first.
-            { href: 'research/titanium-spinner/demo.html', label: 'A spinner for titanium' },
+            // Kenny, 2026-10-07 01:32: cyberpunk's live update rejected on research/families; six options of the chromatic split he described (two neon copies right, one up, one down), the recommendation first.
+            { href: 'research/cyberpunk-live/demo.html', label: "Cyberpunk's live update: the chromatic split" },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
             { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
             // Kenny, 2026-10-06 20:59 (form v39): every titanium loading element twice, as today and in the key figure's anodising bath (r2-ti-load-1).
@@ -96,6 +96,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-07 01:33: Kenny picked the facing cut as titanium's spinner (research/titanium-spinner/decided.json); ported into css/titanium-register.css in place of the drill.
+            { href: 'research/titanium-spinner/demo.html', label: 'A spinner for titanium' },
             // Decided 2026-10-06 23:41: Kenny approved the data table's busy overlay in all 22 themes (research/character-busy/decided.json); it moves into the registers at the port.
             { href: 'research/character-busy/demo.html', label: "A data table's busy overlay, of its own, per theme" },
             // Decided 2026-10-06 21:54: Kenny approved the drawer and its tour in all 22 themes (research/character-drawer/decided.json); they move into the registers at the port.

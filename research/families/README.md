@@ -60,3 +60,31 @@ one asked for.
   Open for interact; columns: Drawn for its tone, the change under each
   figure, which has no state of its own).
 - When the dialog switches the theme, every card follows.
+
+## The package's signature elements (2026-10-07)
+
+Kenny, 2026-10-07 01:32, forest's loading: "wacht, ik dacht dat ik hier een
+progressbar had goedgekeurd voor forest met kleine boompjes die in de bar
+zelf zaten, waar is die naartoe?" The page offered only the character demos'
+picks, so the signature elements every register draws in its `kp.signature`
+layer (scope-140, in the package since 9.0.0) were never candidates. They are
+now, as the last cards of the family they belong to (`signatures.js`, drawn
+by `signature.html` from the package itself: the register, components.css
+and the package's modules):
+
+- While loading: the progress bar (`.kp-progressbar`, filling 0 to 100 % in
+  uneven steps and busy), the spinner, the skeleton;
+- How it arrives: the dialog, the toast, the tooltip (each entrance replays);
+- Hover, focus, press: a link in running text (the kit's played pointer);
+- A live update: the update in place (`js/update.js`, `--kp-update`), in
+  formal, cyberpunk and titanium only; the other themes have no such card.
+
+Not offered, because no family asks for them: the switch and the check/radio
+(a toggled state), the wizard steps and the empty state (a still shape), the
+meter with a mark (the meter is a component card already), the leave.
+
+Stored picks keep working: an option's value is the component's id or the
+signature's own (`sig-progressbar`, …), and the signature options come after
+every component's, so no earlier option moved. A signature only some themes
+draw comes last and has hints only for those themes, so the dialog drops it
+from the end of the others' lists, where the cards stay matched by place.

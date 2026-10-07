@@ -13,6 +13,7 @@
 // theme's loading pictures in the dialog and picks the one the whole theme
 // should speak, theme by theme.
 import { THEMES } from '../../js/theme-registry.js';
+import { SIGNATURES } from './signatures.js';
 
 /** The character demos, in the order they were built, with the name a card shows. */
 const COMPONENTS = [
@@ -116,7 +117,35 @@ const FAMILIES = [
 
 const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
 const theme = () => document.documentElement.getAttribute('data-theme') ?? 'formal';
-const membersOf = (/** @type {typeof FAMILIES[number]} */ family) => COMPONENTS.filter(({ id }) => family.aspects[id]);
+
+/**
+ * A family's options, in a fixed order: the components first, as they always
+ * were (their option values and places are what a stored pick refers to), then
+ * the package's signature elements of that family (signatures.js, drawn by
+ * signature.html), those every theme draws before those only some do.
+ * @typedef {{ id: string, label: string, aspect: string, how: string, signature?: import('./signatures.js').Signature }} Member
+ * @param {typeof FAMILIES[number]} family
+ * @returns {Member[]}
+ */
+const membersOf = (family) => [
+    ...COMPONENTS.filter(({ id }) => family.aspects[id]).map(({ id, label }) => ({
+        id,
+        label,
+        aspect: family.aspects[id],
+        how: [family.loop && 'loop', family.point?.includes(id) && 'point'].filter(Boolean).join(' '),
+    })),
+    ...SIGNATURES.filter((s) => s.family === family.id)
+        .sort((a, b) => Number(Boolean(a.themes)) - Number(Boolean(b.themes)))
+        .map((signature) => ({
+            id: signature.id,
+            label: signature.label,
+            aspect: family.id,
+            how: [family.loop && 'loop', signature.how].filter(Boolean).join(' '),
+            signature,
+        })),
+];
+/** Whether a theme's register draws this option at all (a signature may be limited to some). */
+const drawnIn = (/** @type {Member} */ member, /** @type {string} */ t) => !member.signature?.themes || member.signature.themes.includes(t);
 
 /** Each demo's decided picks, key per aspect per theme (research/character-<c>/decided.json). */
 const decided = Object.fromEntries(
@@ -145,13 +174,16 @@ section.setAttribute(
         FAMILIES.map((family) => ({
             id: family.id,
             label: family.label,
-            options: membersOf(family).map(({ id, label }) => ({
-                value: id,
-                label,
+            options: membersOf(family).map((member) => ({
+                value: member.id,
+                label: member.label,
+                // A signature only some registers draw has hints for those
+                // themes alone, so the dialog drops it from the others.
                 hints: Object.fromEntries(
-                    THEMES.map(({ name }) => {
-                        const key = keyOf(id, family.aspects[id], name);
-                        return [name, `The ${label.toLowerCase()}'s ${family.about}${key ? `, key ${key}` : ''}.`];
+                    THEMES.filter(({ name }) => drawnIn(member, name)).map(({ name }) => {
+                        if (member.signature) return [name, `The package's own element: ${member.signature.about}, as ${LABEL[name]} draws it.`];
+                        const key = keyOf(member.id, member.aspect, name);
+                        return [name, `The ${member.label.toLowerCase()}'s ${family.about}${key ? `, key ${key}` : ''}.`];
                     }),
                 ),
             })),
@@ -175,8 +207,10 @@ let speed = '1';
 /** @type {Map<Window, HTMLElement>} */
 const cardOf = new Map();
 
-const srcOf = (/** @type {string} */ component, /** @type {string} */ aspect, /** @type {string} */ how) =>
-    `../character-${component}/demo.html?${new URLSearchParams({
+/** A card's frame: the component's own demo, or for a signature element the package's own drawing (signature.html). */
+const srcOf = (/** @type {string} */ component, /** @type {string} */ aspect, /** @type {string} */ how, element = '') =>
+    `${element ? 'signature.html' : `../character-${component}/demo.html`}?${new URLSearchParams({
+        ...(element ? { element } : {}),
         embed: aspect,
         theme: theme(),
         speed,
@@ -211,26 +245,33 @@ for (const family of FAMILIES) {
     const h3 = document.createElement('h3');
     h3.textContent = family.label;
     const note = document.createElement('p');
-    note.textContent = `${membersOf(family).length} components, each with its own pick of ${family.about} in this theme.`;
+    const members = membersOf(family);
+    const signatures = members.filter((m) => m.signature).length;
+    note.textContent =
+        `${members.length - signatures} components, each with its own pick of ${family.about} in this theme` +
+        (signatures ? `, then the package's own signature ${signatures === 1 ? 'element' : 'elements'} of this family (kp.signature).` : '.');
     head.append(h3, note);
     const grid = document.createElement('div');
     grid.className = 'fm-grid';
-    membersOf(family).forEach(({ id, label }, at) => {
-        const aspect = family.aspects[id];
+    members.forEach(({ id, label, aspect, how, signature }, at) => {
         const card = document.createElement('figure');
         card.className = 'fm-card';
         card.setAttribute('data-fm-option', String(at + 1));
         card.setAttribute('data-fm-component', id);
         card.setAttribute('data-fm-family-aspect', aspect);
-        card.setAttribute('data-fm-how', [family.loop && 'loop', family.point?.includes(id) && 'point'].filter(Boolean).join(' '));
+        card.setAttribute('data-fm-how', how);
+        if (signature) {
+            card.setAttribute('data-fm-signature', signature.element);
+            if (signature.themes) card.setAttribute('data-fm-themes', signature.themes.join(' '));
+        }
         const caption = document.createElement('figcaption');
         caption.className = 'fm-card__label';
         caption.innerHTML = '<b></b> <span data-fm-name></span> <code data-fm-key></code><small data-fm-told hidden></small>';
         /** @type {HTMLElement} */ (caption.querySelector('b')).textContent = label;
         const frame = document.createElement('iframe');
         frame.className = 'fm-card__frame';
-        frame.title = `${label}: ${family.about}`;
-        frame.dataset.src = srcOf(id, aspect, card.getAttribute('data-fm-how') || '');
+        frame.title = `${label}: ${signature ? signature.name : family.about}`;
+        frame.dataset.src = srcOf(id, aspect, how, signature?.element);
         card.append(caption, frame);
         grid.append(card);
         watch.observe(card);
@@ -305,7 +346,12 @@ function repoint(reload = true) {
             card.getAttribute('data-fm-component') || '',
             card.getAttribute('data-fm-family-aspect') || '',
             card.getAttribute('data-fm-how') || '',
+            card.getAttribute('data-fm-signature') || '',
         );
+        // A signature this theme's register does not draw is set aside (an
+        // attribute of its own: the dialog's flip owns `hidden`).
+        const only = card.getAttribute('data-fm-themes');
+        card.toggleAttribute('data-fm-absent', Boolean(only && !only.split(' ').includes(theme())));
         if (reload && frame.hasAttribute('data-fm-on')) frame.setAttribute('src', frame.dataset.src);
         if (reload) paintCaption(/** @type {HTMLElement} */ (card));
     }

@@ -22,38 +22,50 @@ taken except one: **the motion curve is eased, slowing as it lands**
 (`cubic-bezier(0.2, 0.8, 0.2, 1)`, no overshoot) instead of linear. G1 below
 is amended accordingly; everything else stands as written.
 
-| Question                  | Pick                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------ |
-| Motion curve              | Eased, slows as it lands: `cubic-bezier(0.2, 0.8, 0.2, 1)`, never an overshoot       |
-| Direction                 | Start → end, like a feed                                                             |
-| Opening from a trigger    | Cut open from the top                                                                |
-| Durations                 | Contact 60 · cut 240 · loop 1800 ms                                                  |
-| Colour                    | Oxide only as a cause                                                                |
-| Corners                   | Square with the chamfer                                                              |
-| Chamfer diagonal          | Top-left and bottom-right                                                            |
-| Surface                   | Brushed grain, tool edge, engraving                                                  |
-| Live update               | The heat tint on every carrier                                                       |
-| Loading                   | The anodising bath (00:54; was: the cutter leaving heat); graph own, spinner pending |
-| Leaving and arriving      | Cool-away, start → end, 400 ms                                                       |
-| Buttons inside composites | Exactly like titanium's own button                                                   |
-| Focus ring                | The register's ring, inside the chamfer                                              |
-| Press                     | Drops 1 px into its seat                                                             |
-| Monospace                 | Figures, labels and counts                                                           |
-| Screws and knurling       | Only where a real part would have them                                               |
-| Bronze                    | Only inside the heat ramp                                                            |
+| Question                  | Pick                                                                                                |
+| ------------------------- | --------------------------------------------------------------------------------------------------- |
+| Motion curve              | Eased, slows as it lands: `cubic-bezier(0.2, 0.8, 0.2, 1)`, never an overshoot                      |
+| Direction                 | Start → end, like a feed                                                                            |
+| Opening from a trigger    | Cut open from the top                                                                               |
+| Durations                 | Contact 60 · cut 240 · loop 1800 ms                                                                 |
+| Colour                    | Oxide only as a cause                                                                               |
+| Corners                   | Square with the chamfer                                                                             |
+| Chamfer diagonal          | Top-left and bottom-right                                                                           |
+| Surface                   | Brushed grain, tool edge, engraving                                                                 |
+| Live update               | The heat tint on every carrier                                                                      |
+| Loading                   | The anodising bath (00:54; was: the cutter leaving heat); graph own, spinner the facing cut (01:33) |
+| Leaving and arriving      | Cool-away, start → end, 400 ms                                                                      |
+| Buttons inside composites | Exactly like titanium's own button                                                                  |
+| Focus ring                | The register's ring, inside the chamfer                                                             |
+| Press                     | Drops 1 px into its seat                                                                            |
+| Monospace                 | Figures, labels and counts                                                                          |
+| Screws and knurling       | Only where a real part would have them                                                              |
+| Bronze                    | Only inside the heat ramp                                                                           |
 
 **Loading, changed the same night** (Kenny, 2026-10-07 00:54, on
 research/titanium-loading): the loading picture is **the anodising bath**
 as that page draws it, on every loading element, not the cutter leaving
 heat. Two exceptions: the network graph keeps its own harness signal, and
 the spinner (the drill) stays as it is until new spinner designs are built
-in a separate demo. The bath's own period, 2200 ms, is the one loop period
+in a separate demo (done: the facing cut, 01:33, below). The bath's own period, 2200 ms, is the one loop period
 (`--kp-sig-ti-loop`), in place of the 1800 ms named above: the page Kenny
 picked from runs at 2200 ms, and one token changes it.
 
+**The spinner, decided** (Kenny, 2026-10-07 01:33, on
+research/titanium-spinner: "titanium · The spinner = The facing cut
+(recommended)"): **the facing cut**, in place of the drill. The end of a bar
+turning on the lathe, seen face on (turning grain, a centre point); the tool
+tip, a bright `--primary` radial line, runs round the face and leaves the
+oxide film in its track, gold far behind to cyan right behind the tip,
+fading to bare metal before the tip comes round. Round (a turned part, G7),
+square at every size; one revolution per 1800 ms, linear, start → end
+(clockwise, mirrored for a right-to-left page); standing still, the tip with
+its tail. Built in `css/titanium-register.css` (`kp-sig-titanium-ti-facing`),
+exactly as option 1 of that page draws it.
+
 **How the eased curve applies.** Every one-shot motion (opening, closing,
 arrival, leave, update, press, a cut) uses the decelerating curve. A loop
-(loading, the spinner's drill) keeps a constant feed: an eased loop would
+(loading, the spinner's facing cut) keeps a constant feed: an eased loop would
 stall at the end of every pass, which is not "slowing as it lands" but a
 stutter. This reading is Claude's (2026-10-07 00:52) and is Kenny's to
 overturn.
@@ -72,13 +84,13 @@ stamped, heat-tinted**. Nothing breathes, bounces, swells or spins.
 | G1  | **Motion slows as it lands** (amended 2026-10-07, see §0). Every one-shot motion uses `cubic-bezier(0.2, 0.8, 0.2, 1)`; loops keep a constant feed (`linear`); a discrete count may index with `steps()`; never an overshoot (no value past 1 in a bezier, no keyframe past the rest pose).                                                                                                                               |
 | G2  | **The tool feeds from inline-start to inline-end.** Arrivals, loading passes and heat-tint sweeps travel start→end in logical terms (`inset-inline-start`, `clip-path: inset(0 100% 0 0)` mirrored by `dir`), never end→start and never physical `left`/`translateX` alone.                                                                                                                                               |
 | G3  | **What drops from a trigger is cut top-down.** Menus, dialogs and popovers open by a `clip-path` cut from the top edge (the dialog's `kp-sig-titanium-ti-cut`) and close as that cut reversed; what lives at an edge (drawer, toast) slides in from its own edge, on the theme curve.                                                                                                                                     |
-| G4  | **Durations come from three bands.** Contact (hover, press, focus, toggle): 0–60 ms. Cuts (open, close, arrival, leave, update): 160–400 ms, longer only for a line drawn across a whole chart (≤ 900 ms at a constant feed). Loops (loading): one period, `--kp-sig-ti-loop` 2200 ms (the bath's, 2026-10-07 00:54; was 1800); the spinner's drill 480 ms.                                                               |
+| G4  | **Durations come from three bands.** Contact (hover, press, focus, toggle): 0–60 ms. Cuts (open, close, arrival, leave, update): 160–400 ms, longer only for a line drawn across a whole chart (≤ 900 ms at a constant feed). Loops (loading): one period, `--kp-sig-ti-loop` 2200 ms (the bath's, 2026-10-07 00:54; was 1800); the spinner's facing cut 1800 ms a turn (01:33; was the drill, 480 ms a pitch).           |
 | G5  | **Colour has a cause.** The only chroma is the oxide film, always in the heat order gold → violet → blue → cyan (`--warning-foreground`, `--chart-2`, `--chart-1`, `--chart-3`); bronze `--chart-4` only inside that ramp, never alone (it is the destructive hue, hsl 12 88% 62%).                                                                                                                                       |
 | G6  | **Two accents, two meanings.** Bare bright metal (`--primary`, the tool edge) marks what the person did: focus, pick, press. Blue oxide (`--chart-1`) marks what the system says: today, events, a running process.                                                                                                                                                                                                       |
 | G7  | **Square corners, one chamfer diagonal.** `border-radius: 0`; a cut corner is the register's own pair (top-left and bottom-right, `--kp-chamfer`), on every plate, tag and badge; round only for parts that are turned on a lathe (dials, rivets, graph nodes, spinner).                                                                                                                                                  |
 | G8  | **Surfaces are machined.** Brushed grain (`repeating-linear-gradient(90deg, … 0 1px, transparent 1px 3px)`), a bright tool-edge line along the top (`--kp-tool-edge`), engraved text (dark cut over a lit lip, `text-shadow: 0 -1px 0 background, 0 1px 0 foreground/0.12`), Martian Mono for figures, labels and counts.                                                                                                 |
 | G9  | **Live change is heat, not light.** A value that updates in place gets the package's heat tint (`kp-sig-titanium-update-anodise`): the oxide ramp runs start→end across it through `mix-blend-mode: color`, linear, and cools away; no scale, no brightness flare, no glow ring.                                                                                                                                          |
-| G10 | **Loading is the anodising bath** (Kenny, 2026-10-07 00:54). The oxide ramp washed into the part's plate (`--kp-sig-ti-bath`, 32%) or at full strength on a solid metal part (`--kp-sig-ti-oxide`), drifting start→end, linear, `kp-sig-titanium-bath` at `--kp-sig-ti-loop`: one picture, one period, in every component; the graph's harness signal and the spinner are the two kept exceptions.                        |
+| G10 | **Loading is the anodising bath** (Kenny, 2026-10-07 00:54). The oxide ramp washed into the part's plate (`--kp-sig-ti-bath`, 32%) or at full strength on a solid metal part (`--kp-sig-ti-oxide`), drifting start→end, linear, `kp-sig-titanium-bath` at `--kp-sig-ti-loop`: one picture, one period, in every component; the graph's harness signal and the spinner (the facing cut) are the two kept exceptions.       |
 | G11 | **Leaving is the part cooling off.** What leaves runs the heat ramp start→end and drops away linear; what arrives plays that backwards (reverse-close), so arrival and leave share one curve and one direction axis.                                                                                                                                                                                                      |
 | G12 | **Every animation sits under `prefers-reduced-motion: no-preference`;** the reduced pose is the finished part (the still oxide wash, the full cut), never a missing picture.                                                                                                                                                                                                                                              |
 | G13 | **An element inside a composite is the theme's own element.** A button in a header, menu, drawer, tile or alert hovers, focuses, presses and is cut exactly like titanium's `.kp-button`; a link like its link; a menu entry like `.kp-menu__item`; a chip like `.kp-badge`. A composite may add its own accent around them, never replace their hover, focus ring, press, corner or font. The base set is listed in §4b. |
@@ -101,31 +113,31 @@ on `kp-sig-titanium-update-anodise`, 240 ms, T.
 
 ### 2.1 Package (register, motion.js)
 
-| Element                                                                                    | Now                                                                                                                             | Dir      | Dur       | Ease | Loop |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | -------- | --------- | ---- | ---- |
-| Buttons, contact                                                                           | transitions on `var(--fx-ease)`; press `translate 0 1px`, 0s                                                                    | ↓ 1px    | 60        | T    | once |
-| Field oxide line                                                                           | `scale` on `--fx-ease` (token now the theme curve)                                                                              | S→E      | 90        | T    | once |
-| Nav menu, redact bar                                                                       | on `--fx-ease`                                                                                                                  | ∅ / S→E  | 60 / 380  | T    | once |
-| Headline words                                                                             | `kp-mill 340ms var(--fx-ease)`                                                                                                  | S→E      | 340       | T    | once |
-| Spinner                                                                                    | unchanged (drill flutes 480 ms linear); a new design is pending (Kenny, 00:54)                                                  | S→E      | 480       | L    | loop |
-| Skeleton                                                                                   | the bath on the plate (line: weave still over it, chamfer TL+BR now drawn; circle, block: the bath), lines -300 / -600 ms apart | S→E      | 2200      | L    | loop |
-| Progress, busy                                                                             | the fill spans the track in `--kp-sig-ti-oxide`, the bath drifts; still: the oxide stripes (the mask)                           | S→E      | 2200      | L    | loop |
-| Progress, with a share                                                                     | the fill is `--kp-sig-ti-oxide`, the bath drifts; clip and head transitions T, guarded                                          | S→E      | 2200 / 60 | L/T  | loop |
-| Meter, measuring                                                                           | the whole groove `--kp-sig-ti-oxide`, the bath                                                                                  | S→E      | 2200      | L    | loop |
-| Meter grow, jolt, mark                                                                     | grow 300, jolt 160, mark 300                                                                                                    | S→E      | 300/160   | T    | once |
-| Busy panel, rows, menu entry, busy button, busy card, month busy card, chart loading state | the bath over the part's plate; rows -440 ms apart                                                                              | S→E      | 2200      | L    | loop |
-| Checkbox                                                                                   | stamp `steps(2, jump-end)` (a discrete index)                                                                                   | S→E      | 120       | St   | once |
-| Switch                                                                                     | thumb `transform 60ms` T; thumb chamfer TL+BR                                                                                   | S→E      | 60        | T    | once |
-| Toast                                                                                      | rail from its edge, `translateX(calc(16px * --kp-sig-ti-dir))`, mirrored in RTL; scribe ×1.5                                    | from end | 160 / 240 | T    | once |
-| Dialog open                                                                                | `kp-sig-titanium-ti-cut` + cutter                                                                                               | T↓       | 240       | T    | once |
-| Dialog close / reopen                                                                      | `themeMotion()` reads the cut's curve: close 160, size 192, update 240, all T                                                   | T↑ / T↓  | 160       | T    | once |
-| Tooltip                                                                                    | appears; chamfer TL+BR (was top-right only)                                                                                     | ∅        | 60        | T    | once |
-| Wizard step                                                                                | chamfer TL+BR (was TR+BL)                                                                                                       | —        | —         | —    | —    |
-| Size change                                                                                | `--kp-size-ease` the theme curve                                                                                                | —        | 192       | T    | once |
-| Size, new content                                                                          | fed in from inline-start, `translateX(calc(-14px * --kp-sig-ti-dir))`                                                           | S→E      | 260       | T    | once |
-| Leave                                                                                      | `kp-sig-titanium-leave` 400 ms T; band `background-position 100% → 0%`                                                          | S→E      | 400       | T    | once |
-| Arrival                                                                                    | the leave reversed (`--kp-open: reverse-close`)                                                                                 | E→S      | 400       | T    | once |
-| Update in place                                                                            | the heat tint, `--kp-update-ease` = the dialog's curve                                                                          | S→E      | 240       | T    | once |
+| Element                                                                                    | Now                                                                                                                                                       | Dir      | Dur       | Ease | Loop |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------- | ---- | ---- |
+| Buttons, contact                                                                           | transitions on `var(--fx-ease)`; press `translate 0 1px`, 0s                                                                                              | ↓ 1px    | 60        | T    | once |
+| Field oxide line                                                                           | `scale` on `--fx-ease` (token now the theme curve)                                                                                                        | S→E      | 90        | T    | once |
+| Nav menu, redact bar                                                                       | on `--fx-ease`                                                                                                                                            | ∅ / S→E  | 60 / 380  | T    | once |
+| Headline words                                                                             | `kp-mill 340ms var(--fx-ease)`                                                                                                                            | S→E      | 340       | T    | once |
+| Spinner                                                                                    | the facing cut (Kenny, 01:33; was the drill): the face and grain still, the oxide trail and tool tip turn as one, clockwise; still: the tip with its tail | S→E      | 1800      | L    | loop |
+| Skeleton                                                                                   | the bath on the plate (line: weave still over it, chamfer TL+BR now drawn; circle, block: the bath), lines -300 / -600 ms apart                           | S→E      | 2200      | L    | loop |
+| Progress, busy                                                                             | the fill spans the track in `--kp-sig-ti-oxide`, the bath drifts; still: the oxide stripes (the mask)                                                     | S→E      | 2200      | L    | loop |
+| Progress, with a share                                                                     | the fill is `--kp-sig-ti-oxide`, the bath drifts; clip and head transitions T, guarded                                                                    | S→E      | 2200 / 60 | L/T  | loop |
+| Meter, measuring                                                                           | the whole groove `--kp-sig-ti-oxide`, the bath                                                                                                            | S→E      | 2200      | L    | loop |
+| Meter grow, jolt, mark                                                                     | grow 300, jolt 160, mark 300                                                                                                                              | S→E      | 300/160   | T    | once |
+| Busy panel, rows, menu entry, busy button, busy card, month busy card, chart loading state | the bath over the part's plate; rows -440 ms apart                                                                                                        | S→E      | 2200      | L    | loop |
+| Checkbox                                                                                   | stamp `steps(2, jump-end)` (a discrete index)                                                                                                             | S→E      | 120       | St   | once |
+| Switch                                                                                     | thumb `transform 60ms` T; thumb chamfer TL+BR                                                                                                             | S→E      | 60        | T    | once |
+| Toast                                                                                      | rail from its edge, `translateX(calc(16px * --kp-sig-ti-dir))`, mirrored in RTL; scribe ×1.5                                                              | from end | 160 / 240 | T    | once |
+| Dialog open                                                                                | `kp-sig-titanium-ti-cut` + cutter                                                                                                                         | T↓       | 240       | T    | once |
+| Dialog close / reopen                                                                      | `themeMotion()` reads the cut's curve: close 160, size 192, update 240, all T                                                                             | T↑ / T↓  | 160       | T    | once |
+| Tooltip                                                                                    | appears; chamfer TL+BR (was top-right only)                                                                                                               | ∅        | 60        | T    | once |
+| Wizard step                                                                                | chamfer TL+BR (was TR+BL)                                                                                                                                 | —        | —         | —    | —    |
+| Size change                                                                                | `--kp-size-ease` the theme curve                                                                                                                          | —        | 192       | T    | once |
+| Size, new content                                                                          | fed in from inline-start, `translateX(calc(-14px * --kp-sig-ti-dir))`                                                                                     | S→E      | 260       | T    | once |
+| Leave                                                                                      | `kp-sig-titanium-leave` 400 ms T; band `background-position 100% → 0%`                                                                                    | S→E      | 400       | T    | once |
+| Arrival                                                                                    | the leave reversed (`--kp-open: reverse-close`)                                                                                                           | E→S      | 400       | T    | once |
+| Update in place                                                                            | the heat tint, `--kp-update-ease` = the dialog's curve                                                                                                    | S→E      | 240       | T    | once |
 
 ### 2.2 The decided component picks
 
@@ -191,17 +203,17 @@ The values before the change (2026-10-06) are the ones §4 and §4b quote.
 
 ## 3. The families
 
-| Family                                      | Members (count)                                                                                                                                                                                                                                                              |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **F1 Oxide film, heat order**               | kpi rim, kpi bath, kpi hover/press, busy tag, calendar today ring, chart rivet, meter groove, package leave, update, `--kp-iris` (10). Order is always gold → (bronze) → violet → blue → cyan.                                                                               |
-| **F2 Machined bare metal**                  | brushed grain + engraved mono: calendar shape/tone, chart face/tip (four screws), tiles plate, columns bezels, trend dial (knurl band), graph dial (knurled hub), busy engraved scale, drawer slab, register buttons/fields (11).                                            |
-| **F3 Square + chamfer**                     | radius 0: calendar, chart face, chart tip, header (0 via `--radius`), drawer, tiles (~0), columns (chamfered) + the register (8). Exceptions in §4.                                                                                                                          |
-| **F4 Linear tool pass, inline-start → end** | Loops: calendar cutter, chart mill pass, columns cutting pass, tiles knurl, trend lathe, kpi bath, meter cut, skeleton, progress slug, spinner (10). Once: columns etch, meter grow, `kp-mill`, checkbox stamp, update anodise (5). **15 pure members** — the theme's spine. |
-| **F4b Same direction, wrong curve**         | tiles arrival (ease-in-out), trend arrival (standard bezier), chart arrival (ease-in-out), field line / redact bar (`--fx-ease`) (5).                                                                                                                                        |
-| **F5 Contact is instant**                   | button press 60 ms linear, switch 60 ms, tooltip 60 ms, header interactive, menu interact, kpi interactive, tiles hover, calendar hover (8).                                                                                                                                 |
-| **F6 Top-down cut**                         | dialog cut 240 ms linear, header menu (ease-out) (2) — and the menu button's menu should be here.                                                                                                                                                                            |
-| **F7 Edge-bound slide**                     | drawer rail 220 ms linear, toast rail 160 ms linear (2).                                                                                                                                                                                                                     |
-| **F8 "Glint" in place, eased**              | state flare, trend flare, kpi swell, graph ring, columns ring, tiles sweep (6) — six different motions under one name, none of them the package's own update (heat tint, F1+F4).                                                                                             |
+| Family                                      | Members (count)                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **F1 Oxide film, heat order**               | kpi rim, kpi bath, kpi hover/press, busy tag, calendar today ring, chart rivet, meter groove, package leave, update, `--kp-iris` (10). Order is always gold → (bronze) → violet → blue → cyan.                                                                                                                    |
+| **F2 Machined bare metal**                  | brushed grain + engraved mono: calendar shape/tone, chart face/tip (four screws), tiles plate, columns bezels, trend dial (knurl band), graph dial (knurled hub), busy engraved scale, drawer slab, register buttons/fields (11).                                                                                 |
+| **F3 Square + chamfer**                     | radius 0: calendar, chart face, chart tip, header (0 via `--radius`), drawer, tiles (~0), columns (chamfered) + the register (8). Exceptions in §4.                                                                                                                                                               |
+| **F4 Linear tool pass, inline-start → end** | Loops: calendar cutter, chart mill pass, columns cutting pass, tiles knurl, trend lathe, kpi bath, meter cut, skeleton, progress slug, spinner (the facing cut, a turn start → end) (10). Once: columns etch, meter grow, `kp-mill`, checkbox stamp, update anodise (5). **15 pure members** — the theme's spine. |
+| **F4b Same direction, wrong curve**         | tiles arrival (ease-in-out), trend arrival (standard bezier), chart arrival (ease-in-out), field line / redact bar (`--fx-ease`) (5).                                                                                                                                                                             |
+| **F5 Contact is instant**                   | button press 60 ms linear, switch 60 ms, tooltip 60 ms, header interactive, menu interact, kpi interactive, tiles hover, calendar hover (8).                                                                                                                                                                      |
+| **F6 Top-down cut**                         | dialog cut 240 ms linear, header menu (ease-out) (2) — and the menu button's menu should be here.                                                                                                                                                                                                                 |
+| **F7 Edge-bound slide**                     | drawer rail 220 ms linear, toast rail 160 ms linear (2).                                                                                                                                                                                                                                                          |
+| **F8 "Glint" in place, eased**              | state flare, trend flare, kpi swell, graph ring, columns ring, tiles sweep (6) — six different motions under one name, none of them the package's own update (heat tint, F1+F4).                                                                                                                                  |
 
 The coherent core is F1 + F2 + F3 + F4: oxide-tinted machined metal with square,
 chamfered corners, moved by a linear tool pass from inline-start. F8 is not a
@@ -341,7 +353,7 @@ Keep the idea Kenny picked; change only the parameter that breaks the grammar.
 | proposal-27 | **The failed alert keeps the tool edge:** its destructive ring goes inside (`inset 0 0 0 2px destructive-foreground` only) and `--kp-tool-edge` stays; no outer ring under the chamfer.                                                                                                                                                                                                            | C9     |
 | proposal-28 | **A guard for G13:** a test that, per composite demo in titanium, compares the computed hover, focus and active styles (box-shadow, outline, translate/transform, clip-path, border-radius, font-family) of every inner `.kp-button`, `a` and `.kp-menu__item` with the same element standing alone, and fails on a difference.                                                                    | G13    |
 
-**Package-decided aspects** (no per-component pick): spinner drill flutes,
+**Package-decided aspects** (no per-component pick): spinner (the drill then; the facing cut since 2026-10-07 01:33),
 skeleton pass, progress slug, checkbox stamp, switch, tooltip, dialog cut,
 `kp-mill`, size glide, update heat tint and the meter all **fit** the grammar
 as they stand. The leave (proposal-9), the toast/size arrival (proposal-16), the chamfer of the
@@ -362,7 +374,8 @@ curve, not linear), 18, 21 to 27. Not applied: 19 (nothing to change), 20
 
 Decided by Kenny on research/titanium-loading, 2026-10-07 00:54: the bath
 (key figure `r2-ti-load-1`) on every loading element, the network graph
-excepted (its harness signal stays), the spinner kept until its new design.
+excepted (its harness signal stays), the spinner its own picture: the facing cut
+(Kenny, 2026-10-07 01:33, §0).
 
 1. **The picture:** the oxide ramp gold → bronze → violet → blue → cyan →
    gold at 100deg, 260% wide. On a surface (a tile, a panel, a row, a day, a

@@ -1,0 +1,120 @@
+/* A signature element as a card of research/families/: the package draws
+   the element, this file only sets it on a stage. Nothing here touches the
+   element's own look (colour, shape, motion); it places what the package
+   would float (a dialog, a tooltip, a toast stack) in the flow, so the card
+   shows it at its size, and gives the page its padding. */
+.sg-page {
+    padding: 1rem;
+}
+
+.sg-sec {
+    display: grid;
+    gap: 1rem;
+}
+
+.sg-preview {
+    display: grid;
+    gap: 1.25rem;
+    min-inline-size: 0;
+}
+
+.sg-muted {
+    color: var(--muted-foreground);
+}
+
+.sg-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Progress bars: the group takes the card's width, so a theme's drawing
+   (forest's trees, retro's blocks) has the room it has on a real page. */
+.sg-bars {
+    inline-size: 100%;
+}
+
+.sg-bars--small {
+    max-inline-size: 36rem;
+}
+
+/* The spinner at a second size, through the package's own knob. */
+.sg-spinner--large {
+    --kp-spinner-size: 2.5rem;
+}
+
+.sg-skel {
+    display: grid;
+    gap: 0.75rem;
+    max-inline-size: 36rem;
+    padding: 1rem;
+}
+
+.sg-skel__head {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.sg-skel__avatar {
+    inline-size: 2.75rem;
+}
+
+/* The dialog in the flow, on a stage the colour of a dimmed page: a modal
+   one would float in the frame's top layer, out of the card's measure. */
+.sg-stage {
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    background: color-mix(in oklab, var(--foreground) 14%, var(--background));
+}
+
+.sg-dialog {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    max-inline-size: 100%;
+}
+
+.sg-toasts {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    max-inline-size: 26rem;
+}
+
+.sg-tip {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    min-block-size: 6rem;
+}
+
+/* The tooltip under its button, in the flow; its margins and shape are the register's. */
+.sg-tooltip {
+    position: relative;
+    inset: auto;
+    overflow: visible;
+    max-block-size: none;
+}
+
+.sg-prose {
+    margin: 0;
+    max-inline-size: 60ch;
+    font-size: var(--kp-text-md, 1rem);
+    line-height: 1.8;
+}
+
+.sg-kpis {
+    max-inline-size: 24rem;
+}
+
+.sg-spark {
+    min-inline-size: 0;
+}
+
+.sg-state {
+    margin: 0;
+}

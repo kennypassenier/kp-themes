@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="families-signature">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — a signature element, as the package draws it, for the families page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme') || 'formal';
+                d.setAttribute('data-theme', t);
+                document.write('<link rel="stylesheet" href="../../css/' + t + '-register.css" data-kp-register="' + t + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="signature.css" />
+    </head>
+    <body>
+        <!--
+            One signature element of the package (the registers' kp.signature
+            layer, scope-140), shown as a card of research/families/: the
+            address names it (`?element=progressbar&embed=loading&theme=forest`)
+            and signature.js draws it into the preview below. The review kit's
+            embed mode (research/_review/review.js) shows only the preview,
+            presses Play for the family, tells the families page its height,
+            name and key, and passes the dialog's keys up.
+        -->
+        <main class="sg-page">
+            <section class="sg-sec" data-sg-section>
+                <p data-sg-picks></p>
+                <div class="sg-controls" role="group" aria-label="Play">
+                    <button type="button" class="kp-button kp-button--sm" data-sg-play data-review-plays="loading arrival live">Play</button>
+                </div>
+                <div class="sg-controls" role="group" aria-label="Animation speed">
+                    <button type="button" class="kp-button kp-button--sm" data-sg-speed="1" aria-pressed="true">Full</button>
+                    <button type="button" class="kp-button kp-button--sm" data-sg-speed="0.5" aria-pressed="false">½</button>
+                    <button type="button" class="kp-button kp-button--sm" data-sg-speed="0.25" aria-pressed="false">¼</button>
+                </div>
+                <div class="sg-preview" data-review-preview></div>
+            </section>
+        </main>
+        <script type="module" src="signature.js"></script>
+    </body>
+</html>

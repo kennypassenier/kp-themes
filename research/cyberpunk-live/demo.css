@@ -1,0 +1,592 @@
+/* Cyberpunk's live update, six options of one idea: a chromatic split.
+   The page around them first, then the split itself (the part that would be
+   ported into css/cyberpunk-register.css's kp.signature layer), then the
+   six ideas, then the still version for reduced motion. */
+
+/* ── The page ─────────────────────────────────────────────────────────── */
+
+.cl-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 110rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.cl-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    max-inline-size: 80ch;
+}
+
+.cl-intro h1,
+.cl-intro p,
+.cl-sec__head h2,
+.cl-sec__head p,
+[data-review-look] p {
+    margin: 0;
+}
+
+.cl-motion {
+    padding: 0.5rem 0.75rem;
+    border-inline-start: 3px solid var(--accent);
+    background: var(--muted);
+}
+
+.cl-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.cl-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cl-sec__head p {
+    color: var(--muted-foreground);
+    max-inline-size: 80ch;
+}
+
+.cl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.cl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.cl-actions [aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* Two options side by side on a desk, one on a phone; every card the same
+   height, so the boards line up across a row. */
+.cl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 44rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.cl-opt {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* In the review dialog the shown option takes the stage's width. */
+[data-rv-flip-trio] .cl-opt {
+    min-inline-size: min(100%, 64rem);
+}
+
+.cl-opt__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cl-opt__head h3 {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.cl-opt__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.6em;
+    margin-inline-end: 0.25em;
+    padding: 0 0.3em;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--kp-mono);
+}
+
+.cl-opt__rec {
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.cl-opt__see,
+.cl-opt__verdict {
+    margin: 0;
+    max-inline-size: 75ch;
+}
+
+.cl-opt__verdict {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.cl-opt__verdict--rec {
+    color: var(--accent);
+}
+
+/* The option's numbers in one line of terms: what differs, readable at a glance. */
+.cl-spec {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.cl-spec div {
+    display: flex;
+    gap: 0.4em;
+    align-items: baseline;
+}
+
+.cl-spec dt {
+    color: var(--muted-foreground);
+    font-family: var(--kp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cl-spec dd {
+    margin: 0;
+}
+
+.cl-swatch {
+    display: inline-block;
+    inline-size: 0.7em;
+    block-size: 0.7em;
+    margin-inline: 0.15em 0.25em;
+    background: var(--c);
+    vertical-align: baseline;
+}
+
+/* The board: every place a live update happens, on a grid that keeps each
+   place where it is when a value changes. Three columns on a card wide
+   enough (key figure, trend tile, state word over the tiles and the table,
+   the strip across the foot), one on a phone. */
+.cl-opt {
+    container-type: inline-size;
+}
+
+.cl-board {
+    /* The trend line keeps a tile's height: the review dialog's flip sets a
+       tall spark on the shown card (for the trend demo's own), not wanted here. */
+    --kp-kpi-spark-height: 2.5rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-flow: row dense;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+@container (min-width: 38rem) {
+    .cl-board {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .cl-place--wide {
+        grid-column: span 2;
+    }
+
+    .cl-place--full {
+        grid-column: 1 / -1;
+    }
+}
+
+.cl-place {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.cl-place__name {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-family: var(--kp-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.cl-one {
+    grid-template-columns: 1fr;
+}
+
+.cl-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cl-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+}
+
+.cl-state {
+    margin: 0;
+    align-items: baseline;
+}
+
+.cl-table {
+    inline-size: 100%;
+}
+
+.cl-num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── The split ────────────────────────────────────────────────────────── */
+
+/* The value that changed, and behind it its two copies (`data-cl-text`,
+   written with the value). The value itself is always on top and never
+   hidden: the copies sit under it in its own stacking context, so only
+   where they stick out past the glyphs is any neon seen. Each copy is
+   still and invisible until the value is hit. */
+.cl-v {
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+}
+
+.cl-v::before,
+.cl-v::after {
+    content: attr(data-cl-text);
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    white-space: pre;
+    text-shadow: none;
+    /* The copy's own (dx, dy): the up copy reads --cl-y as negative, the
+       down copy as positive, so the two always go opposite ways. */
+    --cl-sign: -1;
+    color: var(--cl-up);
+    transform: translate(calc(var(--cl-x, 0px)), calc(var(--cl-y, 0px) * var(--cl-sign)));
+}
+
+.cl-v::after {
+    --cl-sign: 1;
+    color: var(--cl-down);
+}
+
+/* The time of every idea, slowed by the page's speed buttons. */
+.cl-v[data-cl-hit]::before,
+.cl-v[data-cl-hit]::after {
+    animation-duration: calc(var(--cl-ms, 300ms) * var(--cl-slow, 1));
+    animation-fill-mode: both;
+    animation-iteration-count: 1;
+}
+
+/* ── The six ideas ────────────────────────────────────────────────────── */
+
+/* Keyframes animate the copy's offset (--cl-x, --cl-y), registered so it
+   interpolates, its opacity and clip-path; never the value itself, except
+   option 2's recoil and option 6's glow, both on the value's own box. */
+@property --cl-x {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+@property --cl-y {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    /* 1 · Split and snap: three hard frames out, one frame home. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='snap'] .cl-v[data-cl-hit]::before,
+    html:not([data-cl-motion='reduced']) [data-cl-fx='snap'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-snap;
+        animation-timing-function: steps(1, end);
+    }
+
+    /* 2 · Shove and spring: thrown far, slides home past the middle; the value recoils. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='shove'] .cl-v[data-cl-hit]::before,
+    html:not([data-cl-motion='reduced']) [data-cl-fx='shove'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-shove;
+        animation-timing-function: cubic-bezier(0.25, 1.7, 0.45, 1);
+    }
+
+    html:not([data-cl-motion='reduced']) [data-cl-fx='shove'] .cl-v[data-cl-hit] {
+        animation: cl-recoil calc(var(--cl-ms) * var(--cl-slow, 1)) steps(1, end) 1;
+    }
+
+    /* 3 · Count-down stutter: home in four ticks. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='tick'] .cl-v[data-cl-hit]::before,
+    html:not([data-cl-motion='reduced']) [data-cl-fx='tick'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-tick;
+        animation-timing-function: steps(1, end);
+    }
+
+    /* 4 · Sliced copies: each copy one band, jumping between heights. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='slice'] .cl-v[data-cl-hit]::before {
+        animation-name: cl-slice-up;
+        animation-timing-function: steps(1, end);
+    }
+
+    html:not([data-cl-motion='reduced']) [data-cl-fx='slice'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-slice-down;
+        animation-timing-function: steps(1, end);
+    }
+
+    /* 5 · Scanline tear: a beam runs down; above it clean, below it split. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='scan'] .cl-v[data-cl-hit]::before,
+    html:not([data-cl-motion='reduced']) [data-cl-fx='scan'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-scan;
+        animation-timing-function: linear;
+    }
+
+    html:not([data-cl-motion='reduced']) [data-cl-fx='scan'] .cl-v[data-cl-hit] {
+        background: linear-gradient(
+                to bottom,
+                transparent calc(50% - 1px),
+                hsl(from var(--accent) h s l / 0.9) calc(50% - 1px) calc(50% + 1px),
+                transparent calc(50% + 1px)
+            )
+            0 0 / 100% 200% no-repeat;
+        animation: cl-beam calc(var(--cl-ms) * var(--cl-slow, 1)) linear 1 both;
+    }
+
+    /* 6 · Afterglow: glides home easing out, the glow fading off the value. */
+    html:not([data-cl-motion='reduced']) [data-cl-fx='glow'] .cl-v[data-cl-hit]::before,
+    html:not([data-cl-motion='reduced']) [data-cl-fx='glow'] .cl-v[data-cl-hit]::after {
+        animation-name: cl-glow;
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html:not([data-cl-motion='reduced']) [data-cl-fx='glow'] .cl-v[data-cl-hit] {
+        animation: cl-glow-value calc(var(--cl-ms) * var(--cl-slow, 1)) cubic-bezier(0.16, 1, 0.3, 1) 1;
+    }
+}
+
+@keyframes cl-snap {
+    0% {
+        opacity: 1;
+        --cl-x: 3px;
+        --cl-y: 2px;
+    }
+    35% {
+        opacity: 1;
+        --cl-x: 4px;
+        --cl-y: 3px;
+    }
+    70% {
+        opacity: 1;
+        --cl-x: 2px;
+        --cl-y: 1px;
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+    }
+}
+
+@keyframes cl-shove {
+    0% {
+        opacity: 0.95;
+        --cl-x: 10px;
+        --cl-y: 5px;
+    }
+    85% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+    }
+}
+
+@keyframes cl-recoil {
+    0% {
+        transform: translateX(-2px);
+    }
+    30%,
+    100% {
+        transform: none;
+    }
+}
+
+@keyframes cl-tick {
+    0% {
+        opacity: 1;
+        --cl-x: 6px;
+        --cl-y: 4px;
+    }
+    25% {
+        opacity: 1;
+        --cl-x: 4px;
+        --cl-y: 3px;
+    }
+    50% {
+        opacity: 1;
+        --cl-x: 2px;
+        --cl-y: 2px;
+    }
+    75% {
+        opacity: 1;
+        --cl-x: 1px;
+        --cl-y: 1px;
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+    }
+}
+
+/* The bands: a copy's clip (top, bottom inset), wide to the sides so the
+   offset never cuts it. */
+@keyframes cl-slice-up {
+    0% {
+        opacity: 1;
+        --cl-x: 5px;
+        --cl-y: 3px;
+        clip-path: inset(0 -1em 55% -1em);
+    }
+    33% {
+        opacity: 1;
+        --cl-x: 6px;
+        --cl-y: 2px;
+        clip-path: inset(35% -1em 30% -1em);
+    }
+    66% {
+        opacity: 1;
+        --cl-x: 3px;
+        --cl-y: 3px;
+        clip-path: inset(10% -1em 70% -1em);
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+        clip-path: inset(50% -1em 50% -1em);
+    }
+}
+
+@keyframes cl-slice-down {
+    0% {
+        opacity: 1;
+        --cl-x: 5px;
+        --cl-y: 3px;
+        clip-path: inset(50% -1em 0 -1em);
+    }
+    33% {
+        opacity: 1;
+        --cl-x: 3px;
+        --cl-y: 2px;
+        clip-path: inset(20% -1em 50% -1em);
+    }
+    66% {
+        opacity: 1;
+        --cl-x: 6px;
+        --cl-y: 3px;
+        clip-path: inset(65% -1em 5% -1em);
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+        clip-path: inset(50% -1em 50% -1em);
+    }
+}
+
+/* The copies are cut away above the beam as it runs down the value. */
+@keyframes cl-scan {
+    0% {
+        opacity: 1;
+        --cl-x: 5px;
+        --cl-y: 3px;
+        clip-path: inset(-0.5em -1em -0.5em -1em);
+    }
+    95% {
+        opacity: 1;
+        clip-path: inset(100% -1em -0.5em -1em);
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 5px;
+        --cl-y: 3px;
+        clip-path: inset(100% -1em -0.5em -1em);
+    }
+}
+
+@keyframes cl-beam {
+    0% {
+        background-position-y: 100%;
+    }
+    100% {
+        background-position-y: 0%;
+    }
+}
+
+@keyframes cl-glow {
+    0% {
+        opacity: 1;
+        --cl-x: 7px;
+        --cl-y: 4px;
+    }
+    100% {
+        opacity: 0;
+        --cl-x: 0px;
+        --cl-y: 0px;
+    }
+}
+
+@keyframes cl-glow-value {
+    0% {
+        text-shadow:
+            0 0 6px hsl(from var(--accent) h s l / 0.9),
+            0 0 14px hsl(from var(--chart-4) h s l / 0.7);
+    }
+    100% {
+        text-shadow: none;
+    }
+}
+
+/* ── The still version ────────────────────────────────────────────────── */
+
+/* Reduced motion (the reader's setting, or the page's preview button): the
+   copies stand two pixels out, in the option's own colours, for as long as
+   demo.js keeps the value hit (1.2 s), and go. Nothing moves; the value
+   never does. */
+@media (prefers-reduced-motion: reduce) {
+    .cl-v[data-cl-hit]::before,
+    .cl-v[data-cl-hit]::after {
+        opacity: 1;
+        --cl-x: 2px;
+        --cl-y: 1px;
+        animation: none;
+    }
+}
+
+html[data-cl-motion='reduced'] .cl-v[data-cl-hit]::before,
+html[data-cl-motion='reduced'] .cl-v[data-cl-hit]::after {
+    opacity: 1;
+    --cl-x: 2px;
+    --cl-y: 1px;
+    animation: none;
+}

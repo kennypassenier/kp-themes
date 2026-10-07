@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="cyberpunk" data-cat-theme="cyberpunk" data-cat-theme-fixed data-review="cyberpunk-live" data-review-themes="cyberpunk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — cyberpunk's live update: the chromatic split, six ways</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" data-kp-register="cyberpunk" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="cl-page">
+            <header class="cl-intro">
+                <h1>Cyberpunk’s live update: the chromatic split, six ways</h1>
+                <p>
+                    Kenny, 2026-10-07 01:32, on cyberpunk’s live update in research/families: “The glitch effect where one colour goes a bit to the
+                    right and up/down and another colour goes to the right and the opposite of the other, with neon colours”. Every option below is
+                    that split: the new value is written at once and stays on top, sharp and readable the whole time; behind it two neon copies of it
+                    jump to the right, one up and the other down, and come back.
+                </p>
+                <p>
+                    The six differ in what you can see at a glance: how far the copies go, whether they move in hard frames, in slices or in one
+                    glide, whether a scan line runs through, which two of cyberpunk’s own neons (cyan, violet, yellow, red: tokens, no new colour),
+                    how long, and how it settles. Each option shows every place a value updates live on a dashboard: a key figure and its change, a
+                    trend tile, a tile, two columns of a key-figure strip, a state word and a table cell. Only the values that changed split; the
+                    others stay still. The first option is the recommendation.
+                </p>
+                <p class="cl-motion" data-cl-motion-note hidden>
+                    <b>Your system asks for reduced motion</b>, so every option shows its still version: the copies stand two pixels out for a moment
+                    and go, and nothing moves. Turn it off in the system settings to see the motion.
+                </p>
+            </header>
+
+            <section
+                class="cl-sec"
+                data-review-item="live"
+                data-review-mode="aspects"
+                data-review-rows="data-cl-aspect"
+                data-review-components="cyberpunk-live"
+                data-review-title="Cyberpunk's live update"
+                aria-labelledby="h-cl"
+            >
+                <div class="cl-sec__head">
+                    <h2 id="h-cl">Six options</h2>
+                    <p>
+                        A live update comes by itself every 2.6 seconds; <b>Live update</b> sends one at once. The speed slows every split down, and
+                        <b>Reduced motion</b> shows the still version a reader who asked for less motion gets.
+                    </p>
+                </div>
+                <div class="cl-controls" data-review-controls>
+                    <div class="cl-actions" role="group" aria-label="Live update">
+                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-cl-live data-review-plays="live">
+                            Live update
+                        </button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Updates by themselves">
+                        <b>By themselves:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-auto="on" aria-pressed="true">Every 2.6 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-auto="off" aria-pressed="false">Only on Live</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Motion">
+                        <b>Motion:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-motion="full" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-motion="reduced" aria-pressed="false">Reduced motion</button>
+                    </div>
+                    <div class="cl-actions" role="group" aria-label="Animation speed">
+                        <b>Speed:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cl-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="cl-grid" data-cl-aspect="live"></div>
+            </section>
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

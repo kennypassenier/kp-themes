@@ -32014,56 +32014,73 @@
         --kp-sig-ti-edge: var(--kp-tool-edge, inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14));
     }
 
+    /* The spinner is the facing cut (Kenny, 2026-10-07 01:33, on
+       research/titanium-spinner, option 1; was the drill). The end of a bar
+       turning on the lathe, seen face on: concentric turning grain and a
+       centre point on the span; the oxide film the tool tip leaves in its
+       track on ::before (thin gold far behind, thickest cyan right behind
+       the tip, fading back to bare metal before the tip comes round); the
+       tool tip itself on ::after, a bright radial line with the dark cut
+       beside it on the side it travels to. Round because it is a turned part
+       (G7); one revolution per 1800 ms at a constant feed (G4, a loop),
+       start → end: clockwise in a left-to-right page, mirrored in a
+       right-to-left one. Square at every size, so it fits the square slots
+       the busy panel, the status line and a calendar day give it. Standing
+       still (reduced motion), the tip with its tail still reads as busy. */
     [data-theme='titanium'] .kp-spinner {
-        --kp-sig-dur: 480ms;
-        /* One flute pitch along the body: the gradient's 8px period at 53.13deg
-           (sin = 0.8) repeats every 10px horizontally. */
-        --kp-sig-ti-pitch: 10px;
-        --kp-sig-ti-shade: linear-gradient(
-            to bottom,
-            hsl(from var(--background) h s l / 0.75) 0%,
-            transparent 30%,
-            hsl(from var(--foreground) h s l / 0.22) 42%,
-            transparent 55%,
-            hsl(from var(--background) h s l / 0.85) 100%
-        );
+        --kp-sig-dur: 1800ms;
+        --kp-sig-ti-spin: var(--kp-spinner-size, 1.25rem);
+        --kp-sig-ti-tip: max(1.5px, calc(var(--kp-sig-ti-spin) * 0.07));
         position: relative;
-        inline-size: calc(var(--kp-spinner-size, 1.25rem) * 1.6);
-        block-size: calc(var(--kp-spinner-size, 1.25rem) * 0.6);
+        display: inline-block;
+        flex: none;
+        inline-size: var(--kp-sig-ti-spin);
+        block-size: var(--kp-sig-ti-spin);
         border: 0;
-        border-radius: 0;
-        background: none;
-        box-shadow: none;
-        /* The silhouette: the chamfered shank end and the chamfered tip. */
-        clip-path: polygon(0 22%, 3% 0, 93% 0, 100% 30%, 100% 70%, 93% 100%, 3% 100%, 0 78%);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle closest-side, var(--primary) 0 9%, transparent 11%),
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: none;
         vertical-align: middle;
+        isolation: isolate;
         animation: none;
     }
 
-    [data-theme='titanium'] .kp-spinner::before {
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: calc(40% - var(--kp-sig-ti-pitch));
-        inline-size: calc(60% + var(--kp-sig-ti-pitch));
-        background: repeating-linear-gradient(
-            53.13deg,
-            var(--primary) 0 3px,
-            hsl(from var(--primary) h s calc(l - 22)) 3px 4px,
-            var(--muted) 4px 7px,
-            hsl(from var(--primary) h s calc(l - 30)) 7px 8px
-        );
+    [data-theme='titanium'] .kp-spinner:dir(rtl) {
+        scale: -1 1;
     }
 
+    [data-theme='titanium'] .kp-spinner::before,
     [data-theme='titanium'] .kp-spinner::after {
         content: '';
         position: absolute;
         inset: 0;
+        box-sizing: border-box;
+        border-radius: 50%;
+    }
+
+    [data-theme='titanium'] .kp-spinner::before {
+        background: conic-gradient(
+            transparent 0 105deg,
+            var(--warning-foreground) 170deg,
+            var(--chart-4) 205deg,
+            var(--chart-2) 245deg,
+            var(--chart-1) 295deg,
+            var(--chart-3) 340deg,
+            var(--primary) 352deg 360deg
+        );
+        /* A mask reads only alpha: any opaque token draws the ring. */
+        -webkit-mask: radial-gradient(circle closest-side, transparent 0 44%, var(--foreground) 47% 100%, transparent 100%);
+        mask: radial-gradient(circle closest-side, transparent 0 44%, var(--foreground) 47% 100%, transparent 100%);
+    }
+
+    [data-theme='titanium'] .kp-spinner::after {
         background:
-            var(--kp-sig-ti-shade),
-            var(--kp-iris) 9% 0 / 6% 100% no-repeat,
-            var(--kp-iris) 100% 0 / 3px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 0 / 40% 100% no-repeat;
+            linear-gradient(var(--primary), var(--primary)) 50% 0 / var(--kp-sig-ti-tip) 48% no-repeat,
+            linear-gradient(var(--background), var(--background)) calc(50% + var(--kp-sig-ti-tip)) 0 / 1px 48% no-repeat;
     }
 
     [data-theme='titanium'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
@@ -32370,8 +32387,11 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='titanium'] .kp-spinner::before {
-            animation: kp-sig-titanium-ti-flutes var(--kp-sig-dur) linear infinite;
+        /* The facing cut: the film and the tool tip turn together; the face
+           and its grain stay, as a turning bar's do to the eye. */
+        [data-theme='titanium'] .kp-spinner::before,
+        [data-theme='titanium'] .kp-spinner::after {
+            animation: kp-sig-titanium-ti-facing var(--kp-sig-dur) linear infinite;
         }
 
         /* The skeleton is the anodising bath; lines run a beat apart. */
@@ -32424,13 +32444,13 @@
         }
     }
 
-    @keyframes kp-sig-titanium-ti-flutes {
+    @keyframes kp-sig-titanium-ti-facing {
         from {
-            transform: translateX(0);
+            rotate: 0turn;
         }
 
         to {
-            transform: translateX(var(--kp-sig-ti-pitch));
+            rotate: 1turn;
         }
     }
 
@@ -32953,7 +32973,8 @@
        32% into the part's own plate, drifting start → end at a constant
        feed, one period (--kp-sig-ti-loop) for every carrier, rows of parts
        a beat apart. The skeleton, the progress bar and the meter carry it
-       above; the spinner (the drill) is kept as it is until its new design.
+       above; the spinner is the facing cut (decided 2026-10-07 01:33), its own
+       picture: the oxide the tool tip leaves on a turning face.
        Standing still (reduced motion) the wash stays, still. ── */
     [data-theme='titanium'] .kp-datatable__busy-panel {
         background: var(--kp-sig-ti-bath), var(--card);

@@ -33,6 +33,17 @@
   bottom-left, the tooltip top-right only). The skeleton line and the empty
   state, which named a custom property the dialog's registered
   `--kp-sig-ti-cut` had made invalid and so were never cut, now carry it.
+- **Changed: titanium's spinner is the facing cut** [Kenny on
+  research/titanium-spinner, 2026-10-07 01:33]. The drill (a 1.6 × 0.6 bar
+  whose flutes travelled one pitch per 480 ms) is replaced by the end face of
+  a bar turning on the lathe: turning grain and a centre point, a bright tool
+  tip running round the face and leaving the oxide film in its track, gold
+  to cyan. Square at `--kp-spinner-size` (so it fits the busy panel, the
+  status line, a calendar day and a busy button), one turn per 1800 ms,
+  linear, clockwise and mirrored under `dir="rtl"`
+  (`kp-sig-titanium-ti-facing`); under reduced motion it stands still, the
+  tip with its tail. Same contract: one span, `--kp-spinner-size`,
+  `role`/`aria-*` on the span.
 
 - **Removed: three themes, `lapis`, `shade-light` and `shade-dark`**
   [breaking, next major release; Kenny, 2026-10-06 23:49: "Ik heb ook

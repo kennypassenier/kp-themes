@@ -1,5 +1,10 @@
 # A spinner for titanium
 
+**Decided (Kenny, 2026-10-07 01:33): The facing cut** ("titanium · The spinner = The facing cut (recommended)"), option 1, in
+place of the drill; the pick is in [decided.json](decided.json). It is ported into `css/titanium-register.css` exactly as
+`options.css` draws it (`kp-sig-titanium-ti-facing`, 1800 ms, start → end, mirrored for `dir="rtl"`) and recorded in
+[themes/titanium/CHARACTER.md](../../themes/titanium/CHARACTER.md) §0.
+
 **Why.** Kenny, 2026-10-07 00:54: "ik wil ook een paar nieuwe ontwerpen voor de spinner (die ook in andere componenten
 terugkomt)". Titanium's spinner today is the drill (`.kp-spinner`, `kp-sig-titanium-ti-flutes`, 480 ms, in
 `css/titanium-register.css`). Six new ideas from a machine shop that works titanium, judged against the decided grammar in

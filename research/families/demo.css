@@ -132,6 +132,12 @@
     background: var(--background);
 }
 
+/* A signature element this theme's register does not draw (the update in
+   place outside formal, cyberpunk and titanium) has no card here. */
+.fm-card[data-fm-absent] {
+    display: none;
+}
+
 .fm-card[data-fm-missing] .fm-card__frame {
     outline: 2px dashed var(--destructive);
 }
