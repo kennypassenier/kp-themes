@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fixed: forest's theme picker no longer sits in a card frame** [2026-10-07, Kenny]. The register painted the card chrome (border and shadow) on `.kp-theme-menu`, the wrapper round the icon button, so the button had a square frame around it; the chrome now belongs to `.kp-theme-menu__list`, the dropdown the React switcher draws.
+
 - **Changed (research demos only): the busy overlay's leave in forest's demo
   is its arrival reversed** [2026-10-07, Kenny: every close is its open
   reversed]. research/character-busy withers back with `fog-grow-back` (the

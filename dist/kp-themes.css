@@ -36159,10 +36159,18 @@
     [data-theme='forest'] .kp-datepicker__panel,
     [data-theme='forest'] .kp-combobox__list,
     [data-theme='forest'] .kp-palette,
-    [data-theme='forest'] .kp-theme-menu {
+    [data-theme='forest'] .kp-theme-menu__list {
         background: var(--card);
         border: 1px solid var(--border-strong);
         box-shadow: 0 20px 44px -16px color-mix(in srgb, var(--foreground) 45%, transparent);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='forest'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
     }
 
     /* Severity toasts [scope-60]. The plain toast above is repainted here in
