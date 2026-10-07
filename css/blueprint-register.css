@@ -157,10 +157,8 @@
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cpath d='M0 -3v6M-3 0h6' stroke='%2364a4c4' stroke-width='1' stroke-opacity='0.18'/%3E%3C/svg%3E");
         --fx-texture-size: 32px 32px, 32px 32px, 160px 160px, 160px 160px, 160px 160px;
         --fx-texture-opacity: 1;
-        /* The cyan wash a mark clears into, and the same wash for a
-           dropdown item's hover — one colour, two jobs. */
+        /* The cyan wash a mark clears into. */
         --kp-wash: hsl(from var(--primary) h s l / 0.28);
-        --kp-menu-wash: hsl(from var(--primary) h s l / 0.08);
         /* The plotter's feed [scope-143, curve]: a stepper plotter's
            trapezoid, a fifth of the time to reach the feed, three fifths at
            it, a fifth to stop; the register's `--fx-ease` is this curve, so
@@ -577,8 +575,8 @@
        chamfer, no shadow — it sits on the page's own ground inside one
        hairline border, with a cyan rule across the top the way a drawing's
        corner names the sheet. Items are separated by hairlines with mono
-       01/02/03 leaders (CSS counters); hover is the cyan wash, never a
-       filled bar. */
+       01/02/03 leaders (CSS counters); pointed at, a link takes the menu
+       entry's own hover (witness lines and a ruler, below), never a wash. */
     [data-theme='blueprint'] .kp-nav__menu {
         background: var(--background);
         border: 1px solid var(--border-strong);
@@ -602,7 +600,9 @@
         }
     }
 
-    [data-theme='blueprint'] .kp-nav__menu::before {
+    /* A menu with a caption (data-kp-menu-label) keeps the caption in this
+       place: the rule would otherwise paint the caption's box as a solid bar. */
+    [data-theme='blueprint'] .kp-nav__menu:not([data-kp-menu-label])::before {
         content: '';
         display: block;
         block-size: 1px;
@@ -638,9 +638,11 @@
         color: var(--muted-foreground);
     }
 
-    [data-theme='blueprint'] .kp-nav__menu a:hover,
-    [data-theme='blueprint'] .kp-nav__menu a:focus-visible {
-        background: var(--kp-menu-wash);
+    /* The link's ground never changes: hover and focus are the witness lines and
+       the ruler (see the menu entry's hover, shared below); the keyboard's ring
+       is the package's. */
+    [data-theme='blueprint'] .kp-nav__menu a:is(:hover, :focus-visible, :active) {
+        background: none;
         color: var(--foreground);
     }
 
@@ -873,9 +875,12 @@
         color: inherit;
     }
 
-    /* The theme menu's list scrolls inside the rounded popover, so it is
-       square and unframed there: the popover draws the box [scope-60]. */
-    [data-theme='blueprint'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+    /* One frame, never two: a menu that sits inside a popover (or inside the
+       theme menu's list) is the popover's content, so the popover draws the
+       one 1 px frame (the pen traces that frame) and the menu is unframed and
+       square there. A standalone menu and a menu button's list are their own
+       frame and keep it [scope-60, scope-143]. */
+    [data-theme='blueprint'] :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
         border: 0;
         border-radius: 0;
     }
@@ -2853,13 +2858,14 @@
        focused. The keyboard's place is told by two channels: the package's focus
        ring round the entry, which only the keyboard sets, and the amber lines
        and ruler (which a pointer sets too). */
-    [data-theme='blueprint'] .kp-menu__item {
+    [data-theme='blueprint'] :is(.kp-menu__item, .kp-nav__menu a) {
         position: relative;
         --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
         --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
     }
 
-    [data-theme='blueprint'] .kp-menu__item::before {
+    [data-theme='blueprint'] .kp-menu__item::before,
+    [data-theme='blueprint'] .kp-nav__menu a::after {
         content: '';
         position: absolute;
         inset-block: -0.2rem;
@@ -2895,13 +2901,58 @@
         background: none;
     }
 
-    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus-visible):not([aria-disabled='true']) {
+    [data-theme='blueprint'] .kp-menu__item:is(:hover, :focus-visible):not([aria-disabled='true']),
+    [data-theme='blueprint'] .kp-nav__menu a:is(:hover, :focus-visible) {
+        --kp-bp-hv: 1;
+        --kp-bp-sv: 1;
+    }
+
+    /* The combobox's and the palette's rows are the same entries: the package
+       lights the active one (the arrow keys' place, mirrored by the pointer) with
+       a wash; here it takes the lines and the ruler and its ground stays. The
+       input keeps the focus, so the lines are the place's one signal. */
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option) {
+        position: relative;
+        --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-hv));
+        --kp-bp-n2: hsl(from var(--accent) h s l / calc(var(--kp-bp-sv) * var(--kp-bp-hv)));
+    }
+
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option)::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.2rem;
+        inset-inline: calc(0.35rem - 4px);
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-image:
+            linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+            linear-gradient(var(--kp-bp-n2), var(--kp-bp-n2)), repeating-linear-gradient(90deg, var(--kp-bp-n2) 0 1px, transparent 1px 5px),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0),
+            conic-gradient(from 135deg at 50% 0, var(--kp-bp-n2) 90deg, transparent 0);
+        background-size:
+            1px 100%,
+            1px 100%,
+            calc(100% - 8px) 1px,
+            calc(100% - 8px) 3px,
+            9px 5px,
+            9px 5px;
+        background-position:
+            4px top,
+            calc(100% - 4px) top,
+            left 4px bottom calc(0.2rem + 5px),
+            left 4px bottom calc(0.2rem + 6px),
+            left bottom 0.2rem,
+            right bottom 0.2rem;
+    }
+
+    [data-theme='blueprint'] :is(.kp-combobox__option, .kp-palette__option).is-active:not([aria-disabled='true'], [data-kp-disabled]) {
+        background: none;
         --kp-bp-hv: 1;
         --kp-bp-sv: 1;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] .kp-menu__item {
+        [data-theme='blueprint'] :is(.kp-menu__item, .kp-nav__menu a, .kp-combobox__option, .kp-palette__option) {
             transition:
                 --kp-bp-hv var(--fx-duration) var(--fx-ease),
                 --kp-bp-sv var(--fx-duration) var(--fx-ease);
