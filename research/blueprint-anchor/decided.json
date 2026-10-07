@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-07 21:19 Brussels, Kenny: 1 of 1 approved in the review dialog (research/blueprint-anchor/README.md): Blueprint's anchor element = The tracing pen",
+    "attributes": "data-ba2-anchor=\"<key>\" on the .ba2-scene, research/blueprint-anchor/options.css",
+    "picks": {
+        "blueprint": {
+            "anchor": "tracing"
+        }
+    }
+}

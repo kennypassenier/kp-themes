@@ -1,5 +1,7 @@
 # What anchors blueprint
 
+**Decided (Kenny, 07/10/2026 21:19): The tracing pen** ("blueprint-anchor · blueprint: The anchor = The tracing pen"), option 6, not the recommended pen that dimensions. Recorded in themes/blueprint/CHARACTER.md §0 and decided.json.
+
 Kenny, 2026-10-07 20:44, on round one: "I kind of like the measuring part of option 1 [the dimension line], but not the implementation itself, like I don't like the form. And I LOVE the plotter pen, so that should be a thing for sure. Come up with some more examples based on this feedback."
 
 ## Why
