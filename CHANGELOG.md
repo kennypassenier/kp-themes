@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Fixed: `.kp-skeleton--block` and `.kp-skeleton--circle` have their own size again** [2026-10-07, Kenny]. The base `.kp-skeleton` rule (1rem tall) came later in components.css than the two shape rules and won at equal specificity, so in every theme a block was a flat 1rem bar and a circle a flat ellipse. The shape rules now follow the base rule: a block is `--kp-skeleton-block` (6rem) tall, a circle `--kp-skeleton-circle` (3rem) wide and as tall as wide.
+
 - **Fixed: no register frames the theme picker's icon button** [2026-10-07, Kenny]. Sixteen registers (blueprint, brutalism, dark, deco, formal, grotesk, high-contrast, light, nostromo, pastel, retro, sepia, solstice, synthwave, terminal, titanium) listed `.kp-theme-menu`, the wrapper round the button, among the popover surfaces and drew a card border or shadow round it; the surface now belongs to `.kp-theme-menu__list`, the dropdown, and the wrapper takes none (as phantom's already did).
 
 - **Changed: forest's skeleton block and circle, and the empty state, carry forest's own pictures** [2026-10-07, Kenny: "not convinced" by the diagonal stripes and the rings]. The skeleton block is a plot of ground being planted (rows of seedlings with a ground line each, the grove walking every row, dashed plot boundary, leaf corner) and the circle a round clearing planted inside its inscribed square; same 3200 ms linear breath as the lines, reduced motion shows the half-planted pose; no stripe is left in forest. The empty state is a clearing on the map: a dashed leaf-cornered plot, one seedling that grows once (1000 ms, growth curve), a clay trig point at the corner (css/forest-register.css only; DOM, sizes and copy unchanged).

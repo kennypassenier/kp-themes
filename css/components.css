@@ -5278,12 +5278,9 @@
     /* A skeleton comes in the shape of what it stands in for, and its gap is
  * a knob rather than an inline style nothing could beat [KT6]. */
     .kp-skeleton--circle {
+        inline-size: var(--kp-skeleton-circle, 3rem);
         border-radius: 50%;
         aspect-ratio: 1;
-    }
-
-    .kp-skeleton--block {
-        block-size: var(--kp-skeleton-block, 6rem);
     }
 
     .kp-skeleton + .kp-skeleton {
@@ -5473,6 +5470,16 @@
         block-size: var(--kp-skeleton-height, 1rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--muted);
+    }
+
+    /* After the base rule, so the shape's own size wins at equal specificity:
+ * a block is as tall as it says and a circle is as tall as it is wide. */
+    .kp-skeleton--block {
+        block-size: var(--kp-skeleton-block, 6rem);
+    }
+
+    .kp-skeleton--circle {
+        block-size: auto;
     }
 
     /* Both of these move, so both are guarded: DI7 is not a preference to
