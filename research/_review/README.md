@@ -103,6 +103,27 @@ A verdict of this round on other files is open again, in the dialog and in
 lists every demo in "Archived research", with the decision its `decided.json`
 records.
 
+## An update after a verdict
+
+When a session republishes a demo after Kenny's verdict, it writes
+`update.json` beside `demo.html`:
+
+```json
+{
+    "update": 1,
+    "picks": { "terminal": { "curve": "cells", "hover": "ring" } },
+    "questions": {
+        "terminal": { "loading": { "comment": "Kenny's words, verbatim", "reply": "What changed and how, or what is proposed" } }
+    }
+}
+```
+
+`picks` are the questions he approved: the dialog takes them as answered and
+no longer walks them. `questions` are the ones the update opens again; the
+dialog shows each with his comment and the reply beside it, and "To judge"
+calls the demo "Update 1 · Terminal". The next update raises the number and
+lists only what it opens again; picks only grow.
+
 ## Choices to tick
 
 When a demo asks the reviewer to pick between options, the options go in the

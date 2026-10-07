@@ -23,6 +23,7 @@ export const storeKey = (demo) => `kp-demo-review:${demo}`;
  * @property {string[]} extras   the keys of the catalogue pairs it carries along
  * @property {{ round?: string, reopen?: string[] } | null} round
  * @property {string | null} [fingerprint]  see fingerprintOf, once read
+ * @property {DemoUpdate | null} [update]   see loadUpdate, once read
  */
 
 const parseJson = (text, fallback) => {
@@ -89,13 +90,48 @@ export function storedFor(id) {
     }
 }
 
+/**
+ * @typedef {object} DemoUpdate
+ * @property {number} update  the update's number: 1 for the first redo after a verdict, then 2, …
+ * @property {Record<string, Record<string, string>>} picks  per theme, per question: the option Kenny approved
+ * @property {Record<string, Record<string, { comment?: string, reply?: string }>>} questions
+ *   per theme, per question the update opens again: Kenny's comment and the session's reply
+ */
+
+/**
+ * A demo's update, the one convention a theme session fills in when it
+ * republishes a demo after Kenny's verdict: `update.json` beside demo.html,
+ *
+ *     { "update": 1,
+ *       "picks": { "<theme>": { "<question>": "<option key>" } },
+ *       "questions": { "<theme>": { "<question>": { "comment": "<his words>", "reply": "<what changed, or the proposal>" } } } }
+ *
+ * The next update raises the number and lists only what it opens again.
+ * Null when the demo has none.
+ * @param {string | URL} url
+ * @returns {Promise<DemoUpdate | null>}
+ */
+export async function loadUpdate(url) {
+    try {
+        const response = await fetch(url, { cache: 'no-cache' });
+        if (!response.ok) return null;
+        const data = await response.json();
+        const update = Number(data?.update);
+        if (!update) return null;
+        return { update, picks: data.picks || {}, questions: data.questions || {} };
+    } catch {
+        return null;
+    }
+}
+
 /*
  * A demo republished under the same round: a theme session redid options,
  * scenes or styles and kept `data-review-round` (Kenny, 2026-10-07: the new
  * cyberpunk and terminal rounds were "judged in every theme" on his page).
  * Every verdict is stamped with the demo's fingerprint, a hash of its page
  * and of the scripts and sheets in its own folder, and with the round it was
- * given in; a verdict of this round on other files is open again.
+ * given in; a "not approved" of this round on other files is open again
+ * (an approval stands, as it does across rounds).
  */
 
 /**
@@ -155,7 +191,7 @@ export function staleKeys(shape, stored) {
     const before = UNSTAMPED_BEFORE[/** @type {keyof typeof UNSTAMPED_BEFORE} */ (shape.id)];
     return Object.entries(stored)
         .filter(([key, entry]) => {
-            if (key.startsWith('__') || !entry?.verdict) return false;
+            if (key.startsWith('__') || entry?.verdict !== 'rejected') return false;
             if (entry.fingerprint) return (entry.round || '') === round && Boolean(shape.fingerprint) && entry.fingerprint !== shape.fingerprint;
             return Boolean(before) && (entry.at || '') < before;
         })
@@ -173,6 +209,7 @@ export function staleKeys(shape, stored) {
  * @property {boolean} extrasLeft  catalogue blocks the demo carries, still open
  * @property {string[]} updated    themes open again since an earlier verdict
  * @property {boolean} extrasUpdated  the catalogue blocks are open again too
+ * @property {number} update       the update's number (update.json), 0 without one
  * @property {number} pairs
  * @property {number} pairsLeft
  */
@@ -195,6 +232,10 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     // and a verdict given on one since closes it like any other pair.
     // A verdict on another version of this round: open, as review.js reopens it on load.
     for (const key of staleKeys(shape, stored)) pending.add(key);
+    // An update not yet opened in this browser: the themes it asks again.
+    if (shape.update && (Number(stored.__update) || 0) < shape.update.update)
+        for (const theme of shape.themes)
+            if (Object.keys(shape.update.questions[theme] || {}).length) for (const item of shape.items) pending.add(`${theme}|${item}`);
     const reopened = new Set(pending.size ? pending : Array.isArray(stored.__reopened) ? stored.__reopened : []);
     const open = (key) => !stored[key]?.verdict || pending.has(key);
     const steps = shape.themes.map((theme) => shape.items.map((item) => `${theme}|${item}`));
@@ -224,6 +265,7 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
         extrasLeft,
         updated,
         extrasUpdated,
+        update: shape.update?.update || 0,
         pairs: pairs.length,
         pairsLeft,
     };

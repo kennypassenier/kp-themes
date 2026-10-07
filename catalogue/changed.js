@@ -27,7 +27,7 @@ import { REVIEW_PAGE, themeLabel } from './review-state.js';
 import { mountJudging } from './judging.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
 import { PAGES } from './pages.js';
-import { fingerprintOf, progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
+import { fingerprintOf, loadUpdate, progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
 
 const ROOT = new URL('../', import.meta.url);
 
@@ -236,7 +236,7 @@ function mountHub() {
             // A later round: name the themes it reopened, so Kenny sees which round he is in.
             const names = progress.updated.map(themeLabel);
             if (progress.extrasUpdated) names.push('its catalogue blocks');
-            badge.textContent = `Updated · ${names.join(', ')}`;
+            badge.textContent = `${progress.update ? `Update ${progress.update}` : 'Updated'} · ${names.join(', ')}`;
             badge.className = 'kp-badge kp-badge--info';
             open.textContent = 'Continue';
         } else if (progress.state === 'new') {
@@ -318,7 +318,10 @@ function mountHub() {
                 const html = await response.text();
                 const shape = shapeOf(new DOMParser().parseFromString(html, 'text/html'));
                 // Its version, so a verdict on earlier files of this round reads as open.
-                if (shape) shape.fingerprint = await fingerprintOf(demo.url, html);
+                if (shape) {
+                    shape.fingerprint = await fingerprintOf(demo.url, html);
+                    shape.update = await loadUpdate(new URL('update.json', demo.url));
+                }
                 demo.shape = shape;
             } catch {
                 demo.failed = true;

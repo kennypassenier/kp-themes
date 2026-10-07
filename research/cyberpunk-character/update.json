@@ -1,0 +1,56 @@
+{
+    "update": 1,
+    "picks": {
+        "cyberpunk": {
+            "direction": "sideways",
+            "durations": "ticks",
+            "colour": "roles",
+            "corners": "notch",
+            "surface": "holo",
+            "tone": "lock",
+            "live": "shape",
+            "type": "prefixed",
+            "motifs": "meaning"
+        }
+    },
+    "questions": {
+        "cyberpunk": {
+            "curve": {
+                "comment": "I like the jitters best, but for some reason when it closes, the dialogs and menus leave like one piece still open and it only closes later, it should be more linear. Try to fix it and give me a couple other options in this style",
+                "reply": "The close is now exactly the open played backwards (measured frame by frame), so no piece lingers; a couple more jitter-style options stand beside the original."
+            },
+            "opening": {
+                "comment": "again, i like glitched in, but the same issue here, it shouldn't let the last piece \"linger\" when it closes, give me a couple more options that are glitchy",
+                "reply": "The same fix: the close is the open reversed, nothing lingers; a couple more glitch-style openings were added."
+            },
+            "loading": {
+                "comment": "I want ten full designs to replace the loading. atleast one should be a data-stream one, but one that looks way fancier than this one. The rest are designs you can come up with that are very cyberpunk, think about existing cyberpunk media for this",
+                "reply": "Ten new loading designs: the netrun as the fancier data stream, and nine drawn from cyberpunk media (braindance scrub, breach protocol, the Matrix prompt, Esper enhance, ghost dive, Akira's vitals trace, the augmentation lattice, VHS signal loss, light cycles)."
+            },
+            "spinner": {
+                "comment": "reticle locks on its core is not bad, but I want nine other demos for this, get creative",
+                "reply": "Nine new spinners beside the reticle: signal bars, a countdown digit, a tearing square, a read barcode, running chevrons, a ratcheting cross, a charging cell, a stuttering neon tube and crawling hazard stripes."
+            },
+            "leave": {
+                "comment": "again, more demos, make sure that you adhere to the rule that in is the opposite of out, grow is the opposite of shrink etc",
+                "reply": "New leave/arrive pairs (collapse to a line, squeeze from a seam, suck into a corner, rows or macroblocks dropping out, un-decode, power flicker); every exit is its entry reversed, measured frame by frame."
+            },
+            "composites": {
+                "comment": "1 has my preference, but i want at least five other demos for this, be creative.",
+                "reply": "Five more beside your preferred option: a cyan header beam, key-cap action names, numbered sockets, a rim tab on the live part, a leader read-out, and the host lighting its own rim."
+            },
+            "hover": {
+                "comment": "none of these, make demos",
+                "reply": "Six new hover designs replace the old ones: glitch flash, static noise, a sideways tear that jitters home, a cyan/red split edge, a chevron wedge and an ink flood; they now play in the dialog as the pointer comes and goes."
+            },
+            "focus": {
+                "comment": "come up with new options",
+                "reply": "Five new focus rings, all keeping the two-channel ring: a glitch ring that tears in and locks, a frame just inside the edge, closing target brackets, an outline outside the part, and a foot bar under it."
+            },
+            "press": {
+                "comment": "I prefer 1, but not sure, give other demos, also make your descriptions crystal clear for where or when it's used. Like I thin,k this is when a button is pressed, but it's not super clear",
+                "reply": "Four more press options (hazard stripes while held, a slicing line while held, a recoil kick, an ACK tag in the corner), each description now saying it is the moment a button is pressed; the pressed mark now animates away instead of vanishing on the last frame."
+            }
+        }
+    }
+}

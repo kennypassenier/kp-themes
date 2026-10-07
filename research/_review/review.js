@@ -75,7 +75,7 @@
 // copies the answer and returns to the hub, which opens the next item.
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
-import { fingerprintOf, staleKeys, storeKey } from './progress.js';
+import { fingerprintOf, loadUpdate, staleKeys, storeKey } from './progress.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -508,6 +508,16 @@ const lookFor = (section, theme) => section.querySelector(`[data-review-look] [d
 // for an arrival), so the motion is already playing. Per aspect the reviewer
 // picks one option or "None of these" with a note; the theme's verdict
 // follows from all its aspects (approved, or not approved with the notes).
+/**
+ * The demo's update, from `update.json` beside it (progress.js, loadUpdate):
+ * the picks Kenny approved, which the dialog takes as answered and no longer
+ * walks, and the questions the update reopens, each with his comment and the
+ * session's reply (Kenny, 2026-10-07: "bij een update enkel zien wat er nog
+ * beoordeeld moet worden").
+ */
+const UPDATE = await loadUpdate(new URL('update.json', location.href));
+/** A question settled by an earlier verdict: picked in update.json and not asked again. */
+const lockedFor = (theme, id) => Boolean(UPDATE?.picks?.[theme]?.[id]) && !UPDATE?.questions?.[theme]?.[id];
 const ASPECT_MODE = items.length > 0 && items.every((item) => item.section.dataset.reviewMode === 'aspects');
 const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[theme]) : Boolean(choice.fixed));
 
@@ -524,7 +534,7 @@ const steps = ORDER.flatMap((theme) => {
     if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
     const aspectSteps = themePairs.flatMap((pair) =>
         pair.item.choices
-            .filter((choice) => !choice.once && !plainFixed(theme, choice))
+            .filter((choice) => !choice.once && !plainFixed(theme, choice) && !lockedFor(theme, choice.id))
             .map((choice) => ({ title: `${LABEL[theme] || theme} · ${choice.label}`, theme, aspect: choice.id, pairs: [pair] })),
     );
     return aspectSteps.length ? aspectSteps : [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
@@ -593,11 +603,27 @@ try {
 // The pairs a round reopened stay listed under `__reopened`, so the hub
 // (progress.js) still calls the demo updated, in those themes, once its
 // verdicts are gone (Kenny, 2026-10-07: "Not started" read as a new demo).
+/**
+ * Opens a judged pair again. Judged per aspect, only its "None of these"
+ * aspects and the ones named open again, and every other pick stands; the
+ * notes it had are kept under `earlier`, shown beside the reopened question.
+ * @param {string} key @param {string[]} [aspects]
+ */
+function reopenPair(key, aspects = []) {
+    const entry = state[key];
+    if (!ASPECT_MODE || !entry) {
+        delete state[key];
+        return;
+    }
+    const choices = { ...entry.choices };
+    for (const aspect of aspects) delete choices[aspect];
+    state[key] = { choices, earlier: { ...entry.earlier, ...entry.redo } };
+}
 if (round?.round && state.__round !== round.round) {
     const reopened = [];
     for (const [key, entry] of Object.entries(state)) {
         if (entry?.verdict === 'rejected') {
-            delete state[key];
+            reopenPair(key);
             reopened.push(key);
         }
     }
@@ -615,8 +641,31 @@ if (round?.round && state.__round !== round.round) {
 fingerprint = await fingerprintOf(location.href);
 {
     const stale = staleKeys({ id: DEMO, round, fingerprint }, state);
-    for (const key of stale) delete state[key];
+    for (const key of stale) reopenPair(key);
     if (stale.length) state.__reopened = [...new Set([...(state.__reopened || []), ...stale])];
+    save();
+}
+// An update (update.json): its picks are answered, and once per update the
+// questions it names open again, Kenny's earlier note kept beside them.
+if (UPDATE && ASPECT_MODE) {
+    const fresh = (Number(state.__update) || 0) < UPDATE.update;
+    const reopened = [];
+    for (const pair of pairs) {
+        if (!pair.item) continue;
+        const asked = Object.keys(UPDATE.questions[pair.theme] || {});
+        const entry = { ...state[pair.key] };
+        entry.choices = { ...entry.choices };
+        for (const [id, value] of Object.entries(UPDATE.picks[pair.theme] || {})) if (!asked.includes(id)) entry.choices[id] = value;
+        state[pair.key] = entry;
+        if (fresh && asked.length) {
+            reopenPair(pair.key, asked);
+            reopened.push(pair.key);
+        }
+    }
+    if (fresh) {
+        state.__update = UPDATE.update;
+        state.__reopened = [...new Set([...(state.__reopened || []), ...reopened])];
+    }
     save();
 }
 const verdictOf = (pair) => state[pair.key]?.verdict;
@@ -821,6 +870,7 @@ dialog.innerHTML = `
         </div>
         <div class="rv-dialog__side">
             <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
+            <div class="rv-update" data-rv-update></div>
             <ol class="rv-dialog__list" data-rv-list></ol>
             <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
             <div class="rv-dialog__actions">
@@ -1559,6 +1609,34 @@ function updateApprove() {
           : '↑ Approve these blocks';
 }
 
+/**
+ * Beside a question an update reopened: which update, Kenny's comment from
+ * the round before and the session's reply, what it changed or proposes.
+ */
+function paintUpdate(step) {
+    const box = /** @type {HTMLElement} */ ($('[data-rv-update]'));
+    const pair = step.pairs[0];
+    const asked = step.aspect && pair ? UPDATE?.questions?.[pair.theme]?.[step.aspect] : null;
+    const earlier = step.aspect && pair ? state[pair.key]?.earlier?.[step.aspect] : '';
+    const comment = asked?.comment || (earlier && earlier !== 'not approved' ? earlier : '');
+    box.replaceChildren();
+    if (!asked && !earlier) return;
+    const head = document.createElement('p');
+    head.className = 'rv-update__head';
+    head.textContent = UPDATE ? `Update ${UPDATE.update} · open again` : 'Open again';
+    box.append(head);
+    for (const [label, text] of [
+        ['Your comment', comment || 'Not approved, without a comment.'],
+        ['Answer', asked?.reply || 'No answer recorded for this update.'],
+    ]) {
+        const p = document.createElement('p');
+        const b = document.createElement('b');
+        b.textContent = `${label}: `;
+        p.append(b, text);
+        box.append(p);
+    }
+}
+
 async function show(at) {
     if (busy) return;
     busy = true;
@@ -1583,6 +1661,7 @@ async function show(at) {
         stage.scrollTop = 0;
         mirrorControls(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section));
         list.replaceChildren(...shownPairs.map((pair) => rowFor(pair, step.aspect ?? null)));
+        paintUpdate(step);
         // The demo's controls always stand open in the dialog: Kenny judges
         // only there (2026-10-06 14:53: "alle knoppen die helpen om de demo te
         // beoordelen ook in de dialog ... fix het"), never folded away.

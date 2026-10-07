@@ -1,0 +1,30 @@
+{
+    "update": 1,
+    "picks": {
+        "terminal": {
+            "curve": "cells",
+            "arrival": "cursor",
+            "opening": "feed",
+            "durations": "clocks",
+            "colour": "phosphor",
+            "surface": "htop",
+            "tone": "level",
+            "live": "blink",
+            "leave": "glide",
+            "composites": "own",
+            "hover": "ring",
+            "focus": "dashed",
+            "press": "reverse",
+            "voice": "shell",
+            "motifs": "one"
+        }
+    },
+    "questions": {
+        "terminal": {
+            "loading": {
+                "comment": "I feel like we can do better, I like 2 most but give me more options",
+                "reply": "Five new loading options built on your favourite, the row of cells along the foot, now written and erased by the block cursor itself; writing and erasing both take 560 ms, the erase being the write played backwards."
+            }
+        }
+    }
+}
