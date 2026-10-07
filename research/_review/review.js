@@ -75,7 +75,7 @@
 // copies the answer and returns to the hub, which opens the next item.
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
-import { storeKey } from './progress.js';
+import { fingerprintOf, staleKeys, storeKey } from './progress.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -560,7 +560,16 @@ function load() {
     }
 }
 let state = load();
+/** This version of the demo (progress.js, fingerprintOf), once read. @type {string | null} */
+let fingerprint = null;
 function save() {
+    // Every verdict carries the version and the round it was given on.
+    if (fingerprint)
+        for (const [key, entry] of Object.entries(state))
+            if (!key.startsWith('__') && entry?.verdict && !entry.fingerprint) {
+                entry.fingerprint = fingerprint;
+                entry.round = round?.round || '';
+            }
     try {
         localStorage.setItem(STORE, JSON.stringify(state));
     } catch {
@@ -598,6 +607,16 @@ if (round?.round && state.__round !== round.round) {
     }
     state.__reopened = [...new Set(reopened)];
     state.__round = round.round;
+    save();
+}
+// A demo republished under the same round (progress.js, staleKeys): the
+// verdicts given on its earlier files are open again, and listed with the
+// round's own so "To judge" calls the demo updated.
+fingerprint = await fingerprintOf(location.href);
+{
+    const stale = staleKeys({ id: DEMO, round, fingerprint }, state);
+    for (const key of stale) delete state[key];
+    if (stale.length) state.__reopened = [...new Set([...(state.__reopened || []), ...stale])];
     save();
 }
 const verdictOf = (pair) => state[pair.key]?.verdict;

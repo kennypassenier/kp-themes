@@ -95,6 +95,14 @@ without waiting for its archiving. While a session rebuilds a round, it marks
 the demo's entry in `catalogue/pages.js` with `rework: '<why>'`; "To judge"
 leaves it out until the flag is removed with the new round.
 
+A demo republished without a new round id is caught as well: every verdict
+carries the round it was given in and a fingerprint of the demo's page and
+of the scripts and sheets in its own folder (`progress.js`, `fingerprintOf`).
+A verdict of this round on other files is open again, in the dialog and in
+"To judge", which then calls the demo updated. Under Decided, "To judge" also
+lists every demo in "Archived research", with the decision its `decided.json`
+records.
+
 ## Choices to tick
 
 When a demo asks the reviewer to pick between options, the options go in the

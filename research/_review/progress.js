@@ -22,6 +22,7 @@ export const storeKey = (demo) => `kp-demo-review:${demo}`;
  * @property {string[]} items    its judged sections (`data-review-item`)
  * @property {string[]} extras   the keys of the catalogue pairs it carries along
  * @property {{ round?: string, reopen?: string[] } | null} round
+ * @property {string | null} [fingerprint]  see fingerprintOf, once read
  */
 
 const parseJson = (text, fallback) => {
@@ -88,6 +89,79 @@ export function storedFor(id) {
     }
 }
 
+/*
+ * A demo republished under the same round: a theme session redid options,
+ * scenes or styles and kept `data-review-round` (Kenny, 2026-10-07: the new
+ * cyberpunk and terminal rounds were "judged in every theme" on his page).
+ * Every verdict is stamped with the demo's fingerprint, a hash of its page
+ * and of the scripts and sheets in its own folder, and with the round it was
+ * given in; a verdict of this round on other files is open again.
+ */
+
+/**
+ * The fingerprint of the demo at `url`: its page and the scripts and sheets
+ * in its own folder, hashed. Null when it cannot be read or hashed.
+ * @param {string | URL} url
+ * @param {string} [html] the page's text, when it is already fetched
+ * @returns {Promise<string | null>}
+ */
+export async function fingerprintOf(url, html) {
+    try {
+        const page = new URL(url);
+        page.search = page.hash = '';
+        const folder = new URL('.', page).href;
+        const text = html ?? (await (await fetch(page, { cache: 'no-cache' })).text());
+        const doc = new DOMParser().parseFromString(text, 'text/html');
+        const own = [...doc.querySelectorAll('script[src], link[rel="stylesheet"][href]')]
+            .map((el) => new URL(el.getAttribute('src') || el.getAttribute('href') || '', page))
+            .filter((file) => file.href.startsWith(folder))
+            .map((file) => file.href)
+            .sort();
+        const parts = [text, ...(await Promise.all(own.map(async (file) => (await fetch(file, { cache: 'no-cache' })).text())))];
+        const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(parts.join('\u0000')));
+        return [...new Uint8Array(digest).slice(0, 8)].map((b) => b.toString(16).padStart(2, '0')).join('');
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Verdicts given before fingerprints were stamped (2026-10-07) carry none:
+ * for the demos still waiting then, a verdict older than the last commit
+ * that changed the demo's own files is open again. Read once, never added
+ * to: every later verdict carries its fingerprint.
+ */
+const UNSTAMPED_BEFORE = {
+    'cyberpunk-character': '2026-10-07T19:24:52Z',
+    'solstice-character': '2026-10-07T15:17:44Z',
+    'brutalism-character': '2026-10-07T14:24:39Z',
+    'terminal-character': '2026-10-07T19:08:45Z',
+    'synthwave-character': '2026-10-07T19:22:41Z',
+    'grotesk-character': '2026-10-07T14:24:39Z',
+    'nostromo-character': '2026-10-07T15:17:26Z',
+    'blueprint-character': '2026-10-07T14:24:39Z',
+};
+
+/**
+ * The verdicts given on another version of this round of the demo.
+ * @param {{ id: string, round: DemoShape['round'], fingerprint?: string | null }} shape
+ * @param {Record<string, any>} stored
+ * @returns {string[]}
+ */
+export function staleKeys(shape, stored) {
+    const round = shape.round?.round || '';
+    // A round not yet opened in this browser is read by the round's own rules.
+    if (round && (stored.__round || '') !== round) return [];
+    const before = UNSTAMPED_BEFORE[/** @type {keyof typeof UNSTAMPED_BEFORE} */ (shape.id)];
+    return Object.entries(stored)
+        .filter(([key, entry]) => {
+            if (key.startsWith('__') || !entry?.verdict) return false;
+            if (entry.fingerprint) return (entry.round || '') === round && Boolean(shape.fingerprint) && entry.fingerprint !== shape.fingerprint;
+            return Boolean(before) && (entry.at || '') < before;
+        })
+        .map(([key]) => key);
+}
+
 /**
  * @typedef {object} DemoProgress
  * @property {'decided' | 'updated' | 'partly' | 'new'} state
@@ -119,6 +193,8 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     // The pairs the round reopened, pending or already reopened (review.js
     // lists those under `__reopened`): they name the themes an update is in,
     // and a verdict given on one since closes it like any other pair.
+    // A verdict on another version of this round: open, as review.js reopens it on load.
+    for (const key of staleKeys(shape, stored)) pending.add(key);
     const reopened = new Set(pending.size ? pending : Array.isArray(stored.__reopened) ? stored.__reopened : []);
     const open = (key) => !stored[key]?.verdict || pending.has(key);
     const steps = shape.themes.map((theme) => shape.items.map((item) => `${theme}|${item}`));

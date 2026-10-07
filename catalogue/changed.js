@@ -27,7 +27,7 @@ import { REVIEW_PAGE, themeLabel } from './review-state.js';
 import { mountJudging } from './judging.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
 import { PAGES } from './pages.js';
-import { progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
+import { fingerprintOf, progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
 
 const ROOT = new URL('../', import.meta.url);
 
@@ -161,6 +161,28 @@ function mountHub() {
     /** @type {Demo[]} */
     const demos = pages.map((page) => ({ ...page, url: new URL(page.href, ROOT), shape: undefined, failed: false, row: rowFor(page) }));
     list.replaceChildren(...demos.map((demo) => demo.row));
+    // Under Decided as well: every archived demo, with the decision its
+    // folder records (decided.json), newest first (Kenny, 2026-10-07: "ik heb
+    // al veel meer demos goedgekeurd dan deze laatste vier").
+    const archived = (PAGES.find((group) => group.group === 'Archived research')?.pages ?? []).map((page) => {
+        const row = rowFor(page);
+        const url = new URL(page.href, ROOT);
+        const open = /** @type {HTMLAnchorElement} */ (row.querySelector('[data-cat-hub-open]'));
+        open.href = url.href;
+        open.textContent = 'Open';
+        open.setAttribute('aria-label', `Open: ${page.label}`);
+        row.dataset.catHubState = 'archived';
+        return { row, url, decided: '' };
+    });
+    /** One archived row's words and badge, from its decided.json or its absence. */
+    const paintArchived = (entry) => {
+        const ask = /** @type {HTMLElement} */ (entry.row.querySelector('[data-cat-hub-ask]'));
+        const badge = /** @type {HTMLElement} */ (entry.row.querySelector('[data-cat-hub-state]'));
+        ask.textContent = entry.decided || 'Archived without a decision file: set aside, or decided before decided.json existed.';
+        badge.textContent = entry.decided ? 'Decided' : 'Archived';
+        badge.className = entry.decided ? 'kp-badge kp-badge--success' : 'kp-badge';
+    };
+    archived.forEach(paintArchived);
     /** @type {number | null} open catalogue blocks in the theme on screen, null while gathering */
     let blocksLeft = null;
 
@@ -235,9 +257,11 @@ function mountHub() {
         const done = demos.filter((demo) => demo.row.dataset.catHubState === 'decided');
         const waiting = demos.filter((demo) => demo.row.dataset.catHubState !== 'decided');
         list.replaceChildren(...waiting.map((demo) => demo.row));
-        decidedList.replaceChildren(...done.map((demo) => demo.row));
-        decided.hidden = !done.length;
-        decided.querySelector('[data-cat-hub-decided-count]').textContent = `(${done.length})`;
+        const byDate = [...archived].sort((a, b) => Number(!a.decided) - Number(!b.decided) || b.decided.localeCompare(a.decided));
+        decidedList.replaceChildren(...done.map((demo) => demo.row), ...byDate.map((entry) => entry.row));
+        const count = done.length + archived.length;
+        decided.hidden = !count;
+        decided.querySelector('[data-cat-hub-decided-count]').textContent = `(${count})`;
         if (!waiting.length) {
             const none = document.createElement('li');
             none.className = 'cat-changed-done';
@@ -291,13 +315,28 @@ function mountHub() {
             try {
                 const response = await fetch(demo.url, { cache: 'no-cache' });
                 if (!response.ok) throw new Error(String(response.status));
-                demo.shape = shapeOf(new DOMParser().parseFromString(await response.text(), 'text/html'));
+                const html = await response.text();
+                const shape = shapeOf(new DOMParser().parseFromString(html, 'text/html'));
+                // Its version, so a verdict on earlier files of this round reads as open.
+                if (shape) shape.fingerprint = await fingerprintOf(demo.url, html);
+                demo.shape = shape;
             } catch {
                 demo.failed = true;
             }
             render();
         }),
     );
+    Promise.all(
+        archived.map(async (entry) => {
+            try {
+                const response = await fetch(new URL('decided.json', entry.url), { cache: 'no-cache' });
+                if (response.ok) entry.decided = String((await response.json())?.decided || 'Decided; see its decided.json.');
+            } catch {
+                // No decision file: the row stays "Archived".
+            }
+            paintArchived(entry);
+        }),
+    ).then(render);
     // A verdict given in a demo in another tab, or the way back to this page
     // through the browser's history: the states are read again.
     window.addEventListener('storage', (event) => {
