@@ -1,0 +1,1905 @@
+/* research/grotesk-character: every option of every question, in the
+   theme's signature layer, scoped by the option's attribute on its scene
+   (`.gk-scene[data-gk-<question>='<key>']`). Colours come from the theme's
+   tokens only; every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the finished part. Durations are
+   multiplied by --gk-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "as picked" options are the ones measured in
+   themes/grotesk/CHARACTER.md §2. Parts at rest are drawn as the
+   recommended grammar has them (a column under its 3 px ink rule, no box,
+   flush left, square, Archivo heavy and tight and Inter in sentence case),
+   so each question changes only its own rule.
+
+   The set: a part arrives by sliding out from behind its own start edge (a
+   translate of its own width and a clip that keeps its start edge still),
+   so nothing shows before its turn. The bands: a 300 % strip of red, ink
+   and paper thirds over the part (`.gk-band`), the leave's own drawing.
+   The proof: a waiting reading's place in two plates, the red on ::before
+   and the ink on ::after, both drawn from one `--gk-img` declared on each
+   pseudo-element so each resolves its own `--gk-c`; only the red moves
+   (`translate`, a transform). */
+
+@layer kp.signature {
+    /* ── The theme's pieces ──────────────────────────────────────────── */
+
+    /* On the scene as well as the page: the review dialog shows a copy of
+       a scene outside the page. */
+    .gk-page,
+    .gk-scene {
+        --gk-ink: var(--foreground);
+        --gk-red: var(--primary);
+        /* The inline direction's sign, for the set and the bands. */
+        --gk-dir: 1;
+        --gk-clip-start: inset(0 0 0 100%);
+        --gk-clip-end: inset(0 100% 0 0);
+    }
+
+    .gk-scene:dir(rtl) {
+        --gk-dir: -1;
+        --gk-clip-start: inset(0 100% 0 0);
+        --gk-clip-end: inset(0 0 0 100%);
+    }
+
+    .gk-scene {
+        position: relative;
+        /* A slipped red plate may reach a few pixels past a part. */
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* G1, G4: every scene runs on the recommended curve and units; the
+           curve and duration questions change these. */
+        --gk-in: linear;
+        --gk-contact: 120ms;
+        --gk-set: 240ms;
+        --gk-bands: 480ms;
+        --gk-loop: 2640ms;
+        --gk-step: 60ms;
+        --gk-arrive: gk-set;
+        /* G7: nothing is translucent; the proof says busy, so layout.css's
+           busy dim (0.7) stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .gk-scene[data-gk-curve='cut'] {
+        --gk-in: steps(3, jump-end);
+    }
+
+    .gk-scene[data-gk-curve='eased'] {
+        --gk-in: cubic-bezier(0.7, 0, 0.3, 1);
+    }
+
+    .gk-scene[data-gk-durations='picks'] {
+        --gk-contact: 150ms;
+        --gk-set: 1200ms;
+        --gk-bands: 550ms;
+        --gk-loop: 2600ms;
+    }
+
+    .gk-scene[data-gk-durations='instant'] {
+        --gk-contact: 0ms;
+        --gk-set: 0ms;
+        --gk-bands: 0ms;
+    }
+
+    .gk-scene[data-gk-direction='clip'] {
+        --gk-arrive: gk-cut;
+    }
+
+    .gk-scene[data-gk-direction='rise'] {
+        --gk-arrive: gk-rise;
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .gk-scene :is(.gk-title, .kp-card__title, .kp-dialog__title, .kp-page-header__title) {
+        margin: 0;
+        color: inherit;
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+    }
+
+    /* G15: Inter speaks the labels, bold, in sentence case. */
+    .gk-scene .gk-label {
+        color: var(--foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 1.25;
+        text-transform: none;
+    }
+
+    /* G15: Archivo counts, heavy and tight. */
+    .gk-scene .gk-figure {
+        position: relative;
+        display: inline-block;
+        justify-self: start;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.9rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+    }
+
+    /* G7: a plate is a column under its rule: white, no box, a 3 px ink
+       rule along its top, the words flush left. */
+    .gk-scene .gk-plate {
+        position: relative;
+        margin: 0;
+        padding: 0.5rem 0 0.65rem;
+        border: 0;
+        border-block-start: 3px solid var(--gk-ink);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: none;
+    }
+
+    /* What floats over the page keeps the register's 3 px ink frame. */
+    .gk-scene .gk-float {
+        position: relative;
+        inset: auto;
+        margin: 0;
+        border: 3px solid var(--gk-ink);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: none;
+        animation: none;
+    }
+
+    .gk-scene .kp-card.gk-plate {
+        display: grid;
+        gap: 0.2rem;
+    }
+
+    .gk-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .gk-scene .kp-dialog {
+        display: block;
+        max-inline-size: none;
+        padding: 0.4rem 1rem 1rem;
+    }
+
+    .gk-scene .kp-dialog__title {
+        margin-block: 0.9rem 0.4rem;
+        font-size: 1.15rem;
+        font-weight: 900;
+    }
+
+    .gk-scene .kp-dialog__description {
+        margin: 0 0 0.75rem;
+    }
+
+    .gk-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .gk-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .gk-scene .gk-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.5rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .gk-scene .gk-pop {
+        display: block;
+        padding: 0.25rem;
+    }
+
+    .gk-scene .kp-menu {
+        display: grid;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        list-style: none;
+    }
+
+    .gk-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        white-space: nowrap;
+        text-align: start;
+    }
+
+    /* The words a baseline is drawn under (scope-12): the register's own
+       drawing, for parts that have no button label. */
+    .gk-scene .gk-words {
+        position: relative;
+        display: inline-block;
+    }
+
+    .gk-scene .gk-words::after {
+        content: '';
+        position: absolute;
+        inset-inline: -0.35rem;
+        inset-block-end: calc(0.225em - var(--kp-baseline-weight, 2px));
+        block-size: var(--kp-baseline-weight, 2px);
+        background: var(--kp-baseline-colour, var(--primary));
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    .gk-scene:dir(rtl) .gk-words::after {
+        transform-origin: right center;
+    }
+
+    .gk-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .gk-scene .gk-kpi-row {
+        grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    }
+
+    .gk-scene .kp-kpi.gk-plate {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        gap: 0.15rem;
+        color: inherit;
+        text-decoration: none;
+        text-align: start;
+    }
+
+    .gk-scene .kp-kpi__trend {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    /* G13: the change on a square plate with the timetable's arrows. */
+    .gk-scene .gk-chip {
+        display: inline-block;
+        padding: 0 0.3rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .gk-scene .gk-chip[data-kp-direction='up']::before {
+        content: '↗\00a0';
+    }
+
+    .gk-scene .gk-chip[data-kp-direction='down']::before {
+        content: '↘\00a0';
+    }
+
+    .gk-cap {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    .gk-scene .gk-faint {
+        color: var(--muted-foreground);
+    }
+
+    .gk-scene .gk-field {
+        display: grid;
+        gap: 0.3rem;
+        margin-block-start: 0.6rem;
+    }
+
+    /* The days of a month: the poster grid, figures flush left under a rule. */
+    .gk-scene .gk-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.3rem;
+    }
+
+    .gk-scene .gk-day {
+        position: relative;
+        display: grid;
+        align-content: end;
+        justify-items: start;
+        inline-size: 2.4rem;
+        block-size: 2.4rem;
+        padding: 0 0.2rem 0.15rem;
+        border-block-start: 2px solid var(--gk-ink);
+        background: var(--card);
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    /* G5: today in the red, the pick a red line. */
+    .gk-scene .gk-today {
+        border-block-start-color: var(--gk-red);
+        color: var(--gk-red);
+    }
+
+    .gk-scene .gk-picked {
+        outline: 3px solid var(--gk-red);
+        outline-offset: 1px;
+    }
+
+    .gk-scene .gk-rows {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    .gk-scene .gk-row-line {
+        display: block;
+        padding: 0.25rem 0 0.1rem;
+        border-block-start: 1px solid var(--gk-ink);
+        font-size: 0.88rem;
+        font-weight: 600;
+    }
+
+    .gk-scene .gk-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0 1rem;
+    }
+
+    .gk-scene .gk-strip__col {
+        display: grid;
+        gap: 0.1rem;
+        padding-block-start: 0.35rem;
+        border-block-start: 3px solid var(--gk-ink);
+    }
+
+    .gk-scene .gk-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        font-family: var(--theme-font-body);
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .gk-scene .gk-state__dot {
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        background: var(--success);
+    }
+
+    .gk-scene .gk-state[data-gk-kind='bad'] .gk-state__dot {
+        background: var(--destructive);
+    }
+
+    .gk-scene .gk-state__word {
+        display: inline-block;
+    }
+
+    .gk-scene .gk-spark-wrap {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .gk-scene .gk-spark {
+        display: block;
+        block-size: 2.2rem;
+        color: var(--foreground);
+    }
+
+    .gk-scene .gk-spark svg,
+    .gk-scene .gk-plot svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .gk-scene .gk-column {
+        display: grid;
+        gap: 0.1rem;
+    }
+
+    /* A chart's plot: the line on the twelve columns, a 3 px ink baseline. */
+    .gk-scene .gk-plot {
+        position: relative;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+        block-size: 6.5rem;
+        padding: 0.6rem 0 0.3rem;
+        color: var(--foreground);
+        background-image: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px calc(100% / 12));
+        background-origin: content-box;
+        background-clip: content-box;
+    }
+
+    .gk-scene .gk-plot svg {
+        border-block-end: 3px solid var(--gk-ink);
+    }
+
+    .gk-scene .gk-plot__read {
+        margin-block-start: 0.35rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+    }
+
+    .gk-scene :is(.gk-meter-plate, .gk-state-plate) {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .gk-scene .gk-table {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .gk-scene .gk-table__head {
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .gk-scene .gk-table > .gk-wait {
+        grid-column: 1 / -1;
+    }
+
+    .gk-scene .gk-header {
+        padding-block: 0.6rem 0.7rem;
+    }
+
+    .gk-scene .gk-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .gk-scene .kp-page-header__description {
+        margin: 0.1rem 0 0;
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+    }
+
+    .gk-scene .kp-page-header__actions {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem;
+    }
+
+    .gk-scene .gk-tile-link {
+        justify-self: start;
+    }
+
+    .gk-scene .gk-header-mini {
+        padding-block: 0.6rem;
+    }
+
+    .gk-scene .gk-key {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.45rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .gk-scene .gk-key__swatch {
+        inline-size: 0.85rem;
+        block-size: 0.25rem;
+        background: var(--chart-1);
+    }
+
+    .gk-scene .gk-prose {
+        margin: 0;
+    }
+
+    .gk-scene .gk-motif-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+        gap: 1rem;
+    }
+
+    .gk-scene .gk-punch {
+        display: none;
+    }
+
+    .gk-scene .gk-events__mark {
+        position: absolute;
+        inset-inline-start: var(--x);
+        inset-block-start: var(--y);
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        translate: -50% -50%;
+        border: 2px solid var(--gk-ink);
+        border-radius: 50%;
+        background: var(--card);
+    }
+
+    .gk-scene .gk-motif-empty {
+        margin: 0;
+    }
+
+    .gk-scene .gk-busy-panel {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .gk-scene .gk-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .gk-scene .gk-drawer {
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    /* The type sample of the voice question. */
+    .gk-scene .gk-type {
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .gk-scene .gk-type :is(p, table) {
+        margin: 0;
+    }
+
+    .gk-scene .gk-type__label {
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .gk-scene .gk-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+    }
+
+    .gk-scene .gk-type__prose {
+        max-inline-size: 60ch;
+    }
+
+    .gk-scene .gk-type__figure {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.4rem;
+    }
+
+    .gk-scene .gk-type__strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 7rem));
+        gap: 1rem;
+    }
+
+    .gk-scene .gk-type__strip > div {
+        display: grid;
+        border-block-start: 3px solid var(--gk-ink);
+        padding-block-start: 0.3rem;
+    }
+
+    .gk-scene .gk-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .gk-scene .gk-type__table :is(th, td) {
+        padding: 0.2rem 1rem 0.2rem 0;
+        border-block-start: 1px solid var(--gk-ink);
+        text-align: start;
+    }
+
+    .gk-scene .gk-type__table th {
+        font-weight: 700;
+    }
+
+    /* G15: a badge and a tag speak Inter 700, sentence case. */
+    .gk-scene :is(.kp-badge, .kp-tag) {
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    /* ── G13: the index and the tone's word (shown where an option asks) ── */
+
+    .gk-scene .gk-index,
+    .gk-scene .gk-toneword {
+        display: none;
+    }
+
+    /* `grid-area: auto`: inside a key figure's grid the bar's containing
+       block stays the plate's padding box, not a grid area. */
+    .gk-scene .gk-index {
+        grid-area: auto;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 6px;
+        background: var(--gk-tone, var(--warning));
+    }
+
+    .gk-scene .gk-toneword {
+        margin-inline-end: 0.4em;
+        color: var(--foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        vertical-align: 0.35em;
+    }
+
+    .gk-scene [data-gk-kind='warn'] {
+        --gk-tone: var(--warning);
+    }
+
+    .gk-scene [data-gk-kind='bad'] {
+        --gk-tone: var(--destructive);
+    }
+
+    /* A toned part keeps room for the index in every option, so the options
+       compare at the same size. */
+    .gk-scene[data-gk-tone] :is(.gk-plate, .kp-menu__item) {
+        padding-inline-start: 0.9rem;
+    }
+
+    .gk-scene[data-gk-tone='index'] :is(.gk-index, .gk-toneword) {
+        display: inline;
+    }
+
+    .gk-scene[data-gk-tone='index'] .gk-index {
+        display: block;
+    }
+
+    .gk-scene .gk-toned {
+        justify-self: start;
+    }
+
+    .gk-scene[data-gk-tone='plate'] :is(.gk-warn, .gk-bad) .gk-toned {
+        padding: 0 0.25em;
+        background: var(--gk-tone);
+        color: var(--destructive-foreground);
+    }
+
+    .gk-scene[data-gk-tone='plate'] .gk-warn .gk-toned {
+        color: var(--warning-foreground);
+    }
+
+    .gk-scene[data-gk-tone='under'] :is(.gk-warn, .gk-bad):not(.kp-menu__item, li) {
+        box-shadow: inset 0 -4px 0 0 var(--gk-tone);
+    }
+
+    .gk-scene[data-gk-tone='under'] .kp-menu__item.gk-bad {
+        box-shadow: inset 0 -4px 0 0 var(--gk-tone);
+    }
+
+    /* ── G5: where the colour goes ───────────────────────────────────── */
+
+    .gk-scene[data-gk-colour='lines'] .gk-line-a {
+        border-block-start-color: var(--chart-1);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-line-b {
+        border-block-start-color: var(--info);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-line-c {
+        border-block-start-color: var(--warning);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-strip__col:nth-child(1) {
+        border-block-start-color: var(--success);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-strip__col:nth-child(2) {
+        border-block-start-color: var(--warning);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-strip__col:nth-child(3) {
+        border-block-start-color: var(--info);
+    }
+
+    .gk-scene[data-gk-colour='lines'] :is(.kp-badge, .kp-tag) {
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .gk-scene[data-gk-colour='lines'] .gk-today {
+        border-block-start-color: var(--success);
+        color: var(--success);
+    }
+
+    .gk-scene[data-gk-colour='plates'] :is(.gk-plate, .gk-strip__col, .gk-day) {
+        padding-inline: 0.5rem;
+        background: var(--gk-ink);
+        color: var(--accent-foreground);
+    }
+
+    .gk-scene[data-gk-colour='plates'] :is(.gk-plate, .gk-strip__col, .gk-day) :is(.gk-figure, .gk-label, .kp-kpi__trend) {
+        color: var(--accent-foreground);
+    }
+
+    .gk-scene[data-gk-colour='plates'] .gk-today {
+        color: var(--gk-red);
+    }
+
+    /* ── G7: the surface ─────────────────────────────────────────────── */
+
+    .gk-scene[data-gk-surface='board'] .gk-plate {
+        border-block-start: 6px solid var(--gk-red);
+    }
+
+    .gk-scene[data-gk-surface='box'] .gk-plate {
+        padding-inline: 0.75rem;
+        border: 2px solid var(--gk-ink);
+    }
+
+    /* ── G15: the voice ──────────────────────────────────────────────── */
+
+    .gk-scene[data-gk-voice='mono'] :is(.gk-label, .gk-type__label, .kp-badge, .kp-tag, .gk-type__table th, .gk-chip) {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .gk-scene[data-gk-voice='lower'] .gk-type,
+    .gk-scene[data-gk-voice='lower'] .gk-type * {
+        text-transform: lowercase;
+    }
+
+    /* ── G16: the motifs ─────────────────────────────────────────────── */
+
+    .gk-scene[data-gk-motifs='one'] :is(.gk-index),
+    .gk-scene[data-gk-motifs='all'] :is(.gk-index) {
+        display: block;
+    }
+
+    .gk-scene[data-gk-motifs] .gk-toneword {
+        display: inline;
+    }
+
+    .gk-scene[data-gk-motifs] .gk-motif-warn {
+        padding-inline-start: 0.9rem;
+    }
+
+    .gk-scene[data-gk-motifs='pure'] .gk-chip[data-kp-direction='up']::before {
+        content: '+';
+    }
+
+    .gk-scene[data-gk-motifs='pure'] .gk-chip[data-kp-direction='down']::before {
+        content: '\2212';
+    }
+
+    .gk-scene[data-gk-motifs='pure'] .gk-today {
+        border-block-start-color: var(--gk-ink);
+        color: var(--foreground);
+        font-weight: 900;
+    }
+
+    .gk-scene[data-gk-motifs='pure'] .gk-picked {
+        outline-color: var(--gk-ink);
+    }
+
+    .gk-scene[data-gk-motifs='pure'] .kp-empty::after {
+        content: none;
+    }
+
+    .gk-scene[data-gk-motifs='pure'] [data-kp-divider]::after {
+        content: none;
+    }
+
+    .gk-scene[data-gk-motifs='all'] :is(.gk-plate, .kp-empty) {
+        border-block-start: 6px solid var(--gk-red);
+    }
+
+    .gk-scene[data-gk-motifs='all'] .gk-tile {
+        background-image: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.08) 0 1px, transparent 1px calc(100% / 6));
+    }
+
+    .gk-scene[data-gk-motifs='all'] .gk-punch {
+        position: absolute;
+        inset-block: 0.4rem;
+        inset-inline-end: 0.4rem;
+        display: block;
+        inline-size: 0.55rem;
+        background:
+            radial-gradient(circle at 50% 0.3rem, var(--muted) 0 0.2rem, var(--gk-ink) 0.2rem 0.26rem, transparent 0.27rem) top / 100% 0.6rem
+                no-repeat,
+            radial-gradient(circle at 50% 0.3rem, var(--muted) 0 0.2rem, var(--gk-ink) 0.2rem 0.26rem, transparent 0.27rem) bottom / 100% 0.6rem
+                no-repeat;
+    }
+
+    .gk-scene[data-gk-motifs='all'] .gk-today {
+        outline: 2px solid var(--gk-ink);
+        outline-offset: 1px;
+    }
+
+    /* ── G8: pointing at something (shown still on .gk-pointed) ───────── */
+
+    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) .kp-button.gk-pointed:not(.kp-button--primary),
+    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) :is(.kp-menu__item, .kp-kpi, .gk-day).gk-pointed {
+        background: var(--muted);
+    }
+
+    .gk-scene:is([data-gk-hover='baseline'], :not([data-gk-hover])) .gk-pointed :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+    }
+
+    .gk-scene[data-gk-hover='baseline'] .kp-button--ghost.gk-pointed {
+        border-color: var(--gk-ink);
+    }
+
+    .gk-scene[data-gk-hover='bar'] .kp-button.gk-pointed {
+        box-shadow: inset 0 -3px 0 0 var(--gk-red);
+    }
+
+    .gk-scene[data-gk-hover='bar'] .kp-menu__item.gk-pointed {
+        border-block-start: 2px solid var(--gk-red);
+    }
+
+    .gk-scene[data-gk-hover='bar'] .gk-tile--pointed {
+        border-block-start-width: 7px;
+        border-block-start-color: var(--gk-red);
+    }
+
+    .gk-scene[data-gk-hover='bar'] .kp-kpi.gk-pointed {
+        border-block-start-color: var(--gk-red);
+        background: color-mix(in oklab, var(--primary) 4%, var(--card));
+    }
+
+    .gk-scene[data-gk-hover='bar'] .gk-day.gk-pointed .gk-words {
+        text-decoration: underline 2px;
+        text-underline-offset: 2px;
+    }
+
+    .gk-scene[data-gk-hover='invert'] :is(.kp-button, .kp-menu__item, .kp-kpi, .gk-day).gk-pointed {
+        border-color: var(--gk-ink);
+        background: var(--gk-ink);
+        color: var(--accent-foreground);
+    }
+
+    .gk-scene[data-gk-hover='invert'] .gk-pointed :is(.gk-figure, .gk-label) {
+        color: var(--accent-foreground);
+    }
+
+    /* ── DI2: the focus ring (shown still on .gk-focused) ─────────────── */
+
+    .gk-scene[data-gk-focus='ring'] .gk-focused {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    .gk-scene[data-gk-focus='ring'] .gk-focused :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+    }
+
+    .gk-scene[data-gk-focus='outline'] .gk-focused {
+        outline: 2px solid var(--gk-red);
+        outline-offset: 2px;
+    }
+
+    .gk-scene[data-gk-focus='frame'] .gk-focused {
+        outline: 1px solid var(--gk-ink);
+        outline-offset: 3px;
+    }
+
+    /* ── G14: the press (the clock presses .gk-press while `in`) ──────── */
+
+    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press,
+    .gk-scene[data-gk-durations][data-gk-phase='in'] .gk-press {
+        background: var(--secondary-active);
+        color: var(--foreground);
+        --kp-baseline-weight: 4px;
+        --kp-baseline-colour: var(--primary-active);
+    }
+
+    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after,
+    .gk-scene[data-gk-durations][data-gk-phase='in'] .gk-press :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+        transition: none;
+    }
+
+    .gk-scene[data-gk-press='rule'][data-gk-phase='in'] .kp-button--primary.gk-press {
+        border-color: var(--secondary-active);
+    }
+
+    .gk-scene[data-gk-press='grey'][data-gk-phase='in'] .gk-press {
+        background: var(--secondary-active);
+        color: var(--foreground);
+    }
+
+    .gk-scene[data-gk-press='grey'][data-gk-phase='in'] .kp-button--primary.gk-press {
+        border-color: var(--secondary-active);
+    }
+
+    .gk-scene[data-gk-press='reverse'][data-gk-phase='in'] .gk-press {
+        border-color: var(--gk-ink);
+        background: var(--gk-ink);
+        color: var(--accent-foreground);
+    }
+
+    .gk-scene[data-gk-press='reverse'][data-gk-phase='in'] .gk-press :is(.gk-figure, .gk-label) {
+        color: var(--accent-foreground);
+    }
+
+    /* ── G17: buttons inside composites (forced by the State buttons) ── */
+
+    /* Own: the theme's own hover, ring and press, inside and alone. */
+    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone:not(.kp-button--primary),
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link):not(.kp-button--primary),
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-entry, .gk-in-kpi),
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link):not(.kp-button--primary),
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-entry, .gk-in-kpi) {
+        border-color: var(--gk-ink);
+        background: var(--muted);
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone.kp-button--primary,
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer).kp-button--primary,
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer).kp-button--primary {
+        border-color: var(--primary);
+        background: var(--background);
+        color: var(--primary);
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
+    [data-gk-show='hover']
+        .gk-scene[data-gk-composites='own']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after,
+    [data-gk-show='hover']
+        .gk-scene[data-gk-composites='quiet']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+    }
+
+    [data-gk-show='focus'] .gk-scene[data-gk-composites] .gk-alone,
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi),
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi) {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    [data-gk-show='focus'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
+    [data-gk-show='focus']
+        .gk-scene[data-gk-composites='own']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after,
+    [data-gk-show='focus']
+        .gk-scene[data-gk-composites='quiet']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+    }
+
+    [data-gk-show='press'] .gk-scene[data-gk-composites] .gk-alone,
+    [data-gk-show='press'] .gk-scene[data-gk-composites='own'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi),
+    [data-gk-show='press'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi) {
+        border-color: var(--secondary-active);
+        background: var(--secondary-active);
+        color: var(--foreground);
+        --kp-baseline-weight: 4px;
+        --kp-baseline-colour: var(--primary-active);
+    }
+
+    [data-gk-show='press'] .gk-scene[data-gk-composites] .gk-alone .kp-button__label::after,
+    [data-gk-show='press']
+        .gk-scene[data-gk-composites='own']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after,
+    [data-gk-show='press']
+        .gk-scene[data-gk-composites='quiet']
+        :is(.gk-in-header, .gk-in-drawer, .gk-tile-link, .gk-in-entry, .gk-in-kpi)
+        :is(.kp-button__label, .gk-words)::after {
+        scale: 1 1;
+        transition: none;
+    }
+
+    /* Quiet: inside a composite a button is its words alone at rest. */
+    [data-gk-show='rest'] .gk-scene[data-gk-composites='quiet'] :is(.gk-in-header, .gk-in-drawer, .gk-tile-link) {
+        border-color: transparent;
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    /* As today (header-d.css, menu-d.css, tiles-d.css, kpi-d.css). */
+    .gk-scene[data-gk-composites='today'] .gk-in-header {
+        border-width: 1px;
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-header {
+        box-shadow: inset 0 -3px 0 0 var(--gk-red);
+    }
+
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='today'] .gk-in-header {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    [data-gk-show='press'] .gk-scene[data-gk-composites='today'] .gk-in-header {
+        box-shadow: inset 0 -3px 0 0 var(--gk-ink);
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-entry,
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='today'] .gk-in-entry {
+        border-block-start: 2px solid var(--gk-red);
+    }
+
+    [data-gk-show='press'] .gk-scene[data-gk-composites='today'] .gk-in-entry {
+        border-block-start: 2px solid var(--gk-ink);
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-tile-link .kp-button__label {
+        text-decoration: underline 3px;
+    }
+
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='today'] .gk-tile-link {
+        outline: 3px solid var(--gk-red);
+        outline-offset: 2px;
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-kpi {
+        border-block-start-color: var(--gk-red);
+        background: color-mix(in oklab, var(--primary) 4%, var(--card));
+    }
+
+    [data-gk-show='focus'] .gk-scene[data-gk-composites='today'] .gk-in-kpi {
+        outline: 1px solid var(--gk-ink);
+        outline-offset: 3px;
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-drawer:not(.kp-button--primary) {
+        background: var(--muted);
+    }
+
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-drawer .kp-button__label::after {
+        scale: 1 1;
+    }
+
+    /* The drawer's buttons conform today: a coloured one inverts. */
+    [data-gk-show='hover'] .gk-scene[data-gk-composites='today'] .gk-in-drawer.kp-button--primary {
+        border-color: var(--primary);
+        background: var(--background);
+        color: var(--primary);
+    }
+
+    /* ── G10: the waiting parts ──────────────────────────────────────── */
+
+    .gk-scene .gk-wait {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+    }
+
+    .gk-scene .gk-wait > :is(.gk-run, .gk-flap) {
+        display: none;
+    }
+
+    /* The proof: the reading's place in two plates. Each plate draws the
+       same --gk-img in its own colour; the red one moves. */
+    .gk-scene .gk-proof {
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        block-size: var(--gk-h, 1rem);
+        --gk-r: 4px;
+    }
+
+    .gk-scene .gk-proof::before,
+    .gk-scene .gk-proof::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--gk-img);
+    }
+
+    .gk-scene .gk-proof::before {
+        --gk-c: var(--gk-red);
+        /* At rest (and under reduced motion): a little out of register. */
+        translate: calc(var(--gk-r) * 0.6 * var(--gk-dir)) calc(var(--gk-r) * 0.5);
+    }
+
+    .gk-scene .gk-proof::after {
+        --gk-c: var(--gk-ink);
+    }
+
+    .gk-scene .gk-wait--figure .gk-proof {
+        --gk-h: 2rem;
+        --gk-r: 5px;
+    }
+
+    .gk-scene .gk-wait--figure .gk-proof::before,
+    .gk-scene .gk-wait--figure .gk-proof::after {
+        --gk-img: linear-gradient(var(--gk-c) 0 0) 0 55% / 4.6rem 1.35rem no-repeat;
+    }
+
+    .gk-scene .gk-wait--rows .gk-proof {
+        --gk-h: 3.3rem;
+    }
+
+    .gk-scene .gk-wait--rows .gk-proof::before,
+    .gk-scene .gk-wait--rows .gk-proof::after {
+        --gk-img:
+            linear-gradient(var(--gk-c) 0 0) 0 0.2rem / 48% 0.55rem no-repeat, linear-gradient(var(--gk-c) 0 0) 58% 0.2rem / 16% 0.55rem no-repeat,
+            linear-gradient(var(--gk-c) 0 0) 0 1.35rem / 40% 0.55rem no-repeat, linear-gradient(var(--gk-c) 0 0) 58% 1.35rem / 16% 0.55rem no-repeat,
+            linear-gradient(var(--gk-c) 0 0) 0 2.5rem / 52% 0.55rem no-repeat, linear-gradient(var(--gk-c) 0 0) 58% 2.5rem / 16% 0.55rem no-repeat;
+    }
+
+    .gk-scene .gk-wait--entry {
+        display: inline-block;
+        inline-size: 4rem;
+        margin-inline-start: 0.6rem;
+        vertical-align: middle;
+    }
+
+    .gk-scene .gk-wait--entry .gk-proof {
+        --gk-h: 0.55rem;
+        --gk-r: 3px;
+    }
+
+    .gk-scene .gk-wait--entry .gk-proof::before,
+    .gk-scene .gk-wait--entry .gk-proof::after,
+    .gk-scene .gk-wait--line .gk-proof::before,
+    .gk-scene .gk-wait--line .gk-proof::after {
+        --gk-img: linear-gradient(var(--gk-c) 0 0);
+    }
+
+    .gk-scene .gk-days--wait .gk-day {
+        align-content: end;
+    }
+
+    .gk-scene .gk-wait--day {
+        inline-size: 1.4rem;
+    }
+
+    .gk-scene .gk-wait--day .gk-proof {
+        --gk-h: 0.95rem;
+        --gk-r: 3px;
+    }
+
+    .gk-scene .gk-wait--day .gk-proof::before,
+    .gk-scene .gk-wait--day .gk-proof::after {
+        --gk-img: linear-gradient(var(--gk-c) 0 0);
+    }
+
+    .gk-scene .gk-wait--meter .gk-proof {
+        --gk-h: 0.625rem;
+    }
+
+    .gk-scene .gk-wait--meter .gk-proof::before,
+    .gk-scene .gk-wait--meter .gk-proof::after {
+        --gk-img:
+            linear-gradient(var(--gk-c) 0 0) 0 0 / 100% 1.5px no-repeat, linear-gradient(var(--gk-c) 0 0) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(90deg, var(--gk-c) 0 1.5px, transparent 1.5px 10%);
+    }
+
+    .gk-scene .gk-wait--body .gk-proof {
+        --gk-h: 1.6rem;
+    }
+
+    .gk-scene .gk-wait--body .gk-proof::before,
+    .gk-scene .gk-wait--body .gk-proof::after {
+        --gk-img:
+            linear-gradient(var(--gk-c) 0 0) 0 0.1rem / 82% 0.55rem no-repeat, linear-gradient(var(--gk-c) 0 0) 0 1.05rem / 55% 0.55rem no-repeat;
+    }
+
+    .gk-scene .gk-wait--bar .gk-proof {
+        --gk-h: 1rem;
+        --gk-r: 3px;
+    }
+
+    .gk-scene .gk-wait--bar .gk-proof::before,
+    .gk-scene .gk-wait--bar .gk-proof::after {
+        --gk-img:
+            linear-gradient(var(--gk-c) 0 0) 0 100% / 100% 2px no-repeat, linear-gradient(var(--gk-c) 0 0) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--gk-c) 0 0) 100% 0 / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--gk-c) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    .gk-scene .gk-wait--line .gk-proof {
+        --gk-h: 0.75rem;
+        --gk-r: 3px;
+    }
+
+    /* The plot's proof is its own line, drawn twice in the svg. */
+    .gk-scene .gk-wait--plot {
+        block-size: 100%;
+    }
+
+    /* A translate on the svg's group is in viewBox units, which the plot
+       stretches about 2.3 times across and 1.6 times down. */
+    .gk-scene .gk-proof--svg {
+        --gk-h: 100%;
+        --gk-r: 2.5px;
+        overflow: visible;
+    }
+
+    .gk-scene .gk-proof--svg::before,
+    .gk-scene .gk-proof--svg::after {
+        content: none;
+    }
+
+    .gk-scene .gk-plate-red {
+        stroke: var(--gk-red);
+        translate: calc(var(--gk-r) * 0.6 * var(--gk-dir)) calc(var(--gk-r) * 0.5);
+    }
+
+    .gk-scene .gk-plate-ink {
+        stroke: var(--gk-ink);
+    }
+
+    .gk-scene .gk-plot--wait {
+        background-image: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    /* Skeleton lines: three proofs, each its own width. */
+    .gk-scene .gk-skel-proof {
+        display: grid;
+        gap: 0.6rem;
+    }
+
+    /* The signature's own skeleton keeps the register's spacing. */
+    .gk-scene .gk-skel-sig {
+        display: grid;
+        gap: 0;
+    }
+
+    .gk-scene .gk-skel__line:nth-child(2) {
+        inline-size: 80%;
+    }
+
+    .gk-scene .gk-skel__line:nth-child(3) {
+        inline-size: 60%;
+    }
+
+    .gk-scene .gk-skel__line {
+        display: block;
+    }
+
+    .gk-scene .gk-skel-sig .kp-skeleton:nth-child(2) {
+        inline-size: 80%;
+    }
+
+    .gk-scene .gk-skel-sig .kp-skeleton:nth-child(3) {
+        inline-size: 60%;
+    }
+
+    .gk-scene .gk-skel-set--figure .gk-skel-sig .kp-skeleton {
+        inline-size: 4.6rem;
+    }
+
+    /* The busy bar and the skeleton: one of the drawings shows. */
+    .gk-scene .gk-bar-sig,
+    .gk-scene .gk-skel-sig {
+        display: none;
+    }
+
+    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-sig, .gk-skel-sig) {
+        display: grid;
+    }
+
+    .gk-scene[data-gk-bars='signature'] .gk-bar-sig {
+        display: block;
+    }
+
+    .gk-scene[data-gk-bars='signature'] :is(.gk-bar-proof, .gk-skel-proof) {
+        display: none;
+    }
+
+    /* The line that runs, and the flap (the options' own pictures): the
+       reading's place stands faint, in grey, its red plate gone. */
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::before,
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-red {
+        display: none;
+    }
+
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-proof::after {
+        --gk-c: var(--border);
+    }
+
+    .gk-scene:is([data-gk-loading='line'], [data-gk-loading='flap'], [data-gk-bars='line']) .gk-plate-ink {
+        stroke: var(--border);
+    }
+
+    .gk-scene:is([data-gk-loading='line'], [data-gk-bars='line']) .gk-wait > .gk-run {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -5px;
+        display: block;
+        block-size: 2px;
+        background: linear-gradient(var(--gk-ink), var(--gk-ink)) -50% 0 / 30% 100% no-repeat;
+    }
+
+    .gk-scene[data-gk-loading='flap'] .gk-wait > .gk-flap {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -7px;
+        display: block;
+        block-size: 4px;
+        background: var(--gk-red);
+        transform-origin: 50% 50%;
+    }
+
+    /* ── G11: the spinner ────────────────────────────────────────────── */
+
+    .gk-scene .gk-spins {
+        gap: 1.25rem;
+    }
+
+    .gk-scene .gk-spin {
+        --gk-spin-size: var(--gk-spin, 1.25rem);
+        display: inline-grid;
+        inline-size: var(--gk-spin-size);
+        block-size: var(--gk-spin-size);
+        vertical-align: middle;
+    }
+
+    .gk-scene .gk-spin > * {
+        grid-area: 1 / 1;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    .gk-scene .gk-spin > :is(.gk-spin__quarter, .gk-spin__ring) {
+        display: none;
+    }
+
+    .gk-scene .gk-spin__mark {
+        position: relative;
+        --gk-r: calc(var(--gk-spin-size) * 0.14);
+    }
+
+    .gk-scene .gk-spin__mark::before,
+    .gk-scene .gk-spin__mark::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(closest-side, transparent calc(62% - 1.6px), var(--gk-c) calc(62% - 1.6px) 62%, transparent calc(62% + 0.5px)),
+            linear-gradient(var(--gk-c) 0 0) 50% 50% / 100% 1.6px no-repeat,
+            linear-gradient(var(--gk-c) 0 0) 50% 50% / 1.6px 100% no-repeat;
+    }
+
+    .gk-scene .gk-spin__mark::before {
+        --gk-c: var(--gk-red);
+        translate: calc(var(--gk-r) * 0.6) calc(var(--gk-r) * 0.5);
+    }
+
+    .gk-scene .gk-spin__mark::after {
+        --gk-c: var(--gk-ink);
+    }
+
+    /* On the red primary face the two plates are its own white and the ink. */
+    .gk-scene .kp-button--primary .gk-spin__mark::before {
+        --gk-c: var(--gk-ink);
+    }
+
+    .gk-scene .kp-button--primary .gk-spin__mark::after {
+        --gk-c: var(--primary-foreground);
+    }
+
+    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__mark,
+    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__mark {
+        display: none;
+    }
+
+    .gk-scene[data-gk-spinner='quarter'] .gk-spin > .gk-spin__quarter {
+        display: inline-block;
+    }
+
+    .gk-scene .kp-button--primary .gk-spin__quarter {
+        border-color: var(--primary-foreground);
+    }
+
+    .gk-scene[data-gk-spinner='ring'] .gk-spin > .gk-spin__ring {
+        display: block;
+        box-sizing: border-box;
+        border: 2px solid var(--border);
+        border-block-start-color: var(--gk-red);
+        border-radius: 50%;
+    }
+
+    /* ── G9: the carriers of a live update ───────────────────────────── */
+
+    .gk-scene .gk-carrier {
+        position: relative;
+    }
+
+    /* The train: a 1.5 em red mark on the baseline, run start → end. */
+    .gk-scene .gk-carrier::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: calc(0.17em - 3px);
+        block-size: 3px;
+        background: linear-gradient(var(--gk-red), var(--gk-red)) 0 0 / 1.5em 100% no-repeat;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .gk-scene .gk-carrier--mark::after {
+        inset-block-end: -6px;
+        inset-inline: -0.2em -1.4em;
+        background-size: 1em 100%;
+    }
+
+    .gk-scene .gk-carrier--line::after {
+        inset-block-end: -6px;
+        background-size: 2.5rem 100%;
+    }
+
+    .gk-scene .gk-carrier--body {
+        display: inline-block;
+    }
+
+    .gk-scene .gk-live-tile .kp-card__body {
+        font-weight: 700;
+    }
+
+    /* ── Motion ──────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* G2: what arrives is set along its line from the start (or the
+           direction question's other ways); hidden in the gap. */
+        .gk-scene[data-gk-phase='gap'] .gk-arrives {
+            visibility: hidden;
+        }
+
+        .gk-scene[data-gk-phase='in'] .gk-arrives {
+            animation: var(--gk-arrive) calc(var(--gk-set) * var(--gk-slow, 1)) var(--gk-in) calc(var(--i, 0) * var(--gk-step) * var(--gk-slow, 1))
+                backwards;
+        }
+
+        /* G3, G12: the bands print what opens and arrives, and take off what
+           closes and leaves. Paper covers it in the gap. */
+        .gk-scene .gk-printed {
+            position: relative;
+            overflow: clip;
+        }
+
+        .gk-scene .gk-band {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            overflow: clip;
+            pointer-events: none;
+        }
+
+        .gk-scene .gk-band__strip {
+            position: absolute;
+            inset-block: 0;
+            inset-inline-start: 0;
+            inline-size: 300%;
+            background: linear-gradient(to right, var(--gk-red) 0 33.34%, var(--gk-ink) 33.34% 66.67%, var(--background) 66.67% 100%);
+            translate: calc(33.34% * var(--gk-dir)) 0;
+        }
+
+        .gk-scene:dir(rtl) .gk-band__strip {
+            background: linear-gradient(to left, var(--gk-red) 0 33.34%, var(--gk-ink) 33.34% 66.67%, var(--background) 66.67% 100%);
+        }
+
+        .gk-scene[data-gk-phase='gap']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
+            .gk-band__strip {
+            translate: calc(-66.67% * var(--gk-dir)) 0;
+        }
+
+        .gk-scene[data-gk-phase='in']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
+            .gk-band__strip {
+            animation: gk-print calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
+        }
+
+        .gk-scene[data-gk-phase='out']:not([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove'])
+            .gk-band__strip {
+            animation: gk-unprint calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in) both;
+        }
+
+        .gk-scene:is([data-gk-opening='cut'], [data-gk-opening='slide'], [data-gk-leave='cut'], [data-gk-leave='shove']) .gk-band {
+            display: none;
+        }
+
+        /* The menu in the moving and the duration scenes is shut in the gap
+           and out phases only by its bands; the leave question's parts too. */
+
+        /* Opening, as picked: cut in from the start (260 ms). */
+        .gk-scene[data-gk-opening='cut'][data-gk-phase='gap'] .gk-opens {
+            visibility: hidden;
+        }
+
+        .gk-scene[data-gk-opening='cut'][data-gk-phase='in'] .gk-opens {
+            animation: gk-cut calc(260ms * var(--gk-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) backwards;
+        }
+
+        .gk-scene[data-gk-opening='cut'][data-gk-phase='out'] .gk-opens {
+            animation: gk-cut-out calc(260ms * var(--gk-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) forwards;
+        }
+
+        /* Opening, the drawer's pick: slid in from the end edge, 220 ms linear. */
+        .gk-scene[data-gk-opening='slide'][data-gk-phase='gap'] .gk-opens {
+            visibility: hidden;
+        }
+
+        .gk-scene[data-gk-opening='slide'][data-gk-phase='in'] .gk-opens {
+            animation: gk-from-end calc(220ms * var(--gk-slow, 1)) linear backwards;
+        }
+
+        .gk-scene[data-gk-opening='slide'][data-gk-phase='out'] .gk-opens {
+            animation: gk-from-end calc(220ms * var(--gk-slow, 1)) linear reverse forwards;
+        }
+
+        /* Leaving, the other two ways (the part inside the printed wrapper). */
+        .gk-scene:is([data-gk-leave='cut'], [data-gk-leave='shove'])[data-gk-phase='gap'] .gk-leaver > :first-child {
+            visibility: hidden;
+        }
+
+        .gk-scene[data-gk-leave='cut'][data-gk-phase='in'] .gk-leaver > :first-child {
+            animation: gk-cut calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) backwards;
+        }
+
+        .gk-scene[data-gk-leave='cut'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-cut-out calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) forwards;
+        }
+
+        .gk-scene[data-gk-leave='shove'][data-gk-phase='in'] .gk-leaver > :first-child {
+            animation: gk-set calc(var(--gk-set) * var(--gk-slow, 1)) linear backwards;
+        }
+
+        .gk-scene[data-gk-leave='shove'][data-gk-phase='out'] .gk-leaver > :first-child {
+            animation: gk-set calc(var(--gk-set) * var(--gk-slow, 1)) linear reverse forwards;
+        }
+
+        /* G9: a live change. The train runs along the baseline once. */
+        .gk-scene[data-gk-phase='in']:not([data-gk-live='jolt'], [data-gk-live='invert']) .gk-carrier::after {
+            animation: gk-train calc(var(--gk-bands) * var(--gk-slow, 1)) var(--gk-in);
+        }
+
+        .gk-scene:dir(rtl)[data-gk-phase='in']:not([data-gk-live='jolt'], [data-gk-live='invert']) .gk-carrier::after {
+            animation-name: gk-train-rtl;
+        }
+
+        .gk-scene[data-gk-live='jolt'][data-gk-phase='in'] .gk-carrier {
+            animation: gk-jolt calc(250ms * var(--gk-slow, 1)) steps(2);
+        }
+
+        .gk-scene[data-gk-live='invert'][data-gk-phase='in'] .gk-carrier {
+            animation: gk-invert calc(600ms * var(--gk-slow, 1)) steps(1);
+        }
+
+        /* The press, the contact time: the baseline's own scale stays 120 ms. */
+        .gk-scene .gk-press {
+            transition:
+                background-color calc(var(--gk-contact) * var(--gk-slow, 1)) linear,
+                color calc(var(--gk-contact) * var(--gk-slow, 1)) linear;
+        }
+
+        /* G10: the proof's red plate travels round the ink and registers. */
+        .gk-scene .gk-proof::before,
+        .gk-scene .gk-plate-red,
+        .gk-scene .gk-spin__mark::before {
+            animation: gk-orbit calc(var(--gk-loop) * var(--gk-slow, 1)) var(--gk-in) infinite;
+            animation-delay: calc(var(--i, 0) * var(--gk-loop) * var(--gk-slow, 1) / 11);
+        }
+
+        .gk-scene .gk-skel__line .gk-proof::before {
+            animation-delay: calc(var(--i, 0) * var(--gk-loop) * var(--gk-slow, 1) / 11);
+        }
+
+        .gk-scene .gk-skel__line {
+            --i: 0;
+        }
+
+        .gk-scene .gk-skel__line:nth-child(2) {
+            --i: 1;
+        }
+
+        .gk-scene .gk-skel__line:nth-child(3) {
+            --i: 2;
+        }
+
+        .gk-scene[data-gk-slip='line'] .gk-proof::before,
+        .gk-scene[data-gk-slip='line'] .gk-plate-red {
+            animation-name: gk-slide;
+        }
+
+        .gk-scene[data-gk-slip='steps'] .gk-proof::before,
+        .gk-scene[data-gk-slip='steps'] .gk-plate-red {
+            animation-name: gk-hop;
+            animation-timing-function: steps(1, end);
+        }
+
+        .gk-scene[data-gk-durations='instant'] .gk-proof::before,
+        .gk-scene[data-gk-durations='instant'] .gk-plate-red {
+            animation: none;
+        }
+
+        /* The options' own loading pictures. */
+        .gk-scene:is([data-gk-loading='line'], [data-gk-bars='line']) .gk-wait > .gk-run {
+            animation: gk-run calc(1000ms * var(--gk-slow, 1)) linear infinite;
+        }
+
+        .gk-scene[data-gk-loading='flap'] .gk-wait > .gk-flap {
+            animation: gk-flap calc(1000ms * var(--gk-slow, 1)) steps(1) infinite;
+        }
+
+        .gk-scene[data-gk-spinner='ring'] .gk-spin__ring {
+            animation: gk-ring calc(900ms * var(--gk-slow, 1)) linear infinite;
+        }
+    }
+
+    /* Both ends of a clip are written: an inset does not interpolate with
+       the part's own `none`, it would flip at half time. */
+    @keyframes gk-set {
+        from {
+            translate: calc(-100% * var(--gk-dir)) 0;
+            clip-path: var(--gk-clip-start);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes gk-cut {
+        from {
+            clip-path: var(--gk-clip-end);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes gk-cut-out {
+        from {
+            clip-path: inset(0);
+        }
+
+        to {
+            clip-path: var(--gk-clip-end);
+        }
+    }
+
+    @keyframes gk-rise {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 0 100% 0);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes gk-from-end {
+        from {
+            translate: calc(100% * var(--gk-dir)) 0;
+        }
+    }
+
+    @keyframes gk-print {
+        from {
+            translate: calc(-66.67% * var(--gk-dir)) 0;
+        }
+
+        to {
+            translate: calc(33.34% * var(--gk-dir)) 0;
+        }
+    }
+
+    @keyframes gk-unprint {
+        from {
+            translate: calc(33.34% * var(--gk-dir)) 0;
+        }
+
+        to {
+            translate: calc(-66.67% * var(--gk-dir)) 0;
+        }
+    }
+
+    @keyframes gk-train {
+        from {
+            visibility: visible;
+            background-position: 0% 0;
+        }
+
+        to {
+            visibility: visible;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes gk-train-rtl {
+        from {
+            visibility: visible;
+            background-position: 100% 0;
+        }
+
+        to {
+            visibility: visible;
+            background-position: 0% 0;
+        }
+    }
+
+    @keyframes gk-jolt {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 -18%;
+        }
+    }
+
+    @keyframes gk-invert {
+        0%,
+        99% {
+            background-color: var(--gk-ink);
+            color: var(--accent-foreground);
+        }
+    }
+
+    /* The orbit: 16 units round the ink through eight positions, 1 unit to
+       snap into register, 4 units of dwell, 1 unit to slip off (22 units). */
+    @keyframes gk-orbit {
+        0% {
+            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
+        }
+
+        9.09% {
+            translate: calc(var(--gk-r) * 0.7 * var(--gk-dir)) calc(var(--gk-r) * 0.7);
+        }
+
+        18.18% {
+            translate: 0 var(--gk-r);
+        }
+
+        27.27% {
+            translate: calc(var(--gk-r) * -0.7 * var(--gk-dir)) calc(var(--gk-r) * 0.7);
+        }
+
+        36.36% {
+            translate: calc(var(--gk-r) * -1 * var(--gk-dir)) 0;
+        }
+
+        45.45% {
+            translate: calc(var(--gk-r) * -0.7 * var(--gk-dir)) calc(var(--gk-r) * -0.7);
+        }
+
+        54.55% {
+            translate: 0 calc(var(--gk-r) * -1);
+        }
+
+        63.64% {
+            translate: calc(var(--gk-r) * 0.7 * var(--gk-dir)) calc(var(--gk-r) * -0.7);
+        }
+
+        72.73% {
+            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
+        }
+
+        77.27%,
+        95.45% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
+        }
+    }
+
+    /* Along the line: out toward the end, back into register, dwell. */
+    @keyframes gk-slide {
+        0% {
+            translate: 0 0;
+        }
+
+        72.73% {
+            translate: calc(var(--gk-r) * 2 * var(--gk-dir)) 0;
+        }
+
+        77.27%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* In hard steps: four offsets held, then register. */
+    @keyframes gk-hop {
+        0% {
+            translate: calc(var(--gk-r) * var(--gk-dir)) 0;
+        }
+
+        18.18% {
+            translate: 0 var(--gk-r);
+        }
+
+        36.36% {
+            translate: calc(var(--gk-r) * -1 * var(--gk-dir)) 0;
+        }
+
+        54.55% {
+            translate: 0 calc(var(--gk-r) * -1);
+        }
+
+        72.73%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes gk-run {
+        from {
+            background-position-x: -50%;
+        }
+
+        to {
+            background-position-x: 150%;
+        }
+    }
+
+    @keyframes gk-flap {
+        0%,
+        30% {
+            transform: scaleY(1);
+            background-color: var(--gk-red);
+        }
+
+        33%,
+        63% {
+            transform: scaleY(0.2);
+            background-color: var(--gk-ink);
+        }
+
+        66%,
+        96% {
+            transform: scaleY(1);
+            background-color: var(--gk-red);
+        }
+    }
+
+    @keyframes gk-ring {
+        to {
+            rotate: 1turn;
+        }
+    }
+}

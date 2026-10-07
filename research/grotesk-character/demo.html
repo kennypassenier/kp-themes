@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" data-theme="grotesk" data-cat-theme="grotesk" data-cat-theme-fixed data-review="grotesk-character" data-review-themes="grotesk">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what makes grotesk grotesk</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" data-kp-register="grotesk" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="gk-page">
+            <header class="gk-intro" id="gk-intro">
+                <h1>What makes grotesk grotesk</h1>
+                <p>
+                    Kenny, 2026-10-07 04:23: the themes one by one, cyberpunk, synthwave, solstice, brutalism, then grotesk. The same way as the six
+                    before it: first find out what belongs together and what does not, then propose. Nineteen questions, each one rule of the theme.
+                    Every option is a live scene built from the package's own components in grotesk, so you see the rule at work; the first option of
+                    each question is the recommendation, and each option says what you see and why it is or is not recommended. Pick per question in
+                    the review dialog (one question per page, the arrow keys flip between the options).
+                </p>
+                <p>
+                    Four of the questions are the loading demo you asked for on 2026-10-06 at 21:37: your graph's loading picture,
+                    <i>Out of register</i>, carried to every loading element (questions 9 to 12). Grotesk has no family picks yet, so the rest of the
+                    grammar is read from your component picks themselves, each of them played in Firefox first: three of them do not move at all (your
+                    "sommigen bewegen zelfs niet!"), and neither does the package's own resize cut; all four are listed in the analysis. Every
+                    recommendation is grotesk's alone (your rule of 03:37: "een thema bestaat om distinct te zijn"); where a pick of yours turned out
+                    to be another theme's picture, it is still on the page as an option, named after that theme.
+                </p>
+                <p class="gk-motion" data-gk-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
+                    system settings to judge the motion questions (1 to 4, 8 to 13 and 17).
+                </p>
+            </header>
+
+            <section class="gk-story" aria-labelledby="h-story">
+                <h2 id="h-story">What grotesk is</h2>
+                <div class="gk-story__grid">
+                    <div class="gk-story__text">
+                        <p>
+                            Grotesk is <b>the timetable</b>: information set on a grid, running on time. White paper, black type and one red, a
+                            twelve-column grid, headings in Archivo heavy and tight, flush left. "Twelve Columns" (2026-09-08) was the Swiss poster;
+                            your later picks carry it into the station: the transit board four times, the transit map, the flap board, Timetable and
+                            Express, the ticker, the train that passes.
+                        </p>
+                        <p>
+                            The two meet in one idea: <b>everything is set, and runs on time</b>. A part stands in its column under a rule. What
+                            arrives <b>is set</b> along its line from the start and stops flush; it moves at an even pace and stops dead, the way the
+                            Swiss station clock does, and a loop <b>dwells at its station</b> before it goes again. What is pointed at
+                            <b>gets its baseline</b> (your scope-12); what is pressed <b>thickens its rule</b>; while something waits,
+                            <b>its proof is out of register</b> until it registers; a new value <b>is passed by the train</b>; a warning
+                            <b>is indexed</b>; what opens and what leaves <b>is printed and taken off by the colour bands</b> (your leave).
+                        </p>
+                        <p>
+                            Already decided by you: Twelve Columns (2026-09-08), the baseline (2026-09-12), the inverting coloured buttons and their
+                            grey press with a black label (2026-09-13/14), the alarm (2026-09-16), the signature (2026-10-03), the cut as the resize
+                            and the colour bands as the leave (2026-10-04), the reverse-close pairing, and every component pick of the character
+                            round. The network graph changes in no theme. The full analysis (every decided pick measured and played, the families,
+                            seventeen outliers and the proposals) is in
+                            <a href="https://github.com/kennypassenier/kp-themes/blob/main/themes/grotesk/CHARACTER.md">themes/grotesk/CHARACTER.md</a
+                            >.
+                        </p>
+                    </div>
+                    <div class="gk-story__parts" aria-label="Grotesk's own parts, as the package draws them">
+                        <div class="gk-row">
+                            <button type="button" class="kp-button"><span class="kp-button__label">Timetable</span></button>
+                            <button type="button" class="kp-button kp-button--primary"><span class="kp-button__label">Depart</span></button>
+                            <span class="kp-badge">Platform 7</span>
+                        </div>
+                        <div class="kp-alert" role="status"><span class="kp-alert__body">The 07:32 to Basel leaves from platform 7.</span></div>
+                        <div class="gk-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar gk-story__bar" role="progressbar" aria-label="Waiting for the timetable" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar gk-story__bar"
+                            role="progressbar"
+                            aria-label="Sync, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div
+                            class="kp-meter"
+                            role="meter"
+                            aria-label="Seats taken, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62; --kp-mark: 0.8"
+                        >
+                            <span class="kp-meter__mark"></span>
+                        </div>
+                        <div class="gk-story__divider" data-kp-divider></div>
+                    </div>
+                </div>
+                <details class="gk-gallery" data-gk-gallery>
+                    <summary>The decided grotesk components as they are today (opens six live demos)</summary>
+                    <div class="gk-gallery__grid">
+                        <figure>
+                            <figcaption>Network graph: out of register (loading; the source of questions 9 to 12, never changed)</figcaption>
+                            <iframe
+                                title="Network graph loading, grotesk as decided"
+                                data-src="../character-graph/demo.html?embed=loading&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Busy table: the flap board (shape)</figcaption>
+                            <iframe
+                                title="Busy table shape, grotesk as decided"
+                                data-src="../character-busy/demo.html?embed=shape&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Trend tile: the transit board (shape)</figcaption>
+                            <iframe
+                                title="Trend tile shape, grotesk as decided"
+                                data-src="../character-trend/demo.html?embed=shape&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Menu button: set in type (opening)</figcaption>
+                            <iframe
+                                title="Menu button opening, grotesk as decided"
+                                data-src="../character-menu/demo.html?embed=open&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Month heatmap: the poster grid (shape)</figcaption>
+                            <iframe
+                                title="Month heatmap shape, grotesk as decided"
+                                data-src="../character-calendar/demo.html?embed=shape&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Meter: the rule and its cursor (shape)</figcaption>
+                            <iframe
+                                title="Meter shape, grotesk as decided"
+                                data-src="../character-meter/demo.html?embed=shape&amp;theme=grotesk"
+                            ></iframe>
+                        </figure>
+                    </div>
+                </details>
+            </section>
+
+            <section
+                class="gk-sec"
+                data-review-item="grotesk"
+                data-review-mode="aspects"
+                data-review-rows="data-gk-aspect"
+                data-review-components="grotesk-character"
+                data-review-title="What makes grotesk grotesk"
+                data-gk-show="rest"
+                aria-labelledby="h-gk"
+            >
+                <div class="gk-sec__head">
+                    <h2 id="h-gk">Nineteen questions</h2>
+                    <p>
+                        Each row is one question, its options side by side, the recommended one first. The scenes replay by themselves every few
+                        seconds; Replay starts them together, the speed buttons slow every motion down, and State shows every button in the composites
+                        scene as hovered, focused or pressed (question 14).
+                    </p>
+                    <ol class="gk-toc" data-gk-toc></ol>
+                </div>
+                <div class="gk-controls" data-review-controls>
+                    <div class="gk-actions" role="group" aria-label="State of every button">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-state="rest" aria-pressed="true">Rest</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-gk-state="hover"
+                            aria-pressed="false"
+                            data-review-plays="composites"
+                        >
+                            Hover
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-state="focus" aria-pressed="false">Focus</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-state="press" aria-pressed="false">Press</button>
+                    </div>
+                    <div class="gk-actions" role="group" aria-label="Replay">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-gk-replay
+                            data-review-plays="curve direction opening durations live leave press"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="gk-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gk-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="gk-aspects" data-gk-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-07-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
