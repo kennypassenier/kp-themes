@@ -95,8 +95,6 @@ const PART = {
         `<div class="bc-skel" aria-hidden="true">${[0, 1, 2]
             .map((i) => `<span class="bc-skel__line bc-small bc-waits" style="--i: ${i}">${well('bc-well--fill')}</span>`)
             .join('')}</div>`,
-    bar: (label = 'Pour busy') =>
-        `<div class="kp-progressbar bc-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`,
     field: () =>
         `<label class="kp-field bc-field"><span class="kp-field__label">Level</span><input class="kp-field__input" value="Level 3, east" /></label>`,
     menuStatic: (items = ['Open the log', 'Assign to…'], cls = '', pointed = true) =>
@@ -232,7 +230,6 @@ const LIVE = () =>
     );
 
 const LOADERS = () =>
-    cell('The progress bar itself, busy (the tape runs)', PART.bar('Pour busy'), 'bc-part--wide') +
     cell(
         'Key figure',
         `<div class="kp-kpis"><div class="kp-kpi bc-slab bc-kpi bc-waits" aria-busy="true"><span class="kp-kpi__label bc-label">Poured today</span>${well(
@@ -258,6 +255,34 @@ const LOADERS = () =>
     cell('Chart plot', `<div class="bc-plot bc-plot--wait bc-slab bc-waits" aria-busy="true">${well('bc-well--plot')}</div>`) +
     cell('Skeleton lines', PART.skeleton()) +
     cell('Meter, measuring', `<div class="bc-meter-wait bc-waits" aria-busy="true">${well('bc-well--meter')}</div>`);
+
+/**
+ * The package's progress bar at its large size. A share (0 to 1) is drawn from
+ * `--kp-value`; no share is a busy bar (`data-bc-busy`, standing for the
+ * register's `data-kp-indeterminate`, so every option draws its own busy
+ * picture). A bar with a share arrives on the page's loop (options.css, bc-k).
+ */
+const pbar = (label, share = null, at = 0) =>
+    `<div class="kp-progressbar kp-progressbar--lg bc-bar${share === null ? '' : ' bc-bar--det'}" role="progressbar" aria-label="${label}" ${
+        share === null
+            ? 'data-bc-busy'
+            : `aria-valuenow="${Math.round(share * 100)}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${share}; --i: ${at}"`
+    }><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`;
+
+const PROGRESS = () =>
+    cell('Busy: no share is known', pbar('Waiting for the sync'), 'bc-part--wide') +
+    cell('A quarter, 25 %', pbar('Sync, 25 %', 0.25, 0)) +
+    cell('Past half, 60 %', pbar('Sync, 60 %', 0.6, 1)) +
+    cell('Done, 100 %', pbar('Sync, 100 %', 1, 2)) +
+    cell(
+        'In a card: a share, and a wait',
+        `<div class="kp-card bc-slab bc-tile"><p class="kp-card__title bc-title">Syncing the cranes</p><p class="kp-card__body">412 of 690 t read</p>${pbar(
+            'Cranes read, 60 %',
+            0.6,
+            1,
+        )}${pbar('Waiting for the next batch')}</div>`,
+        'bc-part--wide',
+    );
 
 /** One spinner in three drawings; options.css shows the option's. */
 const spin = (size = '', label = 'Working…', hidden = false) =>
@@ -751,7 +776,7 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does a waiting part show while it loads?',
-        why: 'The pour is yours (the trend’s pick, and your favourite here, kept as the reference in second place), and eleven loading pictures are in the decided picks: hammers (the busy table, the key figure), stamps (the tiles, the columns, the menu’s shadow), the chart’s rivet gun, the calendar’s tape, the meter’s blocks, the skeleton’s presses and the pour. You asked for something much better, so ten more follow the pour, each a different piece of raw construction on the same well and the same 1200 ms clock: stacking, dropping, carrying, hoisting, tallying, joint-opening, bolting, staking out, scaffolding, quarrying. None strikes (a strike is formal’s seal), none runs or sweeps (running tape is high-contrast’s, a sun crossing solstice’s), none blinks or chases (a cursor is terminal’s, bulbs synthwave’s and nostromo’s). The first is the one I would pick, and why is under it. In each, the labels above stay readable; standing still it shows the finished picture.',
+        why: 'The pour is yours (the trend’s pick, and your favourite here, kept as the reference in second place), and eleven loading pictures are in the decided picks: hammers (the busy table, the key figure), stamps (the tiles, the columns, the menu’s shadow), the chart’s rivet gun, the calendar’s tape, the meter’s blocks, the skeleton’s presses and the pour. You asked for something much better, so ten more follow the pour, each a different piece of raw construction on the same well and the same 1200 ms clock: stacking, dropping, carrying, hoisting, tallying, joint-opening, bolting, staking out, scaffolding, quarrying. You then said you like hoisted best, but that its shape suits the skeleton’s thin lines and fails in the chart plot, so five variations follow it, each still a load hoisted in hard lifts and let go, each answering the shape differently: along the width on a gantry, in relay, as wide as the well (a lintel), as many as the well is wide (bays), or in a pair. The progress bar’s busy picture is no longer shown among the cells here: it is the next question. None strikes (a strike is formal’s seal), none runs or sweeps (running tape is high-contrast’s, a sun crossing solstice’s), none blinks or chases (a cursor is terminal’s, bulbs synthwave’s and nostromo’s). The first is the one I would pick, and why is under it. In each, the labels above stay readable; standing still it shows the finished picture.',
         kind: 'loop',
         scene: LOADERS,
         options: [
@@ -785,7 +810,49 @@ const ASPECTS = [
                 key: 'hoist',
                 name: 'Hoisted: a load climbs its cable in four hard lifts and is let go',
                 see: 'A block hangs from a cable at the well’s floor and is hoisted in four hard lifts to the top, hangs there, and is let go: it falls free on the gravity curve and stops dead.',
-                verdict: not('it is clear and falls well on the gravity curve, but the cable adds a line the grammar has no use for outside a crane.'),
+                verdict: not(
+                    'it is your favourite of the ten and falls well on the gravity curve, but it is one cable and one small load in the middle: it is a good shape in the skeleton’s thin lines and the meter, and in a wide well (the chart plot is 220 by 103 px, the busy table 190 by 40) 85 % of the picture is empty. The five that follow keep it and answer the shape.',
+                ),
+            },
+            {
+                key: 'hoist-gantry',
+                name: 'Hoisted on a gantry: a trolley carries the load along a rail',
+                see: 'A rail runs along the top of the well with a trolley on it. The load is hoisted in two hard lifts up to the trolley, carried across the well in four hard steps, start to end, and let go at the far end: it falls free on the gravity curve and stops dead; then the trolley is back at the start in one cut.',
+                verdict: not(
+                    'it fills a wide well from side to side and reads start to end, but the load travels the same way a carried block does, and in a thin line the rail is as thick as the load.',
+                ),
+            },
+            {
+                key: 'hoist-relay',
+                name: 'Hoisted in relay: three loads, one after the other, start to end',
+                see: 'Three loads hang along the well. The first is hoisted in two hard lifts, then the second, then the third, start to end; all three are let go together and fall free on the gravity curve.',
+                verdict: not(
+                    'it spreads the hoist over the width and keeps the start-to-end reading, but it is three cables where the favourite was one, and in the narrow day squares the three are one grey bar.',
+                ),
+            },
+            {
+                key: 'hoist-lintel',
+                name: 'Hoisted as a lintel: one beam as wide as the well, on two cables',
+                see: 'One beam, as wide as the well allows, hangs on two cables and is hoisted in four hard lifts; let go, it falls free and stops dead. The load follows the well’s width, so a wide well gets a wide load and a narrow one a narrow load.',
+                verdict: not(
+                    'it is the only one whose load fits any well, but a beam is a lift of one thing with no direction, and with two cables it reads as a lift gate more than as a load.',
+                ),
+            },
+            {
+                key: 'hoist-bays',
+                name: 'Hoisted in bays: a hoist for every square of the well’s width',
+                see: 'Loads on cables repeat along the well, one to every 3 rem of width: a wide well holds many, a narrow one one. The odd bays are hoisted in four hard lifts, then the even ones; all are let go together and fall free.',
+                verdict: not(
+                    'the number of hoists follows the well, so it never leaves a wide well empty, but a field of loads is a crowd, and in a thin skeleton line it is a comb.',
+                ),
+            },
+            {
+                key: 'hoist-twin',
+                name: 'Hoisted as a pair: one load rises while the other is lowered',
+                see: 'Two loads hang from one rope over a sheave at the top. One is hoisted in four hard lifts while the other is lowered in four; let go, the first falls free on the gravity curve and hauls the second back up.',
+                verdict: not(
+                    'it uses both halves of a wide well and the rope runs across it, but a pair is a see-saw, and the second load makes one thing happen twice.',
+                ),
             },
             {
                 key: 'scaffold',
@@ -836,6 +903,77 @@ const ASPECTS = [
                 verdict: not(
                     'it is unmistakable, but running tape is high-contrast’s, hazard stripes are cyberpunk’s armed sign, and tape should mean danger.',
                 ),
+            },
+        ],
+    },
+    {
+        id: 'progress',
+        label: 'The progress bar',
+        rule: 'G10',
+        question: 'How does the progress bar show a share, and how does it show that it is busy without one?',
+        why: 'Your signature bar (2026-10-03) is a striped ink fill with a yellow block head, and busy it is an ink tape running under a head that shuttles. You said you do not like it; measured on the page (the story panel’s bar, 122 px of track, and the register’s own rules), five things are weak. 1. The stripes are 45° ink and yellow: hazard tape, which your own motif rule keeps for danger, and a running one is high-contrast’s and cyberpunk’s. 2. The head is 22 px: 18 % of a 122 px track, so a quarter (30 px) is 8 px of stripes and the head, and below 18 % the head is cut by the track’s edge. 3. Busy runs on three clocks that never meet: the tape 600 ms, the head 1600 ms back and forth, every other picture 1200 ms; the tape crawls linear at 33 px a second and the head lands softly on cubic-bezier(0.2, 0, 0, 1), which is the opposite of a slab. 4. A share is wiped in by a 100 ms clip, so 25 % to 60 % slides instead of landing. 5. Busy is ink stripes on white and a share is yellow stripes on ink, so a bar that goes from waiting to 40 % changes its whole picture. The first five options keep the fill and the yellow head and fix one or two of these each; the last five are new mechanisms built from the slab. Every option is drawn on the package’s own markup (track, fill, head) at its large size, with the busy bar, 25 %, 60 % and 100 %, and a bar in a card; a share arrives on the 1200 ms loop for four units, stands four, and leaves four, the arrival played backwards.',
+        kind: 'loop',
+        scene: PROGRESS,
+        options: [
+            {
+                key: 'cast',
+                name: 'Cast: a mould stands on a beam, and the beam is cast under it',
+                see: 'The bar is a floor beam with a yellow mould standing on its end. A share is the beam’s length: the mould lands on its next place on the gravity curve and stops dead, and the beam is cast up to its end; at 100 % the beam spans the track. Busy, the mould stands at the start and a beam is cast under it in four hard lifts and struck: your pour, on the 1200 ms loop. A share arrives for four units, stands four and leaves four, the arrival played backwards.',
+                verdict: rec('it is a slab on its footprint (a mould landed on a beam), a share reads as one length at 25, 60 and 100 %, busy is your favourite, the pour, so waiting and a share are one family, and no other theme’s bar is a beam under a mould (terminal’s whole cells, grotesk’s twelve columns, blueprint’s dimension line, forest’s trees and nostromo’s lamps are all different). Its weakness: busy stands in one place, where the other options travel'),
+            },
+            {
+                key: 'trolley',
+                name: 'Hoisted: a load rides the bar on a cable and lays its floor',
+                see: 'A rail runs along the top, a yellow load hangs from it on a cable, and a floor is laid under it. A share is where the load stands, the floor laid up to it, arriving in six hard steps. Busy, the load is hoisted in two lifts, carried across in four hard steps, set down on the gravity curve with no floor laid, and cut back to the start.',
+                verdict: not('it is your hoist, in a bar, and it travels start to end the way a reading is written; but at a bar’s height the load is a small yellow flag, its lift is a few pixels, and at 25 % the floor is a stub. It is the hoisted loader’s shape problem again, in a thin well'),
+            },
+            {
+                key: 'wall',
+                name: 'Walled: blocks are laid in two courses, the next one set down',
+                see: 'The fill is a wall of ink blocks in two courses, the upper offset by half a block, with a yellow block waiting where the next one goes. A share is whole blocks, laid one after another in hard steps (a tenth each). Busy, three blocks of wall are carried along the track a block at a time with the yellow block ahead of them.',
+                verdict: not('it is the most brutalist texture of the ten (concrete blocks in running bond) and its busy picture is the best of them, a piece of wall walked along; but a share snaps to a tenth (a quarter shows 20 %), it counts blocks as terminal’s whole cells and grotesk’s columns do, and two courses of ink make the bar heavy'),
+            },
+            {
+                key: 'stairs',
+                name: 'Stairs: a staircase is built a tenth at a time',
+                see: 'The finished staircase, ten steps rising to the right, stands in grey from the first frame; a share is the part built in ink, tenth by tenth in hard steps, with the yellow block standing on the last step. Busy, the yellow block climbs the grey stairs step by step and is cut back down.',
+                verdict: not('the silhouette shows how far there is to go and busy is a climb; but it reads as a signal-strength icon, a share snaps to a tenth, and the first steps are 2 px high'),
+            },
+            {
+                key: 'level',
+                name: 'Poured: the channel is poured level, in four hard lifts',
+                see: 'The bar is a channel and the share is its level: ink is poured level across it in four hard lifts, a yellow line marking the surface. Busy is the pour exactly as the loading question draws it: four lifts across the whole channel, then struck.',
+                verdict: not('it is your favourite, the pour, so busy and a share are the same thing; but a bar is read by its length and this one by its height: a quarter is a 7 px strip merged with the bottom line, and it is the meter’s gauge more than a bar'),
+            },
+            {
+                key: 'solid',
+                name: 'Solid: no tape, the yellow head leads the ink',
+                see: 'Fixes the hazard stripes and the head covering the share (1, 2). The fill is solid ink, the head is a narrow yellow block in front of it that never covers the share and is never cut at 0 %. A share arrives in eight hard steps. Busy, the head alone hops start to end in six hard steps on the loop and is cut back (3).',
+                verdict: not('it removes the hazard tape and is the nearest to the signature; but without the stripes it is the package’s plain fill with a yellow end, and busy is a lone hopping block, which is terminal’s cursor'),
+            },
+            {
+                key: 'ruled',
+                name: 'Ruled: the tenths are marked on the track and in the fill',
+                see: 'Fixes the hazard stripes (1) by marking tenths instead: ink ticks stand on the empty track and paper ticks are cut through the ink fill, the yellow head as it is. A share arrives tenth by tenth in hard steps. Busy, the head hops tick to tick, ten hard steps, and is cut back (3).',
+                verdict: not('the ticks answer “how far” at a glance and busy counts along them; but a ruler marked in tenths is blueprint’s dimension line and grotesk’s ruled track, and it makes the bar an instrument rather than a slab'),
+            },
+            {
+                key: 'placed',
+                name: 'Placed: the same bar, landing under gravity',
+                see: 'Keeps the stripes and the head exactly and fixes the motion only (3, 4). A share lands on the gravity curve and stops dead instead of being wiped by a 100 ms clip; busy, the ink stripes stand still and the head hops start to end in six hard steps on the 1200 ms loop.',
+                verdict: not('it is the signature with the least change and the clocks agree, but the stripes are still hazard tape, the head still covers the share, and busy and a share still change texture'),
+            },
+            {
+                key: 'piece',
+                name: 'Cut loose: busy is a piece of the share’s own fill',
+                see: 'Keeps the stripes and the head and fixes the two textures (5). A share is the yellow-on-ink fill as it is, arriving in six hard steps; busy is a piece of that same fill, a third of the track long, with the head at its front, stepping start to end in eight hard steps and cut back.',
+                verdict: not('waiting and a share are one picture, so a bar that turns from busy to 40 % keeps its look; but a stripe piece with a head crossing is the package’s own sweep and high-contrast’s running tape once more, and the stripes are still hazard tape'),
+            },
+            {
+                key: 'labelled',
+                name: 'Labelled: the head is a plate that says the share',
+                see: 'Fixes the share being hard to read (2). The fill is solid ink and the head a wide yellow plate in front of it that prints the percentage, counting up as the share arrives in ten hard steps. Busy, the plate prints three dots and hops start to end in six hard steps.',
+                verdict: not('it cannot be misread, and the number lands with the bar; but a number on a plate is a label (the key figure has it), and a plate 3 rem wide is a quarter of a small bar'),
             },
         ],
     },

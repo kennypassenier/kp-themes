@@ -1287,6 +1287,11 @@
             [data-bc-loading='drop'],
             [data-bc-loading='carry'],
             [data-bc-loading='hoist'],
+            [data-bc-loading='hoist-gantry'],
+            [data-bc-loading='hoist-relay'],
+            [data-bc-loading='hoist-lintel'],
+            [data-bc-loading='hoist-bays'],
+            [data-bc-loading='hoist-twin'],
             [data-bc-loading='tally'],
             [data-bc-loading='form'],
             [data-bc-loading='bolt'],
@@ -1402,6 +1407,200 @@
         margin-inline: auto;
         inline-size: max(2px, 0.16rem);
         block-size: 400%;
+        background: var(--bc-ink);
+    }
+
+    /* 4b · Five more hoists (Kenny, 2026-10-07: "I like hoisted best, but it
+       looks best in the skeleton lines because of its shape. And it doesnt
+       look good in like the chart plot"). The plain hoist is one thin cable
+       and one small load, centred: in a wide well 85 % of the picture is
+       empty. Each of the five keeps the idea (a load hoisted in hard lifts,
+       let go, falling free on G1's curve) and answers the shape differently:
+       along the width (gantry, relay), as wide as the well (lintel), as many
+       as the well is wide (bays), or in a pair (twin). Every cable runs to
+       the well's top edge, which clips it, so none needs to know the height. */
+    .bc-scene:is(
+            [data-bc-loading='hoist-gantry'],
+            [data-bc-loading='hoist-relay'],
+            [data-bc-loading='hoist-lintel'],
+            [data-bc-loading='hoist-bays'],
+            [data-bc-loading='hoist-twin']
+        )
+        .bc-well {
+        --bc-w: min(15cqi, 1.5rem);
+        --bc-cable: max(2px, 0.16rem);
+    }
+
+    /* A load and its cable: the cable is the load's own ::before. */
+    .bc-scene:is(
+            [data-bc-loading='hoist-gantry'],
+            [data-bc-loading='hoist-relay'],
+            [data-bc-loading='hoist-twin']
+        )
+        :is(.bc-pour, .bc-hammer, .bc-tape)::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline: 0;
+        margin-inline: auto;
+        inline-size: var(--bc-cable);
+        block-size: 400%;
+        background: var(--bc-ink);
+    }
+
+    /* A · Gantry: a rail along the top, a trolley on it, the load hoisted in
+       two lifts under the trolley, carried across in four hard steps, let go
+       at the far end; the trolley is back at the start in one cut. */
+    .bc-scene[data-bc-loading='hoist-gantry'] .bc-pour {
+        display: block;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        inline-size: var(--bc-w);
+        block-size: 30%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-gantry'] .bc-well::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        block-size: max(3px, 12%);
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-loading='hoist-gantry'] .bc-well::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: var(--bc-w);
+        block-size: max(5px, 26%);
+        background: var(--bc-ink);
+    }
+
+    /* B · Relay: three loads along the well, hoisted in two lifts each, one
+       after the other, start to end; then all three are let go together. */
+    .bc-scene[data-bc-loading='hoist-relay'] :is(.bc-pour, .bc-hammer, .bc-tape) {
+        display: block;
+        inset-block-end: 0;
+        inset-inline-start: var(--bc-at);
+        margin-inline-start: calc(var(--bc-w) / -2);
+        inline-size: var(--bc-w);
+        block-size: 30%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-relay'] .bc-pour {
+        --bc-at: 17%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-relay'] .bc-hammer {
+        --bc-at: 50%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-relay'] .bc-tape {
+        --bc-at: 83%;
+    }
+
+    /* C · Lintel: one beam as wide as the well allows, on two cables. */
+    .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour {
+        display: block;
+        inset-block-end: 0;
+        inset-inline: 12%;
+        block-size: max(3px, 22%);
+    }
+
+    .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour::before,
+    .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inline-size: var(--bc-cable);
+        block-size: 500%;
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour::before {
+        inset-inline-start: 12%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour::after {
+        inset-inline-end: 12%;
+    }
+
+    /* D · Bays: a hoist for every square of the well's width: loads on
+       cables repeat along the well, so a wide well holds many and a narrow
+       one holds one. Two shifts: the odd bays rise first, the even second. */
+    .bc-scene[data-bc-loading='hoist-bays'] .bc-well {
+        --bc-bay: min(3rem, 100cqi);
+        --bc-lw: min(calc(var(--bc-bay) * 0.34), 1rem);
+        --bc-cw: max(1px, 0.08rem);
+    }
+
+    .bc-scene[data-bc-loading='hoist-bays'] :is(.bc-pour, .bc-hammer) {
+        display: block;
+        inset-block: -300% 0;
+        inset-inline: 0;
+        background:
+            linear-gradient(
+                    90deg,
+                    transparent calc(50% - var(--bc-lw) / 2),
+                    var(--bc-ink) calc(50% - var(--bc-lw) / 2) calc(50% + var(--bc-lw) / 2),
+                    transparent calc(50% + var(--bc-lw) / 2)
+                )
+                0 100% / var(--bc-bay) 7.5% repeat-x,
+            linear-gradient(
+                    90deg,
+                    transparent calc(50% - var(--bc-cw)),
+                    var(--bc-ink) calc(50% - var(--bc-cw)) calc(50% + var(--bc-cw)),
+                    transparent calc(50% + var(--bc-cw))
+                )
+                0 0 / var(--bc-bay) 100% repeat-x;
+    }
+
+    .bc-scene[data-bc-loading='hoist-bays'] .bc-hammer {
+        background-position:
+            calc(var(--bc-bay) / 2) 100%,
+            calc(var(--bc-bay) / 2) 0;
+    }
+
+    /* E · Twin: two loads on one rope over a sheave: one is hoisted in four
+       hard lifts while the other is lowered; let go, the first falls free
+       and hauls the second back up. */
+    .bc-scene[data-bc-loading='hoist-twin'] :is(.bc-pour, .bc-hammer) {
+        display: block;
+        inset-block-end: 0;
+        inset-inline-start: var(--bc-at);
+        margin-inline-start: calc(var(--bc-w) / -2);
+        inline-size: var(--bc-w);
+        block-size: 30%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-twin'] .bc-pour {
+        --bc-at: 26%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-twin'] .bc-hammer {
+        --bc-at: 74%;
+    }
+
+    .bc-scene[data-bc-loading='hoist-twin'] .bc-well::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 26% 26%;
+        block-size: max(3px, 10%);
+        background: var(--bc-ink);
+    }
+
+    .bc-scene[data-bc-loading='hoist-twin'] .bc-well::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        inline-size: max(6px, min(9cqi, 0.9rem));
+        block-size: max(5px, 24%);
         background: var(--bc-ink);
     }
 
@@ -1586,6 +1785,50 @@
 
         .bc-scene[data-bc-loading='hoist'] .bc-pour {
             animation: bc-hoist var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-gantry'] .bc-pour {
+            --bc-end: calc(100cqi - var(--bc-w));
+            --bc-rise: -140%;
+            animation: bc-hauled var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-gantry'] .bc-well::after {
+            --bc-end: calc(100cqi - var(--bc-w));
+            --bc-rise: 0%;
+            animation: bc-hauled var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-relay'] .bc-pour {
+            animation: bc-relay-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-relay'] .bc-hammer {
+            animation: bc-relay-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-relay'] .bc-tape {
+            animation: bc-relay-c var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-lintel'] .bc-pour {
+            animation: bc-lintel var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-bays'] .bc-pour {
+            animation: bc-bays-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-bays'] .bc-hammer {
+            animation: bc-bays-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-twin'] .bc-pour {
+            animation: bc-twin-a var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
+        }
+
+        .bc-scene[data-bc-loading='hoist-twin'] .bc-hammer {
+            animation: bc-twin-b var(--bc-d) linear var(--bc-stag, 0ms) infinite backwards;
         }
 
         .bc-scene[data-bc-loading='tally'] .bc-pour {
@@ -1824,6 +2067,207 @@
         75%,
         100% {
             translate: 0 0;
+        }
+    }
+
+    /* A load hoisted in lifts, carried in hard steps, let go, back at the
+       start in one cut: the gantry's load and trolley (the trolley's rise is
+       0, so it only travels). Knobs: --bc-end, --bc-rise, --bc-n. */
+    @keyframes bc-hauled {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        16.667% {
+            translate: 0 var(--bc-rise, -140%);
+            animation-timing-function: steps(4, jump-end);
+        }
+
+        50%,
+        58.333% {
+            translate: var(--bc-end, 0px) var(--bc-rise, -140%);
+        }
+
+        58.333% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75% {
+            translate: var(--bc-end, 0px) 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-relay-a {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        16.667%,
+        66.667% {
+            translate: 0 -150%;
+        }
+
+        66.667% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-relay-b {
+        0%,
+        16.667% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        33.333%,
+        66.667% {
+            translate: 0 -150%;
+        }
+
+        66.667% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-relay-c {
+        0%,
+        33.333% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        50%,
+        66.667% {
+            translate: 0 -150%;
+        }
+
+        66.667% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-lintel {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            translate: 0 -280%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-bays-a {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        33.333%,
+        58.333% {
+            translate: 0 -16%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-bays-b {
+        0%,
+        33.333% {
+            translate: 0 0;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        58.333% {
+            translate: 0 -16%;
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-twin-a {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            translate: 0 -150%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--bc-fall);
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes bc-twin-b {
+        0% {
+            translate: 0 -150%;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            translate: 0 0;
+        }
+
+        58.333% {
+            animation-timing-function: var(--bc-up);
+        }
+
+        75%,
+        100% {
+            translate: 0 -150%;
         }
     }
 
@@ -2186,6 +2630,559 @@
         91.667%,
         100% {
             translate: 0 0;
+        }
+    }
+
+    /* ── 10b · The progress bar (Kenny, 2026-10-07: "I don't like the
+       progress bar, make 10 variations on that, five should be brand new") ──
+       Every picture is drawn on the package's own markup (track, fill, head)
+       at its medium size, with a share (`--kp-value`) and a busy state that
+       has none (`data-bc-busy`, standing for `data-kp-indeterminate` here so
+       the register's own busy drawing stays out of the way). A share arrives
+       by `--bc-ka` and `--bc-kb` (0 to 1, on the page's 12-unit loop: it arrives
+       for four units, stands for four, and leaves for four, the arrival's
+       mirror), and every picture reads `--bc-v`, the share times what is
+       left of both; without motion the share is whole. */
+    .bc-scene[data-bc-progress] {
+        --bc-kin: var(--bc-fall);
+        --bc-kout: var(--bc-up);
+    }
+
+    .bc-scene[data-bc-progress] .bc-bar {
+        --bc-u: calc(var(--kp-progressbar-scale, 1) * 1px);
+        --bc-v: calc(var(--kp-value, 0) * var(--bc-ka, 1) * (1 - var(--bc-kb, 0)));
+        max-inline-size: none;
+    }
+
+    .bc-scene[data-bc-progress] :is(.kp-progressbar__fill, .kp-progressbar__head) {
+        transition: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Two numbers, so each leg has its own curve: --bc-ka arrives (0 to
+           1, on the option's curve), --bc-kb leaves (0 to 1, on the same curve
+           mirrored), and the share is ka * (1 - kb). */
+        .bc-scene[data-bc-progress] .bc-bar--det {
+            animation:
+                bc-ka var(--bc-d) var(--bc-kin) calc(var(--i, 0) * 100ms * var(--bc-slow, 1)) infinite backwards,
+                bc-kb var(--bc-d) var(--bc-kout) calc(var(--i, 0) * 100ms * var(--bc-slow, 1)) infinite backwards;
+        }
+    }
+
+    @keyframes bc-ka {
+        0% {
+            --bc-ka: 0;
+        }
+
+        33.333%,
+        100% {
+            --bc-ka: 1;
+        }
+    }
+
+    @keyframes bc-kb {
+        0%,
+        66.667% {
+            --bc-kb: 0;
+        }
+
+        100% {
+            --bc-kb: 1;
+        }
+    }
+
+    /* A head hopping start to end in hard steps, back at the start in one
+       cut. Knobs: --bc-steps, --bc-end, --bc-ey. */
+    @keyframes bc-hop {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(var(--bc-steps, 6), jump-end);
+        }
+
+        66.667% {
+            translate: var(--bc-end, 100cqi) var(--bc-ey, 0px);
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ─ 1 · Solid: no tape, the head leads ─ */
+    .bc-scene[data-bc-progress='solid'] {
+        --bc-kin: steps(8, jump-end);
+        --bc-kout: steps(8, jump-start);
+
+        .bc-bar {
+            --bc-hw: calc(0.7rem * var(--kp-progressbar-scale, 1));
+        }
+
+        .kp-progressbar__fill {
+            background: var(--bc-ink);
+            clip-path: inset(0 calc(100% - var(--bc-v) * (100% - var(--bc-hw))) 0 0);
+        }
+
+        .kp-progressbar__head {
+            inline-size: var(--bc-hw);
+            margin-inline-start: 0;
+            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 6;
+                --bc-end: calc(100cqi - var(--bc-hw));
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    /* ─ 2 · Ruled: tenths marked on the track and in the fill ─ */
+    .bc-scene[data-bc-progress='ruled'] {
+        --bc-kin: steps(10, jump-end);
+        --bc-kout: steps(10, jump-start);
+
+        .kp-progressbar__track {
+            background:
+                repeating-linear-gradient(
+                        90deg,
+                        transparent 0 calc(10% - 2 * var(--bc-u)),
+                        var(--bc-ink) calc(10% - 2 * var(--bc-u)) 10%
+                    )
+                    0 100% / 100% 40% no-repeat,
+                var(--card);
+        }
+
+        .kp-progressbar__fill {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--bc-ink) 0 calc(10% - 2 * var(--bc-u)),
+                var(--card) calc(10% - 2 * var(--bc-u)) 10%
+            );
+            clip-path: inset(0 calc((1 - var(--bc-v)) * 100%) 0 0);
+        }
+
+        .kp-progressbar__head {
+            transform: translateX(calc(var(--bc-v) * 100cqi));
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 10;
+                --bc-end: 100cqi;
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    /* ─ 3 · Placed: the register's bar, but the share lands under gravity and
+       the busy tape stands still while the head hops ─ */
+    .bc-scene[data-bc-progress='placed'] {
+        .kp-progressbar__fill {
+            clip-path: inset(0 calc((1 - var(--bc-v)) * 100%) 0 0);
+        }
+
+        .kp-progressbar__head {
+            transform: translateX(calc(var(--bc-v) * 100cqi));
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: none;
+            background: repeating-linear-gradient(
+                -45deg,
+                var(--bc-ink) 0 calc(3 * var(--bc-u)),
+                transparent calc(3 * var(--bc-u)) var(--br-stripe)
+            );
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 6;
+                --bc-end: calc(100cqi - var(--br-block));
+                margin-inline-start: 0;
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__head {
+            margin-inline-start: 0;
+        }
+    }
+
+    /* ─ 4 · Slug: busy is a piece of the share's own fill, cut loose ─ */
+    .bc-scene[data-bc-progress='piece'] {
+        --bc-kin: steps(6, jump-end);
+        --bc-kout: steps(6, jump-start);
+
+        .kp-progressbar__fill {
+            clip-path: inset(0 calc((1 - var(--bc-v)) * 100%) 0 0);
+        }
+
+        .kp-progressbar__head {
+            transform: translateX(calc(var(--bc-v) * 100cqi));
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: none;
+            inset-inline-end: auto;
+            inline-size: 33.333%;
+            translate: 200% 0;
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__head {
+            translate: 100cqi 0;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__fill {
+                animation: bc-slug var(--bc-d) linear infinite;
+            }
+
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 8;
+                --bc-end: 100cqi;
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    @keyframes bc-slug {
+        0% {
+            translate: -100% 0;
+            animation-timing-function: steps(8, jump-end);
+        }
+
+        66.667% {
+            translate: 200% 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: -100% 0;
+        }
+    }
+
+    /* ─ 5 · Labelled: the head is a plate that says the share ─ */
+    .bc-scene[data-bc-progress='labelled'] {
+        --bc-kin: steps(10, jump-end);
+        --bc-kout: steps(10, jump-start);
+
+        .bc-bar {
+            --bc-hw: 3.1rem;
+        }
+
+        .kp-progressbar__fill {
+            background: var(--bc-ink);
+            clip-path: inset(0 calc(100% - var(--bc-v) * (100% - var(--bc-hw))) 0 0);
+        }
+
+        .kp-progressbar__head {
+            display: grid;
+            place-items: center;
+            inline-size: var(--bc-hw);
+            margin-inline-start: 0;
+            counter-reset: bc-pct calc(var(--bc-v) * 100);
+            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
+            color: var(--secondary-foreground);
+            font-family: var(--theme-font-display);
+            font-size: 0.8rem;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .kp-progressbar__head::after {
+            content: counter(bc-pct) '%';
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__head::after {
+            content: '…';
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 6;
+                --bc-end: calc(100cqi - var(--bc-hw));
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    /* ─ 6 · Trolley (new): a load rides the bar, a floor is laid under it ─ */
+    .bc-scene[data-bc-progress='trolley'] {
+        --bc-kin: steps(6, jump-end);
+        --bc-kout: steps(6, jump-start);
+
+        .bc-bar {
+            --bc-hw: calc(0.9rem * var(--kp-progressbar-scale, 1));
+        }
+
+        .kp-progressbar__track::before {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto;
+            block-size: calc(2 * var(--bc-u));
+            background: var(--bc-ink);
+        }
+
+        .kp-progressbar__fill {
+            inset: auto 0 0;
+            block-size: calc(4 * var(--bc-u));
+            background: var(--bc-ink);
+            clip-path: inset(0 calc(100% - (var(--bc-v) * (100% - var(--bc-hw)) + var(--bc-hw) / 2)) 0 0);
+        }
+
+        .kp-progressbar__head {
+            inset-block: auto calc(4 * var(--bc-u));
+            block-size: 44%;
+            inline-size: var(--bc-hw);
+            margin-inline-start: 0;
+            border: 2px solid var(--bc-ink);
+            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
+        }
+
+        .kp-progressbar__head::before {
+            content: '';
+            position: absolute;
+            inset: auto 0 calc(100% + 2px);
+            inline-size: calc(2 * var(--bc-u));
+            margin-inline: auto;
+            block-size: 400%;
+            background: var(--bc-ink);
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-end: calc(100cqi - var(--bc-hw));
+                --bc-rise: -70%;
+                animation: bc-hauled var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    /* ─ 7 · Cast (new): a mould stands on a beam and the beam is cast under it ─ */
+    .bc-scene[data-bc-progress='cast'] {
+        .bc-bar {
+            --bc-hw: calc(1rem * var(--kp-progressbar-scale, 1));
+        }
+
+        .kp-progressbar__fill {
+            inset-block-start: 56%;
+            background: var(--bc-ink);
+            transform-origin: 50% 100%;
+            clip-path: inset(0 calc(100% - (var(--bc-v) * (100% - var(--bc-hw)) + var(--bc-hw))) 0 0);
+        }
+
+        .kp-progressbar__head {
+            inset-block: 0 44%;
+            inline-size: var(--bc-hw);
+            margin-inline-start: 0;
+            border-block-start: var(--br-line) solid var(--bc-ink);
+            transform: translateX(calc(var(--bc-v) * (100cqi - var(--bc-hw))));
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            transform: scaleY(0.5);
+            clip-path: inset(0 calc(100% - var(--bc-hw)) 0 0);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__fill {
+                animation: bc-pour var(--bc-d) steps(1, end) infinite;
+            }
+        }
+    }
+
+    /* ─ 8 · Wall (new): blocks are laid in two courses, the next one set down ─ */
+    .bc-scene[data-bc-progress='wall'] {
+        --bc-kin: steps(10, jump-end);
+        --bc-kout: steps(10, jump-start);
+
+        .kp-progressbar__fill {
+            background:
+                repeating-linear-gradient(90deg, var(--bc-ink) 0 calc(10% - 2 * var(--bc-u)), transparent calc(10% - 2 * var(--bc-u)) 10%)
+                    0 100% / 100% calc(50% - var(--bc-u)) no-repeat,
+                repeating-linear-gradient(90deg, var(--bc-ink) -5% calc(5% - 2 * var(--bc-u)), transparent calc(5% - 2 * var(--bc-u)) 5%)
+                    0 0 / 100% calc(50% - var(--bc-u)) no-repeat;
+            clip-path: inset(0 calc(100% - round(down, var(--bc-v) * 100% + 0.4%, 10%)) 0 0);
+        }
+
+        .kp-progressbar__head {
+            inline-size: calc(10cqi - 2 * var(--bc-u));
+            margin-inline-start: 0;
+            transform: translateX(round(down, var(--bc-v) * 100cqi + 0.4cqi, 10cqi));
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__fill {
+                animation: bc-wall-window var(--bc-d) linear infinite;
+            }
+
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                animation: bc-wall-head var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    @keyframes bc-wall-window {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        16.667% {
+            clip-path: inset(0 70% 0 0);
+            animation-timing-function: steps(7, jump-end);
+        }
+
+        50% {
+            clip-path: inset(0 0 0 70%);
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        66.667%,
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes bc-wall-head {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        16.667% {
+            translate: 30cqi 0;
+            animation-timing-function: steps(7, jump-end);
+        }
+
+        66.667% {
+            translate: 100cqi 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ─ 9 · Stairs (new): a staircase is built a tenth at a time ─ */
+    .bc-scene[data-bc-progress='stairs'] {
+        --bc-kin: steps(10, jump-end);
+        --bc-kout: steps(10, jump-start);
+
+        .bc-bar {
+            --bc-s: round(down, calc(var(--bc-v) * 10 + 0.04), 1);
+        }
+
+        .kp-progressbar__track::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: color-mix(in oklch, var(--bc-ink) 16%, var(--card));
+            clip-path: polygon(0 100%, 0 90%, 10% 90%, 10% 80%, 20% 80%, 20% 70%, 30% 70%, 30% 60%, 40% 60%, 40% 50%, 50% 50%, 50% 40%, 60% 40%, 60% 30%, 70% 30%, 70% 20%, 80% 20%, 80% 10%, 90% 10%, 90% 0%, 100% 0%, 100% 100%);
+        }
+
+        .kp-progressbar__fill {
+            background: var(--bc-ink);
+            clip-path: polygon(0 100%, 0 90%, min(10%, calc(var(--bc-s) * 10%)) 90%, min(10%, calc(var(--bc-s) * 10%)) 80%, min(20%, calc(var(--bc-s) * 10%)) 80%, min(20%, calc(var(--bc-s) * 10%)) 70%, min(30%, calc(var(--bc-s) * 10%)) 70%, min(30%, calc(var(--bc-s) * 10%)) 60%, min(40%, calc(var(--bc-s) * 10%)) 60%, min(40%, calc(var(--bc-s) * 10%)) 50%, min(50%, calc(var(--bc-s) * 10%)) 50%, min(50%, calc(var(--bc-s) * 10%)) 40%, min(60%, calc(var(--bc-s) * 10%)) 40%, min(60%, calc(var(--bc-s) * 10%)) 30%, min(70%, calc(var(--bc-s) * 10%)) 30%, min(70%, calc(var(--bc-s) * 10%)) 20%, min(80%, calc(var(--bc-s) * 10%)) 20%, min(80%, calc(var(--bc-s) * 10%)) 10%, min(90%, calc(var(--bc-s) * 10%)) 10%, min(90%, calc(var(--bc-s) * 10%)) 0%, min(100%, calc(var(--bc-s) * 10%)) 0%, min(100%, calc(var(--bc-s) * 10%)) 100%);
+        }
+
+        .kp-progressbar__head {
+            inset-block: auto calc(var(--bc-s) * 10%);
+            block-size: 40%;
+            inline-size: calc(10cqi - 2 * var(--bc-u));
+            margin-inline-start: 0;
+            transform: translateX(calc(max(0, var(--bc-s) - 1) * 10cqi));
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                --bc-steps: 9;
+                --bc-end: 90cqi;
+                --bc-ey: -225%;
+                animation: bc-hop var(--bc-d) linear infinite;
+            }
+        }
+    }
+
+    /* ─ 10 · Level (new): the channel is poured level, in four hard lifts ─ */
+    .bc-scene[data-bc-progress='level'] {
+        --bc-kin: steps(4, jump-end);
+        --bc-kout: steps(4, jump-start);
+
+        .kp-progressbar__fill {
+            background: var(--bc-ink);
+            clip-path: inset(calc((1 - var(--bc-v)) * 100%) 0 0 0);
+        }
+
+        .kp-progressbar__head {
+            inset-block: auto calc(var(--bc-v) * 100% - 3 * var(--bc-u));
+            inset-inline: 0;
+            inline-size: auto;
+            block-size: calc(3 * var(--bc-u));
+            margin-inline-start: 0;
+            border: 0;
+            transform: none;
+        }
+
+        .bc-bar[data-bc-busy] .kp-progressbar__fill {
+            clip-path: none;
+            transform: scaleY(0.5);
+            transform-origin: 50% 100%;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .bc-bar[data-bc-busy] .kp-progressbar__fill {
+                animation: bc-pour var(--bc-d) steps(1, end) infinite;
+            }
+
+            .bc-bar[data-bc-busy] .kp-progressbar__head {
+                animation: bc-level-head var(--bc-d) steps(1, end) infinite;
+            }
+        }
+    }
+
+    @keyframes bc-level-head {
+        0% {
+            inset-block-end: calc(0% - 3 * var(--bc-u));
+        }
+
+        16.667% {
+            inset-block-end: calc(25% - 3 * var(--bc-u));
+        }
+
+        33.333% {
+            inset-block-end: calc(50% - 3 * var(--bc-u));
+        }
+
+        50% {
+            inset-block-end: calc(75% - 3 * var(--bc-u));
+        }
+
+        66.667% {
+            inset-block-end: calc(100% - 3 * var(--bc-u));
+        }
+
+        83.333%,
+        100% {
+            inset-block-end: calc(0% - 3 * var(--bc-u));
         }
     }
 
@@ -3154,4 +4151,17 @@
     .bc-scene .bc-cap {
         font-weight: 600;
     }
+}
+
+/* The share a bar arrives by: registered so the page's loop can animate it. */
+@property --bc-ka {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --bc-kb {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
 }

@@ -1,5 +1,5 @@
 {
-    "update": 1,
+    "update": 2,
     "picks": {
         "brutalism": {
             "curve": "gravity",
@@ -15,26 +15,21 @@
             "leave": "lift",
             "composites": "own",
             "focus": "ring",
-            "press": "ground"
+            "press": "ground",
+            "hover": "invert",
+            "voice": "shout",
+            "motifs": "one"
         }
     },
     "questions": {
         "brutalism": {
             "loading": {
-                "comment": "I like pour best, but feel like we can do much better, give ten examples",
-                "reply": "The pour stays as the reference, second in the list. Ten new pictures, each a different mechanism built from the hard slab: Carried, Dropped, Stacked, Hoisted, Scaffolded, Quarried, Tallied, Bolted, Staked out and Parted. All run on the same 1200 ms loop and stagger as the pour, so they compare directly; my pick is first, the one made only of the slab itself."
+                "comment": "I like hoisted best, but it looks best in the skeleton lines because of its shape. And it doesnt look good in like the chart plot. So make 5 variations on it",
+                "reply": "Hoisted is one thin cable and one small load in the middle, which fits the skeleton's thin lines and leaves a wide well (the chart plot, the busy table) mostly empty. Five variations follow it, each checked in every cell: on a gantry (a trolley carries the load along a rail), in relay (three loads, one after the other), as a lintel (one beam as wide as the well), in bays (a hoist for every square of the width) and as a pair (one rises, one is lowered). The progress bar's busy picture no longer sits among the cells; it is the next question."
             },
-            "hover": {
-                "comment": "I think I prefer lifted off, but it's hard to tell because the demo doesn't seem to be interactive?",
-                "reply": "The scene was frozen: only marked parts showed a state. Every part now answers a real pointer (and the dialog loops the lift on its own), with a line telling you to point at the parts. Lifted off moves the button 2 px up-left while its shadow stays put."
-            },
-            "voice": {
-                "comment": "I sort of like it, but some text is too thin, like the date and 412 t in the example, not sure if it's the font or thickness of the font that bothers me, give more exampels",
-                "reply": "It was both the weight and the colour: the date was mono at weight 400 and the figure Space Grotesk 400, 13.6 px, in grey. Every figure, date, unit and label is now weight 700 or heavier, at least 12 px, in ink, and dates read dd/mm/yyyy HH:MM. Six new voices join the three: plated, stamped, one family, capitals, ledger and poster figures."
-            },
-            "motifs": {
-                "comment": "it's not showing anything for any of the three examples, so fix that?",
-                "reply": "That was broken: the review dialog shrank the tall scene to about half its size, so the motifs vanished, and the today bar merged into the day's border while the bolts were too small. The dialog now stops shrinking at 0.75 and scrolls the stage, and the scene is rebuilt as six named, larger specimens. Checked in Firefox in the dialog at 1280x720: the weight, the tape and the bolts show at once, the rest below."
+            "progress": {
+                "comment": "I don' tlike the progress bar, make 10 variations on that, five should be brand new",
+                "reply": "A new question, the progress bar, with ten options. Measured, the signature bar is weak in five ways: its stripes are hazard tape, its head covers 18 % of a 122 px track, busy runs on three clocks (600, 1600 and 1200 ms), a share is wiped by a 100 ms clip, and busy and a share are two different textures. Five options keep the bar and fix some of that (solid, ruled, placed, cut loose, labelled); five are brand new, built from the slab (cast, trolley, wall, stairs, level). Each shows busy, 25, 60 and 100 %, and a bar in a card. My pick is cast, a mould on a beam."
             }
         }
     }

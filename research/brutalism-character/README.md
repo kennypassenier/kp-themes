@@ -2,6 +2,8 @@
 
 **Round 1 verdict (Kenny, 07/10/2026 21:03): fourteen of eighteen questions approved as recommended (curve = gravity, direction = diagonal, opening = footprint, durations = units, colour = roles, corners = square, surface = slab, warning = taped, live = slam, spinner = tip, leave = lift, composites = own, focus = ring, press = ground); the other four (loading, pointing, voice, motifs) come back in round 2**; the machine-readable decided.json follows once all eighteen are settled (the gate treats a decided.json as a finished topic).
 
+**Update 1 verdict (Kenny, 07/10/2026 22:50): pointing = invert, voice = shout (dates in bold mono) and motifs = one approved; loading comes back with five variations of Hoisted and the progress bar becomes its own question with ten options (Update 2).**
+
 **Why.** Kenny, 2026-10-07 04:23: the themes one by one, in this order: cyberpunk, synthwave, solstice, brutalism, grotesk, blueprint;
 brutalism fourth in that order, the same way as titanium, forest, nostromo, cyberpunk, synthwave and solstice (02:54: "waar jij eerst
 uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet"). The analysis is
@@ -20,7 +22,7 @@ still on the page as an option, named after the theme it meets. **The network gr
 02:54); in brutalism it is a source of the grammar (the sticker sheet, the site taped off, the rubber stamp askew), never a target.
 
 **What.** One page, brutalism only, in the review kit's aspect mode (`data-review-themes="brutalism"`). An intro, "What brutalism is" (the
-package's own parts, and on demand six decided character demos embedded as they are today), then eighteen questions. Each question is one
+package's own parts, and on demand six decided character demos embedded as they are today), then nineteen questions (eighteen, and since update 1 the progress bar's own). Each question is one
 rule of the grammar, with three options, each a live scene built from the package's components in brutalism (`.kp-button`, `.kp-dialog`,
 `.kp-popover` + `.kp-menu`, `.kp-card`, `.kp-kpi`, `.kp-meter`, `.kp-progressbar`, `.kp-spinner`, `.kp-badge`, `.kp-tag`, `.kp-alert`,
 `.kp-tooltip`, `.kp-empty`, `.kp-field`, `.kp-page-header`, the divider). The first option is always the recommendation; every option
@@ -37,19 +39,20 @@ says what you see and why it is or is not recommended, on the page and in its hi
 | 7   | The surface (G7)                      | the slab: white, one ink line, its hard shadow · the sticker sheet (pastel's sticker chart) · the poster stock                     |
 | 8   | A warning (G13)                       | taped off · the warning poster alone (near high-contrast's framed plate) · the askew sticker (pastel's)                            |
 | 9   | A live update (G9)                    | slammed onto its offset (the headline's slam) · inverted (high-contrast's) · at once (formal's Redrawn)                            |
-| 10  | Loading (G10)                         | carried, lifted off its footprint and set down (recommended) · the pour (Kenny's favourite) · nine more raw-construction pictures (dropped, stacked, hoisted, scaffolded, quarried, tallied, bolted, staked out, parted) · the hammer · the tape runs |
-| 11  | The spinner (G11)                     | the block tipped over (the signature, on gravity) · a cube being poured · the package's ring                                       |
-| 12  | Leaving and arriving (G12)            | lifted off and gone; set down · slammed out to the left (Kenny's pick; near grotesk's) · driven into the ground                    |
-| 13  | Buttons inside composites (G17)       | exactly brutalism's own · as today · brutalism's own but quiet (ghosts inside a composite)                                         |
-| 14  | Pointing at something (G8)            | lifted off its footprint, and it names itself · kicked sideways · inverted (high-contrast's)                                       |
-| 15  | The focus ring (G14, DI2)             | the two-channel ring, lifted · one thick ink outline · the field's yellow fill, with the ring                                      |
-| 16  | The press (G14)                       | driven into its footprint · shoved sideways · reverse video (terminal's)                                                           |
-| 17  | The voice (G15)                       | Archivo Black shouts, Space Grotesk speaks in bold capitals, dates in bold mono · mono capitals · Archivo Black for everything · plated, stamped, one family, capitals, ledger, poster figures (nine in all; no text under 700 below 1 rem) |
-| 18  | Motifs (G16)                          | every motif means one thing · only the shadow · on everything                                                                      |
+| 10  | Loading (G10)                         | carried, lifted off its footprint and set down (recommended) · the pour (Kenny's favourite) · nine more raw-construction pictures (dropped, stacked, hoisted, scaffolded, quarried, tallied, bolted, staked out, parted) and, after Kenny's update 1 comment, five variations of hoisted (gantry, relay, lintel, bays, twin) · the hammer · the tape runs |
+| 11  | The progress bar (G10)                | cast: a mould on a beam (recommended) · hoisted · walled · stairs · poured · five variations of the signature bar (solid, ruled, placed, cut loose, labelled) |
+| 12  | The spinner (G11)                     | the block tipped over (the signature, on gravity) · a cube being poured · the package's ring                                       |
+| 13  | Leaving and arriving (G12)            | lifted off and gone; set down · slammed out to the left (Kenny's pick; near grotesk's) · driven into the ground                    |
+| 14  | Buttons inside composites (G17)       | exactly brutalism's own · as today · brutalism's own but quiet (ghosts inside a composite)                                         |
+| 15  | Pointing at something (G8)            | lifted off its footprint, and it names itself · kicked sideways · inverted (high-contrast's)                                       |
+| 16  | The focus ring (G14, DI2)             | the two-channel ring, lifted · one thick ink outline · the field's yellow fill, with the ring                                      |
+| 17  | The press (G14)                       | driven into its footprint · shoved sideways · reverse video (terminal's)                                                           |
+| 18  | The voice (G15)                       | Archivo Black shouts, Space Grotesk speaks in bold capitals, dates in bold mono · mono capitals · Archivo Black for everything · plated, stamped, one family, capitals, ledger, poster figures (nine in all; no text under 700 below 1 rem) |
+| 19  | Motifs (G16)                          | every motif means one thing · only the shadow · on everything                                                                      |
 
 **How.**
 
-- `demo.js` holds the eighteen questions as data (`ASPECTS`: question, reason, rule, kind, scene, options with what you see and the
+- `demo.js` holds the nineteen questions as data (`ASPECTS`: question, reason, rule, kind, scene, options with what you see and the
   verdict), builds the rows (`data-bc-aspect`, option cells `data-bc-option`) and writes `data-review-choices` from the same data, so the
   page and the dialog cannot disagree.
 - `options.css` (in `@layer kp.signature`) draws every option, scoped by `data-bc-<question>="<key>"` on the scene. Colours are tokens only;
@@ -67,7 +70,7 @@ says what you see and why it is or is not recommended, on the page and in its hi
   stops it. Loading pictures and the spinners loop in CSS.
 - Every close is its open played backwards (Kenny's standing rule; 2026-10-07 15:16: "ik weet niet of je openen en sluiten bv altijd het omgekeerde van mekaar hebt gemaakt"). At `out`, `demo.js` (`closeByReverse`, keyed to `data-bc-phase`) plays every arrival of a cell backwards over the cell's whole arrival: the same keyframes, curve and pace, what arrived last leaving first; the clock's `out` lasts as long as the longest close. Before, most scenes stood through `out` and were cut away at `gap`, or snapped shut as `out` began. The lift-off closes (300 ms for every part, the 1.5 s dialog too, lifted 1 rem where it fell 1.5) are gone; the leave question's driven-into-the-ground arrives on its leave's curve. In the curve question the dialog lands at the menu's and the tile's pace, so the three show one curve; the opening and durations questions keep your quarter-speed dialog. Measured frame by frame in Firefox with `research/_review/measure-motion.mjs`: every arrival's close is now its mirror within one frame.
 - Hover, focus and press are shown standing still on marked parts (`.bc-pointed`, `.bc-focused`) and by the clock (`.bc-press`); the State
-  buttons force a state on every button of question 13.
+  buttons force a state on every button of question 14.
 - The gallery of decided components loads the character demos through the review kit's embed mode (`?embed=…&theme=brutalism`) only when
   it is opened.
 
@@ -88,3 +91,5 @@ The warning figure wrapped on its tone plate; it is shorter. In the review dialo
 the page only); they are now declared on every scene.
 
 **Round after Kenny's first review (2026-10-07).** Loading: ten more pictures after the pour, each a different mechanism on the same well and the 1200 ms clock; the pour stays as the reference. Hover: the scene was frozen (the register's `:hover` moves nothing here, because the scene computes translate and shadow from the footprint's knobs); every part marked `bc-hov` now answers a real `:hover` through the same rules as the held `bc-pointed` part, in the page and in the dialog. Voice: the date and "412 t" were mono 400 / Space Grotesk 400 at 13.6 px; every option now holds figures, dates, units and labels at 700 or heavier, in ink, never under 12 px, prose at 500; dates are dd/mm/yyyy HH:MM (rule 52). Motifs: rebuilt as six named specimens at a size that survives the dialog's fit-to-height (the 2 px bar and 0.6 rem bolts were invisible).
+
+**Update 1, loading and the progress bar (Kenny, 2026-10-07).** Kenny: "I like hoisted best, but it looks best in the skeleton lines because of its shape. And it doesnt look good in like the chart plot. So make 5 variations on it, I don't like the progress bar, make 10 variations on that, five should be brand new." Loading: five hoisted variations follow *Hoisted* (a gantry, a relay of three, a lintel, bays, a pair), each a load hoisted in hard lifts that fits every cell of the scene (key figure, busy table, menu entry, month days, chart plot, skeleton lines, meter); the progress bar's busy picture left the loading scene, which now has seven cells. The progress bar is question 11 (G10): ten options on the package's own track, fill and head at the large size, each drawn busy, at 25, 60 and 100 %, and inside a card; a share arrives on the 1200 ms loop for four units, stands four and leaves four, the arrival played backwards (`--bc-ka` and `--bc-kb`, registered numbers, so the same CSS reads `--kp-value`). Five fix what was measured weak in the signature bar (hazard stripes, a head covering 18 % of a 122 px track, three clocks, a 100 ms wipe, two textures): solid, ruled, placed, cut loose, labelled. Five are new: cast, hoisted, walled, stairs, poured. Motion measured with seeked animations at 10 ms steps (t50 and t90 of the main move); screenshots checked in Firefox in the review dialog.
