@@ -1,0 +1,131 @@
+/* research/character-kpi, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 2, loading
+   2, tone 2, interactive 2, live 1), nothing else. Linked after every other
+   key-figure stylesheet, so each rule here replaces the option's own at equal
+   specificity.
+
+   - shape: a plate is a line of htop (G7): the grid of character cells and
+     the closed frame go, a square bracket stands at each end of the tile, the
+     label is written as a shell writes it (lower case, untracked, its colon);
+   - loading: the waiting figure and words are htop rows (the package draws
+     them on every skeleton line, css/terminal-register.css); the dotted march
+     along the foot is retired;
+   - tone: a warning or destructive figure stands on the tone's square plate
+     in reverse and says its level before it, `[warn]` or `[fail]` (G13); the
+     change is underlined, 2 px in the tone;
+   - interactive: pointing brings the cursor ring and nothing blinks (G8), focus
+     is the dashed box, a press prints the tile in reverse video (G14);
+   - live: the changed number blinks three times between the bright and the
+     dim phosphor, 900 ms (G9), where it was redrawn at once. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-kf-shape='2'] .kp-kpi {
+        --tmk-br: var(--border-strong);
+        --kf-plate: transparent;
+        --kf-frame: 1px solid transparent;
+        --kf-label-case: none;
+        --kf-label-track: 0;
+        --kf-label-weight: 400;
+        --kf-pat:
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 0 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 0 100% / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 100% 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmk-br), var(--tmk-br)) 100% 100% / 0.4rem 1px no-repeat;
+        background-origin: border-box;
+    }
+
+    [data-theme='terminal'] [data-kf-shape='2'] .kp-kpi > .kp-kpi__label::after {
+        content: ':';
+    }
+
+    /* Loading 2 · the dotted march → the rows of the skeleton lines. */
+    [data-theme='terminal'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: none;
+    }
+
+    /* Tone 2 · the tone's plate hugs the figure; its level stands before it. */
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value {
+        --tmk-level: calc(6ch * 0.55);
+        border-radius: 0;
+        background: linear-gradient(var(--tmk-plate), var(--tmk-plate)) 100% 0 / calc(100% - var(--tmk-level) - var(--kp-space-sm, 0.5rem)) 100%
+            no-repeat;
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value::before {
+        font-size: 0.55em;
+        color: var(--tmk-level-ink);
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --tmk-plate: var(--warning);
+        --tmk-level-ink: var(--warning-foreground);
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --tmk-plate: var(--destructive);
+        --tmk-level-ink: var(--destructive);
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value::before {
+        content: '[warn]';
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value::before {
+        content: '[fail]';
+    }
+
+    /* The change is underlined with its sign; 2 px in the tone. */
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
+        border-block-end: 0;
+        text-decoration: underline 1px var(--border-strong);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta[data-kp-tone] {
+        text-decoration-thickness: 2px;
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta[data-kp-tone='good'] {
+        text-decoration-color: var(--success-foreground);
+    }
+
+    [data-theme='terminal'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        text-decoration-color: var(--destructive);
+    }
+
+    /* Interactive 2 · the ring is steady, and a press prints the tile in
+       reverse video with its brackets gone. */
+    [data-theme='terminal'] [data-kf-interactive='2'][data-kf-shape='2'] a.kp-kpi:hover,
+    [data-theme='terminal'] [data-kf-interactive='2'][data-kf-shape='2'] .kp-kpi--toggle:hover {
+        --tmk-br: var(--ring);
+        --kf-hover-border: transparent;
+        box-shadow: var(--tmg-ring);
+    }
+
+    [data-theme='terminal'] [data-kf-interactive='2'][data-kf-shape='2'] a.kp-kpi:active,
+    [data-theme='terminal'] [data-kf-interactive='2'][data-kf-shape='2'] .kp-kpi--toggle:active {
+        --kf-pat: none;
+    }
+
+    [data-theme='terminal'] [data-kf-interactive='2'] a.kp-kpi:active > *,
+    [data-theme='terminal'] [data-kf-interactive='2'] .kp-kpi--toggle:active > * {
+        --kf-ink: var(--primary-foreground);
+        --kf-mute: var(--primary-foreground);
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-kf-interactive='2'] a.kp-kpi:hover,
+        [data-theme='terminal'] [data-kf-interactive='2'] .kp-kpi--toggle:hover {
+            animation: none;
+        }
+
+        /* Live 1 · Redrawn → the number blinks three times. */
+        [data-theme='terminal'] [data-kf-live='1'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: tmg-blink3 var(--tmg-change) steps(1, jump-end);
+        }
+    }
+}

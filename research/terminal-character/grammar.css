@@ -1,0 +1,216 @@
+/* research/terminal-character/grammar.css: terminal's decided grammar as the
+   per-component demos use it (Kenny, 2026-10-07 23:43; themes/terminal/
+   CHARACTER.md G1-G18, the picks of research/terminal-character/decided.json).
+   One file of tokens and keyframes, linked by every research/character-* demo
+   except the network graph (which changes in no theme); each component's
+   `terminal.css` applies it to that component's decided terminal options, as
+   forest's grammar was applied in b0b137d8 and titanium's in f637569f. The
+   register (css/terminal-register.css) holds the same writing for the package;
+   this file only names it for the demos.
+
+   - the line: one hard step per cell or line written, a cell 34 ms, a printed
+     line 136 ms (four cells' time); the blink is 1000 ms for what waits, 900 ms
+     (three rapid blinks) for what changed; the leave is Kenny's 480 ms;
+   - what arrives is typed from its start, the block cursor riding the head of
+     the line (`--tmg-k` runs 0 to 1, the clip and the cursor both read it);
+   - what opens is printed a line a step, the cursor at the line being
+     printed; a close is its open reversed (the same keyframes under a second
+     name, `-back`, played `reverse`: a CSS animation whose name stays the same
+     is not restarted when only its direction changes);
+   - loading is an htop row, the cursor its head (`--tmg-fill`, one cell a
+     step through round()); a change blinks three times;
+   - pointing brings the cursor ring, focus is a dashed box, a press is entered
+     in reverse video.
+
+   Colours come from the theme's tokens only; every animation sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the finished
+   picture (the line typed, the panel printed, the cursor standing lit). */
+
+@property --tmg-k {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
+@property --tmg-fill {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
+@property --tmg-head {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
+/* The same two numbers, inherited: one animation on a grid drives every row
+   in it (a month of waiting days), where a number that does not inherit
+   needs one animation on each. */
+@property --tmg-fill-i {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --tmg-head-i {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@layer kp.signature {
+    [data-theme='terminal'] {
+        --tmg-cell: 34ms;
+        --tmg-line: 136ms;
+        --tmg-slow: 1000ms;
+        --tmg-change: 900ms;
+        --tmg-leave: 480ms;
+        --tmg-ring: inset 0 0 0 1px var(--ring), 0 0 0 1px var(--ring);
+        --tmg-cursor: var(--primary);
+    }
+
+    /* The writing: --tmg-k from 0 to 1 (a clip and a cursor read it), and the
+       cursor held visible for as long as it runs. */
+    @keyframes tmg-type {
+        from {
+            --tmg-k: 0;
+            visibility: visible;
+        }
+
+        to {
+            --tmg-k: 1;
+            visibility: visible;
+        }
+    }
+
+    @keyframes tmg-type-back {
+        from {
+            --tmg-k: 0;
+            visibility: visible;
+        }
+
+        to {
+            --tmg-k: 1;
+            visibility: visible;
+        }
+    }
+
+    /* A loop lights the row a cell a step and empties it as it filled. */
+    @keyframes tmg-fill {
+        from {
+            --tmg-fill: 0;
+        }
+
+        to {
+            --tmg-fill: 1;
+        }
+    }
+
+    @keyframes tmg-fill-i {
+        from {
+            --tmg-fill-i: 0;
+        }
+
+        to {
+            --tmg-fill-i: 1;
+        }
+    }
+
+    @keyframes tmg-head-i {
+        0% {
+            --tmg-head-i: 1;
+        }
+
+        50% {
+            --tmg-head-i: 0;
+        }
+    }
+
+    /* The head cursor: lit 500 ms, dark 500 ms, hard. */
+    @keyframes tmg-head {
+        0% {
+            --tmg-head: 1;
+        }
+
+        50% {
+            --tmg-head: 0;
+        }
+    }
+
+    /* A change: three rapid blinks between the bright and the dim phosphor,
+       never hidden, ending on the part's own ink. */
+    @keyframes tmg-blink3 {
+        0%,
+        33.333%,
+        66.667% {
+            color: var(--kp-hot);
+        }
+
+        16.667%,
+        50%,
+        83.333% {
+            color: var(--border-strong);
+        }
+    }
+
+    @keyframes tmg-blink3-fill {
+        0%,
+        33.333%,
+        66.667% {
+            background-color: var(--tmg-lit, var(--primary));
+        }
+
+        16.667%,
+        50%,
+        83.333% {
+            background-color: var(--border-strong);
+        }
+    }
+
+    @keyframes tmg-blink3-line {
+        0%,
+        33.333%,
+        66.667% {
+            stroke: var(--primary);
+        }
+
+        16.667%,
+        50%,
+        83.333% {
+            stroke: var(--border-strong);
+        }
+    }
+
+    /* The same blink for a part that carries its own colours (a series): its
+       brightness goes between full and a third, never hidden. */
+    @keyframes tmg-blink3-dim {
+        0%,
+        33.333%,
+        66.667% {
+            filter: brightness(1);
+        }
+
+        16.667%,
+        50%,
+        83.333% {
+            filter: brightness(0.4);
+        }
+    }
+
+    /* The same, under a second name, for the next change of the same part: a
+       new name restarts the motion, the same name does not. */
+    @keyframes tmg-blink3-dim-b {
+        0%,
+        33.333%,
+        66.667% {
+            filter: brightness(1);
+        }
+
+        16.667%,
+        50%,
+        83.333% {
+            filter: brightness(0.4);
+        }
+    }
+}

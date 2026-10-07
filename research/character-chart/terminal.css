@@ -1,0 +1,129 @@
+/* research/character-chart, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (loading
+   r4-tm-load-dialup, arrival r3-tm-ar-print, update none, tip b, and the
+   legend keys of shape a; events ring stays as it is), nothing else. Linked
+   after every other chart stylesheet, so each rule here replaces the option's
+   own at equal specificity.
+
+   - loading: one htop row stands in the waiting plot, the cursor its head
+     (G10), in place of the noise bands and the carrier rising on a curve (a
+     second hue, a glide);
+   - arrival: the series is typed along itself from its start, a cell a step,
+     the block cursor riding the head, 1088 ms in all (G2, G4), where it was
+     printed from the top in eight steps;
+   - update: a new reading blinks the series three times between bright and
+     dim, 900 ms (G9), where it just appeared;
+   - tip: a window is one box line (G7): the accent frame and its 10 px glow
+     go, the head stands in the bright phosphor (G5);
+   - legend: a key is a small terminal button (G17): the ring under the
+     pointer, the dashed box on focus, reverse video while held. */
+@layer kp.signature {
+    /* Loading · the handshake waterfall → an htop row. */
+    [data-theme='terminal'] [data-cc-loading='r4-tm-load-dialup'] .kp-chart__state[data-kp-state='loading']::before {
+        --tmh-w: 24;
+        inset: auto;
+        inset-block-start: calc(50% - 0.45rem);
+        inset-inline: 0;
+        margin-inline: auto;
+        inline-size: calc(var(--tmh-w) * 1ch + 8px);
+        max-inline-size: calc(100% - 1rem);
+        block-size: 0.9rem;
+        background:
+            linear-gradient(var(--primary), var(--primary)) calc(4px + max(0px, round(down, var(--tmg-fill) * var(--tmh-w) * 1ch, 1ch) - 1ch)) 3px /
+                calc(var(--tmg-head) * (1ch - 2px)) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                round(down, var(--tmg-fill) * var(--tmh-w) * 1ch, 1ch) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                calc(var(--tmh-w) * 1ch) calc(100% - 6px) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
+    }
+
+    [data-theme='terminal'] [data-cc-loading='r4-tm-load-dialup'] .kp-chart__state[data-kp-state='loading']::after {
+        content: none;
+    }
+
+    /* Arrival · printed top to bottom → typed along itself, the cursor on the head. */
+    [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__series {
+        clip-path: inset(-10px calc(100% - min(100%, round(down, var(--cca-k) * 100%, 1ch) + 1ch)) -10px -10px);
+    }
+
+    [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+        content: '';
+        z-index: 3;
+        inset: auto;
+        inset-block-start: 0;
+        inset-inline-start: calc(min(100%, round(down, var(--cca-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        block-size: 1.15em;
+        border-radius: 0;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cc-loading='r4-tm-load-dialup'] .kp-chart__state[data-kp-state='loading']::before {
+            animation:
+                tmg-fill var(--tmg-slow) linear infinite alternate,
+                tmg-head var(--tmg-slow) steps(1, jump-end) infinite;
+        }
+
+        [data-theme='terminal'] [data-cc-loading='r4-tm-load-dialup'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: none;
+        }
+
+        [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k calc(32 * var(--tmg-cell)) linear both;
+        }
+
+        [data-theme='terminal'] [data-cc-arrival='r3-tm-ar-print'][data-cc-arriving] .kp-chart__plot:not(.kp-chart__spark-plot)::before {
+            animation: tmg-type calc(32 * var(--tmg-cell)) linear backwards;
+        }
+
+        /* Update none · it appears → the series blinks three times. */
+        [data-theme='terminal'] [data-cc-update='none'][data-cc-updating] .kp-chart__series {
+            animation: tmg-blink3-dim var(--tmg-change) steps(1, jump-end);
+        }
+    }
+
+    /* Tip b · the oscilloscope → one box line, no glow, the bright phosphor. */
+    [data-theme='terminal'] [data-cc-tip='b'] .kp-chart__tip {
+        border: 1px solid var(--border-strong);
+        background: var(--secondary);
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] [data-cc-tip='b'] .kp-chart__tip-head > b {
+        color: var(--primary);
+    }
+
+    /* The legend keys: ring, dashed box, reverse video. */
+    [data-theme='terminal'] [data-cc-shape='a'] .kp-chart__source:hover {
+        border-color: var(--ring);
+        box-shadow: var(--tmg-ring);
+    }
+
+    [data-theme='terminal'] [data-cc-shape='a'] .kp-chart__source:focus-visible,
+    [data-theme='terminal'] [data-cc-shape='a'] .kp-chart__show-all:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    [data-theme='terminal'] [data-cc-shape='a'] :is(.kp-chart__source, .kp-chart__show-all):active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='terminal'] [data-cc-shape='a'] .kp-chart__source:active::before {
+        color: var(--primary-foreground);
+    }
+}

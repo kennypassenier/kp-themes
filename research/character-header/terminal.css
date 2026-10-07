@@ -1,0 +1,111 @@
+/* research/character-header, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 3, menu 1,
+   interactive 1), nothing else. Linked after every other header stylesheet, so
+   each rule here replaces the option's own at equal specificity.
+
+   - shape: the header is a plate and a plate is a line of htop (G7): the
+     closed frame goes, a square bracket stands at each end, the title keeps
+     its rule; the actions are the theme's own buttons (G17, composite C1):
+     the register draws their line, their ring under the pointer, the cursor
+     after the label, the dashed focus box and the reverse press, so the
+     header's own reverse hover, 1 px dashed ring and 1 px drop are retired
+     (`revert-layer` gives back what the register says);
+   - menu: the panel is printed a line a step (four lines, 136 ms each), the
+     block cursor at the line being printed (G3); its close is the same
+     keyframes `reverse`, frame for frame. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-ph-shape='3'] .kp-page-header {
+        --tmh-br: var(--border-strong);
+        --ph-frame: 1px solid transparent;
+        --ph-plate: transparent;
+        --ph-pat:
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 0 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 0 100% / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 100% 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmh-br), var(--tmh-br)) 100% 100% / 0.4rem 1px no-repeat;
+        background-origin: border-box;
+    }
+
+    /* Composite C1 · the header's buttons are terminal's own. */
+    [data-theme='terminal'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='terminal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled),
+    [data-theme='terminal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background: revert-layer;
+        background-color: revert-layer;
+        color: revert-layer;
+        transform: revert-layer;
+        box-shadow: revert-layer;
+    }
+
+    [data-theme='terminal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+
+    /* Menu 1 · printed, a line a step, the cursor at the line being printed. */
+    [data-theme='terminal'] [data-ph-menu='1'] [data-ph-panel]::before {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 0.4rem;
+        inset-inline-start: 0.6rem;
+        inline-size: 1ch;
+        block-size: 1.2em;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes tmh-print {
+            from {
+                clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes tmh-feed {
+            from {
+                inset-block-start: 0.4rem;
+                visibility: visible;
+            }
+
+            to {
+                inset-block-start: calc(100% - 1.8rem);
+                visibility: visible;
+            }
+        }
+
+        [data-theme='terminal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: tmh-print calc(4 * var(--tmg-line)) steps(4, jump-end);
+        }
+
+        [data-theme='terminal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: tmh-print calc(4 * var(--tmg-line)) steps(4, jump-end) reverse;
+        }
+
+        [data-theme='terminal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open']::before {
+            animation: tmh-feed calc(4 * var(--tmg-line)) steps(4, jump-end);
+        }
+
+        [data-theme='terminal'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close']::before {
+            animation: tmh-feed calc(4 * var(--tmg-line)) steps(4, jump-end) reverse;
+        }
+    }
+}

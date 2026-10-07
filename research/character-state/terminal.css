@@ -1,0 +1,99 @@
+/* research/character-state, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 2, the
+   box-drawn tag; tone 3, the alert blink; change 3, the cursor blinks
+   faster), nothing else. Linked after every other state stylesheet.
+
+   - shape: a state is a plate and a plate is a line of htop (G7): the double
+     ruled frame goes, square brackets stand at the two ends of the chip, the
+     dot a square cell;
+   - tone: a pending or failed state is printed in reverse in its colour and
+     says its level before it, `[warn]` or `[fail]` (G13), in place of the
+     ring round its dot; a pending state waits, so its dot is the slow
+     cursor, a failed one stands lit, and nothing else blinks at rest (G16);
+   - change: the word and its dot blink three times between the bright and
+     the dim phosphor, 900 ms, hard, never hidden (G9), in place of the dot
+     squashing through 0.54. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-sw-shape='2'] {
+        --sw-dot-size: 0.55em;
+        --sw-dot-radius: 0;
+        --sw-gap: 0.5ch;
+        --sw-frame: none;
+        --sw-radius: 0;
+        --sw-pad: 0 0.1em;
+        --sw-font: 400 0.9em var(--theme-font-mono, ui-monospace, monospace);
+        padding: 0.25em 0.9em;
+        background-image:
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong)),
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong)),
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong));
+        background-size:
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px,
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px;
+        background-position:
+            0 0,
+            0 0,
+            0 100%,
+            100% 0,
+            100% 0,
+            100% 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* A tone is a plate in reverse, not a bracketed chip. */
+    [data-theme='terminal'] [data-sw-shape='2'][data-sw-tone='3']:is([data-sw-kind='pending'], [data-sw-kind='bad']) {
+        background-image: none;
+        padding-inline: 0;
+    }
+
+    [data-theme='terminal'] [data-sw-tone='3'] {
+        --sw-dot-ring: none;
+    }
+
+    [data-theme='terminal'] [data-sw-tone='3']:is([data-sw-kind='pending'], [data-sw-kind='bad'])::after {
+        order: -1;
+        font: 400 0.9em var(--theme-font-mono, ui-monospace, monospace);
+    }
+
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='pending']::after {
+        content: '[warn]';
+        color: var(--warning-foreground);
+    }
+
+    [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='bad']::after {
+        content: '[fail]';
+        color: var(--destructive);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A failed state stands lit: only what waits blinks at rest. */
+        [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='bad']::before {
+            animation: none;
+        }
+
+        [data-theme='terminal'] [data-sw-change='3'][data-sw-playing] .kp-state-word {
+            animation: tmg-blink3 var(--tmg-change) steps(1, jump-end);
+        }
+
+        [data-theme='terminal'] [data-sw-change='3'][data-sw-playing]::before {
+            --tmg-lit: var(--sw-dot, var(--primary));
+            animation: tmg-blink3-fill var(--tmg-change) steps(1, jump-end);
+        }
+
+        [data-theme='terminal'] [data-sw-change='3'][data-sw-playing][data-sw-tone='3'][data-sw-kind='pending']::before {
+            animation:
+                tmg-blink3-fill var(--tmg-change) steps(1, jump-end),
+                sw-terminal-alert var(--tmg-slow) steps(1) var(--tmg-change) infinite;
+        }
+
+        [data-theme='terminal'] [data-sw-change='3'][data-sw-playing][data-sw-tone='3'][data-sw-kind='bad']::before {
+            animation: tmg-blink3-fill var(--tmg-change) steps(1, jump-end);
+        }
+    }
+}

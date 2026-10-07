@@ -1,0 +1,159 @@
+/* research/character-menu, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 1, loading
+   r2-tm-load-4, open 1, tone 1, interact 1), nothing else. Linked after every
+   other menu stylesheet, so each rule here replaces the option's own at equal
+   specificity.
+
+   - shape: a window is one box line (G7): the double frame becomes the single
+     line, the headings are written in lower case, untracked (G15);
+   - loading: the loading entry carries an htop row, the cursor its head (the
+     package draws it, css/terminal-register.css); the redraw flicker is
+     retired;
+   - open: the menu is printed a line a step (four lines, 136 ms each), the
+     block cursor at the line being printed (G3); the close is the same
+     keyframes `reverse` under a second name, so it restarts, frame for frame;
+   - tone: the destructive entry stands on the tone's square plate in reverse
+     and says its level (G13), in place of the edge bar; the disabled reason
+     is a note (`# `), the dashed box is focus's (G16);
+   - interact: an entry is the theme's own (G17, composite C2): the ring
+     inside its width under the pointer, the dashed box on focus, reverse
+     video when pressed; the reverse hover is retired (`revert-layer` gives
+     back what the register says). */
+@layer kp.signature {
+    /* Shape 1 · the top(1) row → a single box line, lower-case headings. */
+    [data-theme='terminal'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        border: 1px solid var(--mb-edge, var(--border-strong));
+    }
+
+    [data-theme='terminal'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        text-transform: none;
+        letter-spacing: 0;
+    }
+
+    /* Loading r2-tm-load-4 · the redraw flickers → the row of the entry. */
+    [data-theme='terminal'] [data-mb-loading='r2-tm-load-4'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        filter: none;
+        animation: none;
+    }
+
+    /* Open 1 · printed: the cursor at the line being printed. */
+    [data-theme='terminal'] [data-mb-open='1'] .kp-menu-button > .kp-menu::before {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 0.4rem;
+        inset-inline-start: 0.6rem;
+        inline-size: 1ch;
+        block-size: 1.2em;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes tmm-print {
+            from {
+                clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes tmm-print-back {
+            from {
+                clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes tmm-feed {
+            from {
+                inset-block-start: 0.4rem;
+                visibility: visible;
+            }
+
+            to {
+                inset-block-start: calc(100% - 1.8rem);
+                visibility: visible;
+            }
+        }
+
+        @keyframes tmm-feed-back {
+            from {
+                inset-block-start: 0.4rem;
+                visibility: visible;
+            }
+
+            to {
+                inset-block-start: calc(100% - 1.8rem);
+                visibility: visible;
+            }
+        }
+
+        [data-theme='terminal'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: tmm-print calc(4 * var(--tmg-line) / var(--mb-speed, 1)) steps(4, jump-end);
+        }
+
+        [data-theme='terminal'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation: tmm-print-back calc(4 * var(--tmg-line) / var(--mb-speed, 1)) steps(4, jump-end) reverse;
+        }
+
+        [data-theme='terminal'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden])::before {
+            animation: tmm-feed calc(4 * var(--tmg-line) / var(--mb-speed, 1)) steps(4, jump-end);
+        }
+
+        [data-theme='terminal'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving]::before {
+            animation: tmm-feed-back calc(4 * var(--tmg-line) / var(--mb-speed, 1)) steps(4, jump-end) reverse;
+        }
+    }
+
+    /* Tone 1 · the bell → the plate in reverse, and its level. */
+    [data-theme='terminal'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: none;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='terminal'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive :is(.kp-menu__label, .kp-menu__hint) {
+        color: inherit;
+    }
+
+    [data-theme='terminal'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label::before {
+        content: '[fail] ';
+        white-space: pre;
+    }
+
+    [data-theme='terminal'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason {
+        border: 0;
+        padding: 0;
+    }
+
+    [data-theme='terminal'] [data-mb-tone='1'] .kp-menu-button > .kp-menu [aria-disabled='true'] .kp-menu__reason::before {
+        content: '# ';
+        white-space: pre;
+    }
+
+    /* Interact 1 · reverse on hover → the theme's own entry (composite C2). */
+    [data-theme='terminal'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        background: revert-layer;
+        color: revert-layer;
+    }
+
+    [data-theme='terminal'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item[data-mb-force-focus],
+    [data-theme='terminal'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: -4px;
+    }
+
+    [data-theme='terminal'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        box-shadow: none;
+    }
+}

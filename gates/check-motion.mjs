@@ -252,12 +252,14 @@ const OUT_OF_SCOPE = {
     'kp-sig-pastel-meter-drop-d': "a meter's share dropping into its track once, replayed in the destructive tone; a transform, under 341x256 px",
     'kp-sig-pastel-meter-drop-o': "a meter's share dropping into its track once; a transform, under 341x256 px",
     'kp-sig-pastel-meter-drop-w': "a meter's share dropping into its track once, replayed in the warning tone; a transform, under 341x256 px",
-    'kp-sig-terminal-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-terminal-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-terminal-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-terminal-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
-    'kp-sig-terminal-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
+    'kp-sig-terminal-tm-fill':
+        'a custom number running 0 to 1 and back that lights an htop row one cell a step; no opacity or colour stop, under 341x256 px',
+    'kp-sig-terminal-tm-k':
+        'a custom number running 0 to 1 that types a part cell by cell with a block cursor on its head; a clip, once, under 341x256 px',
+    'kp-sig-terminal-tm-feed': 'a block cursor stepping down the lines of a printed dialog once; a position, one cell wide',
+    'kp-sig-terminal-update-blink':
+        'a changed value taking the bright then the dim phosphor three times in 900 ms, once; text colour, never hidden, under 341x256 px',
+    'kp-sig-terminal-update-blink-line': 'a changed sparkline taking the bright then the dim phosphor three times in 900 ms, once; under 341x256 px',
     'kp-sig-forest-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-forest-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-forest-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',

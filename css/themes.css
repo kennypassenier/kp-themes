@@ -880,8 +880,8 @@
     --fx-signal: hsl(65, 90%, 22%);
     --fx-signal-foreground: hsl(65, 100%, 100%);
     --fx-notch: 2px;
-    --fx-duration: 90ms;
-    --fx-ease: steps(2, end);
+    --fx-duration: 34ms;
+    --fx-ease: steps(1, jump-end);
     --theme-font-display: 'KP Tech Mono', 'Share Tech Mono', ui-monospace, monospace;
     --theme-font-mono: 'KP Tech Mono', 'Share Tech Mono', ui-monospace, Menlo, monospace;
     --fx-overprint: hsl(65, 90%, 50%);

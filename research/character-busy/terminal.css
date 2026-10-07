@@ -1,0 +1,152 @@
+/* research/character-busy, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape
+   r2-tm-shape-1, loading 1, arrival 1, failure 1; phone 1, the flat row, fits
+   and stays), nothing else. Linked after every other busy stylesheet, so each
+   rule here replaces the option's own at equal specificity.
+
+   - shape: the panel is a plate, a line of htop (G7): the bold `[` and `]`
+     glyphs and the rules at its top and foot become the bracket at each end
+     (on the ground, because it lies over the rows), the words are written in
+     lower case (G15);
+   - loading: one htop row stands at the panel's foot, the cursor its head
+     (G10), in place of the lone blinking block at the end of the words;
+   - arrival: the layer is typed from its start, the block cursor riding the
+     head, a cell a step, in 1088 ms (G2, G4), where it was there at once; its
+     leave is that typing played backwards (terminal.js keeps the removed layer
+     for it, the package drops it at once);
+   - failure: the failed alert is printed in reverse in the tone's colour and
+     says its level, `[fail]` (G13), typed in; the bell (a border flashing
+     twice) and the slide down are gone. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-panel {
+        --tmb-br: var(--border-strong);
+        --tmb-w: 16;
+        --bo-panel-bg: var(--background);
+        border-block: 0;
+        padding-block-end: 2.1rem;
+        text-transform: none;
+        background-image:
+            linear-gradient(var(--tmb-br), var(--tmb-br)), linear-gradient(var(--tmb-br), var(--tmb-br)),
+            linear-gradient(var(--tmb-br), var(--tmb-br)), linear-gradient(var(--tmb-br), var(--tmb-br)),
+            linear-gradient(var(--tmb-br), var(--tmb-br)), linear-gradient(var(--tmb-br), var(--tmb-br));
+        background-size:
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px,
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px;
+        background-position:
+            0 0,
+            0 0,
+            0 100%,
+            100% 0,
+            100% 0,
+            100% 100%;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='terminal'] [data-bo-shape='r2-tm-shape-1'] .kp-datatable__busy-panel::after {
+        content: none;
+    }
+
+    /* Loading 1 · the lone block → an htop row, the cursor its head. */
+    [data-theme='terminal'] [data-bo][data-bo-shape='r2-tm-shape-1'][data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        content: '';
+        position: absolute;
+        inset: auto;
+        inset-block-end: 0.6rem;
+        inset-inline: 0;
+        margin-inline: auto;
+        transform: none;
+        inline-size: calc(var(--tmb-w) * 1ch + 8px);
+        max-inline-size: calc(100% - 1rem);
+        block-size: 0.9rem;
+        font-weight: 400;
+        color: inherit;
+        background:
+            linear-gradient(var(--primary), var(--primary)) calc(4px + max(0px, round(down, var(--tmg-fill) * var(--tmb-w) * 1ch, 1ch) - 1ch)) 3px /
+                calc(var(--tmg-head) * (1ch - 2px)) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                round(down, var(--tmg-fill) * var(--tmb-w) * 1ch, 1ch) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                calc(var(--tmb-w) * 1ch) calc(100% - 6px) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
+    }
+
+    /* Arrival 1 · at once → typed from the start, the cursor on the head. */
+    [data-theme='terminal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+        --bo-arrival: tmg-type;
+        --bo-arrival-dur: calc(32 * var(--tmg-cell));
+        --bo-arrival-ease: linear;
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay::after {
+        content: '';
+        position: absolute;
+        z-index: 3;
+        inset-block-start: calc(50% - 0.6em);
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        block-size: 1.2em;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+            animation:
+                tmg-fill var(--tmg-slow) linear infinite alternate,
+                tmg-head var(--tmg-slow) steps(1, jump-end) infinite;
+        }
+
+        [data-theme='terminal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay::after {
+            animation: tmg-type calc(32 * var(--tmg-cell)) linear backwards;
+        }
+
+        /* The leave: the typing played backwards (terminal.js holds the layer). */
+        [data-theme='terminal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay[data-tmg-leaving] {
+            animation: tmg-type-back calc(32 * var(--tmg-cell)) linear reverse both;
+        }
+
+        [data-theme='terminal'] [data-bo-arrival='1'] .kp-datatable__busy-overlay[data-tmg-leaving]::after {
+            animation: tmg-type-back calc(32 * var(--tmg-cell)) linear reverse backwards;
+        }
+    }
+
+    /* Failure 1 · the bell → reverse video in the tone, and its level. */
+    [data-theme='terminal'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--destructive);
+        --bo-fail-ink: var(--destructive-foreground);
+        --bo-fail-border: 0;
+        --bo-fail-from: none;
+        --bo-fail-transition: none;
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='terminal'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden])::before {
+        content: '[fail] ';
+        white-space: pre;
+    }
+
+    [data-theme='terminal'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden]) {
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden]) {
+            animation: tmg-type calc(32 * var(--tmg-cell)) linear backwards;
+        }
+    }
+}

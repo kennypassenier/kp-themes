@@ -1,0 +1,167 @@
+/* research/character-trend, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 1, loading
+   1, arrival 2, tone 3, live 3), nothing else. Linked after every other trend
+   stylesheet, so each rule here replaces the option's own at equal
+   specificity.
+
+   - shape: a plate is a line of htop (G7): the double frame goes, a square
+     bracket stands at each end of the tile; the line is drawn in braille
+     cells (the data's own cells, G7); the label is written in lower case,
+     untracked (G15);
+   - loading: the waiting plot is an htop row, the cursor its head (G10), in
+     place of the lone blinking block;
+   - arrival: the number and then the line are typed from their start, the
+     block cursor riding the head, a cell a step, in 1088 ms in all (G2, G4);
+   - tone: the change is underlined, 2 px in the tone, and a warning or failed
+     figure stands on the tone's square plate in reverse with its level
+     before it (G13), in place of the dashed box;
+   - live: the line blinks three times between the bright and the dim
+     phosphor, 900 ms (G9), where it flashed in the ink at 1.05:1. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-ct-shape='1'] .kp-kpi--trend {
+        --tmr-br: var(--border-strong);
+        --tr-plate: transparent;
+        --tr-frame: 1px solid transparent;
+        --tr-label-case: none;
+        --tr-label-track: 0;
+        --tr-label-weight: 400;
+        --tr-line-w: 3;
+        --tr-line-join: miter;
+        --tr-line-cap: butt;
+        --tr-area-op: 0.12;
+        --tr-pat:
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 0 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 0 100% / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 100% 0 / 0.4rem 1px no-repeat,
+            linear-gradient(var(--tmr-br), var(--tmr-br)) 100% 100% / 0.4rem 1px no-repeat;
+        background-origin: border-box;
+    }
+
+    [data-theme='terminal'] [data-ct-shape='1'] .kp-kpi--trend .kp-kpi__spark {
+        -webkit-mask: radial-gradient(circle, #000 1.05px, transparent 1.35px) 0 0 / 3px 3px;
+        mask: radial-gradient(circle, #000 1.05px, transparent 1.35px) 0 0 / 3px 3px;
+    }
+
+    /* Loading 1 · the lone block → an htop row, the cursor its head. */
+    [data-theme='terminal'] [data-ct-loading='1'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        --tmr-w: 16;
+        inset: auto;
+        inset-inline-start: 0.5rem;
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        inline-size: calc(var(--tmr-w) * 1ch + 8px);
+        max-inline-size: calc(100% - 1rem);
+        block-size: 0.9rem;
+        background:
+            linear-gradient(var(--primary), var(--primary)) calc(4px + max(0px, round(down, var(--tmg-fill) * var(--tmr-w) * 1ch, 1ch) - 1ch)) 3px /
+                calc(var(--tmg-head) * (1ch - 2px)) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                round(down, var(--tmg-fill) * var(--tmr-w) * 1ch, 1ch) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                calc(var(--tmr-w) * 1ch) calc(100% - 6px) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
+    }
+
+    /* Arrival 2 · printed: the number, then the line, typed from the start. */
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-num: tmg-type calc(6 * var(--tmg-cell)) linear backwards;
+        --tr-arr-line: tmg-type calc(26 * var(--tmg-cell)) linear calc(6 * var(--tmg-cell)) backwards;
+    }
+
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) > .kp-kpi__value {
+        position: relative;
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) > .kp-kpi__value::after {
+        content: '';
+        position: absolute;
+        inset-block: 0.2em;
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+    }
+
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__spark {
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__chart-plot::after {
+        inset: auto;
+        inset-block-start: 0;
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        block-size: 1.1em;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) > .kp-kpi__value::after {
+            animation: var(--tr-arr-num);
+        }
+
+        [data-theme='terminal'] [data-ct-arrival='2'] .kp-kpi--trend:not([aria-busy='true']) .kp-kpi__chart-plot::after {
+            animation: var(--tr-arr-line);
+        }
+    }
+
+    /* Tone 3 · the bell → the plate and its level; the change underlined. */
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-border: 0;
+        --tr-delta-bg: transparent;
+        --tr-delta-fg: var(--success-foreground);
+        --tr-delta-deco: underline 2px var(--success-foreground);
+        --tr-tone-num-pad: 0.25em;
+        --tr-tone-num-bg: linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / calc(100% - calc(6ch * 0.55) - var(--kp-space-sm, 0.5rem)) 100%
+            no-repeat;
+        --tr-tone-num-fg: var(--tr-tf);
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend .kp-kpi__delta {
+        padding-inline: 0;
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend .kp-kpi__delta[data-kp-tone='bad'] {
+        --tr-delta-fg: var(--destructive);
+        text-decoration: underline 2px var(--destructive);
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value::before {
+        font-size: 0.55em;
+        margin-inline-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='warning'] > .kp-kpi__value::before {
+        content: '[warn]';
+        color: var(--warning-foreground);
+    }
+
+    [data-theme='terminal'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='destructive'] > .kp-kpi__value::before {
+        content: '[fail]';
+        color: var(--destructive);
+    }
+
+    /* Live 3 · the reverse flash → three blinks of the line. */
+    [data-theme='terminal'] [data-ct-live='3'] .kp-kpi--trend {
+        --tr-live-line: tmg-blink3-line var(--tmg-change) steps(1, jump-end);
+        --tr-live-area: none;
+    }
+}

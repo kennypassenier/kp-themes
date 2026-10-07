@@ -1,0 +1,87 @@
+/* research/character-columns, terminal: the decided picks on terminal's
+   grammar (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/
+   grammar.css holds the tokens and keyframes). Same method as titanium's
+   f637569f and forest's b0b137d8: only terminal's decided options change
+   (loading 3, arrival 2, tone 3, live 3; shape 3, the prompt listing, fits and
+   stays), nothing else. Linked after every other columns stylesheet, so each
+   rule here replaces the option's own at equal specificity.
+
+   - loading: the waiting figures and words are htop rows (the package draws
+     them on every skeleton line, css/terminal-register.css); the hash bar
+     written along the foot of each column is retired;
+   - arrival: a figure is typed from its start, the block cursor riding the
+     head, a cell a step, one figure after the other (one line typed through,
+     G2), where each stood whole one after the other;
+   - tone: the change is underlined with its sign (`+`, `-`), 2 px in the tone
+     (G13), in place of the brackets;
+   - live: the changed figure blinks three times between the bright and the
+     dim phosphor, 900 ms (G9), where an underscore blinked off and on. */
+@layer kp.signature {
+    /* Loading 3 · the hash bar → the rows of the skeleton lines. */
+    [data-theme='terminal'] [data-cs-loading='3'] .kp-kpis {
+        --cl-load: none;
+    }
+
+    [data-theme='terminal'] [data-cs-loading='3'] .kp-kpis .kp-skeleton {
+        background: none;
+    }
+
+    /* Arrival 2 · line by line → typed, the cursor at the head. */
+    [data-theme='terminal'] [data-cs-arrival='2'] .kp-kpis {
+        --cl-arrive-num: tmg-type calc(6 * var(--tmg-cell)) linear;
+        --cl-arrive-stagger: calc(6 * var(--tmg-cell));
+    }
+
+    [data-theme='terminal'] [data-cs-arrival='2'] .kp-kpis[data-cs-moment='arrive'] > .kp-kpi > .kp-kpi__value {
+        position: relative;
+        justify-self: start;
+        inline-size: max-content;
+        min-inline-size: 7ch;
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-cs-arrival='2'] .kp-kpis[data-cs-moment='arrive'] > .kp-kpi > .kp-kpi__value::after {
+        content: '';
+        position: absolute;
+        inset-block: 0.15em;
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cs-arrival='2'] .kp-kpis[data-cs-moment='arrive'] > .kp-kpi > .kp-kpi__value::after {
+            animation: var(--cl-arrive-num);
+            animation-delay: calc(var(--cl-i, 0) * var(--cl-arrive-stagger, 0ms));
+            animation-fill-mode: backwards;
+        }
+    }
+
+    /* Tone 3 · the bracket → the change underlined with its sign. */
+    [data-theme='terminal'] [data-cs-tone='3'] .kp-kpis {
+        --cl-delta-up: '+';
+        --cl-delta-down: '-';
+        --cl-delta-after: none;
+    }
+
+    [data-theme='terminal'] [data-cs-tone='3'] .kp-kpis .kp-kpi__delta {
+        padding-inline: 0;
+        background: none;
+        color: var(--success-foreground);
+        text-decoration: underline 2px var(--success-foreground);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='terminal'] [data-cs-tone='3'] .kp-kpis .kp-kpi__delta[data-kp-tone='bad'] {
+        background: none;
+        color: var(--destructive);
+        text-decoration-color: var(--destructive);
+    }
+
+    /* Live 3 · the underscore → the figure blinks three times. */
+    [data-theme='terminal'] [data-cs-live='3'] .kp-kpis {
+        --cl-live-num: tmg-blink3 var(--tmg-change) steps(1, jump-end);
+    }
+}

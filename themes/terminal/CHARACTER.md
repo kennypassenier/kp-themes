@@ -4,7 +4,7 @@ The reference for how terminal looks and moves. Read the grammar before adding
 or changing any terminal component; the inventory, families and outliers below
 it record where the decided picks (2026-09-08 … 2026-10-07) stand against that
 grammar, and the numbered proposals (proposal-1 …) are the plan to bring them
-in line. Nothing here is applied yet: Kenny fixes the grammar first, question
+in line. **Applied 2026-10-08** to css/terminal-register.css and research/character-*/terminal.css (see CHANGELOG, Unreleased); the sections below record the analysis it came from. Kenny fixed the grammar first, question
 by question, in `research/terminal-character` (the titanium way, Kenny
 2026-10-07 02:54: "waar jij eerst uitzoekt wat bij mekaar past, wat niet past
 en dan zo voorstellen doet"; terminal tenth in the series, after blueprint, on

@@ -1,0 +1,181 @@
+/* research/character-tiles, terminal: the decided picks on terminal's grammar
+   (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/grammar.css
+   holds the tokens and keyframes). Same method as titanium's f637569f and
+   forest's b0b137d8: only terminal's decided options change (shape 2, loading
+   2, arrival 2, tone 1, hover 3, live 2), nothing else. Linked after every
+   other tiles stylesheet, so each rule here replaces the option's own at
+   equal specificity.
+
+   - shape: a plate is a line of htop (G7): the grid of character cells and the
+     footer rule go, a square bracket stands at each end of the tile, the mark
+     is the `*` glyph in place of the polygon star (G6);
+   - loading: the waiting body and time are htop rows (the package draws them
+     on every skeleton line, css/terminal-register.css); the row of dots along
+     the foot is retired;
+   - arrival: the tile is typed from its start, the block cursor riding the
+     head of the line, a cell a step; two tiles are one line typed through, so
+     the second starts where the first ends (G2, G4);
+   - tone: the note stands on the tone's square plate in reverse and says its
+     level before it (G13);
+   - hover: the tile takes the cursor ring, its brackets turn bright, in place
+     of the 2 px outline; the prompt `>` still blinks before the title; the
+     Open link is the theme's own ghost button; focus is the dashed box;
+   - live: the changed reading blinks three times between the bright and the
+     dim phosphor, 900 ms (G9), where the tile scrolled. */
+@layer kp.signature {
+    [data-theme='terminal'] [data-ti-shape='2'] .kp-card {
+        --tmt-br: var(--border-strong);
+        border: 1px solid transparent;
+        background-origin: border-box;
+        background-repeat: no-repeat;
+        background-position:
+            0 0,
+            0 0,
+            0 100%,
+            100% 0,
+            100% 0,
+            100% 100%;
+        background-size:
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px,
+            1px 100%,
+            0.4rem 1px,
+            0.4rem 1px;
+        background-image:
+            linear-gradient(var(--tmt-br), var(--tmt-br)), linear-gradient(var(--tmt-br), var(--tmt-br)),
+            linear-gradient(var(--tmt-br), var(--tmt-br)), linear-gradient(var(--tmt-br), var(--tmt-br)),
+            linear-gradient(var(--tmt-br), var(--tmt-br)), linear-gradient(var(--tmt-br), var(--tmt-br));
+    }
+
+    [data-theme='terminal'] [data-ti-shape='2'] [data-tl-mark] {
+        inline-size: 1ch;
+        block-size: auto;
+        clip-path: none;
+        background: none;
+        color: var(--primary);
+        font-size: 1.1rem;
+        line-height: 1;
+    }
+
+    [data-theme='terminal'] [data-ti-shape='2'] [data-tl-mark]::before {
+        content: '*';
+    }
+
+    [data-theme='terminal'] [data-ti-shape='2'] .kp-card__footer {
+        border-block-end: 0;
+        padding-block-end: 0;
+    }
+
+    /* Loading 2 · the dots along the foot → the rows of the skeleton lines. */
+    [data-theme='terminal'] [data-ti-loading='2'] [data-kp-busy]::after {
+        content: none;
+    }
+
+    /* Arrival 2 · printed: typed from the start, the cursor on the head. */
+    [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash])::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 0.9rem;
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        block-size: 1.15em;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]),
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash])::after {
+            animation: tmg-type calc(16 * var(--tmg-cell)) linear backwards;
+        }
+
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]),
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash])::after {
+            animation-delay: calc(16 * var(--tmg-cell));
+        }
+    }
+
+    /* Tone 1 · reverse video, and the level before it. */
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__body {
+        --tmt-level: 7ch;
+        padding: 0.15rem 0.35rem;
+        background: linear-gradient(var(--tmt-plate), var(--tmt-plate)) 100% 0 / calc(100% - var(--tmt-level)) 100% no-repeat;
+        color: var(--tmt-ink);
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone] .kp-card__body::before {
+        color: var(--tmt-level-ink);
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__body {
+        --tmt-plate: var(--success);
+        --tmt-ink: var(--success-foreground);
+        --tmt-level-ink: var(--success-foreground);
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] .kp-card__body {
+        --tmt-plate: var(--warning);
+        --tmt-ink: var(--warning-foreground);
+        --tmt-level-ink: var(--warning-foreground);
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__body {
+        --tmt-plate: var(--destructive);
+        --tmt-ink: var(--destructive-foreground);
+        --tmt-level-ink: var(--destructive);
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] .kp-card__body::before {
+        content: '[ok]   ';
+        white-space: pre;
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] .kp-card__body::before {
+        content: '[warn] ';
+        white-space: pre;
+    }
+
+    [data-theme='terminal'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] .kp-card__body::before {
+        content: '[fail] ';
+        white-space: pre;
+    }
+
+    /* Hover 3 · the cursor ring on the tile in place of the 2 px outline. */
+    [data-theme='terminal'] [data-ti-hover='3'] .kp-card:hover,
+    [data-theme='terminal'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
+    [data-theme='terminal'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
+        --tmt-br: var(--ring);
+        outline: none;
+        box-shadow: var(--tmg-ring);
+    }
+
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:hover,
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        text-decoration: none;
+    }
+
+    [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Live 2 · scrolled → the reading blinks. */
+        [data-theme='terminal'] [data-ti-live='2'] [data-tl-flash] {
+            animation: none;
+        }
+
+        [data-theme='terminal'] [data-ti-live='2'] [data-tl-flash] :is(.kp-card__body, .kp-timestamp) {
+            animation: tmg-blink3 var(--tmg-change) steps(1, jump-end);
+        }
+    }
+}

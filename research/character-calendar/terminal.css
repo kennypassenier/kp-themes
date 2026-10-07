@@ -1,0 +1,123 @@
+/* research/character-calendar, terminal: the decided picks on terminal's
+   grammar (themes/terminal/CHARACTER.md G1-G18; research/terminal-character/
+   grammar.css holds the tokens and keyframes). Same method as titanium's
+   f637569f and forest's b0b137d8: only terminal's decided options change
+   (loading 2, arrival 3, select 2; shape 3, the hex dump, and tone 1, cal(1)'s
+   tones with today in reverse video, fit and stay), nothing else. Linked after
+   every other calendar stylesheet, so each rule here replaces the option's
+   own at equal specificity.
+
+   - loading: a waiting day carries an htop row of three cells, the cursor its
+     head (G10), in place of the spinning bar; one animation on the grid
+     drives every row in it; the busy card is a curses window, one box line;
+   - arrival: a day is typed from its start, the block cursor riding the head,
+     a cell a step, a week one line typed through, day after day (G2, G4);
+   - select: a day under the pointer takes the cursor ring, in place of the
+     underlined number; the pick keeps its count in reverse video (emphasis)
+     and gains the prompt before its number; focus is the dashed box. */
+@layer kp.signature {
+    /* Loading 2 · the spinning bar → an htop row in the day. */
+    [data-theme='terminal'] [data-cl-loading='2'] .kp-calendar {
+        --cl-busy-frame: 1px solid var(--border-strong);
+    }
+
+    [data-theme='terminal'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
+        --tmc-w: 3;
+        content: '';
+        inset: auto;
+        inset-inline-start: 0.35rem;
+        inset-block-end: 0.3rem;
+        inline-size: calc(var(--tmc-w) * 1ch + 8px);
+        max-inline-size: calc(100% - 0.7rem);
+        block-size: 0.8rem;
+        z-index: 1;
+        rotate: none;
+        background:
+            linear-gradient(var(--primary), var(--primary)) calc(4px + max(0px, round(down, var(--tmg-fill-i) * var(--tmc-w) * 1ch, 1ch) - 1ch)) 3px /
+                calc(var(--tmg-head-i) * (1ch - 2px)) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                round(down, var(--tmg-fill-i) * var(--tmc-w) * 1ch, 1ch) calc(100% - 6px) no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 calc(1ch - 2px), transparent calc(1ch - 2px) 1ch) 4px 3px /
+                calc(var(--tmc-w) * 1ch) calc(100% - 6px) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: none;
+        }
+
+        [data-theme='terminal'] [data-cl-loading='2'] .kp-calendar__grid[aria-busy='true'] {
+            animation:
+                tmg-fill-i var(--tmg-slow) linear infinite alternate,
+                tmg-head-i var(--tmg-slow) steps(1, jump-end) infinite;
+        }
+    }
+
+    /* Arrival 3 · redraw → each day typed from its start. */
+    [data-theme='terminal'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+        clip-path: inset(0 calc(100% - min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch)) 0 0);
+    }
+
+    [data-theme='terminal'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day::after {
+        content: '';
+        position: absolute;
+        z-index: 3;
+        inset: auto;
+        inset-block-start: 0.3rem;
+        inset-inline-start: calc(min(100%, round(down, var(--tmg-k) * 100%, 1ch) + 1ch) - 1ch);
+        inline-size: 1ch;
+        block-size: 1.1em;
+        border-radius: 0;
+        background: var(--tmg-cursor);
+        box-shadow: var(--kp-bloom);
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day,
+        [data-theme='terminal']
+            [data-cl-arrival='3']
+            .kp-calendar[data-cl-arrive]
+            .kp-calendar__grid:not([aria-busy='true'])
+            .kp-calendar__day::after {
+            animation: tmg-type calc(3 * var(--tmg-cell)) linear calc(var(--cl-col, 0) * 3 * var(--tmg-cell)) backwards;
+        }
+    }
+
+    /* Select 2 · the ring under the pointer, the prompt on the pick. */
+    [data-theme='terminal'] [data-cl-select='2'] .kp-calendar__day:hover {
+        z-index: 1;
+        box-shadow: var(--tmg-ring);
+    }
+
+    [data-theme='terminal'] [data-cl-select='2'] .kp-calendar__day:hover .kp-calendar__num {
+        text-decoration: none;
+    }
+
+    [data-theme='terminal'] [data-cl-select='2'] .kp-calendar {
+        --cl-pick: 0 solid transparent;
+    }
+
+    [data-theme='terminal'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__num::before {
+        content: '>';
+        position: static;
+        z-index: auto;
+        color: var(--primary);
+    }
+
+    [data-theme='terminal'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] [data-cl-select='2'] .kp-calendar__day:focus-visible,
+    [data-theme='terminal'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+}
