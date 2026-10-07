@@ -220,6 +220,38 @@
     font-size: 0.8125rem;
 }
 
+/* In the dialog every attempt is shown at 1:1 (Kenny judges only there): the kit's fitShown() sets an inline
+   `zoom` (down to 0.4) on the shown column, which would shrink a 2 px tube to nothing, so our own rule beats it
+   (!important wins over an inline style). The stage is only about 540 px tall at 1600x1000, so the page is
+   cropped by order, not by size: the header with its buttons and the two cards (progress with the busy table,
+   form with buttons and fields: the parts that carry the horizon) come first, whole; the key figures and the
+   warning follow below and are reached by scrolling the stage. Nothing is magnified or hidden. */
+.rv-dialog__stage .sa-col {
+    zoom: 1 !important;
+}
+
+.rv-dialog__stage .sa-real .kp-page {
+    display: flex;
+    flex-direction: column;
+    padding-block-end: 4.5rem;
+}
+
+.rv-dialog__stage .sa-real .kp-page > .kp-page-header {
+    margin-block-end: 0;
+}
+
+.rv-dialog__stage .sa-real .kp-page > .kp-kpis {
+    order: 2;
+}
+
+.rv-dialog__stage .sa-real .kp-page > .kp-alert {
+    order: 3;
+}
+
+.rv-dialog__stage .sa-measured {
+    display: none;
+}
+
 /* In the dialog the page is shown at the stage's width and the section is the card already. */
 .rv-dialog__stage .sa-sec {
     padding: 0;
@@ -277,6 +309,18 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--kp-space-md, 1rem);
     align-items: stretch;
+}
+
+/* Four buttons at their real width need about 44rem; below that the header stacks (the package's own
+   stacked rule, applied at the window's width because its own container query fires later). */
+@container (max-width: 56rem) {
+    .sa-real .kp-page-header__inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sa-real .kp-page-header__actions {
+        justify-content: flex-start;
+    }
 }
 
 @container (max-width: 52rem) {

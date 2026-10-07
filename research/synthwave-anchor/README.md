@@ -47,8 +47,10 @@ button); tile 298 px wide, lit 277 px (93 %); pressed (attempt 4) the tube is 28
 
 **What could not be made true.**
 
-- The dialog fits a tall demo with the kit's `zoom` (down to 0.4), so the page is shown uniformly smaller there (proportions are the
-  same); the page itself, and every number above, is at 1:1.
+- In the dialog every attempt is shown at 1:1: `demo.css` forces `zoom: 1 !important` on `.rv-dialog__stage .sa-col` (beating the kit's
+  inline `fitShown()` zoom) and puts the header and the two cards first (CSS `order`; key figures and alert follow below), so at
+  1600x1000 the header and both cards are whole in the stage and the rest is a scroll of the stage away; at 1366x768 the stage is
+  about 366 px tall, so the page scrolls there. A button measures 36 px in the dialog.
 - The tile's meter and the foot tube compete in attempts 1 and 3 (two bars at one foot); the meter was kept on two tiles so both can be
   seen.
 - Attempt 4 draws nothing at rest by design; on the page only the busy table shows it until a hand arrives.
