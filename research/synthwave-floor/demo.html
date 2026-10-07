@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="synthwave" data-cat-theme="synthwave" data-cat-theme-fixed data-review="synthwave-floor" data-review-themes="synthwave">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — how deep synthwave's page floor is</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" data-kp-register="synthwave" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="sf-page">
+            <header class="sf-intro" id="sf-intro">
+                <h1>How deep is synthwave's page floor?</h1>
+                <p>
+                    Kenny's anchor (2026-10-07 21:21) is the page horizon: one neon tube for the page on the header's foot and
+                    <b>the floor, which is the page below it</b>. In the anchor demo that floor ran deep behind everything; the package's header is a
+                    layout container, so the port drew only a 3.5 rem band inside it, because a floor any deeper, painted by the header, would lie
+                    over the plates that follow. This page asks one thing: <b>how deep is the floor on a real page, and what does each depth cost?</b>
+                </p>
+                <p>
+                    Four options, each applied to the same real page of the package's own components at their real size: the page header with its
+                    buttons and a More menu, a toolbar, key figures, and two cards, once with a toolbar under the header and once with the plates
+                    right under it. Nothing is magnified. Each option's page waits and rests by itself in turn (the tube is a track the ramp flows
+                    through and the floor drives toward you while it waits), and you can hover and press anything yourself, More ▾ included: the piece
+                    of tube under the hand is exactly as wide as the part.
+                </p>
+                <p class="sf-motion" data-sf-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every page shows its finished pose. Turn it off in the
+                    system settings to see the page wait.
+                </p>
+            </header>
+
+            <section
+                class="sf-sec"
+                data-review-item="synthwave-floor"
+                data-review-mode="aspects"
+                data-review-rows="data-sf-aspect"
+                data-review-components="synthwave-floor"
+                data-review-title="How deep the page floor is"
+                data-sf-state="auto"
+                aria-labelledby="h-sf"
+            >
+                <div class="sf-sec__head">
+                    <h2 id="h-sf">How deep is the floor under the page tube?</h2>
+                    <p>
+                        Look at what is under the tube: how far the grid runs, whether it stays behind the toolbar, the key figures and the cards or
+                        pushes them down, and whether any plate edge is touched. The numbers under each page are measured from the real components.
+                    </p>
+                    <ol class="sf-toc" data-sf-toc></ol>
+                </div>
+                <div class="sf-controls" data-review-controls>
+                    <div class="sf-actions" role="group" aria-label="State of the page">
+                        <b>State of the page:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-mode="auto" aria-pressed="true">Rest, then wait</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-mode="rest" aria-pressed="false">At rest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-mode="busy" aria-pressed="false">Waiting</button>
+                    </div>
+                    <div class="sf-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-sf-replay data-review-plays="floor">Replay</button>
+                    </div>
+                    <div class="sf-actions" role="group" aria-label="Animation speed">
+                        <b>Slow every animation down:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-speed="1" aria-pressed="true">x1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-speed="0.5" aria-pressed="false">x2</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sf-speed="0.25" aria-pressed="false">x4</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="sf-aspects" data-sf-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-08-floor", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

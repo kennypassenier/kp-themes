@@ -950,12 +950,9 @@
         box-shadow: inset 0 0 0 2px var(--card);
     }
 
-    /* The arcade marquee: a pink frame with glow, a pink-drop mark, the display face throughout. */
-    [data-theme='synthwave'] [data-ti-shape='3'] .kp-card {
-        border: 2px solid var(--primary);
-        border-radius: 0.4rem;
-        box-shadow: 0 0 12px color-mix(in oklch, var(--primary) 45%, transparent);
-    }
+    /* The arcade marquee: the display face throughout and a pink-drop mark. Its
+       pink frame, rim glow and 0.4 rem corner are retired: the plate is the
+       register's (research/character-tiles/synthwave.css). */
     [data-theme='synthwave'] [data-ti-shape='3'] .kp-card__title,
     [data-theme='synthwave'] [data-ti-shape='3'] .kp-card__body {
         font-family: var(--theme-font-display, monospace);

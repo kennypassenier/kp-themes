@@ -76,6 +76,8 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny's synthwave floor depth (2026-10-08): the package draws the floor under the page tube as a 3.5 rem band inside the header; the demo drew 8.5 rem. Four options on a real page, one to pick.
+            { href: 'research/synthwave-floor/demo.html', label: "Synthwave's floor depth" },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.

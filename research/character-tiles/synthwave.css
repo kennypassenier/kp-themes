@@ -1,5 +1,12 @@
-/* research/character-tiles, synthwave: hover 3 and tone r2-sw-tone-3 on the
-   decided grammar.
+/* research/character-tiles, synthwave on the decided grammar
+   (themes/synthwave/CHARACTER.md §0, 2026-10-07).
+   shape 3 (the arcade marquee) as picked, drawn as the package draws a tile
+   (`.kp-card`): a square plate, chrome over the floor (the 3 px stripe, the
+   lit line under it, the shaded foot, the grid floor), the corners falling
+   (pink down the left side, cyan down the right). The old 2 px pink frame
+   with its 12 px rim glow and the 0.4 rem corner are retired: the demo's own
+   frame rules hand the surface back to the register (`revert-layer`).
+   hover 3 and tone r2-sw-tone-3 on the decided grammar.
    hover (the tube turns up): the plate's top edge burns near-white with the
    bloom above it, the link's words light as a tube; no drop after the word,
    nothing moves; focus is the two tubes, top and foot.
@@ -8,6 +15,11 @@
    failure) in the tone's ink, the title glows in the tone, and the plate's
    stripe turns to the tone's ink. */
 @layer kp.signature {
+    [data-theme='synthwave'] [data-ti-shape='3'] .kp-card {
+        border: revert-layer;
+        border-radius: revert-layer;
+    }
+
     [data-theme='synthwave'] [data-ti-hover='3'] .kp-card:hover,
     [data-theme='synthwave'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
     [data-theme='synthwave'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {

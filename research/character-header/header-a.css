@@ -544,21 +544,11 @@
         --ph-btn-primary-ink: var(--primary-foreground);
     }
 
-    [data-theme='synthwave'] [data-ph-shape='3'] .kp-page-header {
-        --ph-plate: var(--card);
-        --ph-ink: var(--card-foreground);
-        --ph-radius: calc(var(--radius, 0.5rem) * 1.4);
-        --ph-frame: 3px solid var(--primary);
-        --ph-shadow: 0 0 24px -4px color-mix(in oklch, var(--primary) 55%, transparent);
-    }
-    [data-theme='synthwave'] [data-ph-shape='3'] .kp-page-header__title {
-        --ph-title-font: var(--theme-font-display, sans-serif);
-        text-shadow: 0 2px 0 color-mix(in oklch, var(--primary) 65%, transparent);
-    }
-    [data-theme='synthwave'] [data-ph-shape='3'] .kp-page-header__actions > .kp-button {
-        --ph-btn-radius: 999px;
-        --ph-btn-frame: 2px solid var(--accent);
-    }
+    /* shape 3 (the arcade marquee) as picked: its 3 px pink frame with the 24 px
+       glow, the 2.8 px corner, the pink drop under the title and the pills
+       (999 px) in 2 px cyan frames are retired. The header is the page horizon
+       and its actions are synthwave's own buttons (research/character-header/
+       synthwave.css). */
 
     /* --- The overflow menu's open and its mirrored close ---------------- */
 
@@ -626,18 +616,10 @@
         background-color: color-mix(in oklch, var(--secondary) 80%, black);
     }
 
-    [data-theme='synthwave'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
-        background-image: linear-gradient(90deg, transparent, color-mix(in oklch, var(--primary) 35%, transparent), transparent);
-        background-size: 220% 100%;
-    }
-    [data-theme='synthwave'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-    }
-    [data-theme='synthwave'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
-        transform: translateX(1px);
-        box-shadow: inset 0 0 0 1px var(--border-strong);
-    }
+    /* interactive 2 (the tracking jump) as picked: the pink band across the button,
+       the 2 px outline 2 px out and the 1 px sideways press are retired: a
+       header button hovers, focuses and presses like synthwave's own button
+       (research/character-header/synthwave.css). */
 
     [data-theme='synthwave'] [data-ph-interactive='3'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
         box-shadow:

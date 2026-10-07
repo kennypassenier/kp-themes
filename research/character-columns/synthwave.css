@@ -1,0 +1,35 @@
+/* research/character-columns, synthwave on the decided grammar
+   (themes/synthwave/CHARACTER.md §0, 2026-10-07).
+   shape 1 (the cassette counter) and tone 3 (the neon pill) as picked. A tile
+   of the strip is a plate like any other: square, chrome over the floor (the
+   3 px stripe, the lit line under it, the shaded foot, the grid floor), the
+   corners falling (pink down the left side, cyan down the right); the demo's
+   1 px frame, its 6 px corner and its full-tile overlay are handed back to the
+   register (`revert-layer`; the loading roll keeps its overlay). The counter
+   window and the label strip inside take the 2 px control corner, and the
+   change is a 2 px chip, not a pill (999 px), its 8 px cyan glow retired (cyan
+   reads, pink signals). */
+@layer kp.signature {
+    [data-theme='synthwave'] [data-cs-shape='1'] .kp-kpis {
+        --cl-radius: 0;
+        --cl-num-radius: var(--radius);
+        --cl-label-radius: var(--radius);
+    }
+
+    [data-theme='synthwave'] [data-cs-shape='1'] .kp-kpis > .kp-kpi {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        box-shadow: revert-layer;
+        padding-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-sw-floor) + 0.55rem);
+    }
+
+    [data-theme='synthwave'] [data-cs-shape='1'] .kp-kpis:not([aria-busy='true']) > .kp-kpi::after {
+        all: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-cs-tone='3'] .kp-kpis {
+        --cl-delta-radius: var(--radius);
+        --cl-delta-shadow: none;
+    }
+}

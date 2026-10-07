@@ -1,0 +1,311 @@
+/* research/synthwave-floor: the page only. A centred column; the intro, then
+   one section with one question and four pages, one per dialog page. Every
+   option's own drawing is in options.css. */
+.sf-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.sf-intro,
+.sf-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sf-intro :is(h1, p),
+.sf-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.sf-intro p,
+.sf-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.sf-motion {
+    color: var(--muted-foreground);
+}
+
+.sf-sec {
+    /* A full-width component: the dialog shows the option at the stage's width. */
+    --rv-flip-max: 100%;
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.sf-sec__head p,
+.sf-verdict,
+.sf-measured,
+.sf-caption {
+    color: var(--muted-foreground);
+}
+
+.sf-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.sf-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-sf-mode][aria-pressed='true'],
+[data-sf-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.sf-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.sf-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.sf-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.sf-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.sf-aspect__q {
+    font-weight: 600;
+}
+
+.sf-aspect__why {
+    color: var(--muted-foreground);
+}
+
+/* The options: one real page under the other, each at the width of the column
+   (a real page is wide). In the review dialog one option is shown alone. */
+.sf-four {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: start;
+}
+
+.sf-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.sf-col[hidden] {
+    display: none;
+}
+
+[data-rv-flip-trio] .sf-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+.sf-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.sf-label-row__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.sf-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.4rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sf-rule,
+.sf-see,
+.sf-verdict {
+    margin: 0;
+    max-inline-size: 110ch;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.sf-rule {
+    font-weight: 600;
+}
+
+.sf-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.sf-measured {
+    margin: 0;
+    max-inline-size: 110ch;
+    font-family: var(--theme-font-mono);
+    font-size: 0.8125rem;
+}
+
+.sf-caption {
+    margin: 0;
+    padding-inline: var(--kp-space-md, 1rem);
+    font-family: var(--theme-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* The dialog's bar already says the option's name and what it shows. */
+[data-rv-flip-trio] :is(.sf-label-row, .sf-see, .sf-verdict, .sf-rule) {
+    display: none;
+}
+
+/* In the dialog every option is shown at 1:1 (Kenny judges only there): the kit's fitShown() sets an inline
+   `zoom` (down to 0.75) on the shown column, which would shrink a 3 px tube, so our own rule beats it
+   (!important wins over an inline style). The stage is short, so the pages are not shrunk: the stage scrolls. */
+.rv-dialog__stage .sf-col {
+    zoom: 1 !important;
+}
+
+.rv-dialog__stage .sf-measured {
+    display: none;
+}
+
+/* In the dialog the page is shown at the stage's width and the section is the card already. */
+.rv-dialog__stage .sf-sec {
+    padding: 0;
+    border: 0;
+    background: none;
+}
+
+/* The scene: the package's own components in a window. Unlayered, because the
+   package's layout layer comes after the signature layer and would beat it. */
+.sf-scene {
+    position: relative;
+    container-type: inline-size;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+
+.sf-real {
+    --kp-page-max: 100%;
+    position: relative;
+    isolation: isolate;
+}
+
+.sf-real + .sf-caption {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.sf-real .kp-page {
+    padding-block: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+}
+
+.sf-real .kp-page > * + * {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.sf-real .kp-page > .kp-page-header {
+    margin-block-end: var(--kp-space-lg, 1.5rem);
+}
+
+.sf-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sf-toolbar .kp-field__input {
+    inline-size: min(18rem, 100%);
+}
+
+.sf-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+/* Four buttons at their real width need about 44rem; below that the header stacks (the package's own
+   stacked rule, applied at the window's width because its own container query fires later). */
+@container (max-width: 56rem) {
+    .sf-real .kp-page-header__inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sf-real .kp-page-header__actions {
+        justify-content: flex-start;
+    }
+}
+
+@container (max-width: 40rem) {
+    .sf-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.sf-stack {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.sf-stack > p {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.sf-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sf-head .kp-card__title {
+    margin: 0;
+}
+
+/* On a phone the dialog's own bar already has Replay, Pause and Speed, and the
+   mirrored state and speed rows would leave the stage no height: only their
+   summary stays, the page is what is judged. */
+@media (max-width: 40rem) {
+    .rv-dialog .sf-actions {
+        display: none;
+    }
+}

@@ -1,0 +1,66 @@
+/* research/character-header, synthwave on the decided grammar
+   (themes/synthwave/CHARACTER.md §0 and §4b, 2026-10-07).
+   shape 3 (the arcade marquee) and interactive 2 as picked, drawn as the
+   package draws a page header. The header is the page horizon: no plate, no
+   frame and no glow; the tube on its foot, the floor under it and the piece
+   of tube a hand lights come from the register (`.kp-page-header::before`,
+   `::after`, `.kp-page-header__inner::after`). Its title is the register's
+   (the display face in capitals) and its actions are synthwave's own buttons
+   (G17): the 999 px pills, the cyan frames, the pink band, the outside
+   outline and the sideways press are retired; the demo's own plate and button
+   rules hand the surface back to the register (`revert-layer`). */
+@layer kp.signature {
+    [data-theme='synthwave'] [data-ph] .kp-page-header {
+        padding: revert-layer;
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        box-shadow: revert-layer;
+        color: revert-layer;
+        font-family: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-ph] .kp-page-header__title {
+        font-family: revert-layer;
+        font-weight: revert-layer;
+        letter-spacing: revert-layer;
+        text-transform: revert-layer;
+        text-shadow: none;
+        color: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-ph] .kp-page-header__description {
+        color: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-ph] .kp-page-header__actions > .kp-button {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+        transform: none;
+    }
+
+    [data-theme='synthwave'] [data-ph] .kp-page-header__actions > .kp-button--primary {
+        border-color: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-ph] .kp-page-header__actions > .kp-button:is(:hover, :focus-visible, :active) {
+        background: revert-layer;
+        box-shadow: revert-layer;
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-ph] [data-ph-panel] {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        box-shadow: revert-layer;
+    }
+}

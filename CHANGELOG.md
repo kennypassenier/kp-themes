@@ -8,8 +8,8 @@
   (`::after`), the floor under it (`::before`, a 3.5 rem band inside the header: a
   header is a layout container, so a deeper floor would paint over the plates below),
   and, under a hand on a header action, a brighter piece of the tube exactly as wide as
-  the button (anchor positioning; a trigger with an inline `anchor-name` keeps only its
-  own edge). Tokens (`css/themes.css`, from `themes/synthwave/tokens.json`): `--fx-duration`
+  the action (anchor positioning on the action's own `::after`, so a popover's trigger
+  with an inline `anchor-name`, such as More ▾, lights its piece too). Tokens (`css/themes.css`, from `themes/synthwave/tokens.json`): `--fx-duration`
   225 ms (one beat), `--fx-ease` the sunrise curve `cubic-bezier(0.65, 0, 0.35, 1)`,
   `--fx-lift` 0 (nothing lifts or drops); the root says `--kp-close-max` and
   `--kp-size-max` 450 ms. Durations are beats of 225 ms: an opening 2, a live change 3,
@@ -22,8 +22,11 @@
   data faces speak in VT323 (`--kp-mono` is the OSD face, sized by x-height).
   Hover turns the tube up (no lift); press charges the part (its top edge burns, the
   ground takes the pressed token, the header's piece charges); focus is two tubes, top
-  and foot, plus a hairline each side (button, icon button, field, key-figure link,
-  menu entry). Tone: the VCR's symbols (a pause for a warning, a stop for a failure) in
+  and foot, plus a hairline each side, on every part that takes the keyboard
+  (`--kp-sw-rails-in` inside buttons, fields, selects, textareas, tabs, menu entries, nav
+  links, table cells and rows, tree and accordion triggers, calendar days, pagination,
+  tags, key-figure links; `--kp-sw-rails-out` outside links in text, checkboxes, radios
+  and switches; a catch-all for any other button or role; a forced-colours outline). Tone: the VCR's symbols (a pause for a warning, a stop for a failure) in
   the part's own ink before a key figure's figure or an alert's label, the stripe and
   sides turning to the tone's ink. Live: `--kp-update: laser`, a 2 px laser drawn under
   the changed value from its centre out, 675 ms. Opening: the beam climbs to the
@@ -84,6 +87,15 @@
   keyframes are removed. Not ported yet: the TARGET and CAUTION tags, the meter's
   tone brackets, hover and press on a plain card or calendar day, and a menu
   (popover) open, which needs a `js/motion.js` hook. css/cyberpunk-register.css.
+  (arrival), key figure (shape, tone, hover, focus, live), dashboard tiles (shape, hover,
+  tone), the page header (shape, actions) and the strip (shape, change) are redrawn in
+  `research/character-*/synthwave.css`: square plates on the register's chrome over the
+  floor, the corners falling; the old 2 px pink rim with its glow, the 0.4 rem, 6 px and
+  4 px corners, the header's frame, its 999 px cyan pills and the strip's cyan-glow pill
+  are retired. New review demo `research/synthwave-floor`: how deep the page floor is
+  (a 3.5 rem band inside the header as the package has it, the floor behind the plates
+  at 8.5 rem, a header as deep as the floor, deep only where there is room); the
+  package keeps the band until Kenny picks.
 
 - **Changed: solstice's pointing is the sun climbing its arc, its press the sun swelling inside the part** [2026-10-07, Kenny: both picks of research/solstice-character, replacing the rake of scope-12 and the restated `-active` faces of fix-12]. One grammar for every pressable part (buttons of every variant including primary, mirror and icon, menu items, calendar days, key figures that are links or toggles, chart legend keys): a real `:hover` raises a sun along its arc under the part with a dome of warm light and a lit foot edge (`::before` and `::after`), a real `:active` swells a half-sun from the middle of the foot, lights the foot edge and takes the ground half-way to its held face, the words lifting to cream. Two registered numbers (`--kp-sig-solstice-point`, `--kp-sig-solstice-press`) run 240 ms on `cubic-bezier(.37, 0, .63, 1)`, in and out identical (measured in Firefox, real mouse: t50 120 ms, t90 191 ms, both ways, all parts). The register paints no hover face any more; the alarm keeps its own paint. Reduced motion: the finished pose at once.
 

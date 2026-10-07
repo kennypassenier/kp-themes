@@ -20111,6 +20111,21 @@
         --kp-sw-floor-page: 3.5rem;
         --kp-sw-side: 3px;
         --kp-sw-rail: 3px;
+        /* Focus is two tubes, top and foot, plus a hairline each side [G14,
+           DI2]: a near-white tube with a dark channel beside it above and
+           below (the light and the dark, never colour alone), the sides a
+           hairline of the ring's colour. `-in` lives inside the part (a
+           framed control, a row, a cell, which a scroller or a neighbour
+           could cut); `-out` stands outside it (a link, a plate, a mark small
+           enough that the rails would cover it). */
+        --kp-sw-rails-in:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core), inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core), inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            inset 1px 0 0 0 var(--focus-ring), inset -1px 0 0 0 var(--focus-ring);
+        --kp-sw-rails-out:
+            0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core), 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            0 var(--kp-sw-rail) 0 0 var(--kp-core), 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast), -1px 0 0 0 var(--focus-ring),
+            1px 0 0 0 var(--focus-ring);
         --kp-stripe-from: var(--primary);
         --kp-stripe-to: var(--accent);
         --kp-sw-tube: 0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.6), 0 0 14px hsl(from var(--primary) h s l / 0.3);
@@ -20516,12 +20531,12 @@
     }
 
     /* The keyboard keeps its ring [fix-38, DI2]: the glow above replaced
-       the inner half on a focused link, and the outer half is the page's
-       own ground, so a Tab showed only the stripe under the word. The ring
-       is restated beside the glow. */
+       the ring on a focused link, so the two tubes are restated beside the
+       glow [G14]. */
     [data-theme='synthwave'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        outline: none;
         box-shadow:
-            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-sw-rails-in),
             inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
     }
 
@@ -20669,12 +20684,7 @@
     [data-theme='synthwave'] .kp-button:focus-visible {
         outline: none;
         box-shadow:
-            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
-            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
-            inset 1px 0 0 0 var(--focus-ring),
-            inset -1px 0 0 0 var(--focus-ring),
+            var(--kp-sw-rails-in),
             0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
     }
 
@@ -20767,12 +20777,7 @@
     [data-theme='synthwave'] .kp-icon-button:focus-visible {
         outline: none;
         box-shadow:
-            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
-            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
-            inset 1px 0 0 0 var(--focus-ring),
-            inset -1px 0 0 0 var(--focus-ring),
+            var(--kp-sw-rails-in),
             0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
     }
 
@@ -20805,10 +20810,7 @@
         outline: none;
         border-color: var(--focus-ring);
         box-shadow:
-            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
-            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            var(--kp-sw-rails-in),
             0 0 14px hsl(from var(--primary) h s l / 0.35);
     }
 
@@ -20879,9 +20881,8 @@
        (a band under the tube, inside the header: a header is a layout
        container, so a floor any deeper would paint over the plates below),
        the piece on the inner grid's `::after`, positioned by the hovered
-       action through anchor positioning. A part without an anchor name of its
-       own (a button that is not a popover's trigger) lights its piece; the
-       others keep their own top edge's light. ──────────────────────────── */
+       action through anchor positioning. Every action lights its piece, the
+       popover's trigger included. ───────────────────────────────────────── */
 
     [data-theme='synthwave'] .kp-page-header {
         position: relative;
@@ -20986,8 +20987,23 @@
         pointer-events: none;
     }
 
+    /* The piece is anchored to a pseudo-element of the action, not to the
+       action: a popover's trigger names itself in an inline `anchor-name` (its
+       popover is positioned by it), and an inline name beats any sheet's, so
+       naming the action would either miss the trigger or steal its popover.
+       The action's `::after` is its own box, with no inline style, and is
+       named only while a hand is on it. A button's `::after` is the sun cut,
+       positioned 4 px outside its padding box (2 px past the frame, the frame
+       being 2 px), so the piece takes those 2 px back; an icon button's is a transparent box on its border box. */
     @supports (anchor-name: --a) {
-        [data-theme='synthwave'] .kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active) {
+        [data-theme='synthwave'] .kp-page-header__actions > .kp-icon-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        [data-theme='synthwave'] .kp-page-header__actions > :is(.kp-button, .kp-icon-button):is(:hover, :focus-visible, :active)::after {
             anchor-name: --kp-sw-hand;
         }
 
@@ -20997,6 +21013,13 @@
             display: block;
             left: anchor(--kp-sw-hand left);
             right: anchor(--kp-sw-hand right);
+        }
+
+        [data-theme='synthwave']
+            .kp-page-header:has(.kp-page-header__actions > .kp-button:is(:hover, :focus-visible, :active))
+            .kp-page-header__inner::after {
+            left: calc(anchor(--kp-sw-hand left) + 2px);
+            right: calc(anchor(--kp-sw-hand right) + 2px);
         }
 
         /* A press charges the piece: its bloom doubles and spreads and it
@@ -22307,10 +22330,7 @@
     [data-theme='synthwave'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
         outline: none;
         box-shadow:
-            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
-            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
-            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            var(--kp-sw-rails-in),
             0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
     }
 
@@ -22321,11 +22341,147 @@
 
     [data-theme='synthwave'] .kp-menu__item:focus-visible {
         outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    /* ── Focus is two tubes on every part that takes it [G14, focus = rails;
+       DI2; Kenny, 2026-10-07 23:00] ────────────────────────────────────────
+       One rule for the rest of the package's focusable parts, so no part is
+       left on the global ring (a contrast outline and an inner ring, which is
+       the other themes'). `:focus-visible` only: a click leaves nothing
+       behind. A part that sits inside a frame, a cell, a row or a scroller
+       takes the rails inside it; a link, a mark or a plate takes them outside.
+       Forced colours repaint an outline (below), since a box-shadow is not
+       drawn there. ──────────────────────────────────────────────────────── */
+    [data-theme='synthwave']
+        :is(
+            .kp-tab,
+            .kp-pagination a,
+            .kp-pagination button,
+            .kp-breadcrumb a,
+            .kp-accordion__summary,
+            .kp-tree [role='treeitem'],
+            .kp-table :is(th, td, button, a),
+            .kp-combobox__input,
+            .kp-combobox__list [role='option'],
+            .kp-combobox button,
+            .kp-calendar__day,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart-zoom__reset,
+            .kp-chart__release,
+            .kp-chart__show-all,
+            .kp-chart__plot,
+            .kp-kpi__chart-plot,
+            .kp-kpi__link,
+            .kp-wizard [data-kp-step],
+            .kp-grid__tile,
+            .kp-sidenav__link,
+            .kp-nav__link,
+            .kp-nav__menu a,
+            .kp-nav__search-trigger,
+            .kp-nav__toggle,
+            .kp-tag__remove,
+            .kp-colorpicker__swatch,
+            .kp-split__separator,
+            .kp-form__summary,
+            .kp-theme-option,
+            .kp-palette__input,
+            .kp-palette [role='option'],
+            .kp-theme-menu__list :is(button, [role='option']),
+            .kp-datepicker button,
+            .kp-table-wrap,
+            .kp-sidenav__category-toggle,
+            .kp-nav__disclosure,
+            input[type='range'],
+            .kp-field__input,
+            textarea,
+            select,
+            summary
+        ):focus-visible {
+        outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    /* The option a list marks as the one the keyboard is on (`aria-activedescendant`
+       keeps the focus in the input) takes the same two tubes, while the input
+       has the keyboard. */
+    [data-theme='synthwave']
+        :is(
+            .kp-combobox:has(.kp-combobox__input:focus-visible) .kp-combobox__option.is-active,
+            .kp-palette:has(.kp-palette__input:focus-visible) .kp-palette__option.is-active
+        ) {
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    /* A row that takes the focus rails across its cells, its two ends closing the
+       sides. */
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :is(th, td) {
         box-shadow:
             inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
             inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
             inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
             inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :first-child {
+        box-shadow:
+            var(--kp-sw-rails-in),
+            inset 1px 0 0 0 var(--focus-ring);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :last-child {
+        box-shadow:
+            var(--kp-sw-rails-in),
+            inset -1px 0 0 0 var(--focus-ring);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible {
+        outline: none;
+    }
+
+    /* A link in running text and the small marks stand on their own: the rails
+       sit outside them, close, and their own glow stays. */
+    [data-theme='synthwave']
+        :is(
+            a:not(
+                .kp-button,
+                .kp-kpi,
+                .kp-nav__link,
+                .kp-nav__menu a,
+                .kp-sidenav__link,
+                .kp-breadcrumb a,
+                .kp-pagination a,
+                .kp-table a,
+                .kp-menu__item
+            ),
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-radio
+        ):focus-visible {
+        outline: none;
+        box-shadow:
+            var(--kp-sw-rails-out),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* Whatever else takes the keyboard (a handle, a theme swatch, a custom
+       widget with a role) is a part like any other: the same two tubes inside
+       it, at almost no specificity, so every rule above and any consumer's own
+       wins. The network graph is left as it is (it is no theme's target). */
+    :where([data-theme='synthwave'])
+        :where(button, [role='button'], [role='tab'], [role='menuitem'], [role='option'], [role='gridcell'], [tabindex]):not(
+            .kp-graph *
+        ):focus-visible {
+        outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] :focus-visible {
+            outline: 2px solid Highlight;
+            outline-offset: 2px;
+        }
     }
 }
 

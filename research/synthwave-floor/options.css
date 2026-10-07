@@ -1,0 +1,152 @@
+/* research/synthwave-floor: how deep the page floor is. The page tube, the
+   floor under it, the piece of tube a hand lights and the loading (the tube a
+   track with the ramp flowing through it, the floor driving toward you) are
+   the package's own, from css/synthwave-register.css; an option only changes
+   how far the floor runs and what carries it. Option 'band' is the package as
+   it is (a 3.5 rem band inside the header: a header is a layout container, so
+   a floor any deeper, painted by the header, would lie over the plates that
+   follow). Motion: everything animates under `prefers-reduced-motion:
+   no-preference` (the package's rules); colours are the theme's tokens only;
+   nothing flickers. */
+
+@layer kp.signature {
+    /* ── Tokens. The review dialog moves the section into its stage, so they sit on both. ── */
+
+    :is(.sf-page, .rv-dialog__stage) {
+        --sf-deep: 8.5rem;
+        /* The deep floor: the far cyan line, eight rows closing toward the horizon
+           (the row k at (k/8)² of the depth: the spacing grows toward you, a
+           perspective), and the lines converging on the centre. */
+        --sf-floor-deep:
+            linear-gradient(hsl(from var(--accent) h s l / 0.7) 0 0) 0 6px / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 1.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.31) 0 0) 0 6.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.33) 0 0) 0 14.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 25% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.35) 0 0) 0 39.1% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.37) 0 0) 0 56.2% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 76.6% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.4) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+    }
+
+    /* The scene's beat follows the speed buttons; the package's loading reads it. */
+    .sf-scene {
+        --kp-sw-beat: calc(225ms * var(--sf-slow, 1));
+    }
+
+    /* The loading picture of the deep floor: the package's drive, with its eight
+       rows (the package's keyframes list five). */
+    @keyframes sf-drive {
+        from {
+            background-position:
+                0 6px,
+                0 1.6%,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
+                0 100%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 6px,
+                0 6.2%,
+                0 14.1%,
+                0 25%,
+                0 39.1%,
+                0 56.2%,
+                0 76.6%,
+                0 100%,
+                0 130%,
+                0 0;
+        }
+    }
+
+    /* ═══ 1 · BEHIND THE PAGE ══════════════════════════════════════════════
+       The header reserves nothing: the tube lies on its foot and the floor is
+       painted by the header BEHIND the content that follows, 8.5 rem deep,
+       from the tube down. The header is a stacking context (layout
+       containment), so the floor stays inside it at z-index -1; whatever
+       follows the header is made positioned at no specificity (`position:
+       relative` unless it already says otherwise), so it paints after the
+       header and every plate, field and button stands on the floor, never
+       under it. */
+
+    .sf-scene[data-sf-floor='page'] {
+        --kp-sw-floor-page: 0rem;
+    }
+
+    .sf-scene[data-sf-floor='page'] .kp-page-header::before {
+        inset: 100% 0 auto;
+        z-index: -1;
+        block-size: var(--sf-deep);
+        background: var(--sf-floor-deep);
+    }
+
+    :where(.sf-scene[data-sf-floor='page'] .kp-page-header ~ *) {
+        position: relative;
+    }
+
+    /* ═══ 2 · THE BAND ═════════════════════════════════════════════════════
+       The package as it is: a 3.5 rem band inside the header, the header's own
+       foot padding keeps the plates clear of it. Nothing to override. */
+
+    /* ═══ 3 · RESERVED ═════════════════════════════════════════════════════
+       The header is as deep as the floor: 8.5 rem of floor inside it, so the
+       header's foot padding grows by 5 rem and the plates start under the
+       floor. Nothing is painted over anything. */
+
+    .sf-scene[data-sf-floor='reserve'] .kp-page-header {
+        --kp-sw-floor-page: var(--sf-deep);
+    }
+
+    /* ═══ 4 · WHERE THERE IS ROOM ═════════════════════════════════════════
+       The deep floor, reserved only where nothing that is a plate follows the
+       header (a toolbar, a line of text, an empty page); with plates right
+       under it the header keeps the 3.5 rem band. */
+
+    .sf-scene[data-sf-floor='room'] .kp-page-header:has(+ :not(.kp-card, .kp-kpis, .kp-alert, .sf-grid)) {
+        --kp-sw-floor-page: var(--sf-deep);
+    }
+
+    .sf-scene:is([data-sf-floor='reserve'], [data-sf-floor='room']) .kp-page-header {
+        &::before {
+            background: var(--sf-floor-deep);
+        }
+    }
+
+    .sf-scene[data-sf-floor='room'] .kp-page-header:not(:has(+ :not(.kp-card, .kp-kpis, .kp-alert, .sf-grid)))::before {
+        background:
+            linear-gradient(hsl(from var(--accent) h s l / 0.7) 0 0) 0 6px / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 0% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+    }
+
+    /* The deep floor drives on its own keyframes while the page waits. */
+    @media (prefers-reduced-motion: no-preference) {
+        .sf-scene[data-sf-floor='page'] :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::before {
+            animation-name: sf-drive;
+        }
+
+        .sf-scene:is([data-sf-floor='reserve'], [data-sf-floor='room'])
+            :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header)::before {
+            animation-name: sf-drive;
+        }
+
+        .sf-scene[data-sf-floor='room']
+            :is(.kp-page-header[aria-busy='true'], [aria-busy='true'] .kp-page-header):not(
+                :has(+ :not(.kp-card, .kp-kpis, .kp-alert, .sf-grid))
+            )::before {
+            animation-name: kp-sw-floor-drive;
+        }
+    }
+}

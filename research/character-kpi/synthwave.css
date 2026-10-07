@@ -1,8 +1,54 @@
-/* research/character-kpi, synthwave: live 3 "The laser flares" drawn as the
-   laser (G9): a 2 px near-white line with a pink bloom is drawn under the
-   figure from its centre out in the first beat, flares and burns down, three
-   beats (675 ms); the figure never glows or moves. */
+/* research/character-kpi, synthwave on the decided grammar
+   (themes/synthwave/CHARACTER.md §0, 2026-10-07).
+   shape 3 (the arcade warning) and tone 1 / interactive 2 as picked, drawn as
+   the package draws a key figure: a square plate, chrome over the floor (the
+   3 px stripe, the lit line under it, the shaded foot, the grid floor), the
+   corners falling (pink down the left side, cyan down the right). The old
+   rim (a 2 px pink frame glowing 12 px), the 0.4 rem corner and the pink drop
+   under the figure are retired: the demo's own plate rules hand the surface
+   back to the register (`revert-layer`). A toned figure is the VCR's symbol
+   (the register's `::before`) in the part's ink, its stripe and sides turning
+   to the tone's ink; hovering a link or a toggle turns its tube up and focus
+   is the two tubes, top and foot (the register's rules; the demo's pink
+   figure, scan lines and 2 px outline are retired).
+   live 3 "The laser flares" drawn as the laser (G9): a 2 px near-white line
+   with a pink bloom is drawn under the figure from its centre out in the
+   first beat, flares and burns down, three beats (675 ms); the figure never
+   glows or moves. */
 @layer kp.signature {
+    [data-theme='synthwave'] [data-kf] .kp-kpi {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        box-shadow: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-kf] .kp-kpi::after {
+        all: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-kf] .kp-kpi > .kp-kpi__value {
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] [data-kf] :is(a.kp-kpi, .kp-kpi--toggle):is(:hover, :focus-visible, :active) {
+        border-color: revert-layer;
+        background: revert-layer;
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-kf] :is(a.kp-kpi, .kp-kpi--toggle):is(:hover, :focus-visible) > .kp-kpi__value {
+        color: revert-layer;
+        text-shadow: revert-layer;
+    }
+
+    [data-theme='synthwave'] [data-kf] .kp-kpi--toggle[aria-pressed='true'] {
+        border-color: revert-layer;
+        background: revert-layer;
+    }
+
     [data-theme='synthwave'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
         position: relative;
     }
