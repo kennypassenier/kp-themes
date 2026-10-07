@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-08 01:02 Brussels, Kenny: 19 of 19 approved in the review dialog (research/nostromo-character/README.md, update 3): every recommendation except the spinner (the tape reel) and the focus ring (the lamp lit orange); the busy progress bar keeps its LED window and its lamps compute",
+    "attributes": "data-nc-<question>=\"<key>\" on the .nc-scene, research/nostromo-character/options.css",
+    "picks": {
+        "nostromo": {
+            "curve": "frames",
+            "direction": "raster",
+            "opening": "raster",
+            "durations": "frames",
+            "colour": "indicate",
+            "corners": "moulded",
+            "surface": "both",
+            "tone": "klaxon",
+            "live": "raster",
+            "loading": "raster",
+            "spinner": "reel",
+            "leave": "raster",
+            "composites": "own",
+            "hover": "lamp",
+            "focus": "led",
+            "press": "well",
+            "type": "michroma",
+            "motifs": "place",
+            "busy": "led"
+        }
+    }
+}

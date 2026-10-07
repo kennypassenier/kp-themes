@@ -52984,30 +52984,116 @@
         mask-size: 100% 100%;
     }
 
-    /* Busy, with no share known, the bar is the waiting screen (loading
-       "raster", Kenny 08/10/2026 00:05; G10): its dark window is the glass,
-       its LEDs are off, and COMPUTING is written on it row by row from the
-       top under the beam (the glass below, "The waiting screen"). It was
-       every other LED lit, standing still, which read as a share of about
-       half. A bar with a share keeps its LED bargraph exactly as it was. */
-    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
-        inset: 0;
-        background-color: transparent;
-        mask: none;
+    /* Busy, with no share known, the bar keeps its LED window in the moulded
+       bezel and its lamps compute (busy "led", Kenny 08/10/2026 01:02;
+       research/nostromo-character, update 3): the window's cells are the
+       meter's, 3 px on a 6 px pitch, and the lit ones, in the LED orange as
+       light with its glow (G5), switch in a fixed unordered pattern: a new
+       one every 4 frames, five patterns, 20 frames of 80 ms (below, under
+       the motion query). Nothing walks or sweeps; standing still (reduced
+       motion) the first pattern stands, which reads as busy, never as a
+       share. It replaces the COMPUTING glass of loading "raster" on this
+       bar (d81d9892): in a 1 rem bar the word was 0.5 rem in a 10 px window,
+       too small to read at a glance. A bar with a share keeps its LED
+       bargraph exactly as it was. Every length is multiplied by
+       --kp-progressbar-scale, so the cells grow with the three sizes. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-np-pitch: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-np-cells: linear-gradient(90deg, var(--foreground) 0 calc(3px * var(--kp-progressbar-scale, 1)), transparent 0) 0 0 / var(--kp-np-pitch)
+            100% repeat-x;
+        /* The pattern's tile: 37 cells with 11 lit at no regular spacing (a
+           16-cell tile visibly repeated every 96 px across a wide bar), in
+           37ths of its length so it scales with the bar; each lit cell is
+           drawn half its pitch wide in the tile itself, not through the
+           cells' mask (two repeating layers met on fractional device pixels
+           and a lit edge leaked into its neighbour). */
+        --kp-np-pattern: linear-gradient(
+            90deg,
+            transparent 0 2.7027%,
+            var(--kp-np-lit) 0 4.0541%,
+            transparent 0 10.8108%,
+            var(--kp-np-lit) 0 12.1622%,
+            transparent 0 13.5135%,
+            var(--kp-np-lit) 0 14.8649%,
+            transparent 0 24.3243%,
+            var(--kp-np-lit) 0 25.6757%,
+            transparent 0 37.8378%,
+            var(--kp-np-lit) 0 39.1892%,
+            transparent 0 45.9459%,
+            var(--kp-np-lit) 0 47.2973%,
+            transparent 0 48.6486%,
+            var(--kp-np-lit) 0 50%,
+            transparent 0 62.1622%,
+            var(--kp-np-lit) 0 63.5135%,
+            transparent 0 72.973%,
+            var(--kp-np-lit) 0 74.3243%,
+            transparent 0 83.7838%,
+            var(--kp-np-lit) 0 85.1351%,
+            transparent 0 91.8919%,
+            var(--kp-np-lit) 0 93.2432%,
+            transparent 0
+        );
     }
 
+    /* The unlit cells: the window's dark lenses, as the bar with a share. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        inset: var(--kp-np-window) 1px;
+        background: var(--kp-np-unlit);
+        mask: var(--kp-np-cells);
+        animation: none;
+    }
+
+    /* The lit cells: the tile in the LED orange, with the lit LEDs' glow. */
     [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: 0;
+        inset: var(--kp-np-window) 1px;
         inline-size: auto;
-        filter: none;
+        background: none;
+        filter: drop-shadow(0 0 var(--kp-np-glow-r) var(--kp-np-glow));
         clip-path: none;
+        transform: none;
         animation: none;
     }
 
     [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-        --kp-sig-no-wtail: calc(0.5rem * var(--kp-progressbar-scale, 1));
-        padding-inline: calc(0.4rem * var(--kp-progressbar-scale, 1));
-        font-size: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        content: '';
+        inset: 0;
+        background: var(--kp-np-pattern) 0 0 / calc(var(--kp-np-pitch) * 37) 100% repeat-x;
+        mask: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A new pattern every 4 frames, held whole: five patterns, 20 frames
+           (--kp-sig-no-loop, 1600 ms). */
+        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-sig-nostromo-compute var(--kp-sig-no-loop) steps(1, end) infinite;
+        }
+    }
+
+    /* The busy bar's lamps: five patterns of the tile, one every fifth of
+       the cycle, the shifts unordered (0, 14, 5, 25, 11 cells), so no lamp
+       walks. */
+    @keyframes kp-sig-nostromo-compute {
+        0% {
+            background-position-x: 0;
+        }
+
+        20% {
+            background-position-x: calc(var(--kp-np-pitch) * 14);
+        }
+
+        40% {
+            background-position-x: calc(var(--kp-np-pitch) * 5);
+        }
+
+        60% {
+            background-position-x: calc(var(--kp-np-pitch) * 25);
+        }
+
+        80%,
+        100% {
+            background-position-x: calc(var(--kp-np-pitch) * 11);
+        }
     }
 
     [data-theme='nostromo'] {
@@ -53452,8 +53538,8 @@
        it in 10 steps, and its picture written row by row from the top in 12
        frames under the beam (the bright edge with its fading tail), standing
        for 6 frames and blanked for 2: 20 frames of 80 ms, 1600 ms a cycle
-       (--kp-sig-no-loop). The busy progress bar is that screen in its own
-       window; a skeleton line is a glass with a line of phosphor being
+       (--kp-sig-no-loop). The busy progress bar keeps its LED window and
+       its lamps compute instead (busy "led", above); a skeleton line is a glass with a line of phosphor being
        written, the lines a panel (4 frames) apart; a block skeleton, and so
        the time chart's plot while it loads, writes COMPUTING in its middle;
        a loading day of the month is a glass cell; the menu's loading entry
@@ -53553,7 +53639,6 @@
     }
 
     /* The glass layer: scanlines over the ground, and the hum band. */
-    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before,
     [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before,
     [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
         --kp-sig-dur: var(--kp-sig-no-loop);
@@ -53579,7 +53664,6 @@
        picture's height, its bright edge on the layer's middle line, so the
        layer's position (100 % to 0 %) puts the edge exactly where the clip
        has written to; at rest it lies past the foot (-100 %), away. */
-    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
     [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle)::after,
     [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
         --kp-sig-dur: var(--kp-sig-no-loop);
@@ -53611,7 +53695,6 @@
 
     /* The word. Its content has empty alternative text: a screen reader
        reads the part's own busy state, not the picture. */
-    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
     [data-theme='nostromo'] .kp-skeleton--block::after,
     [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
         content: 'COMPUTING' / '';
@@ -53677,7 +53760,6 @@
     @media (prefers-reduced-motion: no-preference) {
         /* The hum band rolls down every glass in 10 steps per cycle; a week's
            days start 2 frames apart, as the demo's days do. */
-        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before,
         [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before,
         [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
             animation: kp-sig-nostromo-hum var(--kp-sig-dur) steps(10, end) infinite;
@@ -53708,7 +53790,6 @@
         }
 
         /* The word is written in 12 frames, stands 6, is blanked for 2. */
-        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
         [data-theme='nostromo'] .kp-skeleton--block::after,
         [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
             animation: kp-sig-nostromo-redraw var(--kp-sig-dur) linear infinite;

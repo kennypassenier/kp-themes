@@ -1,6 +1,6 @@
 # What makes nostromo nostromo
 
-**Verdict (Kenny, 08/10/2026 00:05): all eighteen approved** (decided.json is kept back until update 3 is settled); the two reopened in update 2 settled as recommended: the live update is the raster redraw with its lamp, Loading is the screen redraws.; A live update: option 1 with a fix for the cut-off glow on the key figure; Loading: option 1 liked, ten more options asked (Update 2).
+**Decided (Kenny, 08/10/2026 01:02): all nineteen approved** (decided.json); update 3: the busy progress bar keeps its LED window, its lamps compute; the two reopened in update 2 settled as recommended: the live update is the raster redraw with its lamp, Loading is the screen redraws.; A live update: option 1 with a fix for the cut-off glow on the key figure; Loading: option 1 liked, ten more options asked (Update 2).
 
 **Why.** Kenny, 2026-10-07 03:50, while he judges forest: "doe terwijl nostromo al", the same way as titanium and forest (02:54:
 "waar jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen doet? begin met 1 thema en we zullen dat één voor
