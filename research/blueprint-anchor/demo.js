@@ -1,4 +1,4 @@
-// What anchors blueprint, round two (Kenny, 2026-10-07 20:44, on round one):
+// What anchors blueprint (round two; Kenny, 2026-10-07 20:44, on round one):
 // "I kind of like the measuring part of option 1 [the dimension line], but not
 // the implementation itself, like I don't like the form. And I LOVE the plotter
 // pen, so that should be a thing for sure. Come up with some more examples
