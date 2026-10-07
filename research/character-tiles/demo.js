@@ -912,6 +912,8 @@ function draw(loading = state.shown === 'loading') {
 
 /** Drawn again: one busy frame, then the readings, so the arrival plays. */
 const replay = () => {
+    // A tile that flashed a live update arrives again: the arrival rules skip [data-tl-flash].
+    for (const tile of document.querySelectorAll('[data-tl-flash]')) tile.removeAttribute('data-tl-flash');
     draw(true);
     requestAnimationFrame(() => requestAnimationFrame(() => draw()));
 };
@@ -953,11 +955,12 @@ document.querySelector('[data-tl-live]')?.addEventListener('click', () => {
     for (const grid of document.querySelectorAll('[data-ti]')) {
         const tile = grid.querySelector('[data-tl-tile="pump"]');
         if (!(tile instanceof HTMLElement)) continue;
+        // The flash stays on once played (the arrival rules skip a flashing
+        // tile, so taking it off would play the arrival again); off and on
+        // with a style read between restarts it.
         tile.removeAttribute('data-tl-flash');
-        requestAnimationFrame(() => {
-            tile.setAttribute('data-tl-flash', '');
-            tile.addEventListener('animationend', () => tile.removeAttribute('data-tl-flash'), { once: true });
-        });
+        void getComputedStyle(tile).animationName;
+        tile.setAttribute('data-tl-flash', '');
     }
 });
 

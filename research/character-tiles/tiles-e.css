@@ -15,19 +15,19 @@
     /* Engraved: the title is written in from the left, slowing as it
        lands; the body follows a beat later. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__title {
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) .kp-card__title {
             animation: tl-formal-engrave 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
         }
-        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) .kp-card__body {
             animation: tl-formal-engrave 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
             animation-delay: 0.14s;
         }
         /* Entered in the ledger: tile after tile drops into the ledger,
            each a beat after the last. */
-        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-formal-ledger 0.3s steps(3, end) both;
         }
-        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='formal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.12s;
         }
     }
@@ -112,14 +112,14 @@
     /* Milled: the body is cut in start → end on the theme's curve, at the
        cuts' 400ms (themes/titanium/CHARACTER.md G1, G4, proposal-8). */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='titanium'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) .kp-card__body {
+        [data-theme='titanium'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) .kp-card__body {
             animation: tl-titanium-mill 400ms var(--kp-sig-ti-ease) both;
         }
         /* Seated: tile after tile drops into place from above, overshooting once. */
-        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-titanium-seat 0.42s cubic-bezier(0.3, 1.6, 0.4, 1) both;
         }
-        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='titanium'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -502,15 +502,15 @@
 
     /* Dawn: the tile rises from the baseline, slowing as it lands. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='solstice'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='solstice'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-solstice-dawn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
         /* Kindled: tile after tile is drawn in backwards, from the last
            to the first. */
-        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-solstice-kindle 0.45s ease-out both;
         }
-        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy]) {
+        [data-theme='solstice'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.12s;
         }
     }
@@ -588,14 +588,14 @@
 
     /* Slammed: the tile drops into place from above, in hard steps. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='brutalism'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='brutalism'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-brutalism-slam 0.3s steps(4, end) both;
         }
         /* Shoved in: tile after tile slides in slanted, easing in and out. */
-        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-brutalism-shove 0.4s ease-in-out both;
         }
-        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='brutalism'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -675,15 +675,15 @@
     /* The curtain rises: the tile rises from the baseline, slowing as it
        lands. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='deco'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='deco'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-deco-curtain 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
         /* The marquee lights: tile after tile lights up in hard steps,
            one after the other. */
-        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-deco-marquee 0.26s steps(1, end) both;
         }
-        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='deco'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.14s;
         }
     }
@@ -767,15 +767,15 @@
     /* The card is thrown: the tile jumps into place sideways, in hard
        jumps. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-phantom-throw 0.28s steps(1, end) both;
         }
         /* Slashed in: tile after tile is drawn in backwards, easing in
            and out. */
-        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-phantom-slash 0.4s ease-in-out both;
         }
-        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy]) {
+        [data-theme='phantom'] [data-ti-arrival='3'] > .kp-card:first-child:not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }

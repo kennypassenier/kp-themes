@@ -1671,31 +1671,6 @@
             animation: sy-cuts-close calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > .sy-cuts {
-            animation: sy-cuts-open calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > .sy-cuts {
-            animation: sy-cuts-open calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        /* Setting behind it: the panels close, the leavers leave. */
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > :first-child {
-            animation: sy-set-body calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'])[data-sy-phase='out'] .sy-opens > .sy-horizon {
-            animation: sy-horizon-out calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > :first-child {
-            animation: sy-set-body calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-leave='sunset'][data-sy-phase='out'] .sy-leaver > .sy-horizon {
-            animation: sy-horizon-out calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
         /* The stripe strikes on with a tube's dips as a panel opens (G3). */
         .sy-scene[data-sy-opening='rise'][data-sy-phase='in'] .sy-opens .sy-strip {
             animation: sy-strike calc(450ms * var(--sy-slow, 1)) calc(160ms * var(--sy-slow, 1)) steps(1, end) both;
@@ -1736,17 +1711,9 @@
             animation: sy-lift-in calc(450ms * var(--sy-slow, 1)) var(--sy-quick) both;
         }
 
-        .sy-scene[data-sy-curve='quick'][data-sy-phase='out'] .sy-opens > :first-child {
-            animation: sy-lift-out calc(450ms * var(--sy-slow, 1)) var(--sy-quick) both;
-        }
-
         /* The spring: up past its place and back. */
         .sy-scene[data-sy-curve='spring']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
             animation: sy-spring-in calc(600ms * var(--sy-slow, 1)) var(--sy-spring) both;
-        }
-
-        .sy-scene[data-sy-curve='spring'][data-sy-phase='out'] .sy-opens > :first-child {
-            animation: sy-lift-out calc(450ms * var(--sy-slow, 1)) ease-in both;
         }
 
         /* The live update in the curve row: the laser on each curve. */
@@ -1802,16 +1769,8 @@
             animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        .sy-scene[data-sy-opening='strike'][data-sy-phase='out'] .sy-opens > :first-child {
-            animation: sy-strike-off calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
-        }
-
         .sy-scene[data-sy-opening='tape']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
             animation: sy-tape calc(320ms * var(--sy-slow, 1)) steps(4, end) both;
-        }
-
-        .sy-scene[data-sy-opening='tape'][data-sy-phase='out'] .sy-opens > :first-child {
-            animation: sy-tape-out calc(320ms * var(--sy-slow, 1)) steps(4, end) both;
         }
 
         /* Durations (G4): each option's own numbers. */
@@ -1926,13 +1885,14 @@
             animation: sy-road calc(600ms * var(--sy-slow, 1)) linear infinite;
         }
 
-        /* Leaving and arriving (G12), the other options. */
+        /* Leaving and arriving (G12), the other options: each arrival is its
+           leave played backwards, the same keyframes on the same curve. */
         .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
-            animation: sy-swallow-back calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) both;
+            animation: sy-swallow calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) reverse both;
         }
 
         .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
-            animation: sy-fade-back calc(750ms * var(--sy-slow, 1)) ease-out both;
+            animation: sy-fade calc(750ms * var(--sy-slow, 1)) ease-in reverse both;
         }
 
         .sy-scene[data-sy-leave='swallow'][data-sy-phase='out'] .sy-sun-over {
@@ -1944,7 +1904,7 @@
         }
 
         .sy-scene[data-sy-leave='crt']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
-            animation: sy-crt-on calc(550ms * var(--sy-slow, 1)) var(--sy-quick) both;
+            animation: sy-crt-off calc(550ms * var(--sy-slow, 1)) var(--sy-quick) reverse both;
         }
 
         .sy-scene[data-sy-leave='crt'][data-sy-phase='out'] .sy-leaver__body {
@@ -1979,19 +1939,6 @@
         }
     }
 
-    @keyframes sy-set-body {
-        0% {
-            translate: 0 0;
-            clip-path: inset(0 0 0 0);
-        }
-
-        72%,
-        100% {
-            translate: 0 0.5rem;
-            clip-path: inset(100% 0 0.5rem 0);
-        }
-    }
-
     @keyframes sy-cuts-close {
         0%,
         30% {
@@ -2008,25 +1955,6 @@
                 100% 0,
                 100% 0,
                 100% 0;
-        }
-    }
-
-    @keyframes sy-cuts-open {
-        0% {
-            background-size:
-                100% 0,
-                100% 0,
-                100% 0,
-                100% 0;
-        }
-
-        72%,
-        100% {
-            background-size:
-                100% 13%,
-                100% 9%,
-                100% 6%,
-                100% 3%;
         }
     }
 
@@ -2049,24 +1977,6 @@
         100% {
             opacity: 0;
             transform: scaleX(1);
-        }
-    }
-
-    @keyframes sy-horizon-out {
-        0% {
-            opacity: 0;
-            transform: scaleX(1);
-        }
-
-        12%,
-        70% {
-            opacity: 1;
-            transform: scaleX(1);
-        }
-
-        100% {
-            opacity: 0;
-            transform: scaleX(0);
         }
     }
 
@@ -2127,25 +2037,6 @@
         }
     }
 
-    @keyframes sy-strike-off {
-        0% {
-            border-color: var(--accent);
-        }
-
-        40% {
-            border-color: var(--primary);
-        }
-
-        70% {
-            border-color: var(--accent);
-            opacity: 1;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
-
     @keyframes sy-tape {
         from {
             clip-path: inset(0 0 100% 0);
@@ -2153,16 +2044,6 @@
 
         to {
             clip-path: inset(0);
-        }
-    }
-
-    @keyframes sy-tape-out {
-        from {
-            clip-path: inset(0);
-        }
-
-        to {
-            clip-path: inset(0 0 100% 0);
         }
     }
 
@@ -2210,18 +2091,6 @@
         to {
             opacity: 1;
             translate: 0 0;
-        }
-    }
-
-    @keyframes sy-lift-out {
-        from {
-            opacity: 1;
-            translate: 0 0;
-        }
-
-        to {
-            opacity: 0;
-            translate: 0 10px;
         }
     }
 
@@ -2456,20 +2325,6 @@
         }
     }
 
-    @keyframes sy-swallow-back {
-        from {
-            clip-path: circle(120% at 50% 120%);
-        }
-
-        30% {
-            clip-path: circle(120% at 50% 120%);
-        }
-
-        to {
-            clip-path: circle(0% at 50% 120%);
-        }
-    }
-
     @keyframes sy-fade {
         0%,
         60% {
@@ -2478,17 +2333,6 @@
 
         to {
             opacity: 0;
-        }
-    }
-
-    @keyframes sy-fade-back {
-        from {
-            opacity: 0;
-        }
-
-        40%,
-        to {
-            opacity: 1;
         }
     }
 
@@ -2508,26 +2352,6 @@
             transform: scaleY(0.02) scaleX(0);
             filter: brightness(5);
             opacity: 0;
-        }
-    }
-
-    @keyframes sy-crt-on {
-        0% {
-            transform: scaleY(0.02) scaleX(0);
-            filter: brightness(5);
-            opacity: 0;
-        }
-
-        40% {
-            transform: scaleY(0.02);
-            filter: brightness(3);
-            opacity: 1;
-        }
-
-        100% {
-            transform: scaleY(1);
-            filter: brightness(1);
-            opacity: 1;
         }
     }
 

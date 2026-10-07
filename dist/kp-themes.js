@@ -2307,6 +2307,8 @@ var init_effects = __esm({
       "kp-tube-off": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
       // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
       "kp-caret": { durationMs: 1e3, cycles: Infinity, property: "background-size", luminanceSteps: [1, 1, 0, 0] },
+      // The character the cursor stands on (the ghost button's `]`), reversed in step with kp-caret.
+      "kp-caret-reverse": { durationMs: 1e3, cycles: Infinity, property: "color", luminanceSteps: [1, 1, 0, 0] },
       // The alarm [scope-94]: the plate fading in, the frame's glow breathing
       // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
       // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per

@@ -213,7 +213,9 @@
 
     [data-theme='grotesk'] [data-bo-loading='2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
         display: inline-block;
-        animation: bo-grotesk-nudge var(--kp-busy-loading-dur, 0.9s) steps(1, end) infinite alternate;
+        /* Held poses, half a beat each: steps(1, end) with alternate over
+           two keyframes never left the first (2026-10-07, outlier-14). */
+        animation: bo-grotesk-nudge var(--kp-busy-loading-dur, 0.9s) steps(1, end) infinite;
     }
 
     [data-theme='grotesk'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
@@ -532,10 +534,11 @@
         }
 
         @keyframes bo-grotesk-nudge {
-            from {
+            from,
+            to {
                 transform: translateX(0);
             }
-            to {
+            50% {
                 transform: translateX(0.12rem);
             }
         }

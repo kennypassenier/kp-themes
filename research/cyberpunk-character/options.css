@@ -1575,31 +1575,17 @@
 
         .cy-scene[data-cy-curve='jitter']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives,
         .cy-scene[data-cy-opening='glitch']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens,
-        .cy-scene[data-cy-leave='torn']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver,
+        .cy-scene[data-cy-leave='torn']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > *,
         .cy-scene[data-cy-direction='sideways']:is([data-cy-phase='in'], [data-cy-phase='hold'], [data-cy-phase='out']) .cy-tile.cy-arrives {
             animation: cy-glitch-in calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
-        }
-
-        .cy-scene[data-cy-curve='jitter'][data-cy-phase='out'] .cy-opens,
-        .cy-scene[data-cy-opening='glitch'][data-cy-phase='out'] .cy-opens,
-        .cy-scene[data-cy-leave='torn'][data-cy-phase='out'] .cy-leaver > * {
-            animation: cy-glitch-out calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
         .cy-scene[data-cy-curve='smooth']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
             animation: cy-rise calc(360ms * var(--cy-slow, 1)) var(--cy-smooth) both;
         }
 
-        .cy-scene[data-cy-curve='smooth'][data-cy-phase='out'] .cy-opens {
-            animation: cy-rise-out calc(360ms * var(--cy-slow, 1)) var(--cy-smooth) both;
-        }
-
         .cy-scene[data-cy-curve='steps']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
             animation: cy-uncover calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
-        }
-
-        .cy-scene[data-cy-curve='steps'][data-cy-phase='out'] .cy-opens {
-            animation: cy-uncover-out calc(360ms * var(--cy-slow, 1)) steps(6, end) both;
         }
 
         .cy-scene[data-cy-curve='jitter'][data-cy-phase='in'] .cy-carrier {
@@ -1647,21 +1633,14 @@
             animation: cy-cut calc(240ms * var(--cy-slow, 1)) steps(4, end) both;
         }
 
-        /* Q3, the opening. */
+        /* Q3, the opening. Every close is its opening played backwards
+           (demo.js, closeByReverse), as is every arrival of Q1, Q2 and Q4. */
         .cy-scene[data-cy-opening='crt']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
             animation: cy-crt calc(1520ms * var(--cy-slow, 1)) cubic-bezier(0.3, 0, 0.2, 1) both;
         }
 
-        .cy-scene[data-cy-opening='crt'][data-cy-phase='out'] .cy-opens {
-            animation: cy-crt-out calc(600ms * var(--cy-slow, 1)) cubic-bezier(0.3, 0, 0.2, 1) both;
-        }
-
         .cy-scene[data-cy-opening='cut']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
             animation: cy-cut calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
-        }
-
-        .cy-scene[data-cy-opening='cut'][data-cy-phase='out'] .cy-opens {
-            animation: cy-cut-out calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
         }
 
         /* Q4, the durations. */
@@ -1791,7 +1770,7 @@
         }
 
         /* Q12, leaving and arriving: what arrives plays the leave backwards. */
-        .cy-scene[data-cy-leave='today']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver {
+        .cy-scene[data-cy-leave='today']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
             animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear reverse both;
         }
 
@@ -1799,7 +1778,7 @@
             animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear both;
         }
 
-        .cy-scene[data-cy-leave='tube']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver {
+        .cy-scene[data-cy-leave='tube']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
             animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) reverse both;
         }
 
@@ -1865,50 +1844,6 @@
 
         100% {
             clip-path: var(--cy-end-clip);
-            translate: 0 0;
-            filter: none;
-        }
-    }
-
-    @keyframes cy-glitch-out {
-        0% {
-            clip-path: var(--cy-end-clip);
-            translate: 1px 0;
-            filter: none;
-        }
-
-        16.67% {
-            clip-path: inset(20% -10px 26% -10px);
-            translate: -3px 0;
-            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
-        }
-
-        33.33% {
-            clip-path: inset(0 -10px 36% -10px);
-            translate: 5px 0;
-            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
-        }
-
-        50% {
-            clip-path: inset(55% -10px 8% -10px);
-            translate: -8px 0;
-            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
-        }
-
-        66.67% {
-            clip-path: inset(8% -10px 64% -10px);
-            translate: 12px 0;
-            filter: drop-shadow(-5px 0 0 var(--accent)) drop-shadow(5px 0 0 var(--destructive));
-        }
-
-        83.33% {
-            clip-path: inset(46% -10px 46% -10px);
-            translate: -18px 0;
-            filter: drop-shadow(-6px 0 0 var(--accent)) drop-shadow(6px 0 0 var(--destructive));
-        }
-
-        100% {
-            clip-path: inset(50% 0 50% 0);
             translate: 0 0;
             filter: none;
         }
@@ -1998,13 +1933,6 @@
         }
     }
 
-    @keyframes cy-rise-out {
-        to {
-            translate: 0 10px;
-            opacity: 0;
-        }
-    }
-
     @keyframes cy-uncover {
         from {
             clip-path: var(--cy-start-clip);
@@ -2012,16 +1940,6 @@
 
         to {
             clip-path: var(--cy-end-clip);
-        }
-    }
-
-    @keyframes cy-uncover-out {
-        from {
-            clip-path: var(--cy-end-clip);
-        }
-
-        to {
-            clip-path: var(--cy-start-clip);
         }
     }
 
@@ -2055,16 +1973,6 @@
         }
     }
 
-    @keyframes cy-cut-out {
-        from {
-            clip-path: var(--cy-end-clip);
-        }
-
-        to {
-            clip-path: var(--cy-top-clip);
-        }
-    }
-
     /* The register's dialog entrance at the quarter speed Kenny chose: a
        line across the middle holds, then opens; overbright while it is a
        line. */
@@ -2077,18 +1985,6 @@
 
         100% {
             clip-path: var(--cy-end-clip);
-        }
-    }
-
-    @keyframes cy-crt-out {
-        0% {
-            clip-path: var(--cy-end-clip);
-        }
-
-        55%,
-        100% {
-            clip-path: var(--cy-line-clip);
-            box-shadow: inset 0 0 0 100vmax var(--primary);
         }
     }
 

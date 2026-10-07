@@ -2005,9 +2005,15 @@
             animation: kp-sig-grotesk-size-cut 240ms steps(3, jump-end) backwards;
         }
 
+        /* An explicit end: an inset does not interpolate with the line's own
+           clip-path: none, so with only a `from` the cut was hidden for half
+           its run and then whole, never in three. */
         @keyframes kp-sig-grotesk-size-cut {
             from {
                 clip-path: inset(0 100% 0 0);
+            }
+            to {
+                clip-path: inset(0);
             }
         }
     }

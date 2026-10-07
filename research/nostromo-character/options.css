@@ -1654,29 +1654,19 @@
             animation: nc-flicker-today calc(900ms * var(--nc-slow, 1)) steps(1) both;
         }
 
-        /* 3 The opening. */
+        /* 3 The opening. Each closes as its opening played backwards
+           (demo.js, closeByReverse): the strike back to its line, the ping
+           back into the button, the cut back up to the top edge. */
         .nc-scene[data-nc-opening='strike']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
             animation: nc-strike calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
-        }
-
-        .nc-scene[data-nc-opening='strike'][data-nc-phase='out'] .nc-strikes {
-            animation: nc-off calc(480ms * var(--nc-slow, 1)) linear both;
         }
 
         .nc-scene[data-nc-opening='ping']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
             animation: nc-ping-open calc(320ms * var(--nc-slow, 1)) var(--nc-f4) both;
         }
 
-        .nc-scene[data-nc-opening='ping'][data-nc-phase='out'] .nc-strikes {
-            animation: nc-ping-open calc(320ms * var(--nc-slow, 1)) var(--nc-f4) reverse both;
-        }
-
         .nc-scene[data-nc-opening='cut']:is([data-nc-phase='in'], [data-nc-phase='hold']) .nc-strikes {
             animation: nc-cut calc(320ms * var(--nc-slow, 1)) var(--nc-smooth) both;
-        }
-
-        .nc-scene[data-nc-opening='cut'][data-nc-phase='out'] .nc-strikes {
-            animation: nc-cut calc(320ms * var(--nc-slow, 1)) var(--nc-smooth) reverse both;
         }
 
         .nc-scene[data-nc-opening][data-nc-phase='gap'] .nc-strikes {

@@ -2488,10 +2488,14 @@
         --tr-live-area: tr-l-shift 300ms steps(2);
     }
 
-    /* terminal · live 3: Reverse flash */
+    /* terminal · live 3: Reverse flash. Reverse video for one beat: the
+       area under the line lights solid in the phosphor and the line goes
+       to the plate's dark, then both jump back. (The ink alone was
+       rgb(104, 243, 104) on the line's own rgb(53, 242, 52), 1.05:1:
+       it played and was not seen; 2026-10-07, outlier-14.) */
     [data-theme='terminal'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-flash 500ms steps(1);
-        --tr-live-area: none;
+        --tr-live-line: tr-l-term-reverse-line 300ms steps(1);
+        --tr-live-area: tr-l-term-reverse-area 300ms steps(1);
     }
 
     /* forest · live 1: Redrawn */
@@ -3171,6 +3175,22 @@
     0%,
     60% {
         stroke: var(--tr-ink);
+    }
+}
+
+/* terminal's reverse flash (live 3): held for the whole run, so it is on
+   from the first frame and off at the last, two hard jumps. */
+@keyframes tr-l-term-reverse-line {
+    from,
+    to {
+        stroke: var(--tr-plate);
+    }
+}
+
+@keyframes tr-l-term-reverse-area {
+    from,
+    to {
+        opacity: 1;
     }
 }
 

@@ -148,14 +148,14 @@
 
     /* printed: the body is typed in from the left, character by character */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='terminal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-term-print 0.5s steps(16) both;
         }
         /* paged in: tile after tile drops into place from above, in hard steps */
-        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-term-page 0.3s steps(4, end) both;
         }
-        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='terminal'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }
@@ -284,6 +284,20 @@
     [data-theme='terminal'] [data-ti-hover='3'] .kp-card.tl-hover-sim .kp-card__title::before {
         content: '> ';
         color: var(--primary);
+    }
+    /* ...and blinks, at the theme's one cursor rate (kp-caret: 1 s, on
+       half, off half), its cell kept so the title never shifts (it stood
+       still, 2026-10-07, outlier-13). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-ti-hover='3'] .kp-card:hover .kp-card__title::before,
+        [data-theme='terminal'] [data-ti-hover='3'] .kp-card.tl-hover-sim .kp-card__title::before {
+            animation: tl-term-prompt 1s steps(1) infinite;
+        }
+    }
+    @keyframes tl-term-prompt {
+        50% {
+            visibility: hidden;
+        }
     }
     [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:hover,
     [data-theme='terminal'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
@@ -492,15 +506,15 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* grows: the tile rises from the ground, slowing as it lands */
-        [data-theme='forest'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='forest'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-forest-grow 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
             transform-origin: bottom;
         }
         /* the trail is walked: tile after tile drawn in from the left */
-        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-forest-walk 0.45s ease-in-out both;
         }
-        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='forest'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -777,14 +791,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* switched: the tile is drawn in hard steps, four at a time */
-        [data-theme='high-contrast'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='high-contrast'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-hc-switch 0.4s steps(4) both;
         }
         /* dropped: tile after tile drops into place from above, in hard steps */
-        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-hc-drop 0.35s steps(4, end) both;
         }
-        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='high-contrast'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }
@@ -1067,14 +1081,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* the nib writes: the body written in from the left, at an even pace */
-        [data-theme='sepia'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='sepia'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-sepia-write 0.5s linear both;
         }
         /* pressed: tile after tile drops into place, slowing as it lands */
-        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-sepia-press 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) both;
         }
-        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='sepia'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }
@@ -1345,14 +1359,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* drafted: the body is drawn in from the left, at an even pace */
-        [data-theme='blueprint'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='blueprint'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-blue-draft 0.5s linear both;
         }
         /* plotted: tile after tile is drawn in from the left, in hard steps */
-        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-blue-plot 0.45s steps(6) both;
         }
-        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='blueprint'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }

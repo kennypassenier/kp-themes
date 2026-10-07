@@ -2187,10 +2187,16 @@
             animation: kp-sig-blueprint-size-plot 420ms linear backwards;
         }
 
+        /* An explicit end: an inset does not interpolate with the line's own
+           clip-path: none, so with only a `from` the line was hidden for half
+           the run and then whole, never plotted. */
         @keyframes kp-sig-blueprint-size-plot {
             from {
                 clip-path: inset(0 0 100% 0);
                 outline: 1px dashed var(--primary);
+            }
+            to {
+                clip-path: inset(0);
             }
         }
     }

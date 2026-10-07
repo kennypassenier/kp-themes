@@ -22,7 +22,8 @@ first.
 its animations listed and their animated properties sampled after the demo's replay button. Two picks do not move as named (the columns'
 _Lettered_: `cl-a-wipe` declares only a `from` inset, two poses instead of six; the tiles' _Retraced in ink_: the arrival rule outranks the
 flash and it never starts) and neither does the package's resize plot (`kp-sig-blueprint-size-plot`, an inset animated toward `none`, which
-flips at half time): CHARACTER.md outlier-14 and proposal-13.
+flips at half time): CHARACTER.md outlier-14 and proposal-13. All three were fixed on 2026-10-07 and sampled again per frame: _Lettered_
+now wipes in six steps, _Retraced in ink_ plays (no arrival rule matches a flashing tile), the resize plot uncovers the line top down.
 
 **What.** One page, blueprint only, in the review kit's aspect mode (`data-review-themes="blueprint"`). An intro, "What blueprint is" (the
 package's own parts, and on demand six decided character demos embedded as they are today), then sixteen questions. Each question is one
@@ -70,6 +71,7 @@ the recommendation; every option says what you see and why it is or is not recom
   options of a row start together; still and looping scenes stand at `hold`. It only writes attributes and text, in one pass, and never
   reads layout; rows far off screen are not rendered (`content-visibility: auto`). Replay restarts it; the speed buttons stretch every
   duration by 2 or 4; the dialog's Pause (Space) stops it.
+- Every close is its open played backwards (Kenny's standing rule; 2026-10-07 15:16: "ik weet niet of je openen en sluiten bv altijd het omgekeerde van mekaar hebt gemaakt"). At `out`, `demo.js` (`closeByReverse`, keyed to `data-bw-phase`) plays every arrival of a cell backwards over the cell's whole arrival: the same keyframes, curve and pace, what arrived last leaving first; the clock's `out` lasts as long as the longest close. Before, most scenes stood through `out` and were cut away at `gap`, or snapped shut as `out` began. The hand-drawn closes (the ink hidden at once, a separate untrace) are gone; a closing panel keeps its ink for the quarter its drawing stood, as the open did. The unroll closes on its own curve and 300 ms (it closed in 280 ms on the reflected curve). Measured frame by frame in Firefox with `research/_review/measure-motion.mjs`: every arrival's close is now its mirror within one frame.
 - Hover, focus and press are shown standing still on marked parts (`.bw-pointed`, `.bw-focused`) and by the clock (`.bw-press`); the State
   buttons force a state on every button of question 11.
 

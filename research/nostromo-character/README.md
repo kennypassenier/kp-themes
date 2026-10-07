@@ -59,6 +59,7 @@ recommended, on the page and in its hint in the dialog.
 - One clock in `demo.js` plays every scene that arrives, opens, presses, updates or leaves (`data-nc-phase`: gap, in, hold, out), so
   the options of a row start together. Replay restarts it; the speed buttons stretch every duration by 2 or 4; the dialog's Pause
   (Space) stops it. Loading pictures loop in CSS.
+- Every close is its open played backwards (Kenny's standing rule; 2026-10-07 15:16: "ik weet niet of je openen en sluiten bv altijd het omgekeerde van mekaar hebt gemaakt"). At `out`, `demo.js` (`closeByReverse`, keyed to `data-nc-phase`) plays every arrival of a cell backwards over the cell's whole arrival: the same keyframes, curve and pace, what arrived last leaving first; the clock's `out` lasts as long as the longest close. Before, most scenes stood through `out` and were cut away at `gap`, or snapped shut as `out` began. The tube's strike now closes as the strike backwards (it was the switch-off, 480 ms, a different path), and the ping and the cut, which snapped shut, close back the way they opened. Measured frame by frame in Firefox with `research/_review/measure-motion.mjs`: every arrival's close is now its mirror within one frame.
 - Hover, focus and press are shown standing still on marked parts (`.nc-pointed`, `.nc-focused`) and by the clock (`.nc-press`), so
   they can be compared without a pointer; the State buttons force a state on every button of question 13, and the dialog presses
   Hover there by itself.

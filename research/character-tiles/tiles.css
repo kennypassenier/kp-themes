@@ -295,14 +295,21 @@
 
     /* ── 3 · How the tiles arrive ────────────────────────────────────── */
 
+    /* Every arrival rule, here and in every theme's file, skips a tile that
+       is flashing a live update ([data-tl-flash]): a themed arrival
+       (0,4,0) outranked every live rule (0,3,0), so the live update never
+       started (2026-10-07, the character analyses' outlier-14). The demo
+       keeps the flash attribute until the next replay, so the arrival does
+       not play again when a flash ends. */
+
     @media (prefers-reduced-motion: no-preference) {
-        [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-arrive-slide 0.42s ease-out both;
         }
-        [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-arrive-drop 0.36s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
         }
-        [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }

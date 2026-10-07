@@ -124,15 +124,15 @@
 
     /* Unfolds: the card opens from its middle. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='light'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='light'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-light-unfold 0.4s ease-out both;
             transform-origin: 50% 50%;
         }
         /* Sunrise: tile after tile rises from the bottom, each a beat after the last. */
-        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-light-sunrise 0.45s ease-out both;
         }
-        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -421,14 +421,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* Switched on: the panel strikes on and off once like a tube, then holds. */
-        [data-theme='dark'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='dark'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-dark-tube 0.5s steps(1) both;
         }
         /* Machined in: tile after tile snaps into place in hard steps. */
-        [data-theme='dark'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='dark'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-dark-snap 0.3s steps(3) both;
         }
-        [data-theme='dark'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='dark'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }
@@ -734,14 +734,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* Jacked in: the tile jumps into place sideways, in hard jumps. */
-        [data-theme='cyberpunk'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-cp-jack 0.3s steps(3) both;
         }
         /* The neon strikes: tile after tile strikes on like a tube, then holds. */
-        [data-theme='cyberpunk'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-cp-strike 0.45s steps(1) both;
         }
-        [data-theme='cyberpunk'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -1034,14 +1034,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* Over the horizon: the tile rises from the baseline, slowing as it lands. */
-        [data-theme='synthwave'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='synthwave'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-sw-rise 0.42s ease-out both;
         }
         /* Tape loads: tile after tile snaps in, in hard steps. */
-        [data-theme='synthwave'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='synthwave'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-sw-tape 0.3s steps(4) both;
         }
-        [data-theme='synthwave'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='synthwave'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.1s;
         }
     }
@@ -1367,14 +1367,14 @@
 
     @media (prefers-reduced-motion: no-preference) {
         /* Popped: the tile rises from the bottom, overshooting once. */
-        [data-theme='pastel'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='pastel'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-pas-pop 0.4s cubic-bezier(0.3, 1.7, 0.5, 1) both;
         }
         /* Doodled in: tile after tile is drawn in from the left, easing in and out. */
-        [data-theme='pastel'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='pastel'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: tl-pas-doodle 0.42s ease-in-out both;
         }
-        [data-theme='pastel'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='pastel'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.09s;
         }
     }

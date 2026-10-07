@@ -511,7 +511,7 @@ const ASPECTS = [
             {
                 key: 'rise',
                 name: 'Over the horizon, its stripe striking on',
-                see: 'A pink horizon line is drawn from the panel’s centre outward along its foot; the panel rises from behind it, cut by the sun’s stripes that close as it rises, and its top stripe strikes on with a neon tube’s dips: 2 beats (450 ms). Closing sets it back behind the line.',
+                see: 'A pink horizon line is drawn from the panel’s centre outward along its foot; the panel rises from behind it, cut by the sun’s stripes that close as it rises, and its top stripe strikes on with a neon tube’s dips: the panel up in 2 beats (450 ms), the stripe lit 160 ms later. Closing plays it all backwards: the stripe dips out, the panel sets back behind the line, the line draws back to its centre.',
                 verdict: rec(
                     'it is your arrival family on every panel with your menu’s strike kept as the light, and no other theme opens over a neon horizon.',
                 ),
@@ -790,7 +790,7 @@ const ASPECTS = [
             {
                 key: 'sunset',
                 name: 'It sets behind its horizon, cut by the sun’s stripes',
-                see: 'Leaving, the part sinks behind its own horizon line while the sun’s stripes cut it, the gaps widening toward the line, until it is gone (900 ms); the horizon glows and goes out. Arriving plays it backwards: it rises over the horizon, its stripes closing.',
+                see: 'Leaving, the part sinks behind its own horizon line while the sun’s stripes cut it, the gaps widening toward the line, until it is gone (900 ms); the horizon line glows up as it starts and draws back to its centre once the part is gone. Arriving plays it backwards: it rises over the horizon, its stripes closing.',
                 verdict: rec(
                     'it keeps your sunset’s stripes, loses the circle that is solstice’s, and arriving becomes your arrival family exactly.',
                 ),
@@ -1118,6 +1118,163 @@ function setPhase(/** @type {string} */ phase) {
     for (const word of words) word.textContent = tick % 2 ? 'Syncing' : 'Running';
 }
 
+/* ------------------------------------------ every close is its open reversed */
+
+// Kenny's standing rule (2026-10-07 15:16): every close is its open played
+// backwards. What a scene hides at `gap` is away; the animations that start
+// at `in` in a cell where something away has come to stay by `hold` are its
+// arrivals, noted with their keyframes and timing as the CSS gave them (a
+// live update or a press, in a cell that was there all along, is not one);
+// at `out`, every part whose option starts
+// no leave of its own plays its arrival backwards over its cell's whole
+// arrival: the same keyframes, curve and pace, what arrived last leaving
+// first (the last day of a week, the panel before the line it rose from).
+// A part whose option draws its own leave (an `out` rule) keeps it.
+// Keyed to the phase attribute, not to the clock, so whatever sets the phase
+// (the clock, research/_review/measure-motion.mjs) gets the same close.
+/** @type {WeakMap<Element, { target: Element, pseudo: string | null, keyframes: Keyframe[], timing: EffectTiming }[]>} */
+const arrivalsOf = new WeakMap();
+/** @type {WeakMap<Element, Animation[]>} */
+const closesOf = new WeakMap();
+/** @type {WeakMap<Element, Set<Element>>} */
+const awayOf = new WeakMap();
+/** When each scene last reached `in`, on the document timeline. */
+/** @type {WeakMap<Element, number>} */
+const inAt = new WeakMap();
+/** The longest close the last `out` started, in ms (the clock waits for it). */
+let closing = 0;
+const FLIP = /** @type {Record<string, PlaybackDirection>} */ ({
+    normal: 'reverse',
+    reverse: 'normal',
+    alternate: 'alternate-reverse',
+    'alternate-reverse': 'alternate',
+});
+// Played backwards, what an arrival showed before it started is what its
+// close shows after it ends, and the other way round.
+const FILL_FLIP = /** @type {Record<string, FillMode>} */ ({
+    none: 'none',
+    auto: 'none',
+    forwards: 'backwards',
+    backwards: 'forwards',
+    both: 'both',
+});
+const isAway = (/** @type {Element} */ el) => {
+    const style = getComputedStyle(el);
+    return style.visibility === 'hidden' || style.opacity === '0';
+};
+const endOf = (/** @type {EffectTiming} */ t) => (Number(t.delay) || 0) + Number(t.duration) * (Number(t.iterations) || 1);
+
+/** What the scene hides at `gap`: hidden, see-through, or fading to it. One style read per element, no layout. */
+function noteAway(/** @type {Element} */ scene) {
+    const away = new Set();
+    for (const el of scene.querySelectorAll('*')) if (isAway(el)) away.add(el);
+    for (const t of scene.getAnimations({ subtree: true }))
+        if (t instanceof CSSTransition && t.transitionProperty === 'opacity') {
+            const frames = /** @type {KeyframeEffect} */ (t.effect).getKeyframes();
+            if (String(frames[frames.length - 1]?.opacity) === '0')
+                away.add(/** @type {Element} */ (/** @type {KeyframeEffect} */ (t.effect).target));
+        }
+    awayOf.set(scene, away);
+}
+
+/** An animation as the CSS gave it: what it moves, its keyframes and its timing. */
+function noted(/** @type {Animation} */ a) {
+    const effect = /** @type {KeyframeEffect} */ (a.effect);
+    const keyframes = effect.getKeyframes().map(({ computedOffset, ...k }) => k);
+    return { target: /** @type {Element} */ (effect.target), pseudo: effect.pseudoElement, keyframes, timing: effect.getTiming() };
+}
+
+const isMotion = (/** @type {Animation} */ a) =>
+    a instanceof CSSAnimation &&
+    Boolean(a.effect && /** @type {KeyframeEffect} */ (a.effect).target) &&
+    Number.isFinite(a.effect?.getComputedTiming().endTime);
+
+/** At `in`: every animation that starts now may be part of an arrival. */
+function noteArrivals(/** @type {Element} */ scene) {
+    inAt.set(scene, Number(document.timeline.currentTime));
+    // Only what starts now: a register's own entrance that ran at page load
+    // and still fills is not part of this arrival.
+    arrivalsOf.set(
+        scene,
+        scene
+            .getAnimations({ subtree: true })
+            .filter((a) => isMotion(a) && a.playState !== 'finished')
+            .map(noted),
+    );
+}
+
+/**
+ * At `hold`: a cell (one dialog, one week of days) arrived when something
+ * that was away at `gap` stands there now; every animation that started in
+ * it at `in` is part of the arrival (the stripes over a rising panel too). A
+ * cell where nothing came to stay (a press, a live change, a dimension shown
+ * only while pressed) has nothing to close.
+ */
+function keepArrivals(/** @type {Element} */ scene) {
+    const cellOf = (/** @type {Element} */ el) => el.closest('.sy-part') || scene;
+    const arrived = new Set([...(awayOf.get(scene) || [])].filter((el) => !isAway(el)).map(cellOf));
+    arrivalsOf.set(
+        scene,
+        (arrivalsOf.get(scene) || []).filter((x) => arrived.has(cellOf(x.target))),
+    );
+}
+
+/** At `out`: what to play backwards, read now; the function it returns plays it and says how long it takes. */
+function closeByReverse(/** @type {Element} */ scene) {
+    const now = scene.getAnimations({ subtree: true }).filter(isMotion);
+    // A leave the option draws itself (an `out` rule) is running now.
+    const ownLeaves = now.filter((a) => a.playState !== 'finished').map((a) => /** @type {KeyframeEffect} */ (a.effect));
+    const same = (
+        /** @type {{ target: Element, pseudo: string | null }} */ x,
+        /** @type {{ target: Element | null, pseudoElement: string | null }} */ e,
+    ) => e.target === x.target && e.pseudoElement === x.pseudo;
+    // What arrived from away, and what moved and still holds its end pose (a
+    // readout that travelled to its mark): both go back the way they came.
+    const arrived = arrivalsOf.get(scene) || [];
+    const since = inAt.get(scene) ?? Infinity;
+    const holding = now
+        .filter((a) => a.playState === 'finished' && (a.startTime === null || Number(a.startTime) >= since - 1))
+        .map(noted)
+        .filter((x) => !arrived.some((y) => y.target === x.target && y.pseudo === x.pseudo));
+    const arrivals = [...arrived, ...holding].filter((x) => x.target.isConnected && !ownLeaves.some((e) => same(x, e)));
+    // Each cell of the scene (one dialog, one week of days) is one arrival.
+    const cellOf = (/** @type {Element} */ el) => el.closest('.sy-part') || scene;
+    /** @type {Map<Element, number>} */
+    const spans = new Map();
+    for (const x of arrivals) spans.set(cellOf(x.target), Math.max(spans.get(cellOf(x.target)) || 0, endOf(x.timing)));
+    // Read now, play later: the observer reads every scene before it writes any.
+    return () => {
+        closesOf.set(
+            scene,
+            arrivals.map((x) =>
+                x.target.animate(x.keyframes, {
+                    ...x.timing,
+                    delay: (spans.get(cellOf(x.target)) || 0) - endOf(x.timing),
+                    endDelay: 0,
+                    direction: FLIP[x.timing.direction || 'normal'],
+                    fill: FILL_FLIP[x.timing.fill || 'none'],
+                    pseudoElement: x.pseudo ?? undefined,
+                }),
+            ),
+        );
+        return Math.max(0, ...spans.values());
+    };
+}
+
+new MutationObserver((records) => {
+    const scenes = [...new Set(records.map((r) => /** @type {Element} */ (r.target)))];
+    const at = (/** @type {string} */ phase) => scenes.filter((scene) => scene.getAttribute('data-sy-phase') === phase);
+    // Every read first, for every scene, then every write, so the styles are
+    // worked out once per phase change and not once per scene.
+    for (const scene of at('gap')) noteAway(scene);
+    for (const scene of at('hold')) keepArrivals(scene);
+    for (const scene of at('in')) noteArrivals(scene);
+    const closes = at('out').map(closeByReverse);
+    // The closed pose holds through `gap`; the next arrival takes over.
+    for (const scene of at('in')) for (const a of closesOf.get(scene) || []) a.cancel();
+    if (closes.length) closing = Math.max(0, ...closes.map((play) => play()));
+}).observe(section, { subtree: true, attributeFilter: ['data-sy-phase'] });
+
 function run(/** @type {number} */ at = 0) {
     clearTimeout(timer);
     if (reduced.matches) {
@@ -1130,7 +1287,12 @@ function run(/** @type {number} */ at = 0) {
     }
     const [phase, ms] = PHASES[at];
     setPhase(phase);
-    timer = window.setTimeout(() => run((at + 1) % PHASES.length), ms * slow);
+    // The closes start in the observer above, a microtask after the phase is
+    // set; `out` lasts at least as long as the longest of them.
+    queueMicrotask(() => {
+        const wait = phase === 'out' ? Math.max(ms * slow, closing + 120) : ms * slow;
+        timer = window.setTimeout(() => run((at + 1) % PHASES.length), wait);
+    });
 }
 
 /* --------------------------------------------------------------- controls */

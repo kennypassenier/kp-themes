@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **Fixed: grotesk's resize cut cuts in three.** `kp-sig-grotesk-size-cut`
+  declared only a `from` inset, and an inset does not interpolate with a
+  line's own `clip-path: none`, so a line arriving in a resized box was
+  hidden for 120 ms and then whole. The keyframe now ends on `inset(0)`:
+  hidden, a third, two thirds, whole, 80 ms apart [themes/grotesk/CHARACTER.md
+  outlier-14].
+- **Fixed: blueprint's resize plot plots top down.** `kp-sig-blueprint-size-plot`
+  had the same missing end (hidden for 210 ms, then whole); it now ends on
+  `inset(0)` and uncovers the line from its top edge at an even pace over
+  420 ms [themes/blueprint/CHARACTER.md outlier-14].
+- **Fixed: terminal's ghost button keeps its `]` under the pointer.** The
+  ghost's closing bracket and the gap-4 cursor both live on `::after`, and the
+  cursor's rule emptied the content, so a hovered or focused ghost showed `[`,
+  its label and a cursor but never the `]`. The `]` is back and the cursor
+  stands on it, the bracket in reverse while the block is lit
+  (`kp-caret-reverse`, new, in step with `kp-caret`, with its row in
+  `TIMINGS`); both brackets sit on the cursor's line box, level with the
+  label. Under reduced motion the cursor stands lit on the bracket
+  [themes/terminal/CHARACTER.md outlier-16].
 - **Changed: cyberpunk's live update is the count-down stutter** [Kenny on
   research/cyberpunk-live, 2026-10-07 02:49]. `update()` in cyberpunk plays
   `--kp-update: stutter` (was `glitch`): two unblurred neon copies of the

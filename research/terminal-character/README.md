@@ -23,7 +23,8 @@ blink_ is the live family), never a target. The gallery shows it as decided.
 (`?embed=<aspect>&theme=terminal`), its animations listed and their animated properties sampled every frame after the demo's replay
 button and the review kit's restart. The tiles' _Scrolled_ never starts (the arrival rule, 0,4,0, outranks the live flash, 0,3,0), and
 the trend's _Reverse flash_ changes the line from `rgb(53, 242, 52)` to `rgb(104, 243, 104)`, 1.05:1, so nothing is seen: CHARACTER.md
-outlier-14 and proposal-13.
+outlier-14 and proposal-13. Both were fixed on 2026-10-07 and sampled again per frame (_Scrolled_ steps up and back; _Reverse flash_ lights
+the area under the line solid and turns the line to the plate's dark for 300 ms), with the blinks the names promise (CHARACTER.md outlier-13).
 
 **What.** One page, terminal only, in the review kit's aspect mode (`data-review-themes="terminal"`). An intro, "What terminal is" (the
 package's own parts, and on demand six decided character demos embedded as they are today: the families and the graph), then sixteen

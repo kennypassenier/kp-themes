@@ -3224,9 +3224,17 @@
     }
 }
 
+/* Both end on an explicit inset(0): an inset does not interpolate with the
+   figure's own clip-path: none, so with only a `from` every wipe ran as two
+   poses (hidden for half its run, then whole) whatever its steps(n)
+   (2026-10-07, blueprint outlier-14). */
 @keyframes cl-a-wipe {
     from {
         clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0);
     }
 }
 
@@ -3234,6 +3242,10 @@
     from {
         translate: 0 0.6em;
         clip-path: inset(0 0 0.6em 0);
+    }
+
+    to {
+        clip-path: inset(0);
     }
 }
 

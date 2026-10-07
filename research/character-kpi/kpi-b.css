@@ -150,9 +150,12 @@
         outline-offset: 2px;
     }
 
+    /* Pressing prints the tile reverse-video, as its text says (it was a
+       16 % phosphor tint, 2026-10-07, outlier-12). */
     [data-theme='terminal'] [data-kf-interactive='2'] a.kp-kpi:active,
     [data-theme='terminal'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
-        --kf-press-plate: color-mix(in oklab, var(--primary) 16%, var(--card));
+        background-color: var(--primary);
+        color: var(--primary-foreground);
     }
 
     [data-theme='terminal'] [data-kf-interactive='3'] a.kp-kpi:hover,
@@ -856,6 +859,22 @@
        keyframes), and the still frame above is what reduced motion shows. */
     @media (prefers-reduced-motion: no-preference) {
         /* terminal: hard, discrete steps — the terminal never eases */
+
+        /* interactive 2, the cursor blinks: the cursor ring the frame picks
+           up on hover blinks at the theme's one cursor rate (kp-caret, 1 s,
+           on half and off half, the off half the frame's own line); at rest
+           nothing blinks (it drew a steady ring, 2026-10-07, outlier-13). */
+        [data-theme='terminal'] [data-kf-interactive='2'] a.kp-kpi:hover,
+        [data-theme='terminal'] [data-kf-interactive='2'] .kp-kpi--toggle:hover {
+            animation: kf-term-ring 1s steps(1) infinite;
+        }
+
+        @keyframes kf-term-ring {
+            50% {
+                border-color: var(--border-strong);
+            }
+        }
+
         [data-theme='terminal'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
             animation: kf-term-caret calc(0.9s / var(--kf-speed, 1)) steps(2, jump-none) infinite;
         }

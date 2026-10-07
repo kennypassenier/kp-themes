@@ -109,3 +109,25 @@ Each option may carry a `hint`, or `hints` by theme, shown under its label.
 Approving refuses until every choice is ticked; ticking fires `review:choice`
 (`{ id, value }`) on the section so the page can show the pick; the picks are
 in the answer under "Picked per theme" and "Picked once".
+
+## Measuring the motion of a character demo
+
+`measure-motion.mjs` measures what the motion scenes of a character demo
+really do, frame by frame, in Firefox (Kenny, 2026-10-07: a dialog that
+"measured" 520 ms read as near-instant next to 900 ms stems). It stops the
+demo's clock, drives every `.<p>-scene[data-<p>-kind="cycle"]` through
+`gap → in` and `hold → out` itself, pauses every animation that starts and
+seeks them together in 10 ms steps. Per animated part it reports t50 and t90
+(when the part is half and nine tenths of the way, a clip-path counted by the
+area it shows), the run from the first visible change to the last, `FRONT`
+when nine tenths are done in the first 30 % of the run, and, for every part
+that arrives, whether its close is its arrival played backwards (within one
+frame and 8 % of each value's range).
+
+```sh
+python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
+node research/_review/measure-motion.mjs research/nostromo-character [--aspect opening] [--parts] [--json out.json] [--width 900]
+```
+
+No gate runs it. Imported, it lends `table`, `timing` and `reversed` to a
+script that measures other motion the same way.

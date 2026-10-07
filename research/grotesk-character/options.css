@@ -1564,7 +1564,8 @@
             animation: gk-from-end calc(220ms * var(--gk-slow, 1)) linear reverse forwards;
         }
 
-        /* Leaving, the other two ways (the part inside the printed wrapper). */
+        /* Leaving, the other two ways (the part inside the printed wrapper);
+           each arrival and leave are one animation, played both ways. */
         .gk-scene:is([data-gk-leave='cut'], [data-gk-leave='shove'])[data-gk-phase='gap'] .gk-leaver > :first-child {
             visibility: hidden;
         }
@@ -1574,7 +1575,7 @@
         }
 
         .gk-scene[data-gk-leave='cut'][data-gk-phase='out'] .gk-leaver > :first-child {
-            animation: gk-cut-out calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) forwards;
+            animation: gk-cut calc(var(--gk-set) * var(--gk-slow, 1)) steps(3, jump-end) reverse forwards;
         }
 
         .gk-scene[data-gk-leave='shove'][data-gk-phase='in'] .gk-leaver > :first-child {

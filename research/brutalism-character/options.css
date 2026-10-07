@@ -632,6 +632,13 @@
             animation-duration: calc(var(--bc-dialog) * var(--bc-slow, 1));
         }
 
+        /* 1 · the curve: the dialog lands at the menu's and the tile's pace,
+           so the three show one curve side by side (Kenny, 2026-10-07: parts
+           in one scene arrive and leave alike). */
+        .bc-scene[data-bc-curve][data-bc-phase='in'] .bc-drops--dialog > .bc-slab {
+            animation-duration: calc(var(--bc-drop) * var(--bc-slow, 1));
+        }
+
         /* A share is thrown on: it falls into its groove from up-left. */
         .bc-scene[data-bc-phase='in'] .bc-track {
             animation: bc-throw calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-in) both;
@@ -645,27 +652,11 @@
             animation-delay: calc(140ms * var(--bc-slow, 1));
         }
 
-        /* G12: what goes is lifted off and gone in one cut. */
-        .bc-scene[data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
-            --bc-h: 1rem;
-            animation: bc-lift-off calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-out) forwards;
-        }
-
-        .bc-scene[data-bc-phase='out'] .bc-small.bc-arrives {
-            --bc-h: 0.5rem;
-        }
-
-        .bc-scene[data-bc-phase='out'] .bc-track {
-            animation: bc-throw calc(var(--bc-drop) * var(--bc-slow, 1)) var(--bc-out) reverse forwards;
-        }
-
+        /* What goes plays its arrival backwards (demo.js, closeByReverse):
+           lifted back up off its footprint on the same curve, and gone. */
         /* 2 · straight down: the shadow travels with the part. */
         .bc-scene[data-bc-direction='down'][data-bc-phase='in'] :is(.bc-arrives, .bc-drops > .bc-slab) {
             animation-name: bc-down;
-        }
-
-        .bc-scene[data-bc-direction='down'][data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
-            animation-name: bc-down-out;
         }
 
         /* 2 · shoved in from the start side. */
@@ -673,17 +664,9 @@
             animation-name: bc-side;
         }
 
-        .bc-scene[data-bc-direction='side'][data-bc-phase='out'] :is(.bc-arrives, .bc-drops > .bc-slab) {
-            animation-name: bc-side-out;
-        }
-
         /* 3 · slammed in two hard steps, as the menu's pick draws it. */
         .bc-scene[data-bc-opening='slam'][data-bc-phase='in'] .bc-drops > .bc-slab {
             animation: bc-slam2 calc(300ms * var(--bc-slow, 1)) steps(2, jump-end) both;
-        }
-
-        .bc-scene[data-bc-opening='slam'][data-bc-phase='out'] .bc-drops > .bc-slab {
-            animation: bc-slam2-out calc(300ms * var(--bc-slow, 1)) steps(2, jump-end) forwards;
         }
 
         /* 3 · the signature's tilted drop with a fade. */
@@ -694,10 +677,6 @@
         .bc-scene[data-bc-opening='tilt'][data-bc-phase='in'] .bc-drops--dialog > .bc-slab {
             animation-name: bc-tilt-big;
             animation-duration: calc(1520ms * var(--bc-slow, 1));
-        }
-
-        .bc-scene[data-bc-opening='tilt'][data-bc-phase='out'] .bc-drops > .bc-slab {
-            animation: bc-tilt calc(420ms * var(--bc-slow, 1)) var(--bc-smooth) reverse forwards;
         }
 
         /* 4 · contact: a press lands during the in phase. */
@@ -756,13 +735,6 @@
         }
     }
 
-    @keyframes bc-down-out {
-        to {
-            translate: 0 calc(-1 * var(--bc-h));
-            visibility: hidden;
-        }
-    }
-
     @keyframes bc-side {
         from {
             translate: calc(-1 * var(--bc-h)) 0;
@@ -770,13 +742,6 @@
 
         to {
             translate: 0 0;
-        }
-    }
-
-    @keyframes bc-side-out {
-        to {
-            translate: calc(-1 * var(--bc-h)) 0;
-            visibility: hidden;
         }
     }
 
@@ -792,21 +757,6 @@
 
         100% {
             translate: 0 0;
-        }
-    }
-
-    @keyframes bc-slam2-out {
-        0% {
-            translate: 0 0;
-        }
-
-        50% {
-            translate: 0 -4px;
-        }
-
-        100% {
-            translate: 0 -14px;
-            visibility: hidden;
         }
     }
 
@@ -1442,7 +1392,7 @@
 
         /* 12 · driven into the ground and cut. */
         .bc-scene[data-bc-leave='ground'][data-bc-phase='in'] .bc-leaver > * {
-            animation: bc-ground calc(300ms * var(--bc-slow, 1)) var(--bc-up) reverse both;
+            animation: bc-ground calc(300ms * var(--bc-slow, 1)) var(--bc-fall) reverse both;
         }
 
         .bc-scene[data-bc-leave='ground'][data-bc-phase='out'] .bc-leaver > * {

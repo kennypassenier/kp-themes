@@ -23,7 +23,9 @@ map), never a target. The gallery shows it as decided, first.
 grotesk pick was played in Firefox through its demo's own embed (`?embed=<aspect>&theme=grotesk`), its animations listed and their
 animated properties sampled every frame after the demo's replay button. Three picks do not move (the busy table's _The poster shifts_,
 the tour's _The rule re-stamps_, the tiles' _Flipped_) and neither does the package's resize cut (`kp-sig-grotesk-size-cut`, an inset
-animated toward `none`, which flips at half time): CHARACTER.md outlier-14 and proposal-17, with the cause of each.
+animated toward `none`, which flips at half time): CHARACTER.md outlier-14 and proposal-17, with the cause of each. All four were fixed
+on 2026-10-07 and sampled again per frame: the poster shifts 0.12rem and back on a 450 ms beat, the rule is stamped for the whole 160 ms,
+_Flipped_ plays, and the resize cut shows three cuts.
 
 **What.** One page, grotesk only, in the review kit's aspect mode (`data-review-themes="grotesk"`). An intro, "What grotesk is" (the
 package's own parts, and on demand six decided character demos embedded as they are today, the graph's _Out of register_ first), then
@@ -79,6 +81,7 @@ recommended, on the page and in its hint in the dialog.
   options of a row start together; still and looping scenes stand at `hold`. It only writes attributes and text, in one pass, and never
   reads layout; rows far off screen are not rendered (`content-visibility: auto`). Replay restarts it; the speed buttons stretch every
   duration by 2 or 4; the dialog's Pause (Space) stops it. Loading pictures and the spinners loop in CSS.
+- Every close is its open played backwards (Kenny's standing rule; 2026-10-07 15:16: "ik weet niet of je openen en sluiten bv altijd het omgekeerde van mekaar hebt gemaakt"). At `out`, `demo.js` (`closeByReverse`, keyed to `data-gk-phase`) plays every arrival of a cell backwards over the cell's whole arrival: the same keyframes, curve and pace, what arrived last leaving first; the clock's `out` lasts as long as the longest close. Before, most scenes stood through `out` and were cut away at `gap`, or snapped shut as `out` began. The leave question's cut-out was a separate set of keyframes, a step off its cut-in; it is now the cut-in played backwards. Measured frame by frame in Firefox with `research/_review/measure-motion.mjs`: every arrival's close is now its mirror within one frame.
 - Hover, focus and press are shown standing still on marked parts (`.gk-pointed`, `.gk-focused`) and by the clock (`.gk-press`); the State
   buttons force a state on every button of question 14.
 - The gallery of decided components loads the character demos through the review kit's embed mode only when it is opened.

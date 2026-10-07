@@ -538,8 +538,11 @@
 
     /* next: the rule re-stamps / the block re-slams / the frame re-snaps */
     @media (prefers-reduced-motion: no-preference) {
+        /* jump-start: the stamped rule is on from the first frame and cut
+           at the last; jump-end held the empty first keyframe for the whole
+           160 ms, so the rule never showed (2026-10-07, outlier-14). */
         [data-theme='grotesk'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
-            animation: kp-sig-drawer-next-grotesk-1 160ms steps(1, jump-end);
+            animation: kp-sig-drawer-next-grotesk-1 160ms steps(1, jump-start);
         }
 
         [data-theme='grotesk'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {

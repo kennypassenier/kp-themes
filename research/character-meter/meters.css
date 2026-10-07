@@ -5581,17 +5581,21 @@
 
     /* ── terminal · tone 2 ── */
 
+    /* Redraw: the meter is printed again one character cell over, then
+       again in its place, two whole poses and nothing between (the shared
+       jolt sampled as a 2 px shake of nine values; 2026-10-07,
+       outlier-13). One keyframe set per tone, so a new tone restarts it. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='terminal'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-jolt-o 160ms steps(2);
+            animation: cm-tm-redraw-o 160ms steps(1);
         }
 
         [data-theme='terminal'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-jolt-w 160ms steps(2);
+            animation: cm-tm-redraw-w 160ms steps(1);
         }
 
         [data-theme='terminal'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-jolt-d 160ms steps(2);
+            animation: cm-tm-redraw-d 160ms steps(1);
         }
     }
 
@@ -7685,6 +7689,39 @@
         translate: 0 -160%;
     }
 
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes cm-tm-redraw-o {
+    from {
+        translate: var(--cm-cell, 0.375rem) 0;
+    }
+
+    50%,
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes cm-tm-redraw-w {
+    from {
+        translate: var(--cm-cell, 0.375rem) 0;
+    }
+
+    50%,
+    to {
+        translate: 0 0;
+    }
+}
+
+@keyframes cm-tm-redraw-d {
+    from {
+        translate: var(--cm-cell, 0.375rem) 0;
+    }
+
+    50%,
     to {
         translate: 0 0;
     }

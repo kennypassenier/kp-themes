@@ -1174,6 +1174,13 @@
             animation: kp-caret calc(var(--tc-blink) * var(--tc-slow, 1)) steps(1) infinite;
         }
 
+        /* Today's key figure (its pick, The cursor blinks): the cursor ring
+           blinks under the pointer at the same rate, off half on the frame's
+           own line (the pick was fixed to blink, 2026-10-07). */
+        [data-tc-show='hover'] .tc-scene[data-tc-composites='today'] .tc-in-kpi {
+            animation: tc-today-ring calc(var(--tc-blink) * var(--tc-slow, 1)) steps(1) infinite;
+        }
+
         /* Contact: one cell (34 ms) in one hard step. */
         .tc-scene .tc-press {
             transition:
@@ -1580,6 +1587,13 @@
 
         to {
             rotate: 180deg;
+        }
+    }
+
+    @keyframes tc-today-ring {
+        50% {
+            border-color: var(--border-strong);
+            box-shadow: none;
         }
     }
 

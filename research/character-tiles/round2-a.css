@@ -189,10 +189,10 @@
     /* Glitch in: the tile tears through a few torn, over-bright frames
        before it locks still, as the calendar's own month glitches in. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: r2-cy-arrive-2 0.4s steps(4) both;
         }
-        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-2'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.08s;
         }
     }
@@ -222,10 +222,10 @@
     /* Packet race: a bright trace races once around the tile's edge
        before it holds, as the graph's own packet race already runs. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
             animation: r2-cy-arrive-3 0.5s steps(1) both;
         }
-        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:nth-child(2):not([data-kp-busy]) {
+        [data-theme='cyberpunk'] [data-ti-arrival='r2-cy-arrive-3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
             animation-delay: 0.12s;
         }
     }

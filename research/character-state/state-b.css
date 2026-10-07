@@ -115,9 +115,44 @@
         --sw-ink: var(--destructive-foreground);
     }
 
+    /* Tone 3, the alert blink: a pending or failed state's cursor blinks
+       in its tone, at the theme's one cursor rate (kp-caret, 1 s, on half
+       and off half). The only loop at rest in this file, and only on an
+       alert; the name promises it (it drew a ring and nothing blinked,
+       2026-10-07, outlier-13). `scale`, so a shape's own transform stays.
+       The demo keeps [data-sw-playing] on after a change, and a change on
+       the dot (1 and 3) names its own animation there: on an alert those
+       two run the change first and the blink after it. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='pending']::before,
+        [data-theme='terminal'] [data-sw-tone='3'][data-sw-kind='bad']::before {
+            animation: sw-terminal-alert 1s steps(1) infinite;
+        }
+
+        [data-theme='terminal'] [data-sw-change='1'][data-sw-playing][data-sw-tone='3']:is([data-sw-kind='pending'], [data-sw-kind='bad'])::before {
+            animation:
+                sw-terminal-blip 0.5s ease-out,
+                sw-terminal-alert 1s steps(1) 0.5s infinite;
+        }
+
+        [data-theme='terminal'] [data-sw-change='3'][data-sw-playing][data-sw-tone='3']:is([data-sw-kind='pending'], [data-sw-kind='bad'])::before {
+            animation:
+                sw-terminal-cursor 0.4s steps(1),
+                sw-terminal-alert 1s steps(1) 0.4s infinite;
+        }
+
+        @keyframes sw-terminal-alert {
+            50% {
+                scale: 1 0;
+            }
+        }
+    }
+
     /* Change: a blip (the dot flares), redrawn (the rule redraws left to
        right under the new word) and the cursor blinks faster (two quick
-       beats, then settles — scaleY, never opacity). */
+       blinks, off and on twice in hard steps, then settles — scaleY, never
+       opacity; it ran steps(2) through its keyframes and sampled as a
+       squash through 0.54, 2026-10-07). */
     [data-theme='terminal'] [data-sw-change='1'][data-sw-playing]::before {
         animation: sw-terminal-blip 0.5s ease-out;
     }
@@ -125,7 +160,7 @@
         animation: sw-terminal-redraw 0.5s linear;
     }
     [data-theme='terminal'] [data-sw-change='3'][data-sw-playing]::before {
-        animation: sw-terminal-cursor 0.4s steps(2, jump-end);
+        animation: sw-terminal-cursor 0.4s steps(1);
     }
 
     @media (prefers-reduced-motion: no-preference) {
