@@ -37,10 +37,117 @@
             linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
             linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
             repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
-        /* The flat crossing grid of the picked busy shape (option 2 of 7). */
-        --sy-flat-grid:
-            repeating-linear-gradient(0deg, hsl(from var(--primary) h s l / 0.2) 0 1px, transparent 1px 10px),
-            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 0 1px, transparent 1px 10px);
+        /* Round 2: the progress bar's own parts as tokens. The sun's ramp is
+           the bar's fill (pink, then laser yellow), cut by the bar's stripes;
+           the head is its glowing edge. */
+        --sy-ramp: linear-gradient(90deg, var(--kp-sun-bottom), var(--primary) 45%, var(--kp-sun-top));
+        --sy-ramp-loop: linear-gradient(
+            90deg,
+            var(--kp-sun-bottom),
+            var(--primary) 25%,
+            var(--kp-sun-top) 50%,
+            var(--primary) 75%,
+            var(--kp-sun-bottom)
+        );
+        --sy-ramp-v: linear-gradient(180deg, var(--kp-sun-top), var(--primary) 55%, var(--kp-sun-bottom));
+        --sy-bar-stripes: linear-gradient(
+            to bottom,
+            transparent 0 48%,
+            var(--sidebar-background) 48% 54%,
+            transparent 54% 64%,
+            var(--sidebar-background) 64% 73%,
+            transparent 73% 81%,
+            var(--sidebar-background) 81% 92%,
+            transparent 92%
+        );
+        --sy-head:
+            0 0 3px hsl(from var(--primary) h s l / 0.9), 0 0 8px hsl(from var(--primary) h s l / 0.7), 0 0 16px hsl(from var(--primary) h s l / 0.45);
+        /* G1, round 2: the motion characters of the curve question, as easing. */
+        --sy-c-transport: linear(
+            0,
+            0.008 5%,
+            0.031 10%,
+            0.07 15%,
+            0.125 20%,
+            0.188 25%,
+            0.25 30%,
+            0.312 35%,
+            0.375 40%,
+            0.438 45%,
+            0.5 50%,
+            0.562 55%,
+            0.625 60%,
+            0.688 65%,
+            0.75 70%,
+            0.812 75%,
+            0.875 80%,
+            0.93 85%,
+            0.969 90%,
+            0.992 95%,
+            1
+        );
+        --sy-c-surges: linear(
+            0,
+            0.015 2.8%,
+            0.053 5.6%,
+            0.107 8.3%,
+            0.169 11.1%,
+            0.231 13.9%,
+            0.284 16.7%,
+            0.321 19.4%,
+            0.333 22.2%,
+            0.333 25%,
+            0.333 27.8%,
+            0.333 30.6%,
+            0.333 33.3%,
+            0.333 36.1%,
+            0.333 38.9%,
+            0.347 41.7%,
+            0.384 44.4%,
+            0.438 47.2%,
+            0.5 50%,
+            0.562 52.8%,
+            0.616 55.6%,
+            0.653 58.3%,
+            0.667 61.1%,
+            0.667 63.9%,
+            0.667 66.7%,
+            0.667 69.4%,
+            0.667 72.2%,
+            0.667 75%,
+            0.667 77.8%,
+            0.679 80.6%,
+            0.716 83.3%,
+            0.769 86.1%,
+            0.831 88.9%,
+            0.893 91.7%,
+            0.947 94.4%,
+            0.985 97.2%,
+            1
+        );
+        --sy-c-strike: linear(
+            0,
+            0.331 5%,
+            0.562 10%,
+            0.712 15%,
+            0.798 20%,
+            0.838 25%,
+            0.849 30%,
+            0.859 35%,
+            0.88 40%,
+            0.899 45%,
+            0.916 50%,
+            0.932 55%,
+            0.947 60%,
+            0.959 65%,
+            0.97 70%,
+            0.979 75%,
+            0.987 80%,
+            0.992 85%,
+            0.997 90%,
+            0.999 95%,
+            1
+        );
     }
 
     .sy-scene {
@@ -82,7 +189,7 @@
 
     /* A grid places an absolute child in its grid area; these drawings span
        the whole plate, so they take no area (the key figure is a grid). */
-    .sy-scene :is(.sy-strip, .sy-floor, .sy-load, .sy-slits) {
+    .sy-scene :is(.sy-strip, .sy-floor, .sy-load, .sy-corners, .sy-fx, .sy-fring) {
         grid-area: auto;
     }
 
@@ -105,6 +212,7 @@
         border-block-start: 1px solid hsl(from var(--kp-pink-text) h s l / 0.6);
         background: var(--sy-floor-lines);
         box-shadow: 0 -2px 12px hsl(from var(--primary) h s l / 0.3);
+        clip-path: inset(-14px 0 0 0);
         pointer-events: none;
     }
 
@@ -292,10 +400,6 @@
         gap: 0.35rem;
     }
 
-    .sy-scene .sy-week {
-        padding-block-end: 0.35rem;
-    }
-
     .sy-scene .sy-day {
         position: relative;
         display: inline-grid;
@@ -314,50 +418,6 @@
         font-size: 0.85rem;
         font-weight: 700;
         text-shadow: var(--sy-tube);
-    }
-
-    .sy-scene .sy-rows {
-        display: grid;
-        gap: 0.25rem;
-    }
-
-    .sy-scene .sy-row-line {
-        color: var(--accent);
-        font-family: var(--theme-font-mono);
-        font-size: 1.05rem;
-        letter-spacing: 0.06em;
-    }
-
-    /* Three readouts: grooves the sun's ramp fills to its mark. */
-    .sy-scene .sy-tracks {
-        display: grid;
-        gap: 0.55rem;
-    }
-
-    .sy-scene .sy-groove {
-        position: relative;
-        display: block;
-        block-size: 0.6rem;
-        overflow: hidden;
-        border-radius: 2px;
-        background: var(--sidebar-background);
-        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
-    }
-
-    .sy-scene .sy-track {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: var(--to);
-        background: linear-gradient(90deg, var(--kp-sun-bottom), var(--primary) 55%, var(--kp-sun-top));
-        transform-origin: left center;
-    }
-
-    .sy-scene .sy-bulb-row {
-        position: relative;
-        block-size: 1rem;
-        border: 1px solid var(--kp-hairline);
-        background: var(--card);
     }
 
     /* A chart's plot: the night sky over the floor, a neon line, cyan ticks. */
@@ -395,31 +455,6 @@
         font-family: var(--theme-font-mono);
         font-size: 1rem;
         letter-spacing: 0.06em;
-    }
-
-    .sy-scene .sy-spark-wrap {
-        display: grid;
-        gap: 0.35rem;
-    }
-
-    .sy-scene .sy-spark {
-        display: block;
-        block-size: 2.2rem;
-        color: color-mix(in oklab, var(--primary) 62%, var(--foreground));
-    }
-
-    .sy-scene .sy-spark svg {
-        display: block;
-        inline-size: 100%;
-        block-size: 100%;
-        overflow: visible;
-        filter: drop-shadow(0 0 1.5px var(--primary)) drop-shadow(0 0 4px var(--primary));
-    }
-
-    .sy-scene .sy-column {
-        display: grid;
-        gap: 0.3rem;
-        justify-items: start;
     }
 
     .sy-scene .sy-meter,
@@ -463,15 +498,6 @@
         margin: 0;
     }
 
-    .sy-scene .sy-skel .sy-bulbs {
-        inset-inline: 0;
-        inset-block-start: 0;
-    }
-
-    .sy-scene .sy-skel .sy-dash {
-        inset: auto 0 -4px;
-    }
-
     .sy-scene .sy-table {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -485,54 +511,6 @@
     .sy-scene .sy-table > span:nth-of-type(-n + 3) {
         color: var(--kp-pink-text);
         text-transform: uppercase;
-    }
-
-    .sy-scene .sy-prose,
-    .sy-scene .sy-heading {
-        margin: 0;
-    }
-
-    .sy-scene .sy-heading {
-        color: var(--kp-core);
-        font-family: var(--theme-font-display);
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        text-shadow: var(--sy-tube);
-    }
-
-    .sy-scene .sy-rule {
-        display: block;
-        block-size: 2px;
-        margin-block-start: 0.4rem;
-        background: linear-gradient(to right, transparent, var(--kp-core) 20%, var(--kp-core) 80%, transparent);
-        box-shadow: var(--sy-laser-glow);
-    }
-
-    .sy-scene .sy-header .kp-page-header__title,
-    .sy-scene .sy-header .kp-page-header__description {
-        margin: 0;
-    }
-
-    .sy-scene .sy-header .kp-page-header__inner {
-        display: grid;
-        gap: 0.6rem;
-    }
-
-    .sy-scene .sy-header .kp-page-header__actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        justify-content: flex-start;
-    }
-
-    .sy-scene .sy-header {
-        position: relative;
-        margin: 0;
-        padding: 0.75rem 1rem;
-        border: 1px solid var(--kp-hairline);
-        background: var(--card);
     }
 
     .sy-scene .sy-header-mini {
@@ -572,22 +550,6 @@
         position: relative;
     }
 
-    /* The sun's two slits, for a part that has no register ::before/::after. */
-    .sy-scene .sy-slits {
-        position: absolute;
-        inset: 0 -4px;
-        z-index: 2;
-        background:
-            linear-gradient(var(--sy-slit-ground, var(--card)) 0 0) 0 34% / 100% 3px no-repeat,
-            linear-gradient(var(--sy-slit-ground, var(--card)) 0 0) 0 58% / 100% 3px no-repeat;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .sy-scene .sy-pop .sy-slits {
-        --sy-slit-ground: var(--popover);
-    }
-
     /* The horizon a part rises over and sets behind (G3, G12): a near-white
        core with the pink bloom, under the part; dark at rest. */
     .sy-scene .sy-rise {
@@ -623,27 +585,6 @@
         pointer-events: none;
     }
 
-    .sy-scene .sy-horizon--week {
-        inset-inline: -0.2rem;
-        inset-block-end: 0;
-    }
-
-    .sy-scene .sy-sun-over {
-        position: absolute;
-        inset: 0;
-        z-index: 4;
-        background: linear-gradient(
-            180deg,
-            var(--chart-3),
-            color-mix(in oklab, var(--chart-3), var(--primary)) 35%,
-            var(--primary) 70%,
-            var(--chart-4)
-        );
-        mask: repeating-linear-gradient(180deg, var(--foreground) 0 8px, transparent 8px 12px);
-        clip-path: circle(0% at 50% 120%);
-        pointer-events: none;
-    }
-
     .sy-scene .sy-leaver__body {
         position: relative;
     }
@@ -652,375 +593,294 @@
         margin: 0;
     }
 
-    /* ── Loading (G10) at rest: one drawing shown per option ─────────── */
+    /* ── The pieces round 2 adds ─────────────────────────────────────── */
 
-    .sy-scene .sy-waits {
-        position: relative;
-    }
-
-    .sy-scene .sy-load {
+    /* Layers an option may draw: the corners' own element, the press layer,
+       the focus ring. Dark (display: none) until an option shows them. */
+    .sy-scene :is(.sy-corners, .sy-fx, .sy-fring) {
         position: absolute;
-        inset: 0;
-        z-index: 2;
+        display: none;
         pointer-events: none;
     }
 
-    .sy-scene .sy-load > * {
-        position: absolute;
+    .sy-scene .sy-corners {
+        inset: 0;
+        z-index: 2;
+    }
+
+    .sy-scene .sy-fx {
+        inset: 0;
+        z-index: -1;
+    }
+
+    .sy-scene .sy-fring {
+        inset: var(--sy-fo, -6px);
+        z-index: 3;
+    }
+
+    /* Inside a framed control or an entry the ring is drawn inset (DI2). */
+    .sy-scene :is(.kp-button:not(.kp-button--ghost), .kp-menu__item) > .sy-fring {
+        --sy-fo: 0;
+    }
+
+    .sy-scene .sy-cuts > i {
         display: none;
     }
 
-    /* The marquee: a row of bulbs along the top, one in four lit. */
-    .sy-scene .sy-bulbs {
-        inset: 6px 0.5rem auto;
-        block-size: 3px;
-        background:
-            repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 3.4rem) 0 0 / 3.4rem 100% repeat-x,
-            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.25) 0 0.5rem, transparent 0.5rem 0.85rem) 0 0 / 0.85rem 100%
-                repeat-x;
-        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.75));
+    .sy-scene .sy-bar {
+        max-inline-size: none;
     }
 
-    .sy-scene .sy-bulb-row .sy-bulbs {
-        inset: calc(50% - 1.5px) 0.5rem auto;
+    .sy-scene .sy-pbars {
+        display: grid;
+        gap: 0.7rem;
     }
 
-    .sy-scene .sy-day .sy-bulbs,
-    .sy-scene .sy-day .sy-dash {
-        inset-inline: calc(50% - 0.25rem);
-        inline-size: 0.5rem;
-        background: hsl(from var(--primary) h s l / 0.25);
+    .sy-scene .sy-pbar-row {
+        display: grid;
+        gap: 0.2rem;
     }
 
-    .sy-scene .sy-day .sy-bulbs {
-        inset-block-start: 4px;
+    .sy-scene .sy-pbar-row .sy-cap {
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        color: var(--accent);
     }
 
-    .sy-scene .sy-meter-wait .sy-bulbs {
-        inset-block-start: calc(50% - 1.5px);
-        inset-inline: 2px;
+    /* Tokens only reach the dialog's stage through :is(.sy-page, .rv-dialog__stage). */
+
+    /* ── The motion curve (G1) ───────────────────────────────────────── */
+
+    .sy-scene[data-sy-curve] {
+        --sy-curve: var(--sy-sun);
     }
 
-    .sy-scene .kp-menu__item .sy-bulbs {
-        inset-block-start: 2px;
+    .sy-scene[data-sy-curve='transport'] {
+        --sy-curve: var(--sy-c-transport);
     }
 
-    /* The drive: pink dashes along the foot (the key figure's, tiles' and menu's picks). */
-    .sy-scene .sy-dash {
-        inset: auto 0.75rem 0.45rem;
-        block-size: 2px;
-        background: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 10px) 0 0 / 10px 100% repeat-x;
+    .sy-scene[data-sy-curve='beats'] {
+        --sy-curve: steps(5, jump-none);
     }
 
-    .sy-scene .sy-day .sy-dash {
-        inset-block-end: 3px;
+    .sy-scene[data-sy-curve='surges'] {
+        --sy-curve: var(--sy-c-surges);
     }
 
-    .sy-scene .sy-meter-wait .sy-dash {
-        inset: calc(50% - 1px) 2px auto;
+    .sy-scene[data-sy-curve='strike'] {
+        --sy-curve: var(--sy-c-strike);
     }
 
-    /* As today: each part its own (CHARACTER.md §2.2). */
-    .sy-scene[data-sy-loading='mix'] .sy-roll {
-        inset: 0 0 auto;
-        block-size: 3px;
-        background: var(--primary);
+    .sy-scene[data-sy-curve] .kp-progressbar__fill,
+    .sy-scene[data-sy-curve] .kp-progressbar__head {
+        transition: none;
     }
 
-    .sy-scene[data-sy-loading='mix'] .sy-plot .sy-roll {
-        inset: 0 auto 0 70%;
-        inline-size: 2px;
-        block-size: auto;
-        background: var(--accent);
+    /* ── Opening (G3): what the panel is dressed in, at rest ─────────── */
+
+    .sy-scene[data-sy-opening] {
+        --sy-curve: var(--sy-sun);
     }
 
-    .sy-scene[data-sy-loading='marquee'] .sy-bulbs,
-    .sy-scene[data-sy-loading='drive'] .sy-dash,
-    .sy-scene[data-sy-durations] .sy-bulbs,
-    .sy-scene[data-sy-curve] .sy-bulbs {
-        display: block;
+    /* The laser climbs: the beam is the horizon, anchored to the top. */
+    .sy-scene[data-sy-opening='climb'] .sy-opens > .sy-horizon {
+        inset-block: -2px auto;
     }
 
-    .sy-scene[data-sy-loading='mix'] :is(.sy-kpi, .kp-menu__item) .sy-dash,
-    .sy-scene[data-sy-loading='mix'] :is(.sy-day, .sy-plot) .sy-roll {
-        display: block;
-    }
-
-    /* The table as picked: one bulb near its top-end corner. */
-    .sy-scene[data-sy-loading='mix'] .sy-table .sy-bulbs {
-        display: block;
-        inset-inline: auto 0.5rem;
-        inline-size: 0.5rem;
-        background: repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 0.85rem) 0 0 / 1.35rem 100%;
-    }
-
-    .sy-scene[data-sy-loading='mix'] .sy-plot--wait .sy-floor {
-        background:
-            repeating-linear-gradient(90deg, hsl(from var(--accent) h s l / 0.35) 0 1px, transparent 1px 12px),
-            repeating-linear-gradient(0deg, hsl(from var(--accent) h s l / 0.18) 0 1px, transparent 1px 12px);
-        block-size: 100%;
-        border: 0;
-        box-shadow: none;
-    }
-
-    /* Only the meter's own overdrive bar plays as today; the skeleton's sheen too. */
-    .sy-scene:not([data-sy-loading='mix']) .kp-meter[data-kp-loading]::after {
-        animation: none;
+    /* The blinds: five bars in the ground's colour over the panel, widest at
+       the horizon, each drawing back toward its own top. */
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts {
+        display: flex;
+        flex-direction: column;
+        inset-inline: 0;
         background: none;
     }
 
-    .sy-scene:not([data-sy-loading='mix']) .sy-skel .kp-skeleton::after {
-        display: none;
-    }
-
-    /* ── The spinner (G11): one of three drawings per option ─────────── */
-
-    .sy-scene .sy-spin {
-        position: relative;
-        display: inline-grid;
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i {
+        display: block;
         flex: none;
-        inline-size: var(--sy-spin, 1rem);
-        block-size: var(--sy-spin, 1rem);
-        vertical-align: middle;
+        background: var(--background);
+        transform: scaleY(0);
+        transform-origin: 50% 0;
     }
 
-    .sy-scene .sy-spin > * {
-        grid-area: 1 / 1;
-        display: none;
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i:nth-child(1) {
+        block-size: 12%;
     }
 
-    .sy-scene .sy-spin .kp-spinner {
-        inline-size: 100%;
-        block-size: 100%;
-        margin: 0;
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i:nth-child(2) {
+        block-size: 16%;
     }
 
-    .sy-scene[data-sy-spinner='sun'] .sy-spin__sun,
-    .sy-scene[data-sy-spinner='ring'] .sy-spin__ring,
-    .sy-scene[data-sy-spinner='road'] .sy-spin__road {
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i:nth-child(3) {
+        block-size: 20%;
+    }
+
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i:nth-child(4) {
+        block-size: 24%;
+    }
+
+    .sy-scene[data-sy-opening='blinds'] .sy-opens > .sy-cuts > i:nth-child(5) {
+        block-size: 28%;
+    }
+
+    /* The marquee carries it on: a row of bulbs along the top edge. */
+    .sy-scene[data-sy-opening='marquee'] .sy-opens > .sy-cuts {
+        inset: -10px 0 auto;
+        block-size: 9px;
+        background: radial-gradient(circle, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2px, transparent 3.6px) 0 50% / 0.9rem 100%
+            repeat-x;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
+    }
+
+    /* ── The corners (G6): the four corners' own element ─────────────── */
+
+    .sy-scene :is(.sy-plate, .sy-panel) {
+        --sy-pg: var(--card);
+    }
+
+    .sy-scene .sy-panel {
+        --sy-pg: var(--popover);
+    }
+
+    /* Tube ends overshoot: the stripe and a bottom tube run past the sides. */
+    .sy-scene[data-sy-corners='tubes'] :is(.sy-plate, .sy-panel) {
+        overflow: visible;
+    }
+
+    .sy-scene[data-sy-corners='tubes'] :is(.sy-plate, .sy-panel) > .sy-strip {
+        inset-inline: -0.5rem;
+        box-shadow:
+            0 0 6px hsl(from var(--primary) h s l / 0.55),
+            0 1px 0 hsl(from var(--kp-core) h s l / 0.22);
+    }
+
+    .sy-scene[data-sy-corners='tubes'] :is(.sy-plate, .sy-panel) > .sy-corners {
         display: block;
     }
 
-    /* A ring of eight bulbs, one lit. */
-    .sy-scene .sy-spin__ring {
-        position: relative;
-        border-radius: 50%;
-        background: repeating-conic-gradient(hsl(from var(--primary) h s l / 0.5) 0 16deg, transparent 16deg 45deg);
-        mask: radial-gradient(circle, transparent 52%, var(--foreground) 54% 70%, transparent 72%);
-    }
-
-    .sy-scene .sy-spin__ring::after {
+    .sy-scene[data-sy-corners='tubes'] .sy-corners::after {
         content: '';
         position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: conic-gradient(var(--kp-core) 0 16deg, transparent 16deg);
-        filter: drop-shadow(0 0 2px var(--primary));
+        inset: auto -0.5rem 0;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
     }
 
-    /* The road to the horizon, its lane dashes racing toward you. */
-    .sy-scene .sy-spin__road {
-        position: relative;
-        overflow: hidden;
-        background:
-            linear-gradient(var(--kp-core) 0 0) 50% 0 / 2px 100% no-repeat,
-            linear-gradient(var(--accent) 0 0) 0 0 / 100% 1px no-repeat,
-            hsl(from var(--primary) h s l / 0.22);
-        clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    /* Only the top and bottom rules: no sides, a stripe above, a horizon below. */
+    .sy-scene[data-sy-corners='rules'] :is(.sy-plate, .sy-panel) {
+        border-inline-width: 0;
     }
 
-    .sy-scene .sy-spin__road::after {
+    .sy-scene[data-sy-corners='rules'] :is(.sy-plate, .sy-panel) > .sy-corners {
+        display: block;
+    }
+
+    .sy-scene[data-sy-corners='rules'] .sy-corners::after {
         content: '';
         position: absolute;
-        inset: 0;
+        inset: auto 0 0;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+    }
+
+    /* The sun-stripe slots: a patch cut by the sun's stripes in each corner. */
+    .sy-scene[data-sy-corners='slots'] :is(.sy-plate, .sy-panel) > .sy-corners {
+        display: block;
+    }
+
+    .sy-scene[data-sy-corners='slots'] .sy-corners::before,
+    .sy-scene[data-sy-corners='slots'] .sy-corners::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: 0.8rem;
+        --sy-slot-top: linear-gradient(
+            to bottom,
+            var(--primary) 0 4px,
+            transparent 4px 5px,
+            var(--primary) 5px 8px,
+            transparent 8px 10px,
+            var(--primary) 10px 12px,
+            transparent 12px
+        );
+        --sy-slot-foot: linear-gradient(
+            to bottom,
+            transparent 0 1px,
+            var(--primary) 1px 3px,
+            transparent 3px 6px,
+            var(--primary) 6px 8px,
+            transparent 8px 10px,
+            var(--primary) 10px 11px,
+            transparent 11px
+        );
+    }
+
+    .sy-scene[data-sy-corners='slots'] .sy-corners::before {
+        inset-block-start: 3px;
         background:
-            linear-gradient(to right, var(--primary) 0 0) 0 0 / 2px 100% no-repeat,
-            linear-gradient(to left, var(--primary) 0 0) 100% 0 / 2px 100% no-repeat,
-            repeating-linear-gradient(to bottom, transparent 0 25%, var(--sidebar-background) 25% 50%);
+            var(--sy-slot-top) 0 0 / 1rem 100% no-repeat,
+            var(--sy-slot-top) 100% 0 / 1rem 100% no-repeat;
+        opacity: 0.8;
     }
 
-    .sy-scene .sy-spins {
-        gap: 1.25rem;
+    .sy-scene[data-sy-corners='slots'] .sy-corners::after {
+        inset-block-end: 0;
+        background:
+            var(--sy-slot-foot) 0 0 / 1rem 100% no-repeat,
+            var(--sy-slot-foot) 100% 0 / 1rem 100% no-repeat;
+        opacity: 0.8;
     }
 
-    .sy-scene .sy-busy-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
+    /* A horizon slit through each side near the corners. */
+    .sy-scene[data-sy-corners='slit'] :is(.sy-plate, .sy-panel) {
+        border-inline-width: 0;
     }
 
-    .sy-scene .sy-busy-panel {
-        justify-items: center;
-        text-align: center;
+    .sy-scene[data-sy-corners='slit'] :is(.sy-plate, .sy-panel) > .sy-corners {
+        display: block;
+        --sy-side: linear-gradient(
+            to bottom,
+            hsl(from var(--kp-pink-text) h s l / 0.85) 0 0.5rem,
+            transparent 0.5rem calc(0.5rem + 3px),
+            hsl(from var(--kp-pink-text) h s l / 0.85) calc(0.5rem + 3px) calc(100% - 0.5rem - 3px),
+            transparent calc(100% - 0.5rem - 3px) calc(100% - 0.5rem),
+            hsl(from var(--kp-pink-text) h s l / 0.85) calc(100% - 0.5rem)
+        );
+        background:
+            var(--sy-side) 0 0 / 2px 100% no-repeat,
+            var(--sy-side) 100% 0 / 2px 100% no-repeat;
     }
 
-    /* ── Tone (G13) at rest ──────────────────────────────────────────── */
-
-    .sy-scene [data-sy-kind='warn'] {
-        --sy-tone: var(--warning-foreground);
-        --sy-tone-plate: var(--warning);
-        --sy-tone-ink: var(--warning-foreground);
+    /* A corner pixel, like a VCR's OSD: two lit squares. */
+    .sy-scene[data-sy-corners='pixel'] :is(.sy-plate, .sy-panel) > .sy-corners {
+        display: block;
     }
 
-    .sy-scene [data-sy-kind='bad'] {
-        --sy-tone: var(--destructive);
-        --sy-tone-plate: var(--destructive);
-        --sy-tone-ink: var(--destructive-foreground);
+    .sy-scene[data-sy-corners='pixel'] .sy-corners::before,
+    .sy-scene[data-sy-corners='pixel'] .sy-corners::after {
+        content: '';
+        position: absolute;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
     }
 
-    .sy-scene .sy-ring {
-        display: none;
-        flex: none;
-        inline-size: 0.9rem;
-        block-size: 0.9rem;
-        margin-inline-end: 0.45rem;
-        border-radius: 50%;
-        vertical-align: -0.1em;
+    .sy-scene[data-sy-corners='pixel'] .sy-corners::before {
+        inset: 3px auto auto 0;
+        background: var(--kp-core);
+        box-shadow: var(--sy-tube);
+    }
+
+    .sy-scene[data-sy-corners='pixel'] .sy-corners::after {
+        inset: auto 0 0 auto;
+        background: var(--kp-core);
         box-shadow:
-            inset 0 0 0 1.5px var(--kp-core),
-            inset 0 0 0 3px hsl(from var(--sy-tone) h s l / 0.85),
-            inset 0 0 6px var(--sy-tone),
-            0 0 5px var(--sy-tone),
-            0 0 14px hsl(from var(--sy-tone) h s l / 0.6);
-    }
-
-    /* The neon ring, the words in the tone (recommended). */
-    .sy-scene[data-sy-tone='ring'] [data-sy-kind] .sy-ring {
-        display: inline-block;
-    }
-
-    .sy-scene[data-sy-tone='ring'] .sy-state[data-sy-kind='bad'] .sy-state__dot {
-        display: none;
-    }
-
-    .sy-scene[data-sy-tone='ring'] [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state) :is(.sy-figure, .sy-toned, .sy-state__word),
-    .sy-scene[data-sy-tone='ring'] .sy-tile[data-sy-kind] .sy-title {
-        color: var(--sy-tone);
-        text-shadow:
             0 0 2px var(--sidebar-background),
-            0 0 8px hsl(from var(--sy-tone) h s l / 0.6);
-    }
-
-    .sy-scene[data-sy-tone='ring'] .sy-meter-wrap .sy-ring {
-        margin-inline-end: 0;
-    }
-
-    /* The arcade warning: the figure or word on its tone's plate. */
-    .sy-scene[data-sy-tone='plate'] [data-sy-kind]:is(.sy-kpi) .sy-figure,
-    .sy-scene[data-sy-tone='plate'] .sy-tile[data-sy-kind] .sy-toned,
-    .sy-scene[data-sy-tone='plate'] .sy-state[data-sy-kind] .sy-state__word {
-        padding-inline: 0.25em;
-        background: var(--sy-tone-plate);
-        color: var(--sy-tone-ink);
-        text-shadow: none;
-    }
-
-    .sy-scene[data-sy-tone='plate'] .kp-menu__item[data-sy-kind] {
-        background: hsl(from var(--destructive) h s l / 0.1);
-        box-shadow: inset 0 -2px 0 var(--destructive);
-    }
-
-    .sy-scene[data-sy-tone='plate'] .sy-tile[data-sy-kind] {
-        box-shadow: inset 0 2px 0 var(--destructive);
-    }
-
-    /* The full neon frame. */
-    .sy-scene[data-sy-tone='frame'] [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state, .sy-meter-wrap) {
-        outline: 2px solid var(--sy-tone);
-        outline-offset: -2px;
-        box-shadow: 0 0 10px hsl(from var(--sy-tone) h s l / 0.55);
-    }
-
-    .sy-scene[data-sy-tone='frame'] .sy-state[data-sy-kind] {
-        padding: 0.2rem 0.5rem;
-        outline-offset: 0;
-    }
-
-    .sy-scene[data-sy-tone='frame'] .sy-meter-wrap[data-sy-kind] {
-        padding-inline: 0.4rem;
-    }
-
-    /* ── Colour (G5) ─────────────────────────────────────────────────── */
-
-    .sy-scene[data-sy-colour] .kp-button.sy-pointed {
-        box-shadow:
-            inset 0 0 0.7em 0 var(--kp-glow),
-            0 0 1.6em 0 var(--kp-glow);
-    }
-
-    .sy-scene[data-sy-colour] .sy-picked {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.5);
-    }
-
-    .sy-scene[data-sy-colour='mix'] .sy-picked {
-        outline-color: var(--accent);
-        outline-offset: 3px;
-        box-shadow: none;
-    }
-
-    .sy-scene[data-sy-colour='mix'] .kp-button.sy-act {
-        --kp-frame: var(--accent);
-        --kp-glow: hsl(from var(--accent) h s l / 0.4);
-        border-radius: 999px;
-        text-shadow: var(--kp-tube-cyan);
-    }
-
-    .sy-scene[data-sy-colour='mix'] .sy-rule {
-        background: linear-gradient(to right, transparent, var(--warning-foreground) 20%, var(--warning-foreground) 80%, transparent);
-        box-shadow: 0 0 8px hsl(from var(--warning-foreground) h s l / 0.6);
-    }
-
-    .sy-scene[data-sy-colour='mix'] .sy-plot__read {
-        color: var(--kp-pink-text);
-    }
-
-    .sy-scene:is([data-sy-colour='roles'], [data-sy-colour='mix']) .sy-warn .sy-ring {
-        display: inline-block;
-    }
-
-    .sy-scene:is([data-sy-colour='roles'], [data-sy-colour='mix']) .sy-warn .sy-figure {
-        color: var(--warning-foreground);
-        text-shadow: 0 0 8px hsl(from var(--warning-foreground) h s l / 0.5);
-    }
-
-    .sy-scene[data-sy-colour='pink'] .sy-label::before {
-        color: var(--kp-pink-text);
-    }
-
-    .sy-scene[data-sy-colour='pink'] .sy-plot__read {
-        color: var(--kp-pink-text);
-    }
-
-    .sy-scene[data-sy-colour='pink'] .sy-warn .sy-figure {
-        color: var(--warning-foreground);
-    }
-
-    .sy-scene[data-sy-colour='pink'] .sy-warn .sy-ring {
-        display: inline-block;
-    }
-
-    .sy-scene[data-sy-colour='pink'] .sy-prose a:not([class]) {
-        background: linear-gradient(var(--primary) 0 0) left bottom / 100% 2px no-repeat;
-    }
-
-    .sy-scene[data-sy-colour='pink'] .kp-button {
-        --kp-frame: var(--primary);
-    }
-
-    /* ── Corners (G6) ────────────────────────────────────────────────── */
-
-    .sy-scene[data-sy-corners='soft'] :is(.sy-plate, .sy-panel, .kp-button, .kp-badge, .kp-tag, .sy-chip, .sy-tip) {
-        border-radius: 0.4rem;
-    }
-
-    .sy-scene[data-sy-corners='pill'] :is(.kp-button, .kp-badge, .kp-tag, .sy-chip, .sy-tip) {
-        border-radius: 999px;
-    }
-
-    .sy-scene[data-sy-corners='pill'] .sy-tip {
-        padding-inline: 0.85rem;
+            0 0 6px hsl(from var(--accent) h s l / 0.8),
+            0 0 14px hsl(from var(--accent) h s l / 0.45);
     }
 
     .sy-scene .sy-tip {
@@ -1033,736 +893,1004 @@
         animation: none;
     }
 
-    /* ── Surface (G7) ────────────────────────────────────────────────── */
+    /* ── A warning (G13): the marks, at rest ─────────────────────────── */
 
-    .sy-scene[data-sy-surface='grid'] .sy-floor,
-    .sy-scene[data-sy-surface='rim'] .sy-floor {
+    .sy-scene [data-sy-kind='warn'] {
+        --sy-tone: var(--warning-foreground);
+    }
+
+    .sy-scene [data-sy-kind='bad'] {
+        --sy-tone: var(--destructive);
+    }
+
+    .sy-scene .sy-ring {
+        display: none;
+        flex: none;
+        margin-inline-end: 0.45rem;
+        vertical-align: -0.1em;
+    }
+
+    .sy-scene .sy-ring > i {
         display: none;
     }
 
-    .sy-scene:is([data-sy-surface='grid'], [data-sy-surface='rim'], [data-sy-motifs='none']) .sy-plate {
-        padding-block-end: 0.85rem;
-    }
-
-    .sy-scene[data-sy-surface='grid'] .sy-plate,
-    .sy-scene[data-sy-surface='grid'] .sy-plot {
-        border: 0;
-        border-radius: 0.2rem;
-        background: var(--sy-flat-grid), var(--card);
-        box-shadow:
-            inset 0 1px 0 hsl(from var(--kp-core) h s l / 0.35),
-            inset 0 -2px 0 hsl(from var(--foreground) h s l / 0.2),
-            0 0 0 1px var(--border-strong);
-    }
-
-    .sy-scene[data-sy-surface='grid'] .sy-plate .sy-strip {
-        display: none;
-    }
-
-    .sy-scene[data-sy-surface='grid'] .sy-title {
-        font-family: var(--theme-font-mono);
-        font-size: 1.15rem;
-        font-weight: 400;
-        text-shadow: none;
-    }
-
-    .sy-scene[data-sy-surface='rim'] .sy-plate,
-    .sy-scene[data-sy-surface='rim'] .sy-plot {
-        border: 2px solid var(--primary);
-        border-radius: 0.4rem;
-        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
-    }
-
-    .sy-scene[data-sy-surface='rim'] .sy-plate .sy-strip {
-        display: none;
-    }
-
-    .sy-scene[data-sy-surface='rim'] .sy-plot {
-        background: var(--background);
-    }
-
-    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
-
-    /* The tube turns up, the sun cut crosses (recommended). */
-    .sy-scene[data-sy-hover='tube'] .kp-button.sy-pointed {
-        box-shadow:
-            inset 0 0 0.7em 0 var(--kp-glow),
-            0 0 1.6em 0 var(--kp-glow);
-    }
-
-    .sy-scene[data-sy-hover='tube'] .kp-button--ghost.sy-pointed {
-        --kp-frame: var(--kp-hairline);
-        box-shadow: none;
-        text-shadow: var(--sy-tube-up);
-    }
-
-    .sy-scene[data-sy-hover='tube'] .kp-menu__item.sy-pointed {
-        background: hsl(from var(--foreground) h s l / 0.14);
-    }
-
-    .sy-scene[data-sy-hover='tube']
-        :is(.kp-menu__item.sy-pointed .sy-entry, .sy-pointed .sy-figure, .sy-pointed-tile .sy-title, .sy-day.sy-pointed .sy-day__num) {
-        color: var(--kp-core);
-        text-shadow: var(--sy-tube-up);
-    }
-
-    .sy-scene[data-sy-hover='tube'] :is(.sy-pointed, .sy-pointed-tile) > .sy-strip {
-        block-size: 4px;
-        filter: brightness(1.35) drop-shadow(0 0 4px var(--primary));
-    }
-
-    .sy-scene[data-sy-hover='tube'] .sy-day.sy-pointed {
-        border-color: hsl(from var(--kp-pink-text) h s l / 0.6);
-    }
-
-    /* The marquee outline on everything (the families page). */
-    .sy-scene[data-sy-hover='outline'] :is(.sy-pointed, .sy-pointed-tile) {
-        outline: 2px solid var(--primary);
-        outline-offset: 3px;
-        box-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.5);
-    }
-
-    .sy-scene[data-sy-hover='outline'] .kp-menu__item.sy-pointed {
-        outline-offset: -3px;
-    }
-
-    /* As today. */
-    .sy-scene[data-sy-hover='mix'] .kp-button.sy-pointed:not(.kp-button--ghost) {
-        box-shadow:
-            inset 0 0 0.7em 0 var(--kp-glow),
-            0 0 1.6em 0 var(--kp-glow);
-        transform: translateY(-1px);
-    }
-
-    .sy-scene[data-sy-hover='mix'] .kp-menu__item.sy-pointed {
-        box-shadow: inset 0 -2px 0 var(--primary);
-    }
-
-    .sy-scene[data-sy-hover='mix'] .sy-pointed-tile {
-        border: 2px solid var(--primary);
-        border-radius: 0.4rem;
-        box-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.5);
-    }
-
-    .sy-scene[data-sy-hover='mix'] .sy-tile-link.sy-pointed::after {
-        content: '';
+    .sy-scene .sy-toned {
         display: inline-block;
-        inline-size: 0.4rem;
-        block-size: 0.5rem;
-        margin-inline-start: 0.3rem;
-        border-radius: 0 0 50% 50%;
-        background: var(--primary);
-        vertical-align: middle;
-        opacity: 1;
-        position: static;
-        animation: none;
     }
 
-    .sy-scene[data-sy-hover='mix'] .sy-kpi.sy-pointed .sy-figure {
-        color: var(--primary);
+    /* The words glow in the tone, in every option that keeps them lit. */
+    .sy-scene[data-sy-tone]:not([data-sy-tone='striped'])
+        [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state)
+        :is(.sy-figure, .sy-toned, .sy-state__word),
+    .sy-scene[data-sy-tone]:not([data-sy-tone='striped']) .sy-tile[data-sy-kind] .sy-title {
+        color: var(--sy-tone);
+        text-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 8px hsl(from var(--sy-tone) h s l / 0.6);
     }
 
-    .sy-scene[data-sy-hover='mix'] .sy-day.sy-pointed {
-        outline: 2px solid var(--ring);
-        outline-offset: 1px;
+    .sy-scene[data-sy-tone]:not([data-sy-tone='rails'], [data-sy-tone='striped']) .sy-state[data-sy-kind='bad'] .sy-state__dot {
+        display: none;
     }
 
-    /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
-
-    /* DI2's ring: inset inside a framed control, outside everything else. */
-    .sy-scene[data-sy-focus='ring'] .kp-button.sy-focused:not(.kp-button--ghost),
-    .sy-scene[data-sy-focus='ring'] .kp-menu__item.sy-focused {
-        outline: none;
-        box-shadow:
-            inset 0 0 0 2px var(--focus-ring),
-            inset 0 0 0 4px var(--focus-ring-contrast);
-    }
-
-    .sy-scene[data-sy-focus='ring'] :is(.sy-kpi, .sy-day, .kp-button--ghost).sy-focused {
-        outline: 2px solid var(--focus-ring-contrast);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 2px var(--focus-ring);
-    }
-
-    .sy-scene[data-sy-focus='ring'] :is(.sy-focused .sy-figure, .sy-focused .sy-entry, .sy-day.sy-focused .sy-day__num),
-    .sy-scene[data-sy-focus='ring'] .kp-button--ghost.sy-focused {
-        text-shadow: var(--sy-tube-up);
-    }
-
-    .sy-scene[data-sy-focus='trace'] .sy-focused {
-        outline: 2px solid var(--primary);
-        outline-offset: 4px;
-        box-shadow: none;
-    }
-
-    .sy-scene[data-sy-focus='trace'] .kp-menu__item.sy-focused {
-        outline-offset: -4px;
-    }
-
-    .sy-scene[data-sy-focus='trace'] .kp-button--primary.sy-focused {
-        outline-offset: -5px;
-    }
-
-    .sy-scene[data-sy-focus='mix'] .kp-button.sy-focused:not(.sy-in-header, .kp-button--ghost) {
-        outline: none;
-        box-shadow:
-            inset 0 0 0 2px var(--focus-ring),
-            inset 0 0 0 4px var(--focus-ring-contrast);
-    }
-
-    .sy-scene[data-sy-focus='mix'] .sy-in-header.sy-focused {
-        border-radius: 999px;
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-        box-shadow: none;
-    }
-
-    .sy-scene[data-sy-focus='mix'] .sy-in-header {
-        --kp-frame: var(--accent);
-        --kp-glow: hsl(from var(--accent) h s l / 0.4);
-        border-radius: 999px;
-    }
-
-    .sy-scene[data-sy-focus='mix'] .sy-kpi.sy-focused {
-        outline: 2px solid var(--primary);
-        outline-offset: 0;
-        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.14) 0 1px, transparent 1px 2px), var(--card);
-    }
-
-    .sy-scene[data-sy-focus='mix'] .kp-menu__item.sy-focused {
-        outline: none;
-        box-shadow: inset 0 -2px 0 var(--primary);
-    }
-
-    .sy-scene[data-sy-focus='mix'] .sy-day.sy-focused {
-        outline: 2px solid var(--ring);
-        outline-offset: 1px;
-    }
-
-    .sy-scene[data-sy-focus='mix'] .sy-tile-link.sy-focused {
-        outline: 2px solid var(--primary);
-        outline-offset: 4px;
-        box-shadow: none;
-    }
-
-    /* ── Composites (G17): the State buttons ─────────────────────────── */
-
-    /* As today, at rest: the header's pills in cyan frames. */
-    .sy-scene:is([data-sy-composites='today'], [data-sy-composites='pills']) .sy-in-header {
-        --kp-frame: var(--accent);
-        --kp-glow: hsl(from var(--accent) h s l / 0.4);
-        border-radius: 999px;
-        text-shadow: var(--kp-tube-cyan);
-    }
-
-    .sy-scene:is([data-sy-composites='today'], [data-sy-composites='pills']) .sy-in-header.kp-button--primary {
-        --kp-frame: transparent;
-        text-shadow: none;
-    }
-
-    /* Hover. */
-    [data-sy-show='hover'] .sy-scene[data-sy-composites] :is(.kp-button:not(.kp-button--ghost)),
-    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .sy-in-header {
-        box-shadow:
-            inset 0 0 0.7em 0 var(--kp-glow),
-            0 0 1.6em 0 var(--kp-glow);
-    }
-
-    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-menu__item {
-        background: hsl(from var(--foreground) h s l / 0.14);
-    }
-
-    [data-sy-show='hover']
-        .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills'])
-        :is(.kp-menu__item .sy-entry, .sy-in-kpi .sy-figure),
-    [data-sy-show='hover'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-button--ghost {
-        color: var(--kp-core);
-        text-shadow: var(--sy-tube-up);
-    }
-
-    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-in-header {
-        background-image: linear-gradient(90deg, transparent, hsl(from var(--primary) h s l / 0.35), transparent);
-    }
-
-    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
-        box-shadow: inset 0 -2px 0 var(--primary);
-    }
-
-    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-tile-link::after {
-        content: '';
-        position: static;
+    /* Round 1's ring: hollow, a near-white core with the tone's bloom. */
+    .sy-scene[data-sy-tone='ring'] [data-sy-kind] .sy-ring {
         display: inline-block;
-        inline-size: 0.4rem;
-        block-size: 0.5rem;
-        margin-inline-start: 0.3rem;
-        border-radius: 0 0 50% 50%;
-        background: var(--primary);
-        vertical-align: middle;
-        opacity: 1;
-        animation: none;
-    }
-
-    [data-sy-show='hover'] .sy-scene[data-sy-composites='today'] .sy-in-kpi .sy-figure {
-        color: var(--primary);
-    }
-
-    /* Focus. */
-    [data-sy-show='focus'] .sy-scene[data-sy-composites] .kp-button:not(.kp-button--ghost),
-    [data-sy-show='focus'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) .kp-menu__item {
-        outline: none;
-        box-shadow:
-            inset 0 0 0 2px var(--focus-ring),
-            inset 0 0 0 4px var(--focus-ring-contrast);
-    }
-
-    [data-sy-show='focus'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) :is(.sy-in-kpi, .kp-button--ghost) {
-        outline: 2px solid var(--focus-ring-contrast);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 2px var(--focus-ring);
-    }
-
-    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .sy-in-header {
-        outline: 2px solid var(--ring);
-        outline-offset: 2px;
-        box-shadow: none;
-    }
-
-    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
-        box-shadow: inset 0 -2px 0 var(--primary);
-    }
-
-    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] :is(.sy-in-kpi, .sy-tile-link) {
-        outline: 2px solid var(--primary);
-        outline-offset: 4px;
-    }
-
-    [data-sy-show='focus'] .sy-scene[data-sy-composites='today'] .sy-in-kpi {
-        outline-offset: 0;
-    }
-
-    /* Press. */
-    [data-sy-show='press'] .sy-scene[data-sy-composites] .kp-button:not(.kp-button--primary, .kp-button--ghost),
-    [data-sy-show='press'] .sy-scene:is([data-sy-composites='own'], [data-sy-composites='pills']) :is(.kp-menu__item, .sy-in-kpi, .kp-button--ghost) {
-        background: var(--secondary-active);
-        box-shadow: none;
-        text-shadow: none;
-    }
-
-    [data-sy-show='press'] .sy-scene[data-sy-composites] .kp-button--primary {
-        background: var(--primary-active);
-        box-shadow: none;
-    }
-
-    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .sy-in-header {
-        transform: translateX(1px);
-        box-shadow: inset 0 0 0 1px var(--border-strong);
-    }
-
-    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .kp-menu__item {
-        box-shadow: inset 0 -2px 0 var(--accent);
-    }
-
-    [data-sy-show='press'] .sy-scene[data-sy-composites='today'] .sy-in-kpi {
-        background: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.2) 0 2px, transparent 2px 5px), var(--card);
-    }
-
-    /* ── The voice (G15) ─────────────────────────────────────────────── */
-
-    .sy-scene .sy-type {
-        gap: 0.45rem;
-    }
-
-    .sy-scene .sy-type :is(p, table) {
-        margin: 0;
-    }
-
-    .sy-scene .sy-type__label {
-        color: var(--kp-pink-text);
-        font-family: var(--theme-font-mono);
-        font-size: 1.05rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
-
-    .sy-scene .sy-type__label::before {
-        content: '▶ ';
-        color: var(--accent);
-    }
-
-    .sy-scene .sy-type__head {
-        color: var(--kp-core);
-        font-family: var(--theme-font-display);
-        font-size: 1.3rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        text-shadow: var(--sy-tube);
-    }
-
-    .sy-scene .sy-type__prose {
-        max-inline-size: 46ch;
-    }
-
-    .sy-scene .sy-type__figure .sy-figure {
-        font-size: 2rem;
-    }
-
-    .sy-scene .sy-type__strip {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 0.75rem;
-    }
-
-    .sy-scene .sy-type__strip > div {
-        display: grid;
-        gap: 0.2rem;
-    }
-
-    .sy-scene .sy-type__table {
-        border-collapse: collapse;
-    }
-
-    .sy-scene .sy-type__table :is(th, td) {
-        padding: 0.2rem 0.75rem 0.2rem 0;
-        text-align: start;
-        border-block-end: 1px solid var(--kp-hairline);
-    }
-
-    .sy-scene .sy-type__table th {
-        color: var(--kp-pink-text);
-        font-family: var(--theme-font-mono);
-        font-size: 1.05rem;
-        font-weight: 400;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
-
-    .sy-scene .sy-stamp {
-        color: var(--accent);
-        font-family: var(--theme-font-mono);
-        font-size: 1.05rem;
-    }
-
-    .sy-scene[data-sy-type='mono'] :is(.sy-figure, .sy-type__table td, .sy-stamp) {
-        font-family: var(--kp-mono);
-        font-size: inherit;
-        letter-spacing: 0.02em;
-        text-shadow: none;
-    }
-
-    .sy-scene[data-sy-type='mono'] .sy-type__figure .sy-figure {
-        font-size: 1.8rem;
-    }
-
-    .sy-scene[data-sy-type='mono'] .sy-type__strip .sy-figure {
-        font-size: 1.25rem;
-    }
-
-    .sy-scene[data-sy-type='plain'] :is(.sy-label, .sy-type__label, .sy-type__table th, .sy-stamp, .kp-badge) {
-        color: var(--muted-foreground);
-        font-family: var(--theme-font-body);
-        font-size: 0.85rem;
-        letter-spacing: 0;
-        text-transform: none;
-    }
-
-    .sy-scene[data-sy-type='plain'] :is(.sy-label, .sy-type__label)::before {
-        content: none;
-    }
-
-    .sy-scene[data-sy-type='plain'] :is(.sy-figure, .sy-type__head) {
-        font-family: var(--theme-font-body);
-        letter-spacing: 0;
-        text-transform: none;
-        text-shadow: none;
-    }
-
-    /* ── Motifs (G16) ────────────────────────────────────────────────── */
-
-    .sy-scene .sy-events__mark {
-        position: absolute;
-        inset-inline-start: var(--x);
-        inset-block-start: var(--y);
-        inline-size: 0.7rem;
-        block-size: 0.7rem;
-        margin: -0.35rem 0 0 -0.35rem;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
         border-radius: 50%;
         box-shadow:
-            inset 0 0 0 2px var(--kp-core),
-            0 0 6px var(--warning-foreground),
-            0 0 12px hsl(from var(--warning-foreground) h s l / 0.5);
+            inset 0 0 0 1.5px var(--kp-core),
+            inset 0 0 0 3px hsl(from var(--sy-tone) h s l / 0.85),
+            inset 0 0 6px var(--sy-tone),
+            0 0 5px var(--sy-tone),
+            0 0 14px hsl(from var(--sy-tone) h s l / 0.6);
     }
 
-    .sy-scene .sy-motif-list {
-        display: grid;
-        gap: 0.25rem;
+    /* The VCR's symbols: pause (two tubes) for a warning, stop (a square) for a failure. */
+    .sy-scene[data-sy-tone='osd'] [data-sy-kind] .sy-ring {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.14rem;
+        block-size: 0.9rem;
+    }
+
+    .sy-scene[data-sy-tone='osd'] [data-sy-kind] .sy-ring > i {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 5px var(--sy-tone),
+            0 0 12px hsl(from var(--sy-tone) h s l / 0.6);
+    }
+
+    .sy-scene[data-sy-tone='osd'] [data-sy-kind='warn'] .sy-ring > i:nth-child(-n + 2) {
+        display: block;
+        inline-size: 0.22rem;
+        block-size: 0.78rem;
+    }
+
+    .sy-scene[data-sy-tone='osd'] [data-sy-kind='bad'] .sy-ring > i:nth-child(3) {
+        display: block;
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+    }
+
+    /* A three-pip level: two lit for a warning, three for a failure. */
+    .sy-scene[data-sy-tone='level'] [data-sy-kind] .sy-ring {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.13rem;
+        block-size: 0.9rem;
+    }
+
+    .sy-scene[data-sy-tone='level'] [data-sy-kind] .sy-ring > i {
+        display: block;
+        inline-size: 0.28rem;
+        block-size: 0.72rem;
+        background: hsl(from var(--sy-tone) h s l / 0.22);
+    }
+
+    .sy-scene[data-sy-tone='level'] [data-sy-kind='warn'] .sy-ring > i:nth-child(-n + 2),
+    .sy-scene[data-sy-tone='level'] [data-sy-kind='bad'] .sy-ring > i {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 5px var(--sy-tone),
+            0 0 12px hsl(from var(--sy-tone) h s l / 0.6);
+    }
+
+    /* Two tube rails above and below the part. */
+    .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring {
+        display: block;
+        position: absolute;
+        inset: 0;
         margin: 0;
-        padding: 0;
-        list-style: none;
     }
 
-    .sy-scene .sy-motif-empty {
-        margin: 0;
+    .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring::before,
+    .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 3px var(--sy-tone),
+            0 0 9px var(--sy-tone),
+            0 0 18px hsl(from var(--sy-tone) h s l / 0.5);
     }
 
-    .sy-scene .sy-divider {
-        margin-block: 0.25rem;
+    .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring::before {
+        inset-block-start: 5px;
     }
 
-    .sy-scene[data-sy-motifs='none'] .kp-meter__mark::before,
-    .sy-scene[data-sy-motifs='none'] .sy-motif-empty::before,
-    .sy-scene[data-sy-motifs='none'] .sy-motif-empty::after,
-    .sy-scene[data-sy-motifs='none'] .sy-floor {
+    .sy-scene[data-sy-tone='rails'] [data-sy-kind] .sy-ring::after {
+        inset-block-end: 0;
+    }
+
+    .sy-scene[data-sy-tone='rails'] .sy-state[data-sy-kind] {
+        position: relative;
+        padding: 0.45rem 0.7rem;
+    }
+
+    .sy-scene[data-sy-tone='rails'] .sy-meter-wrap[data-sy-kind] {
+        padding-block: 0.5rem;
+    }
+
+    .sy-scene[data-sy-tone='rails'] .sy-state[data-sy-kind] .sy-ring::before {
+        inset-block-start: 0;
+    }
+
+    /* The words cut by the sun's stripes, widest at the foot. */
+    .sy-scene[data-sy-tone='striped'] [data-sy-kind]:is(.sy-kpi, .sy-tile, .kp-menu__item, .sy-state) :is(.sy-figure, .sy-toned, .sy-state__word) {
+        background: linear-gradient(180deg, hsl(from var(--sy-tone) h s calc(l + 14)), var(--sy-tone));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        text-shadow: none;
+        mask-image: var(--kp-sig-sw-cuts);
+        filter: drop-shadow(0 0 5px hsl(from var(--sy-tone) h s l / 0.55));
+    }
+
+    /* The sun going down: half set behind a horizon for a warning, set for a failure. */
+    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring {
+        display: inline-block;
+        position: relative;
+        inline-size: 1.1rem;
+        block-size: 0.95rem;
+        overflow: hidden;
+    }
+
+    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring::before {
+        content: '';
+        position: absolute;
+        inset: 0.05rem 0.12rem auto;
+        block-size: 0.85rem;
+        border-radius: 50%;
+        background: linear-gradient(180deg, hsl(from var(--sy-tone) h s calc(l + 12)), var(--sy-tone));
+        mask-image: var(--kp-sig-sw-cuts);
+        filter: drop-shadow(0 0 3px hsl(from var(--sy-tone) h s l / 0.7));
+        clip-path: inset(0 0 38% 0);
+    }
+
+    .sy-scene[data-sy-tone='dusk'] [data-sy-kind='bad'] .sy-ring::before {
+        clip-path: inset(0 0 100% 0);
+    }
+
+    .sy-scene[data-sy-tone='dusk'] [data-sy-kind] .sy-ring::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0.3rem;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 3px var(--sy-tone),
+            0 0 9px hsl(from var(--sy-tone) h s l / 0.7);
+    }
+
+    /* ── Loading (G10): the layers at rest ───────────────────────────── */
+
+    .sy-scene .sy-waits {
+        position: relative;
+        --sy-lh: 8px;
+        --sy-lx: 0px;
+        --sy-ly: 0px;
+        --sy-lh2: 1.2rem;
+    }
+
+    .sy-scene .kp-menu__item.sy-waits {
+        --sy-lh: 4px;
+        --sy-lx: 2px;
+        --sy-ly: 2px;
+        --sy-lh2: 0.7rem;
+    }
+
+    .sy-scene .sy-day.sy-waits {
+        --sy-lh: 4px;
+        --sy-lx: 3px;
+        --sy-ly: 3px;
+        --sy-lh2: 0.8rem;
+    }
+
+    .sy-scene .sy-skel__line {
+        --sy-lh: 4px;
+        --sy-lx: 0px;
+        --sy-ly: 0px;
+        --sy-lh2: 0.6rem;
+    }
+
+    .sy-scene .sy-meter-wait {
+        --sy-lh: 4px;
+        --sy-lx: 0px;
+        --sy-ly: 0px;
+        --sy-lh2: 0.6rem;
+    }
+
+    .sy-scene .sy-load {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        container-type: inline-size;
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-load > * {
+        position: absolute;
         display: none;
     }
 
-    .sy-scene[data-sy-motifs='none'] .kp-meter::before {
-        background: var(--primary);
+    /* The bands: a small bar at the foot (b), another at the top (g), the whole face (f). */
+    .sy-scene .sy-load > .sy-b {
+        inset: auto var(--sy-lx) var(--sy-ly);
+        block-size: var(--sy-lh);
+        container-type: inline-size;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-events__mark {
-        background: var(--warning-foreground);
+    .sy-scene .sy-load > .sy-g {
+        inset: var(--sy-ly) var(--sy-lx) auto;
+        block-size: var(--sy-lh);
+    }
+
+    .sy-scene .sy-load > .sy-f {
+        inset: 0;
+    }
+
+    .sy-scene .sy-b::before,
+    .sy-scene .sy-b::after {
+        content: '';
+        position: absolute;
+    }
+
+    .sy-scene[data-sy-loading] .sy-skel .kp-skeleton::after {
+        display: none;
+    }
+
+    /* 1 · The ramp charges along the foot: the bar's own parts, five hard steps. */
+    .sy-scene[data-sy-loading='charge'] .sy-load > .sy-b {
+        display: block;
+    }
+
+    .sy-scene[data-sy-loading='charge'] .sy-b::before {
+        inset: 0;
+        background: var(--sy-bar-stripes), var(--sy-ramp);
+        clip-path: inset(0 40% 0 0);
+    }
+
+    .sy-scene[data-sy-loading='charge'] .sy-b::after {
+        inset-block: -1px;
+        inset-inline-start: -2px;
+        inline-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+        transform: translateX(60cqi);
+    }
+
+    /* 2 · The ramp flows through the stripes. */
+    .sy-scene[data-sy-loading='flow'] .sy-load > .sy-b {
+        display: block;
+    }
+
+    .sy-scene[data-sy-loading='flow'] .sy-b::before {
+        inset: 0;
+        background:
+            var(--sy-bar-stripes) 0 0 / 100% 100% no-repeat,
+            var(--sy-ramp-loop) 0 0 / 200% 100% repeat-x;
+    }
+
+    /* 3 · The road. */
+    .sy-scene[data-sy-loading='road'] .sy-load > .sy-b {
+        display: block;
+        background: linear-gradient(hsl(from var(--primary) h s l / 0.2) 0 0), var(--sidebar-background);
+    }
+
+    .sy-scene[data-sy-loading='road'] .sy-b::before {
+        inset: 0;
+        background: linear-gradient(90deg, var(--kp-core) 0 1.25rem, transparent 1.25rem) 0 50% / 2.25rem 2px repeat-x;
+        filter: drop-shadow(0 0 2px var(--primary)) drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.8));
+    }
+
+    /* 4 · The part is the bar. */
+    .sy-scene[data-sy-loading='fill'] .sy-load > .sy-f {
+        display: block;
+        background: var(--sy-bar-stripes), var(--sy-ramp);
+        opacity: 0.3;
+        clip-path: inset(0 100% 0 0);
+    }
+
+    .sy-scene[data-sy-loading='fill'] .sy-load > .sy-g {
+        display: block;
+        inset: 0 auto 0 0;
+        inline-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+        opacity: 0;
+    }
+
+    /* 5 · The sun's stripes light up from the horizon. */
+    .sy-scene[data-sy-loading='ladder'] .sy-load > .sy-b {
+        display: block;
+        block-size: var(--sy-lh2);
+        background: none;
         box-shadow: none;
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-label::before {
-        content: none;
+    .sy-scene[data-sy-loading='ladder'] .sy-b::before {
+        inset: 0;
+        background: var(--sy-ramp-v);
+        mask-image: linear-gradient(
+            to bottom,
+            #000 0 22%,
+            transparent 22% 27%,
+            #000 27% 45%,
+            transparent 45% 51%,
+            #000 51% 67%,
+            transparent 67% 74%,
+            #000 74% 88%,
+            transparent 88% 96%,
+            #000 96%
+        );
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.8));
+        clip-path: inset(0);
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-motif-empty {
-        padding-block-start: 1.25rem;
+    /* 6 · The floor drives toward you. */
+    .sy-scene[data-sy-loading='floor'] .sy-load > .sy-b {
+        display: block;
+        block-size: var(--sy-lh2);
+        border-block-start: 1px solid hsl(from var(--kp-pink-text) h s l / 0.7);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 0% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.45) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.5) 0 0.7deg, transparent 0.7deg 9deg),
+            var(--sidebar-background);
+        box-shadow: 0 -3px 10px hsl(from var(--primary) h s l / 0.3);
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-divider {
-        block-size: 1px;
-        background: var(--kp-hairline);
+    /* 7 · The scanner: a head with a ramp tail, there and back. */
+    .sy-scene[data-sy-loading='scanner'] .sy-load > .sy-b {
+        display: block;
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-divider::before,
-    .sy-scene[data-sy-motifs='none'] .sy-divider::after {
+    .sy-scene[data-sy-loading='scanner'] .sy-b::before,
+    .sy-scene[data-sy-loading='scanner'] .sy-b::after {
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 30%;
+        opacity: 0;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
+    }
+
+    .sy-scene[data-sy-loading='scanner'] .sy-b::before {
+        background:
+            linear-gradient(var(--kp-core) 0 0) 100% 0 / 2px 100% no-repeat,
+            linear-gradient(90deg, transparent, var(--primary) 65%, var(--kp-sun-top));
+        translate: 100cqi 0;
+    }
+
+    .sy-scene[data-sy-loading='scanner'] .sy-b::after {
+        background:
+            linear-gradient(var(--kp-core) 0 0) 0 0 / 2px 100% no-repeat,
+            linear-gradient(270deg, transparent, var(--primary) 65%, var(--kp-sun-top));
+        translate: -100% 0;
+    }
+
+    /* 8 · Headlights and tail lights. */
+    .sy-scene[data-sy-loading='highway'] .sy-load > :is(.sy-b, .sy-g) {
+        display: block;
+        block-size: calc(var(--sy-lh) / 2 + 1px);
+        box-shadow: none;
+    }
+
+    .sy-scene[data-sy-loading='highway'] .sy-load > .sy-g {
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
+        filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 7px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sy-scene[data-sy-loading='highway'] .sy-load > .sy-b {
+        background: repeating-linear-gradient(90deg, var(--kp-core) 0 0.6rem, transparent 0.6rem 2.1rem);
+        filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 7px hsl(from var(--accent) h s l / 0.7));
+    }
+
+    /* 9 · The equaliser: five bars in the ramp, on the beat. */
+    .sy-scene[data-sy-loading='eq'] .sy-load > .sy-f {
+        display: block;
+        inset: auto 0.7rem 0.5rem auto;
+        inline-size: 1.4rem;
+        block-size: var(--sy-eqh, 1rem);
+        background:
+            var(--sy-ramp-v) 0 100% / 0.2rem 60% no-repeat,
+            var(--sy-ramp-v) 0.3rem 100% / 0.2rem 60% no-repeat,
+            var(--sy-ramp-v) 0.6rem 100% / 0.2rem 60% no-repeat,
+            var(--sy-ramp-v) 0.9rem 100% / 0.2rem 60% no-repeat,
+            var(--sy-ramp-v) 1.2rem 100% / 0.2rem 60% no-repeat;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .sy-scene[data-sy-loading='eq'] .sy-day.sy-waits {
+        --sy-eqh: 0.6rem;
+    }
+
+    .sy-scene[data-sy-loading='eq'] .sy-day .sy-load > .sy-f {
+        inset-inline-end: calc(50% - 0.7rem);
+        inset-block-end: 3px;
+    }
+
+    .sy-scene[data-sy-loading='eq'] .sy-skel__line .sy-load > .sy-f,
+    .sy-scene[data-sy-loading='eq'] .sy-meter-wait .sy-load > .sy-f,
+    .sy-scene[data-sy-loading='eq'] .kp-menu__item .sy-load > .sy-f {
+        inset-block-end: 50%;
+        translate: 0 50%;
+    }
+
+    /* 10 · The marquee in the ramp's colours, a lit bulb with a tail. */
+    .sy-scene[data-sy-loading='bulbs'] .sy-load > .sy-b {
+        display: block;
+        background: none;
+        box-shadow: none;
+        block-size: max(var(--sy-lh), 8px);
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-b::before,
+    .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
+        inset: 0;
+        background: var(--sy-ramp);
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-b::before {
+        opacity: 0.3;
+        mask: radial-gradient(circle, #000 0 2.2px, transparent 3px) 0 50% / 0.9rem 100% repeat-x;
+    }
+
+    .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
+        mask:
+            radial-gradient(circle, #000 0 2.6px, transparent 3.4px) 0 50% / 0.9rem 100% repeat-x,
+            linear-gradient(90deg, rgb(0 0 0 / 0.3) 0 0.9rem, rgb(0 0 0 / 0.65) 0.9rem 1.8rem, #000 1.8rem 2.7rem, transparent 2.7rem) 0 0 / 3.6rem
+                100% repeat-x;
+        mask-composite: intersect;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
+    }
+
+    /* ── Leaving and arriving (G12): the layers at rest ──────────────── */
+
+    .sy-scene .sy-leaver__part {
+        position: relative;
+    }
+
+    .sy-scene .sy-sun-over {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        display: none;
+        pointer-events: none;
+    }
+
+    .sy-scene .sy-sun-over > i {
         display: none;
     }
 
-    .sy-scene[data-sy-motifs='none'] .sy-plot .sy-floor {
-        display: none;
+    .sy-scene[data-sy-leave] {
+        --sy-sun-v: linear-gradient(
+            180deg,
+            var(--kp-sun-top),
+            color-mix(in oklab, var(--kp-sun-top) 45%, var(--kp-sun-bottom)),
+            var(--kp-sun-bottom)
+        );
     }
 
-    .sy-scene[data-sy-motifs='all'] .sy-motif-card {
-        background: radial-gradient(circle at 78% 30%, var(--kp-sun-top) 0 1.4rem, transparent 1.45rem), var(--card);
-        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.55);
+    /* 1 · The sun's slab: the sun's colours and stripes, resting below the horizon. */
+    .sy-scene[data-sy-leave='slab'] .sy-leaver__body,
+    .sy-scene[data-sy-leave='stripes'] .sy-leaver__body,
+    .sy-scene[data-sy-leave='ramp'] .sy-leaver__body {
+        overflow: hidden;
     }
 
-    .sy-scene[data-sy-motifs='all'] .sy-motif-button {
-        background: var(--sy-floor-lines);
+    .sy-scene[data-sy-leave='slab'] .sy-sun-over {
+        display: block;
+        background: var(--sy-sun-v);
+        mask-image: var(--kp-sig-sw-cuts);
+        translate: 0 101%;
     }
 
-    .sy-scene[data-sy-motifs='all'] :is(.sy-label, .kp-empty__title) {
-        text-shadow:
-            2px 0 hsl(from var(--chart-4) h s l / 0.7),
-            -2px 0 hsl(from var(--accent) h s l / 0.6);
+    /* 2 · The sun's stripes: five bands of the ramp, thick toward the horizon. */
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over {
+        display: flex;
+        flex-direction: column;
+        translate: 0 101%;
     }
 
-    .sy-scene[data-sy-motifs='all'] .sy-motif-empty {
-        background: var(--sy-flat-grid);
-        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.45);
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i {
+        display: block;
+        transform: scaleY(0);
+        transform-origin: 50% 100%;
     }
 
-    .sy-scene[data-sy-motifs='all'] .kp-meter {
-        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.6);
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(1) {
+        flex: 14 1 0;
+        background: var(--kp-sun-top);
+    }
+
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(2) {
+        flex: 17 1 0;
+        margin-block-start: 1px;
+        background: color-mix(in oklab, var(--kp-sun-top) 75%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(3) {
+        flex: 20 1 0;
+        margin-block-start: 2px;
+        background: color-mix(in oklab, var(--kp-sun-top) 50%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(4) {
+        flex: 23 1 0;
+        margin-block-start: 3px;
+        background: color-mix(in oklab, var(--kp-sun-top) 25%, var(--kp-sun-bottom));
+    }
+
+    .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(5) {
+        flex: 26 1 0;
+        margin-block-start: 4px;
+        background: var(--kp-sun-bottom);
+    }
+
+    /* 3 · The bar's ramp, cut by its stripes, with the glowing head. */
+    .sy-scene[data-sy-leave='ramp'] .sy-sun-over {
+        display: block;
+        container-type: inline-size;
+        background: var(--sy-bar-stripes), var(--sy-ramp);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    .sy-scene[data-sy-leave='ramp'] .sy-sun-over::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-head);
+        opacity: 0;
+    }
+
+    /* 4 · The sunset's dye. */
+    .sy-scene[data-sy-leave='dye'] .sy-sun-over {
+        display: block;
+        background: var(--sy-sun-v);
+        mask-image: var(--kp-sig-sw-cuts);
+        mix-blend-mode: color;
+        opacity: 0;
+    }
+
+    /* 5 · Five slats that close into neon lines. */
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i {
+        position: relative;
+        display: block;
+        flex: 1 1 0;
+        background: linear-gradient(var(--kp-core) 0 0) 0 50% / 100% 0 no-repeat;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9)) drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::before,
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: calc(50% - 1px);
+        background: var(--background);
+        transform: scaleY(0);
+    }
+
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::before {
+        inset-block-start: 0;
+        transform-origin: 50% 0;
+    }
+
+    .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i::after {
+        inset-block-end: 0;
+        transform-origin: 50% 100%;
+    }
+
+    /* 6 · The laser erases it: the beam is the horizon, anchored to the top. */
+    .sy-scene[data-sy-leave='laser'] .sy-leaver > .sy-horizon {
+        inset-block: -2px auto;
+    }
+
+    /* 7 · The marquee carries it off: bulbs along the top edge. */
+    .sy-scene[data-sy-leave='marquee'] .sy-leaver > .sy-cuts {
+        inset: -10px 0 auto;
+        block-size: 9px;
+        background: radial-gradient(circle, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2px, transparent 3.6px) 0 50% / 0.9rem 100%
+            repeat-x;
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.85));
+    }
+
+    .sy-scene[data-sy-leave='drive'] .sy-leaver__part,
+    .sy-scene[data-sy-leave='fold'] .sy-leaver__part {
+        transform-origin: 50% 100%;
+    }
+
+    /* 10 · Round 1's swallow, as it was: the disc grows from below. */
+    .sy-scene[data-sy-leave='swallow'] .sy-sun-over {
+        display: block;
+        background: linear-gradient(
+            180deg,
+            var(--chart-3),
+            color-mix(in oklab, var(--chart-3), var(--primary)) 35%,
+            var(--primary) 70%,
+            var(--chart-4)
+        );
+        mask: repeating-linear-gradient(180deg, var(--foreground) 0 8px, transparent 8px 12px);
+        clip-path: circle(0% at 50% 120%);
+    }
+
+    /* ── The focus ring (G14, DI2): the marked parts stand focused ──── */
+
+    .sy-scene[data-sy-focus] .sy-focused {
+        outline: none;
+    }
+
+    .sy-scene[data-sy-focus] .sy-focused:is(.sy-plate, .sy-day) {
+        overflow: visible;
+    }
+
+    .sy-scene[data-sy-focus] .sy-fring {
+        display: block;
+        border-radius: 2px;
+    }
+
+    .sy-scene[data-sy-focus] .sy-plate > .sy-fring {
+        border-radius: 0;
+    }
+
+    .sy-scene[data-sy-focus] :is(.sy-focused .sy-figure, .sy-focused .sy-entry, .sy-day.sy-focused .sy-day__num),
+    .sy-scene[data-sy-focus] .kp-button--ghost.sy-focused {
+        text-shadow: var(--sy-tube-up);
+    }
+
+    .sy-scene[data-sy-focus='twin'] .sy-fring {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 4px var(--focus-ring-contrast),
+            inset 0 0 0 6px var(--kp-core),
+            0 0 12px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .sy-scene[data-sy-focus='ramp'] .sy-fring {
+        border: 3px solid transparent;
+        border-image: var(--sy-ramp) 1;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring-contrast),
+            0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .sy-scene[data-sy-focus='bulbs'] .sy-fring {
+        border: 3px dotted var(--kp-core);
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring-contrast),
+            0 0 0 2px var(--focus-ring-contrast);
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
+    }
+
+    .sy-scene[data-sy-focus='cut'] .sy-fring {
+        background:
+            linear-gradient(var(--kp-core) 0 0) 0 0 / 100% 2px no-repeat,
+            linear-gradient(var(--kp-core) 0 0) 0 100% / 100% 2px no-repeat,
+            linear-gradient(
+                    to bottom,
+                    var(--kp-core) 0 22%,
+                    transparent 22% 25%,
+                    var(--kp-core) 25% 52%,
+                    transparent 52% 57%,
+                    var(--kp-core) 57% 82%,
+                    transparent 82% 89%,
+                    var(--kp-core) 89%
+                )
+                0 0 / 2px 100% no-repeat,
+            linear-gradient(
+                    to bottom,
+                    var(--kp-core) 0 22%,
+                    transparent 22% 25%,
+                    var(--kp-core) 25% 52%,
+                    transparent 52% 57%,
+                    var(--kp-core) 57% 82%,
+                    transparent 82% 89%,
+                    var(--kp-core) 89%
+                )
+                100% 0 / 2px 100% no-repeat;
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            0 0 12px hsl(from var(--primary) h s l / 0.5);
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.9));
+    }
+
+    .sy-scene[data-sy-focus='ends'] .sy-fring {
+        box-shadow: inset 0 0 0 4px var(--focus-ring-contrast);
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.9));
+    }
+
+    .sy-scene[data-sy-focus='ends'] .sy-fring::before,
+    .sy-scene[data-sy-focus='ends'] .sy-fring::after {
+        content: '';
+        position: absolute;
+    }
+
+    .sy-scene[data-sy-focus='ends'] .sy-fring::before {
+        inset: 0 -7px;
+        border-block: 2px solid var(--kp-core);
+    }
+
+    .sy-scene[data-sy-focus='ends'] .sy-fring::after {
+        inset: -7px 0;
+        border-inline: 2px solid var(--kp-core);
+    }
+
+    .sy-scene[data-sy-focus='horizon'] .sy-fring {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .sy-scene[data-sy-focus='horizon'] .sy-fring::after {
+        content: '';
+        position: absolute;
+        inset: auto -0.4rem -9px;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
     }
 
     /* ── The press (G14): the marked parts are pressed during `in` ───── */
 
-    .sy-scene[data-sy-press][data-sy-phase='in'] .kp-button.sy-press:not(.kp-button--primary),
-    .sy-scene[data-sy-press][data-sy-phase='in'] :is(.kp-menu__item, .sy-day, .sy-key, .sy-kpi).sy-press {
-        background: var(--secondary-active);
+    .sy-scene[data-sy-press] .sy-press {
+        isolation: isolate;
     }
 
-    .sy-scene[data-sy-press][data-sy-phase='in'] .kp-button--primary.sy-press {
-        background: var(--primary-active);
+    .sy-scene[data-sy-press] .sy-fx {
+        display: block;
     }
 
-    .sy-scene[data-sy-press='dip'][data-sy-phase='in'] .sy-press,
-    .sy-scene[data-sy-press='dip'][data-sy-phase='in'] .sy-press :is(.sy-entry, .sy-figure, .sy-day__num, .sy-key__swatch) {
-        box-shadow: none;
-        text-shadow: none;
+    /* Ramp: the bar's fill inside the part, start to end. */
+    .sy-scene[data-sy-press='ramp'] .sy-fx {
+        background:
+            linear-gradient(
+                to bottom,
+                transparent 0 74%,
+                var(--sidebar-background) 74% 80%,
+                transparent 80% 88%,
+                var(--sidebar-background) 88% 95%,
+                transparent 95%
+            ),
+            var(--sy-ramp);
+        clip-path: inset(0 100% 0 0);
     }
 
-    .sy-scene[data-sy-press='drop'][data-sy-phase='in'] .sy-press {
-        transform: translateY(1px);
+    /* Laser: drawn under the label, from the centre out. */
+    .sy-scene[data-sy-press='laser'] .sy-fx {
+        inset: auto 0.45rem 3px;
+        z-index: 2;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+        transform: scaleX(0);
     }
 
-    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .kp-button.sy-press::before,
-    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .kp-button.sy-press::after,
-    .sy-scene[data-sy-press='cut'][data-sy-phase='in'] .sy-press > .sy-slits {
-        opacity: 1;
-        transform: none;
-        animation: none;
+    /* Sink: the light gathers along the foot. */
+    .sy-scene[data-sy-press='sink'] .sy-fx {
+        background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.7), transparent 72%);
+        box-shadow: inset 0 -2px 0 var(--kp-core);
+        opacity: 0;
     }
 
-    .sy-scene[data-sy-press='cut'] .kp-button--primary.sy-press::before,
-    .sy-scene[data-sy-press='cut'] .kp-button--primary.sy-press::after {
-        background: var(--background);
+    /* Gleam: a chrome line crosses the part from top to foot. */
+    .sy-scene[data-sy-press='gleam'] .sy-fx {
+        inset: 0 0 auto;
+        z-index: 2;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow: var(--sy-laser-glow);
+        opacity: 0;
     }
 
-    .sy-scene .sy-day > .sy-slits,
-    .sy-scene .sy-key > .sy-slits {
-        --sy-slit-ground: var(--background);
+    /* OSD: a cyan play symbol in the top-end corner. */
+    .sy-scene[data-sy-press='osd'] .sy-fx {
+        z-index: 2;
+        opacity: 0;
     }
 
-    .sy-scene .sy-kpi > .sy-slits {
-        z-index: 3;
+    .sy-scene[data-sy-press='osd'] :is(.sy-day, .sy-key) .sy-fx::before {
+        inset-inline-end: 0.12rem;
+        font-size: 0.7rem;
+    }
+
+    .sy-scene[data-sy-press='osd'] .sy-fx::before {
+        content: '▶';
+        position: absolute;
+        inset-block-start: 0.05rem;
+        inset-inline-end: 0.3rem;
+        color: var(--accent);
+        font-family: var(--theme-font-mono);
+        font-size: 1rem;
+        line-height: 1;
+        text-shadow: var(--kp-tube-cyan);
     }
 
     /* ── Motion ──────────────────────────────────────────────────────── */
 
     @media (prefers-reduced-motion: no-preference) {
         /* Away during `gap`: whatever arrives, opens or leaves. */
-        .sy-scene:is([data-sy-curve], [data-sy-opening], [data-sy-durations], [data-sy-leave])[data-sy-phase='gap'] .sy-rise > :first-child,
-        .sy-scene[data-sy-direction][data-sy-phase='gap'] :is(.sy-rise > :first-child, .sy-day, .sy-row-line, .sy-walk svg) {
+        .sy-scene[data-sy-phase='gap'] .sy-rise > :first-child {
             visibility: hidden;
         }
 
-        /* Over the horizon (G3, G12): the line first, then the part rises. */
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon']):is(
-                [data-sy-phase='in'],
-                [data-sy-phase='hold']
-            )
-            .sy-opens
-            > :first-child {
-            animation: sy-rise-body calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        /* G4: an arrival or a leave is 4 beats, an opening 2. */
+        .sy-scene .sy-rise {
+            --sy-d: calc(900ms * var(--sy-slow, 1));
         }
 
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
-            .sy-rise:not(.sy-opens)
-            > :first-child,
-        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
-            animation: sy-rise-body calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene .sy-opens {
+            --sy-d: calc(450ms * var(--sy-slow, 1));
         }
 
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon']):is(
-                [data-sy-phase='in'],
-                [data-sy-phase='hold']
-            )
-            .sy-opens
-            > .sy-horizon {
-            animation: sy-horizon-in calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        /* ·· The rise over the horizon, the ground (and round 1's option 1). */
+        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
+            animation: sy-rise-body var(--sy-d) var(--sy-curve) both;
         }
 
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
-            .sy-rise:not(.sy-opens)
-            > .sy-horizon,
-        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
-            animation: sy-horizon-in calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
         }
 
-        /* The stripes close as the part rises, open as it sets. */
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-opening='rise'], [data-sy-direction='horizon'], [data-sy-durations]):is(
-                [data-sy-phase='in'],
-                [data-sy-phase='hold']
-            )
-            .sy-opens
-            > .sy-cuts {
-            animation: sy-cuts-close calc(var(--sy-o, 450ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene:is([data-sy-curve], [data-sy-opening='rise']):is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > .sy-cuts {
+            animation: sy-cuts-close var(--sy-d) var(--sy-curve) both;
         }
 
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-direction='horizon']):is([data-sy-phase='in'], [data-sy-phase='hold'])
-            .sy-rise:not(.sy-opens)
-            > .sy-cuts,
-        .sy-scene[data-sy-leave='sunset']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
-            animation: sy-cuts-close calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        /* The stripe strikes on with a tube's dips as a panel opens (G3). */
         .sy-scene[data-sy-opening='rise'][data-sy-phase='in'] .sy-opens .sy-strip {
             animation: sy-strike calc(450ms * var(--sy-slow, 1)) calc(160ms * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        /* Light switches (G1): the bulbs jump a bulb a step. */
-        .sy-scene:is([data-sy-curve='sunrise'], [data-sy-loading='marquee'], [data-sy-durations]) .sy-bulbs {
-            animation: sy-marquee calc(var(--sy-loop, 900ms) * var(--sy-slow, 1)) steps(4, end) infinite;
+        /* ·· The curve: the bars fill to their mark; their reading comes with them. */
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar-row .sy-cap {
+            visibility: hidden;
         }
 
-        .sy-scene:is([data-sy-curve='quick'], [data-sy-curve='spring']) .sy-bulbs {
-            animation: sy-marquee calc(900ms * var(--sy-slow, 1)) linear infinite;
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__fill {
+            clip-path: inset(0 100% 0 0);
         }
 
-        .sy-scene[data-sy-loading='marquee'] .sy-day .sy-bulbs {
-            animation: sy-bulb-beat calc(900ms * var(--sy-slow, 1)) calc(var(--i) * 225ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        .sy-scene[data-sy-curve][data-sy-phase='gap'] .sy-pbar .kp-progressbar__head {
+            transform: translateX(0);
         }
 
-        .sy-scene[data-sy-loading='marquee'] .sy-skel__line .sy-bulbs {
-            animation-delay: calc(var(--i) * 225ms * var(--sy-slow, 1));
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__fill {
+            animation: sy-fill-72 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        /* The readouts fill to their mark. */
-        .sy-scene[data-sy-curve='sunrise']:not([data-sy-phase='gap']) .sy-track {
-            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__fill {
+            animation: sy-fill-48 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        .sy-scene[data-sy-curve='quick']:not([data-sy-phase='gap']) .sy-track {
-            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__fill {
+            animation: sy-fill-88 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        .sy-scene[data-sy-curve='spring']:not([data-sy-phase='gap']) .sy-track {
-            animation: sy-fill calc(900ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='72'] .kp-progressbar__head {
+            animation: sy-head-72 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        /* The quick curve: rise 10 px and fade in, fast. */
-        .sy-scene[data-sy-curve='quick']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
-            animation: sy-lift-in calc(450ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='48'] .kp-progressbar__head {
+            animation: sy-head-48 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        /* The spring: up past its place and back. */
-        .sy-scene[data-sy-curve='spring']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-rise > :first-child {
-            animation: sy-spring-in calc(600ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        .sy-scene[data-sy-curve]:not([data-sy-phase='gap']) .sy-pbar[data-sy-v='88'] .kp-progressbar__head {
+            animation: sy-head-88 calc(900ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        /* The live update in the curve row: the laser on each curve. */
-        .sy-scene[data-sy-curve='sunrise'][data-sy-phase='in'] .sy-carrier::after,
-        .sy-scene[data-sy-live='laser'][data-sy-phase='in'] .sy-carrier::after {
-            animation: sy-laser calc(675ms * var(--sy-slow, 1)) both;
+        /* Light leads: the head runs on the sunrise curve, the ramp follows one beat behind. */
+        .sy-scene[data-sy-curve='lead']:not([data-sy-phase='gap']) .sy-pbar[data-sy-v] .kp-progressbar__fill {
+            animation-delay: calc(225ms * var(--sy-slow, 1));
         }
 
-        .sy-scene[data-sy-curve='quick'][data-sy-phase='in'] .sy-carrier::after {
-            animation: sy-laser-quick calc(675ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        /* ·· Opening: the laser climbs. */
+        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-climb-body var(--sy-d) var(--sy-curve) both;
         }
 
-        .sy-scene[data-sy-curve='spring'][data-sy-phase='in'] .sy-carrier::after {
-            animation: sy-laser-quick calc(675ms * var(--sy-slow, 1)) var(--sy-spring) both;
+        .sy-scene[data-sy-opening='climb']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation:
+                sy-climb-beam var(--sy-d) var(--sy-curve) both,
+                sy-climb-glow var(--sy-d) linear both;
         }
 
-        /* Direction (G2). */
-        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-horizon--week {
-            animation: sy-horizon-in calc(1600ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene[data-sy-opening='climb'][data-sy-phase='in'] .sy-opens .sy-strip {
+            animation: sy-strike calc(300ms * var(--sy-slow, 1)) calc(150ms * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-day {
-            animation: sy-rise-cell calc(450ms * var(--sy-slow, 1)) calc((200ms + var(--i) * 112ms) * var(--sy-slow, 1)) var(--sy-sun) both;
+        /* ·· Opening: the sun's blinds. */
+        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts > i {
+            animation: sy-blind calc(270ms * var(--sy-slow, 1)) calc(var(--sy-bd) * 45ms * var(--sy-slow, 1)) var(--sy-curve) both;
         }
 
-        .sy-scene[data-sy-direction='horizon']:not([data-sy-phase='gap']) .sy-row-line {
-            animation: sy-rise-cell calc(450ms * var(--sy-slow, 1)) calc(var(--i) * 225ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(1) {
+            --sy-bd: 4;
         }
 
-        .sy-scene[data-sy-direction]:not([data-sy-phase='gap']) .sy-walk svg {
-            animation: sy-draw calc(900ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(2) {
+            --sy-bd: 3;
         }
 
-        .sy-scene[data-sy-direction='race']:not([data-sy-phase='gap']) :is(.sy-day, .sy-row-line, .sy-rise > :first-child) {
-            animation: sy-race calc(380ms * var(--sy-slow, 1)) calc(var(--i, 0) * 60ms * var(--sy-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1) both;
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(3) {
+            --sy-bd: 2;
         }
 
-        .sy-scene[data-sy-direction='race']:not([data-sy-phase='gap']) .sy-walk svg {
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-            animation-duration: calc(380ms * var(--sy-slow, 1));
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(4) {
+            --sy-bd: 1;
         }
 
-        .sy-scene[data-sy-direction='drop']:not([data-sy-phase='gap']) :is(.sy-day, .sy-row-line, .sy-rise > :first-child, .sy-walk svg) {
-            animation: sy-drop calc(400ms * var(--sy-slow, 1)) calc(var(--i, 0) * 60ms * var(--sy-slow, 1)) steps(4, end) both;
+        .sy-scene[data-sy-opening='blinds'] .sy-cuts > i:nth-child(5) {
+            --sy-bd: 0;
         }
 
-        /* Opening, the other options. */
+        .sy-scene[data-sy-opening='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
+        }
+
+        /* ·· Opening: it stands up from the floor. */
+        .sy-scene[data-sy-opening='stand'] .sy-opens > :first-child {
+            transform-origin: 50% 100%;
+        }
+
+        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-stand var(--sy-d) var(--sy-curve) both;
+        }
+
+        .sy-scene[data-sy-opening='stand']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-curve) both;
+        }
+
+        /* ·· Opening: the marquee carries it on. */
+        .sy-scene[data-sy-opening='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
+            animation: sy-reveal-x var(--sy-d) steps(9, jump-none) both;
+        }
+
+        .sy-scene[data-sy-opening='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-cuts {
+            animation:
+                sy-reveal-x var(--sy-d) steps(9, jump-none) both,
+                sy-bulbs-off calc(675ms * var(--sy-slow, 1)) steps(1, jump-end) both;
+        }
+
+        /* ·· Opening: round 1's strikes. */
         .sy-scene[data-sy-opening='strike']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
             animation: sy-strike-rim calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
         }
@@ -1771,124 +1899,171 @@
             animation: sy-strike calc(340ms * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        .sy-scene[data-sy-opening='tape']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-tape calc(320ms * var(--sy-slow, 1)) steps(4, end) both;
-        }
-
-        /* Durations (G4): each option's own numbers. */
-        .sy-scene[data-sy-durations='beats'] {
-            --sy-c: 225ms;
-            --sy-o: 450ms;
-            --sy-l: 675ms;
-            --sy-loop: 900ms;
-        }
-
-        .sy-scene[data-sy-durations='slow'] {
-            --sy-c: 360ms;
-            --sy-o: 2880ms;
-            --sy-l: 900ms;
-            --sy-loop: 2600ms;
-        }
-
-        .sy-scene[data-sy-durations='brisk'] {
-            --sy-c: 150ms;
-            --sy-o: 300ms;
-            --sy-l: 450ms;
-            --sy-loop: 600ms;
-        }
-
-        .sy-scene[data-sy-durations][data-sy-phase='in'] .sy-tap {
-            animation: sy-tap calc(var(--sy-c) * 2 * var(--sy-slow, 1)) steps(1, end);
-        }
-
-        .sy-scene[data-sy-durations]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > :first-child {
-            animation: sy-rise-body calc(var(--sy-o) * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-durations]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-opens > .sy-horizon {
-            animation: sy-horizon-in calc(var(--sy-o) * var(--sy-slow, 1)) var(--sy-sun) both;
-        }
-
-        .sy-scene[data-sy-durations][data-sy-phase='in'] .sy-carrier::after {
-            animation: sy-laser calc(var(--sy-l) * var(--sy-slow, 1)) both;
-        }
-
-        /* The tone (G13): the ring strikes on; the plate flashes; the frame lights. */
-        .sy-scene[data-sy-tone='ring'][data-sy-phase='in'] .sy-ring {
+        /* ·· The tone: the mark strikes on once. */
+        .sy-scene[data-sy-tone][data-sy-phase='in'] [data-sy-kind] .sy-ring {
             animation: sy-strike calc(450ms * var(--sy-slow, 1)) steps(1, end) both;
         }
 
-        .sy-scene[data-sy-tone='plate'][data-sy-phase='in'] [data-sy-kind] :is(.sy-figure, .sy-toned, .sy-state__word) {
-            animation: sy-flash calc(900ms * var(--sy-slow, 1)) steps(1, end) both;
+        /* ·· Leaving and arriving: each arrival is the leave backwards; the close is the arrival played backwards by the page's script. */
+        .sy-scene[data-sy-leave]:not(
+                [data-sy-leave='swallow'],
+                [data-sy-leave='blinds'],
+                [data-sy-leave='marquee'],
+                [data-sy-leave='laser'],
+                [data-sy-leave='dye']
+            ):is([data-sy-phase='in'], [data-sy-phase='hold'])
+            .sy-leaver
+            > .sy-horizon {
+            animation: sy-horizon-in var(--sy-d) var(--sy-sun) both;
         }
 
-        .sy-scene[data-sy-tone='plate'][data-sy-phase='in'] .sy-meter-wrap .kp-meter {
-            animation: sy-bump calc(400ms * var(--sy-slow, 1)) ease-out;
+        /* 1 · slab: the sun's slab rises over the part, then retreats down to the horizon. */
+        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-slab-wipe calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        /* The live update (G9). */
-        .sy-scene[data-sy-live='flare'][data-sy-phase='in'] .sy-carrier:not(.sy-carrier--dot, .sy-carrier--line),
-        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-kpi .sy-carrier {
-            animation: sy-flare calc(550ms * var(--sy-slow, 1)) ease-out;
+        .sy-scene[data-sy-leave='slab']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) steps(1, jump-start) both;
         }
 
-        .sy-scene:is([data-sy-live='flare'], [data-sy-live='mix'])[data-sy-phase='in'] .sy-carrier--dot {
-            animation: sy-bright calc(600ms * var(--sy-slow, 1)) ease-out;
+        /* 2 · stripes. */
+        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-slab-up calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        .sy-scene[data-sy-live='flare'][data-sy-phase='in'] .sy-carrier--line svg {
-            animation: sy-flare-line calc(550ms * var(--sy-slow, 1)) ease-out;
+        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
+            animation: sy-band calc(270ms * var(--sy-slow, 1)) calc((450ms + var(--sy-ci) * 45ms) * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-carrier--line svg {
-            animation: sy-flare-line calc(900ms * var(--sy-slow, 1)) ease-out;
+        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(1) {
+            --sy-ci: 0;
         }
 
-        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-column .sy-carrier {
-            animation: sy-flip calc(500ms * var(--sy-slow, 1)) ease-in-out;
+        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(2) {
+            --sy-ci: 1;
         }
 
-        .sy-scene[data-sy-live='mix'][data-sy-phase='in'] .sy-live-tile {
-            animation: sy-jump calc(350ms * var(--sy-slow, 1)) cubic-bezier(0.3, 1.6, 0.6, 1);
+        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(3) {
+            --sy-ci: 2;
         }
 
-        /* Loading (G10). */
-        .sy-scene[data-sy-loading='drive'] .sy-dash,
-        .sy-scene[data-sy-loading='mix'] .sy-kpi .sy-dash {
-            animation: sy-drive calc(900ms * var(--sy-slow, 1)) linear infinite;
+        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(4) {
+            --sy-ci: 3;
         }
 
-        .sy-scene[data-sy-loading='mix'] .kp-menu__item .sy-dash {
-            animation: sy-drive-back calc(1000ms * var(--sy-slow, 1)) linear infinite;
+        .sy-scene[data-sy-leave='stripes'] .sy-sun-over > i:nth-child(5) {
+            --sy-ci: 4;
         }
 
-        .sy-scene[data-sy-loading='mix'] .sy-table .sy-bulbs {
-            animation: sy-marquee-one calc(900ms * var(--sy-slow, 1)) steps(4, end) infinite;
+        .sy-scene[data-sy-leave='stripes']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) steps(1, jump-start) both;
         }
 
-        .sy-scene[data-sy-loading='mix'] .sy-day .sy-roll {
-            animation: sy-beam calc(1300ms * var(--sy-slow, 1)) linear infinite;
+        /* 3 · ramp. */
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation:
+                sy-slab-up calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-ramp-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        .sy-scene[data-sy-loading='mix'] .sy-plot--wait .sy-floor {
-            animation: sy-feed calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over::after {
+            animation:
+                sy-head-back calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) var(--sy-sun) both,
+                sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
         }
 
-        /* The spinner (G11). */
-        .sy-scene[data-sy-spinner='sun'] .sy-spin .kp-spinner::before {
-            animation: kp-sig-synthwave-sw-set calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        .sy-scene[data-sy-leave='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(495ms * var(--sy-slow, 1)) calc(405ms * var(--sy-slow, 1)) steps(1, jump-start) both;
         }
 
-        .sy-scene[data-sy-spinner='ring'] .sy-spin__ring::after {
-            animation: sy-ring-step calc(900ms * var(--sy-slow, 1)) steps(8, end) infinite;
+        /* 4 · dye: the part sets (the sunset), then the dye lifts. */
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > :first-child {
+            animation: sy-rise-body calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        .sy-scene[data-sy-spinner='road'] .sy-spin__road::after {
-            animation: sy-road calc(600ms * var(--sy-slow, 1)) linear infinite;
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
+            animation: sy-horizon-in calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
         }
 
-        /* Leaving and arriving (G12), the other options: each arrival is its
-           leave played backwards, the same keyframes on the same curve. */
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation: sy-cuts-close calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='dye']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
+            animation: sy-dye-out calc(405ms * var(--sy-slow, 1)) calc(495ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        /* 5 · blinds: the covers open (the last half), the lines have come on one by one before. */
+        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i::before,
+        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i::after {
+            animation: sy-blind calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over > i {
+            animation: sy-line-on calc((450ms - var(--sy-ld)) * var(--sy-slow, 1)) calc(var(--sy-ld) * var(--sy-slow, 1)) steps(1, jump-start)
+                backwards;
+        }
+
+        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(1) {
+            --sy-ld: 360ms;
+        }
+
+        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(2) {
+            --sy-ld: 270ms;
+        }
+
+        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(3) {
+            --sy-ld: 180ms;
+        }
+
+        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(4) {
+            --sy-ld: 90ms;
+        }
+
+        .sy-scene[data-sy-leave='blinds'] .sy-sun-over > i:nth-child(5) {
+            --sy-ld: 0ms;
+        }
+
+        .sy-scene[data-sy-leave='blinds']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-part-in calc(450ms * var(--sy-slow, 1)) calc(450ms * var(--sy-slow, 1)) steps(1, jump-start) both;
+        }
+
+        /* 6 · laser: the beam climbs, the part is uncovered under it. */
+        .sy-scene[data-sy-leave='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-climb-body var(--sy-d) var(--sy-sun) both;
+        }
+
+        .sy-scene[data-sy-leave='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-horizon {
+            animation:
+                sy-climb-beam var(--sy-d) var(--sy-sun) both,
+                sy-climb-glow var(--sy-d) linear both;
+        }
+
+        /* 7 · marquee: the part is brought back end to start under the lit bulbs. */
+        .sy-scene[data-sy-leave='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-reveal-e var(--sy-d) steps(5, jump-none) both;
+        }
+
+        .sy-scene[data-sy-leave='marquee']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver > .sy-cuts {
+            animation:
+                sy-reveal-e var(--sy-d) steps(5, jump-none) both,
+                sy-bulbs-off var(--sy-d) steps(1, jump-end) both;
+        }
+
+        /* 8 · drive, 9 · fold. */
+        .sy-scene[data-sy-leave='drive']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation:
+                sy-drive-in var(--sy-d) var(--sy-sun) both,
+                sy-fade-in calc(225ms * var(--sy-slow, 1)) linear both;
+        }
+
+        .sy-scene[data-sy-leave='fold']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__part {
+            animation: sy-stand var(--sy-d) var(--sy-sun) both;
+        }
+
+        /* 10 · swallow, as round 1 had it: its own leave, its arrival the leave backwards. */
         .sy-scene[data-sy-leave='swallow']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-sun-over {
             animation: sy-swallow calc(750ms * var(--sy-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) reverse both;
         }
@@ -1905,23 +2080,138 @@
             animation: sy-fade calc(750ms * var(--sy-slow, 1)) ease-in both;
         }
 
-        .sy-scene[data-sy-leave='crt']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-leaver__body {
-            animation: sy-crt-off calc(550ms * var(--sy-slow, 1)) var(--sy-quick) reverse both;
+        /* ·· Loading: every picture loops, in whole beats. */
+        .sy-scene[data-sy-loading='charge'] .sy-b::before {
+            animation: sy-charge-fill calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
         }
 
-        .sy-scene[data-sy-leave='crt'][data-sy-phase='out'] .sy-leaver__body {
-            animation: sy-crt-off calc(550ms * var(--sy-slow, 1)) var(--sy-quick) both;
+        .sy-scene[data-sy-loading='charge'] .sy-b::after {
+            animation: sy-charge-head calc(1125ms * var(--sy-slow, 1)) steps(5, jump-none) infinite;
         }
 
-        /* Hover (G8): the sun cut crosses the pointed button every few seconds. */
-        .sy-scene:is([data-sy-hover='tube'], [data-sy-hover='mix'], [data-sy-colour]) .kp-button.sy-pointed::before {
-            animation: sy-sun-cut-loop calc(2400ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        .sy-scene[data-sy-loading='flow'] .sy-b::before {
+            animation: sy-flow calc(1800ms * var(--sy-slow, 1)) linear infinite;
         }
 
-        .sy-scene:is([data-sy-hover='tube'], [data-sy-hover='mix'], [data-sy-colour]) .kp-button.sy-pointed::after {
-            animation: sy-sun-cut-loop calc(2400ms * var(--sy-slow, 1)) calc(60ms * var(--sy-slow, 1)) steps(1, end) infinite;
+        .sy-scene[data-sy-loading='road'] .sy-b::before {
+            animation: sy-road-run calc(600ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='fill'] .sy-load > .sy-f {
+            animation: sy-fill-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='fill'] .sy-load > .sy-g {
+            animation: sy-head-sweep calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='ladder'] .sy-b::before {
+            animation: sy-ladder calc(1350ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='floor'] .sy-load > .sy-b {
+            animation: sy-floor-drive calc(900ms * var(--sy-slow, 1)) cubic-bezier(0.55, 0, 1, 0.45) infinite;
+        }
+
+        .sy-scene[data-sy-loading='scanner'] .sy-b::before {
+            animation: sy-scan-a calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='scanner'] .sy-b::after {
+            animation: sy-scan-b calc(1800ms * var(--sy-slow, 1)) var(--sy-sun) infinite;
+        }
+
+        .sy-scene[data-sy-loading='highway'] .sy-load > .sy-g {
+            animation: sy-lane calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='highway'] .sy-load > .sy-b {
+            animation: sy-lane-back calc(1200ms * var(--sy-slow, 1)) linear infinite;
+        }
+
+        .sy-scene[data-sy-loading='eq'] .sy-load > .sy-f {
+            animation: sy-eq calc(1800ms * var(--sy-slow, 1)) steps(1, jump-end) infinite;
+        }
+
+        .sy-scene[data-sy-loading='bulbs'] .sy-b::after {
+            animation: sy-bulbs-chase calc(900ms * var(--sy-slow, 1)) steps(4, end) infinite;
+        }
+
+        /* ·· The press: a beat to press, a beat to release (the press backwards). */
+        .sy-scene[data-sy-press][data-sy-phase='in'] {
+            --sy-pdir: normal;
+        }
+
+        .sy-scene[data-sy-press][data-sy-phase='hold'] {
+            --sy-pdir: reverse;
+        }
+
+        .sy-scene[data-sy-press]:is([data-sy-phase='in'], [data-sy-phase='hold']) {
+            --sy-pd: calc(225ms * var(--sy-slow, 1));
+        }
+
+        .sy-scene[data-sy-press]:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
+            animation: sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press]:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
+            animation-name: sy-press-ground-primary;
+        }
+
+        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
+            animation:
+                sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
+                sy-press-ink var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
+            animation-name: sy-press-ground-primary, sy-press-ink;
+        }
+
+        .sy-scene[data-sy-press='ramp']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+            animation: sy-press-ramp var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='charge']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
+            animation:
+                sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
+                sy-press-charge var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='charge']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
+            animation-name: sy-press-ground-primary, sy-press-charge;
+        }
+
+        .sy-scene[data-sy-press='laser']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+            animation: sy-press-laser var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press {
+            animation:
+                sy-press-ground var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
+                sy-press-dim var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .kp-button--primary.sy-press {
+            animation-name: sy-press-ground-primary, sy-press-dim;
+        }
+
+        .sy-scene[data-sy-press='sink']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+            animation: sy-press-fade var(--sy-pd) var(--sy-sun) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='gleam']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+            animation:
+                sy-press-gleam-y var(--sy-pd) var(--sy-sun) var(--sy-pdir) both,
+                sy-press-fade var(--sy-pd) steps(1, jump-start) var(--sy-pdir) both;
+        }
+
+        .sy-scene[data-sy-press='osd']:is([data-sy-phase='in'], [data-sy-phase='hold']) .sy-press > .sy-fx {
+            animation: sy-press-fade var(--sy-pd) steps(1, jump-start) var(--sy-pdir) both;
         }
     }
+
+    /* ── Keyframes ───────────────────────────────────────────────────── */
 
     @keyframes sy-rise-body {
         0%,
@@ -1982,18 +2272,6 @@
         }
     }
 
-    @keyframes sy-rise-cell {
-        from {
-            translate: 0 0.6rem;
-            clip-path: inset(100% 0 0.6rem 0);
-        }
-
-        to {
-            translate: 0 0;
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
     @keyframes sy-strike {
         0% {
             opacity: 0;
@@ -2039,280 +2317,263 @@
         }
     }
 
-    @keyframes sy-tape {
+    @keyframes sy-fill-72 {
         from {
-            clip-path: inset(0 0 100% 0);
+            clip-path: inset(0 100% 0 0);
         }
 
         to {
-            clip-path: inset(0);
+            clip-path: inset(0 28% 0 0);
         }
     }
 
-    @keyframes sy-marquee {
+    @keyframes sy-fill-48 {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
         to {
-            background-position-x: 3.4rem, 0;
+            clip-path: inset(0 52% 0 0);
         }
     }
 
-    @keyframes sy-marquee-one {
+    @keyframes sy-fill-88 {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
         to {
-            background-position-x: 1.35rem;
+            clip-path: inset(0 12% 0 0);
         }
     }
 
-    @keyframes sy-bulb-beat {
+    @keyframes sy-head-72 {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(72cqi);
+        }
+    }
+
+    @keyframes sy-head-48 {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(48cqi);
+        }
+    }
+
+    @keyframes sy-head-88 {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(88cqi);
+        }
+    }
+
+    @keyframes sy-climb-body {
         0% {
-            background: var(--primary);
-            filter: drop-shadow(0 0 3px var(--primary));
+            clip-path: inset(100% 0 0 0);
         }
 
-        25%,
-        100% {
-            background: hsl(from var(--primary) h s l / 0.25);
-            filter: none;
-        }
-    }
-
-    @keyframes sy-fill {
-        from {
-            transform: scaleX(0);
-        }
-
-        to {
-            transform: scaleX(1);
-        }
-    }
-
-    @keyframes sy-lift-in {
-        from {
-            opacity: 0;
-            translate: 0 10px;
-        }
-
-        to {
-            opacity: 1;
-            translate: 0 0;
-        }
-    }
-
-    @keyframes sy-spring-in {
-        from {
-            opacity: 0;
-            translate: 0 1.25rem;
-        }
-
-        30% {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 1;
-            translate: 0 0;
-        }
-    }
-
-    /* The laser under a changed value (G9): drawn from its centre out on the
-       sunrise curve, flaring, then burning down. */
-    @keyframes sy-laser {
-        0% {
-            opacity: 1;
-            transform: scaleX(0);
-            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
-        }
-
-        33% {
-            opacity: 1;
-            transform: scaleX(1);
-            box-shadow:
-                0 0 6px var(--primary),
-                0 0 16px var(--primary),
-                0 0 30px hsl(from var(--primary) h s l / 0.6);
-            animation-timing-function: linear;
-        }
-
-        60% {
-            opacity: 1;
-            transform: scaleX(1);
+        99% {
+            clip-path: inset(0 0 0 0);
         }
 
         100% {
-            opacity: 0;
-            transform: scaleX(1);
+            clip-path: none;
         }
     }
 
-    @keyframes sy-laser-quick {
+    @keyframes sy-climb-beam {
+        from {
+            inset-block-start: calc(100% - 2px);
+        }
+
+        to {
+            inset-block-start: -2px;
+        }
+    }
+
+    @keyframes sy-climb-glow {
         0% {
             opacity: 1;
             transform: scaleX(0);
         }
 
-        40%,
-        60% {
-            opacity: 1;
-            transform: scaleX(1);
-        }
-
-        100% {
-            opacity: 0;
-            transform: scaleX(1);
-        }
-    }
-
-    @keyframes sy-draw {
-        from {
-            clip-path: inset(-10px 100% -10px -10px);
-        }
-
-        to {
-            clip-path: inset(-10px -10px -10px -10px);
-        }
-    }
-
-    @keyframes sy-race {
-        from {
-            opacity: 0;
-            transform: translateX(-28px) skewX(-18deg);
-        }
-
-        to {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
-    @keyframes sy-drop {
-        from {
-            translate: 0 -0.75rem;
-        }
-
-        to {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes sy-tap {
-        0% {
-            background: var(--secondary-active);
-            box-shadow: none;
-            text-shadow: none;
-        }
-
-        50%,
-        100% {
-            background: transparent;
-        }
-    }
-
-    @keyframes sy-flash {
-        0%,
-        34%,
-        68% {
-            background: var(--sy-tone-plate, transparent);
-            color: var(--sy-tone-ink, inherit);
-        }
-
-        17%,
-        51%,
+        12%,
         85% {
-            background: transparent;
-            color: var(--sy-tone, inherit);
+            opacity: 1;
+            transform: scaleX(1);
         }
 
         100% {
-            background: var(--sy-tone-plate, transparent);
-            color: var(--sy-tone-ink, inherit);
+            opacity: 0;
+            transform: scaleX(1);
         }
     }
 
-    @keyframes sy-bump {
-        40% {
-            scale: 1.04 1.3;
-        }
-    }
-
-    @keyframes sy-flare {
-        0% {
-            text-shadow: 0 0 0 transparent;
-        }
-
-        35% {
-            text-shadow: 0 0 16px hsl(from var(--primary) h s l / 0.95);
-        }
-
-        100% {
-            text-shadow: 0 0 0 transparent;
-        }
-    }
-
-    @keyframes sy-bright {
-        40% {
-            filter: brightness(2);
-        }
-    }
-
-    @keyframes sy-flare-line {
-        35% {
-            filter: drop-shadow(0 0 3px var(--primary)) drop-shadow(0 0 9px var(--primary));
-            stroke-width: 3px;
-        }
-    }
-
-    @keyframes sy-flip {
-        50% {
-            rotate: x 90deg;
-        }
-    }
-
-    @keyframes sy-jump {
-        40% {
-            translate: 0 -0.22rem;
-        }
-    }
-
-    @keyframes sy-drive {
-        to {
-            background-position-x: 10px;
-        }
-    }
-
-    @keyframes sy-drive-back {
-        to {
-            background-position-x: -10px;
-        }
-    }
-
-    @keyframes sy-beam {
+    @keyframes sy-blind {
         from {
+            transform: scaleY(1);
+        }
+
+        to {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes sy-stand {
+        from {
+            transform: perspective(36rem) rotateX(88deg);
+        }
+
+        to {
+            transform: perspective(36rem) rotateX(0deg);
+        }
+    }
+
+    @keyframes sy-reveal-x {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        99% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            clip-path: none;
+        }
+    }
+
+    @keyframes sy-reveal-e {
+        0% {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        99% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            clip-path: none;
+        }
+    }
+
+    @keyframes sy-bulbs-off {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-slab-up {
+        from {
+            translate: 0 101%;
+        }
+
+        to {
             translate: 0 0;
         }
+    }
+
+    @keyframes sy-slab-wipe {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
 
         to {
-            translate: 0 calc(2.4rem - 3px);
+            clip-path: inset(100% 0 0 0);
         }
     }
 
-    @keyframes sy-feed {
+    @keyframes sy-part-in {
+        from {
+            opacity: 0;
+        }
+
         to {
-            background-position:
-                -12px 0,
-                -12px 0;
+            opacity: 1;
         }
     }
 
-    @keyframes sy-ring-step {
+    @keyframes sy-band {
+        from {
+            transform: scaleY(1);
+        }
+
         to {
-            rotate: 360deg;
+            transform: scaleY(0);
         }
     }
 
-    @keyframes sy-road {
+    @keyframes sy-ramp-back {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
         to {
-            background-position:
-                0 0,
-                100% 0,
-                0 100%;
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes sy-head-back {
+        from {
+            translate: calc(100cqi - 2px) 0;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes sy-dye-out {
+        from {
+            opacity: 0.9;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-line-on {
+        from {
+            background-size: 100% 0;
+        }
+
+        to {
+            background-size: 100% 2px;
+        }
+    }
+
+    @keyframes sy-drive-in {
+        from {
+            scale: 0.03;
+        }
+
+        to {
+            scale: 1;
+        }
+    }
+
+    @keyframes sy-fade-in {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
         }
     }
 
@@ -2338,69 +2599,332 @@
         }
     }
 
-    @keyframes sy-crt-off {
-        0% {
-            transform: scaleY(1);
-            filter: brightness(1);
-            opacity: 1;
+    /* Loading. */
+    @keyframes sy-charge-fill {
+        from {
+            clip-path: inset(0 100% 0 0);
         }
 
-        60% {
-            transform: scaleY(0.02);
-            filter: brightness(3);
-        }
-
-        100% {
-            transform: scaleY(0.02) scaleX(0);
-            filter: brightness(5);
-            opacity: 0;
+        to {
+            clip-path: inset(0 0 0 0);
         }
     }
 
-    /* The register's sun cut, once every 2.4 s, so a still scene shows it. */
-    @keyframes sy-sun-cut-loop {
-        0% {
-            opacity: 1;
-            transform: translateX(-10%);
-        }
-
-        5% {
-            opacity: 1;
+    @keyframes sy-charge-head {
+        from {
             transform: translateX(0);
         }
 
-        10% {
-            opacity: 1;
-            transform: translateX(10%);
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes sy-flow {
+        to {
+            background-position:
+                0 0,
+                200% 0;
+        }
+    }
+
+    @keyframes sy-road-run {
+        to {
+            background-position-x: 2.25rem;
+        }
+    }
+
+    @keyframes sy-fill-sweep {
+        0% {
+            clip-path: inset(0 100% 0 0);
         }
 
-        15%,
+        50% {
+            clip-path: inset(0 0 0 0);
+        }
+
         100% {
-            opacity: 0;
-            transform: none;
+            clip-path: inset(0 0 0 100%);
         }
     }
 
-    /* The laser line under a carrier (G9), dark until a change draws it. */
-    .sy-scene .sy-carrier::after {
-        content: '';
-        position: absolute;
-        inset-inline: -0.15rem;
-        inset-block-end: -5px;
-        block-size: 2px;
-        background: var(--kp-core);
-        box-shadow: var(--sy-laser-glow);
-        opacity: 0;
-        transform: scaleX(0);
-        pointer-events: none;
+    @keyframes sy-head-sweep {
+        0% {
+            translate: 0 0;
+            opacity: 1;
+        }
+
+        49.9% {
+            translate: calc(100cqi - 2px) 0;
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            translate: calc(100cqi - 2px) 0;
+            opacity: 0;
+        }
     }
 
-    .sy-scene .sy-carrier--dot::after {
-        inset-inline: -0.35rem;
-        inset-block-end: -6px;
+    @keyframes sy-ladder {
+        0% {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        16.6% {
+            clip-path: inset(96% 0 0 0);
+        }
+
+        33.3% {
+            clip-path: inset(74% 0 0 0);
+        }
+
+        50% {
+            clip-path: inset(51% 0 0 0);
+        }
+
+        66.6% {
+            clip-path: inset(27% 0 0 0);
+        }
+
+        83.3%,
+        100% {
+            clip-path: inset(0 0 0 0);
+        }
     }
 
-    .sy-scene .sy-carrier--line::after {
-        inset-block-end: -3px;
+    @keyframes sy-floor-drive {
+        from {
+            background-position:
+                0 0%,
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 130%,
+                0 0,
+                0 0;
+        }
+    }
+
+    @keyframes sy-scan-a {
+        0% {
+            translate: -100% 0;
+            opacity: 1;
+        }
+
+        49.9% {
+            translate: 100cqi 0;
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            translate: 100cqi 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes sy-scan-b {
+        0%,
+        49.9% {
+            translate: 100cqi 0;
+            opacity: 0;
+        }
+
+        50% {
+            translate: 100cqi 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: -100% 0;
+            opacity: 1;
+        }
+    }
+
+    @keyframes sy-lane {
+        to {
+            background-position-x: 2.1rem;
+        }
+    }
+
+    @keyframes sy-lane-back {
+        to {
+            background-position-x: -2.1rem;
+        }
+    }
+
+    @keyframes sy-eq {
+        0% {
+            background-size:
+                0.2rem 30%,
+                0.2rem 70%,
+                0.2rem 50%,
+                0.2rem 90%,
+                0.2rem 40%;
+        }
+
+        12.5% {
+            background-size:
+                0.2rem 60%,
+                0.2rem 40%,
+                0.2rem 80%,
+                0.2rem 50%,
+                0.2rem 70%;
+        }
+
+        25% {
+            background-size:
+                0.2rem 90%,
+                0.2rem 60%,
+                0.2rem 40%,
+                0.2rem 70%,
+                0.2rem 30%;
+        }
+
+        37.5% {
+            background-size:
+                0.2rem 50%,
+                0.2rem 90%,
+                0.2rem 60%,
+                0.2rem 30%,
+                0.2rem 80%;
+        }
+
+        50% {
+            background-size:
+                0.2rem 70%,
+                0.2rem 50%,
+                0.2rem 90%,
+                0.2rem 40%,
+                0.2rem 60%;
+        }
+
+        62.5% {
+            background-size:
+                0.2rem 40%,
+                0.2rem 80%,
+                0.2rem 30%,
+                0.2rem 60%,
+                0.2rem 90%;
+        }
+
+        75% {
+            background-size:
+                0.2rem 80%,
+                0.2rem 30%,
+                0.2rem 70%,
+                0.2rem 90%,
+                0.2rem 50%;
+        }
+
+        87.5%,
+        100% {
+            background-size:
+                0.2rem 50%,
+                0.2rem 60%,
+                0.2rem 50%,
+                0.2rem 70%,
+                0.2rem 40%;
+        }
+    }
+
+    @keyframes sy-bulbs-chase {
+        to {
+            mask-position:
+                0 50%,
+                3.6rem 0;
+        }
+    }
+
+    /* The press. */
+    @keyframes sy-press-ground {
+        to {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes sy-press-ground-primary {
+        to {
+            background-color: var(--primary-active);
+        }
+    }
+
+    @keyframes sy-press-ink {
+        to {
+            color: var(--sidebar-background);
+            text-shadow: none;
+        }
+    }
+
+    @keyframes sy-press-ramp {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes sy-press-charge {
+        to {
+            color: var(--kp-core);
+            text-shadow:
+                0 0 3px var(--kp-core),
+                0 0 9px var(--primary),
+                0 0 20px hsl(from var(--primary) h s l / 0.8);
+            box-shadow:
+                inset 0 0 1.3em 0 hsl(from var(--primary) h s l / 0.8),
+                0 0 2.8em 0 hsl(from var(--primary) h s l / 0.8);
+        }
+    }
+
+    @keyframes sy-press-laser {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes sy-press-dim {
+        to {
+            text-shadow: none;
+            box-shadow: none;
+        }
+    }
+
+    @keyframes sy-press-fade {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes sy-press-gleam-y {
+        from {
+            inset-block-start: 0;
+        }
+
+        to {
+            inset-block-start: calc(100% - 2px);
+        }
     }
 }

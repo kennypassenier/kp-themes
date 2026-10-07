@@ -19,36 +19,58 @@ grid-floor constellation, the outrun pulse), never a target.
 
 **What.** One page, synthwave only, in the review kit's aspect mode (`data-review-themes="synthwave"`). An intro, "What synthwave
 is" (the drive into the sunset: the floor, the tubes, the sun; the package's own parts, and on demand six decided character demos
-embedded as they are today), then eighteen questions. Each question is one rule of the grammar, with three options, each a live
+embedded as they are today), then, in round 2, eight questions. Each question is one rule of the grammar, with six or ten options, each a live
 scene built from the package's components in synthwave (`.kp-button`, `.kp-dialog`, `.kp-popover` + `.kp-menu`, `.kp-card`,
 `.kp-kpi`, `.kp-meter`, `.kp-progressbar`, `.kp-spinner`, `.kp-badge`, `.kp-tag`, `.kp-alert`, `.kp-skeleton`, `.kp-tooltip`,
 `.kp-empty`, `.kp-field`, `.kp-page-header`, the divider). The first option is always the recommendation; every option says what you
 see and why it is or is not recommended, on the page and in its hint in the dialog.
 
-| #   | Question (rule)                       | Options, recommended first                                                                                                    |
-| --- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| 1   | The motion curve (G1)                 | bodies on the sunrise curve, light switches · the register's quick curve (cyberpunk's, near titanium's) · a spring (pastel's) |
-| 2   | The direction (G2)                    | rise over the horizon · race in from the start (the size change; near titanium's feed) · down from the top                    |
-| 3   | Opening what drops from a button (G3) | over the horizon, its stripe striking on · Neon strikes alone (cyberpunk's, nostromo's) · cut from the top (titanium's)       |
-| 4   | How long things take (G4)             | 225 · 450 · 675 · 900 (beats) · as the slowest picks (the dialog's 2880) · brisk 150 · 300 · 450 · 600                        |
-| 5   | Where the colour goes (G5)            | pink acts, cyan reads, laser warns · as today · one neon: pink for everything                                                 |
-| 6   | The corners (G6)                      | square panels, 2 px controls · the marquee's 0.4 rem (cyberpunk's holo, near dark's) · pills (light's, pastel's)              |
-| 7   | The surface (G7)                      | chrome over the floor · the flat grid as picked (dark's scope, cyberpunk's circuit) · the marquee rim (cyberpunk's holo)      |
-| 8   | A warning (G13)                       | the neon ring, the words in the tone · the arcade warning (the plates) · the full neon frame (nostromo's klaxon)              |
-| 9   | A live update (G9)                    | the laser drawn under it · the glow flares on the digits (dark's trace flares) · as the components play it today              |
-| 10  | Loading (G10)                         | the marquee on every waiting part · the floor drives (dark's ticker) · as today                                               |
-| 11  | The spinner (G11)                     | the sun sets and rises, on the beat · a ring of marquee bulbs · the road                                                      |
-| 12  | Leaving and arriving (G12)            | sets behind its horizon, cut by the stripes · the sun swallows it (solstice's eclipse) · switched off to a line (nostromo's)  |
-| 13  | Buttons inside composites (G17)       | exactly synthwave's own · as today · synthwave's own, the header's as cyan pills                                              |
-| 14  | Pointing at something (G8)            | the tube turns up, the sun cut crosses · the marquee outline on everything · as today                                         |
-| 15  | The focus ring (G14, DI2)             | the two-channel ring, the tube lit · the marquee trace (one channel) · as today                                               |
-| 16  | The press (G14)                       | the tube dips · drops 1 px (titanium's) · the sun cut holds                                                                   |
-| 17  | The voice (G15)                       | the OSD names, the chrome counts · KP Tech Mono for the data (cyberpunk's face) · no OSD voice                                |
-| 18  | Motifs (G16)                          | every motif means one thing · only the stripe · on everything                                                                 |
+| #   | Question (rule)                       | Options, recommended first                                                                                                                                                                                                       |
+| --- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The motion curve (G1)                 | light leads, the body follows · tape transport · marquee beats · charge-up in three surges · strike then burn in · the sunrise S (round 1's), all shown on the package's progress bars                                           |
+| 2   | Opening what drops from a button (G3) | the laser climbs · the sun's blinds · it stands up from the floor · the marquee carries it on · over the horizon (round 1's 1) · neon strikes (round 1's 2)                                                                      |
+| 3   | The corners (G6)                      | tube ends overshoot · only top and bottom rules · the sun-stripe slots · a horizon slit through the sides · a corner pixel · square (the baseline)                                                                               |
+| 4   | A warning (G13)                       | the VCR's pause and stop · the neon ring (round 1's) · a three-pip level · two tube rails · words cut by the sun's stripes · the sun going down                                                                                  |
+| 5   | Loading (G10)                         | the ramp charges · the ramp flows · the road · the part is the bar · the sun's stripes light up · the floor drives · the scanner · headlights and tail lights · the equaliser · the marquee in the ramp's colours (ten attempts) |
+| 6   | Leaving and arriving (G12)            | the sun's slab · the sun's stripes · the progress bar's ramp · the sunset's dye · five neon lines · a laser erases it · the marquee carries it off · it drives off · it lies down · the swallow as it was (round 1's, ten)       |
+| 7   | The focus ring (G14, DI2)             | twin tubes · the sun's ramp · marquee bulbs · a tube cut by the slits · tube ends cross · the two-channel ring on its horizon                                                                                                    |
+| 8   | The press (G14)                       | the ramp fills · the tube overdrives · the laser underneath · the light sinks · a chrome gleam · the VCR's ▶                                                                                                                     |
+
+**Round 2 (Kenny, 2026-10-07 20:41).** Ten of the eighteen questions were approved as recommended and are not asked again: the
+direction (rise over the horizon), the durations (beats 225 · 450 · 675 · 900), the colour roles, the surface (chrome over the floor),
+the live update (the laser), the spinner (the sun), composites (synthwave's own button), hover (the tube turns up), the voice (the OSD
+names, the chrome counts) and the motifs (research/synthwave-character/decided.json). They stay applied on every scene as the fixed
+ground (`GROUND` in `demo.js` writes their `data-sy-<question>` attributes on each `.sy-scene`; `options.css` keys the parts at rest
+and the rise over the horizon on them) and are no longer in the questions, the table of contents or `data-review-choices`. The other
+eight came back with new options in Kenny's words: the curve ("I like the progress bars, come up with more examples": six characters
+shown on `.kp-progressbar`), opening ("I like 1 and 2, more potential": his two stay as options 5 and 6, four bolder ones are new),
+corners ("square, but we can do better": square is the baseline, five ideas strictly inside the grammar), the warning ("need more
+options": six marks, the plate and the frame retired as terminal's and nostromo's), loading (ten attempts on the bar's ramp, stripes,
+head and road, plus new ones), leaving and arriving (ten: what was wrong with the swallow is written on the page, none draws a growing
+circle), the focus ring and the press (six new each; round 1's three are dropped). Each option says what you see, why it does or
+does not suit synthwave, its honest overlap with another theme, and what `research/_review/measure-motion.mjs` read in Firefox.
+Measured in the dialog too (tokens defined on `.rv-dialog__stage`, animations running). The round marker in `demo.html` is
+`{"round":"2026-10-07-r2","reopen":[]}`: nothing was approved about these eight, so there is nothing to reopen.
+
+**The anchor (Kenny, 2026-10-07 21:21): the page horizon.** One neon tube for the page on the header's foot, the floor being the page below
+it, components carrying 1 px of its light, a brighter piece under a hand exactly as wide as the component. Nothing here was redone for it.
+The options that already depart from that line: every option keeps the rise over the horizon as the ground; in the curve, the horizon
+strikes first and the body follows (option 1); in the opening, the laser climbs as the horizon itself (option 1) and the blinds open from it
+(option 2); in the corners, the rules and the tube ends are horizons at a plate's top and foot (options 1 and 2); in the warning, the rails
+(option 4) and the dusk (option 6) are lines on the horizon; in the focus ring, the ring stands on its horizon (option 6); in the leave, the
+slab, the ramp, the laser and the dye set behind the same horizon (options 1, 3, 4, 6); in the press, the laser, the sink and the gleam are
+a lit line at the part's foot (options 3 to 5), as wide as the part. If Kenny picks any of these, its line should be the anchor's tube in
+the real page, at the real component's width; the options here draw their own line at each scene part's width.
+
+What was wrong with the swallow, found in the CSS: the disc was cyan, pink and violet (the sun is laser yellow to pink), its stripes
+all one width (the sun's widen toward the horizon), the part faded under it, it ended as a whole striped rectangle that vanished in one
+frame, and a circle growing from the foot is solstice's moon and dome. The new leaves keep "the sun takes it" in the sun's real colours
+and stripes, end clean behind the horizon, and are authored as arrivals (the leave is the arrival played backwards by the page's script,
+so the close is exact: measured "mirror" for every part of every option).
 
 **How.**
 
-- `demo.js` holds the eighteen questions as data (`ASPECTS`: question, reason, rule, kind, scene, options with what you see and the
+- `demo.js` holds the eight questions as data (`ASPECTS`: question, reason, rule, kind, scene, options with what you see and the
   verdict), builds the rows (`data-sy-aspect`, option cells `data-sy-option`) and writes `data-review-choices` from the same data,
   so the page and the dialog cannot disagree.
 - `options.css` (in `@layer kp.signature`) draws every option, scoped by `data-sy-<question>="<key>"` on the scene. Colours are
@@ -71,11 +93,11 @@ see and why it is or is not recommended, on the page and in its hint in the dial
 - One clock in `demo.js` plays every scene that arrives, opens, presses, updates or leaves (`data-sy-phase`: gap, in, hold, out), so
   the options of a row start together. It only writes attributes and text, in one pass, and never reads layout; rows far off screen
   are not rendered (`content-visibility: auto`). Replay restarts it; the speed buttons stretch every duration by 2 or 4; the dialog's
-  Pause (Space) stops it. Loading pictures, the spinner and the sun cut on a pointed button loop in CSS.
+  Pause (Space) stops it. The loading pictures loop in CSS.
 - Every close is its open played backwards (Kenny's standing rule; 2026-10-07 15:16: "ik weet niet of je openen en sluiten bv altijd het omgekeerde van mekaar hebt gemaakt"). At `out`, `demo.js` (`closeByReverse`, keyed to `data-sy-phase`) plays every arrival of a cell backwards over the cell's whole arrival: the same keyframes, curve and pace, what arrived last leaving first; the clock's `out` lasts as long as the longest close. Before, most scenes stood through `out` and were cut away at `gap`, or snapped shut as `out` began. The hand-drawn closes (setting behind the horizon, lift out, the strike's fade, the tape out) are gone, and the leave question's swallow and CRT arrive as their leaves backwards on the same curve (they arrived on a different curve). Measured frame by frame in Firefox with `research/_review/measure-motion.mjs`: every arrival's close is now its mirror within one frame.
-- Hover, focus and press are shown standing still on marked parts (`.sy-pointed`, `.sy-focused`) and by the clock (`.sy-press`), so
-  they can be compared without a pointer; the State buttons force a state on every button of question 13, and the dialog presses
-  Hover there by itself.
+- Focus is shown standing still on marked parts (`.sy-focused`, the ring drawn in `.sy-fring`) and the press by the clock (`.sy-press`,
+  drawn in `.sy-fx`): pressed for a beat at `in`, released at `hold` as the press played backwards. The State buttons of round 1 are gone
+  with composites and hover (both approved).
 - The gallery of decided components loads the character demos through the review kit's embed mode (`?embed=…&theme=synthwave`) only
   when it is opened.
 

@@ -1,6 +1,6 @@
 /* research/synthwave-character: the page only. A centred column; the story
-   at the top, then one section of eighteen rows, each row a question with
-   its three options side by side on a desk and stacked on a phone. Every
+   at the top, then one section of eight rows (round 2), each row a question
+   with its options three to a line on a desk and stacked on a phone. Every
    option's own drawing is in options.css. */
 .sy-page {
     display: grid;
@@ -201,10 +201,6 @@
     align-items: start;
 }
 
-.sy-trio[data-sy-n='4'] {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .sy-col {
     display: grid;
     grid-row: span 4;
@@ -215,8 +211,7 @@
 
 @media (max-width: 64rem) {
     .sy-story__grid,
-    .sy-trio,
-    .sy-trio[data-sy-n='4'] {
+    .sy-trio {
         grid-template-columns: minmax(0, 1fr);
     }
 
@@ -269,6 +264,7 @@
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
     gap: var(--kp-space-md, 1rem);
     align-content: start;
+    box-sizing: border-box;
     min-block-size: 100%;
     padding: var(--kp-space-md, 1rem);
     border: 1px solid var(--border);

@@ -26,10 +26,13 @@
                 <h1>What makes synthwave synthwave</h1>
                 <p>
                     Kenny, 2026-10-07 04:23: the themes one by one, cyberpunk, then synthwave. The same way as titanium, forest, nostromo and
-                    cyberpunk: first find out what belongs together and what does not, then propose. Eighteen questions, each one rule of the theme.
-                    Every option is a live scene built from the package's own components in synthwave, so you see the rule at work; the first option
-                    of each question is the recommendation, and each option says what you see and why it is or is not recommended. Pick per question
-                    in the review dialog (one question per page, the arrow keys flip between the options).
+                    cyberpunk: first find out what belongs together and what does not, then propose. Round 2: you approved ten of the eighteen
+                    questions as recommended on 07/10 at 20:41 (the direction, the durations, the colour roles, the surface, the live update, the
+                    spinner, composites, hover, the voice and the motifs); they are not asked again and stay as the fixed ground of every scene below.
+                    Eight come back with new options, in your words. Every option is a live scene built from the package's own components in
+                    synthwave, so you see the rule at work; the first option of each question is the recommendation, and each option says what you see
+                    and why it is or is not recommended. Pick per question in the review dialog (one question per page, the arrow keys flip between
+                    the options).
                 </p>
                 <p>
                     Every recommendation is synthwave's alone (your rule of 03:37: "een thema bestaat om distinct te zijn"). Four of your synthwave
@@ -40,7 +43,7 @@
                 </p>
                 <p class="sy-motion" data-sy-motion hidden>
                     <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
-                    system settings to judge the motion questions (1 to 4, 8 to 12 and 16).
+                    system settings to judge the motion questions (1, 2, 4, 5, 6 and 8).
                 </p>
             </header>
 
@@ -170,41 +173,20 @@
                 data-review-rows="data-sy-aspect"
                 data-review-components="synthwave-character"
                 data-review-title="What makes synthwave synthwave"
-                data-sy-show="rest"
                 aria-labelledby="h-sy"
             >
                 <div class="sy-sec__head">
-                    <h2 id="h-sy">Eighteen questions</h2>
+                    <h2 id="h-sy">Eight questions, round 2</h2>
                     <p>
                         Each row is one question, its options side by side, the recommended one first. The scenes replay by themselves every few
-                        seconds; Replay starts them together, the speed buttons slow every motion down, and State shows every button in the composites
-                        scene as hovered, focused or pressed (question 13).
+                        seconds; Replay starts them together and the speed buttons slow every motion down. The loading pictures loop; focus is shown
+                        standing still; the press is pressed every few seconds and released.
                     </p>
                     <ol class="sy-toc" data-sy-toc></ol>
                 </div>
                 <div class="sy-controls" data-review-controls>
-                    <div class="sy-actions" role="group" aria-label="State of every button">
-                        <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-sy-state="rest" aria-pressed="true">Rest</button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-sy-state="hover"
-                            aria-pressed="false"
-                            data-review-plays="composites"
-                        >
-                            Hover
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-sy-state="focus" aria-pressed="false">Focus</button>
-                        <button type="button" class="kp-button kp-button--sm" data-sy-state="press" aria-pressed="false">Press</button>
-                    </div>
                     <div class="sy-actions" role="group" aria-label="Replay">
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-sy-replay
-                            data-review-plays="curve direction opening durations tone live leave press"
-                        >
+                        <button type="button" class="kp-button kp-button--sm" data-sy-replay data-review-plays="curve opening tone leave press">
                             Replay
                         </button>
                     </div>
@@ -220,7 +202,7 @@
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-07-r1", "reopen": [] }
+            { "round": "2026-10-07-r2", "reopen": [] }
         </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
