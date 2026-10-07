@@ -212,7 +212,18 @@ function answersPixels(key, theme, engine, local, kept) {
 
 function newer(local, kept) {
     if (!local.at || local.v !== HASH_VERSION) return false;
-    return new Date(local.at).toISOString().slice(0, 10) >= String(kept.given ?? '');
+    return localDay(new Date(local.at)) >= String(kept.given ?? '');
+}
+
+/**
+ * A day in the local calendar, as gates/verdicts.mjs writes `given`. In UTC
+ * an approval Kenny gave at 01:50 in Brussels fell on the day before a
+ * rejection recorded at 01:40 the same night, so the register's rejection
+ * won and Approve did nothing (2026-10-08, phantom's theme menu).
+ */
+function localDay(date) {
+    const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 /**

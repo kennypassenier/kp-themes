@@ -23338,9 +23338,9 @@
             },
             "phantom": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "9fa4e1b8f7593ad104b330807f03d9950972cf7b980309d07c11dc49270ffec9",
-                    "commit": "f1eebdf5182f9ac2d084cdf86a3913445d25e1d6",
+                    "commit": "e78970ebb4eb3c8993371cb50e186447330b334d",
                     "given": "2026-10-08",
                     "ratio": 2
                 }
@@ -23511,9 +23511,9 @@
             },
             "phantom": {
                 "firefox": {
-                    "verdict": "rejected",
+                    "verdict": "approved",
                     "hash": "5c922f7ba12812509c4dc85bd12128e8f7b8389b65e9025c35119a6e3e3678c9",
-                    "commit": "f1eebdf5182f9ac2d084cdf86a3913445d25e1d6",
+                    "commit": "e78970ebb4eb3c8993371cb50e186447330b334d",
                     "given": "2026-10-08",
                     "ratio": 2
                 }
