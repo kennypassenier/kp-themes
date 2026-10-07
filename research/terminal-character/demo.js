@@ -694,15 +694,15 @@ const ASPECTS = [
             {
                 key: 'bracket',
                 name: 'An htop row, the cursor its head',
-                see: 'A row between two square brackets with all its cells dim. The cells light in the ink one per step from the start, the last lit cell is the block cursor and blinks, and when the row is full it is cleared at once and fills again.',
+                see: 'A row between two square brackets with all its cells dim. The cells light in the ink one per step from the start, the last lit cell is the block cursor and blinks, and when the row is full the cursor backspaces it, one cell a step, the same 1000 ms back.',
                 verdict: not(
-                    'it is your signature progress bar looped, so it reads as a progress that never arrives; it is clearer as a bar than as waiting, and its restart is a redraw, not the fill reversed.',
+                    'it is your signature progress bar looped, so it reads as a progress that never arrives; it is clearer as a bar than as waiting, and it is the fill and its reverse, so it breathes in and out.',
                 ),
             },
             {
                 key: 'prompt',
                 name: 'A prompt line types its dots',
-                see: 'In the first waiting place one line, a prompt and dots: > then . .. ... one dot per beat of the rapid clock (300 ms), the block cursor after the last dot, then the line starts again. One prompt per waiting part, no run along the foot.',
+                see: 'In the first waiting place one line, a prompt and dots: > then . .. ... one dot per beat of the rapid clock (300 ms), the block cursor after the last dot, then the dots are backspaced one per beat and it starts again. One prompt per waiting part, no run along the foot.',
                 verdict: not(
                     'it is the most terminal in words and takes no foot space, but it is the smallest, it needs a line of its own, and its beat is the rapid clock, not the line’s cell rate.',
                 ),

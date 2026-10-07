@@ -1486,9 +1486,9 @@
             animation: tc-walk calc(1600ms * var(--tc-slow, 1)) steps(calc(var(--tc-w) + 3), jump-none) infinite;
         }
 
-        /* The htop row fills, the head blinks on the slow clock, the row is redrawn. */
+        /* The htop row fills, the head blinks on the slow clock, the row empties as it filled. */
         .tc-scene[data-tc-loading='bracket'] .tc-wait {
-            animation: tc-fill calc(1600ms * var(--tc-slow, 1)) steps(var(--tc-w), jump-end) infinite;
+            animation: tc-fill calc(1000ms * var(--tc-slow, 1)) steps(var(--tc-w), jump-end) infinite alternate;
         }
 
         .tc-scene[data-tc-loading='bracket'] .tc-wait__run::after {
@@ -1497,7 +1497,7 @@
 
         /* The prompt: one dot a beat of the rapid clock (300 ms). */
         .tc-scene[data-tc-loading='prompt'] .tc-wait--first {
-            animation: tc-dots-typed calc(1200ms * var(--tc-slow, 1)) steps(4, jump-none) infinite;
+            animation: tc-dots-typed calc(1200ms * var(--tc-slow, 1)) steps(4, jump-none) infinite alternate;
         }
 
         /* ── G12: deleted by the cursor; arriving, written ── */
@@ -1721,17 +1721,12 @@
     }
 
     @keyframes tc-fill {
-        0% {
+        from {
             --tc-k: 0;
         }
 
-        60%,
-        99.9% {
+        to {
             --tc-k: 1;
-        }
-
-        100% {
-            --tc-k: 0;
         }
     }
 
