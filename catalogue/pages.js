@@ -98,8 +98,6 @@ export const PAGES = [
             { href: 'research/blueprint-anchor/demo.html', label: 'What anchors blueprint' },
             // Kenny, 2026-10-07 14:32: what makes terminal terminal ("doe nu terminal"), the same way (the analysis in themes/terminal/CHARACTER.md), sixteen rules of its grammar as questions, each option a live scene, the recommendation first; the tenth theme of the series and the first with all six family picks approved.
             { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
-            // Kenny, 2026-10-07: forest's skeleton drawn as wide light diagonal stripes "does not give forest vibes" (the tree line above it he likes); five pictures for the block, circle and lines, each on the same scene, the recommendation first and the current plot as one of them.
-            { href: 'research/forest-skeleton/demo.html', label: "Forest's skeleton: five pictures" },
         ],
     },
     {
@@ -121,6 +119,9 @@ export const PAGES = [
             { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.
             { href: 'research/titanium-character/demo.html', label: 'What makes titanium titanium' },
+            // Kenny, 2026-10-07: forest's skeleton drawn as wide light diagonal stripes "does not give forest vibes" (the tree line above it he likes); five pictures for the block, circle and lines, each on the same scene, the recommendation first and the current plot as one of them.
+            { href: 'research/forest-skeleton/demo.html', label: "Forest's skeleton: five pictures" },
+            // Decided 2026-10-07 20:05: Kenny approved option 1, the treeline fills in, as forest's skeleton (research/forest-skeleton/decided.json); ported into css/forest-register.css.
             // Kenny, 2026-10-07 02:54: what makes forest forest, the titanium way (the analysis in themes/forest/CHARACTER.md), seventeen rules of its grammar as questions, each option a live scene, the recommendation first; the first theme of the one-by-one series.
             { href: 'research/forest-character/demo.html', label: 'What makes forest forest' },
             // Decided 2026-10-07 17:47: Kenny approved forest's grammar, every recommendation except the corners = the leaf corner (research/forest-character/decided.json); applied in css/forest-register.css.

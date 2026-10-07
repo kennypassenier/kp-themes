@@ -345,10 +345,12 @@ proposal as its first option; nothing is applied before his verdicts.
   calendar, tiles and chart-research parts wait for the port.
 
 - **Skeleton block and circle, empty state (Kenny, 2026-10-07: stripes and rings
-  "not convinced"): applied.** Block = a plot being planted (planted rows, ground
-  line per row, dashed boundary, leaf corner), circle = a clearing planted in its
-  inscribed square, both on the bar's tree drawings and the 3200 ms linear
-  breath; the empty state's rings are replaced by a dashed leaf-cornered plot
+  "not convinced"): applied.** Block and circle = the treeline fills in (option 1
+  of research/forest-skeleton): two ridges rise from the foot, then the bar's whole
+  trees walk start → end on a ground line; 3200 ms linear loop, the leave is the
+  arrival reversed, leaf corner on the block, clipped to the circle, the finished
+  still under reduced motion; the chart's loading panel and stubs take it too; the
+  empty state's rings are replaced by a dashed leaf-cornered plot
   with one seedling (grows once, 1000 ms) and a clay trig point (G14).
 
 **Package-decided aspects that fit as they stand:** the progress bar (the

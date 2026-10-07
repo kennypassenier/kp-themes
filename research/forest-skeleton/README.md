@@ -1,5 +1,7 @@
 # Forest's skeleton: five pictures
 
+**Decided (Kenny, 07/10/2026 20:05): option 1, The treeline fills in** (research/forest-skeleton/decided.json; ported into css/forest-register.css for the block and the circle).
+
 Kenny, 2026-10-07: the skeleton drawn as wide light diagonal stripes in a
 rounded bar (the old `.kp-skeleton--block` look) "does not give forest
 vibes"; the planted tree line above it he likes. He asked for an alternative

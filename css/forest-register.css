@@ -15,6 +15,15 @@
     initial-value: 360deg;
 }
 
+/* The skeleton block's and circle's one clock, 0 (bare ground) to 1 (the
+   finished treeline), registered so the keyframes interpolate it; it stays 1
+   standing still. At the top level for the same Firefox reason. */
+@property --kp-fo-grow {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/forest-register.css
    The forest register, 5.0.0 [S48, LIFT_PLAN forest row]: the contour-map
@@ -838,7 +847,7 @@
     }
 
     [data-theme='forest'] .kp-skeleton {
-        /* No stripe: block and circle are planted ground (see "Skeleton block and circle"). */
+        /* No stripe: block and circle are a treeline (see "Skeleton block and circle"). */
         background: var(--muted);
     }
 
@@ -2303,8 +2312,7 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
-            .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-chart__state[data-kp-state='loading']
+            .kp-calendar--busy-whole > .kp-calendar__busy
         ) {
         --kp-fo-h: var(--kp-fo-size, 1rem);
         --kp-fo-pitch: calc(var(--kp-fo-h) / 2);
@@ -2353,8 +2361,7 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
-            .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-chart__state[data-kp-state='loading']
+            .kp-calendar--busy-whole > .kp-calendar__busy
         )::before,
     [data-theme='forest']
         :is(
@@ -2365,8 +2372,7 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
-            .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-chart__state[data-kp-state='loading']
+            .kp-calendar--busy-whole > .kp-calendar__busy
         )::after {
         content: '';
         display: block;
@@ -2391,8 +2397,7 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
-            .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-chart__state[data-kp-state='loading']
+            .kp-calendar--busy-whole > .kp-calendar__busy
         )::before {
         background: var(--border-strong);
         mask: var(--kp-fo-seedling) 50% 0 / var(--kp-fo-pitch) 100% repeat-x;
@@ -2408,8 +2413,7 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
-            .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-chart__state[data-kp-state='loading']
+            .kp-calendar--busy-whole > .kp-calendar__busy
         )::after {
         background: var(--primary);
         mask: var(--kp-fo-trees) 50% 0 / calc(var(--kp-fo-pitch) * 7) 100% repeat-x;
@@ -2426,8 +2430,7 @@
                 .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
                 .kp-button[aria-busy='true'],
                 .kp-card[aria-busy='true'],
-                .kp-calendar--busy-whole > .kp-calendar__busy,
-                .kp-chart__state[data-kp-state='loading']
+                .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
             animation: kp-progressbar-forest-breath 6600ms linear infinite;
         }
@@ -2453,37 +2456,54 @@
                 .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
                 .kp-button[aria-busy='true'],
                 .kp-card[aria-busy='true'],
-                .kp-calendar--busy-whole > .kp-calendar__busy,
-                .kp-chart__state[data-kp-state='loading']
+                .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
             --kp-fo-breath: 0.5;
         }
     }
 
-    /* ── Skeleton block and circle: a plot of ground being planted [G9, §6;
-       Kenny, 2026-10-07: the diagonal stripes "do not give forest vibes"].
-       The lines above are one row of the planting strip; a block is the same
-       row repeated over a plot (cleared ground, a ground line under every
-       row, a dashed plot boundary), a circle a round clearing planted inside
-       its inscribed square. Same tokens, same whole-slot count, the same
-       breath (3200 ms linear loop); no stripe is drawn anywhere. Rows are
-       counted from the foot, so a row is never cut: what the height leaves
-       over is plain ground at the top. ── */
+    /* ── Skeleton block and circle: the treeline fills in [G9, §6; Kenny,
+       2026-10-07: option 1 of research/forest-skeleton, after the stripes and
+       the planted plot did not give forest vibes]. Two ridges of the same
+       paper-brown rise from the foot, the far one first, then the planted tree
+       line (the lines' own trees, whole trees only, the lines' pitch, margin
+       and edge arithmetic) walks across start to end on the ground line. One
+       clock, --kp-fo-grow, 0 to 1 over 3200 ms linear: it arrives for 1400 ms,
+       stands for 400 ms and leaves for 1400 ms as the arrival played
+       backwards. The ridges are heights in percent and the trees are a fixed
+       size per shape, so it fits any block height and the circle (clipped to
+       the circle) alike. Standing still it is the finished picture
+       (--kp-fo-grow stays 1). The chart's loading panel and legend stubs are
+       block skeletons, so they are drawn here too. ── */
     [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
-        --kp-fo-h: var(--kp-fo-size, 1rem);
-        --kp-fo-pitch: calc(var(--kp-fo-h) / 2);
+        --kp-fo-tree: 2.25rem;
+        --kp-fo-pitch: calc(var(--kp-fo-tree) / 2);
         --kp-fo-run: calc(round(down, 100% - var(--kp-fo-pitch), 2 * var(--kp-fo-pitch)) + var(--kp-fo-pitch));
         --kp-fo-margin: calc((100% - var(--kp-fo-run)) / 2);
-        --kp-fo-top: calc(100% - round(down, 100%, var(--kp-fo-h)));
+        --kp-fo-w: clamp(0, (var(--kp-fo-grow) - 0.12) / 0.88, 1);
         --kp-fo-edge: calc(
             var(--kp-fo-margin) +
-                min(round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
+                min(round(down, var(--kp-fo-w) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
         );
+        --kp-fo-r1: clamp(0, var(--kp-fo-grow) / 0.45, 1);
+        --kp-fo-r2: clamp(0, (var(--kp-fo-grow) - 0.1) / 0.45, 1);
+        --kp-fo-ridge-far: color-mix(in oklab, var(--border-strong) 26%, var(--muted));
+        --kp-fo-ridge-near: color-mix(in oklab, var(--border-strong) 52%, var(--muted));
         position: relative;
         overflow: clip;
         box-sizing: border-box;
-        border: 1px dashed var(--border-strong);
-        background: var(--muted);
+        border: 0;
+        background:
+            linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px),
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-near) 0 99%, transparent 100%) 4.5rem
+                calc((1 - var(--kp-fo-r2) * 0.34) / 0.66 * 100%) / 7rem 34% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-near) 0 99%, transparent 100%) -1rem
+                calc((1 - var(--kp-fo-r2) * 0.46) / 0.54 * 100%) / 12rem 46% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-far) 0 99%, transparent 100%) 7rem
+                calc((1 - var(--kp-fo-r1) * 0.5) / 0.5 * 100%) / 10rem 50% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-far) 0 99%, transparent 100%) 0
+                calc((1 - var(--kp-fo-r1) * 0.66) / 0.34 * 100%) / 17rem 66% repeat-x,
+            var(--muted);
         animation: none;
     }
 
@@ -2492,48 +2512,50 @@
     }
 
     [data-theme='forest'] .kp-skeleton--circle {
-        --kp-fo-size: 0.75rem;
+        --kp-fo-tree: 1.1rem;
         border-radius: 50%;
     }
 
-    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::before,
+    [data-theme='forest'] .kp-skeleton--block.kp-chart__source-stub {
+        --kp-fo-tree: 0.8rem;
+    }
+
+    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::before {
+        content: none;
+    }
+
     [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::after {
         content: '';
         position: absolute;
         inset: 0;
+        border-radius: 0;
         pointer-events: none;
-    }
-
-    [data-theme='forest'] .kp-skeleton--circle::before,
-    [data-theme='forest'] .kp-skeleton--circle::after {
-        inset: 15%;
-    }
-
-    /* The ground: the seedlings and, under every row, its ground line. */
-    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::before {
-        background: var(--border-strong);
-        mask:
-            var(--kp-fo-seedling) 50% 100% / var(--kp-fo-pitch) var(--kp-fo-h) repeat,
-            linear-gradient(to top, var(--foreground) 0 1px, transparent 1px) 0 100% / 100% var(--kp-fo-h) repeat-y;
-        clip-path: inset(var(--kp-fo-top) var(--kp-fo-margin) 0 var(--kp-fo-margin));
-    }
-
-    /* The grove: whole trees walking every row, start to end. */
-    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::after {
         background: var(--primary);
-        mask: var(--kp-fo-trees) 50% 100% / calc(var(--kp-fo-pitch) * 7) var(--kp-fo-h) repeat;
-        clip-path: inset(var(--kp-fo-top) calc(100% - var(--kp-fo-edge)) 0 var(--kp-fo-margin));
+        mask: var(--kp-fo-trees) 50% 100% / calc(var(--kp-fo-pitch) * 7) var(--kp-fo-tree) repeat-x;
+        clip-path: inset(calc(100% - var(--kp-fo-tree)) calc(100% - var(--kp-fo-edge)) 0 var(--kp-fo-margin));
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
-            animation: kp-progressbar-forest-breath 6600ms linear infinite;
+            animation: kp-skeleton-forest-treeline 3200ms linear infinite;
         }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
-            --kp-fo-breath: 0.5;
+    @keyframes kp-skeleton-forest-treeline {
+        0% {
+            --kp-fo-grow: 0;
+            animation-timing-function: linear;
+        }
+        43.75% {
+            --kp-fo-grow: 1;
+            animation-timing-function: linear;
+        }
+        56.25% {
+            --kp-fo-grow: 1;
+            animation-timing-function: linear;
+        }
+        100% {
+            --kp-fo-grow: 0;
         }
     }
 
