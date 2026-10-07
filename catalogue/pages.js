@@ -80,7 +80,6 @@ export const PAGES = [
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
             // Kenny, 2026-10-07 03:50: what makes nostromo nostromo, the same way (the analysis in themes/nostromo/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the second theme of the one-by-one series.
-            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Kenny, 2026-10-07 04:23: what makes solstice solstice, the same way (the analysis in themes/solstice/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the fifth theme of the one-by-one series, after synthwave.
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
@@ -92,6 +91,8 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-08 00:05: Kenny approved all eighteen of nostromo's grammar questions (research/nostromo-character/decided.json); applied to css/nostromo-register.css.
+            { href: 'research/nostromo-character/demo.html', label: 'What makes nostromo nostromo' },
             // Decided 2026-10-07 23:54: Kenny settled all eighteen questions of synthwave's grammar (research/synthwave-character/decided.json); ported into css/synthwave-register.css.
             { href: 'research/synthwave-character/demo.html', label: 'What makes synthwave synthwave' },
             // Decided 2026-10-07 23:52: Kenny approved all eighteen cyberpunk character questions after two updates; Channel split for curve, opening and leave, Split edge for hover, Bars with a glitch copy for the spinner (research/cyberpunk-character/decided.json); applied in css/cyberpunk-register.css.
