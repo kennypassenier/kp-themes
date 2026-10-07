@@ -1,12 +1,12 @@
-/* research/blueprint-anchor: the page only. A centred column; the intro, the
+/* research/blueprint-anchor-2: the page only. A centred column; the intro, the
    line-up of the six, then the one review row with its six options, each a
    stage with one hero element in the middle and a short caption under it.
    Every anchor's own drawing and motion is in options.css.
 
-   The review dialog moves the section out of `.ba-page` into its stage, so
-   nothing here depends on `.ba-page`: every rule hangs on `.ba-sec`,
-   `.ba-aspect`, `.ba-col` or `.ba-scene`. */
-.ba-page {
+   The review dialog moves the section out of `.ba2-page` into its stage, so
+   nothing here depends on `.ba2-page`: every rule hangs on `.ba2-sec`,
+   `.ba2-aspect`, `.ba2-col` or `.ba2-scene`. */
+.ba2-page {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
@@ -15,41 +15,41 @@
     padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
 }
 
-.ba-intro,
-.ba-lineup-sec,
-.ba-sec__head,
-.ba-aspect__head {
+.ba2-intro,
+.ba2-lineup-sec,
+.ba2-sec__head,
+.ba2-aspect__head {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-:is(.ba-intro, .ba-lineup-sec, .ba-sec__head, .ba-aspect__head) :is(h1, h2, h3, p) {
+:is(.ba2-intro, .ba2-lineup-sec, .ba2-sec__head, .ba2-aspect__head) :is(h1, h2, h3, p) {
     margin: 0;
 }
 
-:is(.ba-intro, .ba-lineup-sec, .ba-sec__head) p {
+:is(.ba2-intro, .ba2-lineup-sec, .ba2-sec__head) p {
     max-inline-size: 84ch;
 }
 
-.ba-motion,
-.ba-sec__head p,
-.ba-lineup-sec > p {
+.ba2-motion,
+.ba2-sec__head p,
+.ba2-lineup-sec > p {
     color: var(--muted-foreground);
 }
 
-.ba-aspect__q {
+.ba2-aspect__q {
     font-weight: 600;
     max-inline-size: 84ch;
 }
 
 /* The line-up: six equal cells, one stage each, a name under it. */
-.ba-lineup {
+.ba2-lineup {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.ba-lineup__cell {
+.ba2-lineup__cell {
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
     gap: 0.35rem;
@@ -57,30 +57,30 @@
     min-inline-size: 0;
 }
 
-.ba-lineup__cell figcaption {
+.ba2-lineup__cell figcaption {
     font-size: var(--kp-text-sm, 0.875rem);
     font-weight: 600;
 }
 
-.ba-lineup__no,
-.ba-label__no {
+.ba2-lineup__no,
+.ba2-label__no {
     font-family: var(--theme-font-display);
     color: var(--muted-foreground);
 }
 
 @media (max-width: 80rem) {
-    .ba-lineup {
+    .ba2-lineup {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 40rem) {
-    .ba-lineup {
+    .ba2-lineup {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-.ba-sec {
+.ba2-sec {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
@@ -91,20 +91,20 @@
     color: var(--card-foreground);
 }
 
-.ba-controls,
-.ba-actions {
+.ba2-controls,
+.ba2-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.ba-controls {
+.ba2-controls {
     gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
 }
 
 /* Three options a row on a desk, two below 80rem, one on a phone. */
-.ba-grid {
+.ba2-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--kp-space-lg, 1.5rem);
@@ -112,30 +112,30 @@
 }
 
 @media (max-width: 80rem) {
-    .ba-grid {
+    .ba2-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 48rem) {
-    .ba-grid {
+    .ba2-grid {
         grid-template-columns: minmax(0, 1fr);
     }
 }
 
-.ba-col {
+.ba2-col {
     display: grid;
     align-content: start;
     gap: var(--kp-space-sm, 0.5rem);
     min-inline-size: 0;
 }
 
-.ba-label {
+.ba2-label {
     margin: 0;
     font-weight: 700;
 }
 
-.ba-label__rec {
+.ba2-label__rec {
     display: inline-block;
     margin-inline-start: 0.25rem;
     padding: 0.05rem 0.45rem;
@@ -147,30 +147,30 @@
     white-space: nowrap;
 }
 
-.ba-see,
-.ba-verdict,
-.ba-carries {
+.ba2-see,
+.ba2-verdict,
+.ba2-carries {
     margin: 0;
     font-size: var(--kp-text-sm, 0.875rem);
 }
 
-.ba-verdict {
+.ba2-verdict {
     color: var(--muted-foreground);
 }
 
-.ba-verdict--rec {
+.ba2-verdict--rec {
     color: var(--foreground);
     font-weight: 600;
 }
 
 /* What the anchor would decide for the rest of the theme: five short rows. */
-.ba-carries {
+.ba2-carries {
     display: grid;
     grid-template-columns: max-content minmax(0, 1fr);
     gap: 0.2rem 0.75rem;
 }
 
-.ba-carries dt {
+.ba2-carries dt {
     font-family: var(--theme-font-mono);
     font-size: 0.72rem;
     font-style: oblique 15deg;
@@ -180,17 +180,25 @@
     padding-block-start: 0.1rem;
 }
 
-.ba-carries dd {
+.ba2-carries dd {
     margin: 0;
 }
 
 /* In the review dialog one option is shown alone: the hero stage on top, its
    five rows under it; the dialog's own line above the dots already says what
    it is and why, so the option's own two paragraphs are not repeated. */
-[data-rv-flip-trio] .ba-col:not([hidden]) {
+[data-rv-flip-trio] .ba2-col:not([hidden]) {
     grid-column: 1 / -1;
 }
 
-[data-rv-flip-trio] .ba-col > :is(.ba-see, .ba-verdict) {
+[data-rv-flip-trio] .ba2-col > :is(.ba2-see, .ba2-verdict) {
     display: none;
+}
+
+/* The tag beside a name that is not the recommendation: plain text, no plate. */
+.ba2-label__tag {
+    margin-inline-start: 0.25rem;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
 }
