@@ -1,0 +1,24 @@
+{
+    "decided": "2026-10-07 23:43 Brussels, Kenny: 16 of 16 approved in the review dialog (research/terminal-character/README.md, Update 3): every recommendation except Loading = an htop row, the cursor its head",
+    "attributes": "data-tc-<question>=\"<key>\" on the .tc-scene, research/terminal-character/options.css",
+    "picks": {
+        "terminal": {
+            "curve": "cells",
+            "arrival": "cursor",
+            "opening": "feed",
+            "durations": "clocks",
+            "colour": "phosphor",
+            "surface": "htop",
+            "tone": "level",
+            "live": "blink",
+            "loading": "bracket",
+            "leave": "glide",
+            "composites": "own",
+            "hover": "ring",
+            "focus": "dashed",
+            "press": "reverse",
+            "voice": "shell",
+            "motifs": "one"
+        }
+    }
+}

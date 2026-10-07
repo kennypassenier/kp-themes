@@ -1,5 +1,7 @@
 # What makes terminal terminal
 
+**Decided (Kenny, 07/10/2026 23:43): all sixteen questions approved, every recommendation except Loading = an htop row, the cursor its head** (research/terminal-character/decided.json; to be applied in css/terminal-register.css; see themes/terminal/CHARACTER.md §0).
+
 **Why.** Kenny, 2026-10-07 14:32: "doe nu terminal", the next theme of the one-by-one series, the same way as titanium, forest,
 nostromo, cyberpunk, synthwave, solstice, brutalism, grotesk and blueprint (02:54: "waar jij eerst uitzoekt wat bij mekaar past, wat
 niet past en dan zo voorstellen doet"). The analysis is [themes/terminal/CHARACTER.md](../../themes/terminal/CHARACTER.md): every

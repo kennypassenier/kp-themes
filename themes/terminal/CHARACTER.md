@@ -169,6 +169,8 @@ glows a rim: a cell is lit or it is not.
 
 **Anchor (Kenny, 07/10/2026 18:13): the blinking block cursor.** The one block of a character cell is the element every terminal decision departs from (loading, arrival, leave, hover, focus): does it type, erase or show something with that cursor.
 
+**Decided (Kenny, 07/10/2026 23:43): all sixteen questions of research/terminal-character approved, every recommendation except Loading = an htop row, the cursor its head** (it replaced the recommended cursor-writes-cells after two rounds: the cells written along the foot, the lone cursor in cell rows, the menu entry on the baseline; the picks are in research/terminal-character/decided.json).
+
 What Kenny has **not** decided, and what `research/terminal-character` asks:
 the grammar's parameters (the step, the arrival's cursor, the opening, the
 durations, the colour, the surface beyond the family, the type, the motifs),
