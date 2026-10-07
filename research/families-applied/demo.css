@@ -1,0 +1,223 @@
+/* research/families-applied: the page only. A centred column; one row per
+   family, each holding the picture itself and then one pair per component,
+   today on the left and speaking the family on the right, both frames the
+   same width and the same height (the taller one sets it), so the two
+   pictures compare at one size. On a phone the pair stacks. Nothing here
+   touches a component: the right-hand frames get base.css and <theme>.css. */
+.fa-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 110rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.fa-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-intro h1,
+.fa-intro p {
+    margin: 0;
+}
+
+.fa-intro p {
+    max-inline-size: 80ch;
+}
+
+.fa-how {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    max-inline-size: 80ch;
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    padding-inline-start: 1.25rem;
+}
+
+.fa-meta {
+    color: var(--muted-foreground);
+}
+
+.fa-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-fa-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.fa-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.fa-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.fa-sec__head h2,
+.fa-sec__head p,
+[data-review-look] p {
+    margin: 0;
+}
+
+.fa-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.fa-rows {
+    display: grid;
+    gap: calc(var(--kp-space-xl, 2rem) * 1.5);
+}
+
+/* The family's one option: its words, the picture, the pairs. In the review
+   dialog it is shown at its own size and the stage scrolls (the kit would
+   otherwise shrink it to fit, down to 40 %). */
+.fa-cell {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+[data-rv-flip-trio] .fa-cell {
+    zoom: 1 !important;
+    inline-size: 100%;
+    min-inline-size: min(100%, 76rem);
+}
+
+.fa-family__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    max-inline-size: 90ch;
+}
+
+.fa-family__head h3,
+.fa-family__head p {
+    margin: 0;
+}
+
+.fa-family__keeps {
+    color: var(--muted-foreground);
+}
+
+/* The picture itself: one frame, the width of one side of a pair. */
+.fa-source {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.fa-source .fa-side {
+    max-inline-size: calc(50% - var(--kp-space-md, 1rem) / 2);
+}
+
+.fa-pairs {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.fa-pair {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.fa-pair__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.fa-pair__head span {
+    color: var(--muted-foreground);
+}
+
+/* Two sides, one column each, the same width; one column on a phone. */
+.fa-pair__sides {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+@media (max-width: 48rem) {
+    .fa-pair__sides {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fa-source .fa-side {
+        max-inline-size: none;
+    }
+}
+
+.fa-side {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.fa-side__label {
+    min-block-size: 1.5em;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.fa-side__label [data-fa-told] {
+    color: var(--muted-foreground);
+}
+
+/* The right side is the proposal: one rule in the primary marks it. */
+.fa-side[data-fa-side='after'] {
+    padding-inline-start: var(--kp-space-sm, 0.5rem);
+    border-inline-start: 3px solid var(--primary);
+}
+
+/* The frame keeps a height until its demo says its own, so a pair that has
+   not loaded yet holds its place. */
+.fa-side__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: 14rem;
+    border: 0;
+    background: var(--background);
+}
+
+/* A component that cannot take the picture: one sentence in place of the pair. */
+.fa-pair[data-fa-cannot] .fa-pair__sides {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.fa-pair__cannot {
+    max-inline-size: 80ch;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--border-strong, var(--border));
+    color: var(--muted-foreground);
+}
+
+.fa-family[data-fa-none] .fa-family__idea {
+    color: var(--muted-foreground);
+}

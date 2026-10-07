@@ -1,0 +1,239 @@
+/* research/families-applied: dark, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Dark's grammar: instruments on dark glass, a ticker, a scope's trace,
+   light that steps up or flares, never slides. */
+
+/* ── While loading: the ticker baseline (busy table, loading 1) ─────────
+   A 2 px dashed baseline in the primary (3 px on, 5 px off) ticks along
+   the foot of every waiting surface like a ticker tape: 11 px per 1.5 s,
+   linear, for ever. */
+@keyframes fa-dark-ticker {
+    to {
+        background-position: 11px 0;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    block-size: 2px;
+    background: repeating-linear-gradient(to right, var(--primary) 0 3px, transparent 3px 8px);
+}
+
+/* A meter is its own baseline: the ticker runs along its middle. */
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    inset-block: calc(50% - 1px) auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-dark-ticker 1.5s linear infinite;
+    }
+}
+
+/* ── How it arrives: powered up (menu button, open 3) ───────────────────
+   What arrives lights from dim to full across three hard steps (40 %,
+   65 %, 85 %, full), 300 ms; it does not move. */
+@keyframes fa-dark-power {
+    0% {
+        filter: brightness(0.4);
+    }
+
+    33% {
+        filter: brightness(0.65);
+    }
+
+    66% {
+        filter: brightness(0.85);
+    }
+
+    100% {
+        filter: brightness(1);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        animation: fa-dark-power 300ms steps(3, end) both;
+    }
+}
+
+/* ── A live update: the trace flares (key figure, live 3) ───────────────
+   What changed flares a glow in the primary for a third of a second and
+   dims back (550 ms, ease-out): words glow, lines and drawn sites glow as
+   a drop-shadow. */
+@keyframes fa-dark-flare {
+    0% {
+        text-shadow: 0 0 0 transparent;
+    }
+
+    35% {
+        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 90%, transparent);
+    }
+
+    100% {
+        text-shadow: 0 0 0 transparent;
+    }
+}
+
+@keyframes fa-dark-flare-drawn {
+    0% {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    35% {
+        filter: drop-shadow(0 0 6px color-mix(in oklch, var(--primary) 90%, transparent));
+    }
+
+    100% {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-dark-flare 550ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline, g, .kp-meter)[data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-dark-flare-drawn 550ms ease-out;
+    }
+}
+
+/* ── Hover, focus, press: spotlit (network graph, focus 3) ──────────────
+   What is pointed at glows in the primary; while one part is pointed at,
+   the rest dims to 25 %. Focus adds the primary as a hairline ring, a
+   press holds the glow tighter. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px var(--primary));
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline: 1px solid var(--primary);
+    outline-offset: 2px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    filter: drop-shadow(0 0 2px var(--primary));
+}
+
+html[data-fa-speak='hover'] [data-fa-pointing] [data-fa-point]:not([data-fa-state]):not(#fa):not(#fb) {
+    opacity: 0.25;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke: var(--primary);
+    stroke-width: 4;
+}
+
+/* ── The tone: pressed in the die (meter, tone 3) ───────────────────────
+   Whenever a tone is struck, the part swells once, 4 % wider and 30 %
+   taller, at an even pace, 200 ms; at rest it is drawn as today. */
+@keyframes fa-dark-die {
+    0% {
+        scale: 1;
+    }
+
+    40% {
+        scale: 1.04 1.3;
+    }
+
+    100% {
+        scale: 1;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='tone'] [data-fa-tone][data-fa-hit]:not(#fa):not(#fb) {
+        animation: fa-dark-die 200ms linear;
+    }
+
+    html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big][data-fa-hit]:not(#fa):not(#fb) {
+        animation-name: fa-dark-die-big;
+    }
+
+    html[data-fa-speak='tone'] :is(.kp-kpi__delta, .kp-state-word)[data-fa-tone]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* A tile or an alert swells by the same few pixels, not by 30 % of its height. */
+@keyframes fa-dark-die-big {
+    0% {
+        scale: 1;
+    }
+
+    40% {
+        scale: 1.01 1.04;
+    }
+
+    100% {
+        scale: 1;
+    }
+}
+
+/* ── The shape: the oscilloscope (key-figure strip, shape 3) ────────────
+   Every plate is the dark glass of a scope: the page's black with a fine
+   12 px grid, a 1 px rule, 6 px corners; heads in mono, figures in mono
+   glowing a little in the primary. */
+html[data-fa-speak='shape'] :is([data-fa-shape='plate']):not(#fa):not(#fb) {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--background);
+    background-image:
+        repeating-linear-gradient(0deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 1px, transparent 1px 12px),
+        repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 6%, transparent) 0 1px, transparent 1px 12px);
+    box-shadow: none;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.5rem;
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    border-radius: 6px;
+    font-family: var(--theme-font-mono);
+    letter-spacing: 0.03em;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='head']:not(#fa):not(#fb) {
+    font-family: var(--theme-font-mono);
+    letter-spacing: 0.03em;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='num']:not(#fa):not(#fb) {
+    font-family: var(--theme-font-mono);
+    text-shadow: 0 0 8px color-mix(in oklch, var(--primary) 55%, transparent);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='track']:not(#fa):not(#fb) {
+    border-radius: 6px;
+    background-color: var(--background);
+    background-image: repeating-linear-gradient(90deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0 1px, transparent 1px 12px);
+    box-shadow: inset 0 0 0 1px var(--border);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='track']:not(#fa):not(#fb)::before {
+    border-radius: 6px;
+    box-shadow: 0 0 8px color-mix(in oklch, var(--primary) 55%, transparent);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    box-shadow: 0 0 6px color-mix(in oklch, var(--primary) 70%, transparent);
+}
+
+/* A day of the month keeps its own plate: its colour is its reading. */
+html[data-fa-speak='shape'] [data-fa-shape='cell']:not(#fa):not(#fb) {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}

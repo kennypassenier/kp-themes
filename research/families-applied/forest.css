@@ -1,0 +1,210 @@
+/* research/families-applied: forest, every approved family's picked
+   picture translated onto every other component
+   (research/families/VERDICTS.md, 2026-10-07 01:32). Loading was not
+   approved (the signature progress bar, a forest being planted, was not
+   among the candidates) and is not applied here. Injected into the
+   "Speaking the family" frames only, after base.css; two :not(#fa…) per
+   rule outweigh the character demos. Forest's grammar: growth, wood and
+   moss, the trail's blazes and field notes, slow eased motion. */
+
+/* ── How it arrives: growing (key-figure strip, arrival 1) ──────────────
+   Every part grows up into its place from under its own line, clipped
+   there, slowly, slowing as it lands: 800 ms on cubic-bezier(0.2, 0.8,
+   0.2, 1), one part after the other, 80 ms apart. */
+@keyframes fa-fo-grow {
+    from {
+        translate: 0 40%;
+        clip-path: inset(-1rem -1rem 40% -1rem);
+    }
+
+    to {
+        translate: 0 0;
+        clip-path: inset(-1rem -1rem -1rem -1rem);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        animation: fa-fo-grow 800ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        animation-delay: calc(var(--fa-i, 0) * 80ms);
+    }
+
+    html[data-fa-speak='arrival'][data-fa-comp='state'] [data-fa-arrive]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── A live update: growth ring (trend tile, live 3) ────────────────────
+   What changed swells once and settles, easing in and out, 1 s: a line
+   swells its stroke, a word or a figure its size. */
+@keyframes fa-fo-ring {
+    30% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes fa-fo-ring-line {
+    30% {
+        stroke-width: 4;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        transform-box: fill-box;
+        transform-origin: 0 50%;
+        animation: fa-fo-ring 1000ms ease-in-out;
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline, line)[data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-fo-ring-line 1000ms ease-in-out;
+    }
+
+    html[data-fa-speak='live'] :is(.kp-kpi__value, .kp-kpi__delta, .kp-state-word, .kp-timestamp)[data-fa-live]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── Hover, focus, press: blazed (network graph, focus 3) ───────────────
+   What is pointed at is blazed with a bold trail ring in the primary
+   (3 px, dashed); while one is pointed at, the rest is mossed over
+   (sepia, at 45 %). Focus sets the blaze further out, a press closes it. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    outline: 3px dashed var(--primary);
+    outline-offset: 2px;
+    opacity: 1;
+    filter: none;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline-offset: 4px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    outline-style: solid;
+    outline-offset: 1px;
+}
+
+html[data-fa-speak='hover'] [data-fa-pointing] [data-fa-point]:not([data-fa-state]):not(#fa):not(#fb) {
+    opacity: 0.45;
+    filter: sepia(0.6);
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke: var(--primary);
+    stroke-width: 6;
+    stroke-dasharray: 7 2;
+}
+
+/* ── The tone: the field note (key-figure strip, tone 2) ────────────────
+   A tone is a field note: a square tag in the tone set in italics, a
+   change written with ↑ and ↓; a plate is square, in the tone. */
+html[data-fa-speak='tone'] :is([data-fa-tone='note'], [data-fa-tone='mark']):not(#fa):not(#fb) {
+    border-radius: 0;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    font-style: italic;
+    box-shadow: none;
+    transform: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.35em;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note'][data-kp-direction='up']:not(#fa):not(#fb)::before {
+    content: '↑\00a0';
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note'][data-kp-direction='down']:not(#fa):not(#fb)::before {
+    content: '↓\00a0';
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate']:not(#fa):not(#fb) {
+    border-radius: 0;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate']:not([data-fa-big]):not(#fa):not(#fb) {
+    font-style: italic;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big]:not(#fa):not(#fb) {
+    background: color-mix(in oklch, var(--fa-tone) 55%, var(--card));
+    color: var(--card-foreground);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    border-radius: 0;
+    background: var(--fa-tone-line);
+}
+
+/* ── The shape: the wooden gauge (meter, shape 1) ───────────────────────
+   Every plate is light wood: its grain (fine lines at 177°) over the muted
+   plate, routed in (a shadow inside at the top, a light edge below, a
+   hairline of the strong border), 3 px corners. What the primary fills is
+   the same wood stained forest green, with its grain and a knot; a mark
+   is the trail's trig point. */
+html[data-fa-speak='shape']
+    :is([data-fa-shape='plate'], [data-fa-shape='chip'], [data-fa-shape='button'], [data-fa-shape='track']):not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: 3px;
+    background-color: var(--muted);
+    background-image: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px);
+    box-shadow:
+        inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3),
+        inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
+        0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+}
+
+html[data-fa-speak='shape'] .kp-button--primary[data-fa-shape='button']:not(#fa):not(#fb) {
+    background-color: var(--primary);
+    background-image:
+        radial-gradient(ellipse 5px 2px at 30% 55%, hsl(from var(--background) h s l / 0.25), transparent),
+        repeating-linear-gradient(178deg, transparent 0 2px, hsl(from var(--primary-foreground) h s l / 0.14) 2px 3px);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='track']:not(#fa):not(#fb)::before {
+    border-radius: 3px;
+    background:
+        radial-gradient(ellipse 5px 2px at 30% 55%, hsl(from var(--background) h s l / 0.25), transparent),
+        repeating-linear-gradient(178deg, transparent 0 2px, hsl(from var(--primary-foreground) h s l / 0.14) 2px 3px),
+        var(--kp-meter-fill-colour, var(--primary));
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.75rem;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    inline-size: 0.6rem;
+    block-size: 0.55rem;
+    border-radius: 0;
+    background: radial-gradient(circle at 50% 70%, var(--card) 0 1.2px, transparent 1.6px), var(--foreground);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    box-shadow: none;
+    transform: none;
+}
+
+/* A day of the month keeps its own plate: its colour is its reading. */
+html[data-fa-speak='shape'] [data-fa-shape='cell']:not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: 3px;
+    box-shadow:
+        inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3),
+        0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+}
+
+/* The words on a large toned plate (an alert's sentence) take the plate's
+   readable ink; its own buttons keep theirs. */
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big] :not(.kp-button, .kp-button *):not(#fa):not(#fb) {
+    color: inherit;
+}

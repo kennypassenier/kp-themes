@@ -1,0 +1,110 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="families-applied"
+    data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,high-contrast,sepia"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what the family picks do: every component speaking its theme's family</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="fa-page">
+            <header class="fa-intro">
+                <h1>What the family picks do</h1>
+                <ol class="fa-how">
+                    <li>
+                        <b>What you see:</b> per theme and family, the picture you picked (one component's) translated onto every other component of
+                        the theme. Each component twice, side by side: <b>Today</b>, its own approved pick, and <b>Speaking the family</b>, the same
+                        component drawn in the picked picture.
+                    </li>
+                    <li>
+                        <b>What is translated:</b> the idea, not a copy: the material, the motion, its pace, direction and curve. The picture itself
+                        is shown first, unchanged. Where a component cannot take it sensibly, its card says so and it is left as it is.
+                    </li>
+                    <li>
+                        <b>Apply to the package (↑):</b> the theme's components are reworked like this at the port. <b>None of these (↓):</b> not like
+                        this; say what should change.
+                    </li>
+                </ol>
+                <p>
+                    Kenny, 2026-10-07 01:32, after the families verdicts: "toon al eens wat je met deze bevindingen kan doen vooraleer ik verder ga".
+                    The eight themes approved in full (formal, light, dark, synthwave, pastel, terminal, high-contrast, sepia) and cyberpunk and
+                    forest without the family you did not approve (cyberpunk's live update, forest's loading), ten themes, six families each.
+                </p>
+                <p class="fa-meta">
+                    Both frames of a pair are the component's own demo (<code>research/character-*/demo.html</code>), embedded as on the families
+                    page. The right one gets this folder's stylesheet for the theme (<code>research/families-applied/&lt;theme&gt;.css</code>) and
+                    nothing else; the package and the character demos are untouched. A pair loads when it comes on screen. This theme:
+                    <b data-fa-theme-name>…</b>
+                </p>
+            </header>
+
+            <section
+                class="fa-sec"
+                data-review-item="families-applied"
+                data-review-mode="aspects"
+                data-review-rows="data-fa-aspect"
+                data-review-components="families-applied"
+                data-review-title="What the family picks do"
+                aria-labelledby="h-applied"
+            >
+                <div class="fa-sec__head">
+                    <h2 id="h-applied">Every component speaking <span data-fa-theme-name>this theme</span>'s families</h2>
+                    <p>
+                        One row per family: the picture first, then every other component as a pair, today on the left. <b>Replay</b> plays every
+                        frame again, the speed slows every frame's animation.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="fa-actions" role="group" aria-label="Every frame">
+                        <b>Every frame:</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-fa-replay
+                            data-review-plays="loading arrival live hover tone shape"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="fa-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="fa-rows" data-fa-rows></div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

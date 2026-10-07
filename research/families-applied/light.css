@@ -1,0 +1,237 @@
+/* research/families-applied: light, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Light's grammar: daylight, white cards lifted on soft shadows, the
+   indigo primary as a warm tint, easing that slows as it lands. */
+
+/* ── While loading: morning light (key-figure strip, loading 1) ─────────
+   A soft band of daylight (12 % of the primary, at 100°) crosses every
+   waiting surface, slowly: 1.8 s, eased, for ever. */
+@keyframes fa-light-glint {
+    from {
+        background-position-x: 150%;
+    }
+
+    to {
+        background-position-x: -50%;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb) {
+    background: linear-gradient(100deg, transparent 40%, color-mix(in oklch, var(--primary) 12%, transparent) 50%, transparent 60%) 150% 0 / 250% 100%
+        no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb) {
+        animation: fa-light-glint 1800ms ease-in-out infinite;
+    }
+}
+
+/* ── How it arrives: sunrise (trend tile, arrival 3) ────────────────────
+   A picture or a box rises from its baseline, slowing as it lands; a
+   number drops into its line: 1 s, ease-out, everything at once. */
+@keyframes fa-light-rise {
+    from {
+        transform: scaleY(0);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes fa-light-drop {
+    from {
+        transform: translateY(-0.6em);
+        opacity: 0;
+    }
+
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive='part']:not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        transform-origin: 50% 100%;
+        animation: fa-light-rise 1000ms ease-out both;
+    }
+
+    html[data-fa-speak='arrival'] [data-fa-arrive='num']:not(#fa):not(#fb) {
+        animation: fa-light-drop 1000ms ease-out both;
+    }
+
+    /* A figure is a number: it drops into its line, as the tile's does. */
+    html[data-fa-speak='arrival']:is([data-fa-comp='columns'], [data-fa-comp='kpi']) [data-fa-arrive='part']:not(#fa):not(#fb) {
+        transform-origin: 50% 100%;
+        animation: fa-light-rise 1000ms ease-out both;
+    }
+
+    html[data-fa-speak='arrival']:is([data-fa-comp='columns'], [data-fa-comp='kpi']) [data-fa-arrive] .kp-kpi__value:not(#fa):not(#fb) {
+        animation: fa-light-drop 1000ms ease-out both;
+    }
+
+    /* A word is a number's peer. */
+    html[data-fa-speak='arrival'][data-fa-comp='state'] [data-fa-arrive]:not(#fa):not(#fb) {
+        display: inline-block;
+        animation: fa-light-drop 1000ms ease-out both;
+    }
+}
+
+/* ── A live update: a soft swell (trend tile, live 2) ───────────────────
+   What changed swells once and settles, slowing as it lands: 900 ms,
+   ease-out; a line swells its stroke (2.5 times), a word or a figure its
+   size. */
+@keyframes fa-light-swell {
+    30% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes fa-light-swell-line {
+    30% {
+        stroke-width: 4;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        transform-box: fill-box;
+        transform-origin: 0 50%;
+        animation: fa-light-swell 900ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline, line)[data-fa-live]:not(#fa):not(#fb),
+    html[data-fa-speak='live'] [data-fa-live] :is(path, polyline):not(#fa):not(#fb) {
+        animation: fa-light-swell-line 900ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(.kp-kpi__value, .kp-kpi__delta, .kp-state-word, .kp-timestamp)[data-fa-live]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── Hover, focus, press: the warm glow (page header, interactive 2) ────
+   Hover warms the part with the primary (16 % into its plate), focus adds
+   a soft halo ring (3 px, 40 % of the ring, 3 px out), press flattens it
+   (8 %, a soft inset). */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='hover']:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    background-color: color-mix(in oklch, var(--primary) 16%, var(--secondary));
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline: 3px solid color-mix(in oklch, var(--ring) 40%, transparent);
+    outline-offset: 3px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    background-color: color-mix(in oklch, var(--primary) 8%, var(--secondary));
+    box-shadow: inset 0 1px 3px 0 color-mix(in oklch, var(--foreground) 15%, transparent);
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    background: none;
+    outline: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    fill: color-mix(in oklch, var(--primary) 16%, var(--secondary));
+    stroke: color-mix(in oklch, var(--ring) 60%, transparent);
+    stroke-width: 3;
+}
+
+/* ── The tone: the soft pill (dashboard tiles, tone 1) ──────────────────
+   A tone is a soft pill: a note or a mark is a full pill in the tone; a
+   small plate (a figure, a day, an entry, a word) becomes one; a large one
+   (a tile, an alert) keeps its shape, softly tinted, its corners rounder. */
+html[data-fa-speak='tone'] :is([data-fa-tone='note'], [data-fa-tone='mark'], [data-fa-tone='plate']:not([data-fa-big])):not(#fa):not(#fb) {
+    border-radius: 999px;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.55em;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='mark']:not(#fa):not(#fb) {
+    min-inline-size: 1.1rem;
+    transform: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big]:not(#fa):not(#fb) {
+    border-radius: calc(var(--radius, 0.5rem) * 2);
+    background: color-mix(in oklch, var(--fa-tone) 55%, var(--card));
+    color: var(--card-foreground);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb) {
+    background: var(--fa-tone);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    border-radius: 999px;
+    background: var(--fa-tone-line);
+}
+
+/* ── The shape: separate cards (key-figure strip, shape 3) ──────────────
+   Every plate its own white card lifted on its own soft shadow, no
+   border, corners 1.5 times the theme's; heads in sentence case, figures
+   bold. Small plates (a day, a chip, a button) are small cards. */
+html[data-fa-speak='shape']
+    :is([data-fa-shape='plate'], [data-fa-shape='chip'], [data-fa-shape='button'], [data-fa-shape='track']):not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: calc(var(--radius, 0.5rem) * 1.5);
+    background-color: var(--card);
+    box-shadow:
+        0 1px 2px color-mix(in oklch, var(--foreground) 12%, transparent),
+        0 10px 22px -12px color-mix(in oklch, var(--foreground) 32%, transparent);
+}
+
+html[data-fa-speak='shape'] .kp-button--primary[data-fa-shape='button']:not(#fa):not(#fb) {
+    background-color: var(--primary);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.75rem;
+}
+
+html[data-fa-speak='shape'] .kp-kpi__label[data-fa-shape='head']:not(#fa):not(#fb) {
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='head']:not(#fa):not(#fb) {
+    letter-spacing: 0.01em;
+    text-transform: none;
+    font-variant-caps: normal;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='num']:not(#fa):not(#fb) {
+    font-weight: 700;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    border-radius: 999px;
+    box-shadow: 0 1px 3px color-mix(in oklch, var(--foreground) 25%, transparent);
+}
+
+/* A day of the month keeps its own plate: its colour is its reading. */
+html[data-fa-speak='shape'] [data-fa-shape='cell']:not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: calc(var(--radius, 0.5rem) * 1.5);
+    box-shadow:
+        0 1px 2px color-mix(in oklch, var(--foreground) 12%, transparent),
+        0 6px 14px -8px color-mix(in oklch, var(--foreground) 32%, transparent);
+}
+
+/* The words on a large toned plate (an alert's sentence) take the plate's
+   readable ink; its own buttons keep theirs. */
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big] :not(.kp-button, .kp-button *):not(#fa):not(#fb) {
+    color: inherit;
+}

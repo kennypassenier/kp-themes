@@ -1,0 +1,246 @@
+/* research/families-applied: pastel, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Pastel's grammar: a scrapbook, washi tape, stickers, notes stuck on,
+   a little overshoot, jelly. */
+
+/* ── While loading: the washi flutters (busy table, loading 2) ──────────
+   A strip of washi tape (the accent in 5 px stripes, 55 % and 32 %), 6 px,
+   along the top of every waiting surface, sways a degree each way about
+   its middle: 2 s, eased in and out, for ever. */
+@keyframes fa-pt-washi {
+    0%,
+    100% {
+        transform: rotate(-1deg);
+    }
+
+    50% {
+        transform: rotate(1deg);
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto auto 0;
+    inline-size: 100%;
+    block-size: 6px;
+    background: repeating-linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--accent, var(--primary)) 55%, transparent) 0 5px,
+        color-mix(in oklab, var(--accent, var(--primary)) 32%, transparent) 5px 10px
+    );
+    transform: rotate(-1deg);
+    transform-origin: 50% 0;
+}
+
+/* A meter is the tape's own height: the strip lies over it. */
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    inset-block: -2px auto;
+    block-size: calc(100% + 4px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-pt-washi 2s ease-in-out infinite;
+    }
+}
+
+/* ── How it arrives: stuck on (key-figure strip, arrival 2) ─────────────
+   Every part swings in from its top corner as a note stuck on (from 8°
+   and half a rem up), 600 ms with a little overshoot, one after the other
+   90 ms apart. */
+@keyframes fa-pt-swing {
+    from {
+        rotate: -8deg;
+        translate: 0 -0.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb) {
+        transform-origin: 0 0;
+        animation: fa-pt-swing 600ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+        animation-delay: calc(var(--fa-i, 0) * 90ms);
+    }
+
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        transform-origin: 0 0;
+        animation: fa-pt-swing 600ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+    }
+
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb) {
+        overflow: visible;
+    }
+
+    html[data-fa-speak='arrival'][data-fa-comp='state'] [data-fa-arrive]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── A live update: the wobble (network graph, live 3) ──────────────────
+   What changed wobbles like jelly about its middle (10°, −7°, 3°, rest),
+   800 ms, ease-out; a changed line is drawn again (700 ms). */
+@keyframes fa-pt-wobble {
+    25% {
+        transform: rotate(10deg);
+    }
+
+    50% {
+        transform: rotate(-7deg);
+    }
+
+    75% {
+        transform: rotate(3deg);
+    }
+}
+
+@keyframes fa-pt-draw {
+    from {
+        stroke-dasharray: 0 1600;
+    }
+
+    to {
+        stroke-dasharray: 1600 0;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        animation: fa-pt-wobble 800ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline)[data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-pt-draw 700ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(.kp-kpi__value, .kp-kpi__delta, .kp-state-word, .kp-timestamp)[data-fa-live]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+
+    /* A wide part (a table cell, a tile's line) wobbles less, or it would swing out of its box. */
+    html[data-fa-speak='live'] :is(td, [data-tl-body], .kp-meter)[data-fa-live]:not(#fa):not(#fb) {
+        animation-name: fa-pt-wobble-wide;
+    }
+}
+
+@keyframes fa-pt-wobble-wide {
+    25% {
+        transform: rotate(1.5deg);
+    }
+
+    50% {
+        transform: rotate(-1deg);
+    }
+
+    75% {
+        transform: rotate(0.5deg);
+    }
+}
+
+/* ── Hover, focus, press: the tape peel (page header, interactive 2) ────
+   Pointing peels the part up a little (−1.5°, a pixel up); focus dashes
+   a 2 px line round it, 3 px out; a press presses it flat again. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='hover']:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    transform: rotate(-1.5deg) translateY(-1px);
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline: 2px dashed var(--ring);
+    outline-offset: 3px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    transform: rotate(0deg) translateY(0);
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke-dasharray: 4 3;
+    stroke: var(--ring);
+}
+
+/* ── The tone: the sticker chart (key figure, tone 1) ───────────────────
+   A tone is a sticker: a rounded tag in the tone with its own flat shadow
+   (a tenth of a rem down and right); a small plate is the tone's pill; a
+   large one is stuck on as a sticker sheet, its corners rounder. */
+html[data-fa-speak='tone'] :is([data-fa-tone='note'], [data-fa-tone='mark']):not(#fa):not(#fb) {
+    border-radius: 999px;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: 0.1rem 0.1rem 0 color-mix(in oklch, var(--border-strong) 45%, transparent);
+    transform: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.5em;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate']:not([data-fa-big]):not(#fa):not(#fb) {
+    border-radius: 999px;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: 0.1rem 0.1rem 0 color-mix(in oklch, var(--border-strong) 45%, transparent);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big]:not(#fa):not(#fb) {
+    border-radius: calc(var(--radius, 0.5rem) * 2);
+    background: color-mix(in oklch, var(--fa-tone) 60%, var(--card));
+    color: var(--card-foreground);
+    box-shadow: 0.2rem 0.2rem 0 color-mix(in oklch, var(--border-strong) 45%, transparent);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    border-radius: 999px;
+    background: var(--fa-tone-line);
+}
+
+/* ── The shape: the taped card (busy table, r2-pt-shape-1) ──────────────
+   Every plate is a card stuck in a scrapbook: corners 1.2 times the
+   theme's, a hairline ring of the strong border, and a strip of washi
+   tape (2.6 rem, the accent in stripes) across its top right corner. */
+html[data-fa-speak='shape']
+    :is([data-fa-shape='plate'], [data-fa-shape='track'], [data-fa-shape='cell'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(
+        #fb
+    ) {
+    border-color: transparent;
+    border-radius: calc(var(--radius, 0.5rem) * 1.2);
+    box-shadow: 0 0 0 1px var(--border-strong, var(--border));
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'] > [data-fa-decor]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0.3rem;
+    inset-inline-end: 0.35rem;
+    inline-size: 2.6rem;
+    block-size: 0.9rem;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--border-strong) 35%, transparent);
+    opacity: 0.9;
+    background-image: repeating-linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--accent, var(--primary)) 82%, var(--primary)) 0 5px,
+        var(--accent, var(--primary)) 5px 10px
+    );
+    transform: rotate(35deg);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.75rem;
+}
+
+/* The words on a large toned plate (an alert's sentence) take the plate's
+   readable ink; its own buttons keep theirs. */
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big] :not(.kp-button, .kp-button *):not(#fa):not(#fb) {
+    color: inherit;
+}

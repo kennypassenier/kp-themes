@@ -1,0 +1,213 @@
+/* research/families-applied: the base every theme's sheet stands on,
+   injected into the right-hand ("Speaking the family") frame only, before
+   <theme>.css. It does three things and draws nothing:
+
+   - it quiets the component's own picture of the family where the theme's
+     picture takes its place (a loading sweep, an arrival, a live flash, a
+     tone's motion), so the translated picture is the only one that plays;
+   - it places what speak.js adds (the loading picture's <span data-fa-pic>);
+   - it names the tone a part carries (--fa-tone, --fa-tone-ink).
+
+   Specificity, not !important, wins over the character demos: every rule
+   here carries one :not(#fa) (an id's weight), every rule of a theme's
+   sheet two. An inline style still wins, so the review kit's restart of a
+   motion (an inline `animation: none`, then removed) keeps working. */
+
+/* ── Loading ─────────────────────────────────────────────────────────── */
+
+/* Every motion of the component stands still but the family's picture and
+   the package's spinner, which is no part of any component's pick. */
+html[data-fa-speak='loading'] [data-rv-embed-shown] :not([data-fa-pic], [data-fa-pic] *, .kp-spinner, .kp-spinner *):not(#fa),
+html[data-fa-speak='loading'] [data-rv-embed-shown] :not([data-fa-pic], [data-fa-pic] *, .kp-spinner, .kp-spinner *):not(#fa)::before,
+html[data-fa-speak='loading'] [data-rv-embed-shown] :not([data-fa-pic], [data-fa-pic] *, .kp-spinner, .kp-spinner *):not(#fa)::after {
+    animation: none;
+}
+
+/* The layers today's loading pictures move on (a sweep, a leader, a pass of
+   ink over a skeleton line) go; the still skeletons stay. */
+html[data-fa-speak='loading'] .kp-meter[data-kp-loading]:not(#fa)::after,
+html[data-fa-speak='loading'] .kp-chart__state:not(#fa)::before,
+html[data-fa-speak='loading'] .kp-chart__state:not(#fa)::after,
+html[data-fa-speak='loading'] .kp-calendar__day:not(#fa)::after,
+html[data-fa-speak='loading'] .kp-kpi__chart-plot:not(#fa)::before,
+html[data-fa-speak='loading'][data-fa-comp='columns'] .kp-kpis > .kp-kpi:not(#fa)::after,
+html[data-fa-speak='loading'][data-fa-comp='kpi'] .kp-kpis > .kp-kpi:not(#fa)::before,
+html[data-fa-speak='loading'] .kp-tiles > .kp-card:not(#fa)::after,
+html[data-fa-speak='loading'] .kp-skeleton:not(#fa)::before,
+html[data-fa-speak='loading'] .kp-skeleton:not(#fa)::after,
+html[data-fa-speak='loading'] .kp-datatable__busy-panel:not(#fa)::before {
+    visibility: hidden;
+}
+
+/* A surface is the picture's frame of reference. */
+html[data-fa-speak='loading'] :is(.kp-calendar, .kp-graph__box, .kp-chart__plot, .kp-menu__item)[data-fa-surface]:not(#fa) {
+    position: relative;
+}
+
+/* The picture's own layer: the whole surface, under nothing that is read
+   (it never takes a click). A theme draws on it and on its ::before and
+   ::after. */
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa) {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: block;
+    overflow: visible;
+    border-radius: inherit;
+    pointer-events: none;
+    /* Where a picture that is a mark sits (a seal, a cursor): the centre,
+       unless the surface reads top to bottom (a tile, a figure), where it
+       sits at the foot under the words, as on the busy panel. */
+    --fa-mark-x: 50%;
+    --fa-mark-y: 50%;
+    --fa-mark-scale: 1;
+}
+
+html[data-fa-speak='loading'] [data-fa-pic] [data-fa-pic-word]:not(#fa) {
+    display: none;
+}
+
+html[data-fa-speak='loading']:is([data-fa-comp='tiles'], [data-fa-comp='kpi'], [data-fa-comp='columns'], [data-fa-comp='trend'])
+    [data-fa-pic]:not(#fa) {
+    --fa-mark-y: calc(100% - 0.95rem);
+}
+
+html[data-fa-speak='loading'][data-fa-comp='menu'] [data-fa-pic]:not(#fa) {
+    --fa-mark-x: calc(100% - 1.5rem);
+}
+
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa) {
+    --fa-mark-scale: 0.8;
+}
+
+/* ── Arrival ─────────────────────────────────────────────────────────── */
+
+/* What arrives loses its own arrival, inside and on it; the theme gives it
+   the family's. A chart's own arrival drives its series with --cca-k: held
+   at its end, so nothing waits on a motion that no longer runs. */
+html[data-fa-speak='arrival'] [data-fa-arrive]:not(#fa),
+html[data-fa-speak='arrival'] [data-fa-arrive]:not(#fa)::before,
+html[data-fa-speak='arrival'] [data-fa-arrive]:not(#fa)::after,
+html[data-fa-speak='arrival'] [data-fa-arrive] :not(.kp-spinner, .kp-spinner *):not(#fa),
+html[data-fa-speak='arrival'] [data-fa-arrive] :not(.kp-spinner, .kp-spinner *):not(#fa)::before,
+html[data-fa-speak='arrival'] [data-fa-arrive] :not(.kp-spinner, .kp-spinner *):not(#fa)::after {
+    animation: none;
+    transition: none;
+}
+
+html[data-fa-speak='arrival'] .kp-chart__plot:not(#fa) {
+    --cca-k: 1;
+}
+
+/* ── Live ────────────────────────────────────────────────────────────── */
+
+/* Every motion of the component stands still; the theme's picture plays
+   on the part that took the new reading ([data-fa-live]). */
+html[data-fa-speak='live'] [data-rv-embed-shown]:not(#fa),
+html[data-fa-speak='live'] [data-rv-embed-shown] :not(#fa),
+html[data-fa-speak='live'] [data-rv-embed-shown] :not(#fa)::before,
+html[data-fa-speak='live'] [data-rv-embed-shown] :not(#fa)::after {
+    animation: none;
+    transition: none;
+}
+
+/* ── Hover, focus, press ─────────────────────────────────────────────── */
+
+/* The review kit plays the pointer over the parts its sheets answer
+   :hover, :focus-visible and :active on, this sheet's first: these three
+   rules name the marked parts. */
+html[data-fa-speak='hover'] [data-fa-point]:hover,
+html[data-fa-speak='hover'] [data-fa-point][data-rv-hover] {
+    cursor: pointer;
+}
+
+html[data-fa-speak='hover'] [data-fa-point]:focus-visible,
+html[data-fa-speak='hover'] [data-fa-point][data-rv-focus] {
+    cursor: pointer;
+}
+
+html[data-fa-speak='hover'] [data-fa-point]:active,
+html[data-fa-speak='hover'] [data-fa-point][data-rv-press] {
+    cursor: pointer;
+}
+
+/* Today's answer to the pointer goes where the theme's takes its place. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa),
+html[data-fa-speak='hover'] [data-fa-point]:is(:hover, :focus-visible, :active):not(#fa) {
+    outline: none;
+    transform: none;
+    translate: none;
+    rotate: none;
+    filter: none;
+    text-decoration: none;
+}
+
+html[data-fa-speak='hover'] [data-fa-point]:not(#fa) {
+    transition: none;
+}
+
+/* ── Tone ────────────────────────────────────────────────────────────── */
+
+/* The tone of a part, as the theme's colours. */
+/* --fa-tone fills a plate, --fa-tone-ink is read on it, --fa-tone-line is
+   the tone drawn as a line or as words on the card (a warning plate is pale
+   in several themes, so its line is its ink). */
+html[data-fa-speak='tone'] [data-fa-tint='warning']:not(#fa) {
+    --fa-tone: var(--warning);
+    --fa-tone-ink: var(--warning-foreground);
+    --fa-tone-line: var(--warning-foreground);
+}
+
+html[data-fa-speak='tone'] [data-fa-tint='destructive']:not(#fa) {
+    --fa-tone: var(--destructive);
+    --fa-tone-ink: var(--destructive-foreground);
+    --fa-tone-line: var(--destructive);
+}
+
+html[data-fa-speak='tone'] [data-fa-tint='ok']:not(#fa) {
+    --fa-tone: var(--success);
+    --fa-tone-ink: var(--success-foreground);
+    --fa-tone-line: var(--success-foreground);
+}
+
+/* A layer round the part for a picture drawn there (speak.js adds it),
+   hidden unless a theme draws on it. */
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa) {
+    position: relative;
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa) {
+    position: relative;
+}
+
+html[data-fa-speak='tone'] [data-fa-decor]:not(#fa) {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+}
+
+/* A tone's own motion goes; the theme's plays (on [data-fa-hit]). */
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa),
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa)::before,
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa)::after {
+    animation: none;
+}
+
+/* ── Shape ───────────────────────────────────────────────────────────── */
+
+/* A plate's own layer (speak.js adds it), for what a theme lays on it;
+   a plate that was not positioned becomes its frame. */
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-static]:not(#fa) {
+    position: relative;
+}
+
+html[data-fa-speak='shape'] [data-fa-decor]:not(#fa) {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: block;
+    border-radius: inherit;
+    pointer-events: none;
+}

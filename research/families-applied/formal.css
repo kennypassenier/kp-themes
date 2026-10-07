@@ -1,0 +1,173 @@
+/* research/families-applied: formal, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; every rule carries two :not(#fa…) to outweigh the
+   character demos without !important (see base.css). Formal's grammar: a
+   ledger and a seal, ink on paper, navy and red ink, gold for a ribbon. */
+
+/* ── While loading: the seal is pressed (busy table, loading 3) ────────
+   A navy seal ring, 1.1 rem, pressed and lifted on its own centre (0.85 →
+   1), 1.4 s, ease in and out, for ever; on each waiting surface where its
+   words would be: the centre, or the foot of a tile or figure. */
+@keyframes fa-formal-seal {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(calc(0.85 * var(--fa-mark-scale, 1)));
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(var(--fa-mark-scale, 1));
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: var(--fa-mark-x);
+    inset-block-start: var(--fa-mark-y);
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    box-sizing: border-box;
+    border: 1.5px solid var(--primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(var(--fa-mark-scale, 1));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-formal-seal 1.4s ease-in-out infinite;
+    }
+}
+
+/* ── How it arrives: written into the ledger (meter, arrival 1) ─────────
+   Drawn in from the left, slowing as it lands: 900 ms on
+   cubic-bezier(0.3, 0, 0.2, 1), every part at once, as the three meters
+   of the picture. The clip reaches past the box, so a shadow is not cut. */
+@keyframes fa-formal-ledger {
+    from {
+        clip-path: inset(-2rem 100% -2rem -2rem);
+    }
+
+    to {
+        clip-path: inset(-2rem -2rem -2rem -2rem);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        animation: fa-formal-ledger 900ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
+    }
+}
+
+/* ── A live update: redrawn (trend tile, live 1) ────────────────────────
+   Nothing to draw: base.css stills every motion, and a new reading is
+   written in place at once. */
+
+/* ── Hover, focus, press: the red-ink tick (network graph, focus 3) ─────
+   What is pointed at is ringed in red ink; while one part is pointed at,
+   the rest stays half visible in grey pencil. Focus rings it a little
+   wider (the keyboard's place), a press ticks it with the graph's full
+   3.5 width. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    outline: 2px solid var(--destructive);
+    outline-offset: 2px;
+    opacity: 1;
+    filter: none;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline-offset: 4px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    outline-width: 3.5px;
+    outline-offset: 1px;
+}
+
+html[data-fa-speak='hover'] [data-fa-pointing] [data-fa-point]:not([data-fa-state]):not(#fa):not(#fb) {
+    opacity: 0.5;
+    filter: grayscale(1);
+}
+
+/* The graph's sites are drawn: the ring itself takes the red ink. */
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke: var(--destructive);
+    stroke-width: 3.5;
+}
+
+/* ── The tone: the engraved plate (dashboard tiles, tone 1) ─────────────
+   Every tone boxed like an engraved figure: a 2 px gap in the card, a
+   1 px rule of the tone (its ink where its plate is pale), square corners;
+   a mark is a diamond in the tone. */
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa):not(#fb) {
+    border-radius: 0;
+    box-shadow:
+        0 0 0 2px var(--card),
+        0 0 0 3px var(--fa-tone-line);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.3em;
+    background: var(--card);
+    color: var(--fa-tone-line);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='mark']:not(#fa):not(#fb) {
+    background: var(--fa-tone);
+    box-shadow:
+        0 0 0 2px var(--card),
+        0 0 0 3px var(--fa-tone);
+    transform: rotate(45deg);
+}
+
+/* ── The shape: the bound volume and its ribbon (meter, shape 1) ────────
+   A plate is a bound volume: a navy buckram spine along its start
+   (cross-hatched, as the meter's share), the fore-edge, page after page,
+   along its foot, 1 px corners. What the primary fills is buckram; a mark
+   is the gold ribbon bookmark, notched at its end. */
+html[data-fa-speak='shape'] :is([data-fa-shape='plate'], [data-fa-shape='chip'], [data-fa-shape='cell'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    border-radius: 1px;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate']:not(#fa):not(#fb) {
+    border-inline-start: 6px solid var(--primary);
+    border-image:
+        repeating-linear-gradient(45deg, hsl(from var(--primary-foreground) h s l / 0.16) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(-45deg, hsl(from var(--primary-foreground) h s l / 0.16) 0 1px, transparent 1px 3px),
+        linear-gradient(var(--primary), var(--primary)) 0 0 0 6 / 0 0 0 6px;
+    background-image: repeating-linear-gradient(180deg, color-mix(in oklab, var(--border-strong) 70%, transparent) 0 1px, transparent 1px 2px);
+    background-size: 100% 7px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 -8px 0 -7px var(--border-strong);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding-inline-start: 0.5rem;
+    padding-block-end: 0.6rem;
+}
+
+html[data-fa-speak='shape'] .kp-button--primary[data-fa-shape='button']:not(#fa):not(#fb) {
+    background-image:
+        repeating-linear-gradient(45deg, hsl(from var(--primary-foreground) h s l / 0.12) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(-45deg, hsl(from var(--primary-foreground) h s l / 0.12) 0 1px, transparent 1px 3px);
+    box-shadow:
+        inset 0 1px 0 hsl(from var(--primary-foreground) h s l / 0.3),
+        inset -1px 0 0 hsl(from var(--foreground) h s l / 0.4);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    inline-size: 0.5rem;
+    block-size: 1rem;
+    border-radius: 0;
+    background: var(--fx-signal, var(--warning));
+    box-shadow: none;
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 4px), 0 100%);
+}

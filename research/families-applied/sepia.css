@@ -1,0 +1,147 @@
+/* research/families-applied: sepia, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Sepia's grammar: an archive, ruled paper, a drum and a stamp, a quill;
+   warm brown on aged paper. */
+
+/* ── While loading: the drum turns (busy table, loading 3) ──────────────
+   A ruled band (2 px rules every 10 px, the strong border), 3 px, turns
+   along the foot of every waiting surface like a drum: 10 px per 1.6 s,
+   linear, for ever. */
+@keyframes fa-se-drum {
+    to {
+        background-position: 10px 0;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    block-size: 3px;
+    background: repeating-linear-gradient(to right, var(--border-strong) 0 2px, transparent 2px 10px);
+}
+
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    inset-block: calc(50% - 1.5px) auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-se-drum 1.6s linear infinite;
+    }
+}
+
+/* ── How it arrives: stamped (time chart, arrival stamp) ────────────────
+   What arrives comes down onto the page from 112 %, faster as it lands,
+   like a rubber stamp: 260 ms on cubic-bezier(0.6, 0, 1, 0.4), parts one
+   after the other, 60 ms apart. */
+@keyframes fa-se-stamp {
+    from {
+        scale: 1.12;
+    }
+
+    to {
+        scale: 1;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        transform-origin: 50% 50%;
+        animation: fa-se-stamp 260ms cubic-bezier(0.6, 0, 1, 0.4) both;
+        animation-delay: calc(var(--fa-i, 0) * 60ms);
+    }
+
+    html[data-fa-speak='arrival'][data-fa-comp='state'] [data-fa-arrive]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── A live update: redrawn (trend tile, live 1) ────────────────────────
+   Nothing to draw: base.css stills every motion, and a new reading is
+   written in place at once. */
+
+/* ── Hover, focus, press: the paper warms (menu button, interact 2) ─────
+   What is pointed at or focused warms a shade (10 % of the primary over
+   its plate); a press cools it back for a moment (4 %). */
+html[data-fa-speak='hover'] [data-fa-point]:is([data-fa-state='hover'], [data-fa-state='focus']):not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    background-color: color-mix(in oklab, var(--primary) 10%, var(--card));
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    background-color: color-mix(in oklab, var(--primary) 4%, var(--card));
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    background: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    fill: color-mix(in oklab, var(--primary) 18%, var(--card));
+}
+
+/* ── The tone: quill stroke (meter, tone 2) ─────────────────────────────
+   Whenever a tone is struck, the part is knocked up and back once (3 px
+   up, 1 px down, home), slowing as it lands, 280 ms; at rest it is drawn
+   as today. */
+@keyframes fa-se-quill {
+    0% {
+        translate: 0 0;
+    }
+
+    30% {
+        translate: 0 -3px;
+    }
+
+    60% {
+        translate: 0 1px;
+    }
+
+    100% {
+        translate: 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='tone'] [data-fa-tone][data-fa-hit]:not(#fa):not(#fb) {
+        animation: fa-se-quill 280ms ease-out;
+    }
+
+    html[data-fa-speak='tone'] :is(.kp-kpi__delta, .kp-state-word)[data-fa-tone]:not(#fa):not(#fb) {
+        display: inline-block;
+    }
+}
+
+/* ── The shape: the archive box (busy table, r2-se-shape-3) ─────────────
+   Every plate is an archive box: square, no frame, a vignette of age on
+   its edges (an inner shadow, 1 rem, 18 % of the ink), a heavy 5 px rule
+   of the strong border on top; heads in small capitals. */
+html[data-fa-speak='shape'] :is([data-fa-shape='plate'], [data-fa-shape='track']):not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: 0;
+    border-block-start: 5px solid var(--border-strong);
+    box-shadow: inset 0 0 1rem color-mix(in oklab, var(--foreground) 18%, transparent);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='track']:not(#fa):not(#fb) {
+    border-block-start-width: 2px;
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='cell'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    border-radius: 0;
+    box-shadow: inset 0 0 0.4rem color-mix(in oklab, var(--foreground) 16%, transparent);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.5rem 0.75rem;
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='head'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    font-variant-caps: small-caps;
+    text-transform: none;
+    letter-spacing: 0.04em;
+}

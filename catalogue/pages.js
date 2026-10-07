@@ -77,6 +77,8 @@ export const PAGES = [
             { href: 'research/review-ui/demo.html', label: 'Three faster ways to judge a demo' },
             // Kenny, 2026-10-06 23:52: every component's decided pick side by side per family (loading first), one theme at a time, to pick the one the theme speaks.
             { href: 'research/families/demo.html', label: "Every component's pick, family by family" },
+            // Kenny, 2026-10-07 01:32: what the family picks do, every component as today and speaking its theme's picked family, ten themes.
+            { href: 'research/families-applied/demo.html', label: 'The family picks, applied' },
             // Kenny, 2026-10-07 01:32: cyberpunk's live update rejected on research/families; six options of the chromatic split he described (two neon copies right, one up, one down), the recommendation first.
             { href: 'research/cyberpunk-live/demo.html', label: "Cyberpunk's live update: the chromatic split" },
             // Kenny, 2026-10-07 00:05: what makes titanium titanium, seventeen rules of its grammar as questions, each option a live scene, the recommendation first.

@@ -1,0 +1,220 @@
+/* research/families-applied: high-contrast, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   High-contrast's grammar: ink on paper, 2 px frames, square corners, flips
+   instead of fades, hard steps or nothing. */
+
+/* A warning's plate is a strong colour here and its ink is white: its line
+   on the paper is the plate's colour itself. */
+html[data-fa-speak='tone'] [data-fa-tint='warning']:not(#fa):not(#fb) {
+    --fa-tone-line: var(--warning);
+}
+
+html[data-fa-speak='tone'] [data-fa-tint='ok']:not(#fa):not(#fb) {
+    --fa-tone-line: var(--success);
+}
+
+/* ── While loading: the tape runs (network graph, r4-hc-load-2) ─────────
+   A dashed ink frame (2 px, 14 px on, 10 px off) runs round every waiting
+   surface like the ghost graph's links: 24 px per 900 ms, linear, for
+   ever, the top edge to the right, the right edge down, and so round. */
+@keyframes fa-hc-tape {
+    to {
+        background-position:
+            24px 0,
+            100% 24px,
+            -24px 100%,
+            0 -24px;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb) {
+    background:
+        repeating-linear-gradient(90deg, var(--foreground) 0 14px, transparent 14px 24px) 0 0 / 100% 2px no-repeat,
+        repeating-linear-gradient(180deg, var(--foreground) 0 14px, transparent 14px 24px) 100% 0 / 2px 100% no-repeat,
+        repeating-linear-gradient(90deg, var(--foreground) 0 14px, transparent 14px 24px) 0 100% / 100% 2px no-repeat,
+        repeating-linear-gradient(180deg, var(--foreground) 0 14px, transparent 14px 24px) 0 0 / 2px 100% no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb) {
+        animation: fa-hc-tape 900ms linear infinite;
+    }
+}
+
+/* ── How it arrives: at once (meter, arrival 1) ─────────────────────────
+   No motion: what arrives is there in one hard step (120 ms). */
+@keyframes fa-hc-once {
+    from {
+        clip-path: inset(-2rem 100% -2rem -2rem);
+    }
+
+    to {
+        clip-path: inset(-2rem -2rem -2rem -2rem);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        animation: fa-hc-once 120ms steps(1) backwards;
+    }
+}
+
+/* ── A live update: the bar flips (trend tile, live 3) ──────────────────
+   What changed flips to ink for a moment, in hard jumps (400 ms, on for
+   the first 60 %): words to paper on ink, lines and drawn sites to ink. */
+@keyframes fa-hc-flip {
+    0%,
+    60% {
+        background-color: var(--foreground);
+        color: var(--background);
+    }
+}
+
+@keyframes fa-hc-flip-drawn {
+    0%,
+    60% {
+        stroke: var(--foreground);
+        fill: var(--foreground);
+    }
+}
+
+@keyframes fa-hc-flip-line {
+    0%,
+    60% {
+        stroke: var(--foreground);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-hc-flip 400ms steps(1);
+    }
+
+    html[data-fa-speak='live'] g[data-fa-live]:not(#fa):not(#fb),
+    html[data-fa-speak='live'] g[data-fa-live] :not(#fa):not(#fb) {
+        animation: fa-hc-flip-drawn 400ms steps(1);
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline)[data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-hc-flip-line 400ms steps(1);
+    }
+
+    /* A meter flips its share. */
+    html[data-fa-speak='live'] .kp-meter[data-fa-live]:not(#fa):not(#fb)::before {
+        animation: fa-hc-flip 400ms steps(1);
+    }
+}
+
+/* ── Hover, focus, press: the bar flips (menu button, interact 1) ───────
+   What is pointed at or focused flips from ink on paper to paper on ink;
+   a press flips it to the primary. */
+html[data-fa-speak='hover'] [data-fa-point]:is([data-fa-state='hover'], [data-fa-state='focus']):not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    background: var(--foreground);
+    color: var(--background);
+}
+
+html[data-fa-speak='hover'] [data-fa-point]:is([data-fa-state='hover'], [data-fa-state='focus']):not(#fa):not(#fb) * {
+    color: inherit;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    background: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    fill: var(--foreground);
+    stroke: var(--foreground);
+    stroke-width: 3;
+}
+
+/* ── The tone: the framed plate (key-figure strip, tone 1) ──────────────
+   Every tone on a square plate in its status colour, framed in 2 px ink,
+   its words in the plate's ink. */
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa):not(#fb) {
+    border-radius: 0;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: 0 0 0 2px var(--foreground);
+    transform: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone] *:not(#fa):not(#fb) {
+    color: inherit;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.35em;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big]:not(#fa):not(#fb) {
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow:
+        0 0 0 2px var(--foreground),
+        inset 0.5rem 0 0 var(--fa-tone);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb) {
+    background: var(--card);
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    border-radius: 0;
+    background: var(--fa-tone);
+}
+
+/* ── The shape: the ink frame (meter, shape 2) ──────────────────────────
+   Every plate in a 2 px ink frame, square; what the primary fills is
+   solid ink; a mark is a paper slot between two ink edges. */
+html[data-fa-speak='shape']
+    :is([data-fa-shape='plate'], [data-fa-shape='chip'], [data-fa-shape='button'], [data-fa-shape='track']):not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px var(--foreground);
+    background-image: none;
+}
+
+html[data-fa-speak='shape'] .kp-button--primary[data-fa-shape='button']:not(#fa):not(#fb) {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.5rem;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='head']:not(#fa):not(#fb) {
+    font-weight: 800;
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    inline-size: 8px;
+    border-radius: 0;
+    background: linear-gradient(90deg, var(--foreground) 0 2px, var(--card) 2px 6px, var(--foreground) 6px);
+    box-shadow: none;
+    transform: none;
+}
+
+/* A day of the month keeps its own plate: its colour is its reading. */
+html[data-fa-speak='shape'] [data-fa-shape='cell']:not(#fa):not(#fb) {
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px var(--foreground);
+}
+
+/* The register holds a toned figure's ink with !important (its contrast
+   guard); on the framed plate the plate's own ink is the readable one, so
+   it is set the same way here, for colour only. */
+html[data-fa-speak='tone'] [data-fa-tone]:not([data-fa-big]):not(#fa):not(#fb),
+html[data-fa-speak='tone'] [data-fa-tone]:not([data-fa-big]):not(#fa):not(#fb)::before {
+    color: var(--fa-tone-ink) !important;
+}

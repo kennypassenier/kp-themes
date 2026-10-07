@@ -1,0 +1,205 @@
+/* research/families-applied: terminal, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Terminal's grammar: a phosphor screen, character cells, a block cursor,
+   hard steps and no fades. */
+
+/* ── While loading: the cursor blinks (busy table, loading 1) ───────────
+   One block cursor (0.6 by 1.1 rem, the primary) per waiting surface, at
+   the end of where its line would be, on and off on a hard beat, no fade:
+   1 s, two steps, for ever. */
+@keyframes fa-tm-cursor {
+    0%,
+    49% {
+        background-color: var(--primary);
+    }
+
+    50%,
+    100% {
+        background-color: transparent;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: var(--fa-mark-x);
+    inset-block-start: var(--fa-mark-y);
+    inline-size: 0.6rem;
+    block-size: 1.1rem;
+    background-color: var(--primary);
+    transform: translate(-50%, -50%) scale(var(--fa-mark-scale, 1));
+}
+
+/* On a meter the cursor stands at the end of its line, one cell high. */
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    inset-inline-start: 0;
+    inset-block: 0;
+    block-size: auto;
+    inline-size: 0.375rem;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-tm-cursor 1s steps(2, jump-none) infinite;
+    }
+}
+
+/* ── How it arrives: typed out (meter, arrival 3) ───────────────────────
+   Drawn in from the left in 32 hard steps, 1.2 s, as a line being typed. */
+@keyframes fa-tm-type {
+    from {
+        clip-path: inset(-2rem 100% -2rem -2rem);
+    }
+
+    to {
+        clip-path: inset(-2rem -2rem -2rem -2rem);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive]:not([data-fa-arrive='fill']):not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        animation: fa-tm-type 1200ms steps(32) backwards;
+    }
+}
+
+/* ── A live update: the cursor blink (network graph, live 2) ────────────
+   What changed blinks three times like a cursor, hard, 900 ms. */
+@keyframes fa-tm-blink3 {
+    0%,
+    33%,
+    67% {
+        visibility: hidden;
+    }
+
+    17%,
+    50%,
+    83%,
+    100% {
+        visibility: visible;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-tm-blink3 900ms steps(1);
+    }
+}
+
+/* ── Hover, focus, press: the cursor ring (key figure, interactive 2) ───
+   Pointing picks up the cursor ring (the ring colour as a 1 px frame);
+   focus steps in a dashed box in the primary, 2 px out; a press prints
+   the part on the phosphor (the primary, 16 % into its plate). Nothing
+   blinks at rest. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 1px var(--ring);
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline: 2px dashed var(--primary);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    background-color: color-mix(in oklab, var(--primary) 16%, var(--card));
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+    box-shadow: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke: var(--ring);
+    stroke-width: 2;
+    stroke-dasharray: 3 2;
+}
+
+/* ── The tone: the dumb-terminal plot (key figure, tone 2) ──────────────
+   A note or a mark is underlined (1 px of the strong border, square), in
+   the plain ink; a plate is the tone's square solid plate. */
+html[data-fa-speak='tone'] :is([data-fa-tone='note'], [data-fa-tone='mark']):not(#fa):not(#fb) {
+    border-radius: 0;
+    background: transparent;
+    box-shadow: inset 0 -1px 0 var(--border-strong);
+    transform: none;
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='mark']:not(#fa):not(#fb) {
+    box-shadow: inset 0 -2px 0 var(--fa-tone-line);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate']:not(#fa):not(#fb) {
+    border-radius: 0;
+    background: var(--fa-tone);
+    color: var(--fa-tone-ink);
+    box-shadow: none;
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    border-radius: 0;
+    background: var(--fa-tone-line);
+}
+
+/* ── The shape: the htop meter (meter, shape 1) ─────────────────────────
+   Every plate is a line of htop: square brackets as its frame (a 1 px
+   upright with 3 px ticks, in the muted ink) and nothing else, square
+   corners; small plates (a day, a chip, a button) the same; heads and
+   figures in mono; a mark is the block caret in the accent. */
+html[data-fa-speak='shape'] :is([data-fa-shape='plate'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    --fa-bracket: var(--muted-foreground);
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    background-image:
+        linear-gradient(var(--fa-bracket), var(--fa-bracket)), linear-gradient(var(--fa-bracket), var(--fa-bracket)),
+        linear-gradient(var(--fa-bracket), var(--fa-bracket)), linear-gradient(var(--fa-bracket), var(--fa-bracket)),
+        linear-gradient(var(--fa-bracket), var(--fa-bracket)), linear-gradient(var(--fa-bracket), var(--fa-bracket));
+    background-size:
+        1px 100%,
+        0.375rem 1px,
+        0.375rem 1px,
+        1px 100%,
+        0.375rem 1px,
+        0.375rem 1px;
+    background-position:
+        0 0,
+        0 0,
+        0 100%,
+        100% 0,
+        100% 0,
+        100% 100%;
+    background-repeat: no-repeat;
+}
+
+html[data-fa-speak='shape'] .kp-button--primary[data-fa-shape='button']:not(#fa):not(#fb) {
+    --fa-bracket: var(--primary-foreground);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.5rem 0.75rem;
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='head'], [data-fa-shape='num'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    font-family: var(--theme-font-mono);
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='mark']:not(#fa):not(#fb) {
+    inline-size: 0.375rem;
+    border-radius: 0;
+    background: var(--accent);
+    transform: none;
+    box-shadow: 0 0 0 1px var(--background);
+}
+
+/* A day of the month keeps its own plate: its colour is its reading. */
+html[data-fa-speak='shape'] [data-fa-shape='cell']:not(#fa):not(#fb) {
+    border-radius: 0;
+    font-family: var(--theme-font-mono);
+}

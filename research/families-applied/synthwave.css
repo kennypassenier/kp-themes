@@ -1,0 +1,216 @@
+/* research/families-applied: synthwave, every family's picked picture
+   translated onto every other component (research/families/VERDICTS.md,
+   2026-10-07 01:32). Injected into the "Speaking the family" frames only,
+   after base.css; two :not(#fa…) per rule outweigh the character demos.
+   Synthwave's grammar: an arcade marquee, a neon horizon, pink light that
+   flares and burns down, the grid floor. */
+
+/* ── While loading: the marquee chases (busy table, loading 3) ──────────
+   A row of marquee bulbs (0.5 rem cells, 0.35 rem apart) along the top of
+   every waiting surface: one bulb in four lit in the primary, the light
+   chasing one bulb a step, left to right, in four hard steps per 0.9 s. */
+@keyframes fa-sw-marquee {
+    to {
+        background-position-x: 3.4rem;
+    }
+}
+
+html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    block-size: 3px;
+    background:
+        repeating-linear-gradient(to right, var(--primary) 0 0.5rem, transparent 0.5rem 3.4rem) 0 0 / 100% 100%,
+        repeating-linear-gradient(to right, color-mix(in oklch, var(--primary) 25%, transparent) 0 0.5rem, transparent 0.5rem 0.85rem);
+    filter: drop-shadow(0 0 3px color-mix(in oklch, var(--primary) 70%, transparent));
+}
+
+/* A meter carries its bulbs inside its groove. */
+html[data-fa-speak='loading'][data-fa-comp='meter'] [data-fa-pic]:not(#fa):not(#fb)::before {
+    inset-block: calc(50% - 1.5px) auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='loading'] [data-fa-pic]:not(#fa):not(#fb)::before {
+        animation: fa-sw-marquee 0.9s steps(4, end) infinite;
+    }
+}
+
+/* ── How it arrives: over the horizon (trend tile, arrival 2) ───────────
+   A picture or a box rises from its baseline; a number or a word rises
+   through its own line, clipped there: 1 s, slowing hard as it lands,
+   cubic-bezier(0.2, 0.8, 0.2, 1), everything at once. */
+@keyframes fa-sw-rise {
+    from {
+        transform: scaleY(0);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes fa-sw-rise-num {
+    from {
+        transform: translateY(0.5em);
+        clip-path: inset(-30% -10% 100% -10%);
+    }
+
+    to {
+        transform: none;
+        clip-path: inset(-30% -10% -30% -10%);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='arrival'] [data-fa-arrive='part']:not(#fa):not(#fb),
+    html[data-fa-speak='arrival'] [data-fa-arrive='fill']:not(#fa):not(#fb)::before {
+        transform-origin: 50% 100%;
+        animation: fa-sw-rise 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    html[data-fa-speak='arrival'] [data-fa-arrive='num']:not(#fa):not(#fb),
+    html[data-fa-speak='arrival']:is([data-fa-comp='columns'], [data-fa-comp='kpi']) [data-fa-arrive] .kp-kpi__value:not(#fa):not(#fb) {
+        animation: fa-sw-rise-num 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    html[data-fa-speak='arrival'][data-fa-comp='state'] [data-fa-arrive]:not(#fa):not(#fb) {
+        display: inline-block;
+        animation: fa-sw-rise-num 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+}
+
+/* ── A live update: the laser flares (key figure, live 3) ───────────────
+   What changed flares a pink glow to full and burns back down over half a
+   second (550 ms, ease-out); lines and drawn sites flare as a drop-shadow. */
+@keyframes fa-sw-laser {
+    0% {
+        text-shadow: 0 0 0 transparent;
+    }
+
+    35% {
+        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
+    }
+
+    100% {
+        text-shadow: 0 0 0 transparent;
+    }
+}
+
+@keyframes fa-sw-laser-drawn {
+    0% {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    35% {
+        filter: drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 95%, transparent));
+    }
+
+    100% {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html[data-fa-speak='live'] [data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-sw-laser 550ms ease-out;
+    }
+
+    html[data-fa-speak='live'] :is(path, polyline, g, .kp-meter)[data-fa-live]:not(#fa):not(#fb) {
+        animation: fa-sw-laser-drawn 550ms ease-out;
+    }
+}
+
+/* ── Hover, focus, press: the marquee glows (dashboard tiles, hover 3) ──
+   What is pointed at gets the marquee: its glow widens (16 px of the
+   primary at 50 %) and a 2 px outline in the primary stands 3 px out;
+   focus traces it 4 px out; a press draws the outline in, 1 px out. */
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state]:not(#fa):not(#fb),
+html[data-fa-speak='hover'] [data-fa-point]:hover:not(#fa):not(#fb) {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    box-shadow: 0 0 16px color-mix(in oklch, var(--primary) 50%, transparent);
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='focus']:not(#fa):not(#fb) {
+    outline-offset: 4px;
+}
+
+html[data-fa-speak='hover'] [data-fa-point][data-fa-state='press']:not(#fa):not(#fb) {
+    outline-offset: 1px;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) {
+    outline: none;
+    box-shadow: none;
+}
+
+html[data-fa-speak='hover'] .kp-graph__node[data-fa-state]:not(#fa):not(#fb) .kp-graph__ring {
+    stroke: var(--primary);
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 6px color-mix(in oklch, var(--primary) 80%, transparent));
+}
+
+/* ── The tone: the neon tube (dashboard tiles, r2-sw-tone-3) ────────────
+   A toned part is a neon tube: an empty ring with a light core, glowing
+   in the tone (8 px at 70 %, 14 px at 40 %); its words glow in the tone. */
+html[data-fa-speak='tone'] [data-fa-tone]:not(#fa):not(#fb) {
+    background: transparent;
+    color: var(--fa-tone-line);
+    text-shadow: 0 0 8px color-mix(in oklch, var(--fa-tone-line) 55%, transparent);
+    box-shadow:
+        inset 0 0 0 2px var(--kp-core, var(--foreground)),
+        0 0 8px color-mix(in oklch, var(--fa-tone-line) 70%, transparent),
+        0 0 14px color-mix(in oklch, var(--fa-tone-line) 40%, transparent);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='plate'][data-fa-big]:not(#fa):not(#fb) {
+    background: var(--card);
+    box-shadow:
+        inset 0 0 0 1px var(--kp-core, var(--foreground)),
+        0 0 8px color-mix(in oklch, var(--fa-tone-line) 70%, transparent),
+        0 0 14px color-mix(in oklch, var(--fa-tone-line) 40%, transparent);
+}
+
+html[data-fa-speak='tone'] [data-fa-tone='note']:not(#fa):not(#fb) {
+    padding-inline: 0.4em;
+    border-radius: 999px;
+}
+
+html[data-fa-speak='tone'] .kp-meter[data-fa-tone]:not(#fa):not(#fb)::before {
+    background: var(--fa-tone-line);
+    box-shadow: 0 0 8px var(--fa-tone-line);
+}
+
+/* ── The shape: the grid console (busy table, r2-sw-shape-1) ────────────
+   Every plate is a console: the primary's 10 px grid (20 %) over the card,
+   a bevel lit above and shaded below in a hairline of the strong border,
+   0.2 rem corners; heads in mono. */
+html[data-fa-speak='shape'] :is([data-fa-shape='plate'], [data-fa-shape='track']):not(#fa):not(#fb) {
+    border: 0;
+    border-radius: 0.2rem;
+    background-color: var(--card);
+    background-image:
+        repeating-linear-gradient(0deg, color-mix(in oklab, var(--primary) 20%, transparent) 0 1px, transparent 1px 10px),
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--primary) 20%, transparent) 0 1px, transparent 1px 10px);
+    box-shadow:
+        inset 0 1px 0 0 color-mix(in oklab, var(--background) 70%, white),
+        inset 0 -2px 0 0 color-mix(in oklab, var(--foreground) 20%, transparent),
+        0 0 0 1px var(--border-strong, var(--border));
+}
+
+html[data-fa-speak='shape'] [data-fa-shape='plate'][data-fa-bare]:not(#fa):not(#fb) {
+    padding: 0.5rem;
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='cell'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    border-radius: 0.2rem;
+    box-shadow:
+        inset 0 1px 0 0 color-mix(in oklab, var(--background) 70%, white),
+        inset 0 -2px 0 0 color-mix(in oklab, var(--foreground) 20%, transparent);
+}
+
+html[data-fa-speak='shape'] :is([data-fa-shape='head'], [data-fa-shape='chip'], [data-fa-shape='button']):not(#fa):not(#fb) {
+    font-family: var(--theme-font-mono, var(--theme-font-body));
+}
