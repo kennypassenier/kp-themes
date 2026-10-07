@@ -800,29 +800,20 @@
     }
 
     .cy-scene:not([data-cy-loading], [data-cy-colour='mix']) .cy-ret,
-    .cy-scene[data-cy-colour='mix'] .cy-today,
-    .cy-scene[data-cy-loading='lock'] .cy-ret,
-    .cy-scene[data-cy-loading='lock'] .cy-word,
-    .cy-scene[data-cy-loading='stream'] .cy-stream,
-    .cy-scene[data-cy-loading='mix'] .cy-today {
+    .cy-scene[data-cy-colour='mix'] .cy-today {
         display: block;
     }
 
     /* The skeleton and the meter keep the register's own pictures only as
        they are today. */
-    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .cy-skel__line .kp-skeleton {
+    .cy-scene[data-cy-loading] .cy-skel__line .kp-skeleton {
         background: var(--sidebar-background);
         box-shadow: inset 0 0 0 1px var(--border);
     }
 
-    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .cy-skel__line .kp-skeleton::after,
-    .cy-scene:is([data-cy-loading='lock'], [data-cy-loading='stream']) .kp-meter[data-kp-loading]::after {
+    .cy-scene[data-cy-loading] .cy-skel__line .kp-skeleton::after,
+    .cy-scene[data-cy-loading] .kp-meter[data-kp-loading]::after {
         content: none;
-    }
-
-    .cy-scene[data-cy-loading='mix'] .cy-skel__line .cy-load,
-    .cy-scene[data-cy-loading='mix'] .cy-meter-wait .cy-load {
-        display: none;
     }
 
     /* Today's pictures, one per carrier. */
@@ -912,23 +903,6 @@
         background: var(--accent);
     }
 
-    .cy-spin__scan {
-        --kp-spinner-size: var(--cy-spin);
-        inline-size: var(--cy-spin);
-        block-size: var(--cy-spin);
-    }
-
-    .cy-spin__glyph {
-        place-self: center;
-        font-family: var(--kp-mono);
-        font-size: calc(var(--cy-spin) * 0.95);
-        line-height: 1;
-    }
-
-    .cy-spin__glyph::before {
-        content: '▚';
-    }
-
     .kp-button .cy-spin {
         --cy-spin: 1rem;
         color: currentColor;
@@ -938,18 +912,1760 @@
         background: currentColor;
     }
 
-    .cy-scene[data-cy-spinner='reticle'] .cy-spin__ret,
-    .cy-scene[data-cy-spinner='glyph'] .cy-spin__glyph {
+    .cy-scene[data-cy-spinner='reticle'] .cy-spin__ret {
         display: block;
-    }
-
-    .cy-scene[data-cy-spinner='scan'] .cy-spin__scan {
-        display: inline-block;
     }
 
     .cy-spins {
         align-items: center;
         gap: 1.25rem;
+    }
+
+    /* ── Loading (G10): ten designs, one drawn per option ───────────── */
+
+    /* The progress bar is a waiting part like the rest: it carries the same
+       overlay inside its track. The register's own stream and sweeps give way
+       to the option's drawing. */
+    .cy-bar {
+        position: relative;
+    }
+
+    .cy-scene[data-cy-loading] .cy-load {
+        overflow: hidden;
+        container-type: size;
+    }
+
+    .cy-scene[data-cy-loading] .cy-bar :is(.kp-progressbar__fill, .kp-progressbar__head) {
+        visibility: hidden;
+    }
+
+    .cy-scene[data-cy-loading] .cy-bar .kp-progressbar__track {
+        background: var(--sidebar-background);
+    }
+
+    .cy-scene[data-cy-loading] .cy-load::before,
+    .cy-scene[data-cy-loading] .cy-load::after {
+        position: absolute;
+    }
+
+    .cy-scene[data-cy-loading] .cy-load :is(.cy-la, .cy-lb, .cy-lc) {
+        position: absolute;
+    }
+
+    .cy-scene[data-cy-loading]:not([data-cy-loading='breach']) .cy-lc i {
+        display: none;
+    }
+
+    /* 1 · The netrun: three lanes of comets, each with the glitch's split copies. */
+    .cy-scene[data-cy-loading='net'] .cy-load {
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.18), hsl(from var(--primary) h s l / 0.18)) 0 22% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.18), hsl(from var(--primary) h s l / 0.18)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.18), hsl(from var(--primary) h s l / 0.18)) 0 78% / 100% 1px no-repeat;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-load::before {
+        content: '';
+        display: block;
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(22% - 3px);
+        block-size: 7px;
+        background:
+            linear-gradient(90deg, transparent 68px, var(--primary) 153px, var(--foreground) 153px 164.9px, transparent 164.9px) 0 3px / 170px 2px
+                repeat-x,
+            linear-gradient(90deg, transparent 68px, var(--accent) 153px, transparent 153px) 3px 1px / 170px 1px repeat-x,
+            linear-gradient(90deg, transparent 68px, var(--chart-4) 153px, transparent 153px) 3px 5px / 170px 1px repeat-x;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-load::after {
+        content: '';
+        display: block;
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 3px);
+        block-size: 7px;
+        background:
+            linear-gradient(90deg, transparent 48px, var(--accent) 108px, var(--foreground) 108px 116.4px, transparent 116.4px) 0 3px / 120px 2px
+                repeat-x,
+            linear-gradient(90deg, transparent 48px, var(--chart-4) 108px, transparent 108px) 3px 1px / 120px 1px repeat-x,
+            linear-gradient(90deg, transparent 48px, var(--primary) 108px, transparent 108px) 3px 5px / 120px 1px repeat-x;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-load > .cy-la {
+        content: '';
+        display: block;
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(78% - 3px);
+        block-size: 7px;
+        background:
+            linear-gradient(90deg, transparent 36px, var(--primary) 81px, var(--foreground) 81px 87.3px, transparent 87.3px) 0 3px / 90px 2px repeat-x,
+            linear-gradient(90deg, transparent 36px, var(--accent) 81px, transparent 81px) 3px 1px / 90px 1px repeat-x,
+            linear-gradient(90deg, transparent 36px, var(--chart-4) 81px, transparent 81px) 3px 5px / 90px 1px repeat-x;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-load > .cy-lb {
+        display: block;
+        inset-block: 0;
+        inset-inline-start: 72%;
+        inline-size: 2px;
+        background: var(--accent);
+        box-shadow:
+            3px 0 0 hsl(from var(--chart-4) h s l / 0.8),
+            0 0 8px var(--accent);
+        opacity: 0.6;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-load > .cy-lc {
+        inset: 0;
+        display: none;
+    }
+
+    .cy-scene[data-cy-loading='net'] .cy-lc::before {
+        content: '0x4F2A · 412 PKT';
+        position: absolute;
+        inset-inline-end: 0.4rem;
+        inset-block-end: 0.2rem;
+        padding-inline: 0.25rem;
+        background: hsl(from var(--background) h s l / 0.8);
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.1em;
+        text-shadow: 1px -1px 0 hsl(from var(--chart-4) h s l / 0.8);
+    }
+
+    @container (min-block-size: 3.4rem) and (min-inline-size: 9rem) {
+        .cy-scene[data-cy-loading='net'] .cy-load > .cy-lc {
+            display: block;
+        }
+    }
+
+    /* 2 · Braindance scrub: the timeline, the analysed zone, the playhead. */
+    .cy-scene[data-cy-loading='scrub'] .cy-load::after {
+        content: '';
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 9px;
+        background:
+            repeating-linear-gradient(90deg, var(--accent) 0 1px, transparent 1px 40px) 0 100% / 100% 9px no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--accent) h s l / 0.55) 0 1px, transparent 1px 8px) 0 100% / 100% 5px no-repeat;
+    }
+
+    .cy-scene[data-cy-loading='scrub'] .cy-load::before {
+        content: '';
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 62%;
+        box-sizing: border-box;
+        border-inline-end: 2px solid var(--primary);
+        background:
+            linear-gradient(225deg, var(--primary) 50%, transparent 50%) 100% 0 / 7px 7px no-repeat,
+            hsl(from var(--accent) h s l / 0.15);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    .cy-scene[data-cy-loading='scrub'] .cy-load > .cy-la {
+        display: none;
+        inset-inline-end: 0.35rem;
+        inset-block-start: 0.2rem;
+    }
+
+    .cy-scene[data-cy-loading='scrub'] .cy-la::before {
+        content: '00:03';
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.1em;
+    }
+
+    @container (min-block-size: 3.4rem) and (min-inline-size: 9rem) {
+        .cy-scene[data-cy-loading='scrub'] .cy-load > .cy-la {
+            display: block;
+        }
+    }
+
+    /* 3 · A terminal prompt typed start to end, a block cursor, a reply. */
+    .cy-scene[data-cy-loading='typed'] .cy-load > :is(.cy-la, .cy-lb) {
+        display: block;
+        inset-inline-start: 0.45rem;
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        white-space: pre;
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.06em;
+        text-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+
+    .cy-scene[data-cy-loading='typed'] .cy-la::before {
+        content: '> read▌';
+    }
+
+    .cy-scene[data-cy-loading='typed'] .cy-load > .cy-lb {
+        display: none;
+        color: var(--primary);
+        text-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .cy-scene[data-cy-loading='typed'] .cy-lb::before {
+        content: '0x7F ok';
+    }
+
+    @container (min-block-size: 3.4rem) and (min-inline-size: 9rem) {
+        .cy-scene[data-cy-loading='typed'] .cy-load > .cy-la {
+            inset-block-start: 34%;
+        }
+
+        .cy-scene[data-cy-loading='typed'] .cy-load > .cy-lb {
+            display: block;
+            inset-block-start: calc(34% + 1.3em);
+        }
+    }
+
+    /* 4 · Esper enhance: a crosshair that hops, a zoom frame that closes on it. */
+    .cy-scene[data-cy-loading='esper'] .cy-load::before {
+        content: '';
+        inset-inline: 0;
+        inset-block-start: 50%;
+        block-size: 1px;
+        background: hsl(from var(--accent) h s l / 0.7);
+    }
+
+    .cy-scene[data-cy-loading='esper'] .cy-load::after {
+        content: '';
+        inset-block: 0;
+        inset-inline-start: 50%;
+        inline-size: 1px;
+        background: hsl(from var(--accent) h s l / 0.7);
+    }
+
+    .cy-scene[data-cy-loading='esper'] .cy-load > .cy-la {
+        display: block;
+        inset-inline-start: 50%;
+        inset-block-start: 50%;
+        inline-size: 14%;
+        block-size: 16%;
+        min-inline-size: 10px;
+        min-block-size: 8px;
+        translate: -50% -50%;
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .cy-scene[data-cy-loading='esper'] .cy-load > .cy-lb {
+        display: none;
+        inset-inline-end: 0.4rem;
+        inset-block-end: 0.2rem;
+        padding-inline: 0.25rem;
+        background: hsl(from var(--background) h s l / 0.8);
+        color: var(--accent);
+        font-family: var(--kp-mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.1em;
+    }
+
+    .cy-scene[data-cy-loading='esper'] .cy-lb::before {
+        content: 'ENHANCE 224·176';
+    }
+
+    @container (min-block-size: 3.4rem) and (min-inline-size: 9rem) {
+        .cy-scene[data-cy-loading='esper'] .cy-load > .cy-lb {
+            display: block;
+        }
+    }
+
+    /* 5 · Ghost dive: rings of the part's own shape leave a core. */
+    .cy-scene[data-cy-loading='dive'] .cy-load::before,
+    .cy-scene[data-cy-loading='dive'] .cy-load::after,
+    .cy-scene[data-cy-loading='dive'] .cy-load > .cy-la {
+        content: '';
+        display: block;
+        position: absolute;
+        border: 1px solid var(--accent);
+        clip-path: var(--cy-clip-ctl);
+    }
+
+    .cy-scene[data-cy-loading='dive'] .cy-load::before {
+        inset: 40%;
+    }
+
+    .cy-scene[data-cy-loading='dive'] .cy-load::after {
+        inset: 24%;
+        opacity: 0.6;
+    }
+
+    .cy-scene[data-cy-loading='dive'] .cy-load > .cy-la {
+        inset: 8%;
+        opacity: 0.3;
+    }
+
+    .cy-scene[data-cy-loading='dive'] .cy-load > .cy-lb {
+        display: block;
+        inset: calc(50% - 3px);
+        inline-size: 6px;
+        block-size: 6px;
+        background: var(--primary);
+        box-shadow: 0 0 6px var(--primary);
+    }
+
+    /* 6 · Vitals: a monitor trace, a yellow head sweeping it lit. */
+    .cy-scene[data-cy-loading='vitals'] .cy-load::before {
+        content: '';
+        inset-inline: 0;
+        inset-block-start: 50%;
+        block-size: min(100%, 34px);
+        translate: 0 -50%;
+        background: linear-gradient(
+                90deg,
+                var(--accent) 0 calc(50% - 3px),
+                var(--primary) calc(50% - 3px) 50%,
+                hsl(from var(--accent) h s l / 0.22) 50%
+            )
+            0 0 / 200% 100%;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 30' preserveAspectRatio='none'%3E%3Cpath d='M0 15H26L30 15L34 3L40 27L45 9L49 15H90' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E")
+            0 50% / 90px 100% repeat-x;
+        filter: drop-shadow(0 0 3px hsl(from var(--accent) h s l / 0.6));
+    }
+
+    /* 7 · Augmentation lattice: a honeycomb with a lit band sweeping it. */
+    .cy-scene[data-cy-loading='lattice'] {
+        --cy-hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48.5' viewBox='0 0 28 48.5'%3E%3Cpath d='M14 0L28 8.08V24.25L14 32.33L0 24.25V8.08ZM14 32.33V48.5' fill='none' stroke='%23000' stroke-width='1.4'/%3E%3C/svg%3E");
+        --cy-band: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+    }
+
+    .cy-scene[data-cy-loading='lattice'] .cy-load::before {
+        content: '';
+        inset: 0;
+        background: hsl(from var(--primary) h s l / 0.22);
+        mask: var(--cy-hex) 0 0 / 28px 48.5px;
+    }
+
+    .cy-scene[data-cy-loading='lattice'] .cy-load::after,
+    .cy-scene[data-cy-loading='lattice'] .cy-load > .cy-la {
+        content: '';
+        display: block;
+        inset: 0;
+        background: var(--primary);
+        mask:
+            var(--cy-hex) 0 0 / 28px 48.5px,
+            var(--cy-band) 50% 0 / 45% 100% no-repeat;
+        mask-composite: intersect;
+    }
+
+    .cy-scene[data-cy-loading='lattice'] .cy-load::after {
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .cy-scene[data-cy-loading='lattice'] .cy-load > .cy-la {
+        background: var(--accent);
+        translate: 2px -1px;
+        opacity: 0.8;
+    }
+
+    /* 8 · Signal loss: the word LOADING, deciphered, neon, torn, sliced away. */
+    .cy-scene:is([data-cy-loading='osd'], [data-cy-loading='typed'], [data-cy-loading='breach']) .cy-waits > :not(.cy-load) {
+        opacity: 0.2;
+    }
+
+    .cy-scene:is([data-cy-loading='osd'], [data-cy-loading='typed'], [data-cy-loading='breach']) :is(.kp-menu__item, .cy-day).cy-waits {
+        color: hsl(from var(--foreground) h s l / 0.22);
+    }
+
+    .cy-scene[data-cy-loading='osd'] .cy-load::before {
+        content: 'LOADING';
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--foreground);
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-shadow:
+            2px -1px 0 var(--accent),
+            2px 1px 0 var(--destructive);
+    }
+
+    @container (min-block-size: 3.4rem) and (min-inline-size: 9rem) {
+        .cy-scene[data-cy-loading='osd'] .cy-load::before {
+            font-size: 1.05rem;
+        }
+    }
+
+    @container (max-inline-size: 5.5rem) {
+        .cy-scene[data-cy-loading='osd'] .cy-load::before {
+            font-size: 0.5rem;
+            letter-spacing: 0.1em;
+        }
+    }
+
+    /* 9 · Light cycles: two trails chase round the rim, clockwise. */
+    .cy-scene[data-cy-loading='cycles'] .cy-load {
+        box-shadow: inset 0 0 0 1px hsl(from var(--accent) h s l / 0.16);
+    }
+
+    .cy-scene[data-cy-loading='cycles'] .cy-load::before,
+    .cy-scene[data-cy-loading='cycles'] .cy-load::after {
+        content: '';
+        inset: 0;
+    }
+
+    .cy-scene[data-cy-loading='cycles'] .cy-load::before {
+        background:
+            linear-gradient(90deg, transparent, var(--accent)) 100% 0 / 40% 2px no-repeat,
+            linear-gradient(180deg, transparent, var(--accent)) 100% 100% / 2px 40% no-repeat,
+            linear-gradient(270deg, transparent, var(--accent)) 0 100% / 40% 2px no-repeat,
+            linear-gradient(0deg, transparent, var(--accent)) 0 0 / 2px 40% no-repeat;
+        filter: drop-shadow(0 0 3px var(--accent));
+    }
+
+    .cy-scene[data-cy-loading='cycles'] .cy-load::after {
+        background:
+            linear-gradient(90deg, transparent, var(--primary)) 100% 0 / 40% 2px no-repeat,
+            linear-gradient(180deg, transparent, var(--primary)) 100% 100% / 2px 40% no-repeat,
+            linear-gradient(270deg, transparent, var(--primary)) 0 100% / 40% 2px no-repeat,
+            linear-gradient(0deg, transparent, var(--primary)) 0 0 / 2px 40% no-repeat;
+        filter: drop-shadow(0 0 3px var(--primary));
+    }
+
+    /* 10 · Breach protocol: a buffer of hex codes picked one by one. */
+    .cy-scene[data-cy-loading='breach'] .cy-load > .cy-lc {
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        line-height: 1;
+    }
+
+    .cy-scene[data-cy-loading='breach'] .cy-lc i {
+        padding: 2px 3px;
+        border: 1px solid hsl(from var(--accent) h s l / 0.7);
+        background: transparent;
+        color: var(--accent);
+        font-style: normal;
+    }
+
+    .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(-n + 2) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(2) {
+        --i: 1;
+    }
+
+    .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(3) {
+        --i: 2;
+    }
+
+    .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(4) {
+        --i: 3;
+    }
+
+    @container (max-inline-size: 5.5rem) {
+        .cy-scene[data-cy-loading='breach'] .cy-load > .cy-lc {
+            gap: 1px;
+            font-size: 0.5rem;
+        }
+
+        .cy-scene[data-cy-loading='breach'] .cy-lc i {
+            padding: 1px 2px;
+        }
+
+        .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(4) {
+            display: none;
+        }
+    }
+
+    @container (max-inline-size: 3.4rem) {
+        .cy-scene[data-cy-loading='breach'] .cy-lc i:nth-child(3) {
+            display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .cy-scene[data-cy-loading='net'] .cy-load::before {
+            animation: cy-ld-net-a calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-scene[data-cy-loading='net'] .cy-load::after {
+            animation: cy-ld-net-b calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-scene[data-cy-loading='net'] .cy-load > .cy-la {
+            animation: cy-ld-net-c calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-scene[data-cy-loading='net'] .cy-load > .cy-lb {
+            animation: cy-ld-sync calc(1800ms * var(--cy-slow, 1)) steps(30, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='net'] .cy-lc::before {
+            animation: cy-ld-addr calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='scrub'] .cy-load::before {
+            animation: cy-ld-scrub calc(1800ms * var(--cy-slow, 1)) steps(30, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='scrub'] .cy-la::before {
+            animation: cy-ld-code calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='typed'] .cy-la::before {
+            animation: cy-ld-typed calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='typed'] .cy-lb::before {
+            animation: cy-ld-reply calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='esper'] .cy-load::before {
+            animation: cy-ld-esper-y calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='esper'] .cy-load::after {
+            animation: cy-ld-esper-x calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='esper'] .cy-load > .cy-la {
+            animation: cy-ld-esper-box calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='esper'] .cy-lb::before {
+            animation: cy-ld-esper-read calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='dive'] .cy-load::before {
+            animation: cy-ld-ring calc(1800ms * var(--cy-slow, 1)) steps(7, end) infinite;
+        }
+
+        .cy-scene[data-cy-loading='dive'] .cy-load::after {
+            animation: cy-ld-ring calc(1800ms * var(--cy-slow, 1)) steps(7, end) infinite;
+            animation-delay: calc(-600ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-loading='dive'] .cy-load > .cy-la {
+            animation: cy-ld-ring calc(1800ms * var(--cy-slow, 1)) steps(7, end) infinite;
+            animation-delay: calc(-1200ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-loading='dive'] .cy-load > .cy-lb {
+            animation: cy-ld-core calc(600ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='vitals'] .cy-load::before {
+            animation: cy-ld-sweep calc(1800ms * var(--cy-slow, 1)) steps(30, end) infinite;
+        }
+        .cy-scene[data-cy-loading='lattice'] .cy-load::after,
+        .cy-scene[data-cy-loading='lattice'] .cy-load > .cy-la {
+            animation: cy-ld-band calc(1800ms * var(--cy-slow, 1)) steps(24, end) infinite;
+        }
+        .cy-scene[data-cy-loading='osd'] .cy-load::before {
+            animation:
+                cy-ld-word calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite,
+                cy-ld-tear calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+        .cy-scene[data-cy-loading='cycles'] .cy-load::before {
+            animation: cy-ld-rim calc(1800ms * var(--cy-slow, 1)) linear infinite;
+        }
+
+        .cy-scene[data-cy-loading='cycles'] .cy-load::after {
+            animation: cy-ld-rim calc(1800ms * var(--cy-slow, 1)) linear infinite;
+            animation-delay: calc(-900ms * var(--cy-slow, 1));
+        }
+        .cy-scene[data-cy-loading='breach'] .cy-lc i {
+            animation: cy-ld-pick calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+            animation-delay: calc((var(--i, 0) * 270ms - 1800ms) * var(--cy-slow, 1));
+        }
+    }
+
+    @keyframes cy-ld-net-a {
+        to {
+            background-position:
+                170px 3px,
+                173px 1px,
+                173px 5px;
+        }
+    }
+
+    @keyframes cy-ld-net-b {
+        to {
+            background-position:
+                240px 3px,
+                243px 1px,
+                243px 5px;
+        }
+    }
+
+    @keyframes cy-ld-net-c {
+        to {
+            background-position:
+                90px 3px,
+                93px 1px,
+                93px 5px;
+        }
+    }
+
+    @keyframes cy-ld-sync {
+        from {
+            inset-inline-start: 0;
+        }
+        to {
+            inset-inline-start: 100%;
+        }
+    }
+
+    @keyframes cy-ld-addr {
+        0.00% {
+            content: '0x4F2A · 412 PKT';
+        }
+        16.67% {
+            content: '0x9C71 · 417 PKT';
+        }
+        33.33% {
+            content: '0x03E8 · 409 PKT';
+        }
+        50.00% {
+            content: '0xB6D4 · 421 PKT';
+        }
+        66.67% {
+            content: '0x7A19 · 415 PKT';
+        }
+        83.33% {
+            content: '0xE250 · 408 PKT';
+        }
+    }
+
+    @keyframes cy-ld-scrub {
+        from {
+            inline-size: 0;
+        }
+        to {
+            inline-size: 100%;
+        }
+    }
+
+    @keyframes cy-ld-code {
+        0.00% {
+            content: '00:00';
+        }
+        16.67% {
+            content: '00:01';
+        }
+        33.33% {
+            content: '00:02';
+        }
+        50.00% {
+            content: '00:03';
+        }
+        66.67% {
+            content: '00:04';
+        }
+        83.33% {
+            content: '00:05';
+        }
+    }
+
+    @keyframes cy-ld-typed {
+        0.00% {
+            content: '▌';
+        }
+        8.33% {
+            content: '>▌';
+        }
+        16.67% {
+            content: '> ▌';
+        }
+        25.00% {
+            content: '> r▌';
+        }
+        33.33% {
+            content: '> re▌';
+        }
+        41.67% {
+            content: '> rea▌';
+        }
+        50.00% {
+            content: '> read▌';
+        }
+        58.33% {
+            content: '> read ';
+        }
+        66.67% {
+            content: '> read▌';
+        }
+        75.00% {
+            content: '> read ';
+        }
+        83.33% {
+            content: '> read▌';
+        }
+        91.67% {
+            content: '';
+        }
+    }
+
+    @keyframes cy-ld-reply {
+        0% {
+            content: '';
+        }
+        58.33% {
+            content: '0x7F ok';
+        }
+        91.67% {
+            content: '';
+        }
+    }
+
+    @keyframes cy-ld-esper-y {
+        0% {
+            inset-block-start: 25%;
+        }
+        16.67% {
+            inset-block-start: 70%;
+        }
+        33.33% {
+            inset-block-start: 40%;
+        }
+        50% {
+            inset-block-start: 58%;
+        }
+        66.67% {
+            inset-block-start: 50%;
+        }
+    }
+
+    @keyframes cy-ld-esper-x {
+        0% {
+            inset-inline-start: 80%;
+        }
+        16.67% {
+            inset-inline-start: 25%;
+        }
+        33.33% {
+            inset-inline-start: 60%;
+        }
+        50% {
+            inset-inline-start: 38%;
+        }
+        66.67% {
+            inset-inline-start: 50%;
+        }
+    }
+
+    @keyframes cy-ld-esper-box {
+        0% {
+            inset-inline-start: 80%;
+            inset-block-start: 25%;
+            inline-size: 46%;
+            block-size: 46%;
+            border-color: var(--accent);
+        }
+        16.67% {
+            inset-inline-start: 25%;
+            inset-block-start: 70%;
+            inline-size: 38%;
+            block-size: 38%;
+            border-color: var(--accent);
+        }
+        33.33% {
+            inset-inline-start: 60%;
+            inset-block-start: 40%;
+            inline-size: 30%;
+            block-size: 32%;
+            border-color: var(--accent);
+        }
+        50% {
+            inset-inline-start: 38%;
+            inset-block-start: 58%;
+            inline-size: 22%;
+            block-size: 24%;
+            border-color: var(--accent);
+        }
+        66.67% {
+            inset-inline-start: 50%;
+            inset-block-start: 50%;
+            inline-size: 14%;
+            block-size: 16%;
+            border-color: var(--primary);
+        }
+        75% {
+            border-color: var(--accent);
+        }
+        83.33% {
+            border-color: var(--primary);
+        }
+        91.67% {
+            border-color: var(--accent);
+        }
+    }
+
+    @keyframes cy-ld-esper-read {
+        0% {
+            content: 'ENHANCE 224·176';
+        }
+        16.67% {
+            content: 'ENHANCE 112·088';
+        }
+        33.33% {
+            content: 'ENHANCE 056·044';
+        }
+        50% {
+            content: 'ENHANCE 028·022';
+        }
+        66.67% {
+            content: 'LOCKED ▪';
+        }
+    }
+
+    @keyframes cy-ld-ring {
+        0% {
+            inset: 46%;
+            opacity: 1;
+        }
+        100% {
+            inset: -2%;
+            opacity: 0.1;
+        }
+    }
+
+    @keyframes cy-ld-core {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.3;
+        }
+    }
+
+    @keyframes cy-ld-sweep {
+        from {
+            background-position: 100% 0;
+        }
+        to {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes cy-ld-band {
+        from {
+            mask-position:
+                0 0,
+                -82% 0;
+        }
+        to {
+            mask-position:
+                0 0,
+                182% 0;
+        }
+    }
+
+    @keyframes cy-ld-word {
+        0.00% {
+            content: '#&$?%@/';
+        }
+
+        3.33% {
+            content: 'L@/#&$?';
+        }
+
+        6.67% {
+            content: 'LO?%@/#';
+        }
+
+        10.00% {
+            content: 'LOA&$?%';
+        }
+
+        13.33% {
+            content: 'LOAD/#&';
+        }
+
+        16.67% {
+            content: 'LOADI%@';
+        }
+
+        20.00% {
+            content: 'LOADIN$';
+        }
+
+        23.33% {
+            content: 'LOADING';
+        }
+
+        90% {
+            content: '';
+        }
+    }
+
+    @keyframes cy-ld-tear {
+        0% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+        66.67% {
+            translate: -6px 0;
+            clip-path: inset(30% 0 40% 0);
+            text-shadow:
+                6px -2px 0 var(--accent),
+                6px 2px 0 var(--destructive);
+        }
+        70% {
+            translate: 6px 0;
+            clip-path: inset(0 0 60% 0);
+            text-shadow:
+                -5px -2px 0 var(--accent),
+                -5px 2px 0 var(--destructive);
+        }
+        73.33% {
+            translate: -3px 0;
+            clip-path: inset(55% 0 5% 0);
+            text-shadow:
+                4px -1px 0 var(--accent),
+                4px 1px 0 var(--destructive);
+        }
+        76.67% {
+            translate: 4px 0;
+            clip-path: inset(10% 0 50% 0);
+            text-shadow:
+                -3px -1px 0 var(--accent),
+                -3px 1px 0 var(--destructive);
+        }
+        80% {
+            translate: -2px 0;
+            clip-path: inset(40% 0 20% 0);
+            text-shadow:
+                3px -1px 0 var(--accent),
+                3px 1px 0 var(--destructive);
+        }
+        83.33% {
+            translate: 2px 0;
+            clip-path: inset(0);
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+        86.67% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+    }
+
+    @keyframes cy-ld-rim {
+        from {
+            background-position:
+                0 0,
+                100% 0,
+                100% 100%,
+                0 100%;
+        }
+        to {
+            background-position:
+                100% 0,
+                100% 100%,
+                0 100%,
+                0 0;
+        }
+    }
+
+    @keyframes cy-ld-pick {
+        0% {
+            border-color: hsl(from var(--accent) h s l / 0.7);
+            background: transparent;
+            color: var(--accent);
+        }
+        11% {
+            border-color: var(--primary);
+        }
+        22% {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        80% {
+            border-color: hsl(from var(--accent) h s l / 0.7);
+            background: transparent;
+            color: var(--accent);
+        }
+        84% {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+        92% {
+            border-color: hsl(from var(--accent) h s l / 0.7);
+            background: transparent;
+            color: var(--accent);
+        }
+    }
+
+    /* ── The spinner (G11): nine more drawings beside the reticle ─────── */
+
+    /* Ink: the scene's colours; in a busy button every ink is the button's own. */
+    .cy-spin {
+        --cy-sp-1: var(--accent);
+        --cy-sp-2: var(--primary);
+        --cy-sp-3: var(--destructive);
+    }
+
+    .kp-button .cy-spin {
+        --cy-sp-1: currentColor;
+        --cy-sp-2: currentColor;
+        --cy-sp-3: currentColor;
+    }
+
+    .cy-scene[data-cy-spinner] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
+        position: absolute;
+    }
+
+    .cy-scene[data-cy-spinner] .cy-spin::before,
+    .cy-scene[data-cy-spinner] .cy-spin::after {
+        position: absolute;
+    }
+
+    /* Signal bars: four bars that jump between heights. */
+    .cy-scene[data-cy-spinner='bars'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
+        display: block;
+        inset-block-end: 8%;
+        inline-size: 18%;
+        background: linear-gradient(var(--cy-sp-2) 0 2px, var(--cy-sp-1) 2px);
+    }
+
+    .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s1 {
+        inset-inline-start: 4%;
+        block-size: 40%;
+    }
+
+    .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s2 {
+        inset-inline-start: 28%;
+        block-size: 90%;
+    }
+
+    .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s3 {
+        inset-inline-start: 52%;
+        block-size: 60%;
+    }
+
+    .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s4 {
+        inset-inline-start: 76%;
+        block-size: 75%;
+    }
+
+    /* Countdown: one digit in a cut frame. */
+    .cy-scene[data-cy-spinner='count'] .cy-spin::before {
+        content: '9';
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--cy-sp-2);
+        font-family: var(--kp-mono);
+        font-size: calc(var(--cy-spin) * 0.78);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .cy-scene[data-cy-spinner='count'] .cy-spin::after {
+        content: '';
+        inset: 0;
+        border: 2px solid var(--cy-sp-1);
+        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+    }
+
+    /* The tear: a square in bands, with the glitch's split copies. */
+    .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1,
+    .cy-scene[data-cy-spinner='tear'] .cy-spin::before,
+    .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
+        content: '';
+        display: block;
+        inset: 8%;
+    }
+
+    .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1 {
+        background: var(--cy-sp-2);
+    }
+
+    .cy-scene[data-cy-spinner='tear'] .cy-spin::before {
+        background: var(--cy-sp-1);
+        opacity: 0;
+    }
+
+    .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
+        background: var(--cy-sp-3);
+        opacity: 0;
+    }
+
+    /* Barcode: three poses of bars and a scan line. */
+    .cy-scene[data-cy-spinner='barcode'] .cy-spin::before {
+        content: '';
+        inset: 14% 4%;
+        background: linear-gradient(
+            90deg,
+            var(--cy-sp-1) 0% 8%,
+            transparent 8% 14%,
+            var(--cy-sp-1) 14% 18%,
+            transparent 18% 26%,
+            var(--cy-sp-1) 26% 40%,
+            transparent 40% 46%,
+            var(--cy-sp-1) 46% 52%,
+            transparent 52% 60%,
+            var(--cy-sp-1) 60% 64%,
+            transparent 64% 70%,
+            var(--cy-sp-1) 70% 82%,
+            transparent 82% 88%,
+            var(--cy-sp-1) 88% 100%
+        );
+    }
+
+    .cy-scene[data-cy-spinner='barcode'] .cy-spin::after {
+        content: '';
+        inset-block: 0;
+        inset-inline-start: 50%;
+        inline-size: 2px;
+        background: var(--cy-sp-2);
+        box-shadow: 0 0 4px var(--cy-sp-2);
+    }
+
+    /* Chevrons: three lit in turn. */
+    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3) {
+        display: block;
+        inset-block: 15%;
+        inline-size: 38%;
+        background: var(--cy-sp-1);
+        clip-path: polygon(0 0, 55% 0, 100% 50%, 55% 100%, 0 100%, 45% 50%);
+        opacity: 0.3;
+    }
+
+    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s1 {
+        inset-inline-start: 0;
+        background: var(--cy-sp-2);
+        opacity: 1;
+    }
+
+    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s2 {
+        inset-inline-start: 31%;
+    }
+
+    .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s3 {
+        inset-inline-start: 62%;
+    }
+
+    /* Ratchet: a cross with one yellow tip. */
+    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::before,
+    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::after {
+        content: '';
+        background: var(--cy-sp-1);
+    }
+
+    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::before {
+        inset: 42% 0;
+    }
+
+    .cy-scene[data-cy-spinner='ratchet'] .cy-spin::after {
+        inset: 0 42%;
+    }
+
+    .cy-scene[data-cy-spinner='ratchet'] .cy-spin > .cy-s1 {
+        display: block;
+        inset-block: 0 70%;
+        inset-inline: 36%;
+        background: var(--cy-sp-2);
+    }
+
+    /* Charge: a cut cell fills start to end. */
+    .cy-scene[data-cy-spinner='charge'] .cy-spin::before {
+        content: '';
+        inset: 0;
+        border: 2px solid var(--cy-sp-1);
+        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+    }
+
+    .cy-scene[data-cy-spinner='charge'] .cy-spin::after {
+        content: '';
+        inset: max(3px, 14%);
+        inset-inline-end: auto;
+        inline-size: calc(100% - 2 * max(3px, 14%));
+        background: var(--cy-sp-2);
+    }
+
+    /* Neon: two tubes and a spark. */
+    .cy-scene[data-cy-spinner='neon'] .cy-spin::before,
+    .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
+        content: '';
+        inset: 0;
+        border: 2px solid transparent;
+    }
+
+    .cy-scene[data-cy-spinner='neon'] .cy-spin::before {
+        border-color: var(--cy-sp-1) transparent transparent var(--cy-sp-1);
+        filter: drop-shadow(0 0 3px var(--cy-sp-1));
+    }
+
+    .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
+        border-color: transparent var(--cy-sp-2) var(--cy-sp-2) transparent;
+        filter: drop-shadow(0 0 3px var(--cy-sp-2));
+    }
+
+    .cy-scene[data-cy-spinner='neon'] .cy-spin > .cy-s1 {
+        display: block;
+        inset: 42%;
+        background: var(--cy-sp-2);
+    }
+
+    /* Hazard: stripes crawling in a cut window. */
+    .cy-scene[data-cy-spinner='hazard'] .cy-spin::before {
+        content: '';
+        inset: 0;
+        border: 2px solid var(--cy-sp-1);
+        background: linear-gradient(135deg, var(--cy-sp-2) 0 25%, transparent 25% 50%, var(--cy-sp-2) 50% 75%, transparent 75%) 0 0 /
+            calc(var(--cy-spin) * 0.5) calc(var(--cy-spin) * 0.5);
+        background-clip: padding-box;
+        clip-path: polygon(0 0, 100% 0, 100% 72%, 72% 100%, 0 100%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .cy-scene[data-cy-spinner='bars'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3, .cy-s4) {
+            animation: cy-sp-bars calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s2 {
+            animation-delay: calc(-480ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s3 {
+            animation-delay: calc(-960ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='bars'] .cy-spin > .cy-s4 {
+            animation-delay: calc(-240ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='count'] .cy-spin::before {
+            animation: cy-sp-count calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='tear'] .cy-spin > .cy-s1 {
+            animation: cy-sp-tear-main calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='tear'] .cy-spin::before {
+            animation: cy-sp-tear-cyan calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='tear'] .cy-spin::after {
+            animation: cy-sp-tear-red calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='barcode'] .cy-spin::before {
+            animation: cy-sp-code calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='barcode'] .cy-spin::after {
+            animation: cy-sp-scan calc(1800ms * var(--cy-slow, 1)) steps(10, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > :is(.cy-s1, .cy-s2, .cy-s3) {
+            animation: cy-sp-chev calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s1 {
+            animation-delay: calc(-1800ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s2 {
+            animation-delay: calc(-1620ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='chevrons'] .cy-spin > .cy-s3 {
+            animation-delay: calc(-1440ms * var(--cy-slow, 1));
+        }
+
+        .cy-scene[data-cy-spinner='ratchet'] .cy-spin {
+            animation: cy-sp-ratchet calc(1440ms * var(--cy-slow, 1)) steps(8, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='charge'] .cy-spin::after {
+            animation: cy-sp-charge calc(1200ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='neon'] .cy-spin::before {
+            animation: cy-sp-neon-a calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='neon'] .cy-spin::after {
+            animation: cy-sp-neon-b calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='neon'] .cy-spin > .cy-s1 {
+            animation: cy-sp-spark calc(600ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        }
+
+        .cy-scene[data-cy-spinner='hazard'] .cy-spin::before {
+            animation: cy-sp-hazard calc(900ms * var(--cy-slow, 1)) linear infinite;
+        }
+    }
+
+    @keyframes cy-sp-bars {
+        0.00% {
+            block-size: 30%;
+        }
+
+        6.67% {
+            block-size: 85%;
+        }
+
+        13.33% {
+            block-size: 50%;
+        }
+
+        20.00% {
+            block-size: 100%;
+        }
+
+        26.67% {
+            block-size: 20%;
+        }
+
+        33.33% {
+            block-size: 70%;
+        }
+
+        40.00% {
+            block-size: 40%;
+        }
+
+        46.67% {
+            block-size: 90%;
+        }
+
+        53.33% {
+            block-size: 60%;
+        }
+
+        60.00% {
+            block-size: 25%;
+        }
+
+        66.67% {
+            block-size: 80%;
+        }
+
+        73.33% {
+            block-size: 45%;
+        }
+
+        80.00% {
+            block-size: 95%;
+        }
+
+        86.67% {
+            block-size: 35%;
+        }
+
+        93.33% {
+            block-size: 65%;
+        }
+    }
+
+    @keyframes cy-sp-count {
+        0% {
+            content: '9';
+            text-shadow: none;
+        }
+
+        10% {
+            content: '8';
+            text-shadow: none;
+        }
+
+        20% {
+            content: '7';
+            text-shadow: none;
+        }
+
+        30% {
+            content: '6';
+            text-shadow: none;
+        }
+
+        40% {
+            content: '5';
+            text-shadow: none;
+        }
+
+        50% {
+            content: '4';
+            text-shadow: none;
+        }
+
+        60% {
+            content: '3';
+            text-shadow: none;
+        }
+
+        70% {
+            content: '2';
+            text-shadow: none;
+        }
+
+        80% {
+            content: '1';
+            text-shadow: none;
+        }
+
+        90% {
+            content: '0';
+            text-shadow:
+                0.08em -0.06em 0 var(--cy-sp-1),
+                0.08em 0.06em 0 var(--cy-sp-3);
+        }
+    }
+
+    @keyframes cy-sp-tear-main {
+        0% {
+            clip-path: inset(0);
+            translate: 0 0;
+        }
+
+        33.33% {
+            clip-path: inset(20% 0 55% 0);
+            translate: calc(var(--cy-spin) * -0.12) 0;
+        }
+
+        38.89% {
+            clip-path: inset(60% 0 10% 0);
+            translate: calc(var(--cy-spin) * 0.12) 0;
+        }
+
+        44.44% {
+            clip-path: inset(5% 0 70% 0);
+            translate: calc(var(--cy-spin) * -0.08) 0;
+        }
+
+        50% {
+            clip-path: inset(45% 0 30% 0);
+            translate: calc(var(--cy-spin) * 0.08) 0;
+        }
+
+        55.56% {
+            clip-path: inset(75% 0 5% 0);
+            translate: calc(var(--cy-spin) * -0.04) 0;
+        }
+
+        61.11% {
+            clip-path: inset(0);
+            translate: 0 0;
+        }
+    }
+
+    @keyframes cy-sp-tear-cyan {
+        0% {
+            clip-path: inset(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+
+        33.33% {
+            clip-path: inset(20% 0 55% 0);
+            translate: calc(var(--cy-spin) * 0) calc(var(--cy-spin) * -0.08);
+            opacity: 1;
+        }
+
+        38.89% {
+            clip-path: inset(60% 0 10% 0);
+            translate: calc(var(--cy-spin) * 0.24) calc(var(--cy-spin) * -0.08);
+            opacity: 1;
+        }
+
+        44.44% {
+            clip-path: inset(5% 0 70% 0);
+            translate: calc(var(--cy-spin) * 0.04) calc(var(--cy-spin) * -0.08);
+            opacity: 1;
+        }
+
+        50% {
+            clip-path: inset(45% 0 30% 0);
+            translate: calc(var(--cy-spin) * 0.2) calc(var(--cy-spin) * -0.08);
+            opacity: 1;
+        }
+
+        55.56% {
+            clip-path: inset(75% 0 5% 0);
+            translate: calc(var(--cy-spin) * 0.08) calc(var(--cy-spin) * -0.08);
+            opacity: 1;
+        }
+
+        61.11% {
+            clip-path: inset(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes cy-sp-tear-red {
+        0% {
+            clip-path: inset(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+
+        33.33% {
+            clip-path: inset(20% 0 55% 0);
+            translate: calc(var(--cy-spin) * 0) calc(var(--cy-spin) * 0.08);
+            opacity: 1;
+        }
+
+        38.89% {
+            clip-path: inset(60% 0 10% 0);
+            translate: calc(var(--cy-spin) * 0.24) calc(var(--cy-spin) * 0.08);
+            opacity: 1;
+        }
+
+        44.44% {
+            clip-path: inset(5% 0 70% 0);
+            translate: calc(var(--cy-spin) * 0.04) calc(var(--cy-spin) * 0.08);
+            opacity: 1;
+        }
+
+        50% {
+            clip-path: inset(45% 0 30% 0);
+            translate: calc(var(--cy-spin) * 0.2) calc(var(--cy-spin) * 0.08);
+            opacity: 1;
+        }
+
+        55.56% {
+            clip-path: inset(75% 0 5% 0);
+            translate: calc(var(--cy-spin) * 0.08) calc(var(--cy-spin) * 0.08);
+            opacity: 1;
+        }
+
+        61.11% {
+            clip-path: inset(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes cy-sp-code {
+        0% {
+            background: linear-gradient(
+                90deg,
+                var(--cy-sp-1) 0% 8%,
+                transparent 8% 14%,
+                var(--cy-sp-1) 14% 18%,
+                transparent 18% 26%,
+                var(--cy-sp-1) 26% 40%,
+                transparent 40% 46%,
+                var(--cy-sp-1) 46% 52%,
+                transparent 52% 60%,
+                var(--cy-sp-1) 60% 64%,
+                transparent 64% 70%,
+                var(--cy-sp-1) 70% 82%,
+                transparent 82% 88%,
+                var(--cy-sp-1) 88% 100%
+            );
+        }
+
+        33.33% {
+            background: linear-gradient(
+                90deg,
+                var(--cy-sp-1) 0% 12%,
+                transparent 12% 18%,
+                var(--cy-sp-1) 18% 30%,
+                transparent 30% 36%,
+                var(--cy-sp-1) 36% 40%,
+                transparent 40% 50%,
+                var(--cy-sp-1) 50% 60%,
+                transparent 60% 66%,
+                var(--cy-sp-1) 66% 72%,
+                transparent 72% 78%,
+                var(--cy-sp-1) 78% 86%,
+                transparent 86% 92%,
+                var(--cy-sp-1) 92% 100%
+            );
+        }
+
+        66.67% {
+            background: linear-gradient(
+                90deg,
+                var(--cy-sp-1) 0% 6%,
+                transparent 6% 12%,
+                var(--cy-sp-1) 12% 22%,
+                transparent 22% 28%,
+                var(--cy-sp-1) 28% 34%,
+                transparent 34% 44%,
+                var(--cy-sp-1) 44% 50%,
+                transparent 50% 58%,
+                var(--cy-sp-1) 58% 68%,
+                transparent 68% 74%,
+                var(--cy-sp-1) 74% 80%,
+                transparent 80% 90%,
+                var(--cy-sp-1) 90% 100%
+            );
+        }
+    }
+
+    @keyframes cy-sp-scan {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 2px);
+        }
+    }
+
+    @keyframes cy-sp-chev {
+        0% {
+            opacity: 0.3;
+            background: var(--cy-sp-1);
+        }
+
+        8% {
+            opacity: 1;
+            background: var(--cy-sp-2);
+        }
+
+        33% {
+            opacity: 0.3;
+            background: var(--cy-sp-1);
+        }
+    }
+
+    @keyframes cy-sp-ratchet {
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes cy-sp-charge {
+        0% {
+            inline-size: 0;
+            background: var(--cy-sp-2);
+            animation-timing-function: steps(6, end);
+        }
+
+        50% {
+            inline-size: calc(100% - 2 * max(3px, 14%));
+            background: var(--cy-sp-2);
+            animation-timing-function: steps(1, end);
+        }
+
+        66.67% {
+            background: var(--cy-sp-1);
+        }
+
+        83.33% {
+            background: var(--cy-sp-2);
+        }
+
+        91.67% {
+            inline-size: 0;
+        }
+    }
+
+    @keyframes cy-sp-neon-a {
+        0% {
+            opacity: 1;
+        }
+
+        8% {
+            opacity: 0.15;
+        }
+
+        12% {
+            opacity: 1;
+        }
+
+        30% {
+            opacity: 1;
+        }
+
+        34% {
+            opacity: 0.3;
+        }
+
+        37% {
+            opacity: 1;
+        }
+
+        58% {
+            opacity: 1;
+        }
+
+        60% {
+            opacity: 0;
+        }
+
+        66% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes cy-sp-neon-b {
+        0% {
+            opacity: 0.2;
+        }
+
+        14% {
+            opacity: 1;
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        43% {
+            opacity: 0;
+        }
+
+        46% {
+            opacity: 1;
+        }
+
+        70% {
+            opacity: 0.25;
+        }
+
+        73% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        93% {
+            opacity: 0;
+        }
+
+        96% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes cy-sp-spark {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.25;
+        }
+    }
+
+    @keyframes cy-sp-hazard {
+        to {
+            background-position: calc(var(--cy-spin) * 0.5) 0;
+        }
     }
 
     /* ── Colour (G5) ─────────────────────────────────────────────────── */
@@ -1083,92 +2799,42 @@
             inset 0 0 14px hsl(from var(--primary) h s l / 0.5);
     }
 
-    /* ── Hover (G8): one part per scene is pointed at ─────────────────── */
+    /* ── Pointing (G8) and focus (G14, DI2): shared with the colour scene and the composites ── */
 
-    /* The circuit on a plate, a menu entry and a day. */
-    .cy-scene:not([data-cy-hover='charge'], [data-cy-colour='mix']) :is(.cy-plate.cy-pointed, .cy-pointed-tile),
+    /* The circuit lit on a plate (the colour scene's pointed part, the composites' key figure). */
+    .cy-scene:not([data-cy-colour='mix']) :is(.cy-plate.cy-pointed, .cy-pointed-tile),
     .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi,
-    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi,
-    .cy-scene[data-cy-focus]:not([data-cy-focus='mix']) .cy-plate.cy-focused {
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .cy-in-kpi {
         --cy-grid: var(--cy-grid-30);
     }
 
-    .cy-scene:not([data-cy-hover='charge']) :is(.kp-menu__item, .cy-day).cy-pointed,
-    .cy-sec[data-cy-show='hover'] .cy-scene:is([data-cy-composites='own'], [data-cy-composites='beam']) .kp-menu__item,
-    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) :is(.kp-menu__item, .cy-day).cy-focused {
+    .cy-scene :is(.kp-menu__item, .cy-day).cy-pointed,
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-menu__item {
         background: var(--cy-grid-30), var(--muted);
     }
 
-    .cy-scene[data-cy-hover='mix'] .kp-menu__item.cy-pointed {
-        background: var(--muted);
-        box-shadow:
-            inset 2px 0 0 var(--primary),
-            0 0 0.6rem hsl(from var(--primary) h s l / 0.6);
-    }
-
-    .cy-scene[data-cy-hover='mix'] .cy-day.cy-pointed {
-        background: var(--card);
-        translate: 3px 0;
-    }
-
-    .cy-scene[data-cy-hover='mix'] .cy-kpi.cy-pointed {
-        --cy-grid: none;
-    }
-
-    .cy-scene[data-cy-hover='mix'] .cy-kpi.cy-pointed .cy-figure {
-        text-shadow: 0 0 16px color-mix(in oklch, var(--primary) 95%, transparent);
-    }
-
-    .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed:not(.cy-tile-link) {
-        translate: 0 -1px;
-    }
-
-    .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed:not(.cy-tile-link)::before,
-    .cy-scene[data-cy-hover='charge'] .kp-button.cy-pointed::before {
-        content: none;
-    }
-
-    .cy-scene:is([data-cy-hover], [data-cy-composites]) .cy-tile-link.cy-pointed,
+    .cy-scene[data-cy-composites] .cy-tile-link.cy-pointed,
     .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites] .cy-tile-link {
         text-decoration: underline;
         text-decoration-color: var(--primary);
     }
 
-    /* The charge band of option 2 on every part. */
-    .cy-scene[data-cy-hover='charge'] :is(.cy-plate, .kp-menu__item, .cy-day).cy-pointed::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(105deg, transparent 0 40%, hsl(from var(--accent) h s l / 0.5) 45% 55%, transparent 60% 100%);
-        transform: translateX(-120%);
-        pointer-events: none;
-    }
-
-    .cy-scene[data-cy-hover='charge'] .cy-pointed {
-        overflow: hidden;
-    }
-
-    /* ── Focus (G14, DI2): the marked parts stand focused ────────────── */
-
-    .cy-scene[data-cy-focus] .cy-focused,
+    /* The composites' focus: the register's two channels inside the part. */
     .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) :is(.kp-button, .kp-menu__item, .cy-in-kpi) {
         --cy-ring:
             inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
     }
 
-    .cy-scene[data-cy-focus] :is(.kp-button, .kp-menu__item, .cy-day).cy-focused,
     .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) :is(.kp-button, .kp-menu__item) {
         box-shadow: var(--cy-ring);
         outline: none;
     }
 
-    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) .kp-button.cy-focused,
     .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button {
         --cy-grid-a: 0.3;
     }
 
-    .cy-scene:is([data-cy-focus='inset'], [data-cy-focus='slant']) .kp-button.cy-focused::before,
     .cy-sec:is([data-cy-show='focus'], [data-cy-show='hover']) .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button::before,
     .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites]:not([data-cy-composites='today']) .kp-button::before {
         content: '';
@@ -1181,42 +2847,494 @@
         pointer-events: none;
     }
 
-    .cy-scene[data-cy-focus='slant'] .cy-focused {
-        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    /* ── Pointing (G8), the new set: the pointer arrives on `cy-aim` parts ──
+       One clock for hover, focus and press: `--cy-t` counts the ticks left of
+       the entrance (3, 2, 1, then 0 at rest in the pose), `--cy-p` is 1 while
+       the part is pointed, focused or pressed. Poses are functions of the two,
+       so a leave is the same functions run the other way (1, 2, 3, gone):
+       the frames of the leave are the frames of the entrance in reverse. */
+
+    @property --cy-t {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
     }
 
-    /* Today: the key figure's single warning line (its own 0.3 rem plate,
-       unclipped, as picked), the menu entry and the day with the package's
-       outline, the tile link cut slanted. */
-    .cy-scene[data-cy-focus='mix'] .cy-focused {
-        --cy-ring: 0 0 transparent;
+    @property --cy-p {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
     }
 
-    .cy-scene[data-cy-focus='mix'] .kp-button.cy-focused:not(.cy-tile-link),
-    .cy-scene[data-cy-focus='mix'] .cy-in-header.cy-focused {
+    .cy-scene[data-cy-hover] .cy-aim {
+        --cy-ink: var(--primary);
+        --cy-on-ink: var(--primary-foreground);
+        --cy-rest: var(--card-foreground);
+        isolation: isolate;
+        box-shadow: var(--cy-sh, 0 0 transparent);
+    }
+
+    .cy-scene[data-cy-hover] .kp-button.cy-aim {
+        --cy-ink: var(--kp-btn-fg);
+        --cy-on-ink: var(--kp-btn-ground);
+        --cy-rest: var(--kp-btn-fg);
+    }
+
+    .cy-scene[data-cy-hover] .kp-button--primary.cy-aim {
+        --cy-on-ink: var(--primary);
+    }
+
+    .cy-scene[data-cy-hover] .cy-plate.cy-aim {
+        box-shadow: var(--cy-sh, 0 0 transparent), var(--cy-rim);
+    }
+
+    .cy-scene[data-cy-hover] .cy-day.cy-aim {
         box-shadow:
-            inset 0 0 0 2px var(--focus-ring),
-            inset 0 0 0 4px var(--focus-ring-contrast);
+            var(--cy-sh, 0 0 transparent),
+            inset 0 0 0 1px var(--border);
     }
 
-    .cy-scene[data-cy-focus='mix'] .cy-kpi.cy-focused {
-        border-radius: 0.3rem;
-        clip-path: none;
-        outline: 2px solid var(--warning);
+    .cy-scene[data-cy-hover]:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-aim {
+        --cy-p: 1;
+    }
+
+    /* 1. Glitch flash: the anchor, at the size of a pointer. The text turns
+       neon cyan and, for three ticks, a cyan copy stands right and up, a red
+       one right and down, smaller each tick. */
+    .cy-scene[data-cy-hover='flash'] .cy-aim {
+        --cy-neon: var(--accent);
+        color: color-mix(in oklch, var(--cy-neon) calc(var(--cy-p) * 100%), var(--cy-rest));
+        text-shadow:
+            calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * -1px) 0 hsl(from var(--accent) h s l / var(--cy-t)),
+            calc(var(--cy-t) * 1.5px) calc(var(--cy-t) * 1px) 0 hsl(from var(--destructive) h s l / var(--cy-t));
+    }
+
+    .cy-scene[data-cy-hover='flash'] .kp-button--primary.cy-aim {
+        --cy-neon: var(--kp-btn-fg);
+        --kp-btn-fill: color-mix(in oklch, var(--primary) calc(100% - var(--cy-p) * 28%), var(--foreground));
+    }
+
+    /* 2. Static: a checker of noise flickers over the part for three ticks
+       and leaves a faint dither on it for as long as it is pointed. */
+    .cy-scene[data-cy-hover='static'] .cy-aim::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: repeating-conic-gradient(var(--cy-ink) 0 25%, transparent 0 50%) calc(var(--cy-t) * 2px) calc(var(--cy-t) * 1px) / 4px 4px;
+        opacity: calc(var(--cy-t) * 0.2 + var(--cy-p) * 0.12);
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* 3. Tear: the part itself is thrown sideways and jitters home (−4.5, 3,
+       −1.5, 0 px); the torn edge stays as a bar on its end side. */
+    .cy-scene[data-cy-hover='tear'] .cy-aim {
+        translate: calc(cos(var(--cy-t) * 180deg) * var(--cy-t) * 1.5px) 0;
+        --cy-sh: inset calc(var(--cy-p) * -4px) 0 0 var(--cy-ink);
+    }
+
+    /* 4. Split edge: the part's edge is doubled, a cyan copy right and up, a
+       red copy right and down, 5, 4, 3 px and then 2 px for as long as it is
+       pointed. */
+    .cy-scene[data-cy-hover='split'] .cy-aim {
+        --cy-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
+        --cy-sh:
+            inset calc(-1 * var(--cy-d)) var(--cy-d) 0 0 var(--accent), inset calc(-1 * var(--cy-d)) calc(-1 * var(--cy-d)) 0 0 var(--destructive);
+    }
+
+    /* 5. Chevron: a wedge grows out of the start edge, pointing in, with a
+       3 px bar beside it. */
+    .cy-scene[data-cy-hover='chevron'] .cy-aim {
+        --cy-sh: inset calc(var(--cy-p) * 3px) 0 0 var(--cy-ink);
+    }
+
+    .cy-scene[data-cy-hover='chevron'] .cy-aim::after {
+        content: '';
+        position: absolute;
+        inset: calc(50% - 7px) auto auto 5px;
+        z-index: 1;
+        inline-size: calc(var(--cy-p) * (10px - var(--cy-t) * 2.5px));
+        block-size: 14px;
+        background: var(--cy-ink);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* 6. Flood: a block of the part's own ink floods it from the start edge
+       to the end in four ticks, a 3 px cyan edge leading, and the words turn
+       to the ground colour as the flood passes over them. */
+    .cy-scene[data-cy-hover='flood'] .cy-aim {
+        --cy-flip: calc(var(--cy-p) * max(0, min(1, 2 - var(--cy-t))));
+        color: color-mix(in oklch, var(--cy-on-ink) calc(var(--cy-flip) * 100%), var(--cy-rest));
+    }
+
+    .cy-scene[data-cy-hover='flood'] .cy-aim .cy-label {
+        color: color-mix(in oklch, var(--cy-on-ink) calc(var(--cy-flip) * 100%), var(--accent));
+    }
+
+    .cy-scene[data-cy-hover='flood'] .cy-aim::after {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        z-index: -1;
+        inline-size: calc(var(--cy-p) * (100% - var(--cy-t) * 25%));
+        background: linear-gradient(90deg, var(--cy-ink) calc(100% - min(var(--cy-t), 1) * 3px), var(--accent) 0);
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* ── Focus (G14, DI2), the new set: keyboard focus lands on `cy-focused` parts ── */
+
+    .cy-scene[data-cy-focus] {
+        /* The two channels as rings that follow the cut: a button is cut at its end corner, a plate at its dossier corner (14 px). */
+        --cy-cut-btn-a: polygon(
+            evenodd,
+            0 0,
+            100% 0,
+            100% calc(100% - 14px),
+            calc(100% - 14px) 100%,
+            0 100%,
+            0 0,
+            2px 2px,
+            calc(100% - 2px) 2px,
+            calc(100% - 2px) calc(100% - 14.83px),
+            calc(100% - 14.83px) calc(100% - 2px),
+            2px calc(100% - 2px),
+            2px 2px
+        );
+        --cy-cut-btn-b: polygon(
+            evenodd,
+            2px 2px,
+            calc(100% - 2px) 2px,
+            calc(100% - 2px) calc(100% - 14.83px),
+            calc(100% - 14.83px) calc(100% - 2px),
+            2px calc(100% - 2px),
+            2px 2px,
+            4px 4px,
+            calc(100% - 4px) 4px,
+            calc(100% - 4px) calc(100% - 15.66px),
+            calc(100% - 15.66px) calc(100% - 4px),
+            4px calc(100% - 4px),
+            4px 4px
+        );
+        --cy-cut-pl-a: polygon(
+            evenodd,
+            0 0,
+            calc(100% - 14px) 0,
+            100% 14px,
+            100% 100%,
+            0 100%,
+            0 0,
+            2px 2px,
+            calc(100% - 14.83px) 2px,
+            calc(100% - 2px) 14.83px,
+            calc(100% - 2px) calc(100% - 2px),
+            2px calc(100% - 2px),
+            2px 2px
+        );
+        --cy-cut-pl-b: polygon(
+            evenodd,
+            2px 2px,
+            calc(100% - 14.83px) 2px,
+            calc(100% - 2px) 14.83px,
+            calc(100% - 2px) calc(100% - 2px),
+            2px calc(100% - 2px),
+            2px 2px,
+            4px 4px,
+            calc(100% - 15.66px) 4px,
+            calc(100% - 4px) 15.66px,
+            calc(100% - 4px) calc(100% - 4px),
+            4px calc(100% - 4px),
+            4px 4px
+        );
+    }
+
+    .cy-scene[data-cy-focus] .cy-focused {
+        --cy-sq-ring: inset 0 0 0 calc(var(--cy-p) * 2px) var(--focus-ring), inset 0 0 0 calc(var(--cy-p) * 4px) var(--focus-ring-contrast);
+        isolation: isolate;
+        outline: none;
+        box-shadow: var(--cy-sh, 0 0 transparent);
+    }
+
+    .cy-scene[data-cy-focus] .cy-plate.cy-focused {
+        box-shadow: var(--cy-sh, 0 0 transparent), var(--cy-rim);
+    }
+
+    .cy-scene[data-cy-focus] .cy-day.cy-focused {
+        box-shadow:
+            var(--cy-sh, 0 0 transparent),
+            inset 0 0 0 1px var(--border);
+    }
+
+    .cy-scene[data-cy-focus] .kp-button.cy-focused {
+        --cy-cut-a: var(--cy-cut-btn-a);
+        --cy-cut-b: var(--cy-cut-btn-b);
+    }
+
+    .cy-scene[data-cy-focus] .cy-plate.cy-focused {
+        --cy-cut-a: var(--cy-cut-pl-a);
+        --cy-cut-b: var(--cy-cut-pl-b);
+    }
+
+    /* 2. Floating frame: the same two rings 3 px inside the edge (the cut's
+       diagonal moves in with them, 0.41 px more per px of inset). */
+    .cy-scene[data-cy-focus='float'] .kp-button.cy-focused {
+        --cy-cut-a: polygon(
+            evenodd,
+            3px 3px,
+            calc(100% - 3px) 3px,
+            calc(100% - 3px) calc(100% - 15.24px),
+            calc(100% - 15.24px) calc(100% - 3px),
+            3px calc(100% - 3px),
+            3px 3px,
+            5px 5px,
+            calc(100% - 5px) 5px,
+            calc(100% - 5px) calc(100% - 16.07px),
+            calc(100% - 16.07px) calc(100% - 5px),
+            5px calc(100% - 5px),
+            5px 5px
+        );
+        --cy-cut-b: polygon(
+            evenodd,
+            5px 5px,
+            calc(100% - 5px) 5px,
+            calc(100% - 5px) calc(100% - 16.07px),
+            calc(100% - 16.07px) calc(100% - 5px),
+            5px calc(100% - 5px),
+            5px 5px,
+            7px 7px,
+            calc(100% - 7px) 7px,
+            calc(100% - 7px) calc(100% - 16.9px),
+            calc(100% - 16.9px) calc(100% - 7px),
+            7px calc(100% - 7px),
+            7px 7px
+        );
+    }
+
+    .cy-scene[data-cy-focus='float'] .cy-plate.cy-focused {
+        --cy-cut-a: polygon(
+            evenodd,
+            3px 3px,
+            calc(100% - 15.24px) 3px,
+            calc(100% - 3px) 15.24px,
+            calc(100% - 3px) calc(100% - 3px),
+            3px calc(100% - 3px),
+            3px 3px,
+            5px 5px,
+            calc(100% - 16.07px) 5px,
+            calc(100% - 5px) 16.07px,
+            calc(100% - 5px) calc(100% - 5px),
+            5px calc(100% - 5px),
+            5px 5px
+        );
+        --cy-cut-b: polygon(
+            evenodd,
+            5px 5px,
+            calc(100% - 16.07px) 5px,
+            calc(100% - 5px) 16.07px,
+            calc(100% - 5px) calc(100% - 5px),
+            5px calc(100% - 5px),
+            5px 5px,
+            7px 7px,
+            calc(100% - 16.9px) 7px,
+            calc(100% - 7px) 16.9px,
+            calc(100% - 7px) calc(100% - 7px),
+            7px calc(100% - 7px),
+            7px 7px
+        );
+    }
+
+    .cy-scene[data-cy-focus]:is([data-cy-phase='in'], [data-cy-phase='hold']) :is(.cy-focused, :has(> .cy-focused)) {
+        --cy-p: 1;
+    }
+
+    .cy-fw {
+        display: inline-flex;
+    }
+
+    /* A leave has to be able to see the focus in the wrapper too (an outline outside the cut is drawn there). */
+    .cy-scene[data-cy-focus] li:has(> .cy-focused) {
+        position: relative;
+    }
+
+    /* 1 and 2. The ring: both channels follow the notch. Two pseudo-elements
+       are cut to a ring each (the focus ring outside, the contrast channel
+       inside it); a part without a cut keeps the register's inset shadows. */
+    .cy-scene:is([data-cy-focus='glitch'], [data-cy-focus='float']) :is(.kp-button, .cy-plate).cy-focused::before,
+    .cy-scene:is([data-cy-focus='glitch'], [data-cy-focus='float']) :is(.kp-button, .cy-plate).cy-focused::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        opacity: var(--cy-p);
+        transform: none;
+        pointer-events: none;
+    }
+
+    .cy-scene:is([data-cy-focus='glitch'], [data-cy-focus='float']) :is(.kp-button, .cy-plate).cy-focused::before {
+        background: var(--focus-ring);
+        clip-path: var(--cy-cut-a);
+    }
+
+    .cy-scene:is([data-cy-focus='glitch'], [data-cy-focus='float']) :is(.kp-button, .cy-plate).cy-focused::after {
+        background: var(--focus-ring-contrast);
+        clip-path: var(--cy-cut-b);
+    }
+
+    /* A part with no cut (a menu entry, a day): the register's inset shadows
+       (glitch) or an outline 3 px in with its contrast frame on a pseudo (float). */
+    .cy-scene[data-cy-focus='float'] :is(.kp-menu__item, .cy-day).cy-focused {
+        outline: calc(var(--cy-p) * 2px) solid var(--focus-ring);
+        outline-offset: -5px;
+    }
+
+    .cy-scene[data-cy-focus='float'] :is(.kp-menu__item, .cy-day).cy-focused::after {
+        content: '';
+        position: absolute;
+        inset: 5px;
+        z-index: 2;
+        border: calc(var(--cy-p) * 2px) solid var(--focus-ring-contrast);
+        pointer-events: none;
+    }
+
+    /* 1. Glitch ring: the ring above, torn in: a cyan copy of it stands right
+       and up, a red one right and down, 6, 4, 2 px and then home. */
+    .cy-scene[data-cy-focus='glitch'] .cy-focused {
+        --cy-d: calc(var(--cy-t) * 2px);
+        --cy-copies:
+            inset calc(-1 * var(--cy-d)) var(--cy-d) 0 2px var(--accent), inset calc(-1 * var(--cy-d)) calc(-1 * var(--cy-d)) 0 2px var(--destructive);
+        --cy-sh: var(--cy-copies);
+    }
+
+    .cy-scene[data-cy-focus='glitch'] :is(.kp-menu__item, .cy-day).cy-focused {
+        --cy-sh: var(--cy-sq-ring), var(--cy-copies);
+    }
+
+    /* 3. Target brackets: four corners close on the part from 9 px in, ring
+       colour outside, contrast colour inside. */
+    .cy-scene[data-cy-focus='brackets'] :is(.kp-button, .cy-plate, .cy-day).cy-focused::before,
+    .cy-scene[data-cy-focus='brackets'] :is(.kp-button, .cy-plate, .cy-day).cy-focused::after,
+    .cy-scene[data-cy-focus='brackets'] li:has(> .cy-focused)::before,
+    .cy-scene[data-cy-focus='brackets'] li:has(> .cy-focused)::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        background: none;
+        mask: var(--cy-corners);
+        transform: none;
+        pointer-events: none;
+    }
+
+    .cy-scene[data-cy-focus='brackets'] :is(.kp-button, .cy-plate, .cy-day).cy-focused::before,
+    .cy-scene[data-cy-focus='brackets'] li:has(> .cy-focused)::before {
+        inset: calc(var(--cy-t) * 3px);
+        border: calc(var(--cy-p) * 2px) solid var(--focus-ring);
+    }
+
+    .cy-scene[data-cy-focus='brackets'] :is(.kp-button, .cy-plate, .cy-day).cy-focused::after,
+    .cy-scene[data-cy-focus='brackets'] li:has(> .cy-focused)::after {
+        inset: calc(var(--cy-t) * 3px + 2px);
+        border: calc(var(--cy-p) * 2px) solid var(--focus-ring-contrast);
+    }
+
+    /* 4. An outline outside the cut: the silhouette widened 2 px in the
+       contrast colour and 2 px more in the ring colour, notch included. A
+       part without a cut gets the same as an outline and a shadow. */
+    .cy-scene[data-cy-focus='outside'] :is(.cy-glow, .cy-fw):has(> .cy-focused) {
+        --cy-e: calc(var(--cy-p) * 2px);
+        filter: drop-shadow(var(--cy-e) 0 0 var(--focus-ring-contrast)) drop-shadow(calc(-1 * var(--cy-e)) 0 0 var(--focus-ring-contrast))
+            drop-shadow(0 var(--cy-e) 0 var(--focus-ring-contrast)) drop-shadow(0 calc(-1 * var(--cy-e)) 0 var(--focus-ring-contrast))
+            drop-shadow(var(--cy-e) 0 0 var(--focus-ring)) drop-shadow(calc(-1 * var(--cy-e)) 0 0 var(--focus-ring))
+            drop-shadow(0 var(--cy-e) 0 var(--focus-ring)) drop-shadow(0 calc(-1 * var(--cy-e)) 0 var(--focus-ring))
+            drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.45));
+    }
+
+    .cy-scene[data-cy-focus='outside'] :is(.kp-menu__item, .cy-day).cy-focused {
+        --cy-sh: 0 0 0 calc(var(--cy-p) * 2px) var(--focus-ring-contrast);
+        outline: calc(var(--cy-p) * 2px) solid var(--focus-ring);
         outline-offset: 2px;
     }
 
-    .cy-scene[data-cy-focus='mix'] :is(.kp-menu__item, .cy-day).cy-focused {
-        box-shadow: none;
-        outline: 2px solid var(--focus-ring);
-        outline-offset: -2px;
+    /* 5. A line is read under the part: a bar of ring colour with a contrast
+       line over it is drawn along its foot from the start edge to the end. */
+    .cy-scene[data-cy-focus='bar'] .cy-focused::after {
+        content: '';
+        position: absolute;
+        inset: auto auto 0 0;
+        z-index: 2;
+        inline-size: calc(var(--cy-p) * (100% - var(--cy-t) * 25%));
+        block-size: 5px;
+        background: linear-gradient(var(--focus-ring-contrast) 0 2px, var(--focus-ring) 2px 5px);
+        transform: none;
+        pointer-events: none;
     }
 
-    .cy-scene[data-cy-focus='mix'] .cy-tile-link.cy-focused {
-        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
-        box-shadow:
-            inset 0 0 0 2px var(--focus-ring),
-            inset 0 0 0 4px var(--focus-ring-contrast);
+    @media (prefers-reduced-motion: no-preference) {
+        .cy-scene:is(
+                [data-cy-hover],
+                [data-cy-focus],
+                [data-cy-press='armed'],
+                [data-cy-press='sliced'],
+                [data-cy-press='ack'],
+                [data-cy-press='recoil']
+            ):is([data-cy-phase='in'], [data-cy-phase='hold'])
+            :is(.cy-aim, .cy-focused, :has(> .cy-focused), .cy-press) {
+            animation: cy-hv-in calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene:is([data-cy-hover], [data-cy-focus], [data-cy-press='armed'], [data-cy-press='sliced'], [data-cy-press='ack'])[data-cy-phase='out']
+            :is(.cy-aim, .cy-focused, :has(> .cy-focused), .cy-press) {
+            animation: cy-hv-out calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+    }
+
+    /* Three ticks of 60 ms, each held: 3, 2, 1 ticks of the entrance left,
+       then the pose itself (0). The leave holds 1, 2, 3 and then the part is
+       at rest: the entrance's frames in reverse. */
+    @keyframes cy-hv-in {
+        0% {
+            --cy-t: 3;
+            --cy-p: 1;
+        }
+
+        33.333% {
+            --cy-t: 2;
+            --cy-p: 1;
+        }
+
+        66.667% {
+            --cy-t: 1;
+            --cy-p: 1;
+        }
+
+        100% {
+            --cy-t: 0;
+            --cy-p: 1;
+        }
+    }
+
+    @keyframes cy-hv-out {
+        0% {
+            --cy-t: 1;
+            --cy-p: 1;
+        }
+
+        33.333% {
+            --cy-t: 2;
+            --cy-p: 1;
+        }
+
+        66.667% {
+            --cy-t: 3;
+            --cy-p: 1;
+        }
+
+        100% {
+            --cy-t: 3;
+            --cy-p: 1;
+        }
     }
 
     /* ── Composites (G17): the State buttons ─────────────────────────── */
@@ -1288,6 +3406,300 @@
 
     .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='today'] .cy-in-kpi {
         translate: 2px 0;
+    }
+
+    /* ── Composites (G17), the new options: what the composite adds around its own, unchanged button ── */
+
+    /* The pieces of a part (cap, tab) exist in every option's markup; an option shows its own. */
+    .cy-slot {
+        display: contents;
+    }
+
+    .cy-slot > :is(.cy-hk, .cy-tab) {
+        display: none;
+    }
+
+    .cy-scene:is([data-cy-composites='keycap'], [data-cy-composites='socket'], [data-cy-composites='tab'], [data-cy-composites='callout']) .cy-slot {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .cy-scene:is([data-cy-composites='keycap'], [data-cy-composites='socket'], [data-cy-composites='tab'], [data-cy-composites='callout'])
+        .cy-slot--fill {
+        display: block;
+    }
+
+    .cy-scene:is([data-cy-composites='keycap'], [data-cy-composites='socket'], [data-cy-composites='tab'], [data-cy-composites='callout'])
+        .cy-slot:not(.cy-slot--fill) {
+        justify-self: start;
+    }
+
+    .cy-scene .cy-glow > .cy-slot--fill {
+        display: block;
+    }
+
+    /* 2. Key caps: a cap in front of every action names its key, the way a game's prompt does. */
+    .cy-scene[data-cy-composites='keycap'] .cy-slot > .cy-hk {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        min-inline-size: 1.15rem;
+        block-size: 1.15rem;
+        padding-inline: 0.2rem;
+        border: 1px solid var(--border-strong);
+        background: var(--background);
+        color: var(--accent);
+        font: 0.65rem/1 var(--kp-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%);
+    }
+
+    .cy-scene[data-cy-composites='keycap'] .cy-pop .cy-slot--fill {
+        display: flex;
+    }
+
+    .cy-scene[data-cy-composites='keycap'] .cy-pop .cy-slot--fill > .cy-hk {
+        order: 2;
+        margin-inline: auto 0.5rem;
+    }
+
+    .cy-scene[data-cy-composites='keycap'] .cy-pop .cy-slot--fill > .kp-menu__item {
+        flex: 1;
+    }
+
+    .cy-scene[data-cy-composites='keycap'] .cy-glow > .cy-slot--fill > .cy-hk {
+        position: absolute;
+        inset: 0.45rem 1.2rem auto auto;
+        z-index: 3;
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='keycap'] .cy-hk {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='keycap'] .cy-hk {
+        box-shadow:
+            inset 0 0 0 1px var(--focus-ring),
+            inset 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='keycap'] .cy-hk {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* 3. Sockets: every action sits in a recessed slot with its number on the rim, like a quickhack bar. */
+    .cy-scene[data-cy-composites='socket'] .cy-slot {
+        margin-block: 0.3rem;
+        padding: 4px;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    .cy-scene[data-cy-composites='socket'] .cy-slot > .cy-hk {
+        position: absolute;
+        inset: -0.45rem auto auto 0.5rem;
+        z-index: 3;
+        display: block;
+        padding-inline: 0.25rem;
+        background: var(--card);
+        color: var(--accent);
+        font: 0.58rem/0.9rem var(--kp-mono);
+        letter-spacing: 0.14em;
+    }
+
+    .cy-scene[data-cy-composites='socket'] .cy-pop .cy-slot--fill {
+        margin-block: 0.45rem;
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='socket'] .cy-slot {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='socket'] .cy-hk {
+        color: var(--primary);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='socket'] .cy-slot {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 3px var(--focus-ring-contrast);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='socket'] .cy-slot {
+        background: hsl(from var(--primary) h s l / 0.22);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* 4. Rim tab: the composite's own rim grows a tab where the live part stands. */
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press']) .cy-scene[data-cy-composites='tab'] .cy-slot > .cy-tab {
+        position: absolute;
+        z-index: 3;
+        display: block;
+        inset: auto 0 -0.75rem 0;
+        block-size: 3px;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+        pointer-events: none;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='tab']
+        :is(.cy-tile, .cy-drawer)
+        .cy-slot
+        > .cy-tab {
+        inset-block-end: -0.85rem;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='tab']
+        .cy-pop
+        .cy-slot--fill
+        > .cy-tab {
+        inset: 0 auto 0 -0.25rem;
+        inline-size: 3px;
+        block-size: auto;
+        clip-path: polygon(0 0, 100% 3px, 100% 100%, 0 100%);
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='tab']
+        .cy-glow
+        > .cy-slot--fill
+        > .cy-tab {
+        inset: auto 0 0 0;
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='tab'] .cy-tab {
+        background: var(--focus-ring);
+        box-shadow: 0 0 0 1px var(--focus-ring-contrast);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='tab'] .cy-slot > .cy-tab {
+        block-size: 5px;
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='tab'] .cy-pop .cy-slot--fill > .cy-tab.cy-tab {
+        block-size: auto;
+        inline-size: 5px;
+    }
+
+    /* 5. Callout: a leader and a mono read-out under the live part name what it is and what it is doing. */
+    .cy-scene[data-cy-composites='callout'] :is(.cy-header, .cy-tile, .cy-drawer) {
+        padding-block-end: 1.7rem;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-slot.cy-live::before,
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-slot.cy-live::after {
+        position: absolute;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-slot.cy-live::before {
+        content: '';
+        inset: 100% auto auto 0.6rem;
+        inline-size: 1px;
+        block-size: 0.5rem;
+        background: var(--accent);
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-slot.cy-live::after {
+        inset: calc(100% + 0.5rem) auto auto 0;
+        padding-inline-end: 0.5rem;
+        border-block-start: 1px solid var(--accent);
+        color: var(--accent);
+        font: 0.6rem/1.1 var(--kp-mono);
+        letter-spacing: 0.14em;
+        white-space: nowrap;
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='callout'] .cy-slot.cy-live::after {
+        content: '> ' attr(data-cy-name);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='callout'] .cy-slot.cy-live::after {
+        content: '> ' attr(data-cy-name) ' [ENTER]';
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='callout'] .cy-slot.cy-live::after {
+        content: '> ' attr(data-cy-name) ' // SENT';
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-pop
+        .cy-slot--fill.cy-live::before {
+        content: none;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-pop
+        .cy-slot--fill.cy-live::after,
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-glow
+        > .cy-slot--fill.cy-live::after {
+        inset: 50% 0.6rem auto auto;
+        translate: 0 -50%;
+        padding: 0;
+        border: 0;
+    }
+
+    .cy-sec:is([data-cy-show='hover'], [data-cy-show='focus'], [data-cy-show='press'])
+        .cy-scene[data-cy-composites='callout']
+        .cy-glow
+        > .cy-slot--fill.cy-live::after {
+        inset: auto 1rem 0.35rem auto;
+        translate: none;
+    }
+
+    /* 6. The host takes part: while one of its parts is pointed at, focused or pressed, the composite lights its own rim (the circuit on a plate, a brighter rim on the header). */
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='host'] .cy-plate.cy-host {
+        --cy-grid: var(--cy-grid-30);
+        --cy-rim: inset 0 0 0 1px var(--primary), inset 0 0 16px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='host'] .cy-plate.cy-host {
+        --cy-rim: inset 0 0 0 2px var(--primary), inset 0 0 12px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='host'] .cy-plate.cy-host {
+        --cy-grid: var(--cy-grid-60);
+        --cy-rim: inset 0 0 0 2px var(--primary), inset 0 0 20px hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .cy-sec[data-cy-show='hover'] .cy-scene[data-cy-composites='host'] .cy-header.cy-host {
+        box-shadow:
+            inset 0 0 0 1px var(--accent),
+            inset 0 0 16px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    .cy-sec[data-cy-show='focus'] .cy-scene[data-cy-composites='host'] .cy-header.cy-host {
+        box-shadow:
+            inset 0 0 0 2px var(--accent),
+            inset 0 0 12px hsl(from var(--accent) h s l / 0.3);
+    }
+
+    .cy-sec[data-cy-show='press'] .cy-scene[data-cy-composites='host'] .cy-header.cy-host {
+        background: repeating-linear-gradient(0deg, hsl(from var(--accent) h s l / 0.22) 0 1px, transparent 1px 4px), var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--accent),
+            inset 0 0 20px hsl(from var(--accent) h s l / 0.6);
     }
 
     /* ── The voice (G15) ─────────────────────────────────────────────── */
@@ -1479,13 +3891,24 @@
         content: none;
     }
 
-    /* ── The press (G14): the marked parts are pressed during `in` ───── */
+    /* ── The press (G14): `cy-press` parts go down in `in`, stay down through `hold`, let go in `out` ── */
 
-    .cy-scene[data-cy-press][data-cy-phase='in'] .cy-press {
+    .cy-scene[data-cy-press] .cy-press {
+        --cy-ink: var(--primary);
+        position: relative;
+        isolation: isolate;
+    }
+
+    .cy-scene[data-cy-press] .kp-button.cy-press {
+        --cy-ink: var(--kp-btn-fg);
+    }
+
+    .cy-scene[data-cy-press]:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-press {
+        --cy-p: 1;
         --cy-grid-a: 0.6;
     }
 
-    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] .kp-button.cy-press::before {
+    .cy-scene[data-cy-press='closed']:is([data-cy-phase='in'], [data-cy-phase='hold']) .kp-button.cy-press::before {
         content: '';
         position: absolute;
         inset: 4px;
@@ -1496,33 +3919,86 @@
         pointer-events: none;
     }
 
-    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] .cy-plate.cy-press {
+    .cy-scene[data-cy-press='closed']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-plate.cy-press {
         --cy-grid: var(--cy-grid-60);
     }
 
-    .cy-scene[data-cy-press='closed'][data-cy-phase='in'] :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
+    .cy-scene[data-cy-press='closed']:is([data-cy-phase='in'], [data-cy-phase='hold']) :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
         background: var(--cy-grid-60), var(--secondary);
     }
 
-    .cy-scene[data-cy-press][data-cy-phase='in'] .kp-button.cy-press {
+    /* Every press takes the pressed shade of its ground, as the register's :active does. */
+    .cy-scene[data-cy-press]:is([data-cy-phase='in'], [data-cy-phase='hold']) .kp-button.cy-press {
         --kp-btn-ground: var(--secondary);
     }
 
-    .cy-scene[data-cy-press][data-cy-phase='in'] .kp-button--primary.cy-press {
+    .cy-scene[data-cy-press]:is([data-cy-phase='in'], [data-cy-phase='hold']) .kp-button--primary.cy-press {
         --kp-btn-fill: var(--primary-active);
         --kp-btn-frame: var(--primary-active);
     }
 
-    .cy-scene[data-cy-press]:not([data-cy-press='closed'])[data-cy-phase='in'] :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
+    .cy-scene[data-cy-press]:not([data-cy-press='closed']):is([data-cy-phase='in'], [data-cy-phase='hold'])
+        :is(.kp-menu__item, .cy-day, .cy-key).cy-press {
         background: var(--secondary);
     }
 
-    .cy-scene[data-cy-press='drop'][data-cy-phase='in'] .cy-press {
+    .cy-scene[data-cy-press='drop']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-press {
         translate: 0 1px;
     }
 
-    .cy-scene[data-cy-press='kick'][data-cy-phase='in'] .cy-press {
+    .cy-scene[data-cy-press='kick']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-press {
         translate: 2px 0;
+    }
+
+    /* 4. Armed: hazard stripes are drawn along the foot from the start edge to the end while the mouse button is down: a click fires when it is let go. */
+    .cy-scene[data-cy-press='armed'] .cy-press::after {
+        content: '';
+        position: absolute;
+        inset: auto auto 0 0;
+        z-index: 2;
+        inline-size: calc(var(--cy-p) * (100% - var(--cy-t) * 25%));
+        block-size: 6px;
+        background: repeating-linear-gradient(-45deg, var(--cy-ink) 0 4px, transparent 4px 8px);
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* 5. Sliced: a line cuts across the part's middle from the start edge to the end and stays while it is held. */
+    .cy-scene[data-cy-press='sliced'] .cy-press::after {
+        content: '';
+        position: absolute;
+        inset: calc(50% - 1px) auto auto 0;
+        z-index: 2;
+        inline-size: calc(var(--cy-p) * (100% - var(--cy-t) * 25%));
+        block-size: 2px;
+        background: var(--cy-ink);
+        box-shadow:
+            0 -1px 0 var(--background),
+            0 1px 0 var(--background);
+        transform: none;
+        pointer-events: none;
+    }
+
+    /* 6. Recoil: the words kick sideways and jitter home (−4.5, 3, −1.5, 0 px) while the part itself stays put. */
+    .cy-scene[data-cy-press='recoil'] .cy-press {
+        text-indent: calc(cos(var(--cy-t) * 180deg) * var(--cy-t) * 1.5px);
+    }
+
+    /* 7. Acknowledged: a mono ACK tag is decoded in the part's corner, start to end, and stays while it is held. */
+    .cy-scene[data-cy-press='ack'] .cy-press::after {
+        content: 'ACK';
+        position: absolute;
+        inset: 1px 1.2rem auto auto;
+        z-index: 2;
+        padding: 0 3px;
+        border: 1px solid var(--accent);
+        background: var(--background);
+        color: var(--accent);
+        font: 700 0.5rem/1 var(--kp-mono);
+        letter-spacing: 0.16em;
+        clip-path: inset(0 calc((1 - var(--cy-p)) * 100% + var(--cy-t) * 25%) 0 0);
+        transform: none;
+        pointer-events: none;
     }
 
     /* The durations row: the press closes the circuit for one contact; at
@@ -1602,6 +4078,36 @@
             animation: cy-stutter-even calc(480ms * var(--cy-slow, 1)) steps(6, end);
         }
 
+        .cy-scene[data-cy-curve='swing']:not([data-cy-phase='gap']) .cy-track {
+            --cy-room: min(var(--cy-to), calc(1 - var(--cy-to)));
+            animation: cy-swing-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='ghost']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-ghost-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='weave']:not([data-cy-phase='gap']) .cy-track {
+            animation: cy-weave-track calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='swing']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-swing calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='ghost']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-ghost calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-curve='weave']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-arrives {
+            animation: cy-weave calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        /* The live change stutters home the same way on every tick-driven curve. */
+        .cy-scene:is([data-cy-curve='swing'], [data-cy-curve='ghost'], [data-cy-curve='weave'])[data-cy-phase='in'] .cy-carrier {
+            animation: cy-stutter calc(480ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
         /* Q2, the direction. */
         .cy-scene[data-cy-direction='sideways']:not([data-cy-phase='gap']) .cy-day {
             animation: cy-glitch-cell calc(420ms * var(--cy-slow, 1)) calc(var(--i) * 60ms * var(--cy-slow, 1)) steps(1, end) both;
@@ -1643,6 +4149,18 @@
 
         .cy-scene[data-cy-opening='cut']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
             animation: cy-cut calc(320ms * var(--cy-slow, 1)) steps(4, end) both;
+        }
+
+        .cy-scene[data-cy-opening='rows']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='blocks']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-opening='flicker']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-opens {
+            animation: cy-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
         /* Q4, the durations. */
@@ -1767,10 +4285,6 @@
             animation: cy-spin-lock calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
         }
 
-        .cy-spin__glyph::before {
-            animation: cy-glyph calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
-        }
-
         /* Q12, leaving and arriving: what arrives plays the leave backwards. */
         .cy-scene[data-cy-leave='today']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
             animation: cy-leave-today calc(650ms * var(--cy-slow, 1)) linear reverse both;
@@ -1788,17 +4302,56 @@
             animation: cy-tube calc(480ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        /* Q14, the button's charge runs while pointed (shown as a loop). */
-        .cy-scene:is([data-cy-hover='circuit'], [data-cy-hover='charge']) .kp-button.cy-pointed::after {
-            animation: cy-charge calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-leave='seam']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-seam calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
         }
 
-        .cy-scene[data-cy-hover='mix'] .kp-button.cy-pointed::after {
-            animation: cy-charge-smooth calc(1800ms * var(--cy-slow, 1)) infinite;
+        .cy-scene[data-cy-leave='seam'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-seam calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
         }
 
-        .cy-scene[data-cy-hover='charge'] :is(.cy-plate, .kp-menu__item, .cy-day).cy-pointed::after {
-            animation: cy-charge calc(1800ms * var(--cy-slow, 1)) steps(1, end) infinite;
+        .cy-scene[data-cy-leave='notch']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-notch calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='notch'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-notch calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-leave='rows']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='rows'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-rows calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-leave='blocks']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='blocks'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-blocks calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-leave='unwrite']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-unwrite calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='unwrite'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-unwrite calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-leave='flicker']:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-leaver > * {
+            animation: cy-leave-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) reverse both;
+        }
+
+        .cy-scene[data-cy-leave='flicker'][data-cy-phase='out'] .cy-leaver > * {
+            animation: cy-leave-flicker calc(360ms * var(--cy-slow, 1)) steps(1, end) both;
+        }
+
+        .cy-scene[data-cy-leave='notch'] .cy-leaver > * {
+            transform-origin: 100% 0;
         }
     }
 
@@ -1806,7 +4359,10 @@
 
     /* The glitch-in (G3): six ticks of horizontal bands thrown sideways
        with a cyan and a red copy, smaller each tick, then the part's own
-       cut. The menu's pick, on the theme's 60 ms tick. */
+       cut. The menu's pick, on the theme's 60 ms tick. Every band holds the
+       one before it (8, 28, 48, 68, 84, 96 % of the height), so played
+       backwards the part shrinks steadily and no piece stands apart from
+       the rest as it closes; the tick that follows the last is `gone`. */
     @keyframes cy-glitch-in {
         0% {
             clip-path: inset(46% -10px 46% -10px);
@@ -1815,33 +4371,33 @@
         }
 
         16.67% {
-            clip-path: inset(8% -10px 64% -10px);
+            clip-path: inset(38% -10px 36% -10px);
             translate: 12px 0;
             filter: drop-shadow(-5px 0 0 var(--accent)) drop-shadow(5px 0 0 var(--destructive));
         }
 
         33.33% {
-            clip-path: inset(55% -10px 8% -10px);
+            clip-path: inset(28% -10px 26% -10px);
             translate: -8px 0;
             filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
         }
 
         50% {
-            clip-path: inset(0 -10px 36% -10px);
+            clip-path: inset(18% -10px 16% -10px);
             translate: 5px 0;
             filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
         }
 
         66.67% {
-            clip-path: inset(20% -10px 26% -10px);
+            clip-path: inset(8% -10px 8% -10px);
             translate: -3px 0;
             filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
         }
 
         83.33% {
-            clip-path: var(--cy-end-clip);
+            clip-path: inset(2% -10px 2% -10px);
             translate: 1px 0;
-            filter: none;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
         }
 
         100% {
@@ -2387,32 +4943,6 @@
         }
     }
 
-    @keyframes cy-glyph {
-        0% {
-            content: '▚';
-        }
-
-        16.67% {
-            content: '▞';
-        }
-
-        33.33% {
-            content: '▙';
-        }
-
-        50% {
-            content: '▜';
-        }
-
-        66.67% {
-            content: '▟';
-        }
-
-        83.33% {
-            content: '█';
-        }
-    }
-
     /* The register's leave as it is today (kp-sig-cyberpunk-leave, 650 ms,
        every frame tweened). */
     @keyframes cy-leave-today {
@@ -2491,6 +5021,1135 @@
         100% {
             clip-path: inset(50% 50%);
             filter: none;
+        }
+    }
+
+    /* Q1, the whiplash: the whole part is slapped sideways and sheared, and
+       swings back across its place, each tick less than the one before and
+       on the other side (28, 18, 11, 6, 3, 1 px). Nothing is cut, so a close
+       is the swing growing again until the part is gone. */
+    @keyframes cy-swing {
+        0% {
+            translate: -28px 0;
+            transform: skewX(10deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        16.67% {
+            translate: 18px 0;
+            transform: skewX(-7deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-6px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(6px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        33.33% {
+            translate: -11px 0;
+            transform: skewX(4.5deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-4px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(4px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        50% {
+            translate: 6px 0;
+            transform: skewX(-2.5deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(2px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        66.67% {
+            translate: -3px 0;
+            transform: skewX(1.2deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        83.33% {
+            translate: 1px 0;
+            transform: skewX(-0.5deg);
+            clip-path: inset(-2px -48px);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        100% {
+            translate: 0 0;
+            transform: none;
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    /* The readouts of the whiplash swing across the room they have around
+       their mark (0.9, 0.7, 0.45, 0.25, 0.1 of it, alternately) and stop. */
+    @keyframes cy-swing-track {
+        0% {
+            translate: 0 0;
+        }
+
+        16.67% {
+            translate: calc((var(--cy-to) + var(--cy-room) * 0.9) * 100cqi - 5px) 0;
+        }
+
+        33.33% {
+            translate: calc((var(--cy-to) + var(--cy-room) * -0.7) * 100cqi - 5px) 0;
+        }
+
+        50% {
+            translate: calc((var(--cy-to) + var(--cy-room) * 0.45) * 100cqi - 5px) 0;
+        }
+
+        66.67% {
+            translate: calc((var(--cy-to) + var(--cy-room) * -0.25) * 100cqi - 5px) 0;
+        }
+
+        83.33% {
+            translate: calc((var(--cy-to) + var(--cy-room) * 0.1) * 100cqi - 5px) 0;
+        }
+
+        100% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+        }
+    }
+
+    /* Q1, triple vision: the part does not move at all; a cyan and a red
+       copy of it stand 36 px out and are drawn in to it (36, 24, 15, 8, 3,
+       1 px), as a misregistered print locks. */
+    @keyframes cy-ghost {
+        0% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-36px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(36px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        16.67% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-24px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(24px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        33.33% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-15px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(15px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        50% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        66.67% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-3px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(3px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        83.33% {
+            clip-path: inset(-2px -56px);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        100% {
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    /* The readouts of triple vision stand at their mark at once; a cyan copy
+       holds the place they came from and a red one the far end, and both are
+       drawn in (1, 0.6, 0.35, 0.18, 0.06 of their way). */
+    @keyframes cy-ghost-track {
+        0% {
+            translate: 0 0;
+        }
+
+        16.67% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: inset(-2px -1000px);
+            filter: drop-shadow(calc(var(--cy-to) * -1 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
+                drop-shadow(calc((1 - var(--cy-to)) * 1 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        33.33% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: inset(-2px -1000px);
+            filter: drop-shadow(calc(var(--cy-to) * -0.6 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
+                drop-shadow(calc((1 - var(--cy-to)) * 0.6 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        50% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: inset(-2px -1000px);
+            filter: drop-shadow(calc(var(--cy-to) * -0.35 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
+                drop-shadow(calc((1 - var(--cy-to)) * 0.35 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        66.67% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: inset(-2px -1000px);
+            filter: drop-shadow(calc(var(--cy-to) * -0.18 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
+                drop-shadow(calc((1 - var(--cy-to)) * 0.18 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        83.33% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            clip-path: inset(-2px -1000px);
+            filter: drop-shadow(calc(var(--cy-to) * -0.06 * 100cqi) 0 0 hsl(from var(--accent) h s l / 0.5))
+                drop-shadow(calc((1 - var(--cy-to)) * 0.06 * 100cqi) 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        100% {
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+            filter: none;
+        }
+    }
+
+    /* Q1, the weave: an interlaced picture. Only the even scan lines, 12 px
+       out; then only the odd ones, 9 px back; then even, 6 px; and so on,
+       until the two fields lie in one picture. */
+    @keyframes cy-weave {
+        0% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: 12px 0;
+        }
+
+        16.67% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 2px;
+            translate: -9px 0;
+        }
+
+        33.33% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: 6px 0;
+        }
+
+        50% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 2px;
+            translate: -3px 0;
+        }
+
+        66.67% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: 1px 0;
+        }
+
+        83.33% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 2px;
+            translate: -1px 0;
+        }
+
+        100% {
+            mask-image: none;
+            translate: 0 0;
+        }
+    }
+
+    /* The readouts of the weave land at their mark in alternate fields
+       (6, 4, 2, 1, 1 px). */
+    @keyframes cy-weave-track {
+        0% {
+            translate: 0 0;
+        }
+
+        16.67% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: calc(var(--cy-to) * 100cqi - 5px + 6px) 0;
+        }
+
+        33.33% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 2px;
+            translate: calc(var(--cy-to) * 100cqi - 5px + -4px) 0;
+        }
+
+        50% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: calc(var(--cy-to) * 100cqi - 5px + 2px) 0;
+        }
+
+        66.67% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 2px;
+            translate: calc(var(--cy-to) * 100cqi - 5px + -1px) 0;
+        }
+
+        83.33% {
+            mask-image: repeating-linear-gradient(to bottom, var(--foreground) 0 2px, transparent 2px 4px);
+            mask-position: 0 0px;
+            translate: calc(var(--cy-to) * 100cqi - 5px + 1px) 0;
+        }
+
+        100% {
+            mask-image: none;
+            translate: calc(var(--cy-to) * 100cqi - 5px) 0;
+        }
+    }
+
+    /* Q3, row shuffle: the part is eight rows, and they flash in out of
+       order (1, 2, 4, 5, 7, 8 of them), thrown sideways and split, until
+       every row stands. Each tick holds the rows of the one before. */
+    @keyframes cy-rows {
+        0% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                transparent 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                transparent 62.5% 75%,
+                transparent 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: -14px 0;
+            filter: drop-shadow(-4px 0 0 var(--accent)) drop-shadow(4px 0 0 var(--destructive));
+        }
+
+        16.67% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                transparent 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                transparent 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: 9px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: -6px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        50% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                var(--foreground) 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: 4px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            mask-image: linear-gradient(
+                to bottom,
+                var(--foreground) 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                var(--foreground) 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                var(--foreground) 87.5% 100%
+            );
+            translate: -2px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            mask-image: linear-gradient(
+                to bottom,
+                var(--foreground) 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                var(--foreground) 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                var(--foreground) 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                var(--foreground) 87.5% 100%
+            );
+            translate: 1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        100% {
+            mask-image: none;
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* Q3, macroblocks: the part is twelve blocks (four by three) and they
+       pop in scattered, a few at first (2, 4, 6, 8, 10, 12), each tick
+       keeping the blocks of the one before and thrown sideways. */
+    @keyframes cy-blocks {
+        0% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                0 0,
+                0 0,
+                0 0,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: -12px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        16.67% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: 8px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: -5px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        50% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: 3px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%;
+            mask-repeat: no-repeat;
+            translate: -1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%;
+            mask-repeat: no-repeat;
+            translate: 1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        100% {
+            mask-image: none;
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* Q3, power flicker: the part blinks. On, 18 px out and split; dark;
+       on, 10 px back; dark; on, 4 px; on, 1 px; then it holds. */
+    @keyframes cy-flicker {
+        0% {
+            opacity: 1;
+            translate: 18px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        16.67% {
+            opacity: 0;
+            clip-path: inset(-2px -24px);
+        }
+
+        33.33% {
+            opacity: 1;
+            translate: -10px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-5px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(5px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        50% {
+            opacity: 0;
+            clip-path: inset(-2px -24px);
+        }
+
+        66.67% {
+            opacity: 1;
+            translate: 4px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-2px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(2px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        83.33% {
+            opacity: 1;
+            translate: -1px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            clip-path: var(--cy-end-clip);
+            filter: none;
+        }
+    }
+
+    /* Q12, squeezed to a seam: the part narrows toward its middle line in
+       hard ticks (0.78, 0.55, 0.36, 0.2, 0.07 of its width), jumping
+       sideways and split as it goes, and is gone. Arriving is the seam
+       widening to the part. */
+    @keyframes cy-leave-seam {
+        16.67% {
+            transform: scaleX(0.78);
+            translate: 3px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            transform: scaleX(0.55);
+            translate: -4px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        50% {
+            transform: scaleX(0.36);
+            translate: 3px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            transform: scaleX(0.2);
+            translate: -2px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            transform: scaleX(0.07);
+            translate: 1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        100% {
+            transform: scaleX(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* Q12, sucked into its corner: the part shrinks toward its dossier
+       corner (top, inline end) in hard ticks (0.84, 0.66, 0.48, 0.3, 0.14)
+       and is gone; arriving it grows out of that corner. */
+    @keyframes cy-leave-notch {
+        16.67% {
+            transform: scale(0.84);
+            translate: 3px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            transform: scale(0.66);
+            translate: -4px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        50% {
+            transform: scale(0.48);
+            translate: 3px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            transform: scale(0.3);
+            translate: -2px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            transform: scale(0.14);
+            translate: 1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        100% {
+            transform: scale(0);
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* Q12, rows drop out: the part is eight rows and they go out of order
+       (7, 5, 4, 2, 1 of them stay), thrown sideways and split, until none
+       is left; arriving is the same ticks backwards. */
+    @keyframes cy-leave-rows {
+        16.67% {
+            mask-image: linear-gradient(
+                to bottom,
+                var(--foreground) 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                var(--foreground) 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                var(--foreground) 87.5% 100%
+            );
+            translate: -2px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                var(--foreground) 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: 4px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        50% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                var(--foreground) 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                var(--foreground) 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: -6px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                transparent 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                transparent 62.5% 75%,
+                var(--foreground) 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: 9px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0% 12.5%,
+                transparent 12.5% 25%,
+                transparent 25% 37.5%,
+                var(--foreground) 37.5% 50%,
+                transparent 50% 62.5%,
+                transparent 62.5% 75%,
+                transparent 75% 87.5%,
+                transparent 87.5% 100%
+            );
+            translate: -14px 0;
+            filter: drop-shadow(-4px 0 0 var(--accent)) drop-shadow(4px 0 0 var(--destructive));
+        }
+
+        100% {
+            mask-image: linear-gradient(transparent, transparent);
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* Q12, macroblocks drop out: the part is twelve blocks and they vanish
+       scattered (10, 8, 6, 4, 2 of them stay) until none is left;
+       arriving is the same ticks backwards. */
+    @keyframes cy-leave-blocks {
+        16.67% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%;
+            mask-repeat: no-repeat;
+            translate: -1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: 3px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        50% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: -5px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: 8px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground));
+            mask-position:
+                0% 0%,
+                33.33% 0%,
+                66.67% 0%,
+                100% 0%,
+                0% 50%,
+                33.33% 50%,
+                66.67% 50%,
+                100% 50%,
+                0% 100%,
+                33.33% 100%,
+                66.67% 100%,
+                100% 100%;
+            mask-size:
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                26% 34%,
+                0 0,
+                0 0,
+                0 0,
+                0 0,
+                0 0,
+                0 0;
+            mask-repeat: no-repeat;
+            translate: -12px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        100% {
+            mask-image: linear-gradient(transparent, transparent);
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* Q12, un-decoded: the part is erased from its end back to its start
+       (12, 28, 46, 68, 88 % gone), the cut edge jittering and split;
+       arriving it is decoded start to end, the way text is read. */
+    @keyframes cy-leave-unwrite {
+        16.67% {
+            clip-path: inset(-4px 12% -4px -4px);
+            translate: 2px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        33.33% {
+            clip-path: inset(-4px 28% -4px -4px);
+            translate: -3px 0;
+            filter: drop-shadow(-3px 0 0 var(--accent)) drop-shadow(3px 0 0 var(--destructive));
+        }
+
+        50% {
+            clip-path: inset(-4px 46% -4px -4px);
+            translate: 2px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        66.67% {
+            clip-path: inset(-4px 68% -4px -4px);
+            translate: -1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        83.33% {
+            clip-path: inset(-4px 88% -4px -4px);
+            translate: 1px 0;
+            filter: drop-shadow(-1px 0 0 var(--accent)) drop-shadow(1px 0 0 var(--destructive));
+        }
+
+        100% {
+            clip-path: inset(-4px 100% -4px -4px);
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* Q12, powered down: the part blinks out. It stands, 2 px out; dark;
+       on, 6 px back; dark; on once more, 16 px out and split, and is gone.
+       Arriving is the same blinks backwards. */
+    @keyframes cy-leave-flicker {
+        16.67% {
+            opacity: 1;
+            translate: 2px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-1px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(1px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        33.33% {
+            opacity: 0;
+            clip-path: inset(-2px -24px);
+        }
+
+        50% {
+            opacity: 1;
+            translate: -6px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-3px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(3px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        66.67% {
+            opacity: 0;
+            clip-path: inset(-2px -24px);
+        }
+
+        83.33% {
+            opacity: 1;
+            translate: 16px 0;
+            clip-path: inset(-2px -24px);
+            filter: drop-shadow(-8px 0 0 hsl(from var(--accent) h s l / 0.5)) drop-shadow(8px 0 0 hsl(from var(--destructive) h s l / 0.5));
+        }
+
+        100% {
+            opacity: 0;
+            translate: 0 0;
+            clip-path: inset(-2px -24px);
         }
     }
 

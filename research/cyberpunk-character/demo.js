@@ -23,7 +23,7 @@ const lock = (tag = 'TARGET') =>
     `<span class="cy-bracket" aria-hidden="true"></span><span class="cy-tag" aria-hidden="true">${tag}</span><span class="cy-band" aria-hidden="true"></span>`;
 
 /** Every loading picture an option may draw over a waiting part; options.css shows one. */
-const LOAD = `<span class="cy-load" aria-hidden="true"><span class="cy-ret"></span><span class="cy-stream"></span><span class="cy-today"></span></span>`;
+const LOAD = `<span class="cy-load" aria-hidden="true"><span class="cy-ret"></span><span class="cy-stream"></span><span class="cy-today"></span><span class="cy-la"></span><span class="cy-lb"></span><span class="cy-lc"><i>1C</i><i>BD</i><i>55</i><i>E9</i></span></span>`;
 
 /** The change on a square mono chip with the package's arrows. */
 const chip = (text, dir = 'up', tone = 'good') =>
@@ -93,7 +93,7 @@ const PART = {
             .map((i) => `<span class="cy-skel__line" style="--i: ${i}"><span class="kp-skeleton"></span>${LOAD}</span>`)
             .join('')}</div>`,
     bar: (label = 'Sync busy') =>
-        `<div class="kp-progressbar cy-bar" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span></div>`,
+        `<div class="kp-progressbar cy-bar cy-waits" role="progressbar" aria-label="${label}" data-kp-indeterminate><span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>${LOAD}</div>`,
     field: () =>
         `<label class="kp-field cy-field"><span class="kp-field__label">Node</span><input class="kp-field__input" value="North 01" /></label>`,
     menuStatic: (items = ['Open incident', 'Assign to…'], cls = '', pointed = true) =>
@@ -267,11 +267,11 @@ const LOADERS = () =>
     cell('Skeleton lines', PART.skeleton()) +
     cell('Meter, measuring', `<div class="cy-meter-wait cy-waits" aria-busy="true">${meter(0.62, 0.8, 'data-kp-loading')}${LOAD}</div>`);
 
-/** One spinner in three drawings; options.css shows the option's. */
+/** One spinner in ten drawings; options.css shows the option's. */
 const spin = (size = '', label = 'Working…', hidden = false) =>
     `<span class="cy-spin"${hidden ? ' aria-hidden="true"' : ` role="status" aria-label="${label}"`}${
         size ? ` style="--cy-spin: ${size}"` : ''
-    }><span class="cy-spin__ret"></span><span class="kp-spinner cy-spin__scan"></span><span class="cy-spin__glyph"></span></span>`;
+    }><span class="cy-spin__ret"></span><span class="cy-s1"></span><span class="cy-s2"></span><span class="cy-s3"></span><span class="cy-s4"></span></span>`;
 
 const SPINNERS = () =>
     cell('Three sizes', `<div class="cy-row cy-spins">${['1rem', '1.5rem', '2.5rem'].map((s) => spin(s)).join('')}</div>`, 'cy-part--wide') +
@@ -300,6 +300,20 @@ const LEAVE = () =>
         ),
     );
 
+/**
+ * A part of a composite with the pieces some options draw around it: a key cap
+ * or number (`.cy-hk`), the rim tab (`.cy-tab`), and its name for the read-out
+ * (`data-cy-name`). options.css shows the pieces an option names and none
+ * otherwise, so every option is the same markup. `cy-live` marks the one part
+ * of its composite the read-out and the focus pull belong to.
+ */
+const slot = (html, name, cap = '', cls = '') =>
+    `<span class="cy-slot ${cls}" data-cy-name="${name}">${cap ? `<i class="cy-hk" aria-hidden="true">${cap}</i>` : ''}${html}<i class="cy-tab" aria-hidden="true"></i></span>`;
+
+/** A menu entry as a slot: the list item carries the pieces, the button stays the package's own. */
+const menuSlot = (text, cap, cls = '') =>
+    `<li role="none" class="cy-slot cy-slot--fill ${cls}" data-cy-name="${text.replace('…', '').toUpperCase()}"><i class="cy-hk" aria-hidden="true">${cap}</i><button type="button" role="menuitem" class="kp-menu__item">${text}</button><i class="cy-tab" aria-hidden="true"></i></li>`;
+
 const COMPOSITES = () =>
     cell(
         "Alone: the theme's own button, for reference",
@@ -308,101 +322,154 @@ const COMPOSITES = () =>
     ) +
     cell(
         'Page header: its action buttons',
-        `<header class="kp-page-header cy-header"><div class="kp-page-header__inner"><div><p class="kp-page-header__title cy-title">Nodes</p><p class="kp-page-header__description">Fifteen on the northern grid.</p></div>
-        <div class="kp-page-header__actions">${button('Export', 'kp-button--sm cy-in-header')}${button('Add', 'kp-button--sm kp-button--primary cy-in-header')}</div></div></header>`,
+        `<header class="kp-page-header cy-header cy-host"><div class="kp-page-header__inner"><div><p class="kp-page-header__title cy-title">Nodes</p><p class="kp-page-header__description">Fifteen on the northern grid.</p></div>
+        <div class="kp-page-header__actions">${slot(button('Export', 'kp-button--sm cy-in-header'), 'EXPORT', 'E', 'cy-live')}${slot(button('Add', 'kp-button--sm kp-button--primary cy-in-header'), 'ADD', 'A')}</div></div></header>`,
         'cy-part--wide',
     ) +
-    cell('Menu: its entries', PART.menuStatic(['Open incident', 'Assign to…'], 'cy-in-menu', false)) +
+    cell(
+        'Menu: its entries',
+        glow(
+            `<div class="kp-popover cy-pop cy-pop--static cy-plate cy-in-menu cy-host"><ul class="kp-menu" role="menu">${menuSlot('Open incident', '1', 'cy-live')}${menuSlot('Assign to…', '2')}</ul></div>`,
+            'cy-glow--static',
+        ),
+    ) +
     cell(
         'Tile: its Open link',
         glow(
-            `<div class="kp-card cy-plate cy-tile cy-in-tile"><p class="kp-card__title cy-title">Node 01</p><a class="kp-button kp-button--ghost kp-button--sm cy-tile-link" href="#cy-intro">Open</a></div>`,
+            `<div class="kp-card cy-plate cy-tile cy-in-tile cy-host"><p class="kp-card__title cy-title">Node 01</p>${slot(
+                '<a class="kp-button kp-button--ghost kp-button--sm cy-tile-link" href="#cy-intro">Open</a>',
+                'OPEN',
+                '↵',
+                'cy-live',
+            )}</div>`,
         ),
     ) +
     cell(
         'Drawer: its tour buttons',
         glow(
-            `<div class="kp-card cy-plate cy-drawer"><p class="kp-card__title cy-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="cy-row">${button(
-                'Skip',
-                'kp-button--sm kp-button--ghost',
-            )}${button('Next', 'kp-button--sm kp-button--primary')}</div></div>`,
+            `<div class="kp-card cy-plate cy-drawer cy-host"><p class="kp-card__title cy-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="cy-row">${slot(
+                button('Skip', 'kp-button--sm kp-button--ghost'),
+                'SKIP',
+                'S',
+                'cy-live',
+            )}${slot(button('Next', 'kp-button--sm kp-button--primary'), 'NEXT', 'N')}</div></div>`,
         ),
     ) +
     cell(
         'Key figure as a link',
         `<div class="kp-kpis">${glow(
-            `<a class="kp-kpi cy-plate cy-kpi cy-in-kpi" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span><span class="kp-kpi__trend">avg 15 min</span></a>`,
+            slot(
+                `<a class="kp-kpi cy-plate cy-kpi cy-in-kpi" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span><span class="kp-kpi__trend">avg 15 min</span></a>`,
+                'TRAFFIC NOW',
+                'T',
+                'cy-slot--fill cy-live',
+            ),
         )}</div>`,
     );
 
+/** One list entry of the hover scene; the pointed one carries `cy-aim`. */
+const aimEntry = (text, aimed = false) =>
+    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${aimed ? ' cy-aim' : ''}">${text}</button></li>`;
+
+/**
+ * Hover: every part is pointed at by the clock (`cy-aim`): in `gap` nothing is,
+ * in `in` the pointer arrives, in `hold` it rests, in `out` it leaves.
+ */
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="cy-row">${button('Export readings', 'cy-pointed')}${button('Jack in', 'kp-button--primary')}</div>`) +
-    cell('Menu entries, the first pointed at', PART.menuStatic(['Open incident', 'Assign to…', 'Rename'])) +
     cell(
-        'Tile with its Open link pointed at',
+        'Buttons: the pointer arrives on each one, rests, leaves',
+        `<div class="cy-row">${button('Export readings', 'cy-aim')}${button('Jack in', 'kp-button--primary cy-aim')}</div>`,
+    ) +
+    cell(
+        'Menu: the pointer arrives on the first entry',
         glow(
-            `<div class="kp-card cy-plate cy-tile cy-pointed-tile"><p class="kp-card__title cy-title">Node 01</p><a class="kp-button kp-button--ghost kp-button--sm cy-tile-link cy-pointed" href="#cy-intro">Open</a></div>`,
+            `<div class="kp-popover cy-pop cy-pop--static cy-plate"><ul class="kp-menu" role="menu">${aimEntry('Open incident', true)}${aimEntry('Assign to…')}${aimEntry('Rename')}</ul></div>`,
+            'cy-glow--static',
         ),
     ) +
     cell(
-        'Key figures, the first pointed at',
+        'Tile: the pointer arrives on the card',
+        glow(
+            `<div class="kp-card cy-plate cy-tile cy-aim"><p class="kp-card__title cy-title">Node 01</p><p class="kp-card__body">4.2 Gb/s · 12 ms</p></div>`,
+        ),
+    ) +
+    cell(
+        'Key figures: the pointer arrives on the first',
         `<div class="kp-kpis cy-kpi-row">${glow(
-            `<a class="kp-kpi cy-plate cy-kpi cy-pointed" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span></a>`,
+            `<a class="kp-kpi cy-plate cy-kpi cy-aim" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span></a>`,
         )}${glow(
             `<a class="kp-kpi cy-plate cy-kpi" href="#cy-intro"><span class="kp-kpi__label cy-label">Latency</span><span class="kp-kpi__value cy-figure">31</span></a>`,
         )}</div>`,
     ) +
     cell(
-        'Days of a month, one pointed at',
-        `<div class="cy-days">${[12, 13, 14, 15].map((d) => `<span class="cy-day${d === 13 ? ' cy-pointed' : ''}">${d}</span>`).join('')}</div>`,
+        'Calendar days: the pointer arrives on the second',
+        `<div class="cy-days">${[12, 13, 14, 15].map((d) => `<span class="cy-day${d === 13 ? ' cy-aim' : ''}">${d}</span>`).join('')}</div>`,
     );
 
+/** A button inside the focus scene sits in a wrapper, so an outline outside the notch can follow the cut. */
+const fw = (html) => `<span class="cy-fw">${html}</span>`;
+
+/**
+ * Focus: the clock moves keyboard focus onto each part (`cy-focused`): in `gap`
+ * focus is elsewhere, in `in` Tab lands on it, in `hold` it stays, in `out`
+ * it moves away.
+ */
 const FOCUS = () =>
-    cell('Button', `<div class="cy-row">${button('Export readings', 'cy-focused')}</div>`) +
-    cell('Header action', `<div class="cy-header-mini">${button('Export', 'kp-button--sm cy-in-header cy-focused')}</div>`) +
+    cell('Button: Tab lands on it', `<div class="cy-row">${fw(button('Export readings', 'cy-focused'))}</div>`) +
     cell(
-        'Key figure link',
+        'Page header: Tab lands on an action',
+        `<div class="cy-header-mini">${fw(button('Export', 'kp-button--sm cy-in-header cy-focused'))}</div>`,
+    ) +
+    cell(
+        'Key figure used as a link: Tab lands on it',
         `<div class="kp-kpis">${glow(
             `<a class="kp-kpi cy-plate cy-kpi cy-in-kpi cy-focused" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span></a>`,
         )}</div>`,
     ) +
     cell(
-        'Menu entry',
+        'Menu: the arrow key lands on an entry',
         glow(
-            `<div class="kp-popover cy-pop cy-pop--static cy-plate cy-in-menu"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item cy-focused">Assign to…</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Rename</button></li></ul></div>`,
+            `<div class="kp-popover cy-pop cy-pop--static cy-plate cy-in-menu"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item cy-focused">Assign to…</button></li></ul></div>`,
             'cy-glow--static',
         ),
     ) +
     cell(
-        'Calendar day',
+        'Calendar: an arrow key lands on a day',
         `<div class="cy-days"><span class="cy-day">13</span><span class="cy-day cy-focused">14</span><span class="cy-day">15</span></div>`,
     ) +
     cell(
-        'Tile link',
+        'Tile: Tab lands on its Open link',
         glow(
-            `<div class="kp-card cy-plate cy-tile cy-in-tile"><p class="kp-card__title cy-title">Node 01</p><a class="kp-button kp-button--ghost kp-button--sm cy-tile-link cy-focused" href="#cy-intro">Open</a></div>`,
+            `<div class="kp-card cy-plate cy-tile cy-in-tile"><p class="kp-card__title cy-title">Node 01</p>${fw(
+                '<a class="kp-button kp-button--ghost kp-button--sm cy-tile-link cy-focused" href="#cy-intro">Open</a>',
+            )}</div>`,
         ),
     );
 
+/**
+ * Press: the clock presses every part down (`cy-press`) in `in`, holds it down
+ * through `hold` and lets go in `out`, so each option shows the whole of
+ * "mouse button down, held, released".
+ */
 const PRESS = () =>
-    cell('Button', `<div class="cy-row">${button('Export readings', 'cy-press')}</div>`) +
-    cell('Primary button', `<div class="cy-row">${button('Jack in', 'kp-button--primary cy-press')}</div>`) +
+    cell('Button: the mouse button goes down on it', `<div class="cy-row">${button('Export readings', 'cy-press')}</div>`) +
+    cell('Primary button: the mouse button goes down on it', `<div class="cy-row">${button('Jack in', 'kp-button--primary cy-press')}</div>`) +
     cell(
-        'Menu entry',
+        'Menu entry: pressed down',
         glow(
             `<div class="kp-popover cy-pop cy-pop--static cy-plate"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item cy-press">Assign to…</button></li></ul></div>`,
             'cy-glow--static',
         ),
     ) +
-    cell('Calendar day', `<div class="cy-days"><span class="cy-day cy-press">14</span></div>`) +
+    cell('Calendar day: pressed down', `<div class="cy-days"><span class="cy-day cy-press">14</span></div>`) +
     cell(
-        'Key figure as a filter',
+        'Key figure used as a filter: pressed down',
         `<div class="kp-kpis">${glow(
             `<button type="button" class="kp-kpi kp-kpi--toggle cy-plate cy-kpi cy-press" aria-pressed="false"><span class="kp-kpi__label cy-label">Open incidents</span><span class="kp-kpi__value cy-figure">3</span></button>`,
         )}</div>`,
     ) +
     cell(
-        'Chart legend key',
+        'Chart legend key: pressed down',
         `<div class="cy-row"><button type="button" class="cy-key cy-press" aria-pressed="false"><span class="cy-key__swatch" aria-hidden="true"></span>Node 01</button></div>`,
     );
 
@@ -469,10 +536,33 @@ const ASPECTS = [
             {
                 key: 'jitter',
                 name: 'Hard ticks: it jitters home',
-                see: 'Every motion is a run of held poses, 60 ms each. The readouts do not travel: they land at their mark at once, overshot sideways, and jitter home (+18, −12, +8, −4, +1, 0 px). The dialog, the menu and the tile tear in as bands that jump sideways and lock; the key figure’s copies stutter home in four ticks.',
+                see: 'Every motion is a run of held poses, 60 ms each, and every close is the same ticks backwards. When a readout moves, it does not travel: it lands at its mark at once, overshot sideways, and jitters home (+18, −12, +8, −4, +1, 0 px). When a dialog opens, a menu drops from its button or a tile arrives, it tears in as bands that grow out from the middle line (8, 28, 48, 68, 84, 96 % of its height), jumping sideways with a cyan and a red copy, and lock. Closing shrinks the same bands back in the same ticks and the whole part is gone on the last tick, no strip left behind; when a figure updates, its copies stutter home in four ticks.',
                 verdict: rec(
                     'it is how your stutter and your glitch-in already move, gathered into one clock, and no other theme moves like it: the hard-step themes (terminal, retro, grotesk, brutalism) step along a path, cyberpunk lands off to the side and locks.',
                 ),
+            },
+            {
+                key: 'swing',
+                name: 'Whiplash: slapped sideways, it swings back and settles',
+                see: 'When a readout moves to a new value, a dialog opens, a menu drops from its button or a tile arrives: the whole part is slapped 28 px sideways and sheared, with a cyan and a red copy, then swings back across its place, each tick less and on the other side (18, 11, 6, 3, 1 px). No bands, the part is whole from the first tick; the readouts swing across the room around their mark. Closing is the same swings backwards, growing, and the whole part is gone on the last tick.',
+                verdict: not(
+                    'it is the jitter with more weight: the whole part bounces instead of being torn, which reads as rubber and spring, and a tear is what a hacked signal does. The jitter keeps the bands.',
+                ),
+            },
+            {
+                key: 'ghost',
+                name: 'Triple vision: two copies are drawn in to the part',
+                see: 'When a readout moves, a dialog opens, a menu drops from its button or a tile arrives: the part stands in its place at once and does not move; a cyan and a red copy of it stand 36 px out, left and right, and are drawn in to it (36, 24, 15, 8, 3, 1 px), like a misregistered print locking. The readouts stand at their mark with a cyan copy at the place they came from and a red one at the far end. Closing pushes the copies out again, and the part and its copies are gone on the same tick.',
+                verdict: not(
+                    'it is the anchor (the cyan and red copy) shown as the whole motion, but nothing is torn or thrown sideways, and a part standing whole from the first tick is closer to a fade of the copies than to a jitter.',
+                ),
+            },
+            {
+                key: 'weave',
+                name: 'Interlace: two fields weave into one picture',
+                see: 'When a readout moves, a dialog opens, a menu drops from its button or a tile arrives: first only the even scan lines of the part show, 12 px out; then only the odd ones, 9 px back; then the even ones 6 px, the odd ones 3, 1, 1 px, and then the two fields lie in one picture. The readouts land at their mark in alternate fields. Closing weaves the fields apart again, in the same ticks backwards, and the part is gone on the last tick.',
+                verdict:
+                    'Second choice, the best of the new three: it jitters home like your pick, in hard ticks and on both sides of the mark, but through a picture that only a CRT or a VHS tape does (Blade Runner’s scan lines, Ghost in the Shell’s monitors). Not first, because the jitter with its bands is what you picked and it is the tear of the glitch itself.',
             },
             {
                 key: 'smooth',
@@ -535,8 +625,31 @@ const ASPECTS = [
             {
                 key: 'glitch',
                 name: 'Glitched in',
-                see: 'The menu and the dialog tear in as horizontal bands that jump sideways with a cyan and a red copy, smaller each tick, and lock clean after 6 ticks (360 ms); closing tears them out the same way backwards.',
+                see: 'When a menu drops from its button or a dialog opens after a click: it tears in as horizontal bands that grow from the middle line (8, 28, 48, 68, 84, 96 % of its height), jumping sideways with a cyan and a red copy, smaller each tick, and lock clean after 6 ticks (360 ms). Closing is exactly that backwards: the bands shrink steadily to the middle line and the whole part is gone on the sixth tick, with no last strip left standing.',
                 verdict: rec('it is your arrival family on every panel, it never squashes a letter, and no other theme opens like a torn signal.'),
+            },
+            {
+                key: 'rows',
+                name: 'Row shuffle: the rows flash in out of order',
+                see: 'When a menu drops from its button or a dialog opens after a click: the part is eight rows, and they flash in out of order, 1, 2, 4, 5, 7 and then all 8 of them at 60 ms a tick, thrown sideways with a cyan and a red copy, smaller each tick, and lock. Closing takes the rows away again in the same ticks backwards: the last row to arrive is the first to go, and every row is gone on the same tick.',
+                verdict:
+                    'Second choice, the closest to your glitched in: the same sideways tear and split, but the bands arrive scrambled, like a bad signal, instead of growing from the middle. Not first, because your pick already is that tear and this one is busier on a menu with only three entries.',
+            },
+            {
+                key: 'blocks',
+                name: 'Macroblocks: the panel pops in as scattered blocks',
+                see: 'When a menu drops from its button or a dialog opens after a click: the part is twelve blocks (four by three), and they pop in scattered, 2, 4, 6, 8, 10 and then all 12 at 60 ms a tick, each tick keeping the blocks of the one before and thrown sideways, then it locks clean. Closing is the same ticks backwards, the blocks dropping out of the corrupted picture until none is left, all on the same tick.',
+                verdict: not(
+                    'it is the datamosh look of a broken video stream and the most visibly corrupted of the three, but it hides the menu entries behind blocks for 240 ms, which is slow for something you open to read.',
+                ),
+            },
+            {
+                key: 'flicker',
+                name: 'Power flicker: the panel blinks into place',
+                see: 'When a menu drops from its button or a dialog opens after a click: the whole panel blinks. It shows 18 px out and split in cyan and red; goes dark for a tick; shows 10 px back; goes dark; shows 4 px out, then 1 px, and holds. Closing is the same blinks backwards and the panel is gone on the last tick.',
+                verdict: not(
+                    'it is a signal dropping out, but the dark ticks make a menu look broken instead of torn, and nothing grows or covers: the panel is whole or absent.',
+                ),
             },
             {
                 key: 'crt',
@@ -751,29 +864,87 @@ const ASPECTS = [
         label: 'Loading',
         rule: 'G10',
         question: 'What does everything that waits show?',
-        why: 'Your loading family is the menu’s lock-on: a cyan reticle hunts across the entry in hard jumps, snaps tight round it, blinks its lock and hunts again. Today ten loading pictures run in cyberpunk: data rain, packet rain (one in green), a hazard crawl, a chrome gloss, a neon trace, signal noise, the skeleton’s sweep. The progress bar streams data, as the divider does.',
+        why: 'Ten complete loading designs, each one drawn on the same eight waiting parts: the progress bar, a key figure, a busy table, a menu entry that loads, the days of a month, a chart plot, skeleton lines and a meter that is measuring. They replace the lock-on and the ten mixed pictures; the reticle lives on as the spinner. Each is a scene from cyberpunk media, in the theme’s own colours (yellow acts, cyan reads, violet is the glitch copy) and its own clock.',
         kind: 'loop',
         scene: LOADERS,
         options: [
             {
-                key: 'lock',
-                name: 'The lock-on on every waiting part',
-                see: 'On every waiting part the reticle hunts in from the end, locks round it and blinks cyan and yellow, 1.8 s a cycle; where there is room a mono word reads SCANNING, then TARGET ACQUIRED. A day locks without hunting, one after another. The progress bar keeps its data stream.',
-                verdict: rec('it is your loading pick on every surface, it never covers the words, and no other theme loads by targeting.'),
-            },
-            {
-                key: 'stream',
-                name: 'The data stream at every foot',
-                see: 'The progress bar’s stream (yellow dashes, cyan packets) runs along the foot of every waiting part.',
-                verdict: not(
-                    'it is the bar’s own picture carried everywhere, but dashes ticking along a foot are dark’s ticker baseline almost exactly.',
+                key: 'net',
+                name: 'The netrun: a data stream in three lanes',
+                see: 'Wherever something waits for data (the progress bar, a key figure, a busy table, a loading menu entry, a day of the month, a chart, skeleton lines, a meter) three thin lanes run through it from start to end at three speeds. Each carries comets with a white head and a cyan and a violet ghost copy trailing right of it, one up and one down: the glitch’s own split. A cyan sync line steps across in 60 ms ticks, and on a part with room a mono address ticks in the corner (0x4F2A · 412 PKT). 1.8 s a loop.',
+                verdict: rec(
+                    'it is the progress bar’s data stream carried to every waiting part, but fuller: three speeds, comets that tear into the glitch’s split copies, a sync line and a readout; the lines are 1 to 2 px thick, so the words under them stay readable, and no other theme streams comets.',
                 ),
             },
             {
-                key: 'mix',
-                name: 'As today',
-                see: 'Each part its own: the key figure’s green packet falls, the table’s cyan trace sweeps, the menu locks on, the days crawl hazard bands, the plot rains code, the skeleton sweeps yellow, the meter’s slivers jump.',
-                verdict: not('ten pictures for one state, in four colours and four directions.'),
+                key: 'scrub',
+                name: 'Braindance scrub (Cyberpunk 2077)',
+                see: 'A braindance editor’s timeline along the foot of the waiting part: ticks, and a cyan analysed zone that grows from the start behind a yellow playhead with a flag, one 60 ms tick at a time, then rewinds to the start. Where there is room a timecode counts in the corner (00:00 to 00:05).',
+                verdict: not(
+                    'it reads as "working through something" and is straight from the game, but the zone is a growing tint over the words, so it reads like a determinate progress bar that never finishes.',
+                ),
+            },
+            {
+                key: 'typed',
+                name: 'A terminal prompt is typed (the Matrix)',
+                see: 'A mono prompt is typed letter by letter, start to end, in glowing cyan with a block cursor (> read), the cursor blinks, the line is cleared and typed again. Where there is room a second line answers (0x7F OK) once the first is done. 1.8 s.',
+                verdict: not(
+                    'quiet and legible, but it is text on the waiting part: on the 14 px bar and the day cells it is tiny, and it competes with the faint words under it.',
+                ),
+            },
+            {
+                key: 'esper',
+                name: 'Esper enhance (Blade Runner)',
+                see: 'Two thin cyan lines, a crosshair, jump across the waiting part in hard hops and a zoom frame closes round the crossing, smaller at every hop, until it locks: the frame turns yellow and blinks. Then the crosshair jumps away and starts over. Where there is room a mono line reads ENHANCE 224·176.',
+                verdict: not('very Blade Runner, but a frame closing on a point is the reticle again, which is now the spinner’s picture.'),
+            },
+            {
+                key: 'dive',
+                name: 'Ghost dive: rings leave a core (Ghost in the Shell)',
+                see: 'A small yellow core blinks in the middle of the waiting part and cyan outlines of the part’s own shape leave it one after another, growing in hard ticks until they reach the edge and go out. Three rings are in flight at once. 1.8 s a loop.',
+                verdict: not(
+                    'calm and clear at any size, but it spreads from the middle outward, which is not how this theme reads (start to end, G2), and it is a radar ping, a common sci-fi trope.',
+                ),
+            },
+            {
+                key: 'vitals',
+                name: 'Vitals trace (Akira)',
+                see: 'A heart-monitor line, a flat run with a sharp spike, lies dim across the waiting part; a yellow head sweeps it from start to end in 60 ms ticks and leaves it lit cyan behind it, then the line goes dim again. 1.8 s.',
+                verdict: not(
+                    'one line works on parts of any height, but a heartbeat says "alive" or "alarm" more than "waiting", and the hospital cue is far from this theme’s hardware.',
+                ),
+            },
+            {
+                key: 'lattice',
+                name: 'Augmentation lattice (Deus Ex)',
+                see: 'A fine yellow honeycomb of hexagons lies dim over the waiting part; a band of it lights up bright yellow, with a cyan copy shifted right and up, and sweeps from start to end in 60 ms ticks. 1.8 s.',
+                verdict: not(
+                    'the richest on big parts (the chart, the key figure), but on a skeleton line or the bar the honeycomb turns into a texture, and it is nostromo’s amber lamp bank in a different pattern.',
+                ),
+            },
+            {
+                key: 'osd',
+                name: 'Signal loss: the word glitches (VHS on-screen text)',
+                see: 'The waiting part dims and the word LOADING is deciphered over it from noise glyphs, start to end, then holds in neon with a cyan copy right and up and a red copy right and down, tears sideways in a few ticks and is sliced away before it is deciphered again. 1.8 s.',
+                verdict: not(
+                    'it says in words what is happening and is the glitch anchor itself, but it hides the words of the waiting part under a word, and on the 14 px bar and the day cells it is a shrunken word.',
+                ),
+            },
+            {
+                key: 'cycles',
+                name: 'Light cycles (Tron)',
+                see: 'Two light trails, one cyan and one yellow, chase each other clockwise round the rim of the waiting part, each with a glowing head and a fading tail: one lap in 1.8 s, in a straight smooth run.',
+                verdict: not(
+                    'it frames the part like the reticle did and looks great on the key figure and the table, but it runs smooth where this grammar steps, and on the bar and the skeleton lines the two trails sit on top of each other.',
+                ),
+            },
+            {
+                key: 'breach',
+                name: 'Breach protocol (Cyberpunk 2077)',
+                see: 'A row of four hex codes (1C BD 55 E9) in small cyan frames; they are picked one after another from start to end, each turning solid yellow with dark ink in one tick, then the whole buffer drains in the same order. 1.8 s.',
+                verdict: not(
+                    'an instantly recognisable game reference, and legible, but the codes are text that needs room: three show on a day, and on a skeleton line they sit in a small row that says nothing about its length.',
+                ),
             },
         ],
     },
@@ -782,31 +953,81 @@ const ASPECTS = [
         label: 'The spinner',
         rule: 'G11',
         question: 'What does cyberpunk’s spinner show?',
-        why: 'The spinner is the one loading part too small to hunt across. Today it is the register’s scanner: a cut square, a yellow beam scanning down, a cyan core breathing on a smooth curve.',
+        why: 'The spinner is the one loading part too small to hunt across. You liked the reticle locking on its core, so it stays first; nine other spinners follow, each shown at the same three sizes, in a busy button (where the ink takes the button’s colour) and in the busy panel. Today’s register spinner, the scanning cut square, is gone from this page.',
         kind: 'loop',
         scene: SPINNERS,
         options: [
             {
                 key: 'reticle',
                 name: 'The reticle locks on its core',
-                see: 'Four corner brackets close on the cyan core in hard ticks, blink the lock cyan and yellow, and open again, once per 1.8 s.',
+                see: 'Four corner brackets close on the cyan core in hard ticks, blink the lock cyan and yellow, and open again, once per 1.8 s. Seen whenever a small thing waits: a busy button, a busy panel, a loading line.',
                 verdict: rec(
-                    'it is the lock-on at the spinner’s size, so the smallest wait speaks the same word as the largest, and no other theme has it.',
+                    'it is your pick, and the target lock is also this theme’s warning word, so the smallest wait speaks the same language as the largest; no other theme has it.',
                 ),
             },
             {
-                key: 'scan',
-                name: 'The scanner (the register today)',
-                see: 'The cut square with its yellow beam scanning down every 1.2 s and its cyan core breathing.',
+                key: 'bars',
+                name: 'Signal bars jump',
+                see: 'Four cyan bars with a yellow cap stand side by side and jump between heights in hard 120 ms ticks, each on its own beat, like a signal meter that cannot settle. Seen in a busy button, a busy panel or a loading line.',
                 verdict: not(
-                    'it is the register’s own and reads as busy, but the beam falls (G2) and the core eases, beside a loading picture that locks on.',
+                    'very recognisable and busy-looking, but a level meter is a sound icon, and bars that rise and fall are what G2 forbids for the page.',
                 ),
             },
             {
-                key: 'glyph',
-                name: 'A glyph cell deciphers',
-                see: 'One mono cell cycles noise glyphs in cyan (▚ ▞ ▙ ▜ ▟ █), the headline’s decipher at the size of a letter.',
-                verdict: not('very cyberpunk, but at 1 rem the glyphs read as a broken character, not as work in progress.'),
+                key: 'count',
+                name: 'A digit counts down (Akira)',
+                see: 'A cut square holds one yellow digit that counts 9, 8 … 0 in 180 ms ticks; on 0 it flashes with a cyan copy right and up and a red copy right and down, and starts again at 9.',
+                verdict: not('the most cinematic, but a countdown says "something ends in 9 ticks", which a wait of unknown length never keeps.'),
+            },
+            {
+                key: 'tear',
+                name: 'The square tears (the glitch itself)',
+                see: 'A solid yellow square holds still, then tears: horizontal bands of it jump sideways with a cyan copy right and up and a red copy right and down, smaller each tick, and snap whole again. About 1.8 s, a third of it torn.',
+                verdict: not(
+                    'the theme’s anchor as a spinner and the strongest alternative to the reticle, but unlike the others it holds still for two thirds of a loop, so at 1 rem it can read as stuck.',
+                ),
+            },
+            {
+                key: 'barcode',
+                name: 'A barcode is read (Blade Runner ID)',
+                see: 'A cyan barcode changes its bars in three hard poses while a yellow scan line hops across it from start to end; then it starts over. 1.8 s.',
+                verdict: not('it reads as an ID check, not as waiting, and at 1 rem the bars are single pixels.'),
+            },
+            {
+                key: 'chevrons',
+                name: 'Chevrons run',
+                see: 'Three chevrons (> > >) light yellow one after another from start to end, each for a short beat, over a dim cyan row; then all go dim and the run starts again. 1.8 s.',
+                verdict: not(
+                    'clear and fast to read and it follows start to end, but it is a "forward" sign, closer to a play button than to a wait.',
+                ),
+            },
+            {
+                key: 'ratchet',
+                name: 'The cross ratchets round',
+                see: 'A cyan cross with one yellow tip turns in eight hard steps of 45°, 180 ms each, one turn per 1.4 s: the one spinner here that turns.',
+                verdict: not(
+                    'it is the only one that looks like a spinner at a glance, but turning is every theme’s default picture; forest’s compass, nostromo’s reel and blueprint’s compass all turn.',
+                ),
+            },
+            {
+                key: 'charge',
+                name: 'A cell charges',
+                see: 'A cut square outline fills with yellow from the start to the end in six ticks, flashes full cyan once and empties, once per 1.2 s.',
+                verdict: not('easy to read, but it looks like a progress bar that never ends, the thing a spinner is meant not to be.'),
+            },
+            {
+                key: 'neon',
+                name: 'A neon tube stutters (Blade Runner signs)',
+                see: 'A square sign of two tubes, a cyan upper-left half and a yellow lower-right half, glows and flickers on its own beats like a broken neon sign, with a spark in the middle. About 1.8 s a loop.',
+                verdict: not('the most atmospheric, but a flicker has no direction, so it does not say "progress", only "alive".'),
+            },
+            {
+                key: 'hazard',
+                name: 'Hazard stripes crawl',
+                see: 'A cut square window filled with yellow hazard stripes that crawl from start to end, inside a cyan frame, linear, 0.9 s a loop.',
+                verdict: not(
+                    'it says "work in progress", but hazard stripes are this theme’s warning picture (the armed state), and a spinner that looks like a warning is read as one.',
+                ),
             },
         ],
     },
@@ -837,22 +1058,73 @@ const ASPECTS = [
                 see: 'Leaving, the part collapses to a bright line through its middle, the line to a dot, and the dot goes out; arriving, the reverse.',
                 verdict: not('clean, and close to your dialog’s line, but it is the leave nostromo’s grammar proposes for its tube.'),
             },
+            {
+                key: 'seam',
+                name: 'Squeezed to a seam, widened from a seam',
+                see: 'When an alert, a card or a menu leaves the page, it narrows toward its vertical middle line in five hard ticks of 60 ms (78, 55, 36, 20, 7 % of its width), jumping sideways with a cyan and a red copy, and is gone on the sixth (360 ms). When it arrives, the seam widens to the full part in the same ticks backwards.',
+                verdict: not(
+                    'clear and quick and it reverses cleanly, but it is a narrower cousin of the tube, and the words squash flat before they can be read.',
+                ),
+            },
+            {
+                key: 'notch',
+                name: 'Sucked into its corner, grown out of its corner',
+                see: 'When a part leaves the page, it shrinks toward its top corner at the end of the line (84, 66, 48, 30, 14 % of its size) in hard ticks, split in cyan and red, and is gone on the sixth tick (360 ms). When it arrives, it grows out of that corner in the same ticks backwards.',
+                verdict: not(
+                    'grow and shrink are exact opposites and it reads as a window minimised, but it is the one option that scales the words, and a scaled word is never a glitch.',
+                ),
+            },
+            {
+                key: 'rows',
+                name: 'Rows drop out, rows come back',
+                see: 'When a part leaves the page, it is eight rows and they drop out of order (7, 5, 4, 2, 1 of them stay), thrown sideways and split in cyan and red, until none is left on the sixth tick (360 ms). When it arrives, the rows come back in the same ticks backwards. The opening question’s “rows” is the same thing.',
+                verdict: not(
+                    'it is a clean scan-line failure and pairs with the opening of the same name, but the gaps run through the words, so a half-gone part is hard to read.',
+                ),
+            },
+            {
+                key: 'blocks',
+                name: 'Macroblocks drop out, blocks come back',
+                see: 'When a part leaves the page, it is twelve blocks (four by three) and they vanish scattered (10, 8, 6, 4, 2 of them stay) at 60 ms a tick until none is left (360 ms). When it arrives, the blocks come back in the same ticks backwards, the datamosh of a broken video stream. It pairs with the opening question’s “macroblocks”.',
+                verdict: rec(
+                    'it is the most visibly corrupted without touching the words’ shape, and every piece goes on the same tick, so nothing lingers; second choice after the torn leave.',
+                ),
+            },
+            {
+                key: 'unwrite',
+                name: 'Un-decoded: erased from the end, decoded from the start',
+                see: 'When a part leaves the page, it is erased from its end back to its start (12, 28, 46, 68, 88 % gone), the cut edge jittering and split in cyan and red, and is gone on the sixth tick (360 ms). When it arrives, it is decoded from start to end, the way text is read.',
+                verdict: not(
+                    'it reads like a terminal wiping a line and the arrival is a pleasure to read, but a sweep from one side is the uncover of other themes, so only the jitter makes it ours.',
+                ),
+            },
+            {
+                key: 'flicker',
+                name: 'Powered down: blinks out, blinks in',
+                see: 'When a part leaves the page, it stands 2 px out, goes dark for a tick, shows 6 px back, goes dark, shows once more 16 px out and split in cyan and red, and is gone (360 ms). When it arrives, the same blinks play backwards. It pairs with the opening question’s “flicker”.',
+                verdict: not(
+                    'it is a signal dropping out, but a part that is whole or absent has no middle, and the dark ticks make it look broken instead of torn.',
+                ),
+            },
         ],
     },
     {
         id: 'composites',
         label: 'Buttons inside composites',
         rule: 'G17',
-        question: 'When a button sits inside a header, a menu, a tile or a drawer, is it cyberpunk’s own button?',
-        why: 'Today the header’s actions are cyan beam buttons with a cyan glow ring and a press mixed with black, the menu’s entries surge a yellow edge, the tile’s Open link is cut to a parallelogram that clips its own focus outline away, and the key figure has a single warning-coloured focus line at 1.6:1. Press the State buttons above to see every button hovered, focused or pressed.',
+        question:
+            'When a button sits inside a page header, a menu, a tile or a drawer, is it cyberpunk’s own button, and does the composite add anything around it?',
+        why: 'Today the header’s actions are cyan beam buttons with a cyan glow ring and a press mixed with black, the menu’s entries surge a yellow edge, the tile’s Open link is cut to a parallelogram that clips its own focus outline away, and the key figure has a single warning-coloured focus line at 1.6:1. Options 4 to 8 keep the button exactly as option 1 has it (its own circuit, its own ring, its own closed circuit) and let the composite draw one extra piece around it. Press the State buttons above (Hover, Focus, Press) to show every part hovered, focused or pressed; at Rest only the key caps and the sockets show, the other pieces wait for a state.',
         kind: 'still',
         scene: COMPOSITES,
         options: [
             {
                 key: 'own',
                 name: 'Exactly cyberpunk’s own button',
-                see: 'Every inner button, link and entry hovers, focuses and presses exactly like the button standing alone at the top: the circuit, the inset ring, the closed circuit.',
-                verdict: rec('a control is a control wherever you meet it: one hover to learn, one focus ring to trust.'),
+                see: 'Every inner button, link and entry (the header’s Export and Add, the menu’s entries, the tile’s Open, the drawer’s Skip and Next, the key figure link) hovers, focuses and presses exactly like the button standing alone at the top: the circuit lights, the inset two-channel ring, the closed circuit. The composite adds nothing.',
+                verdict: rec(
+                    'a control is a control wherever you meet it: one hover to learn, one focus ring to trust. This is the option you preferred.',
+                ),
             },
             {
                 key: 'today',
@@ -866,36 +1138,104 @@ const ASPECTS = [
                 see: 'Every button is cyberpunk’s own; the header’s actions keep their cyan frame and ink as the holo strip’s mark.',
                 verdict: not('a fair middle way, but cyan buttons act in the one colour that should only read.'),
             },
+            {
+                key: 'keycap',
+                name: 'Key caps: every action names its key',
+                see: 'In front of each action in the header, the drawer and the tile (and at the end of each menu entry, in the corner of the key figure) a small cut cap shows its key in cyan mono: E, A, 1, 2, ↵, S, N, T, the way a game’s prompt names a key. With State on Hover the cap’s frame turns yellow, on Focus it takes the two-channel ring, on Press it fills cyan, as if the key went down. The button itself is option 1’s.',
+                verdict: not(
+                    'it teaches the shortcut where it exists, but it promises a key that is not always wired, and the caps crowd the narrow header and the drawer.',
+                ),
+            },
+            {
+                key: 'socket',
+                name: 'Sockets: every action sits in a numbered slot',
+                see: 'Each action, entry and link sits in a recessed void slot with a 1 px rim and its number on the rim, like a quickhack bar. State Hover lights the slot’s rim yellow, Focus draws a two-channel ring on the slot, Press fills the slot with a yellow wash. The button inside is option 1’s.',
+                verdict: not(
+                    'it shows at rest what is pressable, and it is very game HUD, but every control gets a second frame: a frame inside a frame, and the focus ring then sits on the slot, not on the button.',
+                ),
+            },
+            {
+                key: 'tab',
+                name: 'Rim tab: the composite marks where the live part stands',
+                see: 'When a part inside a composite is hovered, focused or pressed, the composite’s own rim grows a 3 px tab (5 px on Press) on the edge nearest it, exactly as wide as the part: under the header’s Export, beside the menu entry, under the tile’s Open and the drawer’s Next, along the foot of the key figure. Hover yellow, Focus ring colour with a contrast line, Press thicker. The button is option 1’s.',
+                verdict:
+                    'Best of the new ones: this one, because it adds no text and no second frame: the composite only says, with its own rim, which of its parts is live, and at rest nothing is added.',
+            },
+            {
+                key: 'callout',
+                name: 'Callout: a leader and a read-out name the live part',
+                see: 'When a part is hovered, focused or pressed, a 1 px cyan leader drops from it to a mono read-out that names it: > EXPORT on Hover, > EXPORT [ENTER] on Focus, > EXPORT // SENT on Press (inside the entry or the key figure for those). The composite makes room for the line under its actions. The button is option 1’s.',
+                verdict: not(
+                    'it is the HUD annotation of Cyberpunk 2077 and Ghost in the Shell and the most informative, but it is text on every hover, the composite grows to hold it, and the words have to be written per part.',
+                ),
+            },
+            {
+                key: 'host',
+                name: 'The host takes part: the composite lights its own rim',
+                see: 'While any part inside is hovered the composite lights its circuit grid and brightens its yellow rim (the header’s cyan rim); on Focus the rim doubles to 2 px; on Press the grid goes full and the rim glows. The part itself is option 1’s.',
+                verdict: not(
+                    'it shows that the whole card is engaged, but the card lights even when you point at its title’s neighbour, and it competes with the tile’s own hover.',
+                ),
+            },
         ],
     },
     {
         id: 'hover',
         label: 'Pointing at something',
         rule: 'G8',
-        question: 'How does cyberpunk show what you point at?',
-        why: 'Your hover family is the tiles’ The circuit lights: a 14 px grid lights up on the tile, the Open link gains a neon underline. Today the button lifts 1 px and runs its cyan charge, the menu entry surges a yellow edge, the key figure’s glow widens, the calendar day is nudged 3 px aside. In every scene below the first part is shown pointed at.',
-        kind: 'loop',
+        question:
+            'What does a part do when the mouse pointer arrives on it, while the pointer rests there, and when the pointer leaves again? (A button, a menu entry, a card, a key figure that is a link, a calendar day.)',
+        why: 'None of the three earlier options (the circuit lights, the charge runs, as today) was right, so these are six new ones, all built from the glitch, the theme’s anchor, and from the HUD of Cyberpunk 2077, Watch Dogs and the Matrix terminals. In every scene the page’s clock plays one pointer: it is away for half a second, arrives on the part, rests on it for about 2.7 seconds and leaves. The arrival is three ticks of 60 ms (180 ms) and the leave is those same three frames played backwards, so nothing lingers.',
+        kind: 'cycle',
         scene: HOVER,
         options: [
             {
-                key: 'circuit',
-                name: 'The circuit lights',
-                see: 'The part you point at lights a 14 px circuit grid on its face in its own ink (yellow on the void, ink on a yellow button); a link gains its yellow underline; the button’s cyan charge runs across once. Nothing lifts or moves.',
-                verdict: rec('it is your hover pick on every part, it is unmistakable without moving anything, and no other theme lights a circuit.'),
-            },
-            {
-                key: 'charge',
-                name: 'The charge runs on everything',
-                see: 'No grid: the button’s cyan charge band crosses every part you point at, the entry, the tile, the key figure, the day.',
-                verdict: not(
-                    'it is the register’s own and lively, but a band that crosses and is gone leaves nothing to show which part is still pointed at.',
+                key: 'flash',
+                name: 'Glitch flash: the words flash and stay neon',
+                see: 'The moment the pointer arrives on a button, a menu entry, a card, a key figure or a calendar day, its words flash: a cyan copy stands right and up, a red copy right and down (4.5 px, then 3, then 1.5) and both are gone after three ticks. While the pointer rests, the words stay neon cyan (the yellow Jack in button keeps its dark ink and its face lifts a little toward smoke). When the pointer leaves, the same three frames play backwards and the part is at rest.',
+                verdict: rec(
+                    'it is the anchor of the theme at the size of a pointer (neon words, a cyan and a red copy), it moves nothing under the pointer, and the resting state reads at 13:1 (cyan on the card).',
                 ),
             },
             {
-                key: 'mix',
-                name: 'As today',
-                see: 'The button lifts and charges, the menu entry surges its edge, the tile’s grid lights, the key figure’s glow widens, the day slides 3 px aside.',
-                verdict: not('five hovers on one page, and two of them move the part under the pointer.'),
+                key: 'static',
+                name: 'Static: a checker of noise flickers over the part',
+                see: 'When the pointer arrives, a fine checker of the part’s own ink flickers over its whole face for three ticks, 72 %, 52 %, 32 % strong and shifting each tick, and settles to a faint 12 % dither that stays while the pointer rests. On leaving, the three frames play backwards.',
+                verdict: not(
+                    'it is the screen of a hacked monitor and does not move anything, but the dither also lies over the words, which at 12 % is quiet and over a long list gets restless.',
+                ),
+            },
+            {
+                key: 'tear',
+                name: 'Tear: the part is thrown sideways and jitters home',
+                see: 'When the pointer arrives, the whole part is thrown 4.5 px to one side and jitters home in three ticks (−4.5, 3, −1.5, 0 px, the way the theme’s glitch-in lands); a 3 px bar stays on its end edge while the pointer rests. On leaving, the same jitter plays backwards.',
+                verdict: not(
+                    'it is the theme’s own landing used as a hover, but the part moves under the pointer (up to 4.5 px) and on a small target it can slip out from under it.',
+                ),
+            },
+            {
+                key: 'split',
+                name: 'Split edge: the part’s edge is doubled in cyan and red',
+                see: 'When the pointer arrives, the part’s edge is doubled: a cyan band along its top and end, a red band along its foot and end, 5 px thick, then 4, then 3, and 2 px for as long as the pointer rests. On leaving, the bands thicken again in the same three frames backwards and are gone.',
+                verdict: not(
+                    'it is the glitch’s split drawn as a frame and it is unmistakable, but the split is meant for a signal that changes and here it stands for as long as you point.',
+                ),
+            },
+            {
+                key: 'chevron',
+                name: 'Chevron: a wedge grows out of the start edge',
+                see: 'When the pointer arrives, a yellow wedge pointing inward grows out of the start edge of the part (2.5, 5, 7.5, then 10 px wide) beside a 3 px bar on the edge, as a selected entry looks in Cyberpunk 2077’s menus. It stays while the pointer rests and shrinks away in the same frames backwards.',
+                verdict: not(
+                    'it is clear and cheap, and a pointer on a list reads like a cursor, but it is a menu selection mark and says nothing glitchy, and on days and key figures it crowds the first word.',
+                ),
+            },
+            {
+                key: 'flood',
+                name: 'Flood: the part is filled with its ink, start to end',
+                see: 'When the pointer arrives, a block of the part’s own ink (yellow on a dark part, dark on the yellow Jack in button) floods it from the start edge to the end in four ticks, a 3 px cyan edge leading, and the words turn to the ground colour as it passes. It stays full while the pointer rests (dark words on yellow, 15.6:1) and drains from the end back to the start on leaving.',
+                verdict: not(
+                    'it is the strongest and clearest and the closest to the game’s own menus, but it is the loudest on a page of many cards, and for a few ticks the words are unreadable mid-flood.',
+                ),
             },
         ],
     },
@@ -903,32 +1243,51 @@ const ASPECTS = [
         id: 'focus',
         label: 'The focus ring',
         rule: 'G14, DI2',
-        question: 'What does keyboard focus look like?',
-        why: 'The two-channel focus ring is a system constant (DI2). Cyberpunk’s button draws it inset, because the notch would cut an outside ring away. The tiles’ pick cuts the link to a parallelogram, which clips its own outline (measured in Firefox: only the inset ring shows, cut slanted); the key figure uses one warning-coloured line at 1.6:1; the header’s outline is cut by the notch.',
-        kind: 'still',
+        question:
+            'What does keyboard focus look like: the moment you press Tab (or an arrow key in a menu or on the calendar) and focus lands on a button, a key figure link, a menu entry, a calendar day or a tile’s Open link, while it stays there, and when it moves on?',
+        why: 'The two-channel focus ring is a system constant (DI2): a smoke line and a void line, so it reads on any ground. The register draws it inside the part, which leaves the ring open at the cut corner of a button or a card, and the tiles’ pick clipped it away entirely. These five new options all keep both channels, they differ in where the ring is drawn and how it arrives. In every scene the page’s clock plays one Tab key: focus is elsewhere for half a second, lands on the part, stays about 2.7 seconds and moves on. The arrival is three ticks of 60 ms and the leave plays the same frames backwards.',
+        kind: 'cycle',
         scene: FOCUS,
         options: [
             {
-                key: 'inset',
-                name: 'The two-channel ring, inset, the circuit lit',
-                see: 'Every focused part carries the register’s ring inside its own cut (a smoke line with a void line beside it), and its circuit lights as under the pointer.',
+                key: 'glitch',
+                name: 'Glitch ring: the ring tears in and locks',
+                see: 'When Tab lands on a part, a two-channel ring (smoke, then void inside it) is drawn along its whole edge, following the cut corner too; for three ticks a cyan copy of the ring stands right and up and a red copy right and down (6, 4, 2 px) and then they lock behind it. The ring stays while focus stays. When focus moves on, the same frames play backwards and the ring is gone.',
                 verdict: rec(
-                    'the ring is the constant every theme shares and the notch can never cut it; the lit circuit tells a keyboard user which part is live.',
+                    'the ring you keep is the system’s own (13.5:1 smoke on void), now closed round the notch, and the arrival is the glitch, so a keyboard user sees where focus landed at once and nothing is ever missing from the final ring.',
                 ),
             },
             {
-                key: 'slant',
-                name: 'The glitch-cut ring (the tiles’ pick, as it draws)',
-                see: 'Every focused part is cut to a slanted parallelogram with the inset ring inside it, as the tiles’ Open link looks in Firefox.',
+                key: 'float',
+                name: 'Floating frame: a two-channel frame just inside the edge',
+                see: 'When Tab lands on a part, a second frame appears 3 px inside its own edge (a 2 px smoke line with a 2 px void line inside it), cut at the same corner as the part; the part’s own edge stays. No animation: it is on while focus is on and off when focus moves on.',
                 verdict: not(
-                    'it is cyberpunk’s own and striking, but a focused part changes its shape, and the words near the slanted ends are cut.',
+                    'it is the selected card of the game menus and nothing outside the part can hide it, but it is a double line and covers the first 7 px of the part, which a tight menu entry or a calendar day can hardly spare.',
                 ),
             },
             {
-                key: 'mix',
-                name: 'As today',
-                see: 'The button’s inset ring, the header’s outline cut away by the notch, the key figure’s single warning line, the menu entry’s package ring, the tile link’s parallelogram.',
-                verdict: not('five focus looks, and the key figure’s reads 1.6:1 on its card, which is what DI2 exists to prevent.'),
+                key: 'brackets',
+                name: 'Target brackets: four corners close on the part',
+                see: 'When Tab lands on a part, four L-shaped corner brackets (smoke outside, void inside, 2 px each) close on it from 9 px in over three ticks and stay on its four corners; no line joins them. When focus moves on they open again, the same frames backwards.',
+                verdict: not(
+                    'it is the HUD’s targeting reticle and very legible on a dark card, but it is only the corners, below a continuous ring’s area, and the reticle already means loading and a warning in this theme.',
+                ),
+            },
+            {
+                key: 'outside',
+                name: 'Outline outside: the ring is drawn round the part, cut like it',
+                see: 'When Tab lands on a part, a two-channel outline appears just outside it (a 2 px void gap, then a 2 px smoke line), following the cut corner of a button or a card; a menu entry and a day get the same as an outline. No animation. The yellow glow of a card stays.',
+                verdict: not(
+                    'it leaves the face untouched, so words and the yellow of a primary button stay whole, but it needs 4 px of room round every part and a neighbour or a clipped container can hide it.',
+                ),
+            },
+            {
+                key: 'bar',
+                name: 'Foot bar: a line is read under the part',
+                see: 'When Tab lands on a part, a bar (a 3 px smoke line under a 2 px void line) is drawn along its foot from the start edge to the end in four ticks and stays; on moving on it is withdrawn the same way backwards. There is no ring round the part.',
+                verdict: not(
+                    'quiet and easy on a dense table or menu, but it is one line, not a ring: a part whose foot is hidden by a neighbour loses it, and it is the weakest of the five for a user who needs a strong focus mark.',
+                ),
             },
         ],
     },
@@ -936,30 +1295,63 @@ const ASPECTS = [
         id: 'press',
         label: 'The press',
         rule: 'G14',
-        question: 'What does a press look like?',
-        why: 'Today a cyberpunk button drops 1 px into its seat when pressed, which is titanium’s press exactly; the key figure kicks 2 px sideways. The scenes press each part every few seconds.',
+        question:
+            'What does a part do while it is held down: from the moment the mouse button goes down on it (or Space or Enter is held on a focused one) until you let go? (A button, a menu entry, a calendar day, a key figure used as a filter, a chart legend key.)',
+        why: 'This is the press of a click, not a hover and not a focus. Today a cyberpunk button drops 1 px into its seat while it is held, which is titanium’s press exactly, and the key figure kicks 2 px sideways. Options 4 to 7 are new. In every scene the page’s clock plays one finger: it is up for half a second, goes down on the part, holds it down for about 2.7 seconds and lets go. Every option also gives the held part the register’s pressed shade of its ground. The new options with a mark that stays (4, 5 and 7) draw it in four hard steps (180 ms) and take it back in the same frames reversed when you let go.',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
                 key: 'closed',
                 name: 'The circuit closes',
-                see: 'The pressed part’s circuit lights full (60 %) and its ground takes the pressed shade for as long as it is held; the part does not move.',
+                see: 'While a button, a menu entry, a calendar day, a key figure filter or a legend key is held down, its circuit grid lights at full strength (60 %) and its ground takes the pressed shade; the part does not move. Let go and it is back at rest.',
                 verdict: rec(
-                    'it follows from the hover (the circuit lights, then closes), it never shifts the words, and no other theme presses this way.',
+                    'it follows from the hover (the circuit lights, then closes), it never shifts the words, and no other theme presses this way. This is the option you preferred.',
                 ),
             },
             {
                 key: 'drop',
                 name: 'Drops 1 px (titanium’s press; the register today)',
-                see: 'The pressed part sinks 1 px and takes its pressed shade, then comes back.',
+                see: 'While a part is held down it sinks 1 px and takes its pressed shade, and comes back when you let go.',
                 verdict: not('small and exact, but it is titanium’s press to the pixel.'),
             },
             {
                 key: 'kick',
                 name: 'The kick (the key figure’s pick)',
-                see: 'The pressed part kicks 2 px sideways and takes its pressed shade.',
+                see: 'While a part is held down it sits 2 px to the side and takes its pressed shade, and returns when you let go.',
                 verdict: not('it is a glitch and cyberpunk’s own, but the words jump under the finger on every press.'),
+            },
+            {
+                key: 'armed',
+                name: 'Armed: hazard stripes along the foot while held',
+                see: 'While a part is held down, a 6 px band of hazard stripes is drawn along its foot from the start edge to the end in four ticks and stays as long as you hold; the part takes its pressed shade. Let go and the stripes are withdrawn the same way backwards. A click fires on release, so the stripes say: armed, let go to fire.',
+                verdict: not(
+                    'hazard stripes already mean “armed” in this theme (the switch, the alarm) and a held button is exactly that, but the stripes sit under the label and are busy on a small calendar day.',
+                ),
+            },
+            {
+                key: 'sliced',
+                name: 'Sliced: a line cuts across the part while held',
+                see: 'While a part is held down, a 2 px line (the part’s ink with a void edge) is drawn across its middle from the start edge to the end in four ticks and stays as long as you hold, the way the classic glitch slices a part away; the part takes its pressed shade. Let go and the line is withdrawn backwards.',
+                verdict: not(
+                    'it is the last step of the theme’s leave (sliced away) used as a press and it reads at once, but the line runs through the words.',
+                ),
+            },
+            {
+                key: 'recoil',
+                name: 'Recoil: the words kick and jitter home',
+                see: 'The moment a part goes down, its words kick sideways and jitter home in three ticks (−4.5, 3, −1.5, 0 px) while the part itself stays put; it keeps its pressed shade while held. Nothing happens on letting go.',
+                verdict: not(
+                    'it is the theme’s landing (hard ticks, off to the side) as the feel of a press, but it is a burst, not a state: after 180 ms a held part only shows the pressed shade.',
+                ),
+            },
+            {
+                key: 'ack',
+                name: 'Acknowledged: an ACK tag is decoded in the corner',
+                see: 'While a part is held down, a small mono ACK tag (cyan frame, cyan letters) is decoded in its top corner from the start to the end in four ticks and stays as long as you hold, as the system confirming the press; the part takes its pressed shade. Let go and the tag is undecoded backwards.',
+                verdict: not(
+                    'it is the HUD confirming a press, and it says so in words, but it puts text on every press, and on a calendar day or a legend key it covers part of the figure.',
+                ),
             },
         ],
     },
@@ -1272,11 +1664,21 @@ function closeByReverse(/** @type {Element} */ scene) {
     /** @type {Map<Element, number>} */
     const spans = new Map();
     for (const x of arrivals) spans.set(cellOf(x.target), Math.max(spans.get(cellOf(x.target)) || 0, endOf(x.timing)));
+    // What came from away goes back to away, in the same instant for every
+    // piece of its cell. Played backwards, an arrival ends on its first pose
+    // (a sliver of the glitch, a line of the tube) and `fill` would hold that
+    // pose until the next gap: the last piece lingered, cut off only later.
+    // The part's own `gap` state (hidden) takes over exactly where the close
+    // ends, so the first pose of the open and the last pose of the close are
+    // the same tick, and the part is gone with the close.
+    const away = awayOf.get(scene) || new Set();
+    /** @type {Map<Element, number>} */
+    const goneAt = new Map();
+    for (const x of arrivals) if (!x.pseudo && away.has(x.target)) goneAt.set(x.target, spans.get(cellOf(x.target)) || 0);
     // Read now, play later: the observer reads every scene before it writes any.
     return () => {
-        closesOf.set(
-            scene,
-            arrivals.map((x) =>
+        closesOf.set(scene, [
+            ...arrivals.map((x) =>
                 x.target.animate(x.keyframes, {
                     ...x.timing,
                     delay: (spans.get(cellOf(x.target)) || 0) - endOf(x.timing),
@@ -1286,7 +1688,10 @@ function closeByReverse(/** @type {Element} */ scene) {
                     pseudoElement: x.pseudo ?? undefined,
                 }),
             ),
-        );
+            ...[...goneAt].map(([target, at]) =>
+                target.animate([{ visibility: 'hidden' }, { visibility: 'hidden' }], { delay: at, duration: 1, fill: 'forwards' }),
+            ),
+        ]);
         return Math.max(0, ...spans.values());
     };
 }
