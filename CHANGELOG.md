@@ -87,6 +87,23 @@
 
 - **Changed: solstice's pointing is the sun climbing its arc, its press the sun swelling inside the part** [2026-10-07, Kenny: both picks of research/solstice-character, replacing the rake of scope-12 and the restated `-active` faces of fix-12]. One grammar for every pressable part (buttons of every variant including primary, mirror and icon, menu items, calendar days, key figures that are links or toggles, chart legend keys): a real `:hover` raises a sun along its arc under the part with a dome of warm light and a lit foot edge (`::before` and `::after`), a real `:active` swells a half-sun from the middle of the foot, lights the foot edge and takes the ground half-way to its held face, the words lifting to cream. Two registered numbers (`--kp-sig-solstice-point`, `--kp-sig-solstice-press`) run 240 ms on `cubic-bezier(.37, 0, .63, 1)`, in and out identical (measured in Firefox, real mouse: t50 120 ms, t90 191 ms, both ways, all parts). The register paints no hover face any more; the alarm keeps its own paint. Reduced motion: the finished pose at once.
 
+- **Changed: nostromo's live update and loading, the last two picks of research/nostromo-character**
+  [Kenny, 08/10/2026 00:05, live "raster" and loading "raster"; G9, G10]. Live:
+  `--kp-update: raster`; js/update.js's new value stands at once, dimmed to a third
+  (its own mask), and is rewritten from the top in 4 frames (320 ms) under the beam
+  (`::before`), while the lamp beside a key figure's label lights as the LED in one
+  frame, holds and goes out after 8 frames (640 ms). Every key figure's label now
+  carries its lamp (unlit at rest; G16), with room inside the label's clip so the
+  lit lens and glow are whole. Loading is the waiting screen: dark glass, scanlines,
+  a hum band rolling in 10 steps, COMPUTING written row by row in 12 frames under
+  the beam, standing 6, blank 2 (1600 ms); the busy progress bar is that screen in
+  its own window (it was every other LED lit, standing still), a skeleton line a
+  glass whose phosphor line is written in its turn (rows 4 frames apart), a block
+  skeleton (the time chart's plot while it loads) writes COMPUTING in its middle,
+  a loading day is a glass cell, the menu's loading entry and the data table's busy
+  panel carry a glass along their foot. The skeleton's orange glow is retired. A bar
+  with a share, the meter and the tape reel are unchanged.
+
 - **Changed: nostromo's grammar, as Kenny decided it on research/nostromo-character**
   [2026-10-07 23:18, sixteen of eighteen approved; themes/nostromo/CHARACTER.md].
   The anchor is the raster. Motion runs on the ship's 80 ms frame clock:

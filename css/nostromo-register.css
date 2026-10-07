@@ -1393,7 +1393,7 @@
 
     /* Under :where(), so every state below (hover, press, focus, a rich
        entry's place) outranks the lamp at rest. */
-    [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, a.kp-kpi .kp-kpi__label, .kp-kpi--toggle .kp-kpi__label)::before {
+    [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, .kp-kpi__label)::before {
         content: '';
         position: absolute;
         inset-inline-start: 0.7rem;
@@ -1421,17 +1421,21 @@
         inset-block-start: calc(0.4375rem + 0.75em);
     }
 
-    /* The key figure's lamp stands before its label, in the line. The label
-       clips what overflows it (css/components.css, for its ellipsis), which
-       cut the lit lamp's lens and glow flat on its start side: the label gets
-       half a rem of room on every side, given back by a negative margin, so
-       nothing beside it moves. */
-    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label {
+    /* Every reading carries its lamp too (motifs "place", G16; live
+       "raster", G9): a key figure's lamp stands before its label, in the
+       line, unlit at rest; it lights when the reading changes (the live
+       update below) and, on a key figure that is a link or a filter, under
+       the hand as a switch's does. The label clips what overflows it
+       (css/components.css, `.kp-kpi__label { overflow: hidden }`, for its
+       ellipsis), which cut the lit lamp's lens and glow flat on its start
+       side: the label gets half a rem of room on every side, given back by a
+       negative margin, so nothing beside it moves. */
+    [data-theme='nostromo'] .kp-kpi__label {
         margin: -0.5rem;
         padding: 0.5rem;
     }
 
-    [data-theme='nostromo'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label::before {
+    [data-theme='nostromo'] .kp-kpi__label::before {
         position: relative;
         inset: auto;
         display: inline-block;
@@ -1441,7 +1445,7 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, a.kp-kpi .kp-kpi__label, .kp-kpi--toggle .kp-kpi__label)::before {
+        [data-theme='nostromo'] :where(.kp-button, .kp-menu__item, .kp-kpi__label)::before {
             transition:
                 opacity var(--fx-duration) var(--fx-ease),
                 background var(--fx-duration) var(--fx-ease),
@@ -1801,16 +1805,30 @@
         mask-size: 100% 100%;
     }
 
+    /* Busy, with no share known, the bar is the waiting screen (loading
+       "raster", Kenny 08/10/2026 00:05; G10): its dark window is the glass,
+       its LEDs are off, and COMPUTING is written on it row by row from the
+       top under the beam (the glass below, "The waiting screen"). It was
+       every other LED lit, standing still, which read as a share of about
+       half. A bar with a share keeps its LED bargraph exactly as it was. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        inset: 0;
+        background-color: transparent;
+        mask: none;
+    }
+
     [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset-inline-end: 1px;
+        inset: 0;
         inline-size: auto;
+        filter: none;
         clip-path: none;
         animation: none;
     }
 
     [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-        mask: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(50% - 1px), transparent 0) 0 0 / calc(200% / var(--kp-steps)) 100%
-            repeat-x;
+        --kp-sig-no-wtail: calc(0.5rem * var(--kp-progressbar-scale, 1));
+        padding-inline: calc(0.4rem * var(--kp-progressbar-scale, 1));
+        font-size: calc(0.5rem * var(--kp-progressbar-scale, 1));
     }
 
     [data-theme='nostromo'] {
@@ -1862,39 +1880,8 @@
             0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
     }
 
-    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 280ms;
-        position: relative;
-        overflow: hidden;
-        block-size: 0.75rem;
-        border-radius: var(--kp-radius-pill, 999px);
-        background: hsl(from var(--foreground) h s l / 0.14);
-        box-shadow: var(--kp-sig-no-well);
-        animation: none;
-    }
-
-    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        --kp-sig-dur: 2200ms;
-        content: '';
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: 25%;
-        border-radius: inherit;
-        background: radial-gradient(
-            ellipse 50% 70% at 50% 50%,
-            hsl(from var(--kp-sig-no-led) h s calc(l + 12)) 0 18%,
-            hsl(from var(--kp-sig-no-led) h s l / 0.75) 40%,
-            transparent 100%
-        );
-        transform: translateX(-100%);
-    }
-
-    [data-theme='nostromo']
-        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
-        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        margin-block-start: 0.65rem;
-    }
+    /* The skeleton is the waiting screen too: see "The waiting screen"
+       below (loading "raster"). */
 
     [data-theme='nostromo'] .kp-switch {
         --kp-switch-radius: 0.3rem;
@@ -2188,18 +2175,6 @@
             animation: kp-sig-nostromo-no-reel var(--kp-sig-dur) steps(20, end) infinite;
         }
 
-        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-nostromo-no-scan var(--kp-sig-dur) cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
-
-        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 160ms;
-        }
-
-        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 320ms;
-        }
-
         /* The radio's lens is a lamp: it switches on in one frame, never
            bouncing (G1). The tick is printed start to end in 2 frames. */
         [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
@@ -2208,14 +2183,6 @@
 
         [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
             animation: kp-sig-nostromo-no-punch var(--kp-sig-no-contact) steps(2, end) backwards;
-        }
-
-        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
-            animation-delay: 90ms;
-        }
-
-        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
-            animation-delay: 180ms;
         }
 
         [data-theme='nostromo'] .kp-switch__input::before {
@@ -2289,17 +2256,6 @@
         }
     }
 
-    @keyframes kp-sig-nostromo-no-scan {
-        0% {
-            transform: translateX(-100%);
-        }
-
-        75%,
-        100% {
-            transform: translateX(400%);
-        }
-    }
-
     @keyframes kp-sig-nostromo-no-punch {
         from {
             clip-path: inset(0 100% 0 0);
@@ -2307,6 +2263,557 @@
 
         to {
             clip-path: inset(0);
+        }
+    }
+
+    /* ── The waiting screen [loading "raster", Kenny 08/10/2026 00:05,
+       research/nostromo-character; G10] ─────────────────────────────────
+       Everything that waits is a small amber screen set into the case: dark
+       glass in a moulded bezel with its scanlines, a hum band rolling down
+       it in 10 steps, and its picture written row by row from the top in 12
+       frames under the beam (the bright edge with its fading tail), standing
+       for 6 frames and blanked for 2: 20 frames of 80 ms, 1600 ms a cycle
+       (--kp-sig-no-loop). The busy progress bar is that screen in its own
+       window; a skeleton line is a glass with a line of phosphor being
+       written, the lines a panel (4 frames) apart; a block skeleton, and so
+       the time chart's plot while it loads, writes COMPUTING in its middle;
+       a loading day of the month is a glass cell; the menu's loading entry
+       and the data table's busy panel carry a glass along their foot. The
+       spinner stays the tape reel (G11) and the network graph its blips
+       (G18). Standing still (reduced motion) the picture stands written,
+       never a share. Every glass is two layers on one element: ::before the
+       glass (ground, bezel, scanlines and the hum band), ::after the
+       picture and its beam, clipped from the top; the picture takes the
+       scanlines through its mask, so the words lie under them as on the
+       tube. */
+    [data-theme='nostromo'] {
+        /* The scanlines over the glass, 1 px every 3 px, and the same lines
+           as a mask, for a picture that lies under them. */
+        --kp-sig-no-scan: repeating-linear-gradient(to bottom, hsl(from var(--sidebar-background) h s l / 0.45) 0 1px, transparent 1px 3px);
+        --kp-sig-no-scan-mask: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.55) 0 1px, var(--foreground) 1px 3px);
+        /* The hum band: a dim amber bar 40 % of the glass tall. */
+        --kp-sig-no-hum: linear-gradient(to bottom, transparent, hsl(from var(--sidebar-primary) h s l / 0.22) 60%, transparent) 0 -66.67% / 100% 40%
+            no-repeat;
+    }
+
+    /* The glass of a part that is itself the screen: its own ground. */
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle),
+    [data-theme='nostromo'] .kp-calendar__day[data-kp-tone='loading'] {
+        position: relative;
+        overflow: hidden;
+        border: 2px solid var(--secondary);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 10px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--sidebar-primary);
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-no-row: 78%;
+        block-size: 0.875rem;
+    }
+
+    [data-theme='nostromo']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.5rem;
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n + 2),
+    [data-theme='nostromo'] tr:nth-child(3n + 2) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-no-row: 58%;
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n),
+    [data-theme='nostromo'] tr:nth-child(3n) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-no-row: 66%;
+    }
+
+    /* A loading day is a glass cell: its number in phosphor under the
+       scanlines. */
+    [data-theme='nostromo'] .kp-calendar__day[data-kp-tone='loading'] {
+        border-width: 1px;
+        text-shadow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.7);
+    }
+
+    /* The glass along the foot of a part that waits: the menu's loading
+       entry draws it on its hint line (the entry keeps its final height,
+       js/menu-button.js), the data table's busy panel under its words. */
+    [data-theme='nostromo'] .kp-menu__item[data-kp-loading] > .kp-menu__hint {
+        position: relative;
+        display: block;
+        min-block-size: 1.25rem;
+    }
+
+    [data-theme='nostromo'] .kp-datatable__busy-panel {
+        position: relative;
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 2rem);
+    }
+
+    [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
+        content: '';
+        position: absolute;
+        border: 3px solid var(--secondary);
+        border-radius: var(--kp-sig-no-key);
+        background-color: var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 10px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+
+    [data-theme='nostromo'] .kp-menu__item[data-kp-loading] > .kp-menu__hint::before {
+        inset: 0;
+    }
+
+    [data-theme='nostromo'] .kp-datatable__busy-panel::before {
+        inset: auto 0.75rem 0.75rem;
+        block-size: 1.5rem;
+    }
+
+    /* The glass layer: scanlines over the ground, and the hum band. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before,
+    [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before,
+    [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
+        --kp-sig-dur: var(--kp-sig-no-loop);
+        background-image: var(--kp-sig-no-scan), var(--kp-sig-no-hum);
+        background-position:
+            0 0,
+            0 -66.67%;
+        background-size:
+            auto,
+            100% 40%;
+        background-repeat: repeat, no-repeat;
+    }
+
+    [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The picture: phosphor on the glass, under the scanlines, with the beam
+       riding the edge of what is written. The beam lies in a layer twice the
+       picture's height, its bright edge on the layer's middle line, so the
+       layer's position (100 % to 0 %) puts the edge exactly where the clip
+       has written to; at rest it lies past the foot (-100 %), away. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle)::after,
+    [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
+        --kp-sig-dur: var(--kp-sig-no-loop);
+        --kp-sig-no-wtail: 0.7rem;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        color: var(--sidebar-primary);
+        font-family: var(--theme-font-mono);
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        line-height: 1;
+        text-shadow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.7);
+        white-space: nowrap;
+        background: linear-gradient(
+                to bottom,
+                transparent calc(50% - var(--kp-sig-no-wtail)),
+                hsl(from var(--sidebar-primary) h s l / 0.35) calc(50% - var(--kp-sig-no-wtail) * 0.3),
+                var(--sidebar-primary) calc(50% - var(--kp-sig-no-wtail) * 0.12),
+                hsl(from var(--sidebar-primary) h s calc(l + 25)) 50%,
+                transparent 50%
+            )
+            0 -100% / 100% 200% no-repeat;
+        -webkit-mask: var(--kp-sig-no-scan-mask);
+        mask: var(--kp-sig-no-scan-mask);
+        pointer-events: none;
+    }
+
+    /* The word. Its content has empty alternative text: a screen reader
+       reads the part's own busy state, not the picture. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+    [data-theme='nostromo'] .kp-skeleton--block::after,
+    [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
+        content: 'COMPUTING' / '';
+    }
+
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle)::after {
+        inset: 0;
+        padding-inline: 0.55rem;
+    }
+
+    [data-theme='nostromo'] .kp-menu__item[data-kp-loading] > .kp-menu__hint::after {
+        inset: 3px;
+        padding-inline: 0.45rem;
+        font-size: 0.55rem;
+    }
+
+    [data-theme='nostromo'] .kp-datatable__busy-panel::after {
+        inset: auto calc(0.75rem + 3px) calc(0.75rem + 3px);
+        block-size: calc(1.5rem - 6px);
+        padding-inline: 0.55rem;
+    }
+
+    /* A block (the chart's plot while it loads) writes the word in its
+       middle, larger, with a longer tail. */
+    [data-theme='nostromo'] .kp-skeleton--block::after {
+        --kp-sig-no-wtail: 1.1rem;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    /* A line: one line of phosphor across the glass, as long as its place
+       in the paragraph says. */
+    [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        --kp-sig-no-wtail: 0.5rem;
+        content: '';
+        background:
+            linear-gradient(
+                    to bottom,
+                    transparent calc(50% - var(--kp-sig-no-wtail)),
+                    hsl(from var(--sidebar-primary) h s l / 0.35) calc(50% - var(--kp-sig-no-wtail) * 0.3),
+                    var(--sidebar-primary) calc(50% - var(--kp-sig-no-wtail) * 0.12),
+                    hsl(from var(--sidebar-primary) h s calc(l + 25)) 50%,
+                    transparent 50%
+                )
+                0 -100% / 100% 200% no-repeat,
+            linear-gradient(var(--sidebar-primary), var(--sidebar-primary)) 0.45rem 50% / var(--kp-sig-no-row) 3px no-repeat;
+        filter: drop-shadow(0 0 2px hsl(from var(--sidebar-primary) h s l / 0.7));
+    }
+
+    /* A chart's legend stubs are blocks too small for a screen: they keep
+       the base placeholder. */
+    [data-theme='nostromo'] .kp-chart__source-stub.kp-skeleton--block {
+        border: 0;
+        background: var(--muted);
+        box-shadow: none;
+    }
+
+    [data-theme='nostromo'] .kp-chart__source-stub.kp-skeleton--block::before,
+    [data-theme='nostromo'] .kp-chart__source-stub.kp-skeleton--block::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The hum band rolls down every glass in 10 steps per cycle; a week's
+           days start 2 frames apart, as the demo's days do. */
+        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before,
+        [data-theme='nostromo'] :is(.kp-skeleton:not(.kp-skeleton--circle), .kp-calendar__day[data-kp-tone='loading'])::before,
+        [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::before {
+            animation: kp-sig-nostromo-hum var(--kp-sig-dur) steps(10, end) infinite;
+        }
+
+        [data-theme='nostromo'] td:nth-child(2) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -2);
+        }
+
+        [data-theme='nostromo'] td:nth-child(3) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -4);
+        }
+
+        [data-theme='nostromo'] td:nth-child(4) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -6);
+        }
+
+        [data-theme='nostromo'] td:nth-child(5) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -8);
+        }
+
+        [data-theme='nostromo'] td:nth-child(6) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -10);
+        }
+
+        [data-theme='nostromo'] td:nth-child(7) > .kp-calendar__day[data-kp-tone='loading']::before {
+            animation-delay: calc(var(--kp-sig-no-frame) * -12);
+        }
+
+        /* The word is written in 12 frames, stands 6, is blanked for 2. */
+        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before,
+        [data-theme='nostromo'] .kp-skeleton--block::after,
+        [data-theme='nostromo'] :is(.kp-menu__item[data-kp-loading] > .kp-menu__hint, .kp-datatable__busy-panel)::after {
+            animation: kp-sig-nostromo-redraw var(--kp-sig-dur) linear infinite;
+        }
+
+        /* Skeleton lines are rows of one screen: the first written in frames
+           0 to 3, the second in 4 to 7, the third in 8 to 11; all stand to
+           frame 17 and are blanked together. */
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-nostromo-redraw-row-1 var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n + 2)::after,
+        [data-theme='nostromo'] tr:nth-child(3n + 2) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation-name: kp-sig-nostromo-redraw-row-2;
+        }
+
+        [data-theme='nostromo'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3n)::after,
+        [data-theme='nostromo'] tr:nth-child(3n) .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation-name: kp-sig-nostromo-redraw-row-3;
+        }
+    }
+
+    /* The hum band, top to past the foot, in 10 held steps (the scanlines'
+       layer stands). */
+    @keyframes kp-sig-nostromo-hum {
+        from {
+            background-position:
+                0 0,
+                0 -66.67%;
+        }
+
+        to {
+            background-position:
+                0 0,
+                0 173.33%;
+        }
+    }
+
+    /* The waiting screen's picture: written row by row from the top in 12
+       frames with the beam on its edge (0 to 60 %), standing whole without
+       the beam for 6 frames (60 to 90 %), blank for 2 (90 to 100 %). */
+    @keyframes kp-sig-nostromo-redraw {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position: 0 100%;
+            animation-timing-function: steps(12, end);
+        }
+
+        59.99% {
+            clip-path: inset(0);
+            background-position: 0 0%;
+            animation-timing-function: steps(1, end);
+        }
+
+        60%,
+        89.99% {
+            clip-path: inset(0);
+            background-position: 0 -100%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position: 0 -100%;
+        }
+    }
+
+    /* A skeleton's rows: each written in 4 frames, in its turn. */
+    @keyframes kp-sig-nostromo-redraw-row-1 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        19.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        20%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-redraw-row-2 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        20% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        39.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        40%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-redraw-row-3 {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        40% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 100%,
+                0.45rem 50%;
+            animation-timing-function: steps(4, end);
+        }
+
+        59.99% {
+            clip-path: inset(0);
+            background-position:
+                0 0%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        60%,
+        89.99% {
+            clip-path: inset(0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+            animation-timing-function: steps(1, end);
+        }
+
+        90%,
+        100% {
+            clip-path: inset(0 0 100% 0);
+            background-position:
+                0 -100%,
+                0.45rem 50%;
+        }
+    }
+
+    /* ── A live update: the reading is redrawn and its lamp lights [live
+       "raster", Kenny 08/10/2026 00:05, research/nostromo-character; G9] ──
+       js/update.js writes the new value at once and marks it
+       `[data-kp-updating='raster']` while the keyframes play. The new value
+       is there from the first frame, dimmed to about a third (its own mask,
+       so whatever the ground); the raster rewrites it from the top in 4
+       frames (320 ms), the dimmed part shrinking under the beam with its
+       fading tail (::before) until it stands at full strength. The lamp
+       beside the reading's label (a key figure's, also when its spark
+       changes) switches on in the LED orange in one frame, holds, and goes
+       out after 8 frames (640 ms); the value never moves, glows or inverts.
+       The mark stays on for the lamp's 640 ms: the value's own animation
+       runs that long, the redraw in its first half. Under reduced motion no
+       idea is named and the value simply changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] {
+            --kp-update: raster;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster'] {
+            position: relative;
+            -webkit-mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            animation: kp-sig-nostromo-update-redraw var(--kp-sig-no-print) linear both;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster']::before {
+            --kp-sig-no-tail: 0.9rem;
+            content: '';
+            position: absolute;
+            z-index: 1;
+            inset-inline: 0;
+            inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+            block-size: var(--kp-sig-no-tail);
+            background: var(--kp-sig-no-beam);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-nostromo-update-beam var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        [data-theme='nostromo'] .kp-kpi:has([data-kp-updating='raster']) .kp-kpi__label::before {
+            animation: kp-sig-nostromo-update-lamp var(--kp-sig-no-print) steps(1, end);
+        }
+
+        /* The dimmed part of the value, from the top edge down: the mask's
+           bright half rides down in 4 held frames, then stands. */
+        @keyframes kp-sig-nostromo-update-redraw {
+            0% {
+                -webkit-mask-position: 0 100%;
+                mask-position: 0 100%;
+                animation-timing-function: steps(4, end);
+            }
+
+            49.99% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+                animation-timing-function: steps(1, end);
+            }
+
+            50%,
+            100% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+            }
+        }
+
+        @keyframes kp-sig-nostromo-update-beam {
+            from {
+                inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            to {
+                inset-block-start: calc(100% - var(--kp-sig-no-tail));
+                opacity: 0;
+            }
+        }
+
+        /* The lamp lit as the LED, the same lens and glow a focused switch
+           shows, for the whole 640 ms. */
+        @keyframes kp-sig-nostromo-update-lamp {
+            from,
+            to {
+                background: var(--kp-sig-no-lens);
+                box-shadow:
+                    0 0 0 1px var(--foreground),
+                    0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+                opacity: 1;
+            }
         }
     }
 
