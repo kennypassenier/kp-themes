@@ -92,7 +92,16 @@ async function samplePhase({ sceneIndex, prefix, from, to, always, step, also = 
             return effect && effect.target && scene.contains(effect.target) && Number.isFinite(effect.getComputedTiming().endTime);
         });
     const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
-    scene.setAttribute(attr, from);
+    // A part pointed at by a `<prefix>-pointed` class (the review kit's pointer) is pointed at from `in` through `hold`, away otherwise.
+    const pointer = /** @type {any} */ (scene);
+    pointer.pointedParts ??= [...scene.querySelectorAll('[class*="-pointed"]')].flatMap((el) =>
+        [...el.classList].filter((c) => /^[a-z][a-z0-9]*-pointed(-[a-z]+)?$/.test(c)).map((c) => [el, c]),
+    );
+    const setPhase = (/** @type {string} */ phase) => {
+        scene.setAttribute(attr, phase);
+        for (const [el, cls] of pointer.pointedParts) el.classList.toggle(cls, phase === 'in' || phase === 'hold');
+    };
+    setPhase(from);
     await settle();
     for (const a of mine()) a.finish();
     // What is away in the `from` pose (hidden or see-through): a part that
@@ -123,7 +132,7 @@ async function samplePhase({ sceneIndex, prefix, from, to, always, step, also = 
         for (let at = /** @type {Element | null} */ (el); at && at !== scene; at = at.parentElement) if (away.has(at)) return true;
         return false;
     };
-    scene.setAttribute(attr, to);
+    setPhase(to);
     // A demo may react to the phase (a close played backwards by script):
     // let its observers run before reading what started.
     await Promise.resolve();

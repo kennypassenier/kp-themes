@@ -471,18 +471,18 @@ const COMPOSITES = () =>
         )}</div>`,
     );
 
-/** One list entry of the hover scene; the pointed one carries `cy-aim`. */
+/** One list entry of the hover scene; the pointed one carries `cy-pointed` (the pointer). */
 const aimEntry = (text, aimed = false) =>
-    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${aimed ? ' cy-aim' : ''}">${text}</button></li>`;
+    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${aimed ? ' cy-hv-part cy-pointed' : ''}">${text}</button></li>`;
 
 /**
- * Hover: every part is pointed at by the clock (`cy-aim`): in `gap` nothing is,
+ * Hover: every part is pointed at (`cy-pointed`, toggled by the clock on the loose page and by the review kit's pointer loop in the dialog): in `gap` nothing is,
  * in `in` the pointer arrives, in `hold` it rests, in `out` it leaves.
  */
 const HOVER = () =>
     cell(
         'Buttons: the pointer arrives on each one, rests, leaves',
-        `<div class="cy-row">${button('Export readings', 'cy-aim')}${button('Jack in', 'kp-button--primary cy-aim')}</div>`,
+        `<div class="cy-row">${button('Export readings', 'cy-hv-part cy-pointed')}${button('Jack in', 'kp-button--primary cy-hv-part cy-pointed')}</div>`,
     ) +
     cell(
         'Menu: the pointer arrives on the first entry',
@@ -494,20 +494,20 @@ const HOVER = () =>
     cell(
         'Tile: the pointer arrives on the card',
         glow(
-            `<div class="kp-card cy-plate cy-tile cy-aim"><p class="kp-card__title cy-title">Node 01</p><p class="kp-card__body">4.2 Gb/s · 12 ms</p></div>`,
+            `<div class="kp-card cy-plate cy-tile cy-hv-part cy-pointed"><p class="kp-card__title cy-title">Node 01</p><p class="kp-card__body">4.2 Gb/s · 12 ms</p></div>`,
         ),
     ) +
     cell(
         'Key figures: the pointer arrives on the first',
         `<div class="kp-kpis cy-kpi-row">${glow(
-            `<a class="kp-kpi cy-plate cy-kpi cy-aim" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span></a>`,
+            `<a class="kp-kpi cy-plate cy-kpi cy-hv-part cy-pointed" href="#cy-intro"><span class="kp-kpi__label cy-label">Traffic now</span><span class="kp-kpi__value cy-figure">412</span></a>`,
         )}${glow(
             `<a class="kp-kpi cy-plate cy-kpi" href="#cy-intro"><span class="kp-kpi__label cy-label">Latency</span><span class="kp-kpi__value cy-figure">31</span></a>`,
         )}</div>`,
     ) +
     cell(
         'Calendar days: the pointer arrives on the second',
-        `<div class="cy-days">${[12, 13, 14, 15].map((d) => `<span class="cy-day${d === 13 ? ' cy-aim' : ''}">${d}</span>`).join('')}</div>`,
+        `<div class="cy-days">${[12, 13, 14, 15].map((d) => `<span class="cy-day${d === 13 ? ' cy-hv-part cy-pointed' : ''}">${d}</span>`).join('')}</div>`,
     );
 
 /** A button inside the focus scene sits in a wrapper, so an outline outside the notch can follow the cut. */
@@ -1651,6 +1651,7 @@ const values = ['412', '436', '398', '451'];
 let tick = 0;
 let timer = 0;
 const cycleScenes = [...section.querySelectorAll('.cy-scene[data-cy-kind="cycle"]')];
+const hoverParts = [...section.querySelectorAll('.cy-scene[data-cy-hover] .cy-hv-part')];
 const numbers = [...section.querySelectorAll('.cy-scene[data-cy-kind="cycle"] [data-cy-num]')];
 const words = [...section.querySelectorAll('.cy-scene[data-cy-kind="cycle"] [data-cy-word]')];
 
@@ -1659,6 +1660,11 @@ const dialogPaused = () => Boolean(document.getElementById('rv-flip-pause')?.tex
 
 function setPhase(/** @type {string} */ phase) {
     for (const scene of cycleScenes) scene.setAttribute('data-cy-phase', phase);
+    // The pointer of the hover scenes: on from `in` through `hold`. In the review dialog the kit's own pointer loop toggles
+    // `cy-pointed`, so the clock leaves those scenes alone.
+    for (const part of hoverParts) {
+        if (!part.closest('.rv-dialog__stage')) part.classList.toggle('cy-pointed', phase === 'in' || phase === 'hold');
+    }
     if (phase !== 'in') return;
     tick += 1;
     for (const num of numbers) {

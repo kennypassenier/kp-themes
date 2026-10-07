@@ -2869,7 +2869,7 @@
         pointer-events: none;
     }
 
-    /* ── Pointing (G8), the new set: the pointer arrives on `cy-aim` parts ──
+    /* ── Pointing (G8), the new set: the pointer arrives on `cy-hv-part` parts, `cy-pointed` while it is there ──
        One clock for hover, focus and press: `--cy-t` counts the ticks left of
        the entrance (3, 2, 1, then 0 at rest in the pose), `--cy-p` is 1 while
        the part is pointed, focused or pressed. Poses are functions of the two,
@@ -2888,7 +2888,7 @@
         initial-value: 0;
     }
 
-    .cy-scene[data-cy-hover] .cy-aim {
+    .cy-scene[data-cy-hover] .cy-hv-part {
         --cy-ink: var(--primary);
         --cy-on-ink: var(--primary-foreground);
         --cy-rest: var(--card-foreground);
@@ -2896,27 +2896,28 @@
         box-shadow: var(--cy-sh, 0 0 transparent);
     }
 
-    .cy-scene[data-cy-hover] .kp-button.cy-aim {
+    .cy-scene[data-cy-hover] .kp-button.cy-hv-part {
         --cy-ink: var(--kp-btn-fg);
         --cy-on-ink: var(--kp-btn-ground);
         --cy-rest: var(--kp-btn-fg);
     }
 
-    .cy-scene[data-cy-hover] .kp-button--primary.cy-aim {
+    .cy-scene[data-cy-hover] .kp-button--primary.cy-hv-part {
         --cy-on-ink: var(--primary);
     }
 
-    .cy-scene[data-cy-hover] .cy-plate.cy-aim {
+    .cy-scene[data-cy-hover] .cy-plate.cy-hv-part {
         box-shadow: var(--cy-sh, 0 0 transparent), var(--cy-rim);
     }
 
-    .cy-scene[data-cy-hover] .cy-day.cy-aim {
+    .cy-scene[data-cy-hover] .cy-day.cy-hv-part {
         box-shadow:
             var(--cy-sh, 0 0 transparent),
             inset 0 0 0 1px var(--border);
     }
 
-    .cy-scene[data-cy-hover]:is([data-cy-phase='in'], [data-cy-phase='hold']) .cy-aim {
+    /* `cy-pointed` is the pointer: the loose page's clock and the review kit's pointer loop both toggle it. */
+    .cy-scene[data-cy-hover] .cy-hv-part.cy-pointed {
         --cy-p: 1;
     }
 
@@ -2927,7 +2928,7 @@
        notch), a plate at its head end (14 px), and a menu entry follows the menu's own
        head-end cut: 14 px, less the 0.25 rem the entry sits in from the end and the
        0.35 rem from the head, plus 3 px of air. */
-    .cy-scene[data-cy-hover] .cy-aim {
+    .cy-scene[data-cy-hover] .cy-hv-part {
         --cy-h-ct: 0px;
         --cy-h-cb: 0px;
         --cy-h-o: 0px;
@@ -2964,15 +2965,15 @@
         );
     }
 
-    .cy-scene[data-cy-hover] .kp-button.cy-aim {
+    .cy-scene[data-cy-hover] .kp-button.cy-hv-part {
         --cy-h-cb: var(--kp-button-notch, 14px);
     }
 
-    .cy-scene[data-cy-hover] .cy-plate.cy-aim {
+    .cy-scene[data-cy-hover] .cy-plate.cy-hv-part {
         --cy-h-ct: 14px;
     }
 
-    .cy-scene[data-cy-hover] .kp-menu__item.cy-aim {
+    .cy-scene[data-cy-hover] .kp-menu__item.cy-hv-part {
         --cy-h-ct: calc(14px - 0.25rem - 0.35rem + 3px);
     }
 
@@ -2988,7 +2989,7 @@
             [data-cy-hover='slice'],
             [data-cy-hover='beam']
         )
-        .cy-aim::after {
+        .cy-hv-part::after {
         content: '';
         position: absolute;
         inset: 0;
@@ -3009,7 +3010,7 @@
             [data-cy-hover='slit'],
             [data-cy-hover='beam']
         )
-        .cy-aim {
+        .cy-hv-part {
         --cy-neon: var(--accent);
         color: color-mix(in oklch, var(--cy-neon) calc(var(--cy-p) * 100%), var(--cy-rest));
     }
@@ -3021,20 +3022,20 @@
             [data-cy-hover='slit'],
             [data-cy-hover='beam']
         )
-        .kp-button--primary.cy-aim {
+        .kp-button--primary.cy-hv-part {
         --cy-neon: var(--kp-btn-fg);
         --kp-btn-fill: color-mix(in oklch, var(--primary) calc(100% - var(--cy-p) * 28%), var(--foreground));
     }
 
     /* 1. Split edge (fixed): the edge is doubled, cyan along the head and the end, red along the foot, 5, 4, 3 px and then 2 px while pointed. */
-    .cy-scene[data-cy-hover='split'] .cy-aim {
+    .cy-scene[data-cy-hover='split'] .cy-hv-part {
         --cy-h-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
         --cy-h-shape: var(--cy-h-ring);
         --cy-h-fill: linear-gradient(0deg, var(--destructive) 0 var(--cy-h-d), var(--accent) var(--cy-h-d));
     }
 
     /* 2. End bar: only the end edge is doubled, a bar of two columns, cyan inside and red outside, 10, 8, 6 px and then 4 px. */
-    .cy-scene[data-cy-hover='bar'] .cy-aim {
+    .cy-scene[data-cy-hover='bar'] .cy-hv-part {
         --cy-h-w: calc(var(--cy-p) * (4px + var(--cy-t) * 2px));
         --cy-h-shape: polygon(
             calc(100% - var(--cy-h-w)) max(0px, var(--cy-h-ct) - var(--cy-h-w)),
@@ -3051,7 +3052,7 @@
     }
 
     /* 3. Foot rule: two 2 px rules under the part, cyan over red, 6, 4, 2 px apart and then touching. */
-    .cy-scene[data-cy-hover='foot'] .cy-aim {
+    .cy-scene[data-cy-hover='foot'] .cy-hv-part {
         --cy-h-h: calc(var(--cy-p) * 2px);
         --cy-h-g: calc(var(--cy-p) * var(--cy-t) * 2px);
         --cy-h-shape: polygon(
@@ -3073,7 +3074,7 @@
     }
 
     /* 4. Half frame: a closed 2 px frame, cyan on its upper half and red on its lower half, closing on the edge from 6, 4, 2 px inside. */
-    .cy-scene[data-cy-hover='frame'] .cy-aim {
+    .cy-scene[data-cy-hover='frame'] .cy-hv-part {
         --cy-h-o: calc(var(--cy-p) * var(--cy-t) * 2px);
         --cy-h-d: calc(var(--cy-p) * 2px);
         --cy-h-l0: var(--cy-h-o);
@@ -3083,7 +3084,7 @@
     }
 
     /* 5. Brackets: a red bar on the start edge and a cyan bar on the end edge; the cyan one leads and the red one follows a tick later (and goes first on the way out). */
-    .cy-scene[data-cy-hover='brackets'] .cy-aim {
+    .cy-scene[data-cy-hover='brackets'] .cy-hv-part {
         --cy-h-we: calc(var(--cy-p) * (3px + var(--cy-t) * 1.5px));
         --cy-h-ws: calc(var(--cy-h-we) * min(1, max(0, 3 - var(--cy-t))));
         --cy-h-shape: polygon(
@@ -3109,7 +3110,7 @@
     }
 
     /* 6. Red leads: the same doubled edge with the channels swapped and a heavier hand: red along the head and the end, cyan along the foot, 6, 5, 4 px and then 3 px. */
-    .cy-scene[data-cy-hover='lead'] .cy-aim {
+    .cy-scene[data-cy-hover='lead'] .cy-hv-part {
         --cy-h-d: calc(var(--cy-p) * (3px + var(--cy-t) * 1px));
         --cy-h-shape: var(--cy-h-ring);
         --cy-h-fill: linear-gradient(0deg, var(--accent) 0 var(--cy-h-d), var(--destructive) var(--cy-h-d));
@@ -3118,7 +3119,7 @@
     /* The glitchy five. The anchor: neon words, a cyan copy right and up, a red copy right and down, and the part sliced. */
 
     /* 7. Flash and split: the words flash with their two copies (4.5, 3, 1.5 px) while the split edge of option 1 tears in; both lock together. */
-    .cy-scene[data-cy-hover='flashsplit'] .cy-aim {
+    .cy-scene[data-cy-hover='flashsplit'] .cy-hv-part {
         --cy-h-d: calc(var(--cy-p) * (2px + var(--cy-t) * 1px));
         --cy-h-shape: var(--cy-h-ring);
         --cy-h-fill: linear-gradient(0deg, var(--destructive) 0 var(--cy-h-d), var(--accent) var(--cy-h-d));
@@ -3128,7 +3129,7 @@
     }
 
     /* 8. Jitter: the two copies of the words jump from side to side each tick (left 4.5, right 3, left 1.5 px) before they lock. */
-    .cy-scene[data-cy-hover='jitter'] .cy-aim {
+    .cy-scene[data-cy-hover='jitter'] .cy-hv-part {
         --cy-h-x: calc(cos(var(--cy-t) * 180deg) * var(--cy-t) * 1.5px);
         text-shadow:
             var(--cy-h-x) calc(var(--cy-t) * -1px) 0 hsl(from var(--accent) h s l / var(--cy-t)),
@@ -3136,12 +3137,12 @@
             0 0 6px hsl(from var(--cy-h-glow, var(--accent)) h s l / calc(var(--cy-p) * 0.55));
     }
 
-    .cy-scene[data-cy-hover='jitter'] .kp-button--primary.cy-aim {
+    .cy-scene[data-cy-hover='jitter'] .kp-button--primary.cy-hv-part {
         --cy-h-glow: transparent;
     }
 
     /* 9. Sliced bar: a bar on the start edge, half cyan and half red, comes in as four slices pushed in by 9, 3, 12 and 6 px and slides home into one bar. */
-    .cy-scene[data-cy-hover='slice'] .cy-aim {
+    .cy-scene[data-cy-hover='slice'] .cy-hv-part {
         --cy-h-w: calc(var(--cy-p) * 3px);
         --cy-h-s1: calc(var(--cy-t) * 3px);
         --cy-h-s2: calc(var(--cy-t) * 1px);
@@ -3178,7 +3179,7 @@
     }
 
     /* 10. Slits: two thin rows are sliced out of the part itself (6 px, then 4, then 2) and close; the words flash with a cyan copy right and up and a red copy right and down. */
-    .cy-scene[data-cy-hover='slit'] .cy-aim {
+    .cy-scene[data-cy-hover='slit'] .cy-hv-part {
         --cy-h-s: calc(var(--cy-p) * var(--cy-t) * 2px);
         clip-path: polygon(
             evenodd,
@@ -3208,7 +3209,7 @@
     }
 
     /* 11. Scanline: a cyan line with a red line under it rises through the part (at 75, 50 and 25 % of its height) and parks under its head as a double rule; the words stay neon. */
-    .cy-scene[data-cy-hover='beam'] .cy-aim {
+    .cy-scene[data-cy-hover='beam'] .cy-hv-part {
         --cy-h-y: calc((100% - 4px) * var(--cy-t) / 4);
         --cy-h-m: calc(var(--cy-p) * 2px);
         clip-path: var(--cy-h-sil);
@@ -3508,12 +3509,21 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .cy-scene:is([data-cy-hover], [data-cy-focus]):is([data-cy-phase='in'], [data-cy-phase='hold'])
-            :is(.cy-aim, .cy-focused, :has(> .cy-focused)) {
+        .cy-scene[data-cy-focus]:is([data-cy-phase='in'], [data-cy-phase='hold']) :is(.cy-focused, :has(> .cy-focused)) {
             animation: cy-hv-in calc(180ms * var(--cy-slow, 1)) steps(1, end);
         }
 
-        .cy-scene:is([data-cy-hover], [data-cy-focus])[data-cy-phase='out'] :is(.cy-aim, .cy-focused, :has(> .cy-focused)) {
+        .cy-scene[data-cy-focus][data-cy-phase='out'] :is(.cy-focused, :has(> .cy-focused)) {
+            animation: cy-hv-out calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        /* Hover is keyed to the pointer class, not to the phase: arrival while `cy-pointed` is on, the exact reverse once it is off
+           (it also runs once at load and ends at rest, no fill). */
+        .cy-scene[data-cy-hover] .cy-hv-part.cy-pointed {
+            animation: cy-hv-in calc(180ms * var(--cy-slow, 1)) steps(1, end);
+        }
+
+        .cy-scene[data-cy-hover] .cy-hv-part:not(.cy-pointed) {
             animation: cy-hv-out calc(180ms * var(--cy-slow, 1)) steps(1, end);
         }
 
