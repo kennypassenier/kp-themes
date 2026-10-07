@@ -1252,14 +1252,14 @@ const ASPECTS = [
         label: 'The press',
         rule: 'G14',
         question: 'What happens to a button, a row or a day while you press it (the mouse button is down)?',
-        why: 'You said: “I need better options, and why is the loading animation running?” The loading animation was the plate’s closing spiral: the old first option used the very same fall as loading, so a press looked like something waiting. It is gone: no option here turns or spirals, and nothing in the scene loads; only the press plays. Each scene rests, the press lands, the part is held down, and the release follows. Five new presses, each a different thing the print does when it lands; your scope-12 rule is last, to compare. In all of them the part never moves, and a coloured button presses grey with a black label (2026-09-14).',
+        why: 'You said: “I like the three first options best, but I don’t like the grey background it gives.” The grey was the pressed face (the register’s grey press colour); it is gone from all six. (Before that you asked why the loading animation ran: the old first option used the plate’s closing spiral, so a press looked like something waiting.) No option here turns or spirals any more, and nothing in the scene loads; only the press plays. Each scene rests, the press lands, the part is held down, and the release follows. Five new presses, each a different thing the print does when it lands; your scope-12 rule is last, to compare. In all of them the part never moves, and a pressed part takes only paper, ink and the red, never grey (update 3).',
         kind: 'cycle',
         scene: PRESS,
         options: [
             {
                 key: 'slam',
                 name: 'Slammed home: the red plate is driven into register in one stroke',
-                see: 'On the press, a red copy of the part starts 8 px off, to the lower right, and is driven straight into register in 2 units (240 ms) at an even pace, a dead stop. As it lands, the face turns grey and the label black. On the release the plate is pulled straight back out and gone. No turning, no spiral.',
+                see: 'On the press, a red copy of the part starts 8 px off, to the lower right, and is driven straight into register in 2 units (240 ms) at an even pace, a dead stop. As it lands, the face turns ink and the label paper. On the release the plate is pulled straight back out and gone. No turning, no spiral.',
                 verdict: rec(
                     'the anchor’s second plate lands as the press lands, you see it arrive and you see it stop, “held” means in register, and it is a straight stroke, so it cannot be mistaken for the loading plate.',
                 ),
@@ -1267,7 +1267,7 @@ const ASPECTS = [
             {
                 key: 'beats',
                 name: 'Two beats: the second plate lands, the ink a beat later',
-                see: 'On the press the red second plate is driven in from 8 px off and registers over 2 units; one beat (120 ms) later the ink lands: the face turns grey and the label black. On the release they go in the reverse order: the face lets go first, then the red plate leaves.',
+                see: 'On the press the red second plate is driven in from 8 px off and registers over 2 units; one beat (120 ms) later the ink lands: the face turns ink and the label paper. On the release they go in the reverse order: the face lets go first, then the red plate leaves.',
                 verdict: not(
                     'it shows both plates landing one after the other, which is the print press exactly, but it takes a beat longer to feel held than the slam, and the face answers late.',
                 ),
@@ -1275,7 +1275,7 @@ const ASPECTS = [
             {
                 key: 'jog',
                 name: 'Jogged home in three counted stops',
-                see: 'On the press the red copy starts 9 px off and jogs home in three hard stops of a unit each (6, 3, 0 px), a dead stop at each; as it lands the face turns grey and the label black. Nothing travels between the stops.',
+                see: 'On the press the red copy starts 9 px off and jogs home in three hard stops of a unit each (6, 3, 0 px), a dead stop at each; as it lands the face turns ink and the label paper. Nothing travels between the stops.',
                 verdict: not(
                     'it is counted like a timetable and the three stops are easy to see, but jumping between held poses is how three other themes move.',
                 ),
@@ -1283,7 +1283,7 @@ const ASPECTS = [
             {
                 key: 'squash',
                 name: 'Ink squash: the label gets heavier and a keyline closes in',
-                see: 'As in letterpress, the press squeezes the ink out: the label gets heavier and a 3 px ink keyline closes in inside the frame while the face turns grey. No red, nothing moves.',
+                see: 'As in letterpress, the press squeezes the ink out: the label gets heavier and a 3 px ink keyline closes in inside the frame on the paper face. No red, no grey, nothing moves.',
                 verdict: not(
                     'it is the honest look of a pressed print and needs no second plate, but without the red it leaves the anchor, and the heavier label is a small change.',
                 ),
@@ -1291,15 +1291,15 @@ const ASPECTS = [
             {
                 key: 'overprint',
                 name: 'Overprinted: the second plate prints over the black and deepens it',
-                see: 'On the press the frame and the label turn the deep red of the second plate printed over the black, and the face goes grey. At once, nothing moves; on the release the black is back.',
+                see: 'On the press the frame and the label turn the deep red of the second plate printed over the black, on the paper face. At once, nothing moves; on the release the black is back.',
                 verdict: not(
-                    'it is the quietest of the five and uses only the two plates, but its deep red label on the grey face reads 4.28:1, below WCAG 2.2 AA’s 4.5:1 (the black label of the others reads 11.31:1), and red marking a pressed part says “current”, not “held”.',
+                    'it is the quietest of the five and uses only the two plates, but its deep red label on the paper face reads about 7:1 (above WCAG 2.2 AA) but has no ink fill to say “held”, and red marking a pressed part says “current”, not “held”.',
                 ),
             },
             {
                 key: 'rule',
                 name: 'The rule thickens (your scope-12)',
-                see: 'The baseline under the words thickens to 4 px in the deeper red, the face turns the darker grey, at once, for as long as it is held; the primary presses grey with a black label. Nothing moves.',
+                see: 'The baseline under the words thickens to 4 px in the deeper red, at once, for as long as it is held, on the paper face (a primary deepens its red). No grey. Nothing moves.',
                 verdict: not(
                     'it is your approved press and it says “held” on the very line a hover draws, but if hovering is the plate, a press that draws the baseline is a second idea.',
                 ),

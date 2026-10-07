@@ -1053,10 +1053,16 @@
 
     /* ── G14: the press (the clock presses .gk-press while `in`) ──────── */
 
-    .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press,
     .gk-scene[data-gk-durations][data-gk-phase='in'] .gk-press {
         background: var(--secondary-active);
         color: var(--foreground);
+        --kp-baseline-weight: 4px;
+        --kp-baseline-colour: var(--primary-active);
+    }
+
+    /* The press question's own rule (update 3): no grey face, the paper stays
+       and the rule thickens in the deeper red; a primary deepens its red. */
+    .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press {
         --kp-baseline-weight: 4px;
         --kp-baseline-colour: var(--primary-active);
     }
@@ -1067,7 +1073,8 @@
     }
 
     .gk-scene[data-gk-press='rule']:is([data-gk-phase='in'], [data-gk-phase='hold']) .kp-button--primary.gk-press {
-        border-color: var(--secondary-active);
+        background: var(--primary-active);
+        border-color: var(--primary-active);
     }
 
     /* ── G17: buttons inside composites (forced by the State buttons) ── */
@@ -1309,6 +1316,7 @@
     .gk-scene[data-gk-press]:not([data-gk-press='rule']) .gk-press {
         --gk-face-from: transparent;
         --gk-label-from: var(--foreground);
+        --gk-bc-to: var(--gk-ink);
     }
 
     .gk-scene[data-gk-press]:not([data-gk-press='rule']) .kp-button--primary.gk-press {
@@ -1317,16 +1325,22 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-        .gk-scene[data-gk-press]:not([data-gk-press='rule']) .gk-press {
-            background: var(--secondary-active);
-            color: var(--foreground);
+        .gk-scene[data-gk-press]:is([data-gk-press='slam'], [data-gk-press='beats'], [data-gk-press='jog']) .gk-press {
+            background: var(--gk-ink);
+            color: var(--background);
+        }
+
+        .gk-scene[data-gk-press]:is([data-gk-press='slam'], [data-gk-press='beats'], [data-gk-press='jog']) .gk-press * {
+            color: var(--background);
         }
 
         .gk-scene[data-gk-press='squash'] .gk-press {
+            background: var(--background);
             box-shadow: inset 0 0 0 3px var(--gk-ink);
         }
 
         .gk-scene[data-gk-press='overprint'] .gk-press {
+            background: var(--background);
             border-color: var(--primary-active);
             color: var(--primary-active);
         }
@@ -2342,6 +2356,16 @@
             animation:
                 var(--gk-pk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear reverse both,
                 var(--gk-fk) calc(var(--gk-pt) * var(--gk-slow, 1)) linear reverse both;
+        }
+
+        /* An ink face (slam, beats, jog) turns every word inside it paper, on
+           the same clock, so a tile's own labels never stay ink on ink. */
+        .gk-scene[data-gk-press]:is([data-gk-press='slam'], [data-gk-press='beats'], [data-gk-press='jog']):is([data-gk-phase='in'], [data-gk-phase='hold']) .gk-press * {
+            animation: gk-press-words-paper calc(var(--gk-pt) * var(--gk-slow, 1)) linear calc(400ms * var(--gk-slow, 1)) both;
+        }
+
+        .gk-scene[data-gk-press]:is([data-gk-press='slam'], [data-gk-press='beats'], [data-gk-press='jog'])[data-gk-phase='out'] .gk-press * {
+            animation: gk-press-words-paper calc(var(--gk-pt) * var(--gk-slow, 1)) linear reverse both;
         }
 
         /* G10: the proof's red plate travels the closing spiral, falls into
@@ -3757,7 +3781,8 @@
         }
     }
 
-    /* The face lands at the end of the plate's stroke, or at its start. */
+    /* The face lands at the end of the plate's stroke, or at its start: the ink
+       plate, the label in paper (no grey, update 3). */
     @keyframes gk-press-face-end {
         0%,
         99.9% {
@@ -3767,13 +3792,20 @@
         }
 
         100% {
-            background-color: var(--secondary-active);
-            border-color: var(--gk-bc-to, var(--gk-ink));
-            color: var(--foreground);
+            background-color: var(--gk-ink);
+            border-color: var(--gk-ink);
+            color: var(--background);
         }
     }
 
-    /* Ink squash: the face goes grey, the label gets heavier, a 3 px ink
+    /* Words inside an ink face: their own colour until the ink lands, then paper. */
+    @keyframes gk-press-words-paper {
+        100% {
+            color: var(--background);
+        }
+    }
+
+    /* Ink squash: the face stays paper, the label gets heavier, a 3 px ink
        keyline closes in inside the frame. */
     @keyframes gk-press-squash {
         from {
@@ -3785,8 +3817,8 @@
         }
 
         to {
-            background-color: var(--secondary-active);
-            border-color: var(--gk-bc-to, var(--gk-ink));
+            background-color: var(--background);
+            border-color: var(--gk-ink);
             color: var(--foreground);
             box-shadow: inset 0 0 0 3px var(--gk-ink);
             text-shadow:
@@ -3804,7 +3836,7 @@
         }
 
         to {
-            background-color: var(--secondary-active);
+            background-color: var(--background);
             border-color: var(--primary-active);
             color: var(--primary-active);
         }

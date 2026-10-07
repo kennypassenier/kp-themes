@@ -45,8 +45,15 @@ voice sentence, motifs one); six are asked again, each with his comment and a re
 - **15 hover:** explained as hover in plain words; the other questions that said pointed at, pointer or touch now say hover too.
 - **17 the press:** it no longer borrows the loading spiral (that was the "loading animation"); five new presses (slammed home, two beats,
   jogged home, ink squash, overprinted) and the scope-12 rule to compare.
-- Round id `2026-10-07-r3`. Measured with `research/_review/measure-motion.mjs`, which now reports the turn of a plate in degrees and
+- Round id `2026-10-07-r4` (update 3, see below). Measured with `research/_review/measure-motion.mjs`, which now reports the turn of a plate in degrees and
   says "clockwise both ways" for the intentionally unmirrored leave.
+
+**Round 4 / update 3 (Kenny on the press: "I like the three first options best, but I don't like the grey background it gives").**
+Eighteen questions are approved; only 17 the press is asked again. The grey was the register's pressed face (`--secondary-active`) that
+every press option put behind the pressed part. Now the face never turns grey: slam, two beats and jogged home land the face as the
+ink plate (ink fill, paper label); ink squash and overprinted keep the paper face; the scope-12 rule keeps paper and thickens its
+rule in the deeper red (a primary deepens its red). The other questions' scenes are untouched (their own selectors keep their rules).
+- Round id `2026-10-07-r4`.
 
 **Already decided, not asked again.** Twelve Columns (2026-09-08), the baseline that appears under a touched control (scope-12,
 2026-09-12), the inverting coloured buttons and their grey press with a black label (2026-09-13/14), the alarm (scope-94), the signature
