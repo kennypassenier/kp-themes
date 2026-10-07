@@ -62,6 +62,12 @@ No CI runs on commits; `scripts/release.sh X.Y.Z` builds a release on this
 machine and uploads it as a draft (GitHub Actions builds nothing), and
 `pages.yml` publishes the site on a push to `main`. Node 26 (`.nvmrc`). All artefact text in English.
 
+**Sessions never block each other** (Kenny, 2026-10-07 18:54). Each session
+works in its own worktree (`git worktree add ~/Projects/kp-themes-wt/<name> -b theme/<name> origin/main`),
+never in the shared `~/Projects/kp-themes`, and runs gates, commits and pushes
+from there; before every push `git fetch && git rebase origin/main`, push to
+`main`, then remove your own leftovers from the shared folder.
+
 ## Agents
 
 `.claude/agents/` holds `researcher` (background, own worktree, a demo page
