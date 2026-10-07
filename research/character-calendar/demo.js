@@ -1250,14 +1250,14 @@ const IDEAS = {
                 text: 'Loading hops the zebra along every bullet.',
             },
             {
-                name: 'The ticker',
-                text: 'A red bar slides in from the left under each figure, hits the end and starts again.',
+                name: 'Out of register',
+                text: 'A waiting day is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
         ],
         arrival: [
             {
-                name: 'On the grid',
-                text: 'Each day slides onto its baseline from the left, in reading order.',
+                name: 'Printed',
+                text: 'Each day is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; a week half a unit after the one before.',
             },
             {
                 name: 'Column drop',

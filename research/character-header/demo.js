@@ -638,15 +638,15 @@ const IDEAS = {
         shape: [
             {
                 name: 'The transit board',
-                text: 'A thick bar in the series colour across the top, the title in bold grotesque, the actions as flat colour bars.',
+                text: 'A column under its rule: a heavy ink rule along the top, the title in bold grotesque, the actions grotesk’s own buttons.',
             },
             { name: 'The Swiss poster', text: 'The title huge and flush left, a hairline under it, the actions in the red index colour.' },
             { name: 'The index card', text: 'A red rule down the left margin, a hairline along the top, the actions in tight flat plates.' },
         ],
         menu: [
             {
-                name: 'Set in type',
-                text: 'The menu is drawn in from the top, easing in and out, as type being set; it is lifted the same way in reverse to close.',
+                name: 'Printed',
+                text: 'The menu is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; the same fall played backwards closes it.',
             },
             {
                 name: 'The board flips',
@@ -656,8 +656,8 @@ const IDEAS = {
         ],
         interactive: [
             {
-                name: 'The underlined figure',
-                text: 'Hover thickens a button’s rule, focus boxes it, press presses the plate flat for the moment held.',
+                name: 'The button’s own',
+                text: 'A header button is grotesk’s own button: hover draws a red bar on its foot, focus is the two-channel ring with the red plate falling into register, a press thickens the baseline on the paper face, never grey.',
             },
             { name: 'The index colour', text: 'Hover brightens a button’s index colour, focus rings it, press settles the colour for a moment.' },
             { name: 'The flat bar', text: 'Hover extends a button’s colour bar, focus boxes it, press flattens the bar for the moment held.' },

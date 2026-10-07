@@ -1215,13 +1215,13 @@ const IDEAS = {
             },
             {
                 name: 'The big numerals',
-                text: 'No frames: a hairline over the strip, the figures very large and very bold with tight spacing, the heads bold in sentence case.',
+                text: 'No frames: a heavy ink rule over the strip, the figures very large and very bold with tight spacing, the heads bold in sentence case.',
             },
         ],
         loading: [
             {
-                name: 'A line runs across',
-                text: 'A black line runs across the top of every column.',
+                name: 'Out of register',
+                text: 'A waiting column’s skeleton lines are printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
             {
                 name: 'The blocks fill in',
@@ -1234,8 +1234,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Slid in',
-                text: 'Each column slides in from the left, hard and fast, one after the other.',
+                name: 'Printed',
+                text: 'Each column is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units, half a unit after the one before.',
             },
             {
                 name: 'Wiped in',
@@ -1262,8 +1262,8 @@ const IDEAS = {
         ],
         live: [
             {
-                name: 'Inverted',
-                text: 'A figure that changed shows inverted for a moment.',
+                name: 'Re-registered',
+                text: 'A figure that changed is written at once and its red plate falls back into register on it, clockwise, in 8 units.',
             },
             {
                 name: 'Risen',

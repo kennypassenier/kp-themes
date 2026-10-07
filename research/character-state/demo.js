@@ -330,7 +330,10 @@ const IDEAS = {
             { name: 'The index warning', text: 'A warning or failed state turns the index tick itself that colour.' },
         ],
         change: [
-            { name: 'A flat swap', text: 'The flat-colour square swaps once, in a single hard jump.' },
+            {
+                name: 'Re-registered',
+                text: 'The word and its square are written at once; behind them a red copy falls back into register along the closing spiral, clockwise, in 8 units.',
+            },
             { name: 'The bar redraws', text: 'The transit bar redraws left to right once under the new word.' },
             { name: 'Ticked', text: 'The index tick snaps to a new mark once, in a hard jump.' },
         ],

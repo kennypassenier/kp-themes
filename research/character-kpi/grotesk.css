@@ -1,0 +1,145 @@
+/* research/character-kpi, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; Kenny's picks on
+   research/grotesk-character/decided.json). The package's own register
+   (css/grotesk-register.css) carries the keyframes and the knobs
+   (`kp-sig-grotesk-*`, `--kp-sig-gr-*`) and is loaded on this page whenever
+   the theme is grotesk. Only grotesk's decided options change: shape
+   r2-gr-shape-1, tone 1, interactive 2, live 2 (loading 6 is the plain
+   package loading, which the register draws as the skeleton's proof).
+
+   - shape: a column under its rule: no frame, a 3 px ink rule along the top,
+     the grid's five faint columns kept (the key figure's ruled grid is data's);
+     the red foot bar is gone (the red signals once, never a bar on every plate);
+   - tone: indexed: a 6 px bar of the tone down the start edge and the tone's
+     word before the figure, the figure itself ink on paper; the change on a
+     square plate with the arrows ↗ and ↘;
+   - interactive: hover turns the rule red and 7 px thick (the red goes 4 px
+     deeper inside it, nothing moves) over a 4 % wash of the red; focus is
+     DI2's two-channel ring and the red plate falling into register; a press
+     thickens the rule, in the deeper red, never grey;
+   - live: the number is written at once and its red plate falls back into
+     register on it. */
+@layer kp.signature {
+    /* The register's plate has no inline padding (a column under its rule); the
+       shapes that are still boxes keep the package's own. */
+    [data-theme='grotesk'] [data-kf-shape]:not([data-kf-shape='r2-gr-shape-1']) .kp-kpi {
+        padding: var(--kp-space-md, 1rem);
+    }
+
+    [data-theme='grotesk'] [data-kf-shape='r2-gr-shape-1'] .kp-kpi {
+        --kf-frame: 0;
+        border-block-start: 3px solid var(--foreground);
+        background-image: repeating-linear-gradient(
+            90deg,
+            color-mix(in oklch, var(--foreground) 10%, transparent) 0 1px,
+            transparent 1px calc(100% / 5)
+        );
+        background-repeat: repeat;
+        background-position: 0 0;
+        background-size: 100% 100%;
+    }
+
+    /* Tone 1 · the transit board's colour bar → the index. */
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-radius: 0;
+        --kf-delta-bg: var(--secondary);
+        --kf-delta-ink: var(--secondary-foreground);
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '↗\00a0';
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '↘\00a0';
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-tone='good'] {
+        --kf-delta-bg: var(--success);
+        --kf-delta-ink: var(--success-foreground);
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        --kf-delta-bg: var(--destructive);
+        --kf-delta-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        padding-inline-start: 0.9rem;
+        border-inline-start: 6px solid var(--kp-sig-gr-tone);
+        --kf-tone-shadow: 0 0 #0000;
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-sig-gr-tone: var(--warning);
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-sig-gr-tone: var(--destructive);
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value {
+        --kf-tone-bg: none;
+        --kf-tone-ink: var(--kf-ink);
+        padding-inline: 0;
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value::before {
+        margin-inline-end: 0.4em;
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        vertical-align: 0.35em;
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value::before {
+        content: 'Warning';
+    }
+
+    [data-theme='grotesk'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value::before {
+        content: 'Failed';
+    }
+
+    /* Interactive 2 · the index reddens → the rule turns red and thickens. */
+    [data-theme='grotesk'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        --kf-hover-border: var(--primary);
+        --kf-hover-plate: color-mix(in oklab, var(--primary) 4%, var(--card));
+        --kf-focus-outline: 2px solid var(--focus-ring-contrast);
+        --kf-focus-offset: 2px;
+    }
+
+    [data-theme='grotesk'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        box-shadow: inset 0 4px 0 0 var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-theme='grotesk'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        --kf-press-plate: var(--kf-plate);
+        border-block-start-color: var(--primary-active);
+        box-shadow: inset 0 4px 0 0 var(--primary-active);
+    }
+
+    /* Live 2 · flipped → re-registered: the number's red plate falls back in. */
+    [data-theme='grotesk'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+        --kp-sig-gr-r: 0.14em;
+        justify-self: start;
+        inline-size: fit-content;
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+            animation: kp-sig-grotesk-fall calc(var(--kp-sig-gr-fall) / var(--kf-speed, 1)) linear backwards;
+        }
+
+        [data-theme='grotesk'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kp-sig-grotesk-update-plate calc(var(--kp-sig-gr-fall) / var(--kf-speed, 1)) linear backwards;
+        }
+    }
+}

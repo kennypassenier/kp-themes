@@ -1,0 +1,40 @@
+/* research/character-columns, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: shape 3, loading 1,
+   arrival 1, live 1 (tone 3, the change with the arrows ↗ and ↘, already is
+   the grammar's).
+
+   - shape 3: the big numerals keep their picture; the hairline over the strip
+     becomes the plate's 3 px ink rule;
+   - loading 1: a line runs across → out of register: the waiting column's
+     skeleton lines are the package's proofs (css/grotesk-register.css), so
+     the running line is retired;
+   - arrival 1: slid in → printed: each column is printed in black and its
+     red plate falls into register on it, 8 units, a unit apart in half-unit
+     steps;
+   - live 1: inverted → re-registered: the figure is written at once and its
+     red plate falls back into register on it. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-cs-shape='3'] .kp-kpis {
+        --cl-strip-top: 3px solid var(--cl-ink);
+    }
+
+    [data-theme='grotesk'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+    }
+
+    [data-theme='grotesk'] [data-cs-arrival='1'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear;
+        --cl-arrive-stagger: 60ms;
+    }
+
+    [data-theme='grotesk'] [data-cs-live='1'] .kp-kpis {
+        --kp-sig-gr-r: 0.14em;
+        --cl-live-num: kp-sig-grotesk-update-plate var(--kp-sig-gr-fall) linear backwards;
+        --cl-live-tile: none;
+    }
+}

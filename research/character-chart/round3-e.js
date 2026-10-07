@@ -15,8 +15,8 @@ export default {
             },
             {
                 key: 'r3-gr-load-2',
-                name: 'The grid build',
-                text: 'A hairline Swiss grid, both its rules and its columns, is laid in from the left in eight hard steps, then cleared and laid again.',
+                name: 'Out of register',
+                text: 'The plot’s Swiss grid, its rules and its columns, is printed in ink and, under it, in red: the red copy closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
                 ink: '--foreground',
                 ink2: '--primary',
             },

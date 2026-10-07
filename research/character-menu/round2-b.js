@@ -55,8 +55,8 @@ export default {
             },
             {
                 key: 'r2-gro-load-2',
-                name: 'The ruling pen scores',
-                text: 'A fine rule scores across the loading row in hard steps, then is wiped and scored again, as the graph’s ruling pen scores every line.',
+                name: 'Out of register',
+                text: 'The loading row is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
             {
                 key: 'r2-gro-load-3',

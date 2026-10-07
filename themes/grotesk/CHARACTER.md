@@ -4,12 +4,13 @@ The reference for how grotesk looks and moves. Read the grammar before adding
 or changing any grotesk component; the inventory, families and outliers below
 it record where the decided picks (2026-09-08 … 2026-10-07) stand against that
 grammar, and the numbered proposals (proposal-1 …) are the plan to bring them
-in line. Nothing here is applied yet: Kenny fixes the grammar first, question
-by question, in `research/grotesk-character` (the titanium way, Kenny
-2026-10-07 02:54: "waar jij eerst uitzoekt wat bij mekaar past, wat niet past
-en dan zo voorstellen doet"; grotesk seventh in the series, fifth in Kenny's
-order of 04:23: cyberpunk, synthwave, solstice, brutalism, grotesk,
-blueprint).
+in line. Kenny fixed the grammar question by question in
+`research/grotesk-character` (the titanium way, Kenny 2026-10-07 02:54: "waar
+jij eerst uitzoekt wat bij mekaar past, wat niet past en dan zo voorstellen
+doet"; grotesk seventh in the series, fifth in Kenny's order of 04:23) and
+approved it on 2026-10-07 23:43; the package applies it (see "Applied
+2026-10-07" at the end of §5). The inventory below describes the state before
+that.
 
 Sources measured (2026-10-07): every `research/character-*/decided.json` pick
 for grotesk resolved to its CSS (`busy-d.css` and `round3-a.css` of the busy
@@ -503,6 +504,35 @@ arrival, the columns' big numerals, their slide and their arrows, the menu's
 index colour, the state's index tick.
 
 ---
+
+**Applied 2026-10-07** (css/grotesk-register.css, `kp.signature`, tokens `--kp-sig-gr-*`;
+`--fx-ease` in css/themes.css; Kenny's picks on research/grotesk-character, decided.json):
+
+- **G1, G4 (curve, durations): applied.** `--fx-ease` is `linear`; contact 120, set 240, fall 960,
+  loop 2640 ms; `--kp-close-max` 960, `--kp-size-max` 240 (the resize cut stays).
+- **G2, G3 (arrival, opening): applied** to the dialog, the toast, the tooltip and
+  `[data-kp-arriving]` as the plate's fall (`kp-sig-grotesk-fall`, clockwise, 8 units); menus, popovers
+  and the drawer have no register entrance in the package yet (the port).
+- **G8, G14 (hover, focus, press): applied.** Hover is a red bar (a button's foot, a menu entry's
+  top edge, a link tile's rule at 7 px); focus is DI2's ring plus the fall; the press thickens the
+  baseline to 4 px in the deeper red on the paper face, a red face deepens its red; nothing is grey.
+  Flagged: a red face's hover bar is the ink (its own red would not show), and the bar is drawn
+  inside the part so nothing shifts (the demo's growing border moved the words).
+- **G9 (live): applied** as `--kp-update: plate` and the meter's tone fall; the train and the jolts
+  are gone (G13: a tone never jolts).
+- **G10, G11 (loading): applied** on every waiting surface the package has: skeleton lines, block
+  and circle, the busy bar (the slab), the loading meter, a loading calendar day and menu entry; the
+  spinner is the twin that turns. The key-figure, tile, column and trend loading wait for the port.
+- **G12 (leave): applied, clockwise, not the arrival reversed** (§0b), one animation; the register
+  no longer declares `--kp-open: reverse-close`.
+- **G7, G13, G15, G16 (surface, tone, voice, motifs): applied** where the package has the part:
+  card, key figure, busy panel and page header are a column under a 3 px ink rule; a key figure's
+  warning is indexed with its word (`--kp-sig-gr-word-warning`, `--kp-sig-gr-word-destructive`
+  knobs); the change has ↗ ↘ on a square plate; badges and tags are Inter 700 in sentence case.
+- **G17 (composites): applied** by the buttons' own rules; the research demos hand their header and
+  menu buttons back with `revert-layer`.
+- **Direction under rtl:** the plate turns clockwise in both directions (no `dir` sign on the
+  spiral); the index bar uses the logical start edge.
 
 ## 6. The loading picture: out of register
 

@@ -2172,7 +2172,7 @@
     --fx-signal-foreground: hsl(0, 0%, 100%);
     --fx-notch: 0px;
     --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear;
     --theme-font-display: 'Archivo', 'Inter', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(355, 95%, 45%);

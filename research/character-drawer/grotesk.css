@@ -1,0 +1,33 @@
+/* research/character-drawer, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided option changes: openclose 2 (shape 2 and
+   card 1 are plates that float over the page and keep their 3 px frame,
+   highlight 1 and next 1 are hard cuts of a heavy ring, which fit).
+
+   - openclose 2: it slides on a hard beat → printed: the drawer does not
+     travel; it is printed where it stands in black and its red plate falls
+     into register on it, clockwise, 8 units; closing is that fall played
+     backwards, and it is gone at the end. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-dt-openclose='2'] .dt-drawer,
+    [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        --kp-sig-gr-r: 8px;
+        translate: 0 0;
+    }
+
+    [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        [data-theme='grotesk'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear reverse both;
+        }
+    }
+}

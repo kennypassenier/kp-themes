@@ -29,7 +29,7 @@ export default {
             {
                 key: 'r3-gk-shape-1',
                 name: 'The interchange',
-                text: 'A heavy red line runs across the whole veil and a heavy black line runs down it; the panel is the interchange where they cross, a white box with a thick black frame. Echoes the graph’s transit map and its train that passes. Unlike the other two, the drawing reaches past the panel: two transit lines cross the rows to meet it.',
+                text: 'A heavy red line runs across the whole veil and a heavy black line runs down it; the panel is the interchange where they cross, a white column under a heavy ink rule, no frame. Echoes the graph’s transit map and its train that passes. Unlike the other two, the drawing reaches past the panel: two transit lines cross the rows to meet it.',
             },
             {
                 key: 'r3-gk-shape-2',

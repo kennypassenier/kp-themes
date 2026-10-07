@@ -1159,8 +1159,8 @@ const IDEAS = {
         ],
         tone: [
             {
-                name: 'The transit board',
-                text: 'The change as a flat colour bar; a warning or destructive figure shows the note in the label on the tone’s plate.',
+                name: 'Indexed',
+                text: 'The change on a square plate with the arrows ↗ and ↘; a warning or destructive figure carries a 6 px bar of its tone down the start edge and the tone’s word before the number, the number itself ink on paper.',
             },
             { name: 'The underlined figure', text: 'The change on a flat plate with a heavy rule under it, square.' },
             {
@@ -1174,8 +1174,8 @@ const IDEAS = {
                 text: 'As a link or a filter: the colour bar across the top thickens on hover, a red rule-width ring marks focus, and the bar thins back the instant it is pressed.',
             },
             {
-                name: 'The index reddens',
-                text: 'As a link or a filter: the red margin rule deepens on hover, a hairline ring appears for focus, and the rule dims a shade the instant it is pressed.',
+                name: 'The rule thickens',
+                text: 'As a link or a filter: on hover the rule turns red and 7 px thick over a faint red wash, focus is the two-channel ring with the red plate falling into register on the tile, and a press thickens the rule in the deeper red, never grey.',
             },
             {
                 name: 'The flap turns',
@@ -1184,7 +1184,10 @@ const IDEAS = {
         ],
         live: [
             { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            { name: 'Flipped', text: 'A new reading: the number flips once like a departure-board flap, in two hard steps, no easing.' },
+            {
+                name: 'Re-registered',
+                text: 'A new reading: the number is written at once; behind it a red copy of the number starts a few pixels off and falls into register along the closing spiral, clockwise, in 8 units.',
+            },
             {
                 name: 'Shifted',
                 text: 'A new reading: the old figure slides out to the left and the new one slides in from the right, easing to a stop.',

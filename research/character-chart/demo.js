@@ -882,11 +882,18 @@ const OPTIONS = Object.fromEntries(
             update: [...(pick ? [['none', 'As approved: it appears']] : []), ...r2.update].map(([key, name]) => ({
                 key,
                 // Forest's decided "it appears" is its growth ring (research/character-chart/forest.js).
-                name: theme === 'forest' && key === 'none' ? 'A growth ring on the newest point' : name,
+                name:
+                    theme === 'forest' && key === 'none'
+                        ? 'A growth ring on the newest point'
+                        : theme === 'grotesk' && key === 'none'
+                          ? 'Re-registered'
+                          : name,
                 text:
                     theme === 'forest' && key === 'none'
                         ? 'The new reading is drawn at once; a thin ring is drawn once round its newest point, clockwise from the top, then fades.'
-                        : KIND.update[key],
+                        : theme === 'grotesk' && key === 'none'
+                          ? 'The new reading is drawn at once and the plot’s red plate falls back into register on it, clockwise, in 8 units.'
+                          : KIND.update[key],
             })),
             events: [...(r2.events.length < 3 ? [['shape', 'As the shape draws them']] : []), ...r2.events].map(([key, name]) => ({
                 key,

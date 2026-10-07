@@ -1,0 +1,83 @@
+/* research/character-meter, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: loading 2, arrival 3, tone
+   3, mark 2 (the shape, the rule and its cursor, is an instrument and stays).
+
+   - loading 2: Express → out of register: the meter's own ruler (a hairline
+     above and below it and a tick every tenth) printed in two plates, the ink
+     on ::after and its red twin on ::before travelling the clockwise loop, 22
+     units; the red dashes are gone;
+   - arrival 3: Timetable's four hard steps now last four units, 480 ms;
+   - tone 3: Timetable's sideways jolt → the plate: a tone is never a jolt
+     (G13), a meter that turns to warning or destructive is printed again and
+     its red plate falls into register on it once;
+   - mark 2: Express: the mark moves linearly, 480 ms (on time). */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading] {
+        --kp-sig-gr-r: 4px;
+        background: var(--card);
+        box-shadow: none;
+        animation: none;
+    }
+
+    [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::before,
+    [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::before {
+        background:
+            linear-gradient(var(--primary) 0 0) 0 0 / 100% 1.5px no-repeat,
+            linear-gradient(var(--primary) 0 0) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(90deg, var(--primary) 0 1.5px, transparent 1.5px 10%);
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        translate: calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a)));
+    }
+
+    [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+        background:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% 1.5px no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 1.5px, transparent 1.5px 10%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::before {
+            animation: kp-sig-grotesk-loop calc(var(--kp-sig-gr-loop) / var(--cm-speed, 1)) linear infinite;
+        }
+
+        [data-theme='grotesk'] [data-cm-arrival='3'] .kp-meter::before {
+            animation-duration: 480ms;
+            transition-duration: 480ms;
+        }
+
+        [data-theme='grotesk'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
+            animation: none;
+        }
+
+        [data-theme='grotesk'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear;
+        }
+
+        [data-theme='grotesk'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall-again var(--kp-sig-gr-fall) linear;
+        }
+
+        [data-theme='grotesk'] [data-cm-mark='2'] .kp-meter__mark {
+            transition:
+                inset-inline-start 480ms linear,
+                rotate 480ms linear;
+        }
+    }
+}

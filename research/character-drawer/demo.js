@@ -1216,8 +1216,8 @@ const IDEAS = {
                 text: 'The panel appears at full size with a single hard, fast slide and an abrupt stop (no easing, no overshoot); closing slides out just as abruptly, reversed.',
             },
             {
-                name: 'It slides on a hard beat',
-                text: 'The panel slides in at a constant fast speed, stopping dead with no settle; closing slides out at the same speed, reversed.',
+                name: 'It is printed',
+                text: 'The panel does not travel: it is printed where it stands in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; closing plays that fall backwards.',
             },
             {
                 name: 'It is stamped down',

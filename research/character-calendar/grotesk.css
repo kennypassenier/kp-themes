@@ -1,0 +1,27 @@
+/* research/character-calendar, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: loading 3 and arrival 1
+   (shape 1, tone 1 and select 1, the Swiss grid with today boxed in black
+   and the pick in red, already are the grammar's).
+
+   - loading 3: the ticker → out of register: a waiting day is printed in two
+     plates (the register draws its red copy on the day itself, travelling the
+     clockwise loop), so the red bar that slid under each figure is retired;
+   - arrival 1: on the grid → printed: each day is printed in black and its
+     red plate falls into register on it, 8 units, a week half a unit after
+     the one before. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear calc(var(--cl-row, 0) * 60ms) backwards;
+        }
+    }
+}

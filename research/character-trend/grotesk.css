@@ -1,0 +1,102 @@
+/* research/character-trend, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: shape 1, loading 1,
+   arrival 2, tone 3, live 1.
+
+   - shape 1: the transit board's red 6 px bar becomes the plate's 3 px ink
+     rule (the red bar on every plate is synthwave's stripe); the line stays
+     3 px, round-capped;
+   - loading 1: a line runs across → out of register: the tile's skeleton
+     lines are the package's proofs and the plot's placeholder is the plot
+     printed in two plates, its red copy travelling the clockwise loop;
+   - arrival 2: set in type → printed: the line and the number are printed in
+     black and their red plate falls into register on them, 8 units;
+   - tone 3: the index colour → indexed: a 6 px bar of the tone down the
+     start edge and the tone's word before the number, the number ink on
+     paper;
+   - live 1: redrawn → re-registered: the line is redrawn at once and its red
+     plate falls back into register on it. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-ct-shape='1'] .kp-kpi--trend {
+        --tr-pat: linear-gradient(var(--foreground), var(--foreground)) 0 0 / 100% 3px no-repeat;
+    }
+
+    [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: none;
+        --tr-load-anim: none;
+    }
+
+    [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot {
+        --kp-sig-gr-r: 4px;
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        overflow: visible;
+        filter: drop-shadow(
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+                calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a))) 0
+                rgb(from var(--primary) r g b / clamp(0, calc(var(--kp-sig-gr-q) * 40), 1))
+        );
+    }
+
+    [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        background:
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% 3px no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    [data-theme='grotesk'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --kp-sig-gr-r: 3px;
+        --tr-arr-line: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        --tr-arr-num: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-tone-num-bg: none;
+        --tr-tone-num-fg: inherit;
+        --tr-tone-num-pad: 0;
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        padding-inline-start: 0.9rem;
+        border-inline-start: 6px solid var(--kp-sig-gr-tone);
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='warning'] {
+        --kp-sig-gr-tone: var(--warning);
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='destructive'] {
+        --kp-sig-gr-tone: var(--destructive);
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend:is([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value::before {
+        margin-inline-end: 0.4em;
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        vertical-align: 0.35em;
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='warning'] > .kp-kpi__value::before {
+        content: 'Warning';
+    }
+
+    [data-theme='grotesk'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='destructive'] > .kp-kpi__value::before {
+        content: 'Failed';
+    }
+
+    [data-theme='grotesk'] [data-ct-live='1'] .kp-kpi--trend {
+        --kp-sig-gr-r: 3px;
+        --tr-live-line: kp-sig-grotesk-update-plate var(--kp-sig-gr-fall) linear backwards;
+        --tr-live-area: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot {
+            animation: kp-sig-grotesk-loop var(--kp-sig-gr-loop) linear infinite;
+        }
+    }
+}

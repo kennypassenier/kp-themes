@@ -1,0 +1,88 @@
+/* research/character-menu, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: shape 1, loading
+   r2-gro-load-2, open 1, tone 1, interact 2.
+
+   - shape 1: a column under its rule is for plates; the menu floats over the
+     page, so it keeps the register's 3 px ink frame and its top rule is the
+     ink, not the red bar on every plate;
+   - loading: the ruling pen scores → out of register: the loading entry is
+     printed in two plates, its red copy travelling the clockwise loop;
+   - open 1: set in type → printed: the menu is printed in black and its red
+     plate falls into register on it, 8 units; the close is that fall played
+     backwards;
+   - tone 1: the index colour → indexed: the destructive entry carries a 6 px
+     bar of the tone down the start edge and the tone's word before it;
+   - interact 2: the bar runs → hover draws the red bar along the entry's top
+     edge (inside it, nothing moves); focus is DI2's ring and the red plate
+     falling into register; a press thickens the bar in the deeper red. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        border-block-start: 3px solid var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-mb-loading='r2-gro-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        --kp-sig-gr-r: 4px;
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        background: none;
+        filter: drop-shadow(
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+                calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a))) 0
+                rgb(from var(--primary) r g b / clamp(0, calc(var(--kp-sig-gr-q) * 40), 1))
+        );
+    }
+
+    [data-theme='grotesk'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: none;
+        border-inline-start: 6px solid var(--destructive);
+    }
+
+    [data-theme='grotesk'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive .kp-menu__label::before {
+        content: 'Failed';
+        margin-inline-end: 0.4em;
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+    }
+
+    [data-theme='grotesk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        border-block-start: 0;
+        box-shadow: inset 0 2px 0 0 var(--primary);
+    }
+
+    [data-theme='grotesk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:focus-visible {
+        box-shadow:
+            inset 0 2px 0 0 var(--primary),
+            inset 0 0 0 2px var(--focus-ring);
+    }
+
+    [data-theme='grotesk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        border-block-start: 0;
+        box-shadow: inset 0 4px 0 0 var(--primary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-mb-loading='r2-gro-load-2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: kp-sig-grotesk-loop calc(var(--kp-sig-gr-loop) / var(--mb-speed, 1)) linear infinite;
+        }
+
+        [data-theme='grotesk'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            --kp-sig-gr-r: 8px;
+            animation: kp-sig-grotesk-fall calc(var(--kp-sig-gr-fall) / var(--mb-speed, 1)) linear backwards;
+        }
+
+        [data-theme='grotesk'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-grotesk-fall;
+            animation-direction: reverse;
+        }
+
+        [data-theme='grotesk'] [data-mb-interact='2'] .kp-menu-button > .kp-menu .kp-menu__item:focus-visible {
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall calc(var(--kp-sig-gr-fall) / var(--mb-speed, 1)) linear backwards;
+        }
+    }
+}

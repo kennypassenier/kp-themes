@@ -767,7 +767,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The transit board',
-                text: 'A thick bar in the series colour runs along the plate’s top, headings in bold grotesque, a flat rule between groups.',
+                text: 'A heavy ink rule runs along the plate’s top inside the 3 px frame a floating menu keeps, headings in bold grotesque, a flat rule between groups.',
             },
             { name: 'The Swiss poster', text: 'Headings huge and flush left, a hairline between groups, entries tight and plain.' },
             { name: 'The index card', text: 'A red rule runs down the plate’s left margin, a hairline along the top, entries large and tight.' },
@@ -778,7 +778,10 @@ const IDEAS = {
             { name: 'The flap board', text: 'Three bars flip over one after the other, as a departure board’s flaps.' },
         ],
         open: [
-            { name: 'Set in type', text: 'The menu is drawn in from the left, easing in and out, and erased the same way to close.' },
+            {
+                name: 'Printed',
+                text: 'The menu is printed in black and its red plate falls into register on it, clockwise, in 8 units; the same fall played backwards closes it.',
+            },
             {
                 name: 'The board flips',
                 text: 'The menu rises from the bottom in three hard steps like flap-board tiles, and flips back down to close.',
@@ -788,7 +791,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The index colour',
-                text: 'The destructive entry prints on the poster’s index colour; the disabled reason reads under a heavy rule.',
+                text: 'The destructive entry carries a 6 px bar of its tone down the start edge and the tone’s word before it; the disabled reason reads under a heavy rule.',
             },
             {
                 name: 'The underlined figure',
@@ -801,7 +804,10 @@ const IDEAS = {
         ],
         interact: [
             { name: 'Flipped', text: 'A hovered or focused entry flips a few degrees like a departure-board tile; a press holds the flip.' },
-            { name: 'The bar runs', text: 'A hovered or focused entry’s top bar runs the entry’s width; a press pulls the bar back and in.' },
+            {
+                name: 'The bar runs',
+                text: 'A hovered entry draws a red bar along its top edge; focus is the ring with the red plate falling into register; a press thickens the bar in the deeper red.',
+            },
             { name: 'Shifted', text: 'A hovered or focused entry shifts a hair toward the margin rule; a press shifts it back flush.' },
         ],
     },

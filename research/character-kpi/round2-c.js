@@ -21,7 +21,7 @@ export default {
             {
                 key: 'r2-gr-shape-1',
                 name: 'The ruled grid',
-                text: 'A borderless plate crossed by five faint vertical rules, a bold red baseline rule along the foot, the number set heavy in the grotesque — the Swiss grid behind the chart, and the meter’s own rule, drawn into the tile.',
+                text: 'A column under its rule: no frame, a heavy ink rule along the top, five faint vertical rules behind the number, set heavy in the grotesque — the Swiss grid behind the chart, drawn into the tile. The red foot bar is gone: the red signals once.',
             },
             {
                 key: 'r2-gr-shape-2',

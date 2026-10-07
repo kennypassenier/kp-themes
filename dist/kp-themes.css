@@ -2177,7 +2177,7 @@
     --fx-signal-foreground: hsl(0, 0%, 100%);
     --fx-notch: 0px;
     --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear;
     --theme-font-display: 'Archivo', 'Inter', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(355, 95%, 45%);
@@ -43012,6 +43012,24 @@
 }
 /* ── End of the signature ── */
 
+/* The red plate's polar position round the black ink: --kp-sig-gr-a is its
+   angle (it only ever grows: screen y points down, so a growing angle is
+   clockwise, in either text direction) and --kp-sig-gr-q its distance (1 the
+   far point, 0 in register, where it is behind the ink and so not seen).
+   Registered so the keyframes interpolate them; at the top level because
+   Firefox does not register an @property inside a layer. */
+@property --kp-sig-gr-a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --kp-sig-gr-q {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/grotesk-register.css
    The grotesk register, 5.0.0 [S48, LIFT_PLAN row 12]: the International
@@ -43051,14 +43069,14 @@
         --kp-calendar-nav-fit: 22.5rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
-        --kp-reveal-stagger: 200ms;
-        --kp-classified-delay: 200ms;
-        --kp-redact-stagger: 90ms;
+        --kp-reveal-stagger: 240ms;
+        --kp-classified-delay: 240ms;
+        --kp-redact-stagger: 120ms;
         --kp-sharpen-blur: 14px;
         --kp-sharpen-bright: 0.35;
-        --kp-rule-draw: 320ms;
-        --kp-rule-delay: 640ms;
-        --kp-redact-cut: 220ms;
+        --kp-rule-draw: 360ms;
+        --kp-rule-delay: 600ms;
+        --kp-redact-cut: 240ms;
         /* The reveals this theme performs [S45]: js/effects.js reads these
            and leaves a theme that declares none at rest. */
         --kp-reveal-headline: sharpen;
@@ -43118,7 +43136,7 @@
     /* The rule: Grilli's own two-speed timing has no equivalent for a
        drawn rule, so this reuses the base layer's kp-rule-in keyframe
        (shared by formal, blueprint, deco, academia) at the demo's own
-       320ms/640ms-delay/cubic-bezier(0.2,0,0,1) — a caesura in the grid,
+       360ms/600ms-delay/linear (units of 120 ms) — a caesura in the grid,
        not a new mechanism. */
     [data-theme='grotesk'] [data-kp-reveal='rule'] {
         position: relative;
@@ -43394,7 +43412,15 @@
         color: var(--popover-foreground);
     }
 
-    /* ── Buttons: right angles, a 2px rule, the mirror-invert on hover ──── */
+    /* ── Buttons: right angles, a 2px ink line. Hovered, a red bar on the
+       foot; focused, DI2's two-channel ring and the red plate falling in
+       (the signature layer); pressed, the rule thickens [Kenny, 2026-10-07
+       on research/grotesk-character: hover = a bar on the edge thickens,
+       focus = the ring and the plate, press = the rule thickens, his
+       scope-12, "I don't like the grey background it gives": a pressed part
+       is never grey]. The bar and the ring are two custom properties laid
+       in one box-shadow, so a hovered button that is also focused keeps both
+       whatever the specificity of either rule. ──── */
 
     [data-theme='grotesk'] .kp-button {
         font-weight: 700;
@@ -43402,30 +43428,12 @@
         border-radius: 0;
         background: var(--background);
         color: var(--foreground);
-        box-shadow: none;
     }
 
-    /* The demo's own generic wash (`.kp-button:hover:not(.kp-button--mirror)`)
-       never has to answer a non-mirror primary or destructive button —
-       its own markup always pairs those with `.kp-button--mirror`. The
-       package's dashboard does not: a menu's plain, non-mirror destructive
-       item found the wash overriding the button's own red plate on focus
-       (W4's cross-theme test). The exclusions keep the demo's wash for the
-       default button while leaving a coloured variant's own background,
-       declared below, alone. */
-    /* Phase 7, `grotesk-press`: `:not(:active)` on the hover. The pressed
-       rule below was correct and had no effect — this selector carries
-       three `:not(.class)` clauses and so outranked it, and a pointer is
-       always hovering while it presses. Measured before: hovered and
-       held down both painted 96% lightness — the same grey twice. After:
-       the press lands on 79%, which is what --secondary-active always
-       held and never got to paint. The same shape as `fix-12` one storey down —
-       not a later layer beating a state, but a longer selector in the
-       same layer. high-contrast already wrote it this way, which is why
-       this is the idiom rather than a heavier press selector. */
-    [data-theme='grotesk'] .kp-button:hover:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive),
-    [data-theme='grotesk'] .kp-button:focus-visible:not(:active):not(.kp-button--mirror):not(.kp-button--primary):not(.kp-button--destructive) {
-        background: var(--muted);
+    [data-theme='grotesk'] :is(.kp-button, .kp-icon-button) {
+        --kp-sig-gr-foot: 0 0 0 0 transparent;
+        --kp-sig-gr-ring: 0 0 0 0 transparent;
+        box-shadow: var(--kp-sig-gr-foot), var(--kp-sig-gr-ring);
     }
 
     [data-theme='grotesk'] .kp-button--primary {
@@ -43440,51 +43448,52 @@
         color: var(--destructive-foreground);
     }
 
-    /* (e) The invert, on every coloured button [Kenny's note of 2026-09-13,
-       option B of research/grotesk-hover/demo.html]. The approved demo
-       inverted a coloured button only when it also carried --mirror, so a
-       plain primary or destructive button merely deepened its red on hover
-       (measured: each painted its own --primary-hover or --destructive-hover).
-       Now the fill becomes the page ground and the label takes the colour,
-       on hover and on keyboard focus, and never while pressed — the press
-       keeps its own value, so it still differs from the hover.
-       The border is restated: the fill was the button's colour and the
-       border merely matched it, so with the fill gone the 2px border in the
-       same colour is what keeps the button's outline on the white ground,
-       and --primary-hover from the components layer would otherwise tint it. */
-    [data-theme='grotesk'] .kp-button--primary:hover:not(:active),
-    [data-theme='grotesk'] .kp-button--primary:focus-visible:not(:active) {
+    /* The hover: a 3 px red bar along the foot, drawn inside the line (nothing
+       moves, nothing beside it shifts), the ground the page's own. On a red
+       face the bar is the ink, which the red face can show. The base layer's
+       grey hover ground is painted over. */
+    [data-theme='grotesk'] .kp-button:hover:not(:disabled) {
         background: var(--background);
+    }
+
+    [data-theme='grotesk'] .kp-button--primary:hover:not(:disabled) {
+        background: var(--primary);
         border-color: var(--primary);
-        color: var(--primary);
     }
 
-    [data-theme='grotesk'] .kp-button--destructive:hover:not(:active),
-    [data-theme='grotesk'] .kp-button--destructive:focus-visible:not(:active) {
-        background: var(--background);
+    [data-theme='grotesk'] .kp-button--destructive:hover:not(:disabled) {
+        background: var(--destructive);
         border-color: var(--destructive);
-        color: var(--destructive);
     }
 
-    /* The press, restated for the two coloured variants [fix-12]: the invert
-       above already stands down while :active, so what a press paints is
-       what it painted before and in option B's demo — the register's own
-       pressed ground below (--secondary-active). Written out so the pressed
-       state of these two buttons is this register's decision on the page,
-       not an accident of specificity. The label turns to --foreground while
-       pressed [Kenny, 2026-09-14, "B, met een zwart label bij indrukken"]:
-       the white label measured 1.66:1 on that grey, the black one 11.31:1. */
-    [data-theme='grotesk'] .kp-button--primary:active:not(:disabled),
-    [data-theme='grotesk'] .kp-button--destructive:active:not(:disabled) {
-        background: var(--secondary-active);
+    [data-theme='grotesk'] :is(.kp-button, .kp-icon-button):hover:not(:disabled, :active) {
+        --kp-sig-gr-foot: inset 0 -3px 0 0 var(--primary);
+    }
+
+    [data-theme='grotesk'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled, :active) {
+        --kp-sig-gr-foot: inset 0 -3px 0 0 var(--foreground);
+    }
+
+    /* The press, never grey [Kenny, 2026-10-07, over the grey face he had
+       approved on 2026-09-14]: the paper face stays and the baseline under
+       the words thickens (below, "The baseline"), and a red face deepens its
+       red. Written out for every variant so the pressed state is this
+       register's decision on the page [fix-12]. */
+    [data-theme='grotesk'] .kp-button:active:not(:disabled) {
+        background: var(--background);
         color: var(--foreground);
     }
 
-    /* A bare mirror button, neither primary nor destructive, takes the
-       default button's grey wash on hover (option B), which the wash above
-       leaves out for it. */
-    [data-theme='grotesk'] .kp-button--mirror:not(.kp-button--primary):not(.kp-button--destructive):hover:not(:active) {
-        background: var(--muted);
+    [data-theme='grotesk'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='grotesk'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+        color: var(--destructive-foreground);
     }
 
     [data-theme='grotesk'] .kp-button--ghost {
@@ -43494,13 +43503,14 @@
     }
 
     [data-theme='grotesk'] .kp-button--ghost:hover,
-    [data-theme='grotesk'] .kp-button--ghost:focus-visible {
+    [data-theme='grotesk'] .kp-button--ghost:focus-visible,
+    [data-theme='grotesk'] .kp-button--ghost:active:not(:disabled) {
         border-color: var(--foreground);
         background: none;
     }
 
-    [data-theme='grotesk'] .kp-button:focus-visible {
-        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    [data-theme='grotesk'] :is(.kp-button, .kp-icon-button):focus-visible {
+        --kp-sig-gr-ring: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
     /* A filled button's outer ring can sit against a busy neighbour — a
@@ -43512,10 +43522,7 @@
        button's own face. */
     [data-theme='grotesk'] .kp-button--primary:focus-visible,
     [data-theme='grotesk'] .kp-button--destructive:focus-visible {
-        box-shadow:
-            0 0 0 2px var(--focus-ring-contrast),
-            0 0 0 4px var(--focus-ring),
-            inset 0 0 0 2px var(--focus-ring);
+        --kp-sig-gr-ring: 0 0 0 2px var(--focus-ring-contrast), 0 0 0 4px var(--focus-ring), inset 0 0 0 2px var(--focus-ring);
     }
 
     /* The demo's call-to-action row: wide buttons, as in the reference. A
@@ -43537,9 +43544,9 @@
         color: inherit;
     }
 
-    [data-theme='grotesk'] .kp-icon-button:hover {
+    [data-theme='grotesk'] .kp-icon-button:hover:not(:disabled) {
         border-color: var(--foreground);
-        background: var(--muted);
+        background: var(--background);
     }
 
     /* ── Fields: the ruled well ───────────────────────────────────────── */
@@ -43682,8 +43689,14 @@
         gap: 0.6rem;
     }
 
+    /* A menu entry hovered gets a red bar along its top edge [hover = a bar on
+       the edge], drawn inside the entry so nothing moves. */
+    [data-theme='grotesk'] .kp-menu__item:hover {
+        background: var(--popover);
+        box-shadow: inset 0 2px 0 0 var(--primary);
+    }
+
     /* The keyboard highlight: the wash, the ink keeps its own colour. */
-    [data-theme='grotesk'] .kp-menu__item:hover,
     [data-theme='grotesk'] .kp-combobox__option[aria-selected='true'],
     [data-theme='grotesk'] .kp-palette__option[aria-selected='true'] {
         background: var(--muted);
@@ -43704,7 +43717,7 @@
     [data-theme='grotesk'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--background);
         border: 2px solid var(--border);
-        border-inline-start: 4px solid var(--accent);
+        border-inline-start: 6px solid var(--accent);
         border-radius: 0;
     }
 
@@ -43798,11 +43811,17 @@
 
     /* ── Badges, tags, status ────────────────────────────────────────── */
 
+    /* The voice [Kenny, 2026-10-07 on research/grotesk-character: Archivo heavy
+       and tight for titles and figures, Inter for the rest, in sentence case]:
+       a badge and a tag speak Inter 700, no tracking, no capitals; the mono
+       is for what a machine wrote. */
     [data-theme='grotesk'] .kp-badge,
     [data-theme='grotesk'] .kp-tag {
         border-radius: 0;
-        font-family: var(--kp-mono);
-        letter-spacing: 0.06em;
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
     }
 
     /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
@@ -44159,15 +44178,15 @@
        durations are literal because check-motion.mjs computes DI5's rate
        from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
-        /* (a) The headline's blur+brightness resolve: 640ms, one-shot. */
+        /* (a) The headline's blur+brightness resolve: 600ms (five units), one-shot. */
         [data-theme='grotesk'][data-kp-effects] [data-kp-reveal='headline'].is-sharpening {
-            animation: kp-sharpen-in 640ms cubic-bezier(0.2, 0, 0, 1) forwards;
+            animation: kp-sharpen-in 600ms linear forwards;
         }
 
-        /* (c) The section rule draw-in: 320ms, delayed 640ms so it follows
+        /* (c) The section rule draw-in: 360ms, delayed 600ms so it follows
            the headline settling — the demo's own reading. */
         [data-theme='grotesk'] [data-kp-reveal='rule']::after {
-            transition: transform var(--kp-rule-draw) cubic-bezier(0.2, 0, 0, 1) var(--kp-rule-delay);
+            transition: transform var(--kp-rule-draw) linear var(--kp-rule-delay);
         }
 
         /* (d) The redaction: a monotone three-step cut, staggered ~90ms. */
@@ -44203,12 +44222,12 @@
 
         /* (f) The confirmation dialog: Kenny's rule of 2026-09-08 (a native
            <dialog>, never a button that relabels itself), the theme's own
-           fx-duration/fx-ease (120ms, cubic-bezier(0.2,0,0,1) — written as
+           fx-duration/fx-ease (120ms, linear: on time — written as
            literals here, not var(--fx-duration), because check-motion.mjs
            computes DI5's rate from the animation's own declared duration),
            opacity+transform on the panel only. */
         [data-theme='grotesk'] .kp-dialog[open] {
-            animation: kp-dialog-in 120ms cubic-bezier(0.2, 0, 0, 1);
+            animation: kp-dialog-in 120ms linear;
         }
     }
 
@@ -44315,16 +44334,10 @@
        a register writing `.kp-button:hover { background: ... }` outranks
        the base layer's `.kp-button:active`, so pressing the button changed
        nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
-       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
-       fifteen of the twenty-five registers had it.
-
-       These restate the base layer's own pressed values, token for token.
-       Nothing new is decided here; what the components layer already said
-       is put back where the cascade can reach it. */
-
-    [data-theme='grotesk'] .kp-button:active:not(:disabled) {
-        background: var(--secondary-active);
-    }
+       blijf klikken op de knop zelf, dan gebeurt er precies niks".
+       Grotesk's pressed states are written out with the buttons above
+       (paper, never the base layer's grey; a red face deepens its red), so
+       what a press paints is this register's own decision. */
 
     /* ── The baseline appears [scope-12, approved 2026-09-12] ──────────
        Grotesk is Swiss typography, and the instrument of Swiss typography
@@ -44383,8 +44396,6 @@
         }
     }
 
-    [data-theme='grotesk'] .kp-button:hover .kp-button__label::after,
-    [data-theme='grotesk'] .kp-button:focus-visible .kp-button__label::after,
     [data-theme='grotesk'] .kp-nav__link:hover::after,
     [data-theme='grotesk'] .kp-nav__link:focus-visible::after,
     [data-theme='grotesk'] .kp-sidenav__link:hover::after,
@@ -44392,10 +44403,17 @@
         scale: 1 1;
     }
 
-    /* The press is instant: the rule is already out, and only its weight
-       and colour change. Nothing here is in the transition list, so a
-       click shorter than 220ms still shows — the reading that fixed
-       Shade (light) and Shade (dark). */
+    /* The press thickens the rule [Kenny, 2026-10-07: "the rule thickens", his
+       scope-12]: at once and for as long as it is held, the baseline under a
+       button's words is out, 4 px, in the deeper red; a nav link's was out
+       already (it is drawn by hovering) and only thickens. Nothing here is in
+       the transition list, so a click shorter than 120 ms still shows — the
+       reading that fixed Shade (light) and Shade (dark). */
+    [data-theme='grotesk'] .kp-button:active:not(:disabled) .kp-button__label::after {
+        scale: 1 1;
+        transition: none;
+    }
+
     [data-theme='grotesk'] .kp-button:active:not(:disabled) .kp-button__label,
     [data-theme='grotesk'] .kp-nav__link:active,
     [data-theme='grotesk'] .kp-sidenav__link:active {
@@ -44524,6 +44542,109 @@
     [data-theme='grotesk'] .kp-sidenav__submenu .kp-sidenav__link {
         --kp-sidenav-submenu-mark: '—';
     }
+
+    /* ── A plate is a column under its rule [G7; Kenny, 2026-10-07 on
+       research/grotesk-character: surface = a column under its rule, no box].
+       A card, a key figure, the busy panel and the page header are white
+       paper with no frame: a 3 px ink rule along the top says where it starts
+       and the words stand flush left on the column. The grid's hairlines
+       stay under data and on the page (the twelve columns). What floats over
+       the page (dialog, popover, menu, toast, tooltip) keeps its 3 px ink
+       frame above, so it stands off what is under it. No shadow, no blur, no
+       tint, nothing translucent: the plate has no paper of its own, so the
+       red plate behind it (the signature layer) shows only its ink. ── */
+    [data-theme='grotesk'] :is(.kp-card, .kp-kpi, .kp-datatable__busy-panel, .kp-page-header) {
+        border: 0;
+        border-block-start: 3px solid var(--foreground);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] :is(.kp-card, .kp-kpi) {
+        padding: 0.5rem 0 0.65rem;
+    }
+
+    [data-theme='grotesk'] .kp-page-header {
+        padding-block: 0.6rem 0.7rem;
+    }
+
+    /* A key figure or a card that is a link or a toggle: hovered, its rule
+       turns red and thickens to 7 px (the rule is 3, the red goes 4 deeper
+       inside it, so the words stay where they are) and it takes a 4 % wash of
+       the red [hover = a bar on the edge thickens]. A filter that is on keeps
+       its pressed colours (the package's). */
+    [data-theme='grotesk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend):hover {
+        border-block-start-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 4%, var(--card));
+        box-shadow: inset 0 4px 0 0 var(--primary);
+    }
+
+    /* ── A warning is indexed [G13; Kenny, 2026-10-07: tone = indexed]. A key
+       figure in a tone carries a 6 px bar of the tone down its start edge, like
+       a thumb index, and the tone's word, set in bold before its figure, so
+       colour is never the only carrier (DI4); the figure itself stays ink on
+       paper (the package's plate under the figure is taken off). The words
+       are knobs (--kp-sig-gr-word-warning, --kp-sig-gr-word-destructive) so
+       a page in another language sets its own. ── */
+    [data-theme='grotesk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        padding-inline-start: 0.9rem;
+        border-inline-start: 6px solid var(--kp-sig-gr-tone);
+        box-shadow: none;
+    }
+
+    [data-theme='grotesk'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-sig-gr-tone: var(--warning);
+    }
+
+    [data-theme='grotesk'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-sig-gr-tone: var(--destructive);
+    }
+
+    [data-theme='grotesk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value::before {
+        margin-inline-end: 0.4em;
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        vertical-align: 0.35em;
+    }
+
+    [data-theme='grotesk'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__value::before {
+        content: var(--kp-sig-gr-word-warning, 'Warning');
+    }
+
+    [data-theme='grotesk'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__value::before {
+        content: var(--kp-sig-gr-word-destructive, 'Failed');
+    }
+
+    /* The change sits on a square plate with the timetable's arrows, ↗ and ↘
+       [G13]. A change with a tone keeps the package's status pair. */
+    [data-theme='grotesk'] .kp-kpi__delta {
+        padding-inline: 0.3em;
+        border-radius: 0;
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    [data-theme='grotesk'] .kp-kpi__delta:not([data-kp-tone]) {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='grotesk'] .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '↗\00a0';
+    }
+
+    [data-theme='grotesk'] .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '↘\00a0';
+    }
 }
 
 /* ── Signature [scope-140] ─────────────────────────────────────────────── */
@@ -44569,79 +44690,218 @@
         transition: transform var(--fx-duration, 120ms) var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
     }
 
+    /* The busy bar is the slab [bars = the slab; Kenny, 2026-10-07 on
+       research/grotesk-character: "one heavy ink bar, its red plate turning
+       clockwise behind it"]: a solid ink bar the full width and, behind it,
+       the same bar in red, `--kp-sig-gr-r` away, which closes in clockwise
+       at an even pace, falls into register (the red goes behind the black)
+       and dwells, then opens out again clockwise: 2640 ms. Only the red
+       fringe shows until the plates register; nothing in it is thinner than
+       3 px. A bar with a share is the red fill on the ruled track, as before.
+       Standing still the plate lies a little out of register. */
+    [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-sig-gr-r: calc(3px * var(--kp-progressbar-scale, 1));
+    }
+
+    [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+        background: var(--card);
+    }
+
+    [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-sig-gr-r);
+        background: var(--gr-red);
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        translate: calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a)));
+    }
+
     [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset-block: 45% calc(var(--gr-base) + 2px * var(--kp-progressbar-scale, 1));
-        inset-inline: 0;
+        inset: var(--kp-sig-gr-r);
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: linear-gradient(90deg, var(--gr-red) 0 50%, transparent 50%) 0 0 / calc(var(--gr-col) * 2) 100% repeat-x;
+        background: var(--gr-ink);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-            inset-block: 0 var(--gr-base);
-            inset-inline-end: auto;
-            inline-size: var(--gr-col);
-            background: var(--gr-red);
-            animation: kp-progressbar-grotesk-cut 1440ms steps(12, jump-none) infinite;
+        [data-theme='grotesk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+            animation: kp-sig-grotesk-loop var(--kp-sig-gr-loop) linear infinite;
         }
     }
 
+    /* ── The grammar [Kenny, 2026-10-07 on research/grotesk-character: all
+       nineteen questions approved; themes/grotesk/CHARACTER.md "Applied"].
+       The anchor is Out of register: a second, red plate under the black ink;
+       where it stands says what the part is (slipped: arriving, waiting,
+       changing; in register, behind the black: there, held). It runs on time:
+       an even pace (`--fx-ease` is linear), a dead stop, a dwell, in whole
+       units of the register's 120 ms: contact 1 unit, a set 2, a fall 8, a
+       loop 22. Written as literals: js/motion.js reads its caps from the root
+       and parses their milliseconds. ── */
     [data-theme='grotesk'] {
-        --kp-sig-gr-draw: var(--kp-rule-draw, 320ms);
-        --kp-sig-gr-ease: cubic-bezier(0.2, 0, 0, 1);
+        --kp-sig-gr-unit: 120ms;
+        --kp-sig-gr-set: 240ms;
+        --kp-sig-gr-fall: 960ms;
+        --kp-sig-gr-loop: 2640ms;
+        /* The second plate: the red, and how far it slipped (a part says its own). */
+        --kp-sig-gr-plate: var(--primary);
+        --kp-sig-gr-r: 6px;
+        --kp-sig-gr-draw: var(--kp-rule-draw, 360ms);
+        --kp-sig-gr-ease: linear;
         --kp-sig-gr-cols: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.06) 0 1px, transparent 1px calc(100% / 12));
+        /* A close is as long as a fall, a resize is the cut's two units, and
+           nothing is dimmed while it waits: the proof says busy (G7). */
+        --kp-close-max: var(--kp-sig-gr-fall);
+        --kp-size-max: var(--kp-sig-gr-set);
+        --kp-busy-opacity: 1;
     }
 
+    /* A part's second plate slips less on a small part and more on a window. */
+    [data-theme='grotesk'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-kpi__link, .kp-tag, .kp-badge) {
+        --kp-sig-gr-r: 4px;
+    }
+
+    [data-theme='grotesk'] :is(.kp-dialog, .kp-toast, .kp-tooltip, .kp-popover, .kp-menu) {
+        --kp-sig-gr-r: 8px;
+    }
+
+    /* A red face's second plate is the ink: its own red would not show. */
+    [data-theme='grotesk'] :is(.kp-button--primary, .kp-button--destructive) {
+        --kp-sig-gr-plate: var(--foreground);
+    }
+
+    /* The spinner is the twin that turns [spinner = the twin turns]: a square
+       ink outline (3 px at the least) and, behind it, its red twin, which
+       turns clockwise at an even pace and is in register every quarter turn
+       (a square looks the same every 90 degrees), where it rests for 3
+       units: a quarter turn in 8 units, 2640 ms for half a turn. It never
+       stops turning and never turns back. Standing still, the twin lies a
+       little turned. On a red face the twin is the ink and the square the
+       face's own white. */
     [data-theme='grotesk'] .kp-spinner {
-        --kp-sig-dur: 1600ms;
+        --kp-sig-gr-t: max(3px, calc(var(--kp-spinner-size, 1.25rem) * 0.15));
         position: relative;
-        border: 2px solid var(--foreground);
+        border: 0;
         border-radius: 0;
         background: none;
         animation: none;
     }
 
+    [data-theme='grotesk'] .kp-spinner::before,
     [data-theme='grotesk'] .kp-spinner::after {
         content: '';
         position: absolute;
-        inset: 1px;
-        background: radial-gradient(circle at 100% 100%, var(--primary) 0 70%, transparent calc(70% + 0.5px)) 0 0 / 50% 50% no-repeat;
+        inset: 0;
+        box-sizing: border-box;
+        border: var(--kp-sig-gr-t) solid var(--kp-sig-gr-c);
     }
 
+    [data-theme='grotesk'] .kp-spinner::before {
+        --kp-sig-gr-c: var(--primary);
+        rotate: 22deg;
+    }
+
+    [data-theme='grotesk'] .kp-spinner::after {
+        --kp-sig-gr-c: var(--foreground);
+    }
+
+    [data-theme='grotesk'] :is(.kp-button--primary, .kp-button--destructive) .kp-spinner::before {
+        --kp-sig-gr-c: var(--foreground);
+    }
+
+    [data-theme='grotesk'] .kp-button--primary .kp-spinner::after {
+        --kp-sig-gr-c: var(--primary-foreground);
+    }
+
+    [data-theme='grotesk'] .kp-button--destructive .kp-spinner::after {
+        --kp-sig-gr-c: var(--destructive-foreground);
+    }
+
+    /* The skeleton is the proof [loading = out of register]: the place a
+       reading will stand is printed in two plates, the ink on ::after and,
+       under it, the red on ::before, which closes in clockwise at an even
+       pace, falls into register (the red vanishes behind the black), dwells
+       for 4 units and opens out again clockwise: 22 units, 2640 ms, the
+       lines of one skeleton together. The first line is the heading, twice
+       as thick. Standing still, the red lies a little out of register. A
+       block and a circle are drawn as a frame. */
     [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 1800ms;
-        --kp-sig-gr-base: 2px;
+        --kp-sig-gr-r: 0.65rem;
         position: relative;
-        overflow: hidden;
-        block-size: 0.75rem;
+        block-size: 0.7rem;
         border-radius: 0;
-        background:
-            linear-gradient(var(--foreground), var(--foreground)) bottom / 100% var(--kp-sig-gr-base) no-repeat,
-            linear-gradient(hsl(from var(--foreground) h s l / 0.09), hsl(from var(--foreground) h s l / 0.09)) top / 100%
-                calc(100% - var(--kp-sig-gr-base) - 3px) no-repeat;
+        background: none;
         animation: none;
     }
 
     [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):first-child {
-        --kp-sig-gr-base: 4px;
-        block-size: 1.5rem;
+        block-size: 1.4rem;
         margin-block-end: 0.5rem;
     }
 
     [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        margin-block-start: 0.7rem;
+        margin-block-start: 0.65rem;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-gr-r: 6px;
+        position: relative;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton::before,
+    [data-theme='grotesk'] .kp-skeleton::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='grotesk'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        border: 3px solid var(--kp-sig-gr-c);
+    }
+
+    [data-theme='grotesk'] .kp-skeleton--circle::before,
+    [data-theme='grotesk'] .kp-skeleton--circle::after {
+        border-radius: 50%;
+    }
+
+    [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        background: var(--kp-sig-gr-c);
     }
 
     [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        content: '';
-        position: absolute;
-        inset-inline: 0;
-        inset-block-end: 0;
-        block-size: var(--kp-sig-gr-base);
-        background: var(--primary);
-        transform: translateX(-100%);
+        background: var(--kp-sig-gr-c);
+    }
+
+    [data-theme='grotesk'] .kp-skeleton::before {
+        --kp-sig-gr-c: var(--primary);
+        --kp-sig-gr-a: 37.9deg;
+        --kp-sig-gr-q: 0.57;
+        translate: calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a)));
+    }
+
+    [data-theme='grotesk'] .kp-skeleton::after {
+        --kp-sig-gr-c: var(--foreground);
+    }
+
+    /* A meter that measures, and a day, an entry or a card that waits: the
+       part's own proof, a red copy of it travelling the same loop behind it. */
+    [data-theme='grotesk'] :is(.kp-calendar__day[data-kp-tone='loading'], .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]) {
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        filter: drop-shadow(
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+                calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a))) 0
+                rgb(from var(--kp-sig-gr-plate) r g b / clamp(0, calc(var(--kp-sig-gr-q) * 40), 1))
+        );
+        animation: none;
     }
 
     [data-theme='grotesk'] .kp-switch {
@@ -44675,7 +44935,7 @@
     }
 
     [data-theme='grotesk'] .kp-field__check {
-        --kp-sig-dur: 220ms;
+        --kp-sig-dur: var(--kp-sig-gr-set);
         appearance: none;
         display: inline-grid;
         place-content: center;
@@ -44714,7 +44974,7 @@
     }
 
     [data-theme='grotesk'] .kp-toast {
-        --kp-sig-dur: 220ms;
+        --kp-sig-dur: var(--kp-sig-gr-fall);
         position: relative;
         border-radius: 0;
         border-block-start: 0.375rem solid transparent;
@@ -44735,10 +44995,18 @@
         background: var(--foreground);
     }
 
+    /* The unopened dialog is the one js/motion.js measures for the theme's time
+       (a probe it adds and takes off), and it reads close = two thirds of that:
+       so it runs one and a half falls, and the dialog that is open runs one,
+       which is also its close, a fall of 8 units. */
     [data-theme='grotesk'] .kp-dialog {
-        --kp-sig-dur: 280ms;
+        --kp-sig-dur: calc(var(--kp-sig-gr-fall) * 1.5);
         border: 2px solid var(--foreground);
         border-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-gr-fall);
     }
 
     [data-theme='grotesk'] .kp-dialog__title {
@@ -44765,7 +45033,7 @@
     }
 
     [data-theme='grotesk'] .kp-tooltip {
-        --kp-sig-dur: 160ms;
+        --kp-sig-dur: var(--kp-sig-gr-fall);
         margin-inline-start: 0;
         padding: 0.3rem 0.7rem 0.3rem 0.6rem;
         border: 0;
@@ -44878,24 +45146,20 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='grotesk'] .kp-spinner::after {
-            animation: kp-sig-grotesk-gr-quarter var(--kp-sig-dur) var(--kp-sig-gr-ease) infinite;
+        /* Waiting: the red plate's loop, 22 units: a gap of 2, one clockwise turn
+           in 7 while it closes in, a dwell of 5 in register, one clockwise turn
+           out in 8; and the spinner's twin, which turns clockwise throughout. */
+        [data-theme='grotesk'] .kp-skeleton::before,
+        [data-theme='grotesk'] :is(.kp-calendar__day[data-kp-tone='loading'], .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]) {
+            animation: kp-sig-grotesk-loop var(--kp-sig-gr-loop) linear infinite;
         }
 
-        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-grotesk-gr-baseline var(--kp-sig-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
-        }
-
-        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: 180ms;
-        }
-
-        [data-theme='grotesk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: 360ms;
+        [data-theme='grotesk'] .kp-spinner::before {
+            animation: kp-sig-grotesk-turn var(--kp-sig-gr-loop) linear infinite;
         }
 
         [data-theme='grotesk'] .kp-switch__input::before {
-            transition: transform 140ms var(--kp-sig-gr-ease);
+            transition: transform var(--kp-sig-gr-unit) var(--kp-sig-gr-ease);
         }
 
         [data-theme='grotesk'] .kp-field__check[type='checkbox']:checked::before {
@@ -44910,56 +45174,222 @@
             animation: kp-sig-grotesk-gr-rule var(--kp-sig-gr-draw) var(--kp-sig-gr-ease) both;
         }
 
-        [data-theme='grotesk'] .kp-toast {
-            animation: kp-sig-grotesk-gr-cut-in calc(var(--kp-sig-dur) + 160ms) var(--kp-sig-gr-ease) backwards;
-        }
-
-        [data-theme='grotesk'] .kp-dialog {
-            animation: kp-sig-grotesk-gr-cut-in var(--kp-sig-dur) var(--kp-sig-gr-ease) backwards;
+        /* What opens and what arrives is printed in black and its red plate
+           falls into register on it [direction = the plate, opening = the
+           plate]: it travels the closing spiral clockwise at an even pace,
+           8 units, and stops dead in register. Its close is the same fall
+           played backwards (js/motion.js plays a dialog's entrance in
+           reverse), so a close is an open turned around, as everywhere else. */
+        [data-theme='grotesk'] :is(.kp-toast, .kp-dialog, .kp-tooltip) {
+            animation: kp-sig-grotesk-fall var(--kp-sig-dur) linear backwards;
         }
 
         [data-theme='grotesk'] .kp-dialog__title::before {
-            animation: kp-sig-grotesk-gr-rule var(--kp-sig-gr-draw) var(--kp-sig-gr-ease) 120ms both;
+            animation: kp-sig-grotesk-gr-rule var(--kp-sig-gr-draw) var(--kp-sig-gr-ease) var(--kp-sig-gr-unit) both;
         }
 
-        [data-theme='grotesk'] .kp-tooltip {
-            animation: kp-sig-grotesk-gr-cut-in var(--kp-sig-dur) var(--kp-sig-gr-ease) backwards;
+        /* Hovering draws a bar and the press thickens the rule (the register
+           layer); focusing is DI2's two-channel ring and, as on every
+           arrival, the plate falling into register on the focused part. It
+           stays in register for as long as the focus does. */
+        [data-theme='grotesk']
+            :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-field__input, a.kp-kpi, .kp-kpi--toggle, .kp-kpi__link):focus-visible {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        /* A value that changed is re-registered [live = the plate]. js/update.js
+           writes the new value at once and marks its host
+           `[data-kp-updating='plate']` for the update's time (the close's and
+           the size's longer, times 1.25: 1200 ms; the fall is four fifths of
+           it, 960): its red plate falls back into register on it. The value
+           never moves. A state word keeps its width-holding ::after; a spark
+           is an svg, whose parent carries the mark. */
+        [data-theme='grotesk'] {
+            --kp-update: plate;
+        }
+
+        [data-theme='grotesk'] [data-kp-updating='plate'] {
+            --kp-sig-gr-r: 0.14em;
+            animation: kp-sig-grotesk-update-plate calc(var(--kp-update-duration, 1200ms) * 0.8) linear backwards;
+        }
+
+        [data-theme='grotesk'] .kp-state-word[data-kp-updating='plate'] {
+            --kp-sig-gr-r: 0.22em;
+        }
+
+        [data-theme='grotesk'] [data-kp-updating='plate']:has(> svg) {
+            --kp-sig-gr-r: 3px;
         }
     }
 
-    @keyframes kp-sig-grotesk-gr-quarter {
+    /* The plate's fall [the anchor, research/grotesk-anchor ga-fall]: one turn
+       round the ink in 45 degree steps, clockwise (screen y points down), the
+       radius closing from 1 to 0.2 of --kp-sig-gr-r and into register in the
+       seventh of eight units, then the dwell. The register frame is a
+       transparent shadow, so no hair of red shows at the edge of the ink. The
+       plate is the part's own drop-shadow, in the red (a red face's, the ink). */
+    @keyframes kp-sig-grotesk-fall {
+        0% {
+            filter: drop-shadow(var(--kp-sig-gr-r) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.626) calc(var(--kp-sig-gr-r) * 0.626) 0 var(--kp-sig-gr-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * 0.771) 0 var(--kp-sig-gr-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.465) calc(var(--kp-sig-gr-r) * 0.465) 0 var(--kp-sig-gr-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.543) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.303) calc(var(--kp-sig-gr-r) * -0.303) 0 var(--kp-sig-gr-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * -0.314) 0 var(--kp-sig-gr-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.141) calc(var(--kp-sig-gr-r) * -0.141) 0 var(--kp-sig-gr-plate));
+        }
+
+        87.5%,
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* The same fall under another name, so a meter whose tone goes from one
+       warning to the other starts it again. */
+    @keyframes kp-sig-grotesk-fall-again {
+        0% {
+            filter: drop-shadow(var(--kp-sig-gr-r) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.626) calc(var(--kp-sig-gr-r) * 0.626) 0 var(--kp-sig-gr-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * 0.771) 0 var(--kp-sig-gr-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.465) calc(var(--kp-sig-gr-r) * 0.465) 0 var(--kp-sig-gr-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.543) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.303) calc(var(--kp-sig-gr-r) * -0.303) 0 var(--kp-sig-gr-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * -0.314) 0 var(--kp-sig-gr-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.141) calc(var(--kp-sig-gr-r) * -0.141) 0 var(--kp-sig-gr-plate));
+        }
+
+        87.5%,
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* The same fall once more, named as js/update.js wants a register's update
+       keyframes named (`kp-sig-<theme>-update-*`): it waits for exactly those. */
+    @keyframes kp-sig-grotesk-update-plate {
+        0% {
+            filter: drop-shadow(var(--kp-sig-gr-r) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.626) calc(var(--kp-sig-gr-r) * 0.626) 0 var(--kp-sig-gr-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * 0.771) 0 var(--kp-sig-gr-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.465) calc(var(--kp-sig-gr-r) * 0.465) 0 var(--kp-sig-gr-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.543) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.303) calc(var(--kp-sig-gr-r) * -0.303) 0 var(--kp-sig-gr-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * -0.314) 0 var(--kp-sig-gr-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.141) calc(var(--kp-sig-gr-r) * -0.141) 0 var(--kp-sig-gr-plate));
+        }
+
+        87.5%,
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* The waiting loop, in polar coordinates [slip = clockwise in, clockwise
+       out; Kenny, 2026-10-07: "I only like it going clockwise", so the rule of
+       opposites is broken on purpose, themes/grotesk/CHARACTER.md §0b]: a gap
+       of 2 units, one turn in over 7 while the plate closes in, a dwell of 5 in
+       register, one more turn out over 8 as it opens out. --kp-sig-gr-a only
+       ever grows, so the plate never turns back, in either text direction. */
+    @keyframes kp-sig-grotesk-loop {
         0%,
-        15% {
-            transform: rotate(0);
+        9.09% {
+            --kp-sig-gr-a: 0deg;
+            --kp-sig-gr-q: 1;
         }
 
-        25%,
-        40% {
-            transform: rotate(90deg);
-        }
-
-        50%,
-        65% {
-            transform: rotate(180deg);
-        }
-
-        75%,
-        90% {
-            transform: rotate(270deg);
+        40.91%,
+        63.64% {
+            --kp-sig-gr-a: 360deg;
+            --kp-sig-gr-q: 0;
         }
 
         100% {
-            transform: rotate(360deg);
+            --kp-sig-gr-a: 720deg;
+            --kp-sig-gr-q: 1;
         }
     }
 
-    @keyframes kp-sig-grotesk-gr-baseline {
-        from {
-            transform: translateX(-100%);
+    /* The spinner's twin: a quarter turn in 8 units, a dwell of 3 in register,
+       another quarter turn, a dwell of 3: half a turn a loop, in register every
+       quarter (a square repeats every 90 degrees). */
+    @keyframes kp-sig-grotesk-turn {
+        0% {
+            rotate: 0deg;
         }
 
-        to {
-            transform: translateX(100%);
+        36.36%,
+        50% {
+            rotate: 90deg;
+        }
+
+        86.36%,
+        100% {
+            rotate: 180deg;
         }
     }
 
@@ -44989,25 +45419,6 @@
         }
     }
 
-    @keyframes kp-sig-grotesk-gr-cut-in {
-        from {
-            clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
-        }
-
-        to {
-            clip-path: inset(-0.5rem -0.5rem -0.5rem -0.5rem);
-        }
-    }
-
-    @keyframes kp-progressbar-grotesk-cut {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(1100%);
-        }
-    }
-
     /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
        on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
        `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
@@ -45023,71 +45434,57 @@
             outline-offset: 0;
         }
 
+        /* What arrives in a gliding box is printed in black and its red plate falls
+           into register on it, as everything that arrives does [direction = the
+           plate; Kenny, 2026-10-07]; the box itself still takes its size in the
+           three cuts he picked. */
         [data-theme='grotesk'] [data-kp-arriving] {
-            animation: kp-sig-grotesk-size-cut 240ms steps(3, jump-end) backwards;
-        }
-
-        /* An explicit end: an inset does not interpolate with the line's own
-           clip-path: none, so with only a `from` the cut was hidden for half
-           its run and then whole, never in three. */
-        @keyframes kp-sig-grotesk-size-cut {
-            from {
-                clip-path: inset(0 100% 0 0);
-            }
-            to {
-                clip-path: inset(0);
-            }
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
         }
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    /* Leaving, this theme's way [scope-142; Kenny, 2026-10-07 on
+       research/grotesk-character: leave = opens out clockwise, then it is gone].
+       js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this
+       one. The part stands in black; its red plate leaves register and turns one
+       full turn clockwise while it opens out to --kp-sig-gr-r (a fall's 8 units,
+       960 ms), and the part is gone at the end of the turn. Arriving was the
+       fall closing in clockwise, so the plate has turned the same way the whole
+       time: the leave is NOT the arrival played backwards. This is the one place
+       the rule that a close is its open reversed is broken on purpose, and
+       js/motion.js is told so by this register not declaring
+       `--kp-open: reverse-close`: what arrives plays its own fall above, not this
+       leave backwards (that would turn the plate counter-clockwise). */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── grotesk: colour bands: accent, ink and paper sweep across like a Swiss poster and take it with them ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
-        [data-theme='grotesk'] {
-            --kp-open: reverse-close;
-        }
-
         [data-theme='grotesk'] [data-kp-leaving] {
-            position: relative;
-            overflow: clip;
-            animation: kp-sig-grotesk-leave 550ms linear forwards;
-        }
-
-        [data-theme='grotesk'] [data-kp-leaving]::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 2;
-            inset: 0 auto 0 0;
-            width: 300%;
-            background: linear-gradient(90deg, var(--primary) 0 33.3%, var(--foreground) 33.3% 66.6%, var(--background) 66.6% 100%);
-            animation: kp-sig-grotesk-leave-2 550ms cubic-bezier(0.7, 0, 0.3, 1) forwards;
+            --kp-sig-gr-a: 0deg;
+            --kp-sig-gr-q: 0;
+            filter: drop-shadow(
+                calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+                    calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a))) 0
+                    rgb(from var(--kp-sig-gr-plate) r g b / clamp(0, calc(var(--kp-sig-gr-q) * 40), 1))
+            );
+            animation: kp-sig-grotesk-leave var(--kp-sig-gr-fall) linear forwards;
         }
 
         @keyframes kp-sig-grotesk-leave {
-            0%,
-            90% {
-                opacity: 1;
+            0% {
+                --kp-sig-gr-a: 0deg;
+                --kp-sig-gr-q: 0;
+                visibility: visible;
             }
 
-            to {
-                opacity: 0;
-            }
-        }
-
-        @keyframes kp-sig-grotesk-leave-2 {
-            from {
-                transform: translateX(33.4%);
+            99.9% {
+                --kp-sig-gr-a: 360deg;
+                --kp-sig-gr-q: 1;
+                visibility: visible;
             }
 
-            to {
-                transform: translateX(-66.7%);
+            100% {
+                --kp-sig-gr-a: 360deg;
+                --kp-sig-gr-q: 1;
+                visibility: hidden;
             }
         }
     }
@@ -45219,26 +45616,51 @@
         font: 900 1rem/1 var(--theme-font-display, sans-serif);
     }
 
-    /* ── while loading: option 2 ── */
+    /* ── while loading: the meter's proof [loading = out of register; Kenny,
+       2026-10-07]. The meter's own drawing is printed in two plates: the
+       ruler (a hairline above and below it and a tick every tenth) in ink on
+       ::after and, under it, the same ruler in red on ::before, which travels
+       the clockwise loop (22 units) behind it. Standing still the red lies a
+       little out of register. ── */
 
     [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-gr-r: 4px;
+        background: var(--card);
+        box-shadow: none;
         animation: none;
     }
 
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before,
     [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         all: unset;
         content: '';
+        display: block;
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 12px) 0 100% / 12px 6px repeat-x;
-        --kp-sig-meter-l0: 0 50%;
-        --kp-sig-meter-l1: 12px 50%;
+    }
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        background:
+            linear-gradient(var(--primary) 0 0) 0 0 / 100% 1.5px no-repeat,
+            linear-gradient(var(--primary) 0 0) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(90deg, var(--primary) 0 1.5px, transparent 1.5px 10%);
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        translate: calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a)));
+    }
+
+    [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% 1.5px no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 1.5px, transparent 1.5px 10%);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-grotesk-meter-pos 600ms linear infinite;
+        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+            animation: kp-sig-grotesk-loop var(--kp-sig-gr-loop) linear infinite;
         }
     }
 
@@ -45246,25 +45668,29 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-grotesk-meter-grow-o 400ms steps(4) backwards;
-            transition: inline-size 400ms steps(4);
+            animation: kp-sig-grotesk-meter-grow-o 480ms steps(4) backwards;
+            transition: inline-size 480ms steps(4);
             transform-origin: 0 50%;
         }
     }
 
-    /* ── when the tone changes: option 3 ── */
+    /* ── when the tone changes: the plate falls back into register [G13: a tone
+       never jolts or swells the part; Kenny, 2026-10-07 on
+       research/grotesk-character: live = the plate]. A meter that turns to
+       warning or destructive is printed again: its red plate falls into
+       register on it once, 960 ms; the two tones have a name each, so a change
+       from one to the other starts it again. A meter that is loading draws
+       its own proof. ── */
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-grotesk-meter-jolt-o 160ms steps(2);
-        }
-
         [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-grotesk-meter-jolt-w 160ms steps(2);
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear;
         }
 
         [data-theme='grotesk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-grotesk-meter-jolt-d 160ms steps(2);
+            --kp-sig-gr-r: 4px;
+            animation: kp-sig-grotesk-fall-again var(--kp-sig-gr-fall) linear;
         }
     }
 
@@ -45285,8 +45711,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='grotesk'] .kp-meter__mark {
             transition:
-                inset-inline-start 400ms cubic-bezier(0.6, 0, 0.2, 1),
-                rotate 400ms cubic-bezier(0.6, 0, 0.2, 1);
+                inset-inline-start 480ms var(--kp-sig-gr-ease),
+                rotate 480ms var(--kp-sig-gr-ease);
         }
     }
 
@@ -45297,94 +45723,6 @@
 
         100% {
             scale: 1 1;
-        }
-    }
-
-    @keyframes kp-sig-grotesk-meter-jolt-d {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-grotesk-meter-jolt-o {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-grotesk-meter-jolt-w {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-grotesk-meter-pos {
-        0% {
-            background-position: var(--kp-sig-meter-l0);
-        }
-
-        100% {
-            background-position: var(--kp-sig-meter-l1);
         }
     }
 }

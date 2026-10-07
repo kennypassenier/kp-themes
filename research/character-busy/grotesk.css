@@ -1,0 +1,46 @@
+/* research/character-busy, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: shape r3-gk-shape-1,
+   loading 2, arrival 2 (failure 1, the index colour, and phone 1 already are
+   the grammar's: the alert's 6 px index in the tone).
+
+   - shape: the interchange keeps its two transit lines crossing the veil;
+     the panel where they meet is a column under its rule (G7: the busy panel
+     is a plate), a 3 px ink rule along the top in place of the thick frame;
+   - loading 2: the poster shifts → out of register: the huge word is printed
+     in two plates, its red copy travelling the clockwise loop behind it;
+   - arrival 2: set in type → printed: the panel is printed in black and its
+     red plate falls into register on it, 8 units. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-bo-shape='r3-gk-shape-1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        border-block-start: 3px solid var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-bo-loading='2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+        --kp-sig-gr-r: 0.14em;
+        --kp-sig-gr-a: 39.8deg;
+        --kp-sig-gr-q: 0.78;
+        animation: none;
+        filter: drop-shadow(
+            calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * cos(var(--kp-sig-gr-a)))
+                calc(var(--kp-sig-gr-r) * var(--kp-sig-gr-q) * sin(var(--kp-sig-gr-a))) 0
+                rgb(from var(--primary) r g b / clamp(0, calc(var(--kp-sig-gr-q) * 40), 1))
+        );
+    }
+
+    [data-theme='grotesk'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --kp-sig-gr-r: 8px;
+        --bo-arrival: kp-sig-grotesk-fall;
+        --bo-arrival-dur: var(--kp-sig-gr-fall);
+        --bo-arrival-ease: linear;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-bo-loading='2'] .kp-datatable__busy-panel > .kp-datatable__busy-words {
+            animation: kp-sig-grotesk-loop var(--kp-sig-gr-loop) linear infinite;
+        }
+    }
+}

@@ -1211,7 +1211,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The transit board',
-                text: 'A Swiss transit board: a thick bar in the series colour across the top, the number in bold grotesque, the line 3px round-capped, the change as a flat colour bar.',
+                text: 'A Swiss transit board: a column under a heavy ink rule, the number in bold grotesque, the line 3px round-capped, the change as a flat colour bar.',
             },
             {
                 name: 'The Swiss poster',
@@ -1224,8 +1224,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The transit board',
-                text: 'A line runs across.',
+                name: 'Out of register',
+                text: 'The tile’s lines and the plot are printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
             {
                 name: 'The Swiss poster',
@@ -1242,8 +1242,8 @@ const IDEAS = {
                 text: 'The number and the line are there the moment loading ends, as both characters had them.',
             },
             {
-                name: 'Set in type',
-                text: 'The line is drawn in from the left, easing in and out; the number is written in from the left.',
+                name: 'Printed',
+                text: 'The line and the number are printed in black and their red plate falls into register on them along the closing spiral, clockwise, in 8 units.',
             },
             {
                 name: 'The board flips',
@@ -1261,13 +1261,13 @@ const IDEAS = {
             },
             {
                 name: 'The index colour',
-                text: 'The change on a flat plate; a warning or destructive figure prints its number on the tone’s plate, the poster’s index colour.',
+                text: 'The change on a flat plate; a warning or destructive figure carries a 6 px bar of its tone down the start edge and the tone’s word before the number, the number ink on paper.',
             },
         ],
         live: [
             {
-                name: 'Redrawn',
-                text: 'A new reading redraws the line in place at once, as both characters had it.',
+                name: 'Re-registered',
+                text: 'A new reading redraws the line at once and its red plate falls back into register on it, clockwise, in 8 units.',
             },
             {
                 name: 'Flipped',

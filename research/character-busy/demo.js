@@ -1253,8 +1253,8 @@ const IDEAS = {
                 text: 'A short strip across the top flips through a few positions, hard, looping.',
             },
             {
-                name: 'The poster shifts',
-                text: 'The huge word nudges a pixel or two and back on a hard beat, looping.',
+                name: 'Out of register',
+                text: 'The huge word is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
             {
                 name: 'The index turns',
@@ -1267,8 +1267,8 @@ const IDEAS = {
                 text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
             },
             {
-                name: 'Set in type',
-                text: 'The panel’s words set in from a narrow column to full width, slowing as it lands.',
+                name: 'Printed',
+                text: 'The panel is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units.',
             },
             {
                 name: 'The board flips in',

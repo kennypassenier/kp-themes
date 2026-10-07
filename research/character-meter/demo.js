@@ -1221,8 +1221,8 @@ const IDEAS = {
                 text: 'A black train stops at each station.',
             },
             {
-                name: 'Express',
-                text: 'Red dashes, a line under construction, run along.',
+                name: 'Out of register',
+                text: 'The meter’s own ruler (a hairline above and below it and a tick every tenth) is printed in ink and, under it, in red: the red copy closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
             },
             {
                 name: 'Timetable',
@@ -1240,7 +1240,7 @@ const IDEAS = {
             },
             {
                 name: 'Timetable',
-                text: 'The share stretches out from the start in 4 hard steps.',
+                text: 'The share stretches out from the start in 4 hard steps, 480 ms.',
             },
         ],
         tone: [
@@ -1253,8 +1253,8 @@ const IDEAS = {
                 text: 'A new tone knocks the meter up and back once, slowing as it lands.',
             },
             {
-                name: 'Timetable',
-                text: 'A new tone jolts the meter sideways, in 2 hard steps.',
+                name: 'The plate',
+                text: 'A new tone prints the meter again: its red plate falls back into register on it once, clockwise, in 8 units.',
             },
         ],
         mark: [
@@ -1264,7 +1264,7 @@ const IDEAS = {
             },
             {
                 name: 'Express',
-                text: 'The mark moves slowing as it lands; a mark past the end stands just outside the end, → after it.',
+                text: 'The mark moves at an even pace, 480 ms; a mark past the end stands just outside the end, → after it.',
             },
             {
                 name: 'Timetable',

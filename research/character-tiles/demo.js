@@ -573,33 +573,45 @@ const IDEAS = {
     },
     grotesk: {
         shape: [
-            { name: 'The transit board', text: 'A thick bar in the series colour across the top, the mark a flat colour bar.' },
+            { name: 'The transit board', text: 'A column under its rule: no frame, a heavy ink rule along the top, the mark a flat colour bar.' },
             { name: 'The Swiss poster', text: 'The title huge and flush left, the mark a red index dot.' },
             { name: 'The index card', text: 'A red rule down the left margin, the mark a small square dot.' },
         ],
         loading: [
             { name: 'The transit board', text: 'A line runs across the body.' },
             { name: 'The Swiss poster', text: 'Three blocks cut in.' },
-            { name: 'The flap board', text: 'Three bars flip over one after the other, as a departure board’s flaps.' },
+            {
+                name: 'Out of register',
+                text: 'The whole tile is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
+            },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Set in type', text: 'The body is drawn in from the left, easing in and out.' },
+            {
+                name: 'Printed',
+                text: 'Each tile is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; the second tile half a unit later.',
+            },
             { name: 'The board flips', text: 'Tile after tile rises from the bottom, in hard steps.' },
         ],
         tone: [
             { name: 'The flat colour bar', text: 'A warning or destructive tile shows the note on a flat colour bar.' },
-            { name: 'The underlined figure', text: 'A warning or destructive tile shows the note on a flat plate with a heavy rule under it.' },
+            {
+                name: 'Indexed',
+                text: 'A warning or destructive tile carries a 6 px bar of its tone down the start edge and the tone’s word before the title.',
+            },
             { name: 'The index colour', text: 'A warning or destructive tile prints its note on the poster’s index colour.' },
         ],
         hover: [
-            { name: 'The bar widens', text: 'The top colour bar thickens; Open underlines heavily; focus draws a bold index-red ring.' },
+            {
+                name: 'The bar widens',
+                text: 'The top rule turns red and 7 px thick, the words stay put; Open takes the button’s own hover; focus is the two-channel ring and the red plate falling into register.',
+            },
             { name: 'The type sharpens', text: 'The title weight increases; Open gains an index-colour underline; focus doubles the hairline.' },
             { name: 'The flap turns', text: 'A thin bar flips once under the title; Open underlines; focus frames the card in red.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Flipped', text: 'The tile jolts once, as a needle does, in hard steps.' },
+            { name: 'Re-registered', text: 'The tile is written at once and its red plate falls back into register on it, clockwise, in 8 units.' },
             { name: 'Shifted', text: 'The footer’s timestamp steps forward, easing in and out.' },
         ],
     },

@@ -1,0 +1,23 @@
+/* research/character-state, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided option changes: change 1. The shape (the
+   colour bar dot) and the tone (the index warning, the tick itself in the
+   tone's colour) already are the grammar's index and column.
+
+   - change 1: A flat swap → re-registered: the word and its square are
+     written at once and their red plate falls back into register on them,
+     clockwise, in 8 units; the square no longer swells. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-sw-change='1'][data-sw-playing]::before {
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-sw-change='1'][data-sw-playing] {
+            --kp-sig-gr-r: 0.3em;
+            animation: kp-sig-grotesk-update-plate var(--kp-sig-gr-fall) linear backwards;
+        }
+    }
+}

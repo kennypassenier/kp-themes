@@ -1,0 +1,64 @@
+/* research/character-header, grotesk: the decided picks on grotesk's grammar
+   (themes/grotesk/CHARACTER.md, "Applied 2026-10-07"; research/grotesk-
+   character/decided.json). The package's register (css/grotesk-register.css)
+   carries the keyframes and knobs and is loaded here whenever the theme is
+   grotesk. Only grotesk's decided options change: shape 1, menu 1,
+   interactive 1.
+
+   - composite = the theme's own element (G17): the header's buttons stop being
+     flat colour bars; their ground, frame, corner, shadow and transition
+     revert to grotesk's own `.kp-button` (the register's layer), and they
+     hover, focus and press as grotesk does: a red bar on the foot, the
+     two-channel ring with the red plate falling into register, the baseline
+     thickening on the paper face. A menu entry is grotesk's `.kp-menu__item`;
+   - shape 1: a column under its rule: a 3 px ink rule along the top (the red
+     bar on every plate is synthwave's stripe), the title in bold grotesque;
+   - menu 1: set in type → printed: the panel is printed in black and its
+     red plate falls into register on it, 8 units, and the close is that fall
+     played backwards. */
+@layer kp.signature {
+    [data-theme='grotesk'] [data-ph-shape='1'] .kp-page-header {
+        border-block-start: 3px solid var(--foreground);
+    }
+
+    [data-theme='grotesk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button,
+    [data-theme='grotesk'] [data-ph-menu='1'] [data-ph-panel] .kp-menu__item {
+        border: revert-layer;
+        border-radius: revert-layer;
+        background: revert-layer;
+        color: revert-layer;
+        box-shadow: revert-layer;
+        outline: revert-layer;
+        transition: revert-layer;
+    }
+
+    [data-theme='grotesk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow: revert-layer;
+    }
+
+    [data-theme='grotesk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: revert-layer;
+    }
+
+    [data-theme='grotesk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow: revert-layer;
+    }
+
+    [data-theme='grotesk'] [data-ph-menu='1'] [data-ph-panel] {
+        --kp-sig-gr-r: 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        [data-theme='grotesk'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear reverse both;
+        }
+
+        [data-theme='grotesk'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+    }
+}
