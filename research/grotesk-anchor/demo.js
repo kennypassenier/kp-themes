@@ -7,7 +7,9 @@
 // asked for more options.
 //
 // A review-kit demo in aspect mode, grotesk only, with ONE aspect (one page in
-// the dialog) and five candidates, each drawn only from what grotesk's world
+// the dialog) and five candidates (round two: Kenny kept The baseline and Out
+// of register, wanted the second refined without its crosshairs and the skeleton
+// text as its hero, and asked for more in the same family), each drawn only from what grotesk's world
 // already owns. Each OPTION is a live scene with three places, so the reviewer
 // sees whether the anchor carries the theme: the anchor in its own scene
 // (centred, large), the same anchor as a progress bar, and as a button press.
@@ -34,39 +36,35 @@ const place = (cap, html, cls = '') => `<div class="ga-part ga-part--${cls}"><p 
 const bWord = (text, mod) =>
     `<span class="ga-b-word ga-b-word--${mod}"><span class="ga-b-ghost">${text}</span><span class="ga-b-ink ga-a ga-a--clip" aria-hidden="true">${text}</span>${a('scale', 'ga-b-rule')}</span>`;
 
+/** The skeleton text every plate-and-ink candidate is shown on: a heading bar and five lines, each on a row of its own. */
+const skeleton = (cls = '', row = '') => `<div class="ga-sk ${cls}" aria-hidden="true">${`<i class="${row}"></i>`.repeat(6)}</div>`;
+
 /* 2 · out of register */
 const register = {
-    hero: `<div class="ga-hero ga-r-hero" role="img" aria-label="A registration mark and a heading proof, each printed in two plates; the red plate travels round the ink and registers"><span class="ga-r-mark"></span><span class="ga-r-proof"></span></div>`,
+    hero: `<div class="ga-hero" role="img" aria-label="Skeleton text printed in two plates: the red plate has slipped, travels round the ink in a closing spiral and falls into register"><div class="ga-stack ga-r-stack">${skeleton('ga-r-plate')}${skeleton()}</div></div>`,
     bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><div class="ga-r-track"></div></div>`,
     button: `<div class="ga-btn"><span class="ga-r-btn">${button('Depart', 'ga-press')}</span></div>`,
 };
 
-/* 3 · the twelve columns */
-const columns = {
-    hero: `<div class="ga-hero" role="img" aria-label="Twelve columns laid one after another, then a page set into them piece by piece"><div class="ga-c-stage">${a('clip', 'ga-c-grid')}${a('clip', 'ga-c-piece ga-c-piece--head')}${a('clip', 'ga-c-piece ga-c-piece--a')}${a('clip', 'ga-c-piece ga-c-piece--b')}${a('clip', 'ga-c-piece ga-c-piece--c')}${a('clip', 'ga-c-piece ga-c-piece--red')}</div></div>`,
-    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><div class="ga-c-bar">${a('clip', 'ga-c-bar__fill')}</div></div>`,
-    button: `<div class="ga-btn">${button('Depart', 'ga-c-press', a('clip', 'ga-c-fill'))}</div>`,
+/* 3 · overprint */
+const overprint = {
+    hero: `<div class="ga-hero" role="img" aria-label="Skeleton text in grey; a plate of red passes over it and where it lies on the text the two inks multiply into a deeper red"><div class="ga-o-stage">${skeleton()}${a('move', 'ga-o-plate')}</div></div>`,
+    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><div class="ga-o-track">${a('move', 'ga-o-plate')}</div></div>`,
+    button: `<div class="ga-btn"><span class="ga-o-btn">${button('Depart', 'ga-press')}${a('move', 'ga-o-plate')}</span></div>`,
 };
 
-/* 4 · the train on time */
-const STATIONS = ['07:32', '07:41', '07:46', '07:58', '08:07'];
-const track = (mod, labels) =>
-    `<div class="ga-t-track ga-t-track--${mod}"><span class="ga-t-rail"></span>${a('', 'ga-t-trail')}${STATIONS.map(
-        (t, i) => `<span class="ga-t-st" style="--at: ${i * 25}%">${labels ? `<i>${t}</i>` : ''}</span>`,
-    ).join('')}${a('', 'ga-t-car')}</div>`;
-const train = {
-    // The carriage and the trail run their own keyframes (stops at the stations), not a building block.
-    hero: `<div class="ga-hero" role="img" aria-label="A red train runs along a rule at an even pace and stops dead at every station">${track('hero', true)}</div>`,
-    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable">${track('bar', false)}</div>`,
-    button: `<div class="ga-btn"><span class="ga-t-btn">${button('Depart', 'ga-press')}<span class="ga-t-lane"><span class="ga-t-lane__car" aria-hidden="true"></span></span></span></div>`,
+/* 4 · reversed out */
+const reversed = {
+    hero: `<div class="ga-hero" role="img" aria-label="Skeleton text in ink on paper; a field of red is set behind it row by row and the text is reversed out of it, paper on red"><div class="ga-v-stage">${skeleton()}${skeleton('ga-sk--rev ga-sk--rows', 'ga-a ga-a--clip')}</div></div>`,
+    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><div class="ga-v-track"><span></span>${a('clip', 'ga-v-track__rev')}</div></div>`,
+    button: `<div class="ga-btn"><span class="ga-v-btn">${button('Depart')}<span class="kp-button ga-v-inv ga-a ga-a--clip" aria-hidden="true"><span class="kp-button__label">Depart</span></span></span></div>`,
 };
 
-/* 5 · the colour bands */
-const strip = () => a('move', 'ga-n-strip');
-const bands = {
-    hero: `<div class="ga-hero" role="img" aria-label="Three flat bands, red, ink and paper, sweep across a still poster and print it behind them"><span class="ga-n-print"><span class="ga-n-poster"><i>07:32 · platform 7</i><b>Basel SBB</b></span>${strip()}</span></div>`,
-    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><span class="ga-n-print ga-n-print--bar"><span class="ga-n-bar"></span>${strip()}</span></div>`,
-    button: `<div class="ga-btn"><span class="ga-n-print ga-n-print--pass">${button('Depart', 'ga-press')}${strip()}</span></div>`,
+/* 5 · jogged into register */
+const jogged = {
+    hero: `<div class="ga-hero ga-j-hero" role="img" aria-label="Skeleton text drawn as ink keylines with the red fill printed off to one side; row by row the red fill is jogged home in four counted steps and stops in register"><div class="ga-stack">${skeleton('ga-j-red ga-sk--rows', 'ga-a ga-a--move')}${skeleton('ga-sk--line')}</div></div>`,
+    bar: `<div class="ga-bar" role="progressbar" aria-label="Reading the timetable"><div class="ga-j-track">${a('move', 'ga-j-slide')}<span></span></div></div>`,
+    button: `<div class="ga-btn"><span class="ga-j-btn">${a('move', 'ga-j-slide')}${button('Depart')}</span></div>`,
 };
 
 const rec = (why) => `Recommended: this one, because ${why}`;
@@ -93,47 +91,47 @@ const ANCHORS = [
     },
     {
         key: 'register',
-        name: 'Out of register: the proof’s red plate (your graph loading, as built)',
-        see: 'The black proof stands where the reading will be; a red plate travels round it at an even pace (the registration mark, a heading and its lines, the bar’s ruled track), snaps into register under the ink, dwells for 4 units and slips off again: 22 units, exactly your graph’s loading. On the button the red plate orbits while the finger comes and registers when the press lands.',
-        follows: 'Every waiting part is a proof (G10), the spinner is the register mark (G11), the skeleton and the busy bar are proofs, arrival is the last registration. Hover, focus, the live update and the leave do not follow from two plates by themselves: they stay the baseline’s, the train’s and the bands’.',
+        name: 'Out of register: the red plate falls into register',
+        see: 'Skeleton text, the loading placeholder, printed in two plates: the ink, and under it the same text in red. The red plate has slipped and travels round the ink in a spiral that closes at an even pace, falls into register in the last unit, dwells there for 4 units (the station clock’s stop-to-go) and is released the way it came, the spiral opening again. Nothing else is drawn: no mark, no ring, no cross. The progress bar is the ruled track printed over its slipped red fill, and the red outline behind the button falls into register as the press lands.',
+        follows: 'Every waiting part is a proof (G10): the skeleton is the hero, the busy bar and the spinner are proofs too, arrival is the last registration. Hover, focus, the live update and the leave do not follow from two plates by themselves: they stay the baseline’s, the train’s and the bands’.',
         verdict: not(
-            'it is your own pick and a lovely loading picture, the strongest runner-up, but it speaks for waiting only; nothing in a hover or a press is a second plate that is not forced. Keep it as the loading picture whichever anchor you pick.',
+            'it is your graph pick refined (the spiral closes instead of circling at a constant distance, and the register mark is gone) and the strongest runner-up, but it speaks for waiting only. Keep it as the loading picture whichever anchor you pick.',
         ),
-        caps: ['In its own scene: a mark and a heading, proofed', 'As a progress bar: the track over its slipped fill', 'As a button press: the plate orbits, then registers'],
+        caps: ['In its own scene: the skeleton text, proofed', 'As a progress bar: the track over its slipped fill', 'As a button press: the plate falls into register'],
         ...register,
     },
     {
-        key: 'columns',
-        name: 'The twelve columns: the grid sets the layout',
-        see: 'Twelve hairline columns are laid from the start, one at a time, then the page is set into them piece by piece, each piece stopping flush on its columns (counted steps, nothing eases). The progress bar is twelve cells, ten of them filled one by one; the button’s face fills with its grey four columns at a time.',
-        follows: 'Every motion is counted in columns (steps), arrivals are set column by column, data stands on the grid, a change is a column marked, the leave takes the columns back in reverse. Hover and press have no natural form here: the baseline would have to be borrowed.',
+        key: 'overprint',
+        name: 'Overprint: red printed over the text',
+        see: 'The skeleton text is set in a mid grey. A plate of red, three of the twelve columns wide, enters from the start and passes over it at an even pace, stops dead at the end, dwells and returns. It lies over the ink, not under it: where it covers a bar the two inks multiply into a deeper red, where it covers the paper it is the plain red. As a progress bar, the plate crosses the grey track; on the button it crosses the face and the face turns grey under it.',
+        follows: 'A thing that is being read or worked on is overprinted by the red plate; a changed value is overprinted for a beat; hover would lay the plate on the label. Arrival and leave still need the bands, and a wait needs a second plate that slips.',
         verdict: not(
-            'the grid is already grotesk’s texture under every page and stays the ground whatever anchor you pick; as the anchor it is quiet and counted (stepping blocks are also how nostromo’s lamp bank and terminal’s cells move), and a grid says where things go, not what is happening.',
+            'it is the only candidate where the colours mix, which no other theme can say, but a block travelling across text is how every shimmer skeleton loads, so it needs the deeper red to be seen; and it has no hover, focus or press of its own.',
         ),
-        caps: ['In its own scene: the page set on the grid', 'As a progress bar: twelve cells filled', 'As a button press: the face filled by columns'],
-        ...columns,
+        caps: ['In its own scene: a red plate overprints the text', 'As a progress bar: the plate crosses the track', 'As a button press: the plate crosses the face'],
+        ...overprint,
     },
     {
-        key: 'train',
-        name: 'The train on time: it stops dead at every station',
-        see: 'A red three-car train runs along a rule at an even pace, stops dead for one unit at each station and goes on, a heavy rule laid behind it; it dwells at the terminus and runs back. The progress bar is the same train between five stations; on the button the train runs once under the face and the press lands as it arrives.',
-        follows: 'A changed value is passed by the train (G9, your graph’s pick), loops dwell at their stations (G1), progress is stations passed, the leave is the train gone. Hover and focus would need a station of their own.',
+        key: 'reversed',
+        name: 'Reversed out: the text knocked out of a red field',
+        see: 'The skeleton text stands in ink on paper. A field of red is set behind it row by row from the start, the heading first and each line a beat behind it, so the front is a staircase, and the text is reversed out of it: ink on paper becomes paper on red. Everything stops dead and dwells, then the field is taken off in the same rows backwards. As a progress bar, the red grows from the start and the track’s columns reverse with it; on the button the face is reversed out when the press lands.',
+        follows: 'Hover is a part reversed (the coloured buttons already mirror-invert on hover), a current item stands reversed in its row, a warning is a reversed row, the alarm poster is the whole window reversed. Loading and arrival need other ideas.',
         verdict: not(
-            'it is the timetable itself and the dwell is no other theme’s, but a mark running along a line is how forest, solstice and nostromo already load, and it has no hover or press of its own; it stays the live update, not the whole theme.',
+            'it is the Swiss poster move and the only polarity change among the candidates, and grotesk’s buttons already do it, but it is a state of a part, not a movement, and a red field growing behind a heading reads close to the colour bands you did not choose.',
         ),
-        caps: ['In its own scene: the train between five stations', 'As a progress bar: the train between stations', 'As a button press: the train arrives, the press lands'],
-        ...train,
+        caps: ['In its own scene: the text reversed out of a red field', 'As a progress bar: the red field grows, the track reverses', 'As a button press: the face is reversed out'],
+        ...reversed,
     },
     {
-        key: 'bands',
-        name: 'The colour bands: red, ink and paper pass over it',
-        see: 'Three flat bands, red, ink and paper, sweep across a still part and print it behind them; taken off, they sweep back toward the start. The poster is printed, the progress bar is printed, and on the button the bands pass over the face and leave it pressed. Your leave (2026-10-04) played forwards and backwards.',
-        follows: 'Every opening is the bands backwards (G3), every leave is the bands (G12), a part that waits is printed when it arrives. Hover, focus, the press and the live update have no form in it.',
+        key: 'jogged',
+        name: 'Jogged into register: the red fill is knocked home in four stops',
+        see: 'The classic misprint, put right. The skeleton text is only its black keylines, and the red fill has been printed a hand’s width off, so each bar shows a red edge on one side and a white gap on the other. Row by row from the heading down, the red fill is jogged home into its keyline in four counted stops, each stop held, until every row is filled in register; it dwells, and is jogged out again in the same four stops. The black never moves. The progress bar’s red fill is jogged home under its ruled track; on the button the fill is jogged home as the press lands.',
+        follows: 'Whole things are counted, as the resize’s three cuts and the meter’s ticks already are (G1); a new value is jogged home; arrival is a part knocked into register against its guide; a finished part is filled red. Hover and focus would need a plate of their own.',
         verdict: not(
-            'it is the boldest picture and your own leave, but it is an entrance and an exit, not a state: nothing about waiting, pointing or pressing follows from it, and cyberpunk’s glitch also slices a part sideways; keep it as the leave and the opening.',
+            'it is the most mechanical, press-room reading of the effect you liked (counted, one row after another, a keyline that waits for its colour), but it says the same thing as option 2 in a different gait, and cyberpunk’s glitch also splits copies in ticks, though it jitters and this only closes.',
         ),
-        caps: ['In its own scene: a poster printed by the bands', 'As a progress bar: a bar printed by the bands', 'As a button press: the bands pass, the face is pressed'],
-        ...bands,
+        caps: ['In its own scene: each row jogged home in four stops', 'As a progress bar: the fill jogged under the track', 'As a button press: the plate jogged home'],
+        ...jogged,
     },
 ];
 
@@ -163,7 +161,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', 'grotesk');
-lookLine.textContent = `Five candidates for grotesk’s anchor, each shown in its own scene, as a progress bar and as a button press; the first is the recommendation. Pick the one that is grotesk to you, or “None of these” with a note.`;
+lookLine.textContent = `Round two, five candidates for grotesk’s anchor (the baseline and out of register stay, the other three are new), each shown in its own scene, as a progress bar and as a button press; the first is the recommendation. Pick the one that is grotesk to you, or “None of these” with a note.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the row */

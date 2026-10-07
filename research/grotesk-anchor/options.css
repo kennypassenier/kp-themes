@@ -110,7 +110,7 @@
         /* The mirror starts as late as the drawing ended: what drew last
            goes first. */
         .ga-scene[data-ga-phase='out'] .ga-a {
-            animation: var(--ga-kf-out) calc(var(--ga-l, 8) * var(--ga-u)) var(--ga-ease, linear)
+            animation: var(--ga-kf-out) calc(var(--ga-l, 8) * var(--ga-u)) var(--ga-ease-out, var(--ga-ease, linear))
                 calc((8 - var(--ga-d, 0) - var(--ga-l, 8)) * var(--ga-u)) both;
         }
     }
@@ -278,7 +278,8 @@
         display: block;
         inline-size: 100%;
         font-family: var(--theme-font-body);
-        font-size: 1.35rem;
+        /* The label fits its half of a narrow card. */
+        font-size: min(1.35rem, 4.6cqi);
         font-weight: 700;
         letter-spacing: 0;
         line-height: 1.2;
@@ -377,92 +378,159 @@
         }
     }
 
+    /* ── The skeleton text every other candidate is shown on ────────────── */
+
+    /* The loading placeholder: a heading bar and five lines of text, each bar
+       on a row that carries its own leading, so a row can be printed, moved or
+       reversed on its own and every plate of one print has the same geometry.
+       The size follows the scene's width. */
+    .ga-scene {
+        --ga-sk-u: clamp(0.8rem, 2.5cqi, 1.4rem);
+    }
+
+    .ga-scene .ga-sk {
+        --ga-bar: var(--foreground);
+        display: grid;
+        inline-size: min(100%, calc(var(--ga-sk-u) * 26));
+        margin: 0;
+        padding: 0;
+    }
+
+    .ga-scene .ga-sk > i {
+        display: grid;
+        align-items: center;
+        block-size: calc(var(--ga-sk-u) * 1.9);
+    }
+
+    .ga-scene .ga-sk > i::before {
+        content: '';
+        display: block;
+        block-size: var(--ga-sk-u);
+        inline-size: var(--w, 100%);
+        background: var(--ga-bar);
+    }
+
+    .ga-scene .ga-sk > i:nth-child(1) {
+        --w: 62%;
+        block-size: calc(var(--ga-sk-u) * 3.6);
+    }
+
+    .ga-scene .ga-sk > i:nth-child(1)::before {
+        block-size: calc(var(--ga-sk-u) * 2);
+    }
+
+    .ga-scene .ga-sk > i:nth-child(3) {
+        --w: 94%;
+    }
+
+    .ga-scene .ga-sk > i:nth-child(5) {
+        --w: 80%;
+    }
+
+    .ga-scene .ga-sk > i:nth-child(6) {
+        --w: 46%;
+    }
+
+    /* Rows printed one after another in reading order: the heading first,
+       each line 0.6 of a unit behind, each running 5 units (3 + 5 = 8). */
+    .ga-scene .ga-sk--rows > i {
+        --ga-l: 5;
+    }
+
+    .ga-scene .ga-sk--rows > i:nth-child(2) {
+        --ga-d: 0.6;
+    }
+
+    .ga-scene .ga-sk--rows > i:nth-child(3) {
+        --ga-d: 1.2;
+    }
+
+    .ga-scene .ga-sk--rows > i:nth-child(4) {
+        --ga-d: 1.8;
+    }
+
+    .ga-scene .ga-sk--rows > i:nth-child(5) {
+        --ga-d: 2.4;
+    }
+
+    .ga-scene .ga-sk--rows > i:nth-child(6) {
+        --ga-d: 3;
+    }
+
+    /* Two or more plates of one print lie in the same place. */
+    .ga-scene .ga-stack {
+        display: grid;
+        inline-size: min(100%, calc(var(--ga-sk-u) * 26));
+    }
+
+    /* Positioned, so a plate that is moved (a transform paints above its
+       in-flow later siblings) still lies in DOM order: the last is on top. */
+    .ga-scene .ga-stack > * {
+        grid-area: 1 / 1;
+        position: relative;
+        inline-size: 100%;
+    }
+
     /* ── 2 · Out of register ─────────────────────────────────────────── */
 
-    /* The graph's pick (r5-gk-load-3), as built: a proof in two plates, the
-       ink standing where the reading will, the red plate travelling round it
-       at an even pace, snapping into register and dwelling there (4 of 22
-       units), then slipping off again. At rest, and under reduced motion,
-       the plates stand a little out of register. */
-    .ga-scene .ga-r-hero {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: 2.5rem 3rem;
+    /* The graph's pick (r5-gk-load-3), refined. A print in two plates: the
+       skeleton text in ink, and under it the same text in red. The red plate
+       has slipped; it travels round the ink in a spiral that closes (an even
+       angular pace, the radius shrinking), falls into register in the last
+       unit, dwells there, and is released the way it came: the spiral
+       opened again. No mark, no ring, no cross: only the two plates. At
+       rest, and under reduced motion, the red stands a little out of
+       register. */
+    .ga-scene .ga-r-stack {
+        --ga-r: calc(var(--ga-sk-u) * 0.95);
     }
 
-    .ga-scene .ga-r-mark {
-        --ga-size: clamp(5.5rem, 22cqi, 9rem);
-        --ga-r: calc(var(--ga-size) * 0.12);
+    .ga-scene .ga-r-plate {
+        --ga-bar: var(--primary);
+        translate: calc(var(--ga-r) * 0.45) calc(var(--ga-r) * 0.35);
+    }
+
+    /* The red plate is a pixel smaller each way, so a plate in register leaves
+       no hair of red at the edge of the ink. */
+    .ga-scene .ga-r-plate > i::before {
+        block-size: calc(var(--ga-sk-u) - 1px);
+        inline-size: calc(var(--w, 100%) - 1px);
+    }
+
+    .ga-scene .ga-r-plate > i:nth-child(1)::before {
+        block-size: calc(var(--ga-sk-u) * 2 - 1px);
+    }
+
+    /* The busy bar: the ruled track printed over its red fill. */
+    .ga-scene .ga-r-track {
+        --ga-r: 5px;
         position: relative;
-        inline-size: var(--ga-size);
-        block-size: var(--ga-size);
+        block-size: 1.5rem;
     }
 
-    .ga-scene .ga-r-mark::before,
-    .ga-scene .ga-r-mark::after,
-    .ga-scene .ga-r-proof::before,
-    .ga-scene .ga-r-proof::after,
     .ga-scene .ga-r-track::before,
     .ga-scene .ga-r-track::after {
         content: '';
         position: absolute;
         inset: 0;
-    }
-
-    /* The printer's registration mark: a ring crossed by two hairlines. */
-    .ga-scene .ga-r-mark::before,
-    .ga-scene .ga-r-mark::after {
-        background:
-            radial-gradient(closest-side, transparent calc(62% - 3px), var(--ga-c) calc(62% - 3px) 62%, transparent calc(62% + 0.5px)),
-            linear-gradient(var(--ga-c) 0 0) 50% 50% / 100% 2px no-repeat, linear-gradient(var(--ga-c) 0 0) 50% 50% / 2px 100% no-repeat;
-    }
-
-    /* A heading and two lines, proofed. */
-    .ga-scene .ga-r-proof {
-        --ga-r: 0.4rem;
-        position: relative;
-        inline-size: min(100%, 17rem);
-        block-size: 5rem;
-    }
-
-    .ga-scene .ga-r-proof::before,
-    .ga-scene .ga-r-proof::after {
-        background:
-            linear-gradient(var(--ga-c) 0 0) 0 0 / 100% 2.1rem no-repeat, linear-gradient(var(--ga-c) 0 0) 0 2.9rem / 72% 0.7rem no-repeat,
-            linear-gradient(var(--ga-c) 0 0) 0 4.1rem / 50% 0.7rem no-repeat;
-    }
-
-    /* The busy bar: the ruled track printed over its red fill. */
-    .ga-scene .ga-r-track {
-        --ga-r: 4px;
-        position: relative;
-        block-size: 1.4rem;
-    }
-
-    .ga-scene .ga-r-track::before,
-    .ga-scene .ga-r-track::after {
         background:
             linear-gradient(var(--ga-fill, transparent) 0 0) 0 0 / 62% 100% no-repeat, linear-gradient(var(--ga-c) 0 0) 0 100% / 100% 2px no-repeat,
             linear-gradient(var(--ga-c) 0 0) 0 0 / 100% 1px no-repeat, linear-gradient(var(--ga-c) 0 0) 100% 0 / 1px 100% no-repeat,
             repeating-linear-gradient(90deg, var(--ga-c) 0 1px, transparent 1px calc(100% / 12));
     }
 
-    .ga-scene :is(.ga-r-mark, .ga-r-proof, .ga-r-track)::before {
+    .ga-scene .ga-r-track::before {
         --ga-c: var(--primary);
         --ga-fill: var(--primary);
-        /* At rest: a little out of register. */
-        translate: calc(var(--ga-r) * 0.6) calc(var(--ga-r) * 0.5);
+        translate: calc(var(--ga-r) * 0.45) calc(var(--ga-r) * 0.35);
     }
 
-    .ga-scene :is(.ga-r-mark, .ga-r-proof, .ga-r-track)::after {
+    .ga-scene .ga-r-track::after {
         --ga-c: var(--foreground);
     }
 
     /* The press: the button's ink line is the black plate; behind it stands
-       the red plate, which orbits while the finger comes and snaps into
-       register when the press lands. Registered is the base pose. */
+       the red plate, which falls into register as the press lands. */
     .ga-scene .ga-r-btn {
         --ga-r: 6px;
         position: relative;
@@ -475,6 +543,7 @@
         inset: 0;
         border: 2px solid var(--primary);
         pointer-events: none;
+        translate: 0 0;
     }
 
     .ga-scene .ga-r-btn .kp-button {
@@ -482,617 +551,333 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .ga-scene :is(.ga-r-mark, .ga-r-proof, .ga-r-track)::before {
-            animation: ga-orbit var(--ga-loop) linear infinite;
-        }
-
+        .ga-scene[data-ga-phase='gap'] .ga-r-plate,
+        .ga-scene[data-ga-phase='gap'] .ga-r-track::before,
         .ga-scene[data-ga-phase='gap'] .ga-r-btn::before {
             translate: var(--ga-r) 0;
         }
 
+        .ga-scene[data-ga-phase='in'] .ga-r-plate,
+        .ga-scene[data-ga-phase='in'] .ga-r-track::before,
         .ga-scene[data-ga-phase='in'] .ga-r-btn::before,
+        .ga-scene[data-ga-phase='hold'] .ga-r-plate,
+        .ga-scene[data-ga-phase='hold'] .ga-r-track::before,
         .ga-scene[data-ga-phase='hold'] .ga-r-btn::before {
-            animation: ga-r-press var(--ga-in) linear both;
+            animation: ga-fall var(--ga-in) linear both;
         }
 
+        .ga-scene[data-ga-phase='out'] .ga-r-plate,
+        .ga-scene[data-ga-phase='out'] .ga-r-track::before,
         .ga-scene[data-ga-phase='out'] .ga-r-btn::before {
-            animation: ga-r-press-out var(--ga-in) linear both;
+            animation: ga-fall-out var(--ga-in) linear both;
         }
     }
 
-    /* 16 units round the ink through eight positions, 1 to snap into
-       register, 4 of dwell, 1 to slip off (22 units): the graph's keyframes. */
-    @keyframes ga-orbit {
+    /* The fall into register: one turn of the red plate round the ink in
+       45 degree steps, the radius shrinking from 1 to 0.2, the snap into
+       register in the seventh unit of eight. Played backwards it is the
+       release: the plate leaves register and the spiral opens. */
+    @keyframes ga-fall {
         0% {
-            translate: var(--ga-r) 0;
-        }
-
-        9.09% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * 0.7);
-        }
-
-        18.18% {
-            translate: 0 var(--ga-r);
-        }
-
-        27.27% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * 0.7);
-        }
-
-        36.36% {
-            translate: calc(var(--ga-r) * -1) 0;
-        }
-
-        45.45% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * -0.7);
-        }
-
-        54.55% {
-            translate: 0 calc(var(--ga-r) * -1);
-        }
-
-        63.64% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * -0.7);
-        }
-
-        72.73% {
-            translate: var(--ga-r) 0;
-        }
-
-        77.27%,
-        95.45% {
-            translate: 0 0;
-        }
-
-        100% {
-            translate: var(--ga-r) 0;
-        }
-    }
-
-    /* The button's plate: one orbit in 7 units, registered at the press. */
-    @keyframes ga-r-press {
-        0%,
-        87.49% {
-            translate: var(--ga-r) 0;
+            translate: calc(var(--ga-r) * 1) 0;
         }
 
         10.94% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * 0.7);
+            translate: calc(var(--ga-r) * 0.626) calc(var(--ga-r) * 0.626);
         }
 
-        21.88% {
-            translate: 0 var(--ga-r);
+        21.87% {
+            translate: 0 calc(var(--ga-r) * 0.771);
         }
 
         32.81% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * 0.7);
+            translate: calc(var(--ga-r) * -0.465) calc(var(--ga-r) * 0.465);
         }
 
         43.75% {
-            translate: calc(var(--ga-r) * -1) 0;
+            translate: calc(var(--ga-r) * -0.543) 0;
         }
 
         54.69% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * -0.7);
+            translate: calc(var(--ga-r) * -0.303) calc(var(--ga-r) * -0.303);
         }
 
-        65.63% {
-            translate: 0 calc(var(--ga-r) * -1);
+        65.62% {
+            translate: 0 calc(var(--ga-r) * -0.314);
         }
 
         76.56% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * -0.7);
+            translate: calc(var(--ga-r) * 0.141) calc(var(--ga-r) * -0.141);
         }
 
-        87.5%,
+        87.5% {
+            translate: 0 0;
+        }
+
         100% {
             translate: 0 0;
         }
     }
 
-    @keyframes ga-r-press-out {
-        0%,
-        12.5% {
+    @keyframes ga-fall-out {
+        0% {
             translate: 0 0;
         }
 
-        12.51%,
-        100% {
-            translate: var(--ga-r) 0;
+        12.5% {
+            translate: 0 0;
         }
 
         23.44% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * -0.7);
+            translate: calc(var(--ga-r) * 0.141) calc(var(--ga-r) * -0.141);
         }
 
         34.38% {
-            translate: 0 calc(var(--ga-r) * -1);
+            translate: 0 calc(var(--ga-r) * -0.314);
         }
 
         45.31% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * -0.7);
+            translate: calc(var(--ga-r) * -0.303) calc(var(--ga-r) * -0.303);
         }
 
         56.25% {
-            translate: calc(var(--ga-r) * -1) 0;
+            translate: calc(var(--ga-r) * -0.543) 0;
         }
 
         67.19% {
-            translate: calc(var(--ga-r) * -0.7) calc(var(--ga-r) * 0.7);
+            translate: calc(var(--ga-r) * -0.465) calc(var(--ga-r) * 0.465);
         }
 
         78.13% {
-            translate: 0 var(--ga-r);
+            translate: 0 calc(var(--ga-r) * 0.771);
         }
 
         89.06% {
-            translate: calc(var(--ga-r) * 0.7) calc(var(--ga-r) * 0.7);
+            translate: calc(var(--ga-r) * 0.626) calc(var(--ga-r) * 0.626);
+        }
+
+        100% {
+            translate: calc(var(--ga-r) * 1) 0;
         }
     }
 
-    /* ── 3 · The twelve columns ──────────────────────────────────────── */
 
-    /* The grid is laid column by column, then the page is set into it piece
-       by piece, each piece stopping flush on its columns; everything is
-       counted (steps), nothing eases. */
-    .ga-scene .ga-c-stage {
+    /* ── 3 · Overprint ───────────────────────────────────────────────── */
+
+    /* One plate of red, three columns of twelve wide, passes over the
+       skeleton text at an even pace. It is printed over the ink, not under
+       it: where it lies on a bar the two inks multiply into the deep red,
+       where it lies on the paper it is the red. Behind it the text is as it
+       was; nothing is left on the page. The text is set in a mid grey (a
+       screen of the ink) so the overprint can be seen on it. The plate
+       enters from the start edge and leaves toward it. */
+    .ga-scene .ga-o-stage {
+        --ga-screen: color-mix(in srgb, var(--foreground) 42%, var(--background));
         position: relative;
-        display: grid;
-        grid-template-columns: repeat(12, minmax(0, 1fr));
-        grid-template-rows: clamp(2.2rem, 7cqi, 3.6rem) repeat(3, 1rem);
-        row-gap: 0.55rem;
-        inline-size: min(100%, 44rem);
-        padding-block: 0.75rem;
+        isolation: isolate;
+        inline-size: min(100%, calc(var(--ga-sk-u) * 26));
+        clip-path: inset(calc(var(--ga-sk-u) * -1.1) 0);
     }
 
-    .ga-scene .ga-c-grid {
-        position: absolute;
-        inset: 0;
-        border-inline-end: 1px solid hsl(from var(--foreground) h s l / 0.3);
-        background: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px calc(100% / 12));
-        --ga-l: 3;
-        --ga-ease: steps(12, jump-end);
-    }
-
-    .ga-scene .ga-c-piece {
-        align-self: center;
-        background: var(--foreground);
-        min-block-size: 0.5rem;
-        block-size: 100%;
-    }
-
-    .ga-scene .ga-c-piece--head {
-        grid-column: 1 / span 8;
-        grid-row: 1;
-        --ga-d: 3;
-        --ga-l: 2;
-        --ga-ease: steps(8, jump-end);
-    }
-
-    .ga-scene .ga-c-piece--a {
-        grid-column: 1 / span 5;
-        grid-row: 2;
-        block-size: 0.55rem;
-        --ga-d: 4;
-        --ga-l: 1.25;
-        --ga-ease: steps(5, jump-end);
-    }
-
-    .ga-scene .ga-c-piece--b {
-        grid-column: 1 / span 4;
-        grid-row: 3;
-        block-size: 0.55rem;
-        --ga-d: 4.75;
-        --ga-l: 1;
-        --ga-ease: steps(4, jump-end);
-    }
-
-    .ga-scene .ga-c-piece--c {
-        grid-column: 1 / span 6;
-        grid-row: 4;
-        block-size: 0.55rem;
-        --ga-d: 5.25;
-        --ga-l: 1.5;
-        --ga-ease: steps(6, jump-end);
-    }
-
-    .ga-scene .ga-c-piece--red {
-        grid-column: 9 / span 4;
-        grid-row: 1 / span 4;
-        align-self: stretch;
-        background: var(--primary);
-        --ga-d: 5.5;
-        --ga-l: 2;
-        --ga-ease: steps(4, jump-end);
-    }
-
-    /* The bar: twelve cells, ten of them filled one by one. */
-    .ga-scene .ga-c-bar {
-        position: relative;
-        block-size: 1.6rem;
-        border-block-end: 2px solid var(--foreground);
-        background: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px calc(100% / 12));
-    }
-
-    .ga-scene .ga-c-bar__fill {
-        position: absolute;
-        inset: 0;
-        background: var(--primary);
-        --ga-c1: 16.667%;
-        --ga-l: 7;
-        --ga-ease: steps(10, jump-end);
-    }
-
-    /* The cells are told apart by a paper hairline over the fill. */
-    .ga-scene .ga-c-bar__fill::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(to right, var(--background) 0 2px, transparent 2px calc(100% / 12));
-    }
-
-    /* The press: the face fills with its grey column by column. */
-    .ga-scene .ga-c-press {
-        overflow: clip;
-    }
-
-    .ga-scene .ga-c-press .kp-button__label {
-        z-index: 1;
-    }
-
-    .ga-scene .ga-c-fill {
-        position: absolute;
-        inset: 0;
-        background: var(--secondary-active);
-        --ga-d: 3;
-        --ga-l: 4;
-        --ga-ease: steps(4, jump-end);
-    }
-
-    /* ── 4 · The train on time ───────────────────────────────────────── */
-
-    /* A timetable: stations on a rule and a red train between them. It
-       runs at an even pace and stops dead at every station for a beat. */
-    .ga-scene .ga-t-track {
-        --ga-rail-y: 3.6rem;
-        --ga-rail: 3px;
-        --ga-st: 1.15rem;
-        --ga-car-w: clamp(3rem, 11cqi, 5.5rem);
-        --ga-car-h: 1.5rem;
-        position: relative;
-        inline-size: min(100%, 44rem);
-        block-size: 6.25rem;
-    }
-
-    .ga-scene .ga-t-track--bar {
-        --ga-rail-y: 1.55rem;
-        --ga-rail: 2px;
-        --ga-st: 0.8rem;
-        --ga-car-w: 2.4rem;
-        --ga-car-h: 0.8rem;
+    .ga-scene .ga-o-stage .ga-sk {
+        --ga-bar: var(--ga-screen);
         inline-size: 100%;
-        block-size: 2.4rem;
     }
 
-    .ga-scene :is(.ga-t-rail, .ga-t-trail) {
+    .ga-scene .ga-o-plate {
+        --ga-x0: -100%;
+        --ga-x1: 300%;
         position: absolute;
-        inset-inline: 0;
-        inset-block-start: calc(var(--ga-rail-y) - var(--ga-rail) / 2);
-        block-size: var(--ga-rail);
-        background: var(--foreground);
+        inset-block: calc(var(--ga-sk-u) * -0.9);
+        inset-inline-start: 0;
+        inline-size: 25%;
+        background: var(--primary);
+        mix-blend-mode: multiply;
     }
 
-    .ga-scene .ga-t-rail {
-        background: hsl(from var(--foreground) h s l / 0.25);
-    }
-
-    /* The heavy rule laid behind the train. */
-    .ga-scene .ga-t-trail {
-        transform-origin: left center;
-        inset-block-start: calc(var(--ga-rail-y) - var(--ga-rail));
-        block-size: calc(var(--ga-rail) * 2);
-    }
-
-    .ga-scene .ga-t-st {
-        position: absolute;
-        inset-inline-start: var(--at);
-        inset-block-start: var(--ga-rail-y);
-        inline-size: var(--ga-st);
-        block-size: var(--ga-st);
-        translate: -50% -50%;
-        box-sizing: border-box;
-        border: 3px solid var(--foreground);
-        background: var(--background);
-    }
-
-    .ga-scene .ga-t-st > i {
-        position: absolute;
-        inset-block-start: calc(100% + 0.55rem);
-        inset-inline-start: 50%;
-        translate: -50% 0;
-        font-family: var(--theme-font-body);
-        font-size: 0.85rem;
-        font-style: normal;
-        font-variant-numeric: tabular-nums;
-        font-weight: 700;
-    }
-
-    /* Three cars, coupled. */
-    .ga-scene .ga-t-car {
-        position: absolute;
-        inset-block-start: calc(var(--ga-rail-y) - var(--ga-rail) / 2 - var(--ga-car-h));
-        inset-inline-start: 100%;
-        inline-size: var(--ga-car-w);
-        block-size: var(--ga-car-h);
-        translate: -50% 0;
-        background: repeating-linear-gradient(to right, var(--primary) 0 calc(100% / 3 - 2px), var(--background) calc(100% / 3 - 2px) calc(100% / 3));
-        z-index: 2;
-    }
-
-    .ga-scene .ga-t-trail {
-        --ga-kf: ga-t-trail;
-        --ga-kf-out: ga-t-trail-out;
-    }
-
-    .ga-scene .ga-t-car {
-        --ga-kf: ga-t-run;
-        --ga-kf-out: ga-t-run-out;
-    }
-
-    /* The button's lane: the train runs once under it, in a straight run,
-       and the press lands as it arrives. */
-    .ga-scene .ga-t-btn {
-        display: inline-grid;
-        gap: 0.35rem;
-    }
-
-    .ga-scene .ga-t-lane {
+    .ga-scene .ga-o-track {
+        --ga-screen: color-mix(in srgb, var(--foreground) 42%, var(--background));
         position: relative;
-        block-size: 1.1rem;
-        border-block-end: 2px solid var(--foreground);
+        isolation: isolate;
+        block-size: 1.5rem;
+        clip-path: inset(-0.4rem 0);
+        background:
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% 2px no-repeat, linear-gradient(var(--ga-screen) 0 0) 0 0 / 100% calc(100% - 2px) no-repeat;
     }
 
-    .ga-scene .ga-t-lane .ga-t-lane__car {
-        position: absolute;
-        inset-block-end: 0;
-        inset-inline-start: 100%;
-        inline-size: 2.4rem;
-        block-size: 0.7rem;
-        translate: -100% 0;
-        background: repeating-linear-gradient(to right, var(--primary) 0 calc(100% / 3 - 2px), var(--background) calc(100% / 3 - 2px) calc(100% / 3));
-        --ga-kf: ga-t-slide;
-        --ga-kf-out: ga-t-slide-out;
+    .ga-scene .ga-o-track .ga-o-plate {
+        inset-block: -0.25rem;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        .ga-scene[data-ga-phase='gap'] .ga-t-trail {
-            scale: 0 1;
-        }
-
-        .ga-scene[data-ga-phase='gap'] .ga-t-car {
-            inset-inline-start: 0%;
-        }
-
-        .ga-scene[data-ga-phase='gap'] .ga-t-lane__car {
-            inset-inline-start: 0%;
-        }
-    }
-
-    /* Even pace, then a dead stop of one unit at each of the three stations
-       between: 4 runs of 150 ms and 3 stops of 120 ms in 960 ms. The stops
-       are symmetrical, so the mirror is the same run backwards. */
-    @keyframes ga-t-run {
-        0% {
-            inset-inline-start: 0%;
-        }
-
-        15.625%,
-        28.125% {
-            inset-inline-start: 25%;
-        }
-
-        43.75%,
-        56.25% {
-            inset-inline-start: 50%;
-        }
-
-        71.875%,
-        84.375% {
-            inset-inline-start: 75%;
-        }
-
-        100% {
-            inset-inline-start: 100%;
-        }
-    }
-
-    @keyframes ga-t-run-out {
-        0% {
-            inset-inline-start: 100%;
-        }
-
-        15.625%,
-        28.125% {
-            inset-inline-start: 75%;
-        }
-
-        43.75%,
-        56.25% {
-            inset-inline-start: 50%;
-        }
-
-        71.875%,
-        84.375% {
-            inset-inline-start: 25%;
-        }
-
-        100% {
-            inset-inline-start: 0%;
-        }
-    }
-
-    @keyframes ga-t-trail {
-        0% {
-            scale: 0 1;
-        }
-
-        15.625%,
-        28.125% {
-            scale: 0.25 1;
-        }
-
-        43.75%,
-        56.25% {
-            scale: 0.5 1;
-        }
-
-        71.875%,
-        84.375% {
-            scale: 0.75 1;
-        }
-
-        100% {
-            scale: 1 1;
-        }
-    }
-
-    @keyframes ga-t-trail-out {
-        0% {
-            scale: 1 1;
-        }
-
-        15.625%,
-        28.125% {
-            scale: 0.75 1;
-        }
-
-        43.75%,
-        56.25% {
-            scale: 0.5 1;
-        }
-
-        71.875%,
-        84.375% {
-            scale: 0.25 1;
-        }
-
-        100% {
-            scale: 0 1;
-        }
-    }
-
-    @keyframes ga-t-slide {
-        0% {
-            inset-inline-start: 0%;
-        }
-
-        87.5%,
-        100% {
-            inset-inline-start: 100%;
-        }
-    }
-
-    @keyframes ga-t-slide-out {
-        0%,
-        12.5% {
-            inset-inline-start: 100%;
-        }
-
-        100% {
-            inset-inline-start: 0%;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .ga-scene[data-ga-phase='in'] .ga-t-lane__car,
-        .ga-scene[data-ga-phase='hold'] .ga-t-lane__car {
-            animation: ga-t-slide var(--ga-in) linear both;
-        }
-
-        .ga-scene[data-ga-phase='out'] .ga-t-lane__car {
-            animation: ga-t-slide-out var(--ga-in) linear both;
-        }
-    }
-
-    /* ── 5 · The colour bands ────────────────────────────────────────── */
-
-    /* Kenny's leave (2026-10-04) and, backwards, every opening: three flat
-       bands, red, ink and paper, sweep across a still part and print it
-       behind them; taken off, they sweep back toward the start. The strip
-       is 300 % of the part, moved by translate only. */
-    .ga-scene .ga-n-print {
+    .ga-scene .ga-o-btn {
         position: relative;
+        isolation: isolate;
         display: inline-block;
         overflow: clip;
     }
 
-    .ga-scene .ga-n-print--bar {
-        display: block;
+    .ga-scene .ga-o-btn .ga-o-plate {
+        inset-block: 0;
+    }
+
+    /* The face turns grey half way, while the plate lies on it. */
+    .ga-scene .ga-o-btn .ga-press {
+        --ga-face: ga-face-mid;
+        --ga-face-out: ga-face-mid-out;
+    }
+
+    /* ── 4 · Reversed out ────────────────────────────────────────────── */
+
+    /* A field of red is laid under the type and the type is reversed out of
+       it: the ink on paper becomes paper on red, the way a coloured button
+       mirror-inverts. Two plates of one page lie in the same place: the text
+       in ink, and above it the same text knocked out of its red field. The
+       field is set row by row from the start in reading order, so its front
+       is a staircase; each row stops flush. */
+    .ga-scene .ga-v-stage {
+        display: grid;
+        inline-size: min(100%, calc(var(--ga-sk-u) * 26));
+    }
+
+    .ga-scene .ga-v-stage > .ga-sk {
+        grid-area: 1 / 1;
         inline-size: 100%;
     }
 
-    .ga-scene .ga-n-strip {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: 300%;
-        background: linear-gradient(to right, var(--primary) 0 33.34%, var(--foreground) 33.34% 66.67%, var(--background) 66.67% 100%);
-        --ga-x0: -66.67%;
-        --ga-x1: 33.34%;
-        z-index: 3;
-        pointer-events: none;
+    .ga-scene .ga-v-stage > .ga-sk--rev {
+        --ga-bar: var(--background);
+        margin-inline: calc(var(--ga-sk-u) * -1);
+        inline-size: auto;
     }
 
-    /* A visible part is passed over instead of printed: the strip starts
-       off the start edge. */
-    .ga-scene .ga-n-print--pass .ga-n-strip {
-        --ga-x0: -100%;
-    }
-
-    .ga-scene .ga-n-poster {
-        display: grid;
-        gap: 0.5rem;
-        padding: 0.9rem 1.4rem 1.1rem;
-        border-block-start: 3px solid var(--foreground);
-    }
-
-    .ga-scene .ga-n-poster b {
-        font-family: var(--theme-font-display);
-        font-size: clamp(3rem, 12cqi, 7.5rem);
-        font-weight: 900;
-        letter-spacing: -0.04em;
-        line-height: 1;
-    }
-
-    .ga-scene .ga-n-poster i {
-        color: var(--primary);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 700;
-    }
-
-    .ga-scene .ga-n-bar {
-        position: relative;
-        display: block;
-        block-size: 1.6rem;
-        border-block-end: 2px solid var(--foreground);
-        background: repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.3) 0 1px, transparent 1px calc(100% / 12));
-    }
-
-    .ga-scene .ga-n-bar::before {
-        content: '';
-        position: absolute;
-        inset: 0 38% 0 0;
+    /* The field is the row, wider than the text by one unit each side. */
+    .ga-scene .ga-sk--rev > i {
+        padding-inline: var(--ga-sk-u);
         background: var(--primary);
     }
 
-    .ga-scene .ga-n-print--pass {
-        padding: 0.25rem;
+    .ga-scene .ga-v-track {
+        --ga-c: var(--foreground);
+        display: grid;
+        block-size: 1.5rem;
     }
 
-    /* The face turns grey half way, while a full band covers it. */
-    .ga-scene .ga-n-print--pass .ga-press {
-        --ga-face: ga-face-mid;
-        --ga-face-out: ga-face-mid-out;
+    .ga-scene .ga-v-track > span {
+        grid-area: 1 / 1;
+        background:
+            linear-gradient(var(--ga-c) 0 0) 0 100% / 100% 2px no-repeat, linear-gradient(var(--ga-c) 0 0) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--ga-c) 0 0) 100% 0 / 1px 100% no-repeat, repeating-linear-gradient(90deg, var(--ga-c) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    .ga-scene .ga-v-track > .ga-v-track__rev {
+        --ga-c: var(--background);
+        --ga-c1: 38%;
+        background-color: var(--primary);
+    }
+
+    .ga-scene .ga-v-btn {
+        position: relative;
+        display: inline-block;
+    }
+
+    .ga-scene .ga-v-btn .ga-v-inv {
+        position: absolute;
+        inset: 0;
+        justify-content: center;
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        pointer-events: none;
+    }
+
+    /* ── 5 · Jogged into register ────────────────────────────────────── */
+
+    /* The classic misprint: the black plate is only the keyline, the red plate
+       the fill, and the fill has been printed a hand's width off. Row by row
+       from the heading down, the red fill is jogged home into its keyline in
+       four counted stops, each stop held, until every row is filled in
+       register; it dwells, and is jogged out again in the same four stops
+       (played backwards). The black does not move. */
+    .ga-scene .ga-j-hero {
+        --ga-j: calc(var(--ga-sk-u) * 2.2);
+        padding-inline-start: calc(var(--ga-j) + 0.5rem);
+    }
+
+    .ga-scene .ga-sk--line > i::before {
+        box-sizing: border-box;
+        border: 2px solid var(--foreground);
+        background: transparent;
+    }
+
+    /* The fill lies under the keyline and is two pixels smaller each way, so
+       in register it is hidden by the line and leaves no hair outside it. */
+    .ga-scene .ga-j-red {
+        --ga-bar: var(--primary);
+    }
+
+    .ga-scene .ga-j-red > i::before {
+        block-size: calc(var(--ga-sk-u) - 2px);
+        inline-size: calc(var(--w, 100%) - 2px);
+        margin-inline-start: 1px;
+    }
+
+    .ga-scene .ga-j-red > i:nth-child(1)::before {
+        block-size: calc(var(--ga-sk-u) * 2 - 2px);
+    }
+
+    .ga-scene .ga-j-red > i,
+    .ga-scene .ga-j-slide {
+        --ga-x0: calc(var(--ga-j, 0.9rem) * -1);
+        --ga-ease: steps(4, jump-end);
+        --ga-ease-out: steps(4, jump-start);
+    }
+
+    .ga-scene .ga-j-track {
+        --ga-j: 0.9rem;
+        position: relative;
+        block-size: 1.5rem;
+        margin-inline-start: 0.9rem;
+    }
+
+    .ga-scene .ga-j-track > span {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% 2px no-repeat, linear-gradient(var(--foreground) 0 0) 0 0 / 100% 1px no-repeat,
+            linear-gradient(var(--foreground) 0 0) 100% 0 / 1px 100% no-repeat, linear-gradient(var(--foreground) 0 0) 0 0 / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 1px, transparent 1px calc(100% / 12));
+    }
+
+    .ga-scene .ga-j-track > .ga-j-slide {
+        background: linear-gradient(var(--primary) 0 0) 0 0 / 62% 100% no-repeat;
+    }
+
+    .ga-scene .ga-j-btn {
+        --ga-j: 12px;
+        position: relative;
+        display: inline-block;
+        margin-inline-start: 12px;
+    }
+
+    .ga-scene .ga-j-btn .ga-j-slide {
+        --ga-l: 7;
+        position: absolute;
+        inset: 2px;
+        background: var(--primary);
+        pointer-events: none;
+    }
+
+    .ga-scene .ga-j-btn .kp-button {
+        position: relative;
+        z-index: 1;
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        /* The finished picture: the fill a hair out of register. */
+        .ga-scene .ga-j-red > i,
+        .ga-scene .ga-j-slide {
+            translate: calc(var(--ga-j, 0.9rem) * -0.12) 0;
+        }
     }
 }
