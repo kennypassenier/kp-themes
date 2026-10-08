@@ -44,6 +44,6 @@ Never write out your internal reasoning in a reply, in a skill, or in an agent p
 result and, if needed, a short explanation of it. Instructions that push the model to echo its
 thinking can be declined by the safeguards (`reasoning_extraction`).
 
-The hook `.claude/hooks/release-tests.sh` blocks `npm run test:browser`, `test:firefox`,
-`test:release`, `verify` and a bare `playwright test` unless Kenny has created the file
+The hook `.claude/hooks/release-tests.sh` blocks `npm run test:tags`, `test:browser`, `test:firefox`,
+`test:release`, `verify` and a bare `playwright test` (not `test:tags -- --dry-run`) unless Kenny has created the file
 `.claude/release-go` (his go for a release). Never create that file yourself.

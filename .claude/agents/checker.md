@@ -10,7 +10,7 @@ never edit a file.
 What to run, in this order, from the repository root:
 
 1. `npm run gates` — the code gates, seconds. Report its last line.
-2. The browser tests for what changed, firefox only, by tag:
+2. Only when the file `.claude/release-go` exists (Kenny's go; the hook `.claude/hooks/release-tests.sh` blocks every browser test without it, `--dry-run` excepted): the browser tests for what changed, firefox only, by tag. Without that file, skip this step and say so in the report:
    `npm run test:tags -- --level building` (or `--level commit` when the
    prompt says a commit follows, or `--level engines` — the same selection
    in chromium too — when it says a layer closes or the fix touched paint,

@@ -59,6 +59,10 @@ never a silent deviation. This project follows
 | `npm run verify`                                                  | gates, the whole suite, advice, in order                                                                          | before a release, on the same go                                                                                                                |
 | review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published                                                                   | Claude pushes `main` whenever it asks Kenny to look [scope-67], and links only `catalogue/changed.html` (To judge), the one page he starts from |
 
+Every command in this table that runs a browser test (`test:tags`, `test:release`, `test:browser`,
+`verify`) is blocked for Claude until Kenny creates `.claude/release-go`; `test:tags -- --dry-run`
+and `npm run gates` are not.
+
 No CI runs on commits; `scripts/release.sh X.Y.Z` builds a release on this
 machine and uploads it as a draft (GitHub Actions builds nothing), and
 `pages.yml` publishes the site on a push to `main`. Node 26 (`.nvmrc`). All artefact text in English.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Blocks the browser-test commands that are Kenny's to authorise (CLAUDE.md:
+# Blocks every command that runs a browser test (the whole suite and the tagged subsets) that are Kenny's to authorise (CLAUDE.md:
 # "Tests only after a release go"). A PreToolUse hook on the Bash tool.
 #
 # Contract: Claude Code pipes the tool call as JSON on stdin. Exit 0 allows
@@ -39,11 +39,13 @@ BLOCKED = re.compile(
     r"(?:npm\s+(?:run\s+)?(?:test:browser|test:firefox|test:release|verify)\b"
     r"|npx\s+(?:--no-install\s+)?playwright\s+test\b"
     r"|node\s+gates/verify\.mjs\b"
-    r"|node\s+gates/run-tags\.mjs\b.*--level\s+(?:release|changed)\b"
-    r"|npm\s+(?:run\s+)?test:tags\b.*--level\s+(?:release|changed)\b)")
+    r"|node\s+gates/run-tags\.mjs\b"
+    r"|npm\s+(?:run\s+)?test:tags\b)")
 for seg in re.split(r"\|\||&&|;|\||\n", out):
-    if BLOCKED.match(seg.strip()):
-        print(seg.strip()[:100])
+    seg = seg.strip()
+    # --dry-run only prints the selection and the count; it runs no test.
+    if BLOCKED.match(seg) and "--dry-run" not in seg:
+        print(seg[:100])
         break
 ' 2>/dev/null) || exit 0
 
