@@ -1,0 +1,109 @@
+/* research/character-header, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   menu 2 and interactive 1 (shape 1, the letterhead, stands).
+
+   - menu: "opened at the ribbon" (a hinge) is retired; the overflow menu is
+     ruled open under its button: its frame rule start to end, then each
+     entry one after the other, 60 ms apart, a navy pen ahead of the words;
+     it closes as that played backwards (G3, G13; the register's
+     kp-sig-formal-line-k and kp-sig-formal-pen-k keyframes);
+   - interactive: the pressed plate is retired; a header's button is formal's
+     own button: the rule under its label on hover (the register), DI2's
+     two-channel ring on focus, the rule doubled on a press (G14 to G17); the
+     header adds no manner of its own, and keeps the plate's corner (G6). */
+@layer kp.signature {
+    [data-theme='formal'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-radius: var(--radius);
+    }
+
+    /* Interactive 1 · the pressed plate → formal's own button. */
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button--primary:hover:not(:disabled) {
+        border-color: var(--primary-hover);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: var(--secondary-active);
+    }
+
+    [data-theme='formal'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button--primary:active:not(:disabled) {
+        background-color: var(--primary-active);
+    }
+
+    /* Menu 2 · opened at the ribbon → ruled open. */
+    [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel]::before,
+    [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel] > .kp-menu > li::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: var(--kp-sig-fm-pen, 2px);
+        background: var(--primary);
+        clip-path: inset(0 0 0 100%);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel]::before {
+        inset-block-start: 0;
+        z-index: 1;
+    }
+
+    [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel] > .kp-menu > li {
+        position: relative;
+    }
+
+    [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel] > .kp-menu > li::after {
+        inset-block-end: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] {
+            animation: kp-sig-formal-line-0 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'],
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close']::before,
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] > .kp-menu > li,
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] > .kp-menu > li::after {
+            animation-direction: reverse;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim]::before {
+            animation: kp-sig-formal-pen-0 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(1) {
+            animation: kp-sig-formal-line-0 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(1)::after {
+            animation: kp-sig-formal-pen-0 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(2) {
+            animation: kp-sig-formal-line-1 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(2)::after {
+            animation: kp-sig-formal-pen-1 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(n + 3) {
+            animation: kp-sig-formal-line-2 740ms linear;
+        }
+
+        [data-theme='formal'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim] > .kp-menu > li:nth-child(n + 3)::after {
+            animation: kp-sig-formal-pen-2 740ms linear;
+        }
+    }
+}

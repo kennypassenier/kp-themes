@@ -1,0 +1,71 @@
+/* research/character-tiles, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 1,
+   loading 1, arrival 3, hover 1, live 2 (tone 1, the soft pill, stays).
+
+   - shape: the soft card takes the plate's 0.5 rem (a card is read, G6) and
+     the small shadow of a card (G7);
+   - loading: the dashed baseline is retired (G10): a busy tile keeps its
+     plate and its words breathe out of focus (css/light-register.css);
+   - arrival: the sunrise (tile after tile rising from the bottom) is the
+     exposure (G2): the tiles come into focus where they stand, one after
+     the other in reading order, 120 ms apart, 700 ms on the settle;
+   - hover: the soft lift (the shadow growing, the Open link a filled primary
+     pill) is retired (G15): the tile's shadow does not grow, and the Open
+     link is light's own ghost button, which settles 2 px toward the paper
+     (css/light-register.css); the demo only gives its own rules back;
+   - live: the soft swell (103 %) is the re-exposure (G9): the changed tile
+     goes into the glare for a beat and comes back into focus, in place. */
+@layer kp.signature {
+    [data-theme='light'] [data-ti-shape='1'] .kp-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        box-shadow: var(--kp-shadow-sm);
+    }
+
+    /* Loading 1 · no baseline; the words breathe. */
+    [data-theme='light'] [data-ti-loading='1'] [data-kp-busy]::after {
+        content: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-ti-loading='1'] .kp-card[data-kp-busy] > :not(.kp-skeleton, .kp-meter, [data-tl-mark]) {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+        }
+
+        /* Arrival 3 · the exposure, tile after tile. */
+        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) both;
+        }
+
+        [data-theme='light'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: var(--kp-sig-light-step);
+        }
+
+        /* Live 2 · re-exposed. */
+        [data-theme='light'] [data-ti-live='2'] [data-tl-flash] {
+            animation: kp-sig-light-reexpose calc(var(--kp-sig-light-time) * 0.8) linear;
+        }
+    }
+
+    /* Hover 1 · the shadow does not grow; the link is the register's button. */
+    [data-theme='light'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='light'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
+    [data-theme='light'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        box-shadow: var(--kp-shadow-sm);
+    }
+
+    [data-theme='light'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='light'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        background: revert-layer;
+        color: revert-layer;
+        border-radius: revert-layer;
+    }
+
+    [data-theme='light'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+}

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-cat-theme="dark" data-cat-theme-fixed data-review="dark-character" data-review-themes="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what makes dark dark</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" data-kp-register="dark" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="grammar.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="dk-page">
+            <header class="dk-intro" id="dk-intro">
+                <h1>What makes dark dark</h1>
+                <p data-dk-story="what">
+                    Dark is a spectral instrument: near-black ruled with a faint grid, near-white ink, and one mechanism, the anodised oxide film that
+                    runs along every edge that matters and turns with the pointer. The anchor you picked says what the instrument does: it passes a
+                    line. A spectral line of film light sweeps a part from its start at an even pace and lays the film along its edge behind it,
+                    turning; when the line reaches the end the figure takes the film through its letters and the turn settles, cyan at the top. Held,
+                    the line sweeps back and takes the film with it.
+                </p>
+                <p data-dk-story="so">
+                    So everything that happens on screen is one pass: a part is laid by the line (arriving, opening), re-laid by it (a live update),
+                    swept while it waits (loading, the busy bar, the spinner), and taken off by the pass back (leaving). The film is the only colour
+                    and the line the only light: nothing fades, nothing pops, nothing blinks, no lamp lights and no trace flares.
+                </p>
+                <p data-dk-story="decided">
+                    Already decided by you: the anchor = the line lays the film down, turning (the anchor round, update 1), and round one’s progress
+                    bar stays exactly (the chamfered ticked track, the film fill whose colour turns as it fills, the `]` head) with the line at its
+                    head; the network graph changes in no theme. The questions below turn the anchor into rules for every other component; where a
+                    decided pick is at odds with the rule, the pick is on the page as an option named “the pick” or “today”. The full analysis is in
+                    themes/dark/CHARACTER.md.
+                </p>
+                <p class="dk-motion" data-dk-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose, the part laid,
+                    cyan at the top. Turn it off in the system settings to judge the motion questions (1 to 4, 9 to 13 and 17).
+                </p>
+            </header>
+
+            <section class="dk-story" aria-labelledby="h-story">
+                <h2 id="h-story">What dark is</h2>
+                <div class="dk-story__grid">
+                    <div class="dk-story__text">
+                        <p>
+                            Every option below is a live scene built from the package's own components in dark, so you see the rule at work. The first
+                            option of each question is the recommendation; each option says what you see and why it is or is not recommended. Where a
+                            decided pick is at odds with the rule, it stays on the page as an option named “the pick”, and where the register does
+                            something today that the rule would retire, as an option named “today”.
+                        </p>
+                        <p>
+                            Dark's own parts are on the right as the package draws them: the bracketed buttons with the film along their foot, a
+                            badge, an alert, the ring of the spinner, the busy bar (still a hatch today) and the share bar with its film fill and its
+                            <code>]</code> head, the skeleton's bars. The ground carries the instrument grid, the panels the film on their edge;
+                            nothing else is drawn.
+                        </p>
+                    </div>
+                    <div class="dk-story__parts" aria-label="Dark's own parts, as the package draws them">
+                        <div class="dk-row">
+                            <button type="button" class="kp-button">
+                                <span class="kp-button__label">Export</span><span class="kp-button__edge" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="kp-button kp-button--primary">
+                                <span class="kp-button__label">Add a pump house</span><span class="kp-button__edge" aria-hidden="true"></span>
+                            </button>
+                            <span class="kp-badge">Draft</span>
+                        </div>
+                        <div class="kp-alert" role="status"><span class="kp-alert__body">The export runs at 02:00 from Monday.</span></div>
+                        <div class="dk-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar dk-story__bar" role="progressbar" aria-label="Waiting for the export" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar dk-story__bar"
+                            role="progressbar"
+                            aria-label="Export, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="dk-story__skel" aria-hidden="true">
+                            <span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span>
+                        </div>
+                    </div>
+                </div>
+                <details class="dk-gallery" data-dk-gallery>
+                    <summary>The decided dark components as they are today (opens six live demos)</summary>
+                    <div class="dk-gallery__grid">
+                        <figure>
+                            <figcaption>Key-figure strip (the oscilloscope: the shape and loading families)</figcaption>
+                            <iframe
+                                title="Key-figure strip, dark as decided"
+                                data-src="../character-columns/demo.html?embed=shape&amp;theme=dark"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Menu button (powered up: the arrival family)</figcaption>
+                            <iframe title="Menu button, dark as decided" data-src="../character-menu/demo.html?embed=open&amp;theme=dark"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Key figure (the trace flares: the live family)</figcaption>
+                            <iframe title="Key figure, dark as decided" data-src="../character-kpi/demo.html?embed=live&amp;theme=dark"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Network graph (spotlit: the hover family; never changes)</figcaption>
+                            <iframe
+                                title="Network graph, dark as decided"
+                                data-src="../character-graph/demo.html?embed=focus&amp;theme=dark"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Meter (pressed in the die: the tone family)</figcaption>
+                            <iframe title="Meter, dark as decided" data-src="../character-meter/demo.html?embed=tone&amp;theme=dark"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Busy table (the ticker baseline: the loading family)</figcaption>
+                            <iframe title="Busy table, dark as decided" data-src="../character-busy/demo.html?embed=loading&amp;theme=dark"></iframe>
+                        </figure>
+                    </div>
+                </details>
+            </section>
+
+            <section
+                class="dk-sec"
+                data-review-item="dark"
+                data-review-mode="aspects"
+                data-review-rows="data-dk-aspect"
+                data-review-components="dark-character"
+                data-review-title="What makes dark dark"
+                data-dk-show="rest"
+                aria-labelledby="h-dk"
+            >
+                <div class="dk-sec__head">
+                    <h2 id="h-dk">Nineteen questions</h2>
+                    <p>
+                        Each row is one question with its three options side by side, the recommended one first. The scenes replay by themselves every
+                        few seconds; Replay starts them together, the Speed buttons slow every motion down, and State shows every button in the
+                        composites scene as hovered, focused or pressed (question 14); the hover, focus and press rows show their own state.
+                    </p>
+                    <ol class="dk-toc" data-dk-toc></ol>
+                </div>
+                <div class="dk-controls" data-review-controls>
+                    <div class="dk-actions" role="group" aria-label="State of every button">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-state="rest" aria-pressed="true">Rest</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-dk-state="hover"
+                            aria-pressed="false"
+                            data-review-plays="composites"
+                        >
+                            Hover
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-state="focus" aria-pressed="false">Focus</button>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-state="press" aria-pressed="false">Press</button>
+                    </div>
+                    <div class="dk-actions" role="group" aria-label="Replay">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-dk-replay
+                            data-review-plays="curve direction opening durations live leave"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="dk-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-dk-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="dk-aspects" data-dk-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-08-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

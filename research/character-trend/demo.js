@@ -130,8 +130,8 @@ const IDEAS = {
     light: {
         shape: [
             {
-                name: 'The soft card',
-                text: 'A white card lifted on a soft shadow, a wider radius, the line soft and round-capped over a fuller wash, the change as a soft pill.',
+                name: 'The white card',
+                text: 'A white card of 0.5 rem on its small shadow and a hairline seam, the line in a confident stroke.',
             },
             {
                 name: 'Daylight',
@@ -144,8 +144,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The dashed baseline',
-                text: 'The dashed baseline under the plot drifts to the right.',
+                name: 'Out of focus',
+                text: 'The plot stands out of focus in the seam’s grey, breathing between a dim and a dazzling exposure; no baseline is drawn.',
             },
             {
                 name: 'Daylight',
@@ -166,8 +166,8 @@ const IDEAS = {
                 text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
             },
             {
-                name: 'Sunrise',
-                text: 'The line rises from the baseline, slowing as it lands; the number drops into its line.',
+                name: 'Out of the glare',
+                text: 'The line and the figure come into focus where they stand, out of a blurred, too bright glare, 700 ms on a long settle.',
             },
         ],
         tone: [
@@ -180,8 +180,8 @@ const IDEAS = {
                 text: 'The change as a pill drawn in a soft outline of its own ink over its plate.',
             },
             {
-                name: 'The coloured tab',
-                text: 'The change as a pill with a soft drop shadow; a warning or destructive figure shows a band of its colour along the top of the card.',
+                name: 'The band and the pill',
+                text: 'A warning or failed trend carries a 3 px band of the tone’s colour along its top; its change sits on a soft pill with no shadow.',
             },
         ],
         live: [
@@ -190,8 +190,8 @@ const IDEAS = {
                 text: 'A new reading redraws the line in place at once, as both characters had it.',
             },
             {
-                name: 'A soft swell',
-                text: 'The line swells once and settles, slowing as it lands.',
+                name: 'Re-exposed',
+                text: 'The line goes into the glare for a beat and comes back into focus; it never swells.',
             },
             {
                 name: 'The page turns',

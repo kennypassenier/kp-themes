@@ -1,0 +1,88 @@
+/* research/character-menu, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 1,
+   loading 2, open 3, tone 1, interact 1.
+
+   - shape: the soft card keeps its seam-less soft shadow but takes the
+     menu's 0.5 rem (G6) and no small capitals on its headings (G18);
+   - loading: daylight (a band crossing the loading row) is retired (G10):
+     the row's words breathe out of focus (css/light-register.css);
+   - open: the soft pop (a scale from 97 % with an overshoot) is the
+     exposure (G3): the menu comes into focus under its button, where it
+     hangs, 700 ms on the settle, and goes back into the glare as the same
+     pair played the other way round;
+   - tone: the coloured tab (a soft shadow in the destructive colour) is the
+     warning of G8: a 3 px band of the destructive colour along the top of
+     the entry, its words in the same ink, a soft pill under the pointer;
+   - interact: the soft lift (an entry rising 1 px on a shadow) is retired
+     (G15 to G17): an entry takes the muted wash, wears DI2's ring inside
+     the entry, and lands 2 px and flashes under a press. */
+@layer kp.signature {
+    [data-theme='light'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        border-radius: var(--radius, 0.5rem);
+        box-shadow: var(--kp-shadow-md);
+    }
+
+    [data-theme='light'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-variant-caps: normal;
+        letter-spacing: 0;
+    }
+
+    /* Loading 2 · no band; the entry's words breathe. */
+    [data-theme='light'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-mb-loading='2'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+        }
+
+        /* Open 3 · the exposure under the button, its close the same pair backwards. */
+        [data-theme='light'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: kp-sig-light-expose calc(var(--kp-sig-light-time) / var(--mb-speed, 1)) var(--kp-sig-light-ease);
+        }
+
+        [data-theme='light'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-light-expose;
+            animation-direction: reverse;
+        }
+    }
+
+    /* Tone 1 · the band and the pill. */
+    [data-theme='light'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        color: var(--destructive);
+        box-shadow: inset 0 3px 0 0 var(--destructive);
+    }
+
+    /* Interact 1 · the muted wash, the ring inside, a press that lands. */
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        transform: none;
+        box-shadow: revert-layer;
+    }
+
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:hover, [data-mb-force-focus]) {
+        background: var(--muted);
+    }
+
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:is(:focus-visible, [data-mb-force-focus]) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: -2px;
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: var(--secondary-active);
+        transform: none;
+        translate: 0 2px;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+            animation: kp-sig-light-flash var(--fx-duration) linear 1;
+        }
+    }
+}

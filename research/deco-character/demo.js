@@ -1,6 +1,9 @@
 // What makes deco deco (Kenny, 2026-10-08): the anchor is the fan that opens,
 // and the progress bar is to be redone. Nineteen questions turn that anchor
-// into rules for every other component.
+// into rules for every other component. Update 1 (2026-10-08): thirteen of
+// them are redrawn in Kenny's direction (thin gold on deep blue lacquer with
+// the wallpaper, the fan unfolding smoothly, nothing counted, nothing loud);
+// his six picks keep their round-one scenes.
 //
 // A review-kit demo in aspect mode, deco only. aspects.js holds the nineteen
 // questions as data (the designer's text, used verbatim); this file gives each
@@ -57,32 +60,10 @@ const PART = {
             'dc-fx--dialog',
             'role="group" aria-label="A dialog opening"',
         ),
-    menu: () => `<div class="dc-menu-wrap">
-        ${button('More ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}
-        ${fx(
-            `<div class="kp-popover dc-pop"><ul class="kp-menu" role="menu">
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
-            <li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete</button></li>
-        </ul></div>`,
-            'dc-fx--pop',
-        )}
-    </div>`,
-    toast: () => fx(`<div class="kp-toast dc-toast" role="status"><span class="kp-toast__body">Export saved at 02:00.</span></div>`, 'dc-fx--toast'),
-    tooltip: () => `<div class="dc-tip-wrap">${fx(`<div class="kp-tooltip dc-tip" role="tooltip">14:00 · 412 m³/h</div>`, 'dc-fx--tip')}</div>`,
-    tilePlain: (label = 'Pump house 1', body = '4.2 bar · 412 m³/h') =>
-        `<div class="kp-card dc-tile"><p class="kp-card__title dc-title">${label}</p><p class="kp-card__body">${body}</p></div>`,
-    tile: (label = 'Pump house 1', body = '4.2 bar · 412 m³/h') => fx(PART.tilePlain(label, body), 'dc-fx--tile'),
     kpi: (label = 'Flow now', value = '412', foot = note('6 %')) => `<div class="kp-kpi dc-kpi">
         <span class="kp-kpi__label">${label}</span>
         <span class="kp-kpi__value dc-carrier" data-dc-num>${value}</span>
         <span class="kp-kpi__trend">${foot} on yesterday</span>
-    </div>`,
-    /** The probes of question 1: a fan of twelve rays on this option's curve, and one on an even sweep beside it. */
-    fans: () => `<div class="dc-fans" aria-hidden="true">
-        <span class="dc-fans__ground">${fx(crest('dc-crest--probe'), 'dc-fx--probe')}</span>
-        <span class="dc-fans__ground">${fx(crest('dc-crest--probe'), 'dc-fx--probe dc-fx--ref')}</span>
-        <span class="dc-fans__name">this curve</span><span class="dc-fans__name">an even sweep</span>
     </div>`,
     /** Days of a month: `--i` is a day's rank from the centre (the group opens from there). */
     days: (n = 7, from = 12) => {
@@ -93,48 +74,271 @@ const PART = {
     },
     chip: (word = 'Running') =>
         `<span class="dc-state"><span class="dc-state__dot dc-carrier" aria-hidden="true"></span><span class="dc-state__word dc-carrier" data-dc-word>${word}</span></span>`,
-    alert: (text = 'Pump house 4 is back online.', tone = '') =>
-        `<div class="kp-alert ${tone}" role="status"><span class="kp-alert__body">${text}</span></div>`,
     spark: (cls = '') => `<span class="dc-spark ${cls}" aria-hidden="true"><svg viewBox="0 0 120 32" preserveAspectRatio="none">
         <polyline points="0,24 15,20 30,22 45,14 60,16 75,10 90,12 105,6 120,8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" pathLength="1"/></svg></span>`,
     column: (label = 'Open', value = '38') =>
         `<div class="dc-column"><span class="kp-kpi__label">${label}</span><span class="dc-column__num dc-carrier" data-dc-num>${value}</span></div>`,
-    skeleton: () =>
-        `<div class="dc-skel" aria-hidden="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span></div>`,
-    field: () =>
-        `<label class="kp-field dc-field"><span class="kp-field__label">Pump house</span><input class="kp-field__input" value="North 4" /></label>`,
-    menuStatic: (items = ['Open incident', 'Assign to…'], cls = '', pointed = true) =>
-        `<div class="kp-popover dc-pop dc-pop--static ${cls}"><ul class="kp-menu" role="menu">${items
-            .map(
-                (t, i) =>
-                    `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === 0 && pointed ? ' dc-pointed' : ''}">${t}</button></li>`,
-            )
-            .join('')}</ul></div>`,
-    switchOn: () =>
-        `<label class="kp-switch dc-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked /><span>Alerts on</span></label>`,
 };
 const caption = (text) => `<p class="dc-cap">${text}</p>`;
 const cell = (cap, html, cls = '') => `<div class="dc-part ${cls}">${caption(cap)}${html}</div>`;
 
+/* ------------------------------------------------- update 1: the lobby's parts */
+
+// Update 1 (2026-10-08) redraws thirteen questions in Kenny's direction: thin
+// gold on deep blue lacquer with the chevron wallpaper behind every plate. A
+// plate (`.dc-plate`) is lacquer, the wallpaper and a gold inlay line set in
+// from its edge (its ::after); a part that arrives (`.dc-ar`) is played by
+// the clock through the registered numbers --dc-draw (the inlay drawn), --dc-up
+// (the lacquer and the words up), --dc-g (a glint across) and --dc-p (a part's
+// own parting). `--i` is a part's rank from the centre of its group.
+
+/** A lozenge: a small gold jewel (a square turned 45 degrees). */
+const loz = (cls = '') => `<span class="dc-loz ${cls}" aria-hidden="true"></span>`;
+
+/** A fan of gold hairlines on a pivot at its foot; `--dc-a` is how far it has unfolded. */
+const fan = (cls = '') => `<span class="dc-fan ${cls}" aria-hidden="true"></span>`;
+
+const menuList = (items, pointed = -1, cls = '') =>
+    `<ul class="kp-menu" role="menu">${items
+        .map(
+            (t, i) =>
+                `<li role="none"><button type="button" role="menuitem" class="kp-menu__item${i === pointed ? ' dc-pointed' : ''}${
+                    /Delete/.test(t) ? ' kp-menu__item--destructive' : ''
+                } ${cls}">${t}</button></li>`,
+        )
+        .join('')}</ul>`;
+
+const LOBBY = {
+    /** A dialog on the lacquer: one small crest over its title, its inlay starts there. */
+    dialog: () =>
+        `<div class="kp-dialog dc-plate dc-ar dc-dlg" role="group" aria-label="A dialog">${fan('dc-fan--crest')}<p class="kp-dialog__title dc-title">Close INC-4471?</p><p class="kp-dialog__description">The vendor is told at once.</p><div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Close it', 'kp-button--sm kp-button--primary')}</div></div>`,
+    /** A menu under its button; its inlay starts under the button. */
+    menu: () =>
+        `<div class="dc-menu-wrap">${button('More ▾', 'kp-button--sm', 'aria-haspopup="menu" aria-expanded="true"')}<div class="kp-popover dc-plate dc-ar dc-drop">${menuList(['Open incident', 'Assign to…', 'Rename'])}</div></div>`,
+    menuStatic: (items = ['Open incident', 'Assign to…'], pointed = -1, cls = '') =>
+        `<div class="kp-popover dc-plate dc-pop2 ${cls}">${menuList(items, pointed)}</div>`,
+    toast: () => `<div class="kp-toast dc-plate dc-ar dc-toast2" role="status"><span class="kp-toast__body">Export saved at 02:00.</span></div>`,
+    /** A tooltip: its point is a lozenge on its inlay, under what it names. */
+    tooltip: (cls = 'dc-ar') =>
+        `<div class="dc-tip-wrap"><div class="kp-tooltip dc-plate dc-tip2 ${cls}" role="tooltip">${loz('dc-tip2__point')}<span>14:00 · 412 m³/h</span></div></div>`,
+    tile: (label = 'Pump house 1', body = '4.2 bar · 412 m³/h', cls = '') =>
+        `<div class="kp-card dc-plate ${cls}"><p class="kp-card__title dc-title">${label}</p><p class="kp-card__body">${body}</p></div>`,
+    kpi: (label = 'Flow now', value = '412', foot = `${note('6 %')} on yesterday`, cls = '', extra = '') =>
+        `<div class="kp-kpi dc-plate dc-kpi2 ${cls}" ${extra}><span class="kp-kpi__label">${label}</span><span class="kp-kpi__value">${value}</span>${
+            foot ? `<span class="kp-kpi__trend">${foot}</span>` : ''
+        }</div>`,
+    alert: (html, cls = '') => `<div class="kp-alert dc-plate dc-alert2 ${cls}" role="status"><span class="kp-alert__body">${html}</span></div>`,
+    /** A week of days as small plates, `--i` each day's rank from the middle. */
+    week: (from = 12, cls = 'dc-ar') =>
+        `<div class="dc-days dc-week" aria-hidden="true">${[...Array(7).keys()]
+            .map((i) => `<span class="dc-day2 dc-plate ${cls}" style="--i: ${Math.abs(i - 3)}">${from + i}</span>`)
+            .join('')}</div>`,
+    line: (cls = '') => PART.spark(`dc-line ${cls}`),
+    trendTile: (foot = '') => `<div class="kp-card dc-plate dc-trend2"><p class="kp-card__title dc-title">Flow, 24 h</p>${PART.spark()}${foot}</div>`,
+};
+
 /* ------------------------------------------------------------ the scenes */
 
-/** Question 1: every part fans open from its own base for the same time; only the curve differs. */
+/** Question 1: every part arrives the same way for 480 ms; only the curve differs. */
 const MOVING = () =>
-    cell('A fan of twelve rays on this curve, beside one on an even sweep', PART.fans(), 'dc-part--wide') +
-    cell('A dialog fans open from its crest', PART.dialog()) +
-    cell('A menu fans open from its button', PART.menu()) +
-    cell('A tile fans open from its base', PART.tile());
+    cell(
+        'A fan of hairlines on this curve, beside one at an even pace',
+        `<div class="dc-fans" aria-hidden="true"><span class="dc-fans__ground">${fan('dc-ar dc-fan--probe')}</span><span class="dc-fans__ground">${fan(
+            'dc-ar dc-fan--probe dc-fan--even',
+        )}</span><span class="dc-fans__name">this curve</span><span class="dc-fans__name">an even pace</span></div>`,
+        'dc-part--wide',
+    ) +
+    cell('A dialog arrives', LOBBY.dialog()) +
+    cell('A menu arrives under its button', LOBBY.menu()) +
+    cell('A tile arrives', LOBBY.tile('Pump house 1', '4.2 bar · 412 m³/h', 'dc-ar'));
 
 const DIRECTION = () =>
-    cell('A week of days arrives', PART.days(7), 'dc-part--wide') +
-    cell('A tile arrives', PART.tile()) +
-    cell('The trend’s line is drawn', fx(PART.spark(), 'dc-fx--line'));
+    cell('A week of days arrives', LOBBY.week(), 'dc-part--wide') +
+    cell('A tile arrives', LOBBY.tile('Pump house 1', '4.2 bar · 412 m³/h', 'dc-ar')) +
+    cell('The trend’s line is drawn', `<div class="dc-linebed">${LOBBY.line('dc-ar')}</div>`);
 
 const OPENING = () =>
-    cell('A menu opens from its button', PART.menu()) +
-    cell('A dialog opens', PART.dialog()) +
-    cell('A toast appears', PART.toast()) +
-    cell('A tooltip appears', PART.tooltip());
+    cell('A menu opens under its button', LOBBY.menu()) +
+    cell('A dialog opens on the lacquer', LOBBY.dialog()) +
+    cell('A toast appears', LOBBY.toast()) +
+    cell('A tooltip appears', LOBBY.tooltip());
+
+const COLOUR = () =>
+    cell(
+        'A card under its double rule',
+        `<div class="kp-card dc-plate"><p class="kp-card__title dc-title dc-ruled">Reservoir North</p><p class="kp-card__body">Level 71 % · ${loz('dc-loz--done')} filled at 06:00</p></div>`,
+    ) +
+    cell(
+        'Buttons: the one that acts and the others',
+        `<div class="dc-row">${button('Export')}${button('Add a pump house', 'kp-button--primary')}</div>`,
+    ) +
+    cell(
+        'A switch on, a meter with its mark',
+        `<div class="dc-colours">${'<label class="kp-switch dc-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked /><span>Alerts on</span></label>'}${meter(0.62, 0.8)}</div>`,
+    ) +
+    cell(
+        'A month: two days done, the picked day',
+        `<div class="dc-days dc-month" aria-hidden="true">${[12, 13, 14, 15, 16]
+            .map((d) => `<span class="dc-day2 dc-plate${d < 14 ? ' dc-done' : ''}${d === 14 ? ' dc-picked' : ''}">${d}</span>`)
+            .join('')}</div>`,
+    ) +
+    cell('A key figure', LOBBY.kpi('Flow now', '412')) +
+    cell('A failed export', LOBBY.alert('<b class="dc-fail">Export failed:</b> the pump house did not answer.', 'dc-alert2--fail'));
+
+const CORNERS = () =>
+    cell('Card', LOBBY.tile('Reservoir North', 'Level 71 %')) +
+    cell('Menu panel', LOBBY.menuStatic(['Open incident', 'Assign to…'])) +
+    cell('Key figure with its change', LOBBY.kpi('Flow now', '412')) +
+    cell(
+        'Button, tag and chip',
+        `<div class="dc-row">${button('Export')}<span class="kp-badge dc-tag2">12 new</span><span class="kp-tag dc-tag2">Pumps</span></div>`,
+    ) +
+    cell('Tooltip', LOBBY.tooltip('dc-tip2--still')) +
+    cell('A progress bar’s head', bar(0.62, 'dc-bar2 kp-progressbar--lg', 'Export'));
+
+const WARNING = () =>
+    cell('A warning key figure', LOBBY.kpi('Pressure', '1.1 bar', `${note('0.4 bar', 'down', 'bad')} on yesterday`, 'dc-warn')) +
+    cell(
+        'A failed trend tile',
+        LOBBY.trendTile(`<p class="kp-card__body"><span class="dc-failword">Failed</span> · last reading 07:12</p>`).replace(
+            'dc-trend2',
+            'dc-trend2 dc-warn',
+        ),
+    ) +
+    cell('A destructive menu entry', LOBBY.menuStatic(['Rename', 'Delete'])) +
+    cell('A warning alert', LOBBY.alert('<b class="dc-failword">Low pressure:</b> below 1.2 bar since 07:12.', 'dc-warn'));
+
+/** A surface that waits: lacquer, the wallpaper, its inlay; the option draws what moves on it. */
+const waits = (html, cls = '') =>
+    `<div class="dc-waits dc-plate ${cls}" aria-busy="true">${html}<span class="dc-wait" aria-hidden="true">${fan('dc-fan--wait')}</span></div>`;
+const LOADERS = () =>
+    cell('A tile', waits('<p class="kp-card__title dc-title">Pump house 3</p><p class="kp-card__body">Reading…</p>', 'kp-card')) +
+    cell(
+        'A panel',
+        waits(
+            '<div class="dc-panel2"><span>Station</span><span>Flow</span><span class="dc-faint">North 4</span><span class="dc-faint">412</span></div>',
+        ),
+    ) +
+    cell(
+        'A menu entry',
+        `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-waits" aria-busy="true">Loading stations…<span class="dc-wait" aria-hidden="true">${fan(
+            'dc-fan--wait',
+        )}</span></button></li></ul></div>`,
+    ) +
+    cell(
+        'A month of days',
+        waits(`<div class="dc-days dc-month">${[1, 2, 3, 4, 5].map((d) => `<span class="dc-day2">${d}</span>`).join('')}</div>`),
+    ) +
+    cell('A chart’s plot', waits('<div class="dc-plot2"></div>')) +
+    cell(
+        'Skeleton lines',
+        `<div class="dc-skel dc-waits" aria-busy="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="dc-wait" aria-hidden="true">${fan(
+            'dc-fan--wait',
+        )}</span></div>`,
+    );
+
+const BARS = () =>
+    cell(
+        'A share of 62 %, three sizes',
+        `<div class="dc-bars">${bar(0.62, 'dc-bar2', 'Export')}${bar(0.62, 'dc-bar2 kp-progressbar--md', 'Export')}${bar(0.62, 'dc-bar2 kp-progressbar--lg', 'Export')}</div>`,
+        'dc-part--wide',
+    ) +
+    cell(
+        'Busy, three sizes',
+        `<div class="dc-bars">${bar(null, 'dc-bar2', 'Export')}${bar(null, 'dc-bar2 kp-progressbar--md', 'Export')}${bar(null, 'dc-bar2 kp-progressbar--lg', 'Export')}</div>`,
+        'dc-part--wide',
+    ) +
+    cell(
+        'Inside a busy button',
+        `<button type="button" class="kp-button dc-busy-button" aria-busy="true">Saving…${bar(null, 'dc-bar2', 'Saving')}</button>`,
+    ) +
+    cell('Beside a share of 62 %', `<div class="dc-bars dc-bars--pair">${bar(0.62, 'dc-bar2', 'Share')}${bar(null, 'dc-bar2', 'Busy')}</div>`);
+
+const LEAVE = () =>
+    cell('An alert', LOBBY.alert('Pump house 4 is back online.', 'dc-ar')) +
+    cell('A card', LOBBY.tile('Reservoir North', 'Level 71 %', 'dc-ar')) +
+    cell('A key figure', LOBBY.kpi('Flow now', '412', '', 'dc-ar'));
+
+const COMPOSITES = () =>
+    cell(
+        'Alone: deco’s own button, for reference',
+        `<div class="dc-row">${button('Export readings')}${button('Add', 'kp-button--primary')}</div>`,
+        'dc-part--wide',
+    ) +
+    cell(
+        'Page header: its action buttons',
+        `<header class="kp-page-header dc-header dc-plate"><div class="kp-page-header__inner"><div><p class="kp-page-header__title dc-title">Pump houses</p><p class="kp-page-header__description">Fifteen on the northern network.</p></div>
+        <div class="kp-page-header__actions">${button('Export', 'kp-button--sm dc-in-header')}${button('Add', 'kp-button--sm kp-button--primary dc-in-header')}</div></div></header>`,
+        'dc-part--wide',
+    ) +
+    cell('Menu: its entries', LOBBY.menuStatic(['Open incident', 'Assign to…'], -1, 'dc-in-menu')) +
+    cell(
+        'Tile: its Open link',
+        `<div class="kp-card dc-plate dc-tile dc-in-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link" href="#dc-intro">Open</a></div>`,
+    ) +
+    cell(
+        'Drawer: its tour buttons',
+        `<div class="kp-card dc-plate dc-drawer"><p class="kp-card__title dc-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="dc-row">${button('Skip', 'kp-button--sm kp-button--ghost')}${button('Next', 'kp-button--sm kp-button--primary')}</div></div>`,
+    ) +
+    cell(
+        'Key figure as a link',
+        `<div class="kp-kpis"><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span><span class="kp-kpi__trend">avg 15 min</span></a></div>`,
+    );
+
+const HOVER = () =>
+    cell('Button, pointed at', `<div class="dc-row">${button('Export readings', 'dc-pointed')}${button('Add', 'kp-button--primary')}</div>`) +
+    cell('Menu entries, the first pointed at', LOBBY.menuStatic(['Open incident', 'Assign to…', 'Rename'], 0)) +
+    cell(
+        'Tile with its Open link pointed at',
+        `<div class="kp-card dc-plate dc-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link dc-pointed" href="#dc-intro">Open</a></div>`,
+    ) +
+    cell(
+        'A link in a line, pointed at',
+        `<p class="dc-prose">Read the <a class="dc-pointed" href="#dc-intro">pressure report</a> before the night valve closes.</p>`,
+    ) +
+    cell(
+        'Key figures, the first pointed at',
+        `<div class="kp-kpis dc-kpi-row"><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi dc-pointed" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span></a><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1</span></a></div>`,
+    ) +
+    cell(
+        'Days of a month, one pointed at',
+        `<div class="dc-days dc-month">${[12, 13, 14, 15].map((d) => `<span class="dc-day2 dc-plate${d === 13 ? ' dc-pointed' : ''}">${d}</span>`).join('')}</div>`,
+    );
+
+/** One specimen at rest beside the same one pressed. */
+const duo = (rest, pressed) => `<div class="dc-duo"><span class="dc-duo__one">${rest}</span><span class="dc-duo__one">${pressed}</span></div>`;
+const entry = (state) =>
+    `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item ${state}">Assign to…</button></li></ul></div>`;
+const filter = (state) =>
+    `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle dc-plate dc-kpi2 ${state}" aria-pressed="false"><span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">3</span></button></div>`;
+const PRESS = () =>
+    cell('Button, at rest and pressed', duo(button('Export readings', 'dc-rest'), button('Export readings', 'dc-press'))) +
+    cell('Primary button', duo(button('Add', 'kp-button--primary dc-rest'), button('Add', 'kp-button--primary dc-press'))) +
+    cell('Menu entry', duo(entry('dc-rest'), entry('dc-press'))) +
+    cell('Calendar day', duo('<span class="dc-day2 dc-plate dc-rest">14</span>', '<span class="dc-day2 dc-plate dc-press">14</span>')) +
+    cell('Key figure as a filter', duo(filter('dc-rest'), filter('dc-press')));
+
+const MOTIFS = () =>
+    cell(
+        'A card and its title',
+        `<div class="kp-card dc-plate dc-motif-card">${fan('dc-fan--crest')}<p class="kp-card__title dc-title dc-ruled">Reservoir North</p><p class="kp-card__body">Level 71 %</p></div>`,
+    ) +
+    cell('Meter with its mark', meter(0.62, 0.8)) +
+    cell(
+        'Chart events',
+        `<div class="dc-plate dc-events2"><div class="dc-events" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none"><polyline points="0,36 20,30 40,33 60,22 80,26 100,16 120,20 140,12 160,14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><span class="dc-events__mark" style="--x: 37.5%"></span><span class="dc-events__mark" style="--x: 75%"></span></div></div>`,
+    ) +
+    cell(
+        'Button and a list',
+        `<div class="dc-row">${button('Add a sensor', 'dc-motif-button')}</div><ul class="dc-motif-list"><li>North 4</li><li>South 2</li></ul>`,
+    ) +
+    cell(
+        'Empty state',
+        `<div class="kp-empty dc-plate dc-motif-empty">${fan('dc-fan--crest')}<p class="kp-empty__title">No readings yet</p><p class="kp-empty__body">The first arrives within the hour.</p></div>`,
+    ) +
+    cell('A divider between two sections', `<p class="dc-cap">Pumps</p><hr data-kp-divider class="dc-divider" /><p class="dc-cap">Reservoirs</p>`);
+
+/* The six questions Kenny picked keep their round-one scenes. */
 
 const DURATION = () =>
     cell('Contact: a press', `<div class="dc-row">${button('Export readings', 'dc-tap')}</div><p class="dc-readout" data-dc-readout="contact"></p>`) +
@@ -145,35 +349,6 @@ const DURATION = () =>
     cell('A plate behind its fan', PART.dialog() + '<p class="dc-readout" data-dc-readout="plate"></p>') +
     cell('A group, from the centre out', PART.days(5, 12) + '<p class="dc-readout" data-dc-readout="group"></p>') +
     cell('A loop: the spinner’s fan', `<div class="dc-row">${spin(2.5)}</div><p class="dc-readout" data-dc-readout="loop"></p>`);
-
-const COLOUR = () =>
-    cell('A card under its double rule', PART.tilePlain('Reservoir North', 'Level 71 %')) +
-    cell(
-        'A switch, the head of a share, the picked day',
-        `<div class="dc-colours">${PART.switchOn()}${bar(0.62, '', 'Export')}<div class="dc-days dc-days--today">${[12, 13, 14, 15]
-            .map((d) => `<span class="dc-day${d === 14 ? ' dc-today' : ''}${d === 13 ? ' dc-picked' : ''}">${d}</span>`)
-            .join('')}</div></div>`,
-    ) +
-    cell(
-        'Buttons and the rule that divides',
-        `<div class="dc-row">${button('Export')}${button('Add', 'kp-button--primary')}</div><hr data-kp-divider class="dc-divider" />`,
-    ) +
-    cell(
-        'Key figures with a tone',
-        `<div class="kp-kpis">${PART.kpi('Flow now', '412', note('6 %'))}${PART.kpi('Pressure', '1.1 bar', note('0.4 bar', 'down', 'bad')).replace('class="kp-kpi dc-kpi"', 'class="kp-kpi dc-kpi dc-kpi--fail" data-kp-tone="destructive"')}</div>`,
-    ) +
-    cell('A failed export', PART.alert('Export failed: the pump house did not answer.', 'kp-alert--destructive'));
-
-const CORNERS = () =>
-    cell('Card', PART.tilePlain('Reservoir North', 'Level 71 %')) +
-    cell('Menu panel', PART.menuStatic(['Open incident', 'Assign to…'], '', false)) +
-    cell('Key figure with its change', `<div class="kp-kpis">${PART.kpi('Flow now', '412')}</div>`) +
-    cell(
-        'Button, tag and chip',
-        `<div class="dc-row">${button('Export')}<span class="kp-badge dc-tag">12 new</span><span class="kp-tag dc-chip">Pumps</span></div>`,
-    ) +
-    cell('Tooltip', `<div class="kp-tooltip dc-tip dc-tip--still" role="tooltip">14:00 · 412 m³/h</div>`) +
-    cell('A progress bar’s head', bar(0.62, '', 'Export'));
 
 const SURFACE = () =>
     cell(
@@ -188,21 +363,6 @@ const SURFACE = () =>
     ) +
     cell('The state word', `<div class="dc-state-plate">${PART.chip('Running')}</div>`);
 
-const WARNING = () =>
-    cell(
-        'A warning key figure',
-        `<div class="kp-kpis">${PART.kpi('Pressure', '1.1 bar', note('0.4 bar', 'down', 'bad')).replace('class="kp-kpi dc-kpi"', 'class="kp-kpi dc-kpi dc-kpi--warn" data-kp-tone="warning"')}</div>`,
-    ) +
-    cell(
-        'A failed trend tile',
-        `<div class="kp-card dc-tile dc-trend dc-trend--fail"><p class="kp-card__title dc-title">Flow, 24 h</p>${PART.spark()}<p class="kp-card__body">${note('Failed', 'down', 'bad')} last reading 07:12</p></div>`,
-    ) +
-    cell(
-        'A destructive menu entry',
-        `<div class="kp-popover dc-pop dc-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item">Rename</button></li><li role="none"><button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete</button></li></ul></div>`,
-    ) +
-    cell('A warning alert', PART.alert('Pressure is below 1.2 bar.', 'kp-alert--warning'));
-
 const LIVE = () =>
     cell('Key figure number', `<div class="kp-kpis">${PART.kpi()}</div>`) +
     cell('State word', PART.chip('Running')) +
@@ -213,114 +373,12 @@ const LIVE = () =>
         `<div class="kp-card dc-tile dc-live-tile"><p class="kp-card__title dc-title">Pump house 2</p><p class="kp-card__body"><span class="dc-carrier" data-dc-num>4.2 bar</span></p></div>`,
     );
 
-/** A surface that waits: its picture is drawn by the option. */
-const waits = (html, cls = '') => `<div class="dc-waits ${cls}" aria-busy="true">${html}<span class="dc-wait" aria-hidden="true"></span></div>`;
-const LOADERS = () =>
-    cell(
-        'A tile',
-        waits(`<div class="kp-card dc-tile"><p class="kp-card__title dc-title">Pump house 3</p><p class="kp-card__body">Reading…</p></div>`),
-    ) +
-    cell(
-        'A panel',
-        waits(
-            `<div class="dc-panel"><span>Station</span><span>Flow</span><span class="dc-faint">North 4</span><span class="dc-faint">412</span></div>`,
-        ),
-    ) +
-    cell(
-        'A menu entry',
-        `<div class="kp-popover dc-pop dc-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-waits" aria-busy="true">Loading stations…<span class="dc-wait" aria-hidden="true"></span></button></li></ul></div>`,
-    ) +
-    cell(
-        'Days of a month',
-        `<div class="dc-days">${[1, 2, 3, 4, 5].map((d) => `<span class="dc-day dc-waits" style="--i: ${d - 1}">${d}<span class="dc-wait" aria-hidden="true"></span></span>`).join('')}</div>`,
-    ) +
-    cell('A chart’s plot', waits('<div class="dc-plot"></div>')) +
-    cell('Skeleton lines', PART.skeleton());
-
-const BARS = () =>
-    cell(
-        'A share of 62 %',
-        `<div class="dc-bars">${bar(0.62, '', 'Export')}${bar(0.62, 'kp-progressbar--md', 'Export')}${bar(0.62, 'kp-progressbar--lg', 'Export')}</div>`,
-        'dc-part--wide',
-    ) +
-    cell(
-        'Busy',
-        `<div class="dc-bars">${bar(null, '', 'Export')}${bar(null, 'kp-progressbar--md', 'Export')}${bar(null, 'kp-progressbar--lg', 'Export')}</div>`,
-        'dc-part--wide',
-    ) +
-    cell(
-        'Inside a busy button',
-        `<button type="button" class="kp-button dc-busy-button" aria-busy="true">Saving…${bar(null, '', 'Saving')}</button>`,
-    ) +
-    cell('Beside a share, 62 %', `<div class="dc-bars dc-bars--pair">${bar(0.62, '', 'Share')}${bar(null, '', 'Busy')}</div>`);
-
 const SPINNERS = () =>
     cell('Three sizes', `<div class="dc-row dc-spins">${[1, 1.5, 2.5].map((s) => spin(s)).join('')}</div>`, 'dc-part--wide') +
     cell('A busy button', `<button type="button" class="kp-button dc-busy-button" aria-busy="true">${spin(1)}Saving…</button>`) +
     cell(
         'The busy panel',
         `<div class="kp-card dc-busy-panel">${spin(1.75, 'Reading the pump houses')}<p class="kp-card__body">Reading the pump houses…</p></div>`,
-    );
-
-/** A part that leaves and arrives, in a pleated wrapper. */
-const leaver = (html) => fx(html, 'dc-fx--pleat');
-const LEAVE = () =>
-    cell('An alert', leaver(PART.alert())) +
-    cell(
-        'A card',
-        leaver(`<div class="kp-card dc-tile"><p class="kp-card__title dc-title">Reservoir North</p><p class="kp-card__body">Level 71 %</p></div>`),
-    ) +
-    cell(
-        'A key figure',
-        leaver(
-            `<div class="kp-kpis"><div class="kp-kpi dc-kpi"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span></div></div>`,
-        ),
-    );
-
-const COMPOSITES = () =>
-    cell(
-        'Alone: deco’s own button, for reference',
-        `<div class="dc-row">${button('Export readings')}${button('Add', 'kp-button--primary')}</div>`,
-        'dc-part--wide',
-    ) +
-    cell(
-        'Page header: its action buttons',
-        `<header class="kp-page-header dc-header"><div class="kp-page-header__inner"><div><p class="kp-page-header__title dc-title">Pump houses</p><p class="kp-page-header__description">Fifteen on the northern network.</p></div>
-        <div class="kp-page-header__actions">${button('Export', 'kp-button--sm dc-in-header')}${button('Add', 'kp-button--sm kp-button--primary dc-in-header')}</div></div></header>`,
-        'dc-part--wide',
-    ) +
-    cell('Menu: its entries', PART.menuStatic(['Open incident', 'Assign to…'], 'dc-in-menu', false)) +
-    cell(
-        'Tile: its Open link',
-        `<div class="kp-card dc-tile dc-in-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link" href="#dc-intro">Open</a></div>`,
-    ) +
-    cell(
-        'Drawer: its tour buttons',
-        `<div class="kp-card dc-drawer"><p class="kp-card__title dc-title">Step 2 of 4</p><p class="kp-card__body">The filter keeps your choice.</p><div class="dc-row">${button('Skip', 'kp-button--sm kp-button--ghost')}${button('Next', 'kp-button--sm kp-button--primary')}</div></div>`,
-    ) +
-    cell(
-        'Key figure as a link',
-        `<div class="kp-kpis"><a class="kp-kpi dc-kpi dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span><span class="kp-kpi__trend">avg 15 min</span></a></div>`,
-    );
-
-const HOVER = () =>
-    cell('Button, pointed at', `<div class="dc-row">${button('Export readings', 'dc-pointed')}${button('Add', 'kp-button--primary')}</div>`) +
-    cell('Menu entries, the first pointed at', PART.menuStatic(['Open incident', 'Assign to…', 'Rename'])) +
-    cell(
-        'Tile with its Open link pointed at',
-        `<div class="kp-card dc-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link dc-pointed" href="#dc-intro">Open</a></div>`,
-    ) +
-    cell(
-        'A link in a line, pointed at',
-        `<p class="dc-prose">Read the <a class="dc-pointed" href="#dc-intro">pressure report</a> before the night valve closes.</p>`,
-    ) +
-    cell(
-        'Key figures, the first pointed at',
-        `<div class="kp-kpis dc-kpi-row"><a class="kp-kpi dc-kpi dc-in-kpi dc-pointed" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span></a><a class="kp-kpi dc-kpi dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1</span></a></div>`,
-    ) +
-    cell(
-        'Days of a month, one pointed at',
-        `<div class="dc-days">${[12, 13, 14, 15].map((d) => `<span class="dc-day${d === 13 ? ' dc-pointed' : ''}">${d}</span>`).join('')}</div>`,
     );
 
 const FOCUS = () =>
@@ -344,27 +402,6 @@ const FOCUS = () =>
         `<div class="kp-card dc-tile dc-in-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link dc-focused" href="#dc-intro">Open</a></div>`,
     );
 
-/** One specimen at rest beside the same one pressed. */
-const duo = (rest, pressed) => `<div class="dc-duo"><span class="dc-duo__one">${rest}</span><span class="dc-duo__one">${pressed}</span></div>`;
-const PRESS = () =>
-    cell('Button, at rest and pressed', duo(button('Export readings', 'dc-rest'), button('Export readings', 'dc-press'))) +
-    cell('Primary button', duo(button('Add', 'kp-button--primary dc-rest'), button('Add', 'kp-button--primary dc-press'))) +
-    cell(
-        'Menu entry',
-        duo(
-            `<div class="kp-popover dc-pop dc-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-rest">Assign to…</button></li></ul></div>`,
-            `<div class="kp-popover dc-pop dc-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-press">Assign to…</button></li></ul></div>`,
-        ),
-    ) +
-    cell('Calendar day', duo('<span class="dc-day dc-rest">14</span>', '<span class="dc-day dc-press">14</span>')) +
-    cell(
-        'Key figure as a filter',
-        duo(
-            `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle dc-kpi dc-rest" aria-pressed="false"><span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">3</span></button></div>`,
-            `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle dc-kpi dc-press" aria-pressed="false"><span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">3</span></button></div>`,
-        ),
-    );
-
 const TYPE = () =>
     cell(
         'A tile with its words and figures',
@@ -376,26 +413,6 @@ const TYPE = () =>
         <p>${button('Open the log', 'kp-button--sm')} <span class="kp-badge dc-tag">12 new</span></p></div>`,
         'dc-part--wide',
     );
-
-const MOTIFS = () =>
-    cell(
-        'A card and its title',
-        `<div class="kp-card dc-tile dc-motif-card"><p class="kp-card__title dc-title">Reservoir North</p><p class="kp-card__body">Level 71 %</p></div>`,
-    ) +
-    cell('Meter with its mark', meter(0.62, 0.8)) +
-    cell(
-        'Chart events',
-        `<div class="dc-events" aria-hidden="true"><svg viewBox="0 0 160 48" preserveAspectRatio="none"><polyline points="0,36 20,30 40,33 60,22 80,26 100,16 120,20 140,12 160,14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="dc-events__mark" style="--x: 37.5%"></span><span class="dc-events__mark" style="--x: 75%"></span></div>`,
-    ) +
-    cell(
-        'Button and a list',
-        `<div class="dc-row">${button('Add a sensor', 'dc-motif-button')}</div><ul class="dc-motif-list"><li>North 4</li><li>South 2</li></ul>`,
-    ) +
-    cell(
-        'Empty state',
-        `<div class="kp-empty dc-motif-empty"><p class="kp-empty__title">No readings yet</p><p class="kp-empty__body">The first arrives within the hour.</p></div>`,
-    ) +
-    cell('A divider between two sections', `<p class="dc-cap">Pumps</p><hr data-kp-divider class="dc-divider" /><p class="dc-cap">Reservoirs</p>`);
 
 const SCENES = {
     moving: MOVING,
@@ -421,6 +438,23 @@ const SCENES = {
 
 /** The questions of aspects.js, each given its scene function. */
 const ROWS = ASPECTS.map((a) => ({ ...a, build: SCENES[/** @type {keyof typeof SCENES} */ (a.scene)] }));
+
+/** The thirteen questions update 1 redrew (their scenes carry `.dc-scene--r2`); the other six are Kenny's picks, kept as drawn. */
+const REDRAWN = new Set([
+    'curve',
+    'direction',
+    'opening',
+    'colour',
+    'corners',
+    'warning',
+    'loading',
+    'bar',
+    'leave',
+    'composites',
+    'hover',
+    'press',
+    'motifs',
+]);
 
 /* ---------------------------------------------------- the review kit's text */
 
@@ -475,7 +509,7 @@ ROWS.forEach((a, n) => {
         col.innerHTML = `<p class="dc-label"><span class="dc-label__no">${at + 1}</span> <span class="dc-label__name"></span>${
             at === 0 ? ' <span class="dc-label__rec">Recommended</span>' : ''
         }</p><p class="dc-see"></p><p class="dc-verdict"></p>
-        <div class="dc-scene" data-dc-kind="${a.kind}" data-dc-${a.id}="${o.key}" data-dc-phase="in" data-dc-show="rest">${a.build()}</div>`;
+        <div class="dc-scene${REDRAWN.has(a.id) ? ' dc-scene--r2' : ''}" data-dc-kind="${a.kind}" data-dc-${a.id}="${o.key}" data-dc-phase="in" data-dc-show="rest">${a.build()}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.dc-label__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.dc-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.dc-verdict'));

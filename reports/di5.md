@@ -90,24 +90,51 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-trace` | stroke-dashoffset | 1800 ms | 1× | — | 0.00/s | under |
 | `kp-cartouche-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-redaction-clear` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-clip-reveal` | opacity | 620 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
-| `kp-mark-sweep` | color | 420 ms | 1× | 0 → 1 | 0.00/s | under |
+| `kp-clip-reveal` | opacity | 700 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
+| `kp-mark-sweep` | filter | 700 ms | 1× | — | 0.00/s | under |
 | `kp-sharpen-in` | filter | 640 ms | 1× | — | 0.00/s | under |
 | `kp-headline-fade` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-dim-label` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-formal-update-stamp` | opacity | 300 ms | 1× | 0 → 0.9 → 0.6 → 0 | 2.00/s | under |
 | `kp-sig-cyberpunk-update-stutter` | text-shadow | 480 ms | 1× | — | 0.00/s | under |
 | `kp-sig-cyberpunk-update-still` | text-shadow | 1200 ms | 1× | — | 0.00/s | under |
 | `kp-sig-titanium-update-anodise` | opacity | 240 ms | 1× | 0 → 1 → 1 → 0 | 2.00/s | under |
-| `kp-sig-formal-meter-pos` | background-position | 2600 ms | loops | — | 0.00/s | under |
-| `kp-sig-formal-meter-wipe-d` | clip-path | 900 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-meter-wipe-o` | clip-path | 900 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-meter-wipe-w` | clip-path | 900 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-meter-day` | translate | 3000 ms | loops | — | 0.00/s | under |
-| `kp-sig-light-meter-bump-d` | scale | 260 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-meter-bump-o` | scale | 260 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-meter-bump-w` | scale | 260 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-meter-grow-o` | scale | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-d` | clip-path | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-o` | clip-path | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-w` | clip-path | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-0` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-0-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-0` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-0-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-1` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-1-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-1` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-1-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-2` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-2-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-2` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-2-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-3` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-line-3-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-3` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-pen-3-rtl` | clip-path | 740 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-leave` | clip-path | 560 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-leave-rtl` | clip-path | 560 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-leave-pen` | clip-path | 560 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-leave-pen-rtl` | clip-path | 560 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-backdrop` | clip-path | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-ledger` | clip-path | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-bar-band` | clip-path | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-bar-second` | clip-path | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-bar-head` | transform, opacity | 2400 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
+| `kp-sig-formal-ruling` | --kp-fm-t | 860 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-loading` | --kp-fm-l | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-update-closed` | --kp-fm-u | 850 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-arc-outer` | --kp-fm-a0, --kp-fm-a1 | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-arc-inner` | --kp-fm-a0, --kp-fm-a1 | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-pen` | clip-path | 180 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-expose-d` | filter | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-expose-o` | filter | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-expose-w` | filter | 700 ms | 1× | — | 0.00/s | under |
 | `kp-sig-synthwave-meter-grow-o` | scale | 600 ms | 1× | — | 0.00/s | under |
 | `kp-sig-synthwave-meter-pos` | background-position | 1800 ms | loops | — | 0.00/s | under |
 | `kp-sig-pastel-meter-drift` | translate | 1600 ms | loops | — | 0.00/s | under |
@@ -273,13 +300,16 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-progressbar-deco-ascent` | transform | 900 ms | loops | — | 0.00/s | under |
 | `kp-sig-deco-leave` | opacity | 480 ms | 1× | 0 | 0.00/s | under |
 | `kp-sig-light-light-orbit` | transform | 1200 ms | loops | — | 0.00/s | under |
-| `kp-sig-light-light-open-x` | clip-path | 900 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-light-tick` | clip-path | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-light-bead` | transform | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-light-light-window` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-light-light-float` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-light-size-bloom` | opacity | 420 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-light-leave` | opacity | 420 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-light-light-tick` | clip-path | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-expose` | opacity | 700 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-light-leave` | opacity | 700 ms | 1× | 1 → 0 | 1.00/s | under |
+| `kp-sig-light-reexpose` | filter | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-breathe` | filter | 3600 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-breathe-ink` | text-shadow | 3600 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-burn` | filter | 1200 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-flash` | filter | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-line` | transform | 3600 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-feed` | clip-path, filter | 700 ms | 1× | — | 0.00/s | under |
 | `kp-sig-grotesk-fall` | filter | 34 ms | 1× | — | 0.00/s | under |
 | `kp-sig-grotesk-fall-again` | filter | 960 ms | 1× | — | 0.00/s | under |
 | `kp-sig-grotesk-update-plate` | filter | 34 ms | 1× | — | 0.00/s | under |
@@ -334,16 +364,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-dark-dark-brackets-open` | clip-path | 260 ms | 1× | — | 0.00/s | under |
 | `kp-sig-dark-size-develop` | opacity | 480 ms | 1× | 0.2 | 0.00/s | under |
 | `kp-sig-dark-leave` | opacity | 460 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-formal-orbit` | transform | 1600 ms | loops | — | 0.00/s | under |
-| `kp-sig-formal-ink` | clip-path | 3000 ms | loops | — | 0.00/s | under |
-| `kp-sig-formal-pen` | clip-path | 200 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-dot` | transform | 200 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-rise` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-formal-rule` | transform | 560 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-sheet` | opacity | 300 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-formal-tip-drop` | opacity | 200 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-formal-size-ink` | clip-path | 320 ms | 1× | — | 0.00/s | under |
-| `kp-sig-formal-leave` | opacity | 400 ms | 1× | 0.2 | 0.00/s | under |
 | `kp-sig-solstice-solstice-arc` | opacity | 2400 ms | loops | 0 → 1 → 1 → 0 → 0 | 0.83/s | under |
 | `kp-sig-solstice-solstice-light` | transform | 3600 ms | loops | — | 0.00/s | under |
 | `kp-sig-solstice-solstice-warm` | opacity | 360 ms | 1× | 0 → 1 | 1.00/s | under |

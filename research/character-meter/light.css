@@ -1,0 +1,81 @@
+/* research/character-meter, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`, and draws the meter itself). Only light's decided
+   options change: shape 1, loading 1, arrival 2, tone 2, mark 2.
+
+   - shape: the share no longer brightens toward a sun at its end, the
+     gnomon's shadow and the glint past the end are retired (G7, G19): a flat
+     share on a hairline track, the mark a plain stroke with a white edge;
+   - loading: the daylight band is retired (G10): the track breathes out of
+     focus;
+   - arrival: the grow (a scale from the start) is the share exposed along
+     its length, start to end, out of the glare (G2), 700 ms on the settle;
+   - tone: the bump (a swell of the track) is the re-exposure (G9);
+   - mark: the mark past the end sits at the end, upright, with no sign
+     (G19). */
+@layer kp.signature {
+    [data-theme='light'] [data-cm-shape='1'] .kp-meter::before {
+        background: var(--kp-meter-fill-colour);
+    }
+
+    [data-theme='light'] [data-cm-shape='1'] .kp-meter__mark {
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='light'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
+        content: none;
+    }
+
+    /* Loading 1 · the track stands out of focus. */
+    [data-theme='light'] [data-cm-loading='1'] .kp-meter[data-kp-loading] {
+        background: hsl(from var(--border-strong) h s l / 0.55);
+        box-shadow: none;
+        filter: var(--kp-sig-light-dim);
+    }
+
+    [data-theme='light'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
+        content: none;
+        animation: none;
+    }
+
+    /* Mark 2 · upright, no sign. */
+    [data-theme='light'] [data-cm-mark='2'] .kp-meter {
+        --cm-mo-sign: '';
+    }
+
+    [data-theme='light'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over] {
+        rotate: 0deg;
+    }
+
+    [data-theme='light'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over]::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-cm-loading='1'] .kp-meter[data-kp-loading] {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+        }
+
+        [data-theme='light'] [data-cm-arrival='2'] .kp-meter::before {
+            animation: kp-sig-light-feed var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+            transition: inline-size var(--kp-sig-light-time) var(--kp-sig-light-ease);
+        }
+
+        [data-theme='light'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-light-meter-expose-o var(--kp-sig-light-time) linear;
+        }
+
+        [data-theme='light'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-light-meter-expose-w var(--kp-sig-light-time) linear;
+        }
+
+        [data-theme='light'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-light-meter-expose-d var(--kp-sig-light-time) linear;
+        }
+
+        [data-theme='light'] [data-cm-mark='2'] .kp-meter__mark {
+            transition: inset-inline-start var(--kp-sig-light-time) var(--kp-sig-light-ease);
+        }
+    }
+}

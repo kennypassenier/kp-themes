@@ -1,0 +1,44 @@
+/* research/character-trend, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 1,
+   loading 1, arrival 3, tone 3, live 2.
+
+   - shape: the soft card takes the plate's 0.5 rem (a card is read, G6) and
+     the small shadow of a card (G7);
+   - loading: the dashed baseline is retired (G10): the plot stands out of
+     focus, breathing between its dim and its dazzle, in the seam's grey;
+   - arrival: the sunrise (the line rising, the figure dropping) is the
+     exposure (G2): the line and the figure come into focus where they stand,
+     700 ms on the settle;
+   - tone: the coloured tab keeps its band, now 3 px, and its soft pill loses
+     the shadow beneath it (G8);
+   - live: the soft swell of the line is the re-exposure (G9): the line goes
+     into the glare for a beat and comes back into focus, never swelling. */
+@layer kp.signature {
+    [data-theme='light'] [data-ct-shape='1'] .kp-kpi--trend {
+        --tr-radius: var(--radius, 0.5rem);
+        --tr-frame: 1px solid var(--border);
+        --tr-shadow: var(--kp-shadow-sm);
+    }
+
+    [data-theme='light'] [data-ct-loading='1'] .kp-kpi--trend {
+        --tr-load: linear-gradient(hsl(from var(--border-strong) h s l / 0.55), hsl(from var(--border-strong) h s l / 0.55));
+        --tr-load-anim: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+    }
+
+    [data-theme='light'] [data-ct-arrival='3'] .kp-kpi--trend {
+        --tr-arr-line: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) both;
+        --tr-arr-num: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) both;
+    }
+
+    [data-theme='light'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-shadow: none;
+        --tr-tone-over: linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat;
+    }
+
+    [data-theme='light'] [data-ct-live='2'] .kp-kpi--trend {
+        --tr-live-line: kp-sig-light-reexpose calc(var(--kp-sig-light-time) * 0.8) linear;
+        --tr-live-area: none;
+    }
+}

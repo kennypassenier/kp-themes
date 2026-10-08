@@ -1,0 +1,97 @@
+/* research/character-columns, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   loading 3, arrival 2 and live 3 (shape 3, the engraved certificate, and
+   tone 3 stand: the certificate carries the double rule, G7).
+
+   - loading: the dotted leader is retired; each waiting column is ruled with
+     the register's three navy lines (its --kp-fm-stack) across its foot, one
+     after the other, held, lifted and ruled again, 2400 ms (G10);
+   - arrival: "set in type" in hard steps is retired; the figures are ruled
+     in, start to end, 400 ms at an even pace, the columns 60 ms apart
+     (G1, G2, G4);
+   - live: the clerk's stamp is retired; a navy rule is ruled under the
+     changed figure, the second rule closes it, both are lifted (G9). */
+@layer kp.signature {
+    /* Loading 3 · the dotted leader → the lines are ruled. */
+    [data-theme='formal'] [data-cs-loading='3'] .kp-kpis {
+        --cl-load: var(--kp-fm-stack);
+        --cl-load-anim: none;
+    }
+
+    [data-theme='formal'] [data-cs-loading='3'] .kp-kpis[aria-busy='true'] > .kp-kpi::after {
+        inset: auto 0.75rem 0.5rem;
+        block-size: 0.9rem;
+        border-radius: 0;
+        background-image: var(--cl-load);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+    }
+
+    /* Arrival 2 · set in type → ruled in. */
+    [data-theme='formal'] [data-cs-arrival='2'] .kp-kpis {
+        --cl-arrive-num: cl-formal-ruled var(--kp-sig-fm-time, 400ms) linear;
+        --cl-arrive-tile: none;
+        --cl-arrive-stagger: var(--kp-sig-fm-stagger, 60ms);
+    }
+
+    /* Live 3 · the clerk's stamp → ruled again and closed. */
+    [data-theme='formal'] [data-cs-live='3'] .kp-kpis {
+        --cl-live-num: none;
+        --cl-live-tile: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value {
+            position: relative;
+            animation: kp-sig-formal-update-closed 850ms linear both;
+        }
+
+        [data-theme='formal'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value::after {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: calc(100% - 0.05em);
+            block-size: 5px;
+            pointer-events: none;
+            --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+            --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+            --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+            background-image:
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                    transparent calc(var(--kp-fm-r1) * 100%)
+                ),
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                    transparent calc(var(--kp-fm-r2) * 100%)
+                );
+            background-repeat: no-repeat;
+            background-size:
+                100% 2px,
+                100% 1px;
+            background-position:
+                0 0,
+                0 4px;
+        }
+
+        @keyframes cl-formal-ruled {
+            from {
+                clip-path: inset(-0.5em 100% -0.5em -0.5em);
+            }
+
+            to {
+                clip-path: inset(-0.5em);
+            }
+        }
+    }
+}

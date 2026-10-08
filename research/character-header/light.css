@@ -1,0 +1,54 @@
+/* research/character-header, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 1, menu
+   1, interactive 2.
+
+   - shape: the soft card takes the plate's 0.5 rem (a card is read, G6) and
+     the small shadow of a card (G7); the title is 600, not 800 (G18); the
+     pills keep their soft shadow (a pill is what you act on);
+   - menu: the hinge (a perspective turn from the top) is the exposure (G3):
+     the panel comes into focus where it hangs, 700 ms on the settle, and
+     goes back into the glare as the same pair the other way round;
+   - interactive: the warm glow (a primary-tinted plate on hover, a pale ring
+     on focus, an inset shadow on a press) is retired (G5, G14 to G17): a
+     button in the header is light's own button, which settles 2 px toward
+     the paper and tightens its shadow, wears DI2's two-channel ring and
+     lands flat and flashes under a press (css/light-register.css); the demo
+     only gives its own rules back. */
+@layer kp.signature {
+    [data-theme='light'] [data-ph-shape='1'] .kp-page-header {
+        --ph-radius: var(--radius, 0.5rem);
+        --ph-shadow: var(--kp-shadow-sm);
+    }
+
+    [data-theme='light'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-weight: 600;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease);
+            transform-origin: top center;
+        }
+
+        [data-theme='light'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) reverse;
+            transform-origin: top center;
+        }
+    }
+
+    [data-theme='light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-color: revert-layer;
+    }
+
+    [data-theme='light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: revert-layer;
+        outline-offset: revert-layer;
+    }
+
+    [data-theme='light'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        background-color: revert-layer;
+        box-shadow: revert-layer;
+    }
+}

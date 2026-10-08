@@ -55,14 +55,17 @@ const IDEAS = {
             { name: 'The ledger stamp', text: 'Every state but Running gets a thin ruled frame of its own colour around the tab.' },
         ],
         change: [
-            { name: 'Re-sealed', text: 'The seal presses down once and lifts, slowing as it lands.' },
+            {
+                name: 'Ruled again and closed',
+                text: 'A navy rule is ruled under the word, the second rule closes it, and both are lifted; the word never moves.',
+            },
             { name: 'Entered in the ledger', text: 'The tab’s rule redraws left to right under the new word.' },
             { name: 'Turned over', text: 'The word flips over like a card index, in two hard steps.' },
         ],
     },
     light: {
         shape: [
-            { name: 'The soft dot', text: 'A soft round dot with a gentle glow sits before the word on no plate.' },
+            { name: 'The plain dot', text: 'A small dot in the state’s ink beside the word, with no glow around it.' },
             { name: 'The daylight pill', text: 'The whole chip is a pale rounded pill lifted on a soft shadow, the dot at its left.' },
             { name: 'The sticky note', text: 'The word sits on a small square note with a folded corner, the dot a pin through it.' },
         ],
@@ -72,7 +75,7 @@ const IDEAS = {
             { name: 'The warm note', text: 'A warning or failed state warms the note’s paper and darkens the pin.' },
         ],
         change: [
-            { name: 'A soft swell', text: 'The dot swells once and settles, slowing as it lands.' },
+            { name: 'Re-exposed', text: 'The dot and the word go into the glare for a beat and come back into focus; nothing moves or swells.' },
             { name: 'The pill breathes', text: 'The pill widens a touch and back as the word changes, easing in and out.' },
             { name: 'The note flutters', text: 'The note tips a few degrees and rights itself, overshooting once.' },
         ],
@@ -277,11 +280,17 @@ const IDEAS = {
         tone: [
             { name: 'The block colour', text: 'Only the square dot takes the state’s colour at full strength; the word stays black.' },
             { name: 'The slab colour', text: 'The slab’s fill takes the state’s colour, the word kept black or white on it for contrast.' },
-            { name: 'The hazard sticker', text: 'A pending or failed state is taped off: the word is printed on the state’s plate, framed in an ink line on a 3px hard shadow; a good or muted one is framed in ink.' },
+            {
+                name: 'The hazard sticker',
+                text: 'A pending or failed state is taped off: the word is printed on the state’s plate, framed in an ink line on a 3px hard shadow; a good or muted one is framed in ink.',
+            },
         ],
         change: [
             { name: 'A hard slam', text: 'The block dot snaps larger once and back, in a single hard jump.' },
-            { name: 'The slab shifts', text: 'The word is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.' },
+            {
+                name: 'The slab shifts',
+                text: 'The word is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.',
+            },
             { name: 'Restamped', text: 'The sticker tips to a new angle once, in a hard jump.' },
         ],
     },

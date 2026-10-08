@@ -62,7 +62,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The engraved plate',
-                text: 'A ruled double frame around the menu, headings in the serif’s small capitals, hints in a lighter serif underneath.',
+                text: 'A paper plate with a hairline and the register’s corner, headings in small capitals, hints in a lighter serif underneath.',
             },
             { name: 'The ledger page', text: 'A fine rule under each heading like a ledger page, entries in the display serif, hints in italic.' },
             {
@@ -71,12 +71,18 @@ const IDEAS = {
             },
         ],
         loading: [
-            { name: 'The dotted leader', text: 'A dotted leader is written across the loading row, left to right, and starts again.' },
+            {
+                name: 'Ruling the lines',
+                text: 'Three navy rules are ruled across the loading row one after the other, held, lifted and ruled again.',
+            },
             { name: 'The seal is pressed', text: 'A small navy seal ring presses onto the loading row, lifts, and presses again.' },
             { name: 'The nib sweeps', text: 'A fine nib sweeps once across the loading row and lifts for the next pass.' },
         ],
         open: [
-            { name: 'Unrolled', text: 'The menu unrolls downward from the button like a scroll, and rolls back up the same way to close.' },
+            {
+                name: 'Ruled open',
+                text: 'The menu is ruled open under its button: its frame rule start to end, then each entry in turn, 60 ms apart; it closes as that played backwards.',
+            },
             {
                 name: 'The frame draws in',
                 text: 'The double rule draws in from the corners to its edges, and draws back out to the corners to leave.',
@@ -113,7 +119,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The soft card',
-                text: 'A white plate on a soft shadow with a wide radius, headings in muted small caps over a feather-light rule.',
+                text: 'A white menu of 0.5 rem on the medium shadow, plain headings in the regular face, a solid rule between groups.',
             },
             { name: 'Daylight', text: 'A pale wash lightens toward the top of the plate, headings sit on it plainly, entries keep generous air.' },
             {
@@ -123,18 +129,24 @@ const IDEAS = {
         ],
         loading: [
             { name: 'The dashed baseline', text: 'A dashed baseline under the loading row drifts to the right, then starts again.' },
-            { name: 'Daylight', text: 'A slow band of daylight crosses the loading row, left to right.' },
+            {
+                name: 'Out of focus',
+                text: 'The loading row’s words breathe out of focus (blur and brightness up and back); nothing crosses the row.',
+            },
             { name: 'A cloud passes', text: 'The soft shadow of a cloud drifts across the loading row, slowly, and returns.' },
         ],
         open: [
             { name: 'Unfolds', text: 'The menu opens from its middle like a folded card, and folds back to its middle to close.' },
             { name: 'Sunrise', text: 'The menu rises softly from the button’s edge, slowing as it lands, and sinks back the same way to close.' },
-            { name: 'A soft pop', text: 'The menu scales up from 97% with a gentle overshoot, and scales back down to leave.' },
+            {
+                name: 'Out of the glare',
+                text: 'The menu comes into focus under its button, out of a blurred, too bright glare, 700 ms on a long settle, and goes back into the glare to close.',
+            },
         ],
         tone: [
             {
-                name: 'The coloured tab',
-                text: 'The destructive entry carries a soft drop shadow in its colour; a disabled reason reads muted under a dashed rule.',
+                name: 'The band',
+                text: 'The destructive entry carries a 3 px band of the destructive colour along its top and its words in the same ink, with a soft pill under the pointer.',
             },
             {
                 name: 'The soft outline',
@@ -146,7 +158,10 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'The soft lift', text: 'A hovered or focused entry lifts on a soft shadow of its own; a press settles it flat again.' },
+            {
+                name: 'Settles toward the paper',
+                text: 'A hovered entry takes the muted wash, a focused one the two-channel ring inside the entry, a pressed one lands 2 px and flashes.',
+            },
             { name: 'The glow', text: 'A hovered or focused entry’s plate glows a touch warmer; a press dims it back for a moment.' },
             { name: 'The round pill', text: 'A hovered or focused entry gets a soft rounded fill behind it; a press shrinks the fill by a hair.' },
         ],
@@ -616,7 +631,10 @@ const IDEAS = {
             { name: 'The hammer', text: 'A black block hammers three places along the loading row in turn.' },
         ],
         open: [
-            { name: 'Dropped onto its footprint', text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, and closes as that drop played backwards.' },
+            {
+                name: 'Dropped onto its footprint',
+                text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, and closes as that drop played backwards.',
+            },
             { name: 'Shoved in', text: 'The menu is shoved in from the side in one hard step, and shoved back out the same step to close.' },
             { name: 'Stamped', text: 'The menu stamps down flat onto the button in one hard step, and is lifted off in one step to close.' },
         ],
@@ -635,7 +653,10 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'Inverted', text: 'A hovered entry inverts, nothing moves; a focused one is the yellow plate under the inner ring; a pressed one takes the active plate.' },
+            {
+                name: 'Inverted',
+                text: 'A hovered entry inverts, nothing moves; a focused one is the yellow plate under the inner ring; a pressed one takes the active plate.',
+            },
             { name: 'The block drops', text: 'A hovered or focused entry’s shadow drops harder; a press flattens the shadow to nothing.' },
             { name: 'The stamp presses', text: 'A hovered or focused entry’s frame thickens by a hard step; a press stamps it down flat.' },
         ],

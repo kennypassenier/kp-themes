@@ -1,0 +1,4220 @@
+/* research/dark-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.dk-scene[data-dk-<question>='<key>']`). Colours come from the theme's
+   tokens only (grammar.css holds the grammar as tokens and keyframes); every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the part laid, the film settled, cyan at the top. Durations are
+   multiplied by --dk-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the register's own (css/dark-register.css); the
+   values of "the pick" options are the decided demos' (research/character-*).
+
+   SCOPE. The review dialog moves the section out of the page into its stage,
+   so nothing here hangs on `.dk-page` alone: every rule hangs on `.dk-scene`
+   (or on `.dk-sec` for the State buttons), which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-dk-phase` on every scene of
+   kind `cycle`: gap (what arrives is away: the line has not come), in (the
+   line crosses and lays it), hold (it stands laid, cyan at the top), out (the
+   pass back takes it off). The base style of every part is its finished
+   pose, so reduced motion and hold show the laid part; `gap` sets the start
+   pose; `in` and `hold` run the open, `out` runs its mirror: every open is a
+   pair of keyframes (`dk-x`, `dk-x-out`) whose close is the open reversed
+   (the timing function written out in the keyframes, the inverse curve on the
+   way back; steps(n, jump-end) against steps(n, jump-start)), and a part's
+   delay is mirrored (window less delay less length), so what came last goes
+   first. A scene's window is --dk-win (1000 ms; 1500 ms for the unhurried
+   durations).
+
+   THE FILM. The register's --kp-iris follows the pointer, which a demo has
+   not: every element of a scene writes the same conic on the registered
+   angle --dk-angle, so a turn of the angle turns every edge that wears it. */
+@layer kp.signature {
+    /* ── The scene's clock, its ground and its film ─────────────────────── */
+
+    .dk-scene {
+        /* One pass, the pass with its settle, one group step, the contact, a loop
+       and the window the open and the close are mirrored in; --dk-slow is the
+       page's speed buttons. */
+        --dk-sl: var(--dk-slow, 1);
+        --dk-x: calc(var(--dk-pass) * var(--dk-sl));
+        --dk-t: calc((var(--dk-pass) + var(--dk-after)) * var(--dk-sl));
+        --dk-st: calc(var(--dk-stride) * var(--dk-sl));
+        --dk-c: calc(var(--dk-contact) * var(--dk-sl));
+        --dk-lap: calc(var(--dk-loop) * var(--dk-sl));
+        --dk-win: calc(1000ms * var(--dk-sl));
+        /* The keyframes each role of a laid part runs: the body's clip, the line,
+       the film's turn and the figure's ink. */
+        --dk-kf-clip: dk-clip;
+        --dk-kf-clip-out: dk-clip-out;
+        --dk-kf-line: dk-line-t, dk-line-o;
+        --dk-kf-line-out: dk-line-t-out, dk-line-o-out;
+        --dk-kf-turn: dk-turn;
+        --dk-kf-turn-out: dk-turn-out;
+        --dk-kf-fig: dk-fig;
+        --dk-kf-fig-out: dk-fig-out;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        border: 1px solid var(--border-strong);
+        background-color: var(--dk-ground);
+        background-image:
+            repeating-linear-gradient(90deg, var(--dk-hair) 0 1px, transparent 1px var(--dk-grid)),
+            repeating-linear-gradient(0deg, var(--dk-hair) 0 1px, transparent 1px var(--dk-grid));
+        background-position: 0.4rem 0.4rem;
+        /* The layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+        --dk-trend-b: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 28' preserveAspectRatio='none'%3E%3Cpolyline points='1,23 18,19 36,21 54,12 72,14 90,8 108,10 126,5 144,7 159,3' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        --dk-trend-a: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 28' preserveAspectRatio='none'%3E%3Cpolyline points='1,21 18,23 36,17 54,20 72,13 90,16 108,11 126,14 144,9 159,12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    /* The film, written on the registered angle of every element that wears it,
+   so a turn of the angle turns the colour. */
+    .dk-scene,
+    .dk-scene *,
+    .dk-scene *::before,
+    .dk-scene *::after {
+        --kp-iris: conic-gradient(from var(--dk-angle), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+        --dk-film: var(--kp-iris);
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────────── */
+
+    .dk-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .dk-gap {
+        block-size: 1.25rem;
+    }
+
+    .dk-scene .kp-card {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .dk-scene .kp-card__title,
+    .dk-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .dk-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem 1.1rem;
+        animation: none;
+    }
+
+    .dk-scene .kp-dialog::after {
+        animation: none;
+        opacity: 0;
+    }
+
+    .dk-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .dk-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    /* A menu under its button: the popover hangs from it. */
+    .dk-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .dk-scene .dk-lay--pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.45rem);
+        inset-inline-start: 0;
+        z-index: 2;
+    }
+
+    .dk-scene .kp-popover {
+        position: relative;
+        inset: auto;
+        z-index: 1;
+        min-inline-size: 12rem;
+        margin: 0;
+        animation: none;
+    }
+
+    .dk-scene .dk-pop--static {
+        display: block;
+    }
+
+    /* The register gives the popover and the menu in it each the halo, so a menu
+   casts two; one panel, one halo. */
+    .dk-scene .kp-popover > .kp-menu {
+        box-shadow: none;
+        border: 0;
+        background: none;
+    }
+
+    .dk-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .dk-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        padding-inline: 1rem;
+        white-space: nowrap;
+    }
+
+    .dk-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .dk-scene .dk-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dk-scene .kp-kpi {
+        position: relative;
+    }
+
+    /* A key figure is a panel: one shade lighter, the film along its edge, two
+   opposite corners cut (G6, G7). */
+    .dk-scene .kp-kpi:not(.dk-column) {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--dk-plate), var(--dk-plate)) padding-box,
+            var(--dk-film) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel))
+        );
+    }
+
+    .dk-scene .dk-column {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--dk-plate), var(--dk-plate)) padding-box,
+            var(--dk-film) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-notch)) 0,
+            100% var(--dk-notch),
+            100% 100%,
+            var(--dk-notch) 100%,
+            0 calc(100% - var(--dk-notch))
+        );
+    }
+
+    .dk-scene :is(a.kp-kpi, .kp-kpi--toggle, a.kp-button) {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .dk-scene .kp-kpi__value {
+        justify-self: start;
+    }
+
+    .dk-scene .kp-kpi__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+    }
+
+    /* The change on a key figure is set in the tone's plate and ink, square. */
+    .dk-scene .dk-note {
+        border-radius: 0;
+        padding-inline: 0.45em;
+    }
+
+    .dk-scene .kp-alert,
+    .dk-scene .kp-toast {
+        margin: 0;
+    }
+
+    .dk-scene .kp-tooltip {
+        position: relative;
+        inset: auto;
+        margin: 0;
+        animation: none;
+    }
+
+    .dk-scene .dk-tip--static {
+        inline-size: fit-content;
+        margin: 0.4rem 0 0 0.5rem;
+    }
+
+    .dk-scene :is(.kp-badge, .kp-tag) {
+        border-radius: 0;
+    }
+
+    .dk-scene .dk-tag,
+    .dk-scene .dk-chip,
+    .dk-scene .dk-tile-link {
+        justify-self: start;
+        inline-size: fit-content;
+    }
+
+    .dk-scene .dk-state {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.45em;
+        inline-size: fit-content;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .dk-scene .dk-state::before,
+    .dk-scene .dk-state::after {
+        color: var(--muted-foreground);
+    }
+
+    .dk-scene .dk-state::before {
+        content: '[';
+    }
+
+    .dk-scene .dk-state::after {
+        content: ']';
+    }
+
+    .dk-scene .dk-state--warn .dk-state__word {
+        color: var(--dk-caution);
+    }
+
+    .dk-scene .dk-field {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .dk-scene .dk-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .dk-scene .dk-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .dk-scene .dk-header .kp-page-header__title {
+        font-weight: 700;
+    }
+
+    .dk-scene .dk-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.5rem;
+    }
+
+    .dk-scene .dk-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    .dk-header-mini {
+        padding: 0.6rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    .dk-sizes {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .dk-scene .dk-bar {
+        max-inline-size: none;
+    }
+
+    .dk-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .dk-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .dk-busy-button .kp-button__label {
+        gap: 0.6rem;
+    }
+
+    .dk-scene .dk-bar--inline {
+        --kp-progressbar-scale: 0.8;
+        inline-size: 4.5rem;
+        flex: none;
+    }
+
+    .dk-spins {
+        gap: 1.5rem;
+    }
+
+    .dk-scene .dk-link {
+        color: var(--foreground);
+    }
+
+    .dk-prose {
+        margin: 0;
+    }
+
+    .dk-scene .dk-seam {
+        inline-size: 100%;
+        margin-block: 1.5rem;
+        margin-inline: 0;
+    }
+
+    .dk-scene .dk-cap--inner {
+        margin-block: 0;
+    }
+
+    .dk-scene .dk-empty {
+        padding-block-end: 2.25rem;
+    }
+
+    .dk-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.2rem;
+        font-size: 0.9rem;
+    }
+
+    .dk-list li {
+        padding-inline-start: 1rem;
+        border-inline-start: 2px solid var(--border-strong);
+    }
+
+    /* A day: a small plate, cut on two opposite corners, a mono numeral. */
+    .dk-days > .dk-day {
+        inline-size: auto;
+    }
+
+    .dk-days {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 2.6rem);
+        justify-content: start;
+        gap: 6px;
+    }
+
+    .dk-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.6rem;
+        aspect-ratio: 1;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-cut-small)) 0,
+            100% var(--dk-cut-small),
+            100% 100%,
+            var(--dk-cut-small) 100%,
+            0 calc(100% - var(--dk-cut-small))
+        );
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* ── The figure takes the film through its letters ───────────────────── */
+
+    /* A figure is ink; the line (or the end of the pass) lays the film over its
+   letters, which settle back to ink. At rest and before the line it is plain
+   ink: --dk-at is 100 % (the line has passed), --dk-ink-a is 1. */
+    .dk-scene .dk-ink {
+        background:
+            linear-gradient(90deg, transparent var(--dk-at), var(--dk-ink) var(--dk-at)),
+            linear-gradient(hsl(from var(--dk-ink) h s l / var(--dk-ink-a)), hsl(from var(--dk-ink) h s l / var(--dk-ink-a))), var(--dk-film);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* ── The trend: one line, in the muted slot and in the film ──────────── */
+
+    .dk-trendbox {
+        padding-block: 0.25rem;
+    }
+
+    .dk-trendrun {
+        position: relative;
+        padding-block: 0.25rem;
+    }
+
+    .dk-trendrun:not(:has(> .dk-trend)) {
+        aspect-ratio: 160 / 28;
+        box-sizing: content-box;
+    }
+
+    .dk-trend {
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        aspect-ratio: 160 / 28;
+    }
+
+    .dk-trend--b {
+        --dk-trend-mask: var(--dk-trend-b);
+    }
+
+    .dk-trend--a {
+        --dk-trend-mask: var(--dk-trend-a);
+    }
+
+    .dk-trend > i {
+        position: absolute;
+        inset: 0;
+        -webkit-mask: var(--dk-trend-mask) 0 0 / 100% 100% no-repeat;
+        mask: var(--dk-trend-mask) 0 0 / 100% 100% no-repeat;
+    }
+
+    .dk-trend__slot {
+        background: var(--border-strong);
+    }
+
+    .dk-trend__lit {
+        background: var(--dk-spectrum) 0 0 / 200% 100%;
+    }
+
+    /* ── The lay: a part is laid by a line that crosses it ───────────────────
+   The part (the body) is clipped to what the line has passed and the line is
+   a 2 px slice of the film with the one glow the theme allows. The line
+   crosses the stage, the part and the reach of its halo on either side, so
+   the clip's edge and the line are one thing (G1, G2, G13). Each role runs
+   the keyframes the option names (--dk-kf-*): in `in` and `hold` the open, in
+   `out` its mirror, as late as the open ended (the window less the delay less
+   the length), so a close is its open reversed and what came last goes
+   first. */
+
+    .dk-lay {
+        --dk-d: calc(var(--i, 0) * var(--dk-st));
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)) calc(100% + var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)));
+        --dk-clip-1: inset(calc(-1 * var(--dk-reach)));
+        --dk-line-0: -100% 0;
+        --dk-line-4: -96% 0;
+        --dk-line-92: -8% 0;
+        --dk-line-1: 0% 0;
+        position: relative;
+        display: block;
+    }
+
+    /* From the edge a part hangs from, down (a menu under its button). */
+    .dk-lay--down {
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(100% + var(--dk-reach)) calc(-1 * var(--dk-reach)));
+        --dk-line-0: 0 -100%;
+        --dk-line-4: 0 -96%;
+        --dk-line-92: 0 -8%;
+        --dk-line-1: 0 0%;
+    }
+
+    .dk-lay__body {
+        clip-path: var(--dk-clip-1);
+    }
+
+    .dk-lay__line {
+        position: absolute;
+        inset-block: -6px;
+        inset-inline: calc(-1 * var(--dk-reach));
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: var(--dk-line-1);
+    }
+
+    .dk-lay--down > .dk-lay__line {
+        inset-block: calc(-1 * var(--dk-reach));
+        inset-inline: -6px;
+        background: linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 0 100% / 100% 2px no-repeat;
+    }
+
+    /* Small parts carry less halo, so the line crosses less beyond them. */
+    .dk-lay--group,
+    .dk-lay--tip,
+    .dk-lay--slot,
+    .dk-lay--trend {
+        --dk-reach: 0.4rem;
+    }
+
+    .dk-lay--tip {
+        display: inline-block;
+        max-inline-size: 100%;
+    }
+
+    /* A group is crossed by one line, a stride a part. */
+    .dk-lay--group {
+        --dk-lx: calc(var(--dk-n) * var(--dk-st));
+    }
+
+    .dk-group--5 {
+        --dk-n: 5;
+    }
+
+    .dk-group--7 {
+        --dk-n: 7;
+    }
+
+    /* A member of a group turns with its own delay and lasts until the group is
+   laid, whole. */
+    .dk-member {
+        --dk-d: calc(var(--i, 0) * var(--dk-st));
+        --dk-lt: calc(var(--dk-t) - (var(--dk-n) - 1) * var(--dk-st));
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--dk-film) border-box;
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The start pose: the line has not come. */
+        .dk-scene[data-dk-phase='gap'] .dk-lay > .dk-lay__body {
+            clip-path: var(--dk-clip-0);
+        }
+
+        .dk-scene[data-dk-phase='gap'] .dk-lay > .dk-lay__line {
+            translate: var(--dk-line-0);
+        }
+
+        .dk-scene:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-lay > .dk-lay__body {
+            animation: var(--dk-kf-clip) var(--dk-lx, var(--dk-x)) linear var(--dk-d) both;
+        }
+
+        .dk-scene:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-lay > .dk-lay__line {
+            animation-name: var(--dk-kf-line);
+            animation-duration: var(--dk-lx, var(--dk-x));
+            animation-timing-function: linear;
+            animation-delay: var(--dk-d);
+            animation-fill-mode: both;
+        }
+
+        .dk-scene:is([data-dk-phase='in'], [data-dk-phase='hold']) :is(.dk-lay, .dk-member) {
+            animation: var(--dk-kf-turn) var(--dk-lt, var(--dk-t)) linear var(--dk-d) both;
+        }
+
+        .dk-scene:is([data-dk-phase='in'], [data-dk-phase='hold']) :is(.dk-lay, .dk-member) .dk-ink {
+            animation: var(--dk-kf-fig) var(--dk-lt, var(--dk-t)) linear var(--dk-d) both;
+        }
+
+        .dk-scene[data-dk-phase='out'] .dk-lay > .dk-lay__body {
+            animation: var(--dk-kf-clip-out) var(--dk-lx, var(--dk-x)) linear calc(var(--dk-win) - var(--dk-d) - var(--dk-lx, var(--dk-x))) both;
+        }
+
+        .dk-scene[data-dk-phase='out'] .dk-lay > .dk-lay__line {
+            animation-name: var(--dk-kf-line-out);
+            animation-duration: var(--dk-lx, var(--dk-x));
+            animation-timing-function: linear;
+            animation-delay: calc(var(--dk-win) - var(--dk-d) - var(--dk-lx, var(--dk-x)));
+            animation-fill-mode: both;
+        }
+
+        .dk-scene[data-dk-phase='out'] :is(.dk-lay, .dk-member) {
+            animation: var(--dk-kf-turn-out) var(--dk-lt, var(--dk-t)) linear calc(var(--dk-win) - var(--dk-d) - var(--dk-lt, var(--dk-t))) both;
+        }
+
+        .dk-scene[data-dk-phase='out'] :is(.dk-lay, .dk-member) .dk-ink {
+            animation: var(--dk-kf-fig-out) var(--dk-lt, var(--dk-t)) linear calc(var(--dk-win) - var(--dk-d) - var(--dk-lt, var(--dk-t))) both;
+        }
+    }
+
+    /* ── The motions of "today" and "the picks": keyframe pairs ──────────────
+   Each is written as an open and its close, the timing function inside the
+   keyframes, the close on the inverse curve (steps(n, jump-end) against
+   steps(n, jump-start)), so the mirror holds for them too. The parts that
+   play them have no line: the register's dialog develops, its menu fades, a
+   tile strikes on like a tube. */
+
+    /* The register's dialog: the panel settles in from 1.02 on --kp-settle. */
+    @keyframes dk-develop {
+        from {
+            opacity: 0;
+            scale: 1.02;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes dk-develop-out {
+        from {
+            opacity: 1;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            opacity: 0;
+            scale: 1.02;
+        }
+    }
+
+    /* The develop's flash: a film layer over the panel at 55 %, fading out. */
+    @keyframes dk-flash {
+        from {
+            opacity: 0.55;
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-flash-out {
+        from {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        to {
+            opacity: 0.55;
+        }
+    }
+
+    /* The register's fade (the nav dropdown's opacity on --fx-ease). */
+    @keyframes dk-fade {
+        from {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes dk-fade-out {
+        from {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* The picks' strike: the tile's tube, dark, a flash, dark, on, in hard steps
+   (research/character-tiles, arrival 2: 0.3, 1.4, 0.5, 1). */
+    @keyframes dk-tube {
+        0%,
+        20% {
+            filter: brightness(0.3);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        35% {
+            filter: brightness(1.4);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        50% {
+            filter: brightness(0.5);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+    @keyframes dk-tube-out {
+        0% {
+            filter: brightness(1);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        50% {
+            filter: brightness(0.5);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        65% {
+            filter: brightness(1.4);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        80%,
+        100% {
+            filter: brightness(0.3);
+        }
+    }
+
+    /* ── 1 The motion curve ─────────────────────────────────────────────── */
+
+    /* A line crosses a slot, beside one at an even pace: the same slot, the
+   ticked track of the bar with the film as its fill, so the curve is seen
+   on its own. */
+    .dk-slots {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .dk-slot {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .dk-slot__name {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .dk-slot__track {
+        position: relative;
+        display: block;
+        block-size: 1.15rem;
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / 10% 45% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    }
+
+    .dk-slot__fill {
+        position: absolute;
+        inset: 3px 3px 3px 5px;
+        background: var(--dk-spectrum) var(--dk-slide) 0 / 200% 100% repeat-x;
+    }
+
+    /* The even slot has no turn: its film is laid still. */
+    .dk-lay--even {
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+    }
+
+    /* The curves of question 1. The pass and the turn: the register's curve on
+   both, or the settle on both. A curve's inverse is its point reflection. */
+
+    @keyframes dk-clip-reg {
+        from {
+            clip-path: var(--dk-clip-0);
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            clip-path: var(--dk-clip-1);
+        }
+    }
+
+    @keyframes dk-clip-reg-out {
+        from {
+            clip-path: var(--dk-clip-1);
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            clip-path: var(--dk-clip-0);
+        }
+    }
+
+    @keyframes dk-line-t-reg {
+        from {
+            translate: var(--dk-line-0);
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            translate: var(--dk-line-1);
+        }
+    }
+
+    @keyframes dk-line-t-reg-out {
+        from {
+            translate: var(--dk-line-1);
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            translate: var(--dk-line-0);
+        }
+    }
+
+    @keyframes dk-turn-reg {
+        from {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+        }
+    }
+
+    @keyframes dk-turn-reg-out {
+        from {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+        }
+    }
+
+    @keyframes dk-clip-set {
+        from {
+            clip-path: var(--dk-clip-0);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            clip-path: var(--dk-clip-1);
+        }
+    }
+
+    @keyframes dk-clip-set-out {
+        from {
+            clip-path: var(--dk-clip-1);
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            clip-path: var(--dk-clip-0);
+        }
+    }
+
+    @keyframes dk-line-t-set {
+        from {
+            translate: var(--dk-line-0);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            translate: var(--dk-line-1);
+        }
+    }
+
+    @keyframes dk-line-t-set-out {
+        from {
+            translate: var(--dk-line-1);
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            translate: var(--dk-line-0);
+        }
+    }
+
+    @keyframes dk-turn-set {
+        from {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+        }
+    }
+
+    @keyframes dk-turn-set-out {
+        from {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+        }
+    }
+
+    .dk-scene[data-dk-curve='register'] {
+        --dk-kf-clip: dk-clip-reg;
+        --dk-kf-clip-out: dk-clip-reg-out;
+        --dk-kf-line: dk-line-t-reg, dk-line-o;
+        --dk-kf-line-out: dk-line-t-reg-out, dk-line-o-out;
+        --dk-kf-turn: dk-turn-reg;
+        --dk-kf-turn-out: dk-turn-reg-out;
+    }
+
+    .dk-scene[data-dk-curve='settle'] {
+        --dk-kf-clip: dk-clip-set;
+        --dk-kf-clip-out: dk-clip-set-out;
+        --dk-kf-line: dk-line-t-set, dk-line-o;
+        --dk-kf-line-out: dk-line-t-set-out, dk-line-o-out;
+        --dk-kf-turn: dk-turn-set;
+        --dk-kf-turn-out: dk-turn-set-out;
+    }
+
+    /* The slot at an even pace is the same in every option: the line at one pace, no turn. */
+    .dk-scene[data-dk-curve] .dk-lay--even {
+        --dk-kf-clip: dk-clip;
+        --dk-kf-clip-out: dk-clip-out;
+        --dk-kf-line: dk-line-t, dk-line-o;
+        --dk-kf-line-out: dk-line-t-out, dk-line-o-out;
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+    }
+
+    /* As today: each part on its own motion, none of them the pass. */
+    .dk-scene[data-dk-curve='mix'] .dk-lay:not(.dk-lay--even) > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-scene[data-dk-curve='mix'] .dk-lay:not(.dk-lay--even) {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+    }
+
+    /* the dialog develops: the panel settles in, a flash of film fades off it */
+    .dk-scene[data-dk-curve='mix'] .dk-lay:has(.kp-dialog) {
+        --dk-kf-clip: dk-develop;
+        --dk-kf-clip-out: dk-develop-out;
+    }
+
+    .dk-scene[data-dk-curve='mix'] .dk-dialog::after {
+        animation: none;
+        opacity: 0;
+    }
+
+    /* the menu fades in */
+    .dk-scene[data-dk-curve='mix'] .dk-lay--pop,
+    .dk-scene[data-dk-curve='mix'] .dk-lay--own {
+        --dk-kf-clip: dk-fade;
+        --dk-kf-clip-out: dk-fade-out;
+        --dk-lx: var(--dk-c);
+    }
+
+    /* the tile strikes on like a tube */
+    .dk-scene[data-dk-curve='mix'] .dk-lay:has(.dk-tile) {
+        --dk-kf-clip: dk-tube;
+        --dk-kf-clip-out: dk-tube-out;
+        --dk-lx: calc(500ms * var(--dk-sl));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='gap'] .dk-lay:has(.kp-dialog) > .dk-lay__body,
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='gap'] :is(.dk-lay--pop, .dk-lay--own) > .dk-lay__body {
+            opacity: 0;
+        }
+
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='gap'] .dk-lay:has(.kp-dialog) > .dk-lay__body {
+            scale: 1.02;
+        }
+
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='gap'] .dk-lay:has(.dk-tile) > .dk-lay__body {
+            filter: brightness(0.3);
+        }
+
+        /* the dialog's flash runs with the develop, 660 ms */
+        .dk-scene[data-dk-curve='mix']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-dialog::after {
+            animation: dk-flash var(--dk-x) linear 0s both;
+        }
+
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='out'] .dk-dialog::after {
+            animation: dk-flash-out var(--dk-x) linear calc(var(--dk-win) - var(--dk-x)) both;
+        }
+
+        .dk-scene[data-dk-curve='mix'][data-dk-phase='gap'] .dk-dialog::after {
+            opacity: 0.55;
+        }
+    }
+
+    /* ── 2 The direction ────────────────────────────────────────────────── */
+
+    /* The trend: the slot stands, the film is what the line lays along it. */
+    .dk-trendrun {
+        position: relative;
+        padding-block: 0.25rem;
+    }
+
+    .dk-scene .dk-lay--over {
+        position: absolute;
+        inset: 0.25rem 0;
+    }
+
+    .dk-scene .dk-lay--over > .dk-lay__body {
+        block-size: 100%;
+    }
+
+    /* A group of days: one line, the members each turn with their stride. */
+    .dk-days .dk-day {
+        transition: none;
+    }
+
+    /* From the start, along the edge is the grammar's own (no rules here). */
+
+    /* Switched on in place (the picks): every part strikes on where it stands,
+   dark, a flash, dark, on, in hard steps; a group all at once. */
+    .dk-scene[data-dk-direction='switch'] .dk-lay > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-scene[data-dk-direction='switch'] .dk-lay {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-kf-clip: dk-tube;
+        --dk-kf-clip-out: dk-tube-out;
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+        --dk-lx: calc(500ms * var(--dk-sl));
+    }
+
+    .dk-scene[data-dk-direction='switch'] .dk-member {
+        --dk-d: 0ms;
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-direction='switch'][data-dk-phase='gap'] .dk-lay > .dk-lay__body {
+            filter: brightness(0.3);
+        }
+    }
+
+    /* From the centre out: the line starts at the centre and runs to both ends
+   at once; a group from its middle outward. */
+    @keyframes dk-line-c {
+        from {
+            background-position:
+                50% 0,
+                50% 0;
+            animation-timing-function: linear;
+        }
+
+        to {
+            background-position:
+                0% 0,
+                100% 0;
+        }
+    }
+
+    @keyframes dk-line-c-out {
+        from {
+            background-position:
+                0% 0,
+                100% 0;
+            animation-timing-function: linear;
+        }
+
+        to {
+            background-position:
+                50% 0,
+                50% 0;
+        }
+    }
+
+    .dk-scene[data-dk-direction='centre'] {
+        --dk-kf-line: dk-line-c, dk-line-o;
+        --dk-kf-line-out: dk-line-c-out, dk-line-o-out;
+    }
+
+    .dk-scene[data-dk-direction='centre'] .dk-lay {
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)) 50% calc(-1 * var(--dk-reach)) 50%);
+        --dk-line-0: 0 0;
+        --dk-line-4: 0 0;
+        --dk-line-92: 0 0;
+        --dk-line-1: 0 0;
+    }
+
+    .dk-scene[data-dk-direction='centre'] .dk-lay > .dk-lay__line {
+        background:
+            var(--dk-vspectrum) 50% 0 / 2px 100% no-repeat,
+            var(--dk-vspectrum) 50% 0 / 2px 100% no-repeat;
+    }
+
+    .dk-scene[data-dk-direction='centre'] .dk-lay--group {
+        --dk-lx: calc(var(--dk-n) * var(--dk-st) / 2);
+    }
+
+    .dk-scene[data-dk-direction='centre'] .dk-member {
+        --dk-d: calc(max(var(--i) - 3, 3 - var(--i)) * var(--dk-st));
+        --dk-lt: calc(var(--dk-t) - 3 * var(--dk-st));
+    }
+
+    /* ── 3 Opening what drops from a button ─────────────────────────────── */
+
+    /* Swept in from its anchor is the grammar's own: the menu's line crosses its
+   footprint from the button's edge down, the dialog and the toast from their
+   start edge, the tooltip from its notch. */
+    .dk-tipwrap {
+        position: relative;
+        display: inline-grid;
+        justify-items: start;
+        padding-block-start: 0.7rem;
+    }
+
+    .dk-tipwrap__point {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 1.1rem;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        background: var(--foreground);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .dk-scene .dk-tipwrap .kp-tooltip {
+        margin: 0;
+    }
+
+    /* Developed (today): the register's dialog (a film flash over the panel
+   that fades out while the panel scales from 1.02 to 1, 420 ms), its menu fades
+   in, its toast rises 6 px, its tooltip opens from a slit. */
+    @keyframes dk-rise {
+        from {
+            opacity: 0;
+            translate: 0 6px;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes dk-rise-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 6px;
+        }
+    }
+
+    @keyframes dk-slit {
+        from {
+            clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+        }
+    }
+
+    @keyframes dk-slit-out {
+        from {
+            clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
+        }
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay:has(.kp-dialog) {
+        --dk-kf-clip: dk-develop;
+        --dk-kf-clip-out: dk-develop-out;
+        --dk-lx: calc(420ms * var(--dk-sl));
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay--pop {
+        --dk-kf-clip: dk-fade;
+        --dk-kf-clip-out: dk-fade-out;
+        --dk-lx: var(--dk-c);
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay--toast {
+        --dk-kf-clip: dk-rise;
+        --dk-kf-clip-out: dk-rise-out;
+        --dk-lx: calc(520ms * var(--dk-sl));
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-lay--tip {
+        --dk-kf-clip: dk-slit;
+        --dk-kf-clip-out: dk-slit-out;
+        --dk-lx: calc(260ms * var(--dk-sl));
+    }
+
+    .dk-scene[data-dk-opening='develop'] .dk-dialog::after {
+        animation: none;
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-lay:has(.kp-dialog) > .dk-lay__body,
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-lay:is(.dk-lay--pop, .dk-lay--toast) > .dk-lay__body {
+            opacity: 0;
+        }
+
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-lay:has(.kp-dialog) > .dk-lay__body {
+            scale: 1.02;
+        }
+
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-lay--toast > .dk-lay__body {
+            translate: 0 6px;
+        }
+
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-lay--tip > .dk-lay__body {
+            clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
+        }
+
+        .dk-scene[data-dk-opening='develop']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-dialog::after {
+            animation: dk-flash calc(420ms * var(--dk-sl)) linear 0s both;
+        }
+
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='out'] .dk-dialog::after {
+            animation: dk-flash-out calc(420ms * var(--dk-sl)) linear calc(var(--dk-win) - 420ms * var(--dk-sl)) both;
+        }
+
+        .dk-scene[data-dk-opening='develop'][data-dk-phase='gap'] .dk-dialog::after {
+            opacity: 0.55;
+        }
+    }
+
+    /* Scanned open by a lit band (the pick): the header's pick sweeps a wide
+   white band down over the footprint and reveals it, on ease-in, and back up
+   to close; the dialog the same. */
+    @keyframes dk-clip-ei {
+        from {
+            clip-path: var(--dk-clip-0);
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        to {
+            clip-path: var(--dk-clip-1);
+        }
+    }
+
+    @keyframes dk-clip-ei-out {
+        from {
+            clip-path: var(--dk-clip-1);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        to {
+            clip-path: var(--dk-clip-0);
+        }
+    }
+
+    @keyframes dk-line-t-ei {
+        from {
+            translate: var(--dk-line-0);
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        to {
+            translate: var(--dk-line-1);
+        }
+    }
+
+    @keyframes dk-line-t-ei-out {
+        from {
+            translate: var(--dk-line-1);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        to {
+            translate: var(--dk-line-0);
+        }
+    }
+
+    .dk-scene[data-dk-opening='scanned'] {
+        --dk-kf-clip: dk-clip-ei;
+        --dk-kf-clip-out: dk-clip-ei-out;
+        --dk-kf-line: dk-line-t-ei, dk-line-o;
+        --dk-kf-line-out: dk-line-t-ei-out, dk-line-o-out;
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+    }
+
+    .dk-scene[data-dk-opening='scanned'] .dk-lay {
+        --dk-reach: 0.6rem;
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(100% + var(--dk-reach)) calc(-1 * var(--dk-reach)));
+        --dk-line-0: 0 -100%;
+        --dk-line-4: 0 -96%;
+        --dk-line-92: 0 -8%;
+        --dk-line-1: 0 0%;
+    }
+
+    .dk-scene[data-dk-opening='scanned'] .dk-lay > .dk-lay__line {
+        inset-block: calc(-1 * var(--dk-reach));
+        inset-inline: -6px;
+        background: linear-gradient(to bottom, transparent, hsl(from var(--primary) h s l / 0.14) 55%, hsl(from var(--primary) h s l / 0.6)) 0 100% /
+            100% 2.2rem no-repeat;
+        filter: none;
+    }
+
+    /* ── 4 How long things take ─────────────────────────────────────────── */
+
+    /* One picture (the line laying a dialog, a group crossed, the busy bar
+   running, a press); only the times differ, printed under each part. The pass
+   is the grammar's own at the clock of the option. */
+    .dk-scene[data-dk-durations='brisk'] {
+        --dk-contact: 150ms;
+        --dk-pass: 440ms;
+        --dk-after: 150ms;
+        --dk-stride: 40ms;
+        --dk-loop: 1600ms;
+    }
+
+    .dk-scene[data-dk-durations='unhurried'] {
+        --dk-contact: 300ms;
+        --dk-pass: 990ms;
+        --dk-after: 330ms;
+        --dk-stride: 90ms;
+        --dk-loop: 3600ms;
+        --dk-win: calc(1500ms * var(--dk-sl));
+    }
+
+    /* ── 5 Where the colour goes (still) ────────────────────────────────── */
+
+    .dk-colour-stack {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .dk-scene .dk-switch {
+        justify-self: start;
+    }
+
+    /* The film and meaning: the film is every edge, the line, the fill, the head
+   and the ring; ink is near-white; an act is a light plate; danger is coral
+   and nothing else is a colour. The register's own, with the failed export
+   on a near-black plate, its edge and its words coral. */
+    .dk-scene[data-dk-colour='film'] .dk-failed {
+        border-color: var(--dk-danger);
+        background: var(--dk-plate);
+        color: var(--dk-danger);
+    }
+
+    .dk-scene[data-dk-colour='film'] .dk-state:not(.dk-state--warn) .dk-state__word {
+        background: var(--dk-film);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    /* The lit console (the picks): the picks' palette on top of the film: a green
+   scope trace behind the key figure, a red alarm lamp on a warning, lit
+   square chips, a status lamp before the state word. */
+    .dk-scene[data-dk-colour='console'] .dk-scope {
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(color-mix(in oklab, var(--card) 80%, black), color-mix(in oklab, var(--card) 80%, black)) padding-box,
+            var(--dk-film) border-box;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-scope .kp-kpi__value {
+        font-family: var(--theme-font-mono);
+        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-scope::after {
+        content: '';
+        position: absolute;
+        inset: 38% 0.75rem 18% 0.75rem;
+        z-index: 0;
+        background: var(--success-foreground);
+        -webkit-mask: var(--dk-trend-b) 0 0 / 100% 100% no-repeat;
+        mask: var(--dk-trend-b) 0 0 / 100% 100% no-repeat;
+        opacity: 0.55;
+        filter: drop-shadow(0 0 4px var(--success-foreground));
+        pointer-events: none;
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-scope > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-failed::before,
+    .dk-scene[data-dk-colour='console'] .dk-state::before {
+        content: '';
+        flex: none;
+        align-self: center;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        border-radius: 50%;
+        background: var(--lamp, var(--success-foreground));
+        box-shadow: 0 0 0.6em var(--lamp, var(--success-foreground));
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-state::after {
+        content: none;
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-state--warn {
+        --lamp: var(--warning-foreground);
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-failed {
+        --lamp: var(--destructive);
+        align-items: center;
+        background: color-mix(in oklab, var(--card) 85%, black);
+        border-color: var(--destructive);
+        color: var(--foreground);
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-colour-panel .kp-card__title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.55em;
+        background: var(--primary);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.7);
+        vertical-align: 0.12em;
+    }
+
+    .dk-scene[data-dk-colour='console'] .dk-colour-panel .kp-card__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* Ink only: no film. Every edge is a grey hairline, the line is white, the
+   act plate is white; coral for danger. */
+    .dk-scene[data-dk-colour='ink'] {
+        --dk-spectrum: linear-gradient(90deg, var(--foreground), var(--foreground));
+        --dk-vspectrum: linear-gradient(180deg, var(--foreground), var(--foreground));
+        --dk-glow: none;
+        --kp-ps-film: linear-gradient(90deg, var(--foreground), var(--foreground));
+    }
+
+    .dk-scene[data-dk-colour='ink'] *,
+    .dk-scene[data-dk-colour='ink'] *::before,
+    .dk-scene[data-dk-colour='ink'] *::after {
+        --kp-iris: linear-gradient(var(--border-strong), var(--border-strong));
+        --dk-film: linear-gradient(var(--border-strong), var(--border-strong));
+        --kp-ps-film: linear-gradient(90deg, var(--foreground), var(--foreground));
+    }
+
+    .dk-scene[data-dk-colour='ink'] {
+        --kp-halo: 0 0 0 transparent;
+    }
+
+    .dk-scene[data-dk-colour='ink'] .kp-meter::before {
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 100% 2px no-repeat,
+            var(--kp-meter-fill-colour);
+    }
+
+    .dk-scene[data-dk-colour='ink'] .dk-failed {
+        border-color: var(--dk-danger);
+        background: var(--dk-plate);
+        color: var(--dk-danger);
+    }
+
+    /* ── 6 The corners (still) ──────────────────────────────────────────── */
+
+    /* Chamfered on two opposite corners is the register's own: controls 0.55 rem,
+   panels 1 rem, the key figure a panel, brackets close on a label. */
+
+    /* Chamfered on all four corners: every corner cut, the same size, on plates
+   and small parts alike. */
+    .dk-scene[data-dk-corners='four'] .kp-card::after,
+    .dk-scene[data-dk-corners='four'] .kp-alert,
+    .dk-scene[data-dk-corners='four'] .kp-dialog::before {
+        clip-path: polygon(
+            var(--dk-cut-panel) 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% calc(100% - var(--dk-cut-panel)),
+            calc(100% - var(--dk-cut-panel)) 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel)),
+            0 var(--dk-cut-panel)
+        );
+    }
+
+    .dk-scene[data-dk-corners='four'] .kp-card,
+    .dk-scene[data-dk-corners='four'] .kp-dialog {
+        clip-path: none;
+    }
+
+    .dk-scene[data-dk-corners='four'] .kp-kpi:not(.dk-column) {
+        clip-path: polygon(
+            var(--dk-cut-panel) 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% calc(100% - var(--dk-cut-panel)),
+            calc(100% - var(--dk-cut-panel)) 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel)),
+            0 var(--dk-cut-panel)
+        );
+    }
+
+    .dk-scene[data-dk-corners='four'] .kp-popover {
+        clip-path: polygon(
+            var(--dk-cut-panel) 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% calc(100% - var(--dk-cut-panel)),
+            calc(100% - var(--dk-cut-panel)) 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel)),
+            0 var(--dk-cut-panel)
+        );
+    }
+
+    .dk-scene[data-dk-corners='four'] :is(.kp-button, .kp-badge, .kp-tag, .kp-field__input) {
+        clip-path: polygon(
+            var(--dk-notch) 0,
+            calc(100% - var(--dk-notch)) 0,
+            100% var(--dk-notch),
+            100% calc(100% - var(--dk-notch)),
+            calc(100% - var(--dk-notch)) 100%,
+            var(--dk-notch) 100%,
+            0 calc(100% - var(--dk-notch)),
+            0 var(--dk-notch)
+        );
+    }
+
+    .dk-scene[data-dk-corners='four'] .kp-tooltip {
+        clip-path: polygon(
+            0.45rem 0,
+            calc(100% - 0.45rem) 0,
+            100% 0.45rem,
+            100% calc(100% - 0.45rem),
+            calc(100% - 0.45rem) 100%,
+            0.45rem 100%,
+            0 calc(100% - 0.45rem),
+            0 0.45rem
+        );
+    }
+
+    .dk-scene[data-dk-corners='four'] .kp-progressbar__track {
+        clip-path: polygon(
+            calc(4px * var(--kp-progressbar-scale, 1)) 0,
+            calc(100% - calc(4px * var(--kp-progressbar-scale, 1))) 0,
+            100% calc(4px * var(--kp-progressbar-scale, 1)),
+            100% calc(100% - calc(4px * var(--kp-progressbar-scale, 1))),
+            calc(100% - calc(4px * var(--kp-progressbar-scale, 1))) 100%,
+            calc(4px * var(--kp-progressbar-scale, 1)) 100%,
+            0 calc(100% - calc(4px * var(--kp-progressbar-scale, 1))),
+            0 calc(4px * var(--kp-progressbar-scale, 1))
+        );
+    }
+
+    /* Square: radius 0 and no cut anywhere. */
+    .dk-scene[data-dk-corners='square']
+        :is(
+            .kp-card,
+            .kp-dialog,
+            .kp-popover,
+            .kp-kpi,
+            .kp-alert,
+            .kp-button,
+            .kp-badge,
+            .kp-tag,
+            .kp-tooltip,
+            .kp-progressbar__track,
+            .kp-field__input
+        ),
+    .dk-scene[data-dk-corners='square'] :is(.kp-card, .kp-dialog)::after,
+    .dk-scene[data-dk-corners='square'] .kp-dialog::before {
+        clip-path: none;
+    }
+
+    .dk-scene[data-dk-corners='square'] .kp-card,
+    .dk-scene[data-dk-corners='square'] .kp-dialog {
+        box-shadow: var(--kp-halo);
+    }
+
+    /* ── 7 The surface (still) ──────────────────────────────────────────── */
+
+    .dk-menu-head {
+        display: block;
+        padding: 0.35rem 0.625rem 0.15rem;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .dk-surface-dialog {
+        margin: 0;
+    }
+
+    /* Near-black, the grid, the film on the edge is the register's own: the ground
+   carries the grid and a pool of light, a panel is one shade lighter with the
+   film along its edge and the four-colour halo behind a lit panel. */
+
+    /* The status board (the picks): a black-ops panel with a fine grid behind the
+   text, the title in the ticker mono, lit square chips, a scope trace behind
+   the figure. */
+    .dk-scene[data-dk-surface='board'] {
+        background-image: none;
+    }
+
+    .dk-scene[data-dk-surface='board'] :is(.kp-card::after, .kp-dialog::before) {
+        background:
+            repeating-linear-gradient(0deg, hsl(from var(--border-strong) h s l / 0.35) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.35) 0 1px, transparent 1px 12px),
+            linear-gradient(color-mix(in oklab, var(--card) 85%, black), color-mix(in oklab, var(--card) 85%, black)) padding-box,
+            linear-gradient(var(--border-strong), var(--border-strong)) border-box;
+    }
+
+    .dk-scene[data-dk-surface='board'] .kp-card,
+    .dk-scene[data-dk-surface='board'] .kp-dialog,
+    .dk-scene[data-dk-surface='board'] .kp-popover {
+        box-shadow: none;
+    }
+
+    .dk-scene[data-dk-surface='board'] :is(.kp-card__title, .kp-dialog__title) {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    .dk-scene[data-dk-surface='board'] :is(.kp-card__title, .kp-dialog__title)::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.55em;
+        background: var(--primary);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.7);
+        vertical-align: 0.1em;
+    }
+
+    .dk-scene[data-dk-surface='board'] .kp-kpi:not(.dk-column) {
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(color-mix(in oklab, var(--card) 80%, black), color-mix(in oklab, var(--card) 80%, black)) padding-box,
+            linear-gradient(var(--primary), var(--primary)) border-box;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        clip-path: none;
+    }
+
+    .dk-scene[data-dk-surface='board'] .kp-kpi .kp-kpi__value {
+        font-family: var(--theme-font-mono);
+        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-surface='board'] .kp-kpi:not(.dk-column)::after {
+        content: '';
+        position: absolute;
+        inset: 38% 0.75rem 18% 0.75rem;
+        background: var(--success-foreground);
+        -webkit-mask: var(--dk-trend-b) 0 0 / 100% 100% no-repeat;
+        mask: var(--dk-trend-b) 0 0 / 100% 100% no-repeat;
+        opacity: 0.4;
+        pointer-events: none;
+    }
+
+    .dk-scene[data-dk-surface='board'] .kp-popover {
+        background: color-mix(in oklab, var(--popover) 85%, black);
+        border-color: color-mix(in oklab, var(--foreground) 42%, var(--card));
+    }
+
+    .dk-scene[data-dk-surface='board'] .dk-menu-head {
+        color: var(--primary);
+    }
+
+    .dk-scene[data-dk-surface='board'] .dk-state::before {
+        content: '';
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        align-self: center;
+        background: var(--success-foreground);
+        box-shadow: 0 0 6px var(--success-foreground);
+    }
+
+    .dk-scene[data-dk-surface='board'] .dk-state::after {
+        content: none;
+    }
+
+    .dk-scene[data-dk-surface='board'] .dk-trendtile .dk-trend__slot {
+        background: hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* The halo on everything: every panel carries the four-colour halo and the
+   film on all its edges (the key figure, the menu, the state word's plate). */
+    .dk-scene[data-dk-surface='halo'] :is(.kp-kpi, .kp-popover, .dk-state, .dk-trendtile) {
+        box-shadow: var(--kp-halo);
+    }
+
+    .dk-scene[data-dk-surface='halo'] .kp-kpi:not(.dk-column) {
+        clip-path: none;
+    }
+
+    .dk-scene[data-dk-surface='halo'] .kp-popover {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--popover), var(--popover)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-surface='halo'] .dk-state {
+        padding: 0.25rem 0.6rem;
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-surface='halo'] .dk-surface-dialog,
+    .dk-scene[data-dk-surface='halo'] .dk-trendtile {
+        box-shadow:
+            var(--kp-halo),
+            0 0 0 1px hsl(from var(--chart-3) h s l / 0.35);
+    }
+
+    /* ── 8 A warning (still) ────────────────────────────────────────────── */
+
+    .dk-scene[data-dk-warning] .dk-warn,
+    .dk-scene[data-dk-warning] .dk-warning {
+        --dk-tone: var(--warning-foreground);
+    }
+
+    .dk-scene[data-dk-warning] :is(.dk-failed, .dk-bad) {
+        --dk-tone: var(--destructive);
+    }
+
+    .dk-scene[data-dk-warning] .dk-failed .dk-trendbox {
+        padding-block: 0.15rem;
+    }
+
+    /* The film gone coral: the part's film edge takes the tone's colour along its
+   whole length (coral for a failure, the warning colour for a warning) and the
+   change is set in that ink; the plate stays near-black. A destructive menu
+   entry has a coral edge at its start and coral ink. */
+    .dk-scene[data-dk-warning='coral'] .dk-warn {
+        background:
+            linear-gradient(var(--dk-plate), var(--dk-plate)) padding-box,
+            linear-gradient(var(--dk-tone), var(--dk-tone)) border-box;
+        box-shadow: none;
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-warn .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: var(--dk-tone);
+    }
+
+    .dk-scene[data-dk-warning='coral'] :is(.dk-warn, .dk-failed) .dk-note {
+        background: transparent;
+        color: var(--dk-tone);
+        padding-inline: 0;
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-failed {
+        --kp-halo:
+            0 10px 18px hsl(from var(--dk-tone) h s l / 0.3), -10px 4px 16px hsl(from var(--dk-tone) h s l / 0.26),
+            10px 4px 16px hsl(from var(--dk-tone) h s l / 0.26), 0 -6px 14px hsl(from var(--dk-tone) h s l / 0.2);
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-failed::after {
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(var(--dk-tone), var(--dk-tone)) border-box;
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-failed .dk-trend__lit {
+        background: var(--dk-tone);
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-failed .dk-trend__slot {
+        background: hsl(from var(--dk-tone) h s l / 0.3);
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-warning {
+        background: var(--dk-plate);
+        border-color: var(--dk-tone);
+        color: var(--foreground);
+    }
+
+    .dk-scene[data-dk-warning='coral'] .dk-warning .kp-alert__label {
+        color: var(--dk-tone);
+    }
+
+    .dk-scene[data-dk-warning='coral'] .kp-menu__item.dk-bad {
+        color: var(--dk-tone);
+        box-shadow: inset 2px 0 0 var(--dk-tone);
+    }
+
+    /* The alarm lamp (the picks): a lamp lights the number on the tone's plate;
+   a tile's chip lights; the menu entry's rim lights red. */
+    .dk-scene[data-dk-warning='lamp'] .dk-warn {
+        background:
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.3) 1px, transparent 1px) 0 0 / 9px 9px,
+            linear-gradient(color-mix(in oklab, var(--card) 80%, black), color-mix(in oklab, var(--card) 80%, black)) padding-box,
+            linear-gradient(var(--primary), var(--primary)) border-box;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        clip-path: none;
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-warn .kp-kpi__value {
+        background: transparent;
+        padding-inline: 0;
+        color: var(--warning-foreground);
+        font-family: var(--theme-font-mono);
+        text-shadow: 0 0 10px hsl(from var(--warning-foreground) h s l / 0.8);
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-warn .dk-note {
+        border-radius: 999px;
+        background: color-mix(in oklab, var(--muted-foreground) 25%, black);
+        color: var(--card-foreground);
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-failed .kp-card__title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        margin-inline-end: 0.55em;
+        background: var(--destructive);
+        box-shadow:
+            0 0 10px hsl(from var(--destructive) h s l / 0.85),
+            0 0 3px var(--destructive);
+        vertical-align: 0.1em;
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-failed .dk-trend__lit {
+        background: var(--destructive);
+        filter: drop-shadow(0 0 4px var(--destructive));
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-failed .dk-note {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .kp-menu__item.dk-bad {
+        box-shadow:
+            inset 3px 0 0 var(--destructive),
+            inset 8px 0 8px -6px hsl(from var(--destructive) h s l / 0.8);
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-warning {
+        background: color-mix(in oklab, var(--card) 85%, black);
+        border-color: var(--warning-foreground);
+        color: var(--foreground);
+    }
+
+    .dk-scene[data-dk-warning='lamp'] .dk-warning::before {
+        content: '';
+        align-self: center;
+        flex: none;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        border-radius: 50%;
+        background: var(--warning-foreground);
+        box-shadow: 0 0 0.6em var(--warning-foreground);
+    }
+
+    /* The tinted plate: the whole plate takes a deep tint of the tone with the
+   tone's luminous ink; the film edge stays. */
+    .dk-scene[data-dk-warning='tinted'] .dk-warn {
+        background:
+            linear-gradient(var(--warning), var(--warning)) padding-box,
+            var(--dk-film) border-box;
+        color: var(--warning-foreground);
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-warn :is(.kp-kpi__label, .kp-kpi__trend) {
+        color: inherit;
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-warn .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: inherit;
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-failed::after {
+        background:
+            linear-gradient(color-mix(in oklab, var(--card) 80%, var(--destructive)), color-mix(in oklab, var(--card) 80%, var(--destructive)))
+                padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-failed {
+        color: var(--destructive);
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-failed .kp-card__body {
+        color: inherit;
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-failed .dk-trend__lit {
+        background: var(--destructive);
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .dk-failed .dk-note {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .dk-scene[data-dk-warning='tinted'] .kp-menu__item.dk-bad {
+        background: color-mix(in oklab, var(--card) 80%, var(--destructive));
+        color: var(--destructive);
+    }
+
+    /* ── 9 A live update ────────────────────────────────────────────────── */
+
+    /* The value that changes: the new reading is the body of a small lay, the old
+   one stands over it, clipped to what the line has not yet passed. */
+    .dk-scene .dk-lay--live {
+        --dk-reach: 2px;
+        display: inline-grid;
+        grid-template-areas: 'v';
+        justify-items: start;
+    }
+
+    .dk-scene .dk-lay--live > .dk-lay__body,
+    .dk-scene .dk-lay--live > .dk-live__old {
+        grid-area: v;
+    }
+
+    .dk-live__old,
+    .dk-lay--comp > .dk-lay__body {
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)));
+        --dk-clip-1: inset(calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(100% + var(--dk-reach)));
+        clip-path: var(--dk-clip-1);
+    }
+
+    .dk-lay--comp {
+        --dk-clip-0: inset(calc(-1 * var(--dk-reach)));
+        --dk-clip-1: inset(calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(-1 * var(--dk-reach)) calc(100% + var(--dk-reach)));
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+    }
+
+    .dk-lay--comp > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-live__old {
+        color: var(--foreground);
+        pointer-events: none;
+    }
+
+    .dk-live-word .dk-lay__body,
+    .dk-live-word .dk-live__old {
+        white-space: nowrap;
+    }
+
+    .dk-live-word {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The tile's edge is re-laid: its film turns as the line crosses, the tile
+   itself stays. */
+    .dk-lay--edge {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-reach: 0.4rem;
+    }
+
+    .dk-trendlive {
+        padding-block: 0.25rem;
+    }
+
+    .dk-scene[data-dk-live='pass'] {
+        --dk-kf-fig: dk-fig-live;
+        --dk-kf-fig-out: dk-fig-live-out;
+    }
+
+    /* A part that is re-laid is not laid whole: the figure's letters are the
+   ones the line colours (the film's turn and the figure's ink are the
+   grammar's). The old reading is the clip's complement. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-live='pass'][data-dk-phase='gap'] .dk-live__old {
+            clip-path: var(--dk-clip-0);
+        }
+
+        .dk-scene[data-dk-live='pass']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-live__old {
+            animation: var(--dk-kf-clip) var(--dk-lx, var(--dk-x)) linear var(--dk-d) both;
+        }
+
+        .dk-scene[data-dk-live='pass'][data-dk-phase='out'] .dk-live__old {
+            animation: var(--dk-kf-clip-out) var(--dk-lx, var(--dk-x)) linear calc(var(--dk-win) - var(--dk-d) - var(--dk-lx, var(--dk-x))) both;
+        }
+    }
+
+    /* The trace flares (the picks) and Nothing (today): no line. The new reading
+   is simply there from `in` to `hold`, the old one in `gap` and `out`. */
+    .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']) .dk-lay > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']) .dk-lay {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-kf-clip: none;
+        --dk-kf-clip-out: none;
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+    }
+
+    .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']) .dk-live__old {
+        visibility: hidden;
+        clip-path: none;
+    }
+
+    .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']) .dk-lay--comp {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']):is([data-dk-phase='gap'], [data-dk-phase='out']) .dk-live__old {
+            visibility: visible;
+        }
+
+        .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']):is([data-dk-phase='gap'], [data-dk-phase='out']) .dk-lay--live > .dk-lay__body {
+            visibility: hidden;
+        }
+
+        .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']):is([data-dk-phase='gap'], [data-dk-phase='out']) .dk-lay--comp {
+            display: block;
+        }
+
+        .dk-scene:is([data-dk-live='flare'], [data-dk-live='none']):is([data-dk-phase='gap'], [data-dk-phase='out']) .dk-lay--comp + .dk-lay {
+            display: none;
+        }
+    }
+
+    /* The key figure's glow flares once, slowing as it lands (kf-dark-flare:
+   0.55 s ease-out); the tile's number jolts like a needle in two hard steps;
+   the state word's lamp flares; the trend's line flares as the figure does. */
+    @keyframes dk-flare {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        35% {
+            filter: drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.9));
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes dk-flare-out {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        65% {
+            filter: drop-shadow(0 0 8px hsl(from var(--primary) h s l / 0.9));
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes dk-jolt {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-end);
+        }
+
+        50% {
+            translate: 0 -18%;
+            animation-timing-function: steps(2, jump-end);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes dk-jolt-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        50% {
+            translate: 0 -18%;
+            animation-timing-function: steps(2, jump-start);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes dk-lamp {
+        0% {
+            filter: brightness(1);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        40% {
+            filter: brightness(2.2);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+    @keyframes dk-lamp-out {
+        0% {
+            filter: brightness(1);
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        60% {
+            filter: brightness(2.2);
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+    .dk-scene[data-dk-live='flare'] .dk-state::before {
+        content: '';
+        align-self: center;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        background: var(--success-foreground);
+        box-shadow: 0 0 0.55em var(--success-foreground);
+    }
+
+    .dk-scene[data-dk-live='flare'] .dk-state::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-live='flare']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-live-figure .dk-ink,
+        .dk-scene[data-dk-live='flare']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-live-word .dk-ink {
+            animation: dk-flare calc(550ms * var(--dk-sl)) linear 0s both;
+        }
+
+        .dk-scene[data-dk-live='flare'][data-dk-phase='out'] .dk-live-figure .dk-ink,
+        .dk-scene[data-dk-live='flare'][data-dk-phase='out'] .dk-live-word .dk-ink {
+            animation: dk-flare-out calc(550ms * var(--dk-sl)) linear calc(var(--dk-win) - 550ms * var(--dk-sl)) both;
+        }
+
+        .dk-scene[data-dk-live='flare']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-live-tile .dk-lay--live {
+            animation: dk-jolt calc(300ms * var(--dk-sl)) linear 0s both;
+        }
+
+        .dk-scene[data-dk-live='flare'][data-dk-phase='out'] .dk-live-tile .dk-lay--live {
+            animation: dk-jolt-out calc(300ms * var(--dk-sl)) linear calc(var(--dk-win) - 300ms * var(--dk-sl)) both;
+        }
+
+        .dk-scene[data-dk-live='flare']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-state::before {
+            animation: dk-lamp calc(600ms * var(--dk-sl)) linear 0s both;
+        }
+
+        .dk-scene[data-dk-live='flare'][data-dk-phase='out'] .dk-state::before {
+            animation: dk-lamp-out calc(600ms * var(--dk-sl)) linear calc(var(--dk-win) - 600ms * var(--dk-sl)) both;
+        }
+
+        .dk-scene[data-dk-live='flare']:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-trendlive {
+            animation: dk-lamp calc(550ms * var(--dk-sl)) linear 0s both;
+        }
+
+        .dk-scene[data-dk-live='flare'][data-dk-phase='out'] .dk-trendlive {
+            animation: dk-lamp-out calc(550ms * var(--dk-sl)) linear calc(var(--dk-win) - 550ms * var(--dk-sl)) both;
+        }
+    }
+
+    /* ── 10 Loading (a loop) ────────────────────────────────────────────── */
+
+    /* A waiting part: its content stands dim, a surface over it carries the
+   option's picture. */
+    .dk-waits {
+        position: relative;
+    }
+
+    .dk-wait {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: clip;
+        pointer-events: none;
+    }
+
+    .dk-scene .kp-card.dk-waits .dk-wait,
+    .dk-scene .kp-kpi.dk-waits .dk-wait {
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel))
+        );
+    }
+
+    .dk-scene[data-dk-loading] .dk-waits > :not(.dk-wait) {
+        opacity: 0.55;
+    }
+
+    .dk-scene .dk-waits .dk-wait > * {
+        display: none;
+    }
+
+    .dk-scene[data-dk-loading] .kp-skeleton {
+        animation: none;
+    }
+
+    .dk-scene .dk-days--month {
+        grid-auto-flow: row;
+        grid-template-columns: repeat(7, minmax(0, 2.6rem));
+    }
+
+    .dk-plot {
+        position: relative;
+        block-size: 5.2rem;
+        border: 1px solid var(--border-strong);
+        background:
+            repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--border-strong) h s l / 0.45) 19px 20px),
+            repeating-linear-gradient(to right, transparent 0 31px, hsl(from var(--border-strong) h s l / 0.3) 31px 32px), var(--card);
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-notch)) 0,
+            100% var(--dk-notch),
+            100% 100%,
+            var(--dk-notch) 100%,
+            0 calc(100% - var(--dk-notch))
+        );
+    }
+
+    .dk-plot__trend {
+        position: absolute;
+        inset: 14% 5%;
+        display: block;
+    }
+
+    .dk-plot__trend .dk-trend {
+        block-size: 100%;
+        aspect-ratio: auto;
+    }
+
+    /* The slots of the line: the film it lays is soft, the line a slice of the film. */
+    .dk-scene {
+        --dk-soft: linear-gradient(
+            90deg,
+            hsl(from var(--chart-1) h s l / 0.3),
+            hsl(from var(--chart-2) h s l / 0.3),
+            hsl(from var(--chart-3) h s l / 0.3),
+            hsl(from var(--chart-4) h s l / 0.3),
+            hsl(from var(--chart-1) h s l / 0.3),
+            hsl(from var(--chart-2) h s l / 0.3),
+            hsl(from var(--chart-3) h s l / 0.3),
+            hsl(from var(--chart-4) h s l / 0.3),
+            hsl(from var(--chart-1) h s l / 0.3)
+        );
+    }
+
+    /* The line sweeps the slot: on every waiting surface the line crosses from
+   start to end and the film it lays turns behind it, then dims as the line
+   leaves at the end; again from the start, 2.4 s a loop. The skeleton's lines
+   are the slots; the chart's plot is swept whole. */
+    .dk-scene[data-dk-loading='sweep'] .dk-wait::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
+    }
+
+    .dk-scene[data-dk-loading='sweep'] .dk-wait__line {
+        display: block;
+        position: absolute;
+        inset-block: 0;
+        inset-inline: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: -100% 0;
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        opacity: 1;
+        background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
+    }
+
+    .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        opacity: 1;
+        inset-inline: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: -100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='sweep'] .dk-wait::before,
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: dk-wash var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-loading='sweep'] .dk-wait__line,
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: dk-wait-line var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-loading='sweep'] .dk-day.dk-waits .dk-wait::before,
+        .dk-scene[data-dk-loading='sweep'] .dk-day.dk-waits .dk-wait__line {
+            animation-delay: calc(var(--i, 0) * var(--dk-lap) * -0.05);
+        }
+
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(2)::before,
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(2)::after {
+            animation-delay: calc(var(--dk-lap) * -0.1667);
+        }
+
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(3)::before,
+        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(3)::after {
+            animation-delay: calc(var(--dk-lap) * -0.3333);
+        }
+    }
+
+    /* The ticker baseline (the picks): a dashed baseline under the waiting part
+   ticks along, as a ticker tape would. */
+    .dk-scene[data-dk-loading='ticker'] .dk-wait__ticker {
+        display: block;
+        position: absolute;
+        inset-inline: 1rem;
+        inset-block-end: 0.6rem;
+        block-size: 2px;
+        background-image: repeating-linear-gradient(to right, var(--primary) 0 8px, transparent 8px 14px);
+    }
+
+    .dk-scene[data-dk-loading='ticker'] .dk-days .dk-wait__ticker,
+    .dk-scene[data-dk-loading='ticker'] .kp-menu__item .dk-wait__ticker {
+        inset-inline: 0.4rem;
+        inset-block-end: 0.35rem;
+    }
+
+    .dk-scene[data-dk-loading='ticker'] .dk-skel .dk-wait__ticker {
+        inset-inline: 0;
+        inset-block-end: 0.1rem;
+    }
+
+    .dk-scene[data-dk-loading='ticker'] .dk-skel {
+        padding-block-end: 0.9rem;
+    }
+
+    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        background:
+            linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
+            var(--border-strong);
+    }
+
+    @keyframes dk-ticker {
+        to {
+            background-position: -14px 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='ticker'] .dk-wait__ticker {
+            animation: dk-ticker 1s linear infinite;
+        }
+    }
+
+    /* The ghosts drift (today): the register's skeleton, a cyan ghost and a
+   magenta ghost of each line drift 8 px apart and back; every waiting part
+   wears the same two ghosts. */
+    .dk-scene[data-dk-loading='ghosts'] .dk-wait::before,
+    .dk-scene[data-dk-loading='ghosts'] .dk-wait::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='ghosts'] .dk-wait::before {
+        background: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-loading='ghosts'] .dk-wait::after {
+        background: hsl(from var(--chart-3) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-loading='ghosts'] {
+        --kp-sig-dur: var(--dk-lap);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='ghosts'] .dk-wait::before,
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-dark-dark-ghost-l var(--dk-lap) ease-in-out infinite;
+        }
+
+        .dk-scene[data-dk-loading='ghosts'] .dk-wait::after,
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-dark-dark-ghost-r var(--dk-lap) ease-in-out infinite;
+        }
+
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(2)::before,
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(2)::after {
+            animation-delay: calc(var(--dk-lap) * -5 / 6);
+        }
+
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(3)::before,
+        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(3)::after {
+            animation-delay: calc(var(--dk-lap) * -2 / 3);
+        }
+    }
+
+    /* ── 11 The busy progress bar (a loop) ──────────────────────────────── */
+
+    /* Round one's bar stays exactly: the chamfered ticked track, the film fill whose
+   colour turns as it fills, the `]` head. The line stands at its head when a
+   share is known (the same in every option); busy, the option decides. */
+    .dk-scene .kp-progressbar {
+        contain: layout;
+        overflow: visible;
+    }
+
+    .dk-scene .kp-progressbar__fill {
+        background: var(--dk-spectrum) 0 0 / 200% 100% repeat-x;
+    }
+
+    .dk-bar__line {
+        display: none;
+        position: absolute;
+        inset-block: -5px;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        z-index: 2;
+        pointer-events: none;
+        background: var(--dk-vspectrum);
+        filter: var(--dk-glow);
+    }
+
+    .dk-bar--share > .dk-bar__line {
+        display: block;
+        inset-inline-start: calc(var(--kp-value) * 100% + 3px);
+    }
+
+    /* The line runs the track: busy, the line runs the empty track from start to
+   end laying a short stretch of film behind it that turns and dims, 2.4 s, and
+   again. The track's own ticks stand; the hatch is gone. */
+    .dk-scene:is([data-dk-busybar='runs'], [data-dk-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: -34% auto;
+        inline-size: 34%;
+        clip-path: none;
+        background: var(--dk-spectrum) 0 0 / 400% 100% repeat-x;
+        -webkit-mask: linear-gradient(90deg, transparent, var(--foreground) 80%);
+        mask: linear-gradient(90deg, transparent, var(--foreground) 80%);
+        animation: none;
+    }
+
+    .dk-scene:is([data-dk-busybar='runs'], [data-dk-durations]) .kp-progressbar[data-kp-indeterminate] > .dk-bar__line {
+        display: block;
+        opacity: 0;
+    }
+
+    @keyframes dk-bar-run {
+        0% {
+            inset-inline-start: -34%;
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            inset-inline-start: 66%;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            inset-inline-start: 66%;
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-bar-line {
+        0% {
+            inset-inline-start: 0%;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            inset-inline-start: 5.7143%;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        66% {
+            inset-inline-start: 94.2857%;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            inset-inline-start: 100%;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene:is([data-dk-busybar='runs'], [data-dk-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: dk-bar-run var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene:is([data-dk-busybar='runs'], [data-dk-durations]) .kp-progressbar[data-kp-indeterminate] > .dk-bar__line {
+            animation: dk-bar-line var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* Reduced motion: the run stands at its end, the stretch laid, the line gone. */
+    @media (prefers-reduced-motion: reduce) {
+        .dk-scene:is([data-dk-busybar='runs'], [data-dk-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline: 66% auto;
+        }
+    }
+
+    /* The hatch (today) is the register's own: a static diagonal hatch in the
+   film's colours that does not move. */
+
+    /* The fill breathes: the film fill is laid whole and its brightness breathes
+   slowly, up and down. */
+    .dk-scene[data-dk-busybar='breathe'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        -webkit-mask: none;
+        mask: none;
+        background: var(--kp-ps-film);
+        filter: brightness(1);
+    }
+
+    @keyframes dk-breathe {
+        0%,
+        100% {
+            filter: brightness(0.7);
+            animation-timing-function: ease-in-out;
+        }
+
+        50% {
+            filter: brightness(1.3);
+            animation-timing-function: ease-in-out;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-busybar='breathe'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: dk-breathe var(--dk-lap) infinite;
+        }
+    }
+
+    /* ── 12 The spinner (a loop) ────────────────────────────────────────── */
+
+    .dk-scene .kp-spinner {
+        flex: none;
+    }
+
+    /* The line runs the ring: the register's ring in film colours, and the line
+   runs round it once per loop laying the film behind it, which turns and dims
+   by the time the line comes round; the ring itself never rotates. */
+    .dk-scene[data-dk-spinner='runs'] .kp-spinner {
+        position: relative;
+        background: hsl(from var(--border-strong) h s l / 0.7);
+        animation: none;
+    }
+
+    .dk-scene[data-dk-spinner='runs'] .kp-spinner::before,
+    .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* the film laid behind the line: bright at the head, tailing off back round */
+    .dk-scene[data-dk-spinner='runs'] .kp-spinner::before {
+        background: conic-gradient(
+            from calc(var(--dk-run) - 270deg),
+            transparent,
+            var(--chart-1) 70deg,
+            var(--chart-2) 140deg,
+            var(--chart-3) 210deg,
+            var(--chart-4) 270deg,
+            transparent 270deg
+        );
+        opacity: 1;
+    }
+
+    /* the line: a slice of the film at the head */
+    .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
+        background: conic-gradient(from calc(var(--dk-run) - 5deg), transparent, var(--foreground) 0.5deg, var(--chart-1) 5deg, transparent 5deg);
+        filter: var(--dk-glow);
+        opacity: 1;
+    }
+
+    @keyframes dk-ring-run {
+        0% {
+            --dk-run: 0deg;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            --dk-run: 360deg;
+        }
+    }
+
+    @keyframes dk-ring-dim {
+        0%,
+        70% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-ring-out {
+        0%,
+        66% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='runs'] .kp-spinner {
+            animation: dk-ring-run var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='runs'] .kp-spinner::before {
+            animation: dk-ring-dim var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
+            animation: dk-ring-out var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* Reduced motion: the ring stands laid, the film all the way round. */
+    @media (prefers-reduced-motion: reduce) {
+        .dk-scene[data-dk-spinner='runs'] .kp-spinner {
+            --dk-run: 360deg;
+        }
+
+        .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
+            opacity: 0;
+        }
+    }
+
+    /* The ring turns (today): the register's spinner, a ring in film colours
+   rotating linear. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='turns'] .kp-spinner {
+            animation: kp-sig-dark-dark-turn 1400ms linear infinite;
+            animation-duration: calc(1400ms * var(--dk-sl));
+        }
+    }
+
+    /* The brackets turn: a pair of brackets `[ ]` turns round a centre, the film
+   laid on their inner edge. */
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner {
+        position: relative;
+        background: none;
+        -webkit-mask: none;
+        mask: none;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::before,
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset-block: 8%;
+        inline-size: 24%;
+        --dk-arm: max(2px, calc(var(--kp-spinner-size, 1.25rem) * 0.06));
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 100% var(--dk-arm) no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% var(--dk-arm) no-repeat,
+            var(--dk-vspectrum) var(--edge, 0) 0 / var(--dk-arm) 100% no-repeat;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::before {
+        --edge: 0%;
+        inset-inline-start: 6%;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::after {
+        --edge: 100%;
+        inset-inline-end: 6%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='brackets'] .kp-spinner {
+            animation: kp-sig-dark-dark-turn var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* ── 13 Leaving and arriving ────────────────────────────────────────── */
+
+    /* The pass lays, the pass back takes off is the grammar's own: the line
+   crosses from the part's start and the part is laid behind it; to leave, the
+   line crosses back from the end and the part goes dark behind it. */
+
+    .dk-lay--leaver {
+        margin-block-end: 0.25rem;
+    }
+
+    /* To black (today): the register's leave, brightness to 0 and scale to 0.98 in
+   460 ms, ease-in; arriving is the same backwards. */
+    @keyframes dk-black {
+        from {
+            filter: brightness(0);
+            opacity: 0;
+            scale: 0.98;
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        to {
+            filter: brightness(1);
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes dk-black-out {
+        from {
+            filter: brightness(1);
+            opacity: 1;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        to {
+            filter: brightness(0);
+            opacity: 0;
+            scale: 0.98;
+        }
+    }
+
+    /* Powered up and down (the picks): the menu button's pick, the part is
+   powered up from dim in three hard steps and down the same way
+   (mb-dark-power: brightness 0.4, 0.65, 0.85, 1, steps(3) in each stretch). */
+    @keyframes dk-power {
+        0% {
+            filter: brightness(0.4);
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        33% {
+            filter: brightness(0.65);
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        66% {
+            filter: brightness(0.85);
+            animation-timing-function: steps(3, jump-end);
+        }
+
+        100% {
+            filter: brightness(1);
+        }
+    }
+
+    @keyframes dk-power-out {
+        0% {
+            filter: brightness(1);
+            animation-timing-function: steps(3, jump-start);
+        }
+
+        34% {
+            filter: brightness(0.85);
+            animation-timing-function: steps(3, jump-start);
+        }
+
+        67% {
+            filter: brightness(0.65);
+            animation-timing-function: steps(3, jump-start);
+        }
+
+        100% {
+            filter: brightness(0.4);
+        }
+    }
+
+    .dk-scene:is([data-dk-leave='black'], [data-dk-leave='powered']) .dk-lay > .dk-lay__line {
+        display: none;
+    }
+
+    .dk-scene:is([data-dk-leave='black'], [data-dk-leave='powered']) .dk-lay {
+        --dk-clip-0: var(--dk-clip-1);
+        --dk-kf-turn: none;
+        --dk-kf-turn-out: none;
+        --dk-kf-fig: none;
+        --dk-kf-fig-out: none;
+    }
+
+    .dk-scene[data-dk-leave='black'] .dk-lay {
+        --dk-kf-clip: dk-black;
+        --dk-kf-clip-out: dk-black-out;
+        --dk-lx: calc(460ms * var(--dk-sl));
+    }
+
+    .dk-scene[data-dk-leave='powered'] .dk-lay {
+        --dk-kf-clip: dk-power;
+        --dk-kf-clip-out: dk-power-out;
+        --dk-lx: calc(300ms * var(--dk-sl));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-leave='black'][data-dk-phase='gap'] .dk-lay > .dk-lay__body {
+            filter: brightness(0);
+            opacity: 0;
+            scale: 0.98;
+        }
+
+        .dk-scene[data-dk-leave='powered'][data-dk-phase='gap'] .dk-lay > .dk-lay__body {
+            filter: brightness(0.4);
+        }
+    }
+
+    /* ── The manners of a control: pointed at, focused, pressed ──────────────
+   The register's own answers, given by class too, so the parts drawn standing
+   in a state (the review dialog gives and takes `dk-pointed`; State forces
+   `dk-st-hover`, `dk-st-focus`, `dk-st-press`) look as the pointer, the
+   keyboard and a press make them. The real pointer reaches the register's own
+   rules. Questions 14 to 17 refine them per option. */
+
+    .dk-tapline {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: -100% 0;
+    }
+
+    /* ground */
+    .dk-scene
+        .kp-button:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus):not(.kp-button--primary, .kp-button--ghost, .kp-button--destructive) {
+        background: var(--accent);
+    }
+
+    .dk-scene .kp-button--primary:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    .dk-scene .kp-button--ghost:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus) {
+        background: var(--accent);
+        border-color: var(--border-strong);
+    }
+
+    /* the brackets close on the label, the film's edge is drawn from the start */
+    .dk-scene .kp-button:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus)::before,
+    .dk-scene .kp-button:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus)::after {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    .dk-scene .kp-button:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus) .kp-button__edge {
+        scale: 1 1;
+    }
+
+    .dk-scene .kp-button:is(.dk-pointed, .dk-focused, .dk-st-hover, .dk-st-focus) .kp-button__label {
+        scale: 0.94;
+    }
+
+    /* DI2's two-channel ring, inside the chamfer */
+    .dk-scene .kp-button:is(.dk-focused, .dk-st-focus) {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    /* pressed: the brackets close the last step, the label settles, the edge doubles */
+    .dk-scene .kp-button.dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    .dk-scene .kp-button--primary.dk-st-press {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    .dk-scene .kp-button--ghost.dk-st-press {
+        background: var(--secondary-active);
+        border-color: var(--border-strong);
+    }
+
+    .dk-scene .kp-button.dk-st-press::before,
+    .dk-scene .kp-button.dk-st-press::after {
+        opacity: 1;
+    }
+
+    .dk-scene .kp-button.dk-st-press::before {
+        translate: 0.15rem 0;
+    }
+
+    .dk-scene .kp-button.dk-st-press::after {
+        translate: -0.15rem 0;
+    }
+
+    .dk-scene .kp-button.dk-st-press .kp-button__label {
+        scale: 0.9;
+    }
+
+    .dk-scene .kp-button.dk-st-press .kp-button__edge {
+        block-size: 4px;
+        scale: 1 1;
+    }
+
+    /* a menu entry: the accent ground; the keyboard's ring inside the entry */
+    .dk-scene .kp-menu__item:is(.dk-pointed, .dk-st-hover, .dk-focused, .dk-st-focus) {
+        background: var(--accent);
+    }
+
+    .dk-scene .kp-menu__item:is(.dk-focused, .dk-st-focus) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    .dk-scene .kp-menu__item.dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    /* a key figure that is a link or a filter: its edge answers, the ring inside */
+    .dk-scene :is(a.kp-kpi, .kp-kpi--toggle):is(.dk-focused, .dk-st-focus) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    .dk-scene :is(a.kp-kpi, .kp-kpi--toggle):is(.dk-pointed, .dk-st-hover) {
+        border-color: transparent;
+    }
+
+    .dk-scene :is(a.kp-kpi, .kp-kpi--toggle) {
+        cursor: pointer;
+    }
+
+    /* a day of a month */
+    .dk-scene .dk-day:is(.dk-focused, .dk-st-focus) {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    /* a link in running text: the register's link signature */
+    .dk-scene .dk-link {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+        text-underline-offset: 0.25em;
+    }
+
+    .dk-scene .dk-link:is(.dk-pointed, :hover) {
+        padding-block-end: 1px;
+        background: var(--dk-film) left bottom / 100% 2px no-repeat;
+        text-decoration-color: transparent;
+    }
+
+    .dk-scene .dk-link:is(.dk-focused, :focus-visible) {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene .kp-button:not(.dk-st-press) {
+            transition-property: background-color, border-color, box-shadow, color;
+        }
+    }
+
+    /* ── 14 Buttons inside composites (State forces a state) ────────────── */
+
+    /* Exactly dark's own: every button, link and entry inside a composite is dark's
+   bracketed button as it stands alone (the brackets, the film edge from the
+   start, the chamfer); State forces the same poses wherever it stands. The
+   register's own manners, so there is nothing to add. */
+    .dk-scene .dk-actions-card {
+        justify-content: flex-start;
+    }
+
+    .dk-scene .dk-drawer .dk-row {
+        margin-block-start: 0.4rem;
+    }
+
+    /* Dark's own on a lit panel: the header's actions and the drawer's buttons
+   stand on a panel with the film along all its edges and the halo behind it. */
+    .dk-scene[data-dk-composites='lit'] .dk-actions-card {
+        padding: 0.5rem;
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--dk-film) border-box;
+        box-shadow: var(--kp-halo);
+        clip-path: none;
+    }
+
+    /* As today: three hovers on one page. The header's pick lights the rim and
+   adds a square glow ring, the tiles' Open lights, the drawer's buttons take a
+   glow ring (the picks, drawn inside the chamfer where a clip leaves room). */
+    .dk-scene[data-dk-composites='mix'] .dk-in-header:is(.dk-pointed, .dk-st-hover, :hover) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-header:is(.dk-focused, .dk-st-focus, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--ring),
+            inset 0 0 12px hsl(from var(--ring) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-header.dk-st-press {
+        background: color-mix(in oklab, var(--secondary) 80%, black);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-tile-link:is(.dk-pointed, .dk-st-hover, :hover) {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 6%, var(--card));
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-tile-link:is(.dk-focused, .dk-st-focus, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 10px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-drawer:is(.dk-pointed, .dk-st-hover, :hover) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-drawer:is(.dk-focused, .dk-st-focus, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px hsl(from var(--info-foreground) h s l / 0.8),
+            inset 0 0 14px hsl(from var(--info-foreground) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-drawer.dk-st-press {
+        background: var(--secondary-active);
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-kpi:is(.dk-pointed, .dk-st-hover, :hover) {
+        background:
+            linear-gradient(color-mix(in oklab, var(--primary) 6%, var(--card)), color-mix(in oklab, var(--primary) 6%, var(--card))) padding-box,
+            linear-gradient(var(--primary), var(--primary)) border-box;
+    }
+
+    .dk-scene[data-dk-composites='mix'] .dk-in-kpi:is(.dk-focused, .dk-st-focus, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+        outline: 2px dashed var(--primary);
+        outline-offset: -8px;
+    }
+
+    .dk-scene[data-dk-composites='mix'] .kp-menu__item:is(.dk-pointed, .dk-st-hover, :hover) {
+        background: color-mix(in oklab, var(--primary) 8%, var(--popover));
+        box-shadow: inset 0 0 12px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    .dk-scene[data-dk-composites='mix'] .kp-menu__item.dk-st-press {
+        background: color-mix(in oklab, black 25%, var(--popover));
+        box-shadow: none;
+    }
+
+    /* ── 15 Pointing at something (still: the pointed part is marked) ───── */
+
+    /* The class is the pointer: the review dialog gives it and takes it away on a
+   loop. The real pointer reaches the same rules. */
+
+    .dk-scene[data-dk-hover] :is(.kp-button, .kp-menu__item, .dk-day, .dk-in-kpi, .dk-in-tile) {
+        transition-duration: var(--dk-c);
+        transition-timing-function: var(--dk-quick);
+    }
+
+    /* The line rests at the start: the line stands at the control's start edge (a 2 px
+   slice of the film with its glow) and the brackets close one step; a menu entry
+   takes the line at its start; a link's underline takes the film; a tile's Open
+   takes the line. Leaving, the line goes. */
+    .dk-scene[data-dk-hover='rests'] :is(.kp-button, .kp-menu__item) {
+        background-image: var(--dk-vspectrum);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+
+    .dk-scene[data-dk-hover='rests'] :is(.kp-button, .kp-menu__item):is(.dk-pointed, :hover):not(:disabled) {
+        background-size: 2px 100%;
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.4);
+    }
+
+    .dk-scene[data-dk-hover='rests'] :is(.dk-in-kpi, .dk-day)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--dk-vspectrum);
+        box-shadow: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-hover='rests'] :is(.dk-in-kpi, .dk-day):is(.dk-pointed, :hover)::before {
+        opacity: 1;
+    }
+
+    .dk-scene[data-dk-hover='rests'] .dk-in-kpi:is(.dk-pointed, :hover) {
+        border-color: transparent;
+    }
+
+    /* The panel lights (the picks): the key figure's and the tiles' pick: the
+   panel's bevel lip brightens, the rim lights, Open lights. */
+    .dk-scene[data-dk-hover='lights'] .kp-button:is(.dk-pointed, :hover):not(:disabled) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    .dk-scene[data-dk-hover='lights'] .kp-menu__item:is(.dk-pointed, :hover) {
+        background: color-mix(in oklab, var(--primary) 8%, var(--popover));
+        box-shadow: inset 0 0 12px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    .dk-scene[data-dk-hover='lights'] .dk-in-kpi:is(.dk-pointed, :hover) {
+        background:
+            linear-gradient(color-mix(in oklab, var(--primary) 6%, var(--card)), color-mix(in oklab, var(--primary) 6%, var(--card))) padding-box,
+            linear-gradient(var(--primary), var(--primary)) border-box;
+    }
+
+    .dk-scene[data-dk-hover='lights'] .dk-in-tile:has(.dk-pointed, :hover)::after {
+        background:
+            linear-gradient(color-mix(in oklab, var(--primary) 6%, var(--card)), color-mix(in oklab, var(--primary) 6%, var(--card))) padding-box,
+            linear-gradient(var(--primary), var(--primary)) border-box;
+    }
+
+    .dk-scene[data-dk-hover='lights'] .dk-tile-link:is(.dk-pointed, :hover) {
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .dk-scene[data-dk-hover='lights'] .dk-day:is(.dk-pointed, :hover) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .dk-scene[data-dk-hover='lights'] .dk-link:is(.dk-pointed, :hover) {
+        background: none;
+        color: var(--primary);
+        text-decoration-color: var(--primary);
+    }
+
+    /* The brackets close: only the brackets close on the label, one step; no line,
+   no edge, no change of ground. */
+    .dk-scene[data-dk-hover='brackets'] .kp-button:is(.dk-pointed, :hover):not(:disabled) {
+        background: var(--card);
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .kp-button--primary:is(.dk-pointed, :hover):not(:disabled) {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .kp-button--ghost:is(.dk-pointed, :hover):not(:disabled) {
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .kp-button:is(.dk-pointed, :hover) .kp-button__edge {
+        scale: 0 1;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .kp-button:is(.dk-pointed, :hover) .kp-button__label {
+        scale: 1;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::before,
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::after {
+        position: absolute;
+        inset-block: 0;
+        display: grid;
+        place-items: center;
+        color: currentcolor;
+        font-family: var(--theme-font-mono);
+        font-size: 0.85em;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::before {
+        content: '[';
+        inset-inline-start: 0.2rem;
+        translate: -0.4rem 0;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::after {
+        content: ']';
+        inset-inline-end: 0.2rem;
+        translate: 0.4rem 0;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .dk-link {
+        position: relative;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .dk-link:is(.dk-pointed, :hover) {
+        background: none;
+        text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+        padding-inline: 0.8em;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .dk-link::before {
+        inset-inline-start: 0;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .dk-link::after {
+        inset-inline-end: 0;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link):is(.dk-pointed, :hover)::before,
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link):is(.dk-pointed, :hover)::after {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] .dk-in-kpi:is(.dk-pointed, :hover) {
+        border-color: transparent;
+    }
+
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::before,
+    .dk-scene[data-dk-hover='brackets'] :is(.kp-menu__item, .dk-day, .dk-in-kpi, .dk-link)::after {
+        transition:
+            opacity var(--dk-c) var(--dk-quick),
+            translate calc(var(--dk-c) * 1.3) var(--dk-quick);
+    }
+
+    /* ── 16 The focus ring (still: the focused part is marked) ──────────── */
+
+    /* The two-channel ring is DI2's, a system constant: the ink ring along the
+   edge, the ring colour inside it, on every control, chamfered with it; it is
+   the register's own and the manners (50-manners) give it to every control. */
+
+    /* A square glow ring (the picks): a square glow ring in the film's cyan round
+   the focused control instead of the two channels (inside the chamfer, where a
+   clip leaves room for it). */
+    .dk-scene[data-dk-focus='glow'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .dk-day, .dk-link):is(.dk-focused, :focus-visible) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--chart-1),
+            inset 0 0 14px hsl(from var(--chart-1) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-focus='glow'] .dk-link:is(.dk-focused, :focus-visible) {
+        outline: 2px solid var(--chart-1);
+        outline-offset: 2px;
+        box-shadow: 0 0 12px hsl(from var(--chart-1) h s l / 0.5);
+    }
+
+    /* As today: the register's ring plus the picks' glow rings and dashed
+   outlines where a pick drew them: three focus marks. */
+    .dk-scene[data-dk-focus='mix'] :is(.kp-button, .kp-menu__item, .dk-day):is(.dk-focused, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast),
+            inset 0 0 14px 4px hsl(from var(--chart-1) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-focus='mix'] a.kp-kpi:is(.dk-focused, :focus-visible) {
+        outline: 2px dashed var(--primary);
+        outline-offset: -8px;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    .dk-scene[data-dk-focus='mix'] .dk-tile-link:is(.dk-focused, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast),
+            inset 0 0 10px 3px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-focus='mix'] .dk-in-header:is(.dk-focused, :focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--ring),
+            inset 0 0 12px hsl(from var(--ring) h s l / 0.55);
+    }
+
+    /* ── 17 The press (the pressed part loops; State: Press holds it) ────── */
+
+    /* The pressed part is shown pressed on a loop, 3.2 s: at rest, pressed (the
+   clock in demo.js gives and takes `dk-st-press`), let go. Pressing is at
+   once, letting go eases back. */
+    .dk-pair {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.9rem;
+    }
+
+    .dk-pair--wide {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dk-pair__rest,
+    .dk-pair__pressed {
+        display: inline-flex;
+    }
+
+    /* The press is a pass that turns the edge a quarter: on contact the line crosses
+   the face (220 ms) and the film edge turns a quarter (+90 degrees) and settles;
+   the brackets close; the face takes the pressed ground. Release turns the edge
+   back. Nothing moves. The turn is a transition of the registered angle, the
+   settle on the way in and the inverse curve on the way out. */
+    .dk-scene[data-dk-press='quarter'] :is(.kp-button, .kp-menu__item, .dk-day, .kp-kpi--toggle) {
+        transition:
+            --dk-angle var(--dk-c) cubic-bezier(0.64, 0, 0.78, 0),
+            background-color var(--dk-c) var(--dk-quick),
+            box-shadow var(--dk-c) var(--dk-quick);
+    }
+
+    .dk-scene[data-dk-press='quarter'] :is(.kp-button, .kp-menu__item, .dk-day, .kp-kpi--toggle):is(.dk-st-press) {
+        --dk-angle: 90deg;
+        transition:
+            --dk-angle var(--dk-c) cubic-bezier(0.22, 1, 0.36, 1),
+            background-color 0s,
+            box-shadow 0s;
+    }
+
+    .dk-scene[data-dk-press='quarter'] .kp-menu__item::before,
+    .dk-scene[data-dk-press='quarter'] .dk-day::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--dk-film);
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-press='quarter'] :is(.kp-menu__item, .dk-day).dk-st-press::before {
+        opacity: 1;
+    }
+
+    /* the line that crosses the face on contact (a loop, the pressed face is held) */
+    .dk-scene[data-dk-press='quarter'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: -100% 0;
+    }
+
+    @keyframes dk-tap {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        8% {
+            translate: -92% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        90% {
+            translate: -10% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-press='quarter'] .kp-button.dk-st-press .dk-tapline,
+        .dk-scene[data-dk-press='quarter'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle).dk-st-press::after {
+            animation: dk-tap var(--dk-c) linear both;
+        }
+
+        .dk-scene[data-dk-durations] .dk-tap.dk-st-press .dk-tapline {
+            animation: dk-tap var(--dk-c) linear both;
+        }
+    }
+
+    .dk-scene[data-dk-press='quarter'] .kp-kpi--toggle.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-press='quarter'] .dk-day.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            var(--dk-film) border-box;
+        box-shadow: none;
+    }
+
+    /* The plate dims (today): the face takes the pressed ground; no line, no
+   turn, no brackets. */
+    .dk-scene[data-dk-press='dims'] .kp-button.dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    .dk-scene[data-dk-press='dims'] .kp-button--primary.dk-st-press {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    .dk-scene[data-dk-press='dims'] .kp-button.dk-st-press::before,
+    .dk-scene[data-dk-press='dims'] .kp-button.dk-st-press::after {
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-press='dims'] .kp-button.dk-st-press .kp-button__label {
+        scale: 1;
+    }
+
+    .dk-scene[data-dk-press='dims'] .kp-button.dk-st-press .kp-button__edge {
+        scale: 0 1;
+    }
+
+    .dk-scene[data-dk-press='dims'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle).dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    .dk-scene[data-dk-press='dims'] .kp-kpi--toggle.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-press='dims'] .dk-day.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            linear-gradient(var(--border-strong), var(--border-strong)) border-box;
+    }
+
+    /* The brackets snap shut: the brackets close onto the label in one step and the
+   face dims; no line. */
+    .dk-scene[data-dk-press='snap'] .kp-button.dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    .dk-scene[data-dk-press='snap'] .kp-button--primary.dk-st-press {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    .dk-scene[data-dk-press='snap'] .kp-button.dk-st-press::before,
+    .dk-scene[data-dk-press='snap'] .kp-button.dk-st-press::after {
+        opacity: 1;
+        translate: 0 0;
+        transition: none;
+    }
+
+    .dk-scene[data-dk-press='snap'] .kp-button.dk-st-press .kp-button__label {
+        scale: 1;
+    }
+
+    .dk-scene[data-dk-press='snap'] .kp-button.dk-st-press .kp-button__edge {
+        scale: 0 1;
+    }
+
+    .dk-scene[data-dk-press='snap'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle).dk-st-press {
+        background: var(--secondary-active);
+    }
+
+    .dk-scene[data-dk-press='snap'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle).dk-st-press::before,
+    .dk-scene[data-dk-press='snap'] :is(.kp-menu__item, .dk-day, .kp-kpi--toggle).dk-st-press::after {
+        content: '';
+    }
+
+    .dk-scene[data-dk-press='snap'] :is(.kp-menu__item, .dk-day).dk-st-press::before {
+        content: '[';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0.2rem;
+        display: grid;
+        place-items: center;
+        font-family: var(--theme-font-mono);
+    }
+
+    .dk-scene[data-dk-press='snap'] :is(.kp-menu__item, .dk-day).dk-st-press::after {
+        content: ']';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0.2rem;
+        display: grid;
+        place-items: center;
+        font-family: var(--theme-font-mono);
+    }
+
+    .dk-scene[data-dk-press='snap'] .kp-kpi--toggle.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-press='snap'] .dk-day.dk-st-press {
+        background:
+            linear-gradient(var(--secondary-active), var(--secondary-active)) padding-box,
+            linear-gradient(var(--border-strong), var(--border-strong)) border-box;
+    }
+
+    /* ── Question 4's contact: a press answers in the option's contact time ──
+   The press of question 17 (a pass that turns the edge a quarter) played as
+   keyframe pairs over the contact, so it is mirrored with the rest: the
+   brackets close, the face takes the pressed ground, the line crosses the face
+   and the edge turns a quarter and settles; in `out` the press is let go,
+   the same backwards. */
+    @keyframes dk-tap-ground {
+        from {
+            background-color: var(--card);
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes dk-tap-ground-out {
+        from {
+            background-color: var(--secondary-active);
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            background-color: var(--card);
+        }
+    }
+
+    @keyframes dk-tap-bl {
+        from {
+            opacity: 0;
+            translate: -0.5rem 0;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0.15rem 0;
+        }
+    }
+
+    @keyframes dk-tap-bl-out {
+        from {
+            opacity: 1;
+            translate: 0.15rem 0;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            opacity: 0;
+            translate: -0.5rem 0;
+        }
+    }
+
+    @keyframes dk-tap-br {
+        from {
+            opacity: 0;
+            translate: 0.5rem 0;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            opacity: 1;
+            translate: -0.15rem 0;
+        }
+    }
+
+    @keyframes dk-tap-br-out {
+        from {
+            opacity: 1;
+            translate: -0.15rem 0;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            opacity: 0;
+            translate: 0.5rem 0;
+        }
+    }
+
+    @keyframes dk-tap-label {
+        from {
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            scale: 0.9;
+        }
+    }
+
+    @keyframes dk-tap-label-out {
+        from {
+            scale: 0.9;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            scale: 1;
+        }
+    }
+
+    @keyframes dk-tap-edge {
+        from {
+            scale: 0 1;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+
+        to {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes dk-tap-edge-out {
+        from {
+            scale: 1 1;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+
+        to {
+            scale: 0 1;
+        }
+    }
+
+    @keyframes dk-tap-turn {
+        from {
+            --dk-angle: 0deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            --dk-angle: 90deg;
+        }
+    }
+
+    @keyframes dk-tap-turn-out {
+        from {
+            --dk-angle: 90deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            --dk-angle: 0deg;
+        }
+    }
+
+    @keyframes dk-tap-out {
+        from {
+            translate: 0 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        10% {
+            translate: -10% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        92% {
+            translate: -92% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        to {
+            translate: -100% 0;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap {
+            animation:
+                dk-tap-ground var(--dk-c) linear 0s both,
+                dk-tap-turn var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap::before {
+            animation: dk-tap-bl var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap::after {
+            animation: dk-tap-br var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap .kp-button__label {
+            animation: dk-tap-label var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap .kp-button__edge {
+            animation: dk-tap-edge var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations]:is([data-dk-phase='in'], [data-dk-phase='hold']) .dk-tap .dk-tapline {
+            animation: dk-tap var(--dk-c) linear 0s both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap {
+            animation:
+                dk-tap-ground-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both,
+                dk-tap-turn-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap::before {
+            animation: dk-tap-bl-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap::after {
+            animation: dk-tap-br-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap .kp-button__label {
+            animation: dk-tap-label-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap .kp-button__edge {
+            animation: dk-tap-edge-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='out'] .dk-tap .dk-tapline {
+            animation: dk-tap-out var(--dk-c) linear calc(var(--dk-win) - var(--dk-c)) both;
+        }
+    }
+
+    /* Under reduced motion the contact stands pressed. */
+    .dk-scene[data-dk-durations] .dk-tap {
+        background-color: var(--secondary-active);
+        --dk-angle: 90deg;
+    }
+
+    .dk-scene[data-dk-durations] .dk-tap::before {
+        opacity: 1;
+        translate: 0.15rem 0;
+    }
+
+    .dk-scene[data-dk-durations] .dk-tap::after {
+        opacity: 1;
+        translate: -0.15rem 0;
+    }
+
+    .dk-scene[data-dk-durations] .dk-tap .kp-button__label {
+        scale: 0.9;
+    }
+
+    .dk-scene[data-dk-durations] .dk-tap .kp-button__edge {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-durations][data-dk-phase='gap'] .dk-tap {
+            background-color: var(--card);
+            --dk-angle: 0deg;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='gap'] .dk-tap::before {
+            opacity: 0;
+            translate: -0.5rem 0;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='gap'] .dk-tap::after {
+            opacity: 0;
+            translate: 0.5rem 0;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='gap'] .dk-tap .kp-button__label {
+            scale: 1;
+        }
+
+        .dk-scene[data-dk-durations][data-dk-phase='gap'] .dk-tap .kp-button__edge {
+            scale: 0 1;
+        }
+    }
+
+    /* ── 18 The voice ───────────────────────────────────────────────────── */
+
+    .dk-scene .dk-type {
+        gap: 0.4rem;
+    }
+
+    .dk-scene .dk-type :is(p, table) {
+        margin: 0;
+    }
+
+    .dk-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .dk-type__head {
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .dk-type__prose {
+        font-weight: 400;
+    }
+
+    .dk-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-size: 1.75rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.15;
+    }
+
+    .dk-type__figure small {
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .dk-type__figure .dk-note {
+        font-size: 0.8rem;
+    }
+
+    .dk-type__reading {
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+    }
+
+    .dk-bracket {
+        color: var(--muted-foreground);
+    }
+
+    .dk-type__row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    /* Archivo, the ticker mono for readings: headings Archivo 700, buttons 600,
+   prose 400; readouts, brackets, microlabels, timestamps and identifiers in
+   the ticker mono. The register's own. */
+    .dk-scene[data-dk-type='archivo'] :is(.dk-type__label, .dk-type__figure, .dk-type__reading, .dk-type__row, .dk-type__figure .dk-note) {
+        font-family: var(--theme-font-mono);
+    }
+
+    .dk-scene[data-dk-type='archivo'] .dk-type__figure small {
+        font-family: var(--theme-font-body);
+    }
+
+    /* The ticker mono for titles too (the picks): titles and captions in the
+   ticker mono, uppercase, letter-spaced. */
+    .dk-scene[data-dk-type='ticker']
+        :is(.dk-type__label, .dk-type__head, .dk-type__figure, .dk-type__reading, .dk-type__row, .dk-type__figure .dk-note) {
+        font-family: var(--theme-font-mono);
+    }
+
+    .dk-scene[data-dk-type='ticker'] :is(.dk-type__head, .dk-type__label) {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .dk-scene[data-dk-type='ticker'] .dk-type__head {
+        font-size: 1rem;
+        color: var(--primary);
+    }
+
+    .dk-scene[data-dk-type='ticker'] .dk-type__figure small {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Archivo everywhere: no mono; readings and timestamps in Archivo 600 with
+   tabular numerals. */
+    .dk-scene[data-dk-type='everywhere']
+        :is(
+            .dk-type__label,
+            .dk-type__figure,
+            .dk-type__reading,
+            .dk-type__row,
+            .dk-type__figure .dk-note,
+            .dk-stamp,
+            .dk-ident,
+            .kp-kpi__label,
+            .dk-state
+        ) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dk-scene[data-dk-type='everywhere'] .dk-type__label {
+        letter-spacing: 0.1em;
+    }
+
+    .dk-scene[data-dk-type='everywhere'] :is(.kp-button::before, .kp-button::after) {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── 19 Motifs (still) ──────────────────────────────────────────────── */
+
+    .dk-motif-panel {
+        --dk-label: 'PUMP HOUSE 4';
+    }
+
+    .dk-plot--events {
+        block-size: 5.2rem;
+    }
+
+    .dk-event {
+        position: absolute;
+        inset-block: 0.35rem;
+        inset-inline-start: calc(22% + var(--i) * 28%);
+        inline-size: 2px;
+        background: var(--dk-vspectrum);
+        filter: var(--dk-glow);
+    }
+
+    /* The film, the line, the chamfer, the brackets, the grid: the film on an edge
+   that matters, the line where something happens (an event), the chamfer on two
+   corners, the brackets on a label, the instrument grid on the ground; nothing
+   else is drawn. */
+    .dk-scene[data-dk-motifs='film'] .dk-motif-panel .kp-card__title::before {
+        content: '[ ';
+        font-family: var(--theme-font-mono);
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .dk-scene[data-dk-motifs='film'] .dk-motif-panel .kp-card__title::after {
+        content: ' ]';
+        font-family: var(--theme-font-mono);
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .dk-scene[data-dk-motifs='film'] .dk-list li:first-child {
+        border-image: var(--dk-vspectrum) 1;
+    }
+
+    /* Plus the lamps and the scope (the picks): the same five, and the picks'
+   status lamps, tube switch-ons, ticker baselines and the oscilloscope trace
+   behind the key figure. */
+    .dk-scene[data-dk-motifs='console'] .dk-motif-panel .kp-card__title::before,
+    .dk-scene[data-dk-motifs='all'] .dk-motif-panel .kp-card__title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.55em;
+        block-size: 0.55em;
+        margin-inline-end: 0.55em;
+        border-radius: 50%;
+        background: var(--success-foreground);
+        box-shadow: 0 0 0.6em var(--success-foreground);
+        vertical-align: 0.1em;
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-event,
+    .dk-scene[data-dk-motifs='all'] .dk-event {
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        inset-block: auto;
+        inset-block-start: calc(25% + var(--i) * 18%);
+        border-radius: 50%;
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 8px hsl(from var(--primary) h s l / 0.8);
+        filter: none;
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-plot--events::after,
+    .dk-scene[data-dk-motifs='all'] .dk-plot--events::after {
+        content: '';
+        position: absolute;
+        inset: 50% 0 auto 0;
+        block-size: 2px;
+        background: repeating-linear-gradient(to right, var(--primary) 0 8px, transparent 8px 14px);
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-plot--events .dk-trend__lit,
+    .dk-scene[data-dk-motifs='all'] .dk-plot--events .dk-trend__lit {
+        background: var(--success-foreground);
+        filter: drop-shadow(0 0 4px var(--success-foreground));
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-list li,
+    .dk-scene[data-dk-motifs='all'] .dk-list li {
+        border-inline-start: 0;
+        padding-inline-start: 1.2rem;
+        position: relative;
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-list li::before,
+    .dk-scene[data-dk-motifs='all'] .dk-list li::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.2rem;
+        inset-block-start: 0.5em;
+        inline-size: 0.5em;
+        block-size: 0.5em;
+        background: var(--success-foreground);
+        box-shadow: 0 0 6px var(--success-foreground);
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-list::after,
+    .dk-scene[data-dk-motifs='all'] .dk-list::after {
+        content: '';
+        block-size: 2px;
+        background: repeating-linear-gradient(to right, var(--primary) 0 8px, transparent 8px 14px);
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-motif-panel,
+    .dk-scene[data-dk-motifs='all'] .dk-motif-panel {
+        --kp-halo: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+    }
+
+    /* As today (everything): every mark the register and the picks carry: the film,
+   the ghosts, the develop flash, the lamps, the scope, the boards, the glow
+   rings. */
+    .dk-scene[data-dk-motifs='all'] .dk-motif-panel .kp-card__title {
+        text-shadow:
+            -0.06em 0 0 hsl(from var(--chart-3) h s l / 0.8),
+            0.06em 0 0 hsl(from var(--chart-1) h s l / 0.8);
+    }
+
+    .dk-scene[data-dk-motifs='all'] .dk-motif-panel::after {
+        background:
+            repeating-linear-gradient(0deg, hsl(from var(--border-strong) h s l / 0.35) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.35) 0 1px, transparent 1px 12px),
+            linear-gradient(color-mix(in oklab, var(--card) 85%, black), color-mix(in oklab, var(--card) 85%, black)) padding-box,
+            var(--dk-film) border-box;
+    }
+
+    .dk-scene[data-dk-motifs='all'] .dk-motif-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: var(--dk-film);
+        opacity: 0.22;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--dk-cut-panel)) 0,
+            100% var(--dk-cut-panel),
+            100% 100%,
+            var(--dk-cut-panel) 100%,
+            0 calc(100% - var(--dk-cut-panel))
+        );
+        pointer-events: none;
+    }
+
+    .dk-scene[data-dk-motifs='all'] .kp-button {
+        box-shadow:
+            inset 0 0 0 2px var(--chart-1),
+            inset 0 0 12px hsl(from var(--chart-1) h s l / 0.5);
+    }
+
+    .dk-scene[data-dk-motifs='all'] .kp-meter {
+        filter: drop-shadow(0 0 5px hsl(from var(--primary) h s l / 0.6));
+    }
+
+    .dk-scene[data-dk-motifs='all'] .dk-empty .kp-empty__title {
+        text-shadow:
+            -0.06em 0 0 hsl(from var(--chart-3) h s l / 0.8),
+            0.06em 0 0 hsl(from var(--chart-1) h s l / 0.8);
+    }
+
+    .dk-scene[data-dk-motifs='console'] .dk-empty::before,
+    .dk-scene[data-dk-motifs='all'] .dk-empty::before {
+        content: '';
+        display: block;
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        margin: 0 auto 0.5rem;
+        border-radius: 50%;
+        background: var(--warning-foreground);
+        box-shadow: 0 0 0.6em var(--warning-foreground);
+    }
+}

@@ -83,8 +83,8 @@ const IDEAS = {
                 text: 'The panel turns in from the end edge as if hinged on its outer corner, easing to flat; closing turns it away on the same hinge, in reverse.',
             },
             {
-                name: 'The seal is broken',
-                text: 'The panel rises from a thin line at the edge, unfolding upward to full height as a wax seal lifts; closing folds it back down into that line, in reverse.',
+                name: 'Ruled open',
+                text: 'The panel is ruled open where it stands: its frame rule start to end, then its head, its body and its foot 60 ms apart; closing takes the rules off, bottom first.',
             },
         ],
         highlight: [
@@ -175,8 +175,8 @@ const IDEAS = {
         ],
         card: [
             {
-                name: 'The sticky note',
-                text: 'A pale yellow-white card with a soft shadow and a small rounded corner lift at the top, the title in medium weight, the foot plain.',
+                name: 'The plain card',
+                text: 'The tour card is a white card of 0.5 rem on all four corners, on the medium shadow, its title at 600.',
             },
             {
                 name: 'The sunlit card',
@@ -189,8 +189,8 @@ const IDEAS = {
         ],
         next: [
             {
-                name: 'The halo drifts',
-                text: 'The soft halo slides smoothly from the old target to the new one while the card’s text cross-steps in; the count updates as the halo settles.',
+                name: 'Re-exposed',
+                text: 'On the next step the card goes into the glare for a beat and comes back into focus, in place.',
             },
             {
                 name: 'The beam swings',

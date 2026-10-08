@@ -1,0 +1,117 @@
+/* research/character-kpi, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   loading 3, tone 3, interactive 2 and live 3 (shape 2, the annual report,
+   stands).
+
+   - loading: the travelling seal is retired; the tile's foot is ruled with the
+     register's three navy lines (its --kp-fm-stack), one after the other,
+     held, lifted and ruled again, 2400 ms (G10);
+   - tone: a warning or failed tile is the red-ink entry, ruled off along its
+     start edge in 3 px red ink on paper, its figure in red ink, never on a
+     plate; the change is a square plate in a hairline, red for a bad one
+     (G5, G6, G8);
+   - interactive: a tile that is a link or a toggle is formal's own: the rule
+     under its label on hover (the register), DI2's ring on focus, the rule
+     doubled round it on a press; the plate does not tint (G14 to G17);
+   - live: the swell is retired; a navy rule is ruled under the changed
+     figure, the second rule closes it, both are lifted (G9). */
+@layer kp.signature {
+    /* Loading 3 · the seal travels → the lines are ruled. */
+    [data-theme='formal'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inline-size: auto;
+        block-size: 0.9rem;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    /* Tone 3 · the margin note → the red-ink entry. */
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'],
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-tone-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value,
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--destructive);
+        --kf-tone-pad: 0;
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-radius: 0;
+        --kf-delta-bg: var(--success);
+        --kf-delta-ink: var(--success-foreground);
+        border: 0;
+    }
+
+    [data-theme='formal'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        --kf-delta-bg: var(--card);
+        --kf-delta-ink: var(--destructive);
+        border: 1px solid var(--destructive);
+    }
+
+    /* Interactive 2 · the plate tints → formal's own tile. */
+    [data-theme='formal'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle) {
+        --kf-hover-border: var(--border-strong);
+        --kf-hover-plate: var(--kf-plate);
+        --kf-press-plate: color-mix(in oklab, var(--secondary-active) 35%, var(--card));
+        --kf-focus-outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        --kf-focus-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+
+    [data-theme='formal'] [data-kf-interactive='2'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    /* Live 3 · the swell → ruled again and closed. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            position: relative;
+            animation: kp-sig-formal-update-closed 850ms linear both;
+        }
+
+        [data-theme='formal'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::after {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: calc(100% - 0.05em);
+            block-size: 5px;
+            pointer-events: none;
+            --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+            --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+            --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+            background-image:
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                    transparent calc(var(--kp-fm-r1) * 100%)
+                ),
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                    transparent calc(var(--kp-fm-r2) * 100%)
+                );
+            background-repeat: no-repeat;
+            background-size:
+                100% 2px,
+                100% 1px;
+            background-position:
+                0 0,
+                0 4px;
+        }
+    }
+}

@@ -109,7 +109,7 @@
     --fx-signal-foreground: hsl(38, 70%, 0%);
     --fx-notch: 0px;
     --fx-duration: 180ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-ease: linear;
     --theme-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(30, 40%, 88%);
@@ -237,8 +237,8 @@
     --fx-signal: hsl(190, 80%, 40%);
     --fx-signal-foreground: hsl(190, 95%, 0%);
     --fx-notch: 0px;
-    --fx-duration: 150ms;
-    --fx-ease: cubic-bezier(0.2, 0, 0, 1);
+    --fx-duration: 200ms;
+    --fx-ease: cubic-bezier(0.16, 1, 0.3, 1);
     --theme-font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(190, 80%, 92%);

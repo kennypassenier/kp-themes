@@ -57,7 +57,7 @@ const IDEAS = {
         },
         b: {
             name: 'Daylight',
-            text: 'The plot in the light: a pale sky at its top, the sun just out of frame in the top corner, and every line throwing a soft shadow on the paper below it. The tooltip is frosted glass; the legend is pills with a soft shadow. Loading lets a band of daylight cross the plot, slowly.',
+            text: 'The plot in the light: white paper, its lines crisp, the tooltip a white card on the medium shadow, the legend pills with a soft shadow. Loading stands the plot out of focus, breathing, until the readings come into focus.',
         },
     },
     dark: {
@@ -344,11 +344,11 @@ const R2 = {
         loading: [
             ['pen', 'The fountain pen', '--primary', '--foreground'],
             ['dash', 'The ruling pen', '--primary', '--primary'],
-            ['stamp', 'The received stamp', '--primary'],
+            ['stamp', 'The lines are ruled', '--primary'],
         ],
         arrival: [
             ['wipe', 'Entered from the left'],
-            ['draw', 'Written in by hand'],
+            ['draw', 'Ruled in by the pen'],
         ],
         update: [
             ['tail', 'The new line entered'],
@@ -362,11 +362,11 @@ const R2 = {
     light: {
         loading: [
             ['glint', 'Sunlight along the seam', '--primary', '--chart-2'],
-            ['rise', 'Morning rising', '--primary', '--primary'],
+            ['rise', 'Out of focus', '--primary', '--primary'],
             ['hop', 'Three beads', '--primary', '--primary'],
         ],
         arrival: [
-            ['rise', 'Grows into the light'],
+            ['rise', 'Exposed along its length'],
             ['wipe', 'Drawn in, softly'],
         ],
         update: [
@@ -880,14 +880,31 @@ const OPTIONS = Object.fromEntries(
                 { key: other, name: `The tooltip of ${lower(IDEAS[theme][other].name)}`, text: "Round 1's other character's tooltip." },
                 { key: 'plain', name: 'The plain tooltip', text: "The package's popover, as today." },
             ],
-            loading: r2.loading.map(([key, name, ink, ink2, say]) => ({ key, name, text: KIND.loading[key], ink, ink2, say })),
+            loading: r2.loading.map(([key, name, ink, ink2, say]) => ({
+                key,
+                name,
+                // Light's "rise" is its grammar's out of focus (research/character-chart/light.css).
+                text:
+                    theme === 'light' && key === 'rise'
+                        ? 'The loading panel is a placeholder out of focus, breathing between a dim and a dazzling exposure; its sentence stays sharp.'
+                        : theme === 'formal' && key === 'stamp'
+                          ? 'Three navy rules are ruled across the whole plot one after the other, held, lifted and ruled again, as a ledger is ruled.'
+                          : KIND.loading[key],
+                ink,
+                ink2,
+                say,
+            })),
             arrival: [...(pick ? [['none', 'As approved: at once']] : []), ...r2.arrival].map(([key, name]) => ({
                 key,
                 name: theme === 'blueprint' && key === 'linear' ? 'Read out on its scales' : name,
                 text:
                     theme === 'blueprint' && key === 'linear'
                         ? 'The chart is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; the series is simply there, 3 units.'
-                        : KIND.arrival[key],
+                        : theme === 'light' && key === 'rise'
+                          ? 'The lines are exposed from the left to the right, out of a blurred, too bright glare, 700 ms on a long settle.'
+                          : theme === 'formal' && key === 'draw'
+                            ? 'The pen draws each line from its start, the area follows under it, at an even pace and a dead stop, 400 ms.'
+                            : KIND.arrival[key],
             })),
             update: [...(pick ? [['none', 'As approved: it appears']] : []), ...r2.update].map(([key, name]) => ({
                 key,

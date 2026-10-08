@@ -1,0 +1,53 @@
+/* research/character-drawer, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: openclose
+   r2-light-oc-3, card 1, next 1 (shape 1, the soft card, and highlight 1,
+   the soft halo, stay).
+
+   - openclose: "grows into the light" (a width reveal from the edge, 0.06 to
+     1.03) is the exposure (G2, G3, G13): the drawer comes into focus where it
+     stands, out of the glare, 700 ms on the settle, and goes back into the
+     glare as the same pair played the other way on the inverse (the arrival
+     and the leave are one pair of keyframes, `kp-sig-light-expose` and
+     `kp-sig-light-leave`, in css/light-register.css);
+   - card: the sticky note (a small top corner) is a plain card of 0.5 rem
+     on all four corners (G6, G19), the medium shadow;
+   - next: the halo drifting sideways is the re-exposure (G9): the card
+     goes into the glare for a beat and comes back into focus, in place. */
+@layer kp.signature {
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-3'] .dt-drawer {
+        scale: 1 1;
+        opacity: 1;
+        filter: none;
+    }
+
+    [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='closed'] .dt-drawer {
+        scale: 1 1;
+        opacity: 0;
+        filter: var(--kp-sig-light-glare);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) both;
+        }
+
+        [data-theme='light'] [data-dt-openclose='r2-light-oc-3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-light-leave var(--kp-sig-light-time) var(--kp-sig-light-ease-out) both;
+        }
+
+        [data-theme='light'] [data-dt-next='1'][data-dt-playing='next'] .dt-tour {
+            animation: kp-sig-light-reexpose var(--kp-sig-light-time) linear;
+        }
+    }
+
+    [data-theme='light'] [data-dt-card='1'] .dt-tour {
+        border-radius: var(--radius, 0.5rem);
+        box-shadow: var(--kp-shadow-md);
+    }
+
+    [data-theme='light'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-weight: 600;
+    }
+}

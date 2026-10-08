@@ -57,7 +57,10 @@ const IDEAS = {
             { name: 'The certificate', text: 'A thin navy rule inside the frame, a guilloche corner, the mark a small crest.' },
         ],
         loading: [
-            { name: 'The dotted leader', text: 'A dotted leader is written across the body, dot by dot.' },
+            {
+                name: 'Ruling the lines',
+                text: 'Three navy rules are ruled across the tile’s foot one after the other, held, lifted and ruled again.',
+            },
             { name: 'The ledger is ruled', text: 'Two ledger rules draw across the body, left to right, and rule again.' },
             { name: 'The seal is pressed', text: 'A navy seal ring presses onto the plate, lifts and presses again.' },
         ],
@@ -72,31 +75,43 @@ const IDEAS = {
             { name: 'The red-ink entry', text: 'A warning or destructive tile is ruled off along the left edge in the accountant’s red ink.' },
         ],
         hover: [
-            { name: 'The raised seal', text: 'The plate lifts a hair on a soft shadow; Open underlines in navy; the border darkens on focus.' },
+            {
+                name: 'The rule under the label',
+                text: 'The tile stays where it is; Open is formal’s own button: a navy rule under its label on hover, the two-channel ring on focus.',
+            },
             { name: 'The ink deepens', text: 'The frame’s rule doubles; Open gains a navy plate; a focus ring in navy traces the tile.' },
             { name: 'The wax warms', text: 'The mark glows faintly; Open’s underline thickens; focus draws a fine double rule.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
             { name: 'Entered again', text: 'The footer’s timestamp is struck through once, then the new one is written in.' },
-            { name: 'Signed again', text: 'The whole tile is traced again by a thin rule, left to right.' },
+            {
+                name: 'Ruled again and closed',
+                text: 'A navy rule is ruled under the tile’s reading, the second rule closes it, and both are lifted.',
+            },
         ],
     },
     light: {
         shape: [
-            { name: 'The soft card', text: 'A white card lifted on a soft shadow, a wide radius, the mark a soft dot.' },
+            { name: 'The white card', text: 'A white card of 0.5 rem on its small shadow and a hairline seam, a soft mark.' },
             { name: 'Daylight', text: 'A pale wash from the top, the mark a small sun, the footer a soft rule.' },
             { name: 'The paper sheet', text: 'A lifted corner at the top right, faint writing rules, the mark a paperclip dot.' },
         ],
         loading: [
-            { name: 'The dashed baseline', text: 'A dashed line under the body drifts to the right.' },
+            {
+                name: 'Out of focus',
+                text: 'A busy tile keeps its plate and its words breathe out of focus (blur and brightness up and back); no baseline is drawn.',
+            },
             { name: 'Daylight', text: 'A slow band of light crosses the plate.' },
             { name: 'A cloud passes', text: 'The soft shadow of a cloud drifts across the plate, slowly.' },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
             { name: 'Unfolds', text: 'The card opens from its middle, slowing as it lands.' },
-            { name: 'Sunrise', text: 'Tile after tile rises from the bottom, each a beat after the last.' },
+            {
+                name: 'Out of the glare',
+                text: 'Tile after tile comes into focus where it stands, out of a blurred, too bright glare, in reading order, 120 ms apart.',
+            },
         ],
         tone: [
             { name: 'The soft pill', text: 'A warning or destructive tile shows the note on a soft pill under the title.' },
@@ -104,13 +119,16 @@ const IDEAS = {
             { name: 'The outline', text: 'A warning or destructive tile is ringed in a soft outline of its own colour.' },
         ],
         hover: [
-            { name: 'The shadow lifts', text: 'The card’s shadow grows softly; Open becomes a filled soft pill; focus adds a soft ring.' },
+            {
+                name: 'Settles toward the paper',
+                text: 'The tile’s shadow does not grow; its Open link settles 2 px toward the paper like any of light’s buttons.',
+            },
             { name: 'The warmth rises', text: 'The card warms a shade; Open underlines; a focus ring glows around the tile.' },
             { name: 'The corner lifts', text: 'The paper corner lifts further; Open gains a dot; focus traces a dashed outline.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'A soft swell', text: 'The card swells once and settles, slowing as it lands.' },
+            { name: 'Re-exposed', text: 'The changed tile goes into the glare for a beat and comes back into focus; it never swells.' },
             { name: 'The page turns', text: 'The tile flips like a page corner, then shows the new reading.' },
         ],
     },
@@ -191,7 +209,10 @@ const IDEAS = {
             { name: 'The arcade marquee', text: 'A pink frame with a glow, the mark a pink drop, VT323 throughout.' },
         ],
         loading: [
-            { name: 'The oncoming tube and floor', text: 'The tile’s stripe is an unlit tube with the sun’s ramp flowing along it (1800 ms) while the floor lines drive toward you (900 ms), as the page tube and floor do.' },
+            {
+                name: 'The oncoming tube and floor',
+                text: 'The tile’s stripe is an unlit tube with the sun’s ramp flowing along it (1800 ms) while the floor lines drive toward you (900 ms), as the page tube and floor do.',
+            },
             { name: 'The VCR display', text: 'A tracking band rolls down the body.' },
             { name: 'The sun rises', text: 'A striped sun swells up over the horizon and sinks again.' },
         ],
@@ -474,28 +495,43 @@ const IDEAS = {
             { name: 'The poster block', text: 'A 3px frame with a hard offset shadow, the mark a hatched block.' },
         ],
         loading: [
-            { name: 'The hoisted lintel', text: 'A lintel hangs on two cables in a well at the tile’s foot: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.' },
+            {
+                name: 'The hoisted lintel',
+                text: 'A lintel hangs on two cables in a well at the tile’s foot: four hard lifts, held, let go to fall free and left to rest, looping every 1.2 s.',
+            },
             { name: 'The drop', text: 'A black block drops onto the body and lands hard, again and again.' },
             { name: 'The hammer', text: 'A black block hammers on three spots along the body in turn.' },
         ],
         arrival: [
             { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
             { name: 'Slammed', text: 'The tile drops into place from above, in hard steps.' },
-            { name: 'Dropped onto its footprint', text: 'Tile after tile falls from up-left onto its footprint, 100 ms after the one before, 300 ms on the fall curve.' },
+            {
+                name: 'Dropped onto its footprint',
+                text: 'Tile after tile falls from up-left onto its footprint, 100 ms after the one before, 300 ms on the fall curve.',
+            },
         ],
         tone: [
-            { name: 'The hard-shadow block', text: 'The mark is painted in its tone under a 2px ink line and a 3px ink shadow, never a coloured shadow; a warning or destructive tile shows the note on that block.' },
+            {
+                name: 'The hard-shadow block',
+                text: 'The mark is painted in its tone under a 2px ink line and a 3px ink shadow, never a coloured shadow; a warning or destructive tile shows the note on that block.',
+            },
             { name: 'The sticker', text: 'A warning or destructive tile shows the note on an askew sticker in a black outline.' },
             { name: 'The warning poster', text: 'A warning or destructive tile prints its note on the tone’s block, framed in ink.' },
         ],
         hover: [
-            { name: 'The shadow grows', text: 'The tile inverts, nothing moves; Open is a brutalism ghost button, inverted, with the two-channel ring lifted on focus and driven in when pressed.' },
+            {
+                name: 'The shadow grows',
+                text: 'The tile inverts, nothing moves; Open is a brutalism ghost button, inverted, with the two-channel ring lifted on focus and driven in when pressed.',
+            },
             { name: 'The sticker peels', text: 'The sticker tilts further; Open gains a black outline; focus adds a hatched ring.' },
             { name: 'The slab tips', text: 'The whole tile tilts a degree; Open underlines heavily; focus frames it twice.' },
         ],
         live: [
             { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Slammed onto its yellow offset', text: 'A changed tile is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.' },
+            {
+                name: 'Slammed onto its yellow offset',
+                text: 'A changed tile is slammed onto a yellow offset: three units of fall, twelve standing, struck off in one cut.',
+            },
             { name: 'Shoved', text: 'The footer’s timestamp steps forward, in hard steps.' },
         ],
     },

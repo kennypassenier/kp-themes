@@ -28,7 +28,7 @@ display face, no ornament, no texture") and research/light-anchor.
 | 2026-10-08       | research/light-anchor, review dialog    | **The anchor = Overexposed: out of the glare** (option 5): a part is there as a glare first, blurred and too bright, and comes down into focus and into its own white; it never fades up from grey; it leaves into the glare, as the register already does.                                                                                                                                                                                                                                                                                         |
 | 2026-10-08       | research/light-character, review dialog | **All nineteen questions approved, every recommendation except How long things take = Unhurried: 200 · 700 (+120) · 3600 ms and The busy progress bar = The bead orbits the line** (research/light-character/decided.json). The grammar G1 to G21 below stands as decided, with G4 (durations) = 200 ms contact, 700 ms exposure, 120 ms between the parts of a group, 3.6 s a loop, and G11 (busy bar) = one cyan bead running to the end of the hairline and back. To be applied in css/light-register.css and the research/character-* variants. |
 
-Decided 2026-10-08: every question in research/light-character is answered (see the last row above); what remains is applying the grammar to the register and the variants, and the package findings under a Light heading in research/PACKAGE_FINDINGS.md.
+Decided 2026-10-08: every question in research/light-character is answered (see the last row above). Applied the same day in css/light-register.css and the research variants (the notes at the end of §4); the package findings are under a Light heading in research/PACKAGE_FINDINGS.md.
 
 ---
 
@@ -144,6 +144,103 @@ Only the meter is in `css/light-register.css` beyond the signature elements.
 | 17  | The press                        | G17  | lands and flashes · lands flat · nothing (today)                                                             |
 | 18  | The voice                        | G18  | one face, two weights · figures in mono · headings tight and heavy                                           |
 | 19  | Motifs                           | G19  | the seam, its circle, the bead · plus the sun and the gnomon (the picks) · none                              |
+
+**Applied 2026-10-08** (css/light-register.css, kp.register and `kp.signature`, tokens
+`--kp-sig-light-*`; `--fx-ease` and `--fx-duration` in css/themes.css; Kenny's answers on
+research/light-character, all nineteen approved, durations and the busy bar as he chose them):
+
+- **Q1, Q4 (curve, durations): applied.** `--fx-ease` is the settle,
+  `cubic-bezier(0.16, 1, 0.3, 1)`, and `--kp-ease-hover` is the same curve; its inverse
+  `--kp-ease-leave` is `cubic-bezier(0.7, 0, 0.84, 0)` (the control points reflected through the
+  middle: (1 − x2, 1 − y2, 1 − x1, 1 − y1), so its last number is 0, as the demo's own
+  `--lt-settle-out` has it). Contact 200 ms (`--fx-duration`), exposure 700 ms
+  (`--kp-sig-light-time`), 120 ms between the parts of a group (`--kp-sig-light-step`), a loop
+  3600 ms (`--kp-sig-light-loop`), the spinner's turn 1200 ms (`--kp-sig-light-orbit`). The
+  glare, the beat, the dim and the dazzle, the burn and the shutter are tokens too (brightness 1.6
+  and blur 5 px; 1.4 and 2 px; 1.3 and 3 px; 1.8 and 4 px; 1.25). `--kp-close-max` and
+  `--kp-size-max` are one exposure, so js/motion.js does not cut a close at 600 ms. The old
+  loom curve, the 150 ms contact and every 420 and 520 ms are gone; the easings written inside
+  keyframes are literal (`cubic-bezier(0.16, 1, 0.3, 1)` into focus, `(0.7, 0, 0.84, 0)` into the
+  glare); the plain eases left are the there-and-backs (the bead on the hairline, the breathing)
+  and the two halves of the spinner's burn.
+- **Q2, Q3, Q13 (direction, opening, leave): applied.** One pair of keyframes:
+  `kp-sig-light-expose` (opacity 0 to 1, `filter` glare to none) and `kp-sig-light-leave` (the
+  same the other way), neither names its own easing, so js/motion.js can turn either round and
+  the close is the arrival's frames reversed (sampled in Chromium on the dialog and the menu:
+  one pair, run each way, on the settle and on its inverse). `.kp-dialog` (one and a half exposures
+  unopened, so the close js/motion.js reads off it is one; one when open), `.kp-toast` (a
+  group 120 ms apart), `.kp-tooltip`, `.kp-menu-button > .kp-menu`, `.kp-popover[popover]`,
+  `dialog.kp-drawer`, `.kp-tour[open]` and `[data-kp-arriving]` come into focus where they stand;
+  `[data-kp-leaving]` is `kp-sig-light-leave` on the inverse curve, `--kp-open: reverse-close`
+  stays. The headline (`kp-clip-reveal`, the slit is retired: opacity and glare), the rule
+  under a heading (`kp-sig-light-expose` in place of the drawn `kp-rule-in`) and the mark
+  (`kp-mark-sweep`, the sweep of a background is retired: the phrase takes its ground and
+  comes into focus) arrive the same way; the 8 px rise of the leave, the window slit of the
+  dialog and the toast, the tooltip's float and scale, the radio bead's scale from nothing,
+  the meter share's scale and the skeleton's clip are gone.
+- **Q5, Q7 (colour, surface): applied.** The three shadows and the seam are the whole of the
+  depth; the blueprint grid texture the base layer still painted for light (T6, 5 %) is taken
+  off in the register (`--fx-texture: none`); the meter's share is flat (no sun at its end),
+  its mark a plain stroke, the glint past the end gone; a resizing box brightens (white) without
+  the indigo drop shadow; no amber warmth anywhere in the register.
+- **Q6 (corners): as the register had it.** Buttons, icon buttons, badges, tags, the tooltip,
+  the switch and the bar's line are pills, cards, inputs, dialogs and menus 0.5 rem, the
+  checkbox 0.3 rem; nothing changed.
+- **Q8 (warning): applied.** `.kp-kpi[data-kp-tone='warning'|'destructive']` (and so the trend
+  tile) carries a 3 px band along its top as an inset shadow (`--kp-sig-light-band`, which
+  follows the corners), the card stays white, the figure is in the ink and the change
+  (`.kp-kpi__delta`) sits on a soft pill (14 % of the tone's ink, in the ink); the package's
+  start edge, its frame all round and its plate under the figure are retired.
+  `.kp-alert--warning` and `.kp-alert--destructive` are a white card with the same band and
+  the label on a soft pill (the attention band's items keep what they had);
+  `.kp-menu__item--destructive` is in the destructive ink (the components layer's own
+  `color: inherit` had cancelled it) with the band and a soft wash under the pointer.
+- **Q9 (live update): applied** as `--kp-update: reexpose` and
+  `[data-kp-updating='reexpose']`: `kp-sig-light-reexpose`, into the glare for a beat on the
+  inverse curve (18 % of the time) and back into focus on the settle, in 0.8 times the theme's
+  update time (700 ms); the figure, the word and the line never move. The meter's tone change
+  is the same beat (`kp-sig-light-meter-expose-o|w|d`, one name per tone so a change restarts it).
+- **Q10 (loading): applied** on every waiting surface the package has, out of focus and
+  breathing (`kp-sig-light-breathe`, brightness 1.3 to 1.6 and blur 3 to 5 px, 3600 ms
+  ease-in-out): `.kp-skeleton` lines, blocks and circles (the fill is on `::before`, so the
+  chart's loading sentence stays sharp; the key figures', columns' and trend's lines and plot
+  are such skeletons), `.kp-meter[data-kp-loading]` and `.kp-kpi__meter`, a loading menu entry,
+  and the words of `.kp-card[aria-busy]`, a busy tile of `.kp-tiles`, `.kp-kpi[aria-busy]`,
+  `.kp-datatable__busy-panel` (not its spinner) and a loading calendar day (a day later in the
+  week a beat later); a busy `.kp-button` keeps its pill and its label is its own blur
+  (`kp-sig-light-breathe-ink`), because a pill that is brighter and blurred as a whole is white
+  on white. The busy dim of layout.css is off in light (`--kp-busy-opacity: 1`). Under
+  reduced motion the placeholders and the meter stand still, out of focus, and words stay sharp.
+- **Q11, Q12 (busy bar, spinner): applied.** An indeterminate `.kp-progressbar` keeps its
+  hairline and its one cyan bead runs to the end and back (`kp-sig-light-line`, 3600 ms a leg,
+  ease-in-out, `alternate`) in the three sizes; standing still it is the three beads at the
+  middle. The `.kp-spinner`'s indigo bead burns out at the top and is back in focus by the foot
+  (`kp-sig-light-burn` beside the orbit, 1200 ms).
+- **Q14 to Q17 (composites, hover, focus, press): applied** to every `.kp-button` and
+  `.kp-icon-button` wherever it stands, to `.kp-menu__item`, `a.kp-kpi`, `.kp-kpi--toggle`,
+  `.kp-kpi--trend`, `.kp-calendar__day` and `.kp-kpi__link`: pointing settles 2 px and tightens
+  the shadow (a card-like part takes the softer 1 px shadow and the stronger hairline, a menu
+  entry the muted wash, a link the pale-cyan wash); focus is DI2's ring, written after the
+  pointer's rule at the same weight so it wins (`:focus-visible:not(:disabled)`), and kept
+  through a press; a press lands flat (shadow gone, 2 px down) and flashes
+  (`kp-sig-light-flash`, brightness 1.25 for the contact), then stands crisp in the pressed
+  ground the components layer paints. Buttons now also transition their ground and ink on the
+  contact time.
+- **Q18, Q19 (voice, motifs): applied.** Headings 600 tracked −0.01 em (h4 too), figures 600
+  tabular (`.kp-numeric` is no longer mono), labels 500 at 0.8125 rem (the side note, the
+  platform line, the spec's terms, the wizard steps, the language link and the status lines
+  lose their mono, capitals and tracking), the brand and the laurels' figure 600. Monospace is
+  left on identifiers, timestamps, code and keys. The seam and its circle stay, the empty state's
+  bead is white-ringed, today in the calendar wears the bead (in the top corner of its cell,
+  because the package's day carries its count under the number) instead of an inner ring.
+- **Research variants redrawn** on the grammar (a `light.css` per component, wired in its
+  demo.html, its IDEAS text updated): character-busy, -calendar, -chart, -columns, -drawer
+  (round2-a.js too), -header, -kpi, -menu, -meter, -state, -tiles, -trend. The network graph
+  is untouched. The chart tooltip is a white card now (the picked frosted glass was a
+  translucent plate, G7); the tour card of the drawer is a plain card (the sticky note, G19).
+- **Gates:** every new keyframe has its row in `TIMINGS` (js/effects.js) and, where it
+  animates a filter, its line in `OUT_OF_SCOPE` (gates/check-motion.mjs); reports/di5.md is
+  to be regenerated.
 
 ---
 

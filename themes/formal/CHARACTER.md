@@ -185,6 +185,95 @@ Each proposal is one question; its first option is the grammar above.
 | 18  | The voice                        | G18  | Fraunces figures, small-caps labels · sans figures · tabular mono figures                                                                            |
 | 19  | Motifs                           | G19  | the rule, the double rule, the docket cut, red ink · those plus the seal where picked · as today (everything)                                        |
 
+**Applied 2026-10-08** (css/formal-register.css, `kp.register` and `kp.signature`, tokens `--kp-sig-fm-*`;
+`--fx-ease: linear` in css/themes.css; Kenny's picks on research/formal-character, all nineteen approved,
+hover = a rule under the label, motifs = the rules plus the seal where picked):
+
+- **Q1 curve, Q4 durations: applied.** `--fx-ease` is `linear` (css/themes.css), contact is
+  `--fx-duration` 180 ms, a rule across a part is `--kp-sig-fm-time` 400 ms, a group is ruled
+  `--kp-sig-fm-stagger` 60 ms apart (unitless `--kp-sig-fm-len/-st/-lift`: 400, 60, 160), a loop is
+  `--kp-sig-fm-loop` 2400 ms, the busy bar's half 1200 ms. No keyframe, transition or animation in the
+  register names a cubic-bezier, an `ease` or a `steps()` any more; linear is its own inverse, so a close
+  needs no inverse curve. `--kp-close-max` 1000 ms and `--kp-size-max` 400 ms let js/motion.js keep the
+  times. The headline, the lede's marks, the section rule and the redactions (kp.register) are ruled on
+  the same time and curve (the headline is ruled in by a clip-path, no longer faded and risen).
+- **Q2 direction, Q3 opening, Q13 leave: applied.** One drawing, two machines (the comment above the
+  `@media` block in kp.signature says why). The dialog, the drawer and the tour card are ruled by
+  `kp-sig-formal-line-0..3` (clip, one pair per line, the wait carried in the keyframe offsets because
+  js/motion.js drops delays when it turns an entrance round) and `kp-sig-formal-pen-0..3` (the 2 px navy
+  pen on the frame's `::before` and each line's `::after`), 740 ms (400 + 160 + three lines 60 ms apart),
+  `-rtl` twins for `dir`; the unopened `.kp-dialog` runs 1.5 times that (`--kp-fm-dur` 1110 ms) so that
+  js/motion.js's close (two thirds of what it reads) is 740 ms. The menu, popover, tooltip, combobox list
+  and date panel are ruled by `kp-sig-formal-ruling` (a registered number `--kp-fm-t`, 0 to 1, over
+  `--kp-fm-total` = 400 + 160 + 60 per line after the first, lines counted with `:has()`), which the CSS
+  reversal of css/components.css can play. A leave is `kp-sig-formal-leave` (560 ms: the pen is set
+  again, then the rule is taken off end to start; `reverse-close` stays and plays it back as the
+  arrival, a toast comes in as it), `--kp-leave-stagger: 0.1` (60 ms of the whole) for a row of leaves.
+  The shade behind a dialog is `kp-sig-formal-backdrop`, a clip. The alarm's ground, sheet, tick and
+  reason are ruled by clip-path transitions 60 ms apart.
+- **Q5 colour: applied.** Navy rules and picks everywhere; gold left the mirror button's twin impression
+  (now `--border-strong`) and the alarm's button (now a veil of `--primary-foreground`); gold stays the
+  meter's ribbon and the laurels (G5 names both; the option's own words say "the meter's ribbon and
+  nothing else": a finding for Kenny if the laurels should go).
+- **Q6 corners, Q7 surface: applied.** A tag, a badge, the tooltip, the change on a key figure, a
+  checkbox, a skeleton line and a chart's tooltip are square (0); the docket label on a card
+  (`.kp-card[data-kp-label]::before`) is a square red-ink plate, set straight, no longer a rotated
+  stamp. A plain card, tile and menu are paper with a hairline; the double rule stays on the dialog (its
+  mat), the drawer and the tour card (an inner double rule), the page header (a 3 px double rule under
+  it), a strip column (the certificate), the alarm panel and the empty state; the table's lines are the
+  ledger lines.
+- **Q8 warning: applied** as the red-ink entry on `.kp-kpi[data-kp-tone='warning'|'destructive']` (the
+  trend tile and the strip column included), `.kp-menu__item--destructive`, `.kp-alert--warning` and
+  `--destructive` (the attention band's items too), and the calendar's `warn` and `bad` days (one red
+  rule, two red rules; `ok` is a navy rule): 3 px `--destructive` along the start edge, the figure in
+  red ink on paper, the change on a square plate in a hairline. The amber-plate ink nudges
+  (alert-contrast-M1, fix-98, fix-99) are gone with the plates.
+- **Q9 live update: applied** as `--kp-update: closed` and `[data-kp-updating='closed']`: a pseudo-element
+  under the changed figure draws the 2 px rule (0 to 47 % of the update time), the 1 px second rule
+  (47 to 66 %) and lifts both from the start (72 to 100 %), from one registered number `--kp-fm-u`
+  (`kp-sig-formal-update-closed`); a state word keeps its width-holding `::after`, so its rules are on
+  `::before`. The stamp (`kp-sig-formal-update-stamp`) is gone.
+- **Q10 loading: applied** on every waiting surface: the skeleton line (a ledger line and one 2 px rule,
+  `kp-sig-formal-ledger`, 300 ms between lines), the block and the circle, the loading meter and key-figure
+  meter (one rule), the table's busy panel, the loading menu entry, busy button and card, a loading day,
+  the busy calendar's panel, the busy tile grid and the chart's loading state (three rules): one
+  registered number `--kp-fm-l` (0 to 1 over 2400 ms, `kp-sig-formal-loading`) read by each rule 300 ms
+  after the one before and kept in the custom property `--kp-fm-stack`, defined on any `[aria-busy]`,
+  `[data-kp-busy]`, `[data-kp-loading]` or `[data-kp-state='loading']` element so that a variant can lay
+  the same picture. The old ink, the dotted leader and the seal pressed are gone.
+- **Q11 busy bar, Q12 spinner: applied.** `.kp-progressbar[data-kp-indeterminate]`: the band, the
+  second rule and the pen are ruled, closed and lifted over 2400 ms (`kp-sig-formal-bar-band/-second/-head`),
+  standing still the band across and the account closed. `.kp-spinner`: a hairline ring with a
+  thinner ring inside it (background), a navy arc ruled round it on `::after` and a thinner arc on
+  `::before` (`kp-sig-formal-arc-outer/-inner` on `--kp-fm-a0/-a1`), any size, in a busy button; standing
+  still the closed ring.
+- **Q14 composites, Q15 hover, Q16 focus, Q17 press: applied** by one selector list over
+  `.kp-button`, `.kp-icon-button`, `.kp-menu__item`, `a.kp-kpi`, `.kp-kpi--toggle`, `.kp-calendar__day`,
+  `.kp-kpi__link` and `.kp-nav__link`, wherever they stand: the underline (2 px, offset 0.3 em, no ink
+  skip) is transparent at rest and takes navy (the label's colour on a filled button, a toast and the
+  bar) in the contact time; an icon button rules its line under the glyph; a press draws the inner rule
+  (`::after`, 2 px in) and its second rule (`::before`, 3 px further in) and the face takes its pressed
+  ground; a menu entry takes the muted ground and a double underline on a press; a strip tile takes a
+  second pair of inner rules; a day's figure is ruled twice. Focus is the system ring, never replaced, so
+  it wins; the old `:focus-visible` inner rule is gone.
+- **Q18 voice: applied.** Fraunces and tabular numerals on `.kp-kpi__value`, `.kp-state-word`, the
+  calendar's figures and a chart's numbers; all-small-caps tracked 0.06 em on labels, captions, tags,
+  badges, menu headings, table heads, group labels, the masthead lines, timestamps and identifiers.
+- **Q19 motifs: applied.** The rule, the double rule, the docket cut, red ink, plus the wax seal where
+  Kenny placed it: before the state word (a background on `.kp-state-word`) and on the busy table's words
+  (`.kp-datatable__busy-words::before`), set, not pressed; the ribbon stays on the meter.
+- **Research variants redrawn** (`formal.css` beside the demo, wired in its demo.html and, where its
+  text described the retired picture, its demo.js): character-busy (shape 1, loading 3, arrival 3, failure
+  3), -calendar (loading 1, arrival 2, tone 1), -chart (loading, arrival), -columns (loading 3, arrival 2,
+  live 3), -drawer (shape 1, openclose 3), -header (menu 2, interactive 1), -kpi (loading 3, tone 3,
+  interactive 2, live 3), -menu (shape 1, loading 1, open 1), -meter (loading 2, arrival 1), -state
+  (change 1), -tiles (shape 1, loading 1, arrival 2, hover 1, live 3), -trend (shape 1, loading 2,
+  arrival 2). The network graph (character-graph) is untouched.
+- **Package findings** (research/PACKAGE_FINDINGS.md, heading Formal): the motion check wants rows in
+  js/effects.js `TIMINGS` and lines in gates/check-motion.mjs `OUT_OF_SCOPE`; js/motion.js cannot replay a
+  custom-property animation; a leave is replayed element by element, not line by line; the update time
+  has no knob; the controls the manners list does not name.
+
 ---
 
 ## 5. Distinct from the other themes

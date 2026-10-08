@@ -1,7 +1,17 @@
 # What makes deco deco
 
-**Open (2026-10-08).** Nineteen questions wait for Kenny's verdicts in the review dialog (`data-review="deco-character"`, round
-`2026-10-08-r1`).
+**Update 1 (2026-10-08).** Kenny did not approve thirteen of the nineteen questions, with one comment on all of them: "I don't like
+this direction at all, you should take a look at what art deco represents again, this should be the fancy, distinguished theme, with
+lots of gold accents and fancy blue backgrounds (maybe even with a background wallpaper style like it already has for most pages), it
+should exhume elegance without being too 'in your face'". The thirteen (curve, direction, opening, colour, corners, warning, loading,
+the bar, leave, composites, hover, press, motifs) are redrawn with five new options each in his direction: deep blue lacquer with the
+chevron wallpaper behind every plate, thin gold inlay lines with stepped corners, a lozenge and a double rule where something matters,
+the fan unfolding smoothly, a glint passing once, nothing counted, nothing loud. His six picks stay ticked and drawn as approved; his
+verdict is pending in the review dialog (round `2026-10-08-r2`).
+
+**Kenny's six picks (round one, 2026-10-08), kept.** How long things take = one fan, 160 · 480 (+160, +80) · 2400 ms; the surface =
+lacquer, the double rule, one crest; a live update = gilded, a flare; the spinner = the sunburst rotates (today); the focus ring = a
+double gold ring; the voice = Poiret capitals, Josefin figures.
 
 **Why.** Kenny, 2026-10-08, on research/deco-anchor: the anchor is **the fan opens** (a crest of gold rays folded to a point opens ray
 by ray from one side to the other and folds back), and "I'm really not a fan of the progress bar btw, that needs to be redone for
@@ -23,27 +33,37 @@ in question 11), each a live scene built from the package's components in deco (
 `.kp-skeleton`, `.kp-switch`, `.kp-empty`, `.kp-page-header`). The first option is always the recommendation; every option says what
 you see and why it is or is not recommended, on the page and in its hint in the dialog.
 
-| #   | Question (rule)                       | Options, recommended first                                                                                     |
-| --- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 1   | The motion curve (G1)                 | ray by ray, counted · one smooth sweep · the register's curve (today)                                          |
-| 2   | The direction (G2)                    | from a point outward, groups from the centre · rising from the foot (the picks) · start → end                  |
-| 3   | Opening what drops from a button (G3) | fans open from its anchor · the curtain rises (the picks) · as today                                           |
-| 4   | How long things take (G4)             | 160 · 480 (+160, +80) · 2400 ms · brisk 120 · 320 · 1600 · grand 200 · 720 · 3600                              |
-| 5   | Where the colour goes (G5)            | gold acts flat, emerald marks, ruby warns · gold with a glint (the picks) · gold and ivory only                |
-| 6   | The corners (G6)                      | cut corners, lozenge ends · stepped ziggurat corners · all square                                              |
-| 7   | The surface (G7)                      | lacquer, the double rule, one crest · a sunburst behind every figure · setbacks behind every plate (the picks) |
-| 8   | A warning (G8)                        | the gilt notice · a tinted sunburst (the state's pick) · framed all round in gold                              |
-| 9   | A live update (G9)                    | one flash of the fan · gilded: a flare (the picks) · the glint (the picks)                                     |
-| 10  | Loading (G10)                         | a fan opens and folds · the glint runs · the bulbs chase (the picks) · the skeleton's strips (today)           |
-| 11  | The progress bar, redone (G11)        | a fan laid flat · a flat band with a chevron tip · the lift's lamps · stepped tiers · the pennant (today)      |
-| 12  | The spinner (G12)                     | a fan opens and folds · the sunburst rotates (today) · the lift's lamps round                                  |
-| 13  | Leaving and arriving (G13)            | fans open from its base, folds to it · folds flat (today) · the curtain (the picks)                            |
-| 14  | Buttons inside composites (G14)       | exactly deco's own · deco's own on a gilt plaque · as today                                                    |
-| 15  | Pointing at something (G15)           | the fan opens behind the label · the gilded edge (the picks) · the bulbs light (the picks)                     |
-| 16  | The focus ring (G16)                  | the two-channel ring · a double gold ring · as today                                                           |
-| 17  | The press (G17)                       | the fan opens fully · the fan folds shut · a colour step (today)                                               |
-| 18  | The voice (G18)                       | Poiret capitals, Josefin figures · Poiret figures too · Josefin everywhere                                     |
-| 19  | Motifs (G19)                          | the fan, the double rule, the lozenge, the chevron · plus the bulbs and the setbacks (the picks) · as today    |
+| #   | Question (rule)                       | Options, recommended first                                                                                                                                 |
+| --- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The motion curve (G1)                 | the fan unfolds and settles · slow at both ends · even, with a glint at the tip · in three folds · the register's curve (today)                            |
+| 2   | The direction (G2)                    | from the centre to both sides · from the base point up and out · from the top down · from the start edge · from the four corners inward                    |
+| 3   | Opening what drops from a button (G3) | the gold inlay draws itself, the lacquer comes up · unfolds like a fan · the lift doors part · a curtain of gold threads · rises from the lacquer, a glint |
+| 4   | How long things take (G4)             | **decided:** one fan, 160 · 480 (+160, +80) · 2400 ms (brisk and grand were the others)                                                                    |
+| 5   | Where the colour goes (G5)            | gold is a line and a jewel, blue the ground, ivory reads · gold fills what acts · two blues · gold and ivory only · champagne gold, bronze                 |
+| 6   | The corners (G6)                      | square plates, an inlay line with stepped corners · one corner bitten (today) · all four chamfered · stepped at the top corners only · all square          |
+| 7   | The surface (G7)                      | **decided:** lacquer, the double rule, one crest                                                                                                           |
+| 8   | A warning (G8)                        | a ruby inlay and a ruby word · the figure in ruby over a gold rule · a ruby lozenge · a ruby plaque · the lacquer tinted toward ruby                       |
+| 9   | A live update (G9)                    | **decided:** gilded, a flare                                                                                                                               |
+| 10  | Loading (G10)                         | light on lacquer: a glint crosses · a small fan unfolds and folds · the inlay draws and undraws · the wallpaper breathes · the skeleton's strips (today)   |
+| 11  | The progress bar, redone (G11)        | a gold inlay with a lozenge head · a string of lozenges · between two hairlines · a stepped head · a fan laid flat, smooth                                 |
+| 12  | The spinner (G12)                     | **decided:** the sunburst rotates (today)                                                                                                                  |
+| 13  | Leaving and arriving (G13)            | the inlay draws, the lacquer comes up; undraws, sinks · unfolds from its base · sinks, a glint passes · the lift doors · the curtain of threads            |
+| 14  | Buttons inside composites (G14)       | exactly deco's own · hairline inside, solid alone · gold text only inside · deco's own on a lacquer plaque · as today                                      |
+| 15  | Pointing at something (G15)           | the inlay brightens, a glint passes once · a hairline under the label · the lacquer lightens · a small fan unfolds · the capitals open their tracking      |
+| 16  | The focus ring (G16)                  | **decided:** a double gold ring                                                                                                                            |
+| 17  | The press (G17)                       | the inlay doubles, the face sinks a shade · gold fills it · the fan folds shut · a lozenge lights · a colour step (today)                                  |
+| 18  | The voice (G18)                       | **decided:** Poiret capitals, Josefin figures                                                                                                              |
+| 19  | Motifs (G19)                          | the wallpaper, the stepped inlay, the double rule, the lozenge · plus a crest · plus the chevron bite · the wallpaper and hairlines only · as today        |
+
+**Recommendation, and why (update 1).** Deco is the grand lobby of 1925 after the lights go down, and every recommendation is one
+gesture of that room: a surface comes and goes by its inlay (a 1 px gold line set 6 px into the lacquer, its corners stepped once,
+drawn from the middle of the top edge round both ways while the lacquer and its chevron wallpaper come up behind it, 320 + 160 ms on
+the settle curve `cubic-bezier(0.22, 1, 0.36, 1)` and closed on its point reflection `cubic-bezier(0.64, 0, 0.78, 0)`); a group comes
+from its centre out; gold is a hairline and a small mark (the inlay, a double rule, a lozenge jewel), a fill only on the one primary
+button; emerald is one jewel on what is on or done and ruby a hairline and a word on a failure; light passes once as a soft glint (on a
+waiting part, on the busy bar's hairline, on a pointed control); a press doubles the line and sinks the face a shade. The fan stays the
+anchor and unfolds smoothly, by angle, where something happens. Nothing rises, slides, jumps or flashes solid gold, and nothing is
+counted: each of the thirteen is what Kenny asked for, elegance that does not shout.
 
 **How.**
 
@@ -71,6 +91,8 @@ you see and why it is or is not recommended, on the page and in its hint in the 
 - The gallery of decided components loads the six character demos through the review kit's embed mode (`?embed=…&theme=deco`) only
   when it is opened.
 
-**Measured.** Pending: the mirror of every cycle scene (each close its open reversed, per frame) and the frames of every row at 1280
-and 390 px were checked in Chromium on 2026-10-08, before Kenny's first look; nothing is measured in Firefox yet (the tests run only
-after a release go).
+**Measured.** Update 1, 2026-10-08, in Chromium: every cycle scene of the page is its open reversed frame for frame (the mirror of
+`research/_coherence/tools/mirror.mjs`, adapted to `data-dc-phase` and each scene's own window, sampled off the counted steps of the
+kept durations); the thirteen redrawn rows were looked at in paused frames at 1280 and 390 px with nothing painting outside its scene,
+and three of them were stepped through in the review dialog. Nothing is measured in Firefox yet (the tests run only after a release
+go).

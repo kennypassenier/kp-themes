@@ -91,7 +91,7 @@ const IDEAS = {
         loading: [
             {
                 name: 'The desk diary: its loading',
-                text: 'Loading leaves the paper blank with a dotted leader across it. Now it moves: the dotted leader is written dot by dot, again and again.',
+                text: 'Loading leaves the paper blank with three navy rules ruled across its foot one after the other, held, lifted and ruled again.',
             },
             {
                 name: 'The ledger: its loading',
@@ -108,8 +108,8 @@ const IDEAS = {
                 text: 'The days are set line by line, each revealed left to right as type on a press.',
             },
             {
-                name: 'The page turns',
-                text: 'Each week turns down into place like the leaf of a diary.',
+                name: 'Each day ruled in',
+                text: 'Each day is ruled in from its start to its end at an even pace, in reading order, as a ledger is ruled.',
             },
             {
                 name: 'Ruled in',
@@ -119,7 +119,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The desk diary: its tones and today',
-                text: 'A night is marked by its tinted paper and a rule in its ink along the top; a night with nothing done is the full navy-red plate. Today is boxed in the navy double rule; the picked day hangs in a navy frame.',
+                text: 'A night is paper with a rule along its start edge: navy when kept, red ink when to look at, two red rules when none was backed up. Today is boxed in the navy double rule; the picked day hangs in a navy frame.',
             },
             {
                 name: 'The ledger: its tones and today',
@@ -152,8 +152,8 @@ const IDEAS = {
                 text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come.",
             },
             {
-                name: 'Daylight',
-                text: 'Every day a white card lifted off a pale sky by a soft shadow, the night washed in its colour from the top as light falls on it.',
+                name: 'White cards',
+                text: 'The month as white cards on the white page, each on its soft shadow and a hairline seam, with the numbers in the regular face; no wash behind them.',
             },
             {
                 name: 'The pill row',
@@ -166,8 +166,8 @@ const IDEAS = {
                 text: 'Loading is a dashed seam on a blank plate. Now it moves: the dashed seam walks along the foot.',
             },
             {
-                name: 'Daylight: its loading',
-                text: 'Loading lets a band of daylight cross each card, slowly. Now it moves: the band of daylight crosses each card.',
+                name: 'Out of focus',
+                text: 'A loading day keeps its cell; its number and its count breathe out of focus (blur and brightness up and back), a day later in the week a beat later.',
             },
             {
                 name: 'The sunbeam',
@@ -176,8 +176,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Morning',
-                text: 'The days open from their centre, as light reaching a room, from the top left corner outwards.',
+                name: 'Out of the glare',
+                text: 'Every day comes into focus where it stands, out of a blurred, too bright glare, one after the other in reading order, 30 ms apart.',
             },
             {
                 name: 'Slide up',
@@ -194,8 +194,8 @@ const IDEAS = {
                 text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come. Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring.",
             },
             {
-                name: 'Daylight: its tones and today',
-                text: 'Every day a white card lifted off a pale sky by a soft shadow, the night washed in its colour from the top as light falls on it. Today wears a ring of sunlight; the picked day an indigo ring.',
+                name: 'White plates, a bead for today',
+                text: 'Each tone paints its plain plate; today wears a white-ringed cyan bead in the corner of its cell; no glow and no ring of sunlight.',
             },
             {
                 name: 'The coloured dot',
@@ -208,8 +208,8 @@ const IDEAS = {
                 text: "Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring. New: the day lifts on hover, the picked count in heavy type.",
             },
             {
-                name: 'Daylight: its pick',
-                text: 'Today wears a ring of sunlight; the picked day an indigo ring. New: a ring of light on hover, the picked count on an inverted label.',
+                name: 'Settles under the pointer',
+                text: 'Pointing settles the day 2 px toward the paper and tightens its shadow; the picked day keeps its indigo ring and its count on an ink plate.',
             },
             {
                 name: 'The focus halo',

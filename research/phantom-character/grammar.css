@@ -1,0 +1,201 @@
+/* research/phantom-character/grammar.css: phantom's proposed grammar as the
+   questions use it (Kenny's anchor verdict of 2026-10-08, research/phantom-
+   anchor, update 1: "Thrown as a screen, resolves at the slap";
+   themes/phantom/CHARACTER.md G1-G21). One file of tokens and keyframes,
+   linked by demo.html before options.css; options.css applies it to every
+   option of every question.
+
+   - phantom is PRINT and what it does is THROW A SCREEN THAT RESOLVES. A part
+     flies in from beyond its start edge as its own halftone, a silhouette of
+     dots in its shape (the part drawn through a mask of the register's 7 px
+     grid, the dot at 25 % of the cell), slaps down with a dead stop a degree and
+     a half askew and resolves into the solid thing in three hard cuts (50 %, 75 %,
+     solid, 100 ms a cut); it leaves by dissolving back into dots in three cuts and
+     being thrown back off the start edge (G1, G2, G13);
+   - two gaits that never mix: the throw is the shove, `cubic-bezier(0.81, 0, 0,
+     1)`, a start that holds and a dead stop; every change of state is hard cuts,
+     `steps(1, jump-end)` between the keys, 100 ms a cut. A close is the cuts
+     backwards (`steps(1, jump-start)`) and the shove on its inverse, `cubic-bezier(1,
+     0, 0.19, 1)` (a curve's inverse is its point reflection: (1 - x2, 1 - y2, 1 -
+     x1, 1 - y1)). Never the register's `--fx-ease`, never a spring, never a blur;
+   - the clock: contact 120 ms, a throw 400 ms and its resolve 300 ms (one
+     700 ms picture), a group 80 ms apart, a live resolve 400 ms (two cuts to the
+     dots, two cuts back), a loop 1500 ms, the spinner's turn 1200 ms (G4);
+   - red is a PLATE with black ink and never a word; cards are white with black
+     ink or black with white; the halftone is white dots on black; the deep red
+     (`--kp-red-deep`) is the second plate behind a red one and every hard
+     shadow; yellow (`--fx-signal`) is the overprint for a warning only (G5, G8);
+   - radius 0; controls and bars are parallelograms (`--kp-skew` -8 deg, the label
+     upright); cards and menus are cut paper (`--kp-paperclip`); a landed card is
+     a degree and a half askew; the tooltip a slab at -3 deg (G6);
+   - a live update dissolves into its dots (two cuts) and resolves to the new value
+     (two cuts), in place; loading is the screen that will not resolve (25, 50,
+     75, 50, 25 %, hard cuts, never solid); the busy bar is the slab shoved across
+     as a screen; the spinner is the star that snaps and resolves on each landing
+     (G9 to G12);
+   - hover throws the red bar in and resolves it, focus is the two rings, a press
+     drops the cap onto its shadow and the face resolves in two cuts (G15 to G17).
+
+   Every one-shot motion is a pair of keyframes, `ph-x` and `ph-x-out`, so a
+   close is its open reversed: the timing function is written out inside the
+   keyframes (a `var()` there is invalid and falls back to `ease`), and an eased
+   open closes on the inverse curve. Colours come from the theme's tokens only;
+   every animation sits under prefers-reduced-motion: no-preference and the
+   reduced pose is the part resolved, landed askew (G20). The tokens hang on
+   `.ph-page, .ph-scene`, because the review dialog moves a section into its
+   stage. */
+
+/* The dot of the screen, grown smoothly by the options that grow it (the
+   register's curve and the eased one); 5.4 px covers the corner of the 7 px cell. */
+@property --ph-r {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 5.4px;
+}
+
+@layer kp.signature {
+    :is(.ph-page, .ph-scene) {
+        /* G1: the throw is the shove (a hard start, a dead stop), its inverse
+           closes; the cut is the register's own (its own inverse). Inside
+           @keyframes both are written out. */
+        --ph-shove: cubic-bezier(0.81, 0, 0, 1);
+        --ph-shove-out: cubic-bezier(1, 0, 0.19, 1);
+        --ph-cut: var(--kp-cut, cubic-bezier(0.7, 0, 0.3, 1));
+        /* G4: the durations of one throw. */
+        --ph-contact: 120ms;
+        --ph-throw: 400ms;
+        --ph-resolve: 300ms;
+        --ph-stagger: 80ms;
+        --ph-update: 400ms;
+        --ph-loop: 1500ms;
+        --ph-orbit: 1200ms;
+        /* G6: the landing, and the register's skew. */
+        --ph-land: -1.5deg;
+        --ph-skew: var(--kp-skew, -8deg);
+        /* G5: the colours by role. */
+        --ph-plate: var(--primary);
+        --ph-ink: var(--primary-foreground);
+        --ph-second: var(--kp-red-deep);
+        --ph-paper: var(--foreground);
+        --ph-board: var(--background);
+        --ph-overprint: var(--fx-signal);
+        /* G7: the hard shadow, no blur; the screen's cell. */
+        --ph-shadow: 6px;
+        --ph-dot: 7px;
+        /* G1, G13: the screen of a part in the air, 25, 50 and 75 % of the cell
+           (the dot's radius is sqrt(share x 49 / pi), its edge a third of a pixel
+           soft), and the dots of the busy slab on a 4 px cell. */
+        --ph-m25: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px);
+        --ph-m50: radial-gradient(circle at center, var(--foreground) 2.7926px, transparent 3.1426px);
+        --ph-m75: radial-gradient(circle at center, var(--foreground) 3.4202px, transparent 3.7702px);
+        --ph-s25: radial-gradient(circle at center, var(--foreground) 1.1284px, transparent 1.4784px);
+        --ph-s50: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+        --ph-s75: radial-gradient(circle at center, var(--foreground) 1.9544px, transparent 2.3044px);
+        /* The same from the centre outward (question 2): an ellipse that grows
+           in hard cuts, seen through the 75 % screen. */
+        --ph-e1: radial-gradient(ellipse closest-side at 50% 50%, var(--foreground) 24%, transparent 24.5%), var(--ph-m50);
+        --ph-e2: radial-gradient(ellipse closest-side at 50% 50%, var(--foreground) 52%, transparent 52.5%), var(--ph-m50);
+        --ph-e3: radial-gradient(ellipse closest-side at 50% 50%, var(--foreground) 80%, transparent 80.5%), var(--ph-m75);
+    }
+}
+
+/* ── G1 · G2 · G13: the throw. A part comes from beyond its start edge, turning,
+   and lands a degree and a half askew on the dead stop (the anchor's throw: the
+   pose it starts in is --ph-x0, --ph-y0, --ph-r0 and --ph-s0, so a menu can come
+   from its button and a day from the edge of the board). One animation of 700 ms
+   (400 ms of throw, then the part holds); the close is the same backwards. ── */
+@keyframes ph-fly {
+    0% {
+        translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+        rotate: var(--ph-r0, -22deg);
+        scale: var(--ph-s0, 1.15);
+        animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+    }
+
+    57.142857% {
+        translate: 0 0;
+        rotate: var(--ph-land, -1.5deg);
+        scale: 1;
+        animation-timing-function: linear;
+    }
+
+    100% {
+        translate: 0 0;
+        rotate: var(--ph-land, -1.5deg);
+        scale: 1;
+    }
+}
+
+@keyframes ph-fly-out {
+    0% {
+        translate: 0 0;
+        rotate: var(--ph-land, -1.5deg);
+        scale: 1;
+        animation-timing-function: linear;
+    }
+
+    42.857143% {
+        translate: 0 0;
+        rotate: var(--ph-land, -1.5deg);
+        scale: 1;
+        animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+    }
+
+    100% {
+        translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+        rotate: var(--ph-r0, -22deg);
+        scale: var(--ph-s0, 1.15);
+    }
+}
+
+@keyframes ph-resolve {
+    0% {
+        mask-image: var(--ph-m25);
+        animation-timing-function: steps(1, jump-end);
+    }
+
+    57.141429% {
+        mask-image: var(--ph-m50);
+        animation-timing-function: steps(1, jump-end);
+    }
+
+    71.427143% {
+        mask-image: var(--ph-m75);
+        animation-timing-function: steps(1, jump-end);
+    }
+
+    85.712857% {
+        mask-image: none;
+        animation-timing-function: linear;
+    }
+
+    100% {
+        mask-image: none;
+    }
+}
+
+@keyframes ph-resolve-out {
+    0% {
+        mask-image: none;
+        animation-timing-function: linear;
+    }
+
+    14.287143% {
+        mask-image: none;
+        animation-timing-function: steps(1, jump-start);
+    }
+
+    28.572857% {
+        mask-image: var(--ph-m75);
+        animation-timing-function: steps(1, jump-start);
+    }
+
+    42.858571% {
+        mask-image: var(--ph-m50);
+        animation-timing-function: steps(1, jump-start);
+    }
+
+    100% {
+        mask-image: var(--ph-m25);
+    }
+}

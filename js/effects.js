@@ -566,8 +566,8 @@ export const TIMINGS = Object.freeze({
     // window opening once (a shape and a fade, never a loop), and the lede
     // marks' background-size sweep with its one colour swap — a highlighter
     // reveal, not a flash.
-    'kp-clip-reveal': { durationMs: 620, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 1] },
-    'kp-mark-sweep': { durationMs: 420, cycles: 1, property: 'color', luminanceSteps: [0, 1] },
+    'kp-clip-reveal': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 1] },
+    'kp-mark-sweep': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
     // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
     // resolve, a monotone blur+brightness sweep, once, on the whole,
     // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
@@ -593,7 +593,6 @@ export const TIMINGS = Object.freeze({
     // The steps are the opacity stops this gate parses (from/to included since
     // 2026-10-08).
     // formal's stamp: a frame that lands round the value and soaks in.
-    'kp-sig-formal-update-stamp': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0, 0.9, 0.6, 0] },
     // cyberpunk's count-down stutter [Kenny, research/cyberpunk-live,
     // 2026-10-07 02:49]: two unblurred text-shadow copies (yellow up, cyan
     // down) ticking home 6, 4, 2, 1 px in four hard steps, 0.64 of the
@@ -607,15 +606,46 @@ export const TIMINGS = Object.freeze({
     // research/character-meter, 2026-10-05]: the loading picture (loops while
     // loading), the share arriving, its re-ink or a single move when the tone
     // changes. Only terminal's caret blinks in opacity, once a second.
-    'kp-sig-formal-meter-pos': { durationMs: 2600, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
-    'kp-sig-formal-meter-wipe-d': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-formal-meter-wipe-o': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-formal-meter-wipe-w': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-light-meter-day': { durationMs: 3000, cycles: Infinity, property: 'translate', luminanceSteps: [] },
-    'kp-sig-light-meter-bump-d': { durationMs: 260, cycles: 1, property: 'scale', luminanceSteps: [] },
-    'kp-sig-light-meter-bump-o': { durationMs: 260, cycles: 1, property: 'scale', luminanceSteps: [] },
-    'kp-sig-light-meter-bump-w': { durationMs: 260, cycles: 1, property: 'scale', luminanceSteps: [] },
-    'kp-sig-light-meter-grow-o': { durationMs: 700, cycles: 1, property: 'scale', luminanceSteps: [] },
+    'kp-sig-formal-meter-wipe-d': { durationMs: 400, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-meter-wipe-o': { durationMs: 400, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-meter-wipe-w': { durationMs: 400, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    // Formal's grammar [themes/formal/CHARACTER.md §4, Kenny, 2026-10-08]: every
+    // one is a clip, a clip-path or a registered custom property that moves a
+    // rule's extent; none changes a colour or an opacity but the bar's head.
+    'kp-sig-formal-line-0': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-0-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-0': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-0-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-1': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-1-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-1': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-1-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-2': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-2-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-2': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-2-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-3': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-line-3-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-3': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-pen-3-rtl': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-leave': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-leave-rtl': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-leave-pen': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-leave-pen-rtl': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-backdrop': { durationMs: 400, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-ledger': { durationMs: 2400, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-bar-band': { durationMs: 2400, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-bar-second': { durationMs: 2400, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-formal-bar-head': { durationMs: 2400, cycles: Infinity, property: 'transform, opacity', luminanceSteps: [1, 1, 0, 0] },
+    'kp-sig-formal-ruling': { durationMs: 860, cycles: 1, property: '--kp-fm-t', luminanceSteps: [] },
+    'kp-sig-formal-loading': { durationMs: 2400, cycles: Infinity, property: '--kp-fm-l', luminanceSteps: [] },
+    'kp-sig-formal-update-closed': { durationMs: 850, cycles: 1, property: '--kp-fm-u', luminanceSteps: [] },
+    'kp-sig-formal-arc-outer': { durationMs: 2400, cycles: Infinity, property: '--kp-fm-a0, --kp-fm-a1', luminanceSteps: [] },
+    'kp-sig-formal-arc-inner': { durationMs: 2400, cycles: Infinity, property: '--kp-fm-a0, --kp-fm-a1', luminanceSteps: [] },
+    'kp-sig-formal-pen': { durationMs: 180, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-light-meter-expose-d': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-meter-expose-o': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-meter-expose-w': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
     'kp-sig-synthwave-meter-grow-o': { durationMs: 600, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-synthwave-meter-pos': { durationMs: 1800, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-pastel-meter-drift': { durationMs: 1600, cycles: Infinity, property: 'translate', luminanceSteps: [] },
@@ -802,13 +832,20 @@ export const TIMINGS = Object.freeze({
     'kp-sig-deco-leave': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     // light-register
     'kp-sig-light-light-orbit': { durationMs: 1200, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-light-light-open-x': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-light-light-tick': { durationMs: 280, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-light-light-bead': { durationMs: 280, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-sig-light-light-window': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-light-light-float': { durationMs: 280, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-light-size-bloom': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-light-leave': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [0] },
+    'kp-sig-light-light-tick': { durationMs: 200, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    // Light's grammar, 2026-10-08 (themes/light/CHARACTER.md §4): the exposure
+    // and its leave (opacity, 0 to 1 and 1 to 0), the filter keyframes (a
+    // re-exposure, out of focus, the burnt bead, the shutter), the bead on the
+    // hairline and the line exposed start to end.
+    'kp-sig-light-expose': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-sig-light-leave': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
+    'kp-sig-light-reexpose': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-breathe': { durationMs: 3600, cycles: Infinity, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-breathe-ink': { durationMs: 3600, cycles: Infinity, property: 'text-shadow', luminanceSteps: [] },
+    'kp-sig-light-burn': { durationMs: 1200, cycles: Infinity, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-flash': { durationMs: 200, cycles: 1, property: 'filter', luminanceSteps: [] },
+    'kp-sig-light-line': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
+    'kp-sig-light-feed': { durationMs: 700, cycles: 1, property: 'clip-path, filter', luminanceSteps: [] },
     // grotesk-register
     'kp-sig-grotesk-fall': { durationMs: 34, cycles: 1, property: 'filter', luminanceSteps: [] },
     'kp-sig-grotesk-fall-again': { durationMs: 960, cycles: 1, property: 'filter', luminanceSteps: [] },
@@ -893,16 +930,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-dark-size-develop': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0.2] },
     'kp-sig-dark-leave': { durationMs: 460, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     // formal-register
-    'kp-sig-formal-orbit': { durationMs: 1600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-formal-ink': { durationMs: 3000, cycles: Infinity, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-formal-pen': { durationMs: 200, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-formal-dot': { durationMs: 200, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-sig-formal-rise': { durationMs: 280, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-formal-rule': { durationMs: 560, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-sig-formal-sheet': { durationMs: 300, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-formal-tip-drop': { durationMs: 200, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-formal-size-ink': { durationMs: 320, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-formal-leave': { durationMs: 400, cycles: 1, property: 'opacity', luminanceSteps: [0.2] },
     // solstice-register
     'kp-sig-solstice-solstice-arc': { durationMs: 2400, cycles: Infinity, property: 'opacity', luminanceSteps: [0, 1, 1, 0, 0] },
     'kp-sig-solstice-solstice-light': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },

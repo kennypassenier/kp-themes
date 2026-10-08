@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- **Changed: formal's grammar, as Kenny decided it on research/formal-character** [2026-10-08, themes/formal/CHARACTER.md §4]. The
+  clerk rules a ledger: `--fx-ease` is `linear` (css/themes.css); everything that opens, leaves, loads, spins or updates is a rule
+  being ruled (400 ms, 60 ms apart, loop 2400 ms; `kp-sig-formal-line-k`/`-pen-k`/`-leave`/`-ruling`/`-loading`/`-update-closed`/
+  `-arc-*`/`-bar-*`, css/formal-register.css). Hover is a rule under the label, a press doubles the rule, a warning is a red-ink
+  entry on paper (alerts, key figures, menu entry, calendar days), a live update is ruled again and closed, gold is the meter's
+  ribbon only (the laurels are navy), tags and tooltips are square, labels are small capitals. The stamp, the dial, the dotted
+  leader, the fold and the fade-and-rise are gone.
+- **Changed: formal's research variants** [2026-10-08]. `formal.css` beside character-busy, -calendar, -chart, -columns, -drawer,
+  -header, -kpi, -menu, -meter, -state, -tiles and -trend redraws the picks on the grammar.
+- **Changed: light's grammar, as Kenny decided it on research/light-character** [2026-10-08, themes/light/CHARACTER.md §4]. Light
+  exposes: a part comes into focus out of a glare (brightness 1.6, blur 5 px) where it stands and leaves back into it
+  (`kp-sig-light-expose`/`-leave`, css/light-register.css), 700 ms on the settle `cubic-bezier(0.16, 1, 0.3, 1)`, closing on its
+  inverse. `--fx-ease` is the settle and `--fx-duration` is 200 ms (css/themes.css), a group is 120 ms apart and a loop 3600 ms;
+  the dialog, menu, popover, tooltip, toast, drawer, tour, headline, rule and mark all arrive this way. Waiting surfaces stand out
+  of focus and breathe; the busy bar's bead runs the hairline and back; the spinner's bead burns out at the top. A live update is
+  re-exposed (`--kp-update: reexpose`). A warning is a 3 px top band and a soft pill on the key figure, trend tile, alert and
+  destructive menu entry. Hover settles 2 px, the focus ring is DI2's, and a press lands and flashes. One face in two weights,
+  and the blueprint grid texture is off.
+- **Changed: the research demos' light picks** (busy, calendar, chart, columns, drawer, header, kpi, menu, meter, state, tiles,
+  trend) are redrawn on the grammar in a `light.css` each.
 - **Fixed: a trend tile's label no longer runs under its "Charts ↗" link**: `.kp-kpi--trend > .kp-kpi__label` ends
   before the link (`margin-inline-end` 4.5 rem, 1.5 rem in a narrow tile) and a label that is still too long ends in an
   ellipsis (`overflow: hidden`, `text-overflow: ellipsis`), in every theme (css/components.css). Measured at 390 and

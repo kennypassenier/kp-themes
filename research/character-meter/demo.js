@@ -123,8 +123,8 @@ const IDEAS = {
     light: {
         shape: [
             {
-                name: 'Daylight',
-                text: 'A soft pill in the light: the indigo share brightens towards its end, the mark is a thin gnomon with a short shadow, and past the end the light spills out in a cyan glint.',
+                name: 'The hairline track',
+                text: 'A flat indigo share on a hairline track, the mark a plain stroke with a white edge; nothing brightens, shadows or glints.',
             },
             {
                 name: 'The seam and its circle',
@@ -137,8 +137,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Morning light',
-                text: 'A band of daylight crosses the track, slowly.',
+                name: 'Out of focus',
+                text: 'The track breathes out of focus (blur and brightness up and back) while it measures.',
             },
             {
                 name: 'The shadow swings',
@@ -155,8 +155,8 @@ const IDEAS = {
                 text: 'The share is drawn in from the left slowing as it lands.',
             },
             {
-                name: 'The shadow swings',
-                text: 'The share stretches out from the start slowing as it lands.',
+                name: 'Exposed along its length',
+                text: 'The share is exposed from its start to its end, out of a blurred, too bright glare, 700 ms on a long settle.',
             },
             {
                 name: 'Through the window',
@@ -169,8 +169,8 @@ const IDEAS = {
                 text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
             },
             {
-                name: 'The shadow swings',
-                text: 'A new tone swells the meter once, slowing as it lands.',
+                name: 'Re-exposed',
+                text: 'A new tone puts the meter into the glare for a beat and brings it back into focus, in place.',
             },
             {
                 name: 'Through the window',
@@ -183,8 +183,8 @@ const IDEAS = {
                 text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
             },
             {
-                name: 'The shadow swings',
-                text: 'The mark moves easing in and out; a mark past the end leans over the end, › beside it.',
+                name: 'The upright mark',
+                text: 'The mark moves on the settle; a mark past the end stops at the meter’s end, upright, with no sign after it.',
             },
             {
                 name: 'Through the window',

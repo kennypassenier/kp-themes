@@ -1,0 +1,4582 @@
+/* research/phantom-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.ph-scene[data-ph-<question>='<key>']`). Colours come from the theme's
+   tokens only (grammar.css holds the grammar as tokens and keyframes); every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the ruled, closed picture: the part resolved, landed askew. Durations
+   are multiplied by --ph-slow (1, 2 or 4: the page's speed buttons). The values
+   of the "today" options are the register's own (css/phantom-register.css); the
+   values of "the pick" options are the decided demos' (research/character-*).
+
+   SCOPE. The review dialog moves the section out of the page into its stage,
+   so nothing here hangs on `.ph-page` alone: every rule hangs on `.ph-scene`
+   (or on `.ph-sec` for the State buttons), which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-ph-phase` on every scene of
+   kind `cycle`: gap (what arrives is away, a screen beyond its start edge), in
+   (it is thrown and resolves), hold (it stands solid, askew), out (it
+   dissolves and is thrown back). The base style of every part is its finished
+   pose, so reduced motion and hold show the printed picture; `gap` pauses every
+   open at its first frame; `in` and `hold` run the open, `out` runs its mirror:
+   every open is a pair of keyframes (`ph-x`, `ph-x-out`) whose close is the open
+   reversed (the timing function written out in the keyframes, the inverse curve
+   on the way back; steps(1, jump-end) against steps(1, jump-start), a cut placed
+   a hundredth of a millisecond early so that the instant it falls on shows the
+   new picture in both directions), and a part's delay is mirrored (window - delay
+   - length), so what came last goes first. A scene's window is --ph-win (1300 ms;
+   1900 ms for the unhurried durations).
+
+   THE SCREEN. A part arriving is its own halftone: the part itself is drawn
+   through a mask of the register's 7 px dot grid (grammar.css: --ph-m25, --ph-m50,
+   --ph-m75, the dot growing from 25 % to 50 % to 75 % of the cell), so it is a
+   silhouette of dots in its own shape, title and all, that densifies in hard cuts
+   and ends with no mask at all. */
+
+@layer kp.signature {
+    /* ── The scene: a screened black board, the clock and the arriving part ─ */
+
+    .ph-scene {
+        /* The throw and the resolve are one animation of --ph-L (400 + 300 ms
+           at the register's pace); the window is what the open and the close
+           are mirrored in; --ph-slow is the page's speed buttons. */
+        --ph-L: calc(700ms * var(--ph-slow, 1));
+        --ph-win: calc(1300ms * var(--ph-slow, 1));
+        --ph-step: calc(var(--ph-stagger) * var(--ph-slow, 1));
+        --ph-upd: calc(var(--ph-update) * var(--ph-slow, 1));
+        --ph-lap: calc(var(--ph-loop) * var(--ph-slow, 1));
+        --ph-c: calc(var(--ph-contact) * var(--ph-slow, 1));
+        --ph-fly: ph-fly;
+        --ph-fly-out: ph-fly-out;
+        --ph-res: ph-resolve;
+        --ph-res-out: ph-resolve-out;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        container-type: inline-size;
+        background:
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.16) 0.9px, transparent 1px) 0 0 / 7px 7px,
+            var(--background);
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .ph-scene .ph-arrives {
+        --ph-d: calc(var(--i, 0) * var(--ph-step));
+        rotate: var(--ph-land);
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    /* ── The parts at rest (the recommendation's picture) ───────────── */
+
+    .ph-scene .ph-title {
+        margin: 0;
+    }
+
+    /* Cut paper: a white plate with black ink and the red edge; the hard
+       shadow is the wrapper's, because a clip-path cuts off its own shadow. */
+    .ph-plate {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+    }
+
+    .ph-plate::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--ph-second);
+        clip-path: var(--kp-paperclip);
+        translate: var(--ph-shadow) var(--ph-shadow);
+    }
+
+    .ph-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+        background: var(--ph-paper);
+        color: var(--ph-board);
+    }
+
+    .ph-scene .kp-card .ph-title {
+        color: var(--ph-board);
+        font-size: 1.15rem;
+        line-height: 1.05;
+        text-shadow: none;
+    }
+
+    /* A button on a white plate is inked black (the key cap's frame and label). */
+    .ph-scene .kp-card .kp-button:not(.kp-button--primary) {
+        --kp-plate-ink: var(--ph-board);
+        --kp-plate-frame: var(--ph-board);
+        color: var(--ph-board);
+    }
+
+    .ph-scene .kp-card .kp-button:not(.kp-button--primary):is(:hover, .ph-pointed) {
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene .kp-card__body {
+        margin: 0;
+        color: inherit;
+    }
+
+    /* The drawer is a black plate framed in white, its buttons the key cap in white. */
+    .ph-scene .kp-card.ph-drawer {
+        border: 2px solid var(--foreground);
+        background: var(--ph-board);
+        color: var(--ph-paper);
+    }
+
+    .ph-scene .ph-drawer .ph-title {
+        color: var(--ph-paper);
+    }
+
+    .ph-scene .ph-drawer .kp-button:not(.kp-button--primary) {
+        --kp-plate-ink: var(--foreground);
+        --kp-plate-frame: var(--foreground);
+        color: var(--foreground);
+    }
+
+    .ph-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        rotate: none;
+        animation: none;
+    }
+
+    .ph-dialog-wrap,
+    .ph-pop-wrap,
+    .ph-toast-wrap {
+        margin-block-end: 0.5rem;
+    }
+
+    .ph-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .ph-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .ph-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .ph-menu-wrap > .ph-pop-wrap {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.45rem);
+        inset-inline-start: 0.4rem;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    /* The menu is the calling card's black plate under its screen, framed in
+       white, the red edge on its start side (the menu's decided shape). */
+    .ph-scene .ph-pop {
+        position: relative;
+        inset: auto;
+        margin: 0;
+        padding: 0.25rem 0.25rem 0.25rem 0.4rem;
+        border: 2px solid var(--foreground);
+        border-inline-start: 5px solid var(--primary);
+        overflow: clip;
+        background:
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.16) 0.9px, transparent 1px) 0 0 / 7px 7px,
+            var(--background);
+        animation: none;
+        position-area: none;
+    }
+
+    .ph-scene .ph-pop > .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .ph-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .ph-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.6rem;
+    }
+
+    .ph-scene .ph-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ph-scene .kp-kpi {
+        position: relative;
+        gap: 0.2rem;
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-left: 5px solid var(--primary);
+        background: var(--ph-paper);
+        color: var(--ph-board);
+        clip-path: var(--kp-paperclip);
+    }
+
+    .ph-scene .kp-kpi .kp-kpi__label,
+    .ph-scene .kp-kpi .kp-kpi__trend {
+        color: inherit;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+    }
+
+    .ph-scene .kp-kpi .kp-kpi__trend {
+        font-family: var(--theme-font-body);
+        font-style: normal;
+        font-weight: 400;
+    }
+
+    .ph-scene .kp-kpi .kp-kpi__value {
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    .ph-scene .ph-in-kpi,
+    .ph-scene .kp-kpi--toggle,
+    .ph-scene a.kp-button {
+        text-decoration: none;
+    }
+
+    .ph-scene .ph-in-kpi,
+    .ph-scene .kp-kpi--toggle {
+        color: var(--ph-board);
+    }
+
+    .ph-carrier {
+        position: relative;
+        display: inline-block;
+    }
+
+    .ph-scene .kp-kpi__value.ph-carrier {
+        justify-self: start;
+    }
+
+    /* The change is a plate in the tone's ink: good is a green plate, bad is
+       the red plate with black ink (the package's own pairs). */
+    .ph-scene .ph-note {
+        padding-inline: 0.45em;
+    }
+
+    .ph-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .ph-stack {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .ph-gap {
+        block-size: 1.25rem;
+    }
+
+    /* The plates of question 1: the same plate twice on a track, one thrown on
+       the option's curve and one at an even pace. */
+    .ph-beads {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 1rem;
+    }
+
+    .ph-beads__ground {
+        position: relative;
+        display: grid;
+        justify-items: end;
+        align-items: center;
+        block-size: 4.5rem;
+        padding-inline-end: 0.6rem;
+        overflow: clip;
+    }
+
+    .ph-beads__ground::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 50%;
+        block-size: 2px;
+        background: var(--border-strong);
+    }
+
+    .ph-bead {
+        --ph-x0: -11rem;
+        --ph-y0: 0px;
+        --ph-r0: 0deg;
+        --ph-s0: 1;
+        --ph-land: 0deg;
+        position: relative;
+        inline-size: 2.75rem;
+        block-size: 2.1rem;
+        background: var(--primary);
+        clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+        translate: 0 0;
+    }
+
+    .ph-bead--even {
+        background: var(--foreground);
+    }
+
+    .ph-beads__name {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-align: center;
+    }
+
+    /* A day is a small white plate, its figure upright. */
+    .ph-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .ph-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.6rem;
+        block-size: 2.6rem;
+        background: var(--ph-paper);
+        color: var(--ph-board);
+        clip-path: var(--kp-paperclip);
+        font-family: var(--theme-font-display);
+        font-size: 1.25rem;
+        font-style: italic;
+        font-weight: 900;
+    }
+
+    .ph-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        inline-size: fit-content;
+    }
+
+    .ph-state__dot {
+        inline-size: 0.7em;
+        block-size: 0.7em;
+        background: var(--success-foreground);
+        transform: skewX(var(--kp-skew));
+    }
+
+    .ph-state__word {
+        font-family: var(--theme-font-display);
+        font-size: 1.2rem;
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .ph-spark,
+    .ph-run {
+        display: block;
+        color: var(--primary);
+    }
+
+    .ph-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .ph-spark--stale {
+        color: var(--muted-foreground);
+    }
+
+    .ph-column {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.5rem 1rem;
+        background: var(--ph-paper);
+        color: var(--ph-board);
+        clip-path: var(--kp-paperclip);
+    }
+
+    .ph-column .kp-kpi__label {
+        color: inherit;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+    }
+
+    .ph-column__num {
+        font-size: 1.5rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .ph-scene .ph-bar {
+        max-inline-size: none;
+    }
+
+    .ph-sizes {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .ph-tipbox {
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 5rem;
+    }
+
+    .ph-scene .kp-tooltip.ph-tip {
+        position: relative;
+        inline-size: fit-content;
+        margin: 0.5rem 0 0 0.5rem;
+        animation: none;
+        inset: auto;
+        position-area: none;
+    }
+
+    .ph-toast-wrap {
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 8px);
+        margin-block-start: 0.25rem;
+    }
+
+    .ph-scene .ph-toast {
+        position: relative;
+        margin: 0;
+        box-shadow: none;
+        animation: none;
+    }
+
+    .ph-scene .kp-alert {
+        margin: 0;
+    }
+
+    .ph-scene .kp-badge.ph-tag,
+    .ph-scene .kp-tag.ph-chip {
+        inline-size: fit-content;
+    }
+
+    .ph-scene .ph-tile-link {
+        justify-self: start;
+    }
+
+    .ph-header-mini {
+        padding: 0.6rem;
+        background: var(--card);
+    }
+
+    .ph-scene .ph-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .ph-scene .ph-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .ph-scene .ph-header .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-size: 1.5rem;
+        font-style: italic;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .ph-scene .ph-header .kp-page-header__description {
+        color: var(--muted-foreground);
+    }
+
+    .ph-scene .ph-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.9rem;
+    }
+
+    .ph-scene .ph-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    /* A busy panel is a black plate with a white frame: the star is white. */
+    .ph-scene .kp-card.ph-busy-panel {
+        justify-items: center;
+        padding-block: 1rem;
+        border: 2px solid var(--foreground);
+        background: var(--background);
+        color: var(--foreground);
+        text-align: center;
+    }
+
+    .ph-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .ph-scene .ph-bar--inline {
+        --kp-progressbar-scale: 0.8;
+        inline-size: 4.5rem;
+        flex: none;
+        margin-inline-start: 0.5rem;
+    }
+
+    .ph-scene .ph-busy-button .kp-button__label {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .ph-spins {
+        gap: 1.5rem;
+    }
+
+    .ph-leaver {
+        position: relative;
+    }
+
+    .ph-scene .ph-link {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .ph-prose {
+        margin: 0;
+    }
+
+    .ph-scene .ph-seam {
+        inline-size: 100%;
+        margin-block: 0.5rem;
+        margin-inline: 0;
+    }
+
+    .ph-scene .ph-cap--inner {
+        margin-block: 0;
+    }
+
+    .ph-scene .ph-empty {
+        padding-block-end: 1.25rem;
+    }
+
+    .ph-chart__plot {
+        display: block;
+        color: var(--primary);
+    }
+
+    .ph-chart__plot svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 3.5rem;
+        overflow: visible;
+    }
+
+    .ph-plot {
+        position: relative;
+        block-size: 5rem;
+        background: repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--border) h s l / 0.7) 19px 20px), var(--ph-paper);
+        color: var(--ph-board);
+        clip-path: var(--kp-paperclip);
+    }
+
+    .ph-plot > .ph-wait {
+        position: absolute;
+        inset: 0;
+    }
+
+    .ph-plot svg {
+        position: absolute;
+        inset: 14% 5%;
+        inline-size: 90%;
+        block-size: 72%;
+        overflow: visible;
+        color: var(--primary);
+    }
+
+    .ph-skel {
+        display: grid;
+        gap: 0.75rem;
+        padding-block: 0.3rem;
+    }
+
+    .ph-skel > .kp-skeleton + .kp-skeleton {
+        margin-block-start: 0;
+    }
+
+    .ph-waits {
+        position: relative;
+    }
+
+    .ph-load {
+        display: none;
+    }
+
+    .ph-wait--fill {
+        display: grid;
+        gap: inherit;
+    }
+
+    .ph-scene .ph-meter {
+        margin-inline-end: 1.5rem;
+    }
+
+    /* The type sample. */
+    .ph-type {
+        gap: 0.4rem;
+    }
+
+    .ph-type :is(p, table) {
+        margin: 0;
+    }
+
+    .ph-type__label {
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .ph-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.6rem;
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    .ph-type__prose {
+        font-family: var(--theme-font-body);
+        font-weight: 400;
+    }
+
+    .ph-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-family: var(--theme-font-body);
+        font-size: 1.9rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .ph-type__figure small {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .ph-type__figure .ph-note {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .ph-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .ph-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .ph-type__table th {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .ph-type__id {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+    }
+
+    .ph-events {
+        position: relative;
+        color: var(--primary);
+    }
+
+    .ph-events svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 4rem;
+        overflow: visible;
+    }
+
+    /* An event on the chart: a slash cut in red. */
+    .ph-events i {
+        position: absolute;
+        inset-block-start: 22%;
+        inset-inline-start: 26%;
+        inline-size: 1rem;
+        block-size: 1.3rem;
+        background: var(--primary);
+        clip-path: polygon(34% 0, 100% 0, 66% 100%, 0 100%);
+    }
+
+    .ph-events i + i {
+        inset-inline-start: 70%;
+    }
+
+    .ph-list {
+        margin: 0.5rem 0 0;
+        padding-inline-start: 1.1rem;
+    }
+
+    /* ── The motion: what arrives, opens, updates or leaves ────────────
+       One rule for every scene the clock plays: in `in` and `hold` the part
+       runs its open (--ph-fly: the throw, --ph-res: the resolve), in `out` its
+       mirror as late as the open ended (the window less the delay less the
+       length), so a close is its open reversed frame by
+       frame and what came last goes first. Each option names its pair, its
+       length (--ph-L). In `gap` the close stands at its last frame (the start pose): a
+       one millisecond run of the close, never a paused open, because a CSS
+       animation keeps its time while its name stays and a replay must start
+       from nothing. */
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-phase='gap'] .ph-arrives {
+            animation:
+                var(--ph-fly-out) 1ms linear 0s both,
+                var(--ph-res-out) 1ms linear 0s both;
+        }
+
+        .ph-scene:is([data-ph-phase='in'], [data-ph-phase='hold']) .ph-arrives {
+            animation:
+                var(--ph-fly) var(--ph-L) linear var(--ph-d) both,
+                var(--ph-res) var(--ph-L) linear var(--ph-d) both;
+        }
+
+        .ph-scene[data-ph-phase='out'] .ph-arrives {
+            animation:
+                var(--ph-fly-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both,
+                var(--ph-res-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both;
+        }
+    }
+
+    /* ── The red bar behind a pointed-at part (G15) ──────────────────────
+       Every part that can be pointed at has the bar waiting off its start edge:
+       the button's own (the register's ::after, which it widens on hover), a menu
+       entry's, a day's, a key figure's label and a link's thin underline. The
+       options of the hover, press and composites questions throw it in. */
+    .ph-scene .kp-menu__item,
+    .ph-scene .ph-day {
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    .ph-scene .kp-menu__item::before,
+    .ph-scene .ph-day::before,
+    .ph-scene :is(a, button).kp-kpi .kp-kpi__label::before {
+        content: '';
+        position: absolute;
+        inset: 0 0.2rem 0 -0.35rem;
+        z-index: -1;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        translate: -115% 0;
+    }
+
+    .ph-scene .ph-day::before {
+        inset: 0 0.35rem 0 -0.35rem;
+    }
+
+    .ph-scene :is(a, button).kp-kpi .kp-kpi__label {
+        position: relative;
+        isolation: isolate;
+        inline-size: fit-content;
+        padding-inline: 0.3rem;
+        margin-inline: -0.3rem;
+        overflow: visible;
+    }
+
+    .ph-scene :is(a, button).kp-kpi .kp-kpi__label::before {
+        inset: 0 0 0 0;
+        translate: -120% 0;
+    }
+
+    .ph-scene .ph-link {
+        position: relative;
+        text-decoration: none;
+        isolation: isolate;
+    }
+
+    .ph-scene .ph-link::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.12em;
+        block-size: 0.2em;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        translate: -110% 0;
+    }
+
+    .ph-scene .ph-prose {
+        overflow: clip;
+        padding-block-end: 0.3rem;
+    }
+
+    /* ── 1 The motion curve ──────────────────────────────────────────────
+       Every part arrives for the same 700 ms (a throw from off the start edge,
+       then the resolve), so only the curves differ. The plate on its track
+       beside the parts is thrown at an even pace in every option, so the curve
+       is seen on its own. */
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-curve] .ph-bead--even {
+            --ph-fly: ph-fly-lin;
+            --ph-fly-out: ph-fly-lin-out;
+        }
+
+        /* The register's curve: the throw on --fx-ease, slowing into place, and the
+           dots do not cut in, they grow smoothly on the same curve (a fade of
+           the dots). */
+        .ph-scene[data-ph-curve='register'] {
+            --ph-fly: ph-fly-reg;
+            --ph-fly-out: ph-fly-reg-out;
+            --ph-res: ph-grow-reg;
+            --ph-res-out: ph-grow-reg-out;
+        }
+
+        /* Eased in and out: the pick's curve for the throw and for the dots. */
+        .ph-scene[data-ph-curve='eased'] {
+            --ph-fly: ph-fly-eased;
+            --ph-fly-out: ph-fly-eased-out;
+            --ph-res: ph-grow-eased;
+            --ph-res-out: ph-grow-eased-out;
+        }
+
+        .ph-scene:is([data-ph-curve='register'], [data-ph-curve='eased']) .ph-arrives {
+            mask-image: radial-gradient(circle at center, var(--foreground) var(--ph-r), transparent calc(var(--ph-r) + 0.35px));
+        }
+
+        /* All cuts: the throw in four hard jumps and the resolve in three. */
+        .ph-scene[data-ph-curve='cuts'] {
+            --ph-fly: ph-fly-steps;
+            --ph-fly-out: ph-fly-steps-out;
+        }
+    }
+
+    /* ── 2 The direction ──────────────────────────────────────────────────
+       A week of days, a tile, a key figure and a trend line arrive; every
+       option takes 700 ms (300 ms for the jumps) and only where it comes from
+       and the order of the group differ. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* Thrown from off the start edge: the group is dealt 80 ms apart, the
+           trend line is cut in from its start in four hard cuts and resolves. */
+        .ph-scene[data-ph-direction='start'] .ph-run {
+            --ph-land: 0deg;
+            --ph-fly: ph-cutin;
+            --ph-fly-out: ph-cutin-out;
+        }
+
+        /* The picks' jumps: three hard jumps sideways, a group all at once, the
+           trend line slashed in from its end; solid, no screen. */
+        .ph-scene[data-ph-direction='jumps'] {
+            --ph-L: calc(300ms * var(--ph-slow, 1));
+            --ph-step: 0ms;
+            --ph-fly: ph-jump;
+            --ph-fly-out: ph-jump-out;
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+        }
+
+        .ph-scene[data-ph-direction='jumps'] .ph-run {
+            --ph-land: 0deg;
+            --ph-fly: ph-slash-end;
+            --ph-fly-out: ph-slash-end-out;
+        }
+
+        /* From the centre out: no throw, every part resolves in place from its
+           middle outwards (the dots densify from the middle), a group from its
+           middle outward. */
+        .ph-scene[data-ph-direction='centre'] {
+            --ph-fly: ph-none;
+            --ph-fly-out: ph-none-out;
+            --ph-res: ph-centre;
+            --ph-res-out: ph-centre-out;
+        }
+
+        .ph-scene[data-ph-direction='centre'] .ph-arrives {
+            --ph-land: 0deg;
+            --ph-d: calc(max(var(--i, 3) - 3, 3 - var(--i, 3)) * var(--ph-step));
+            mask-composite: intersect;
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+        }
+    }
+
+    /* ── 3 Opening what drops from a button ───────────────────────────────
+       A menu opens under its button, a dialog opens on the board, a toast and
+       a tooltip appear. Every close is the open backwards. */
+    .ph-scene .ph-pop-wrap.ph-arrives {
+        /* The menu is thrown from its button's edge. */
+        --ph-x0: -1.6rem;
+        --ph-y0: -2.4rem;
+        --ph-r0: -9deg;
+        --ph-s0: 1;
+    }
+
+    .ph-scene .ph-tip.ph-arrives {
+        --ph-land: -3deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Thrown from its anchor, resolves: the tooltip is too small to fly, it
+           resolves in place in three cuts. */
+        .ph-scene[data-ph-opening='thrown'] .ph-tip {
+            --ph-fly: ph-none;
+            --ph-fly-out: ph-none-out;
+        }
+
+        /* The register's openings (today): the dialog scales from 1.25 and rotates
+           from -7 deg, the tooltip pops from 0.4, the toast slides in skewed, the
+           nav menu fades in three steps. Each on its own clock. */
+        .ph-scene[data-ph-opening='scaled'] .ph-arrives {
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+        }
+
+        .ph-scene[data-ph-opening='scaled'] .ph-dialog-wrap {
+            --ph-fly: ph-scale;
+            --ph-fly-out: ph-scale-out;
+            --ph-land: -1.5deg;
+            --ph-L: calc(420ms * var(--ph-slow, 1));
+        }
+
+        .ph-scene[data-ph-opening='scaled'] .ph-tip {
+            --ph-fly: ph-pop;
+            --ph-fly-out: ph-pop-out;
+            --ph-L: calc(260ms * var(--ph-slow, 1));
+        }
+
+        .ph-scene[data-ph-opening='scaled'] .ph-toast-wrap {
+            --ph-fly: ph-slide;
+            --ph-fly-out: ph-slide-out;
+            --ph-land: 0deg;
+            --ph-L: calc(380ms * var(--ph-slow, 1));
+        }
+
+        .ph-scene[data-ph-opening='scaled'] .ph-pop-wrap {
+            --ph-fly: ph-film;
+            --ph-fly-out: ph-film-out;
+            --ph-land: 0deg;
+            --ph-L: calc(180ms * var(--ph-slow, 1));
+        }
+
+        /* Slashed in easing (the menu's pick): drawn in backwards from its end,
+           easing in and out, and drawn out to close; no screen. */
+        .ph-scene[data-ph-opening='slashed'] .ph-arrives {
+            --ph-fly: ph-wipe;
+            --ph-fly-out: ph-wipe-out;
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+            --ph-land: 0deg;
+            --ph-L: calc(400ms * var(--ph-slow, 1));
+        }
+
+        .ph-scene[data-ph-opening='slashed'] .ph-dialog-wrap {
+            --ph-land: -1.5deg;
+        }
+    }
+
+    /* ── 4 How long things take ───────────────────────────────────────────
+       The same picture in every option (a dialog thrown and resolved, a group
+       dealt, the busy slab shoved, a press); only the times differ, printed
+       under each part. */
+    .ph-tap {
+        --ph-fly: ph-drop;
+        --ph-fly-out: ph-drop-out;
+        --ph-res: ph-none;
+        --ph-res-out: ph-none-out;
+        --ph-L: var(--ph-c);
+        --ph-land: 0deg;
+    }
+
+    .ph-readout {
+        margin: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+    }
+
+    .ph-scene[data-ph-durations='throw'] {
+        --ph-contact: 120ms;
+        --ph-stagger: 80ms;
+        --ph-loop: 1500ms;
+    }
+
+    .ph-scene[data-ph-durations='brisk'] {
+        --ph-contact: 80ms;
+        --ph-stagger: 50ms;
+        --ph-loop: 1000ms;
+        --ph-L: calc(460ms * var(--ph-slow, 1));
+        --ph-fly: ph-fly-brisk;
+        --ph-fly-out: ph-fly-brisk-out;
+        --ph-res: ph-resolve-brisk;
+        --ph-res-out: ph-resolve-brisk-out;
+    }
+
+    .ph-scene[data-ph-durations='unhurried'] {
+        --ph-contact: 180ms;
+        --ph-stagger: 120ms;
+        --ph-loop: 2250ms;
+        --ph-win: calc(1900ms * var(--ph-slow, 1));
+        --ph-L: calc(1050ms * var(--ph-slow, 1));
+        --ph-fly: ph-fly-slow;
+        --ph-fly-out: ph-fly-slow-out;
+        --ph-res: ph-resolve-slow;
+        --ph-res-out: ph-resolve-slow-out;
+    }
+
+    .ph-scene[data-ph-durations] .ph-tap {
+        --ph-fly: ph-drop;
+        --ph-fly-out: ph-drop-out;
+        --ph-res: ph-none;
+        --ph-res-out: ph-none-out;
+        --ph-L: var(--ph-c);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The loop is the busy slab shoved across as a screen, at the option's pace. */
+        .ph-scene[data-ph-durations] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation-duration: var(--ph-lap);
+        }
+    }
+
+    /* ── 9 A live update ──────────────────────────────────────────────────
+       A key figure, a state word, a trend line, a strip column and a tile change
+       in every option, 400 ms each; the value changes on the way in and again on
+       the way out (the clock changes it 150 ms into the 400 ms). The scene's
+       window is the 400 ms: its parts do not travel, so there is no gap to
+       stand in, only the picture before the change. */
+    .ph-scene[data-ph-live] {
+        --ph-win: calc(400ms * var(--ph-slow, 1));
+        --ph-L: calc(400ms * var(--ph-slow, 1));
+        --ph-fly: ph-none;
+        --ph-fly-out: ph-none-out;
+        --ph-res: ph-reprint;
+        --ph-res-out: ph-reprint-out;
+    }
+
+    .ph-scene[data-ph-live] .ph-carrier {
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    .ph-scene[data-ph-live] .ph-spark.ph-carrier {
+        display: block;
+    }
+
+    .ph-scene[data-ph-live] .ph-live-tile .ph-carrier {
+        transform-origin: 0 60%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-live]:is([data-ph-phase='in'], [data-ph-phase='hold']) .ph-carrier {
+            animation:
+                var(--ph-fly) var(--ph-L) linear 0s both,
+                var(--ph-res) var(--ph-L) linear 0s both;
+        }
+
+        .ph-scene[data-ph-live][data-ph-phase='out'] .ph-carrier {
+            animation:
+                var(--ph-fly-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-L)) both,
+                var(--ph-res-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-L)) both;
+        }
+
+        /* The string twangs (the picks): the key figure's number jolts up, dips and
+           lands in three sharp steps; the tile's figure punches out in a red ring and
+           snaps back; the strip's figure shivers sideways; the state word jolts. */
+        .ph-scene[data-ph-live='twang'] {
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+            --ph-fly: ph-twang;
+            --ph-fly-out: ph-twang-out;
+        }
+
+        .ph-scene[data-ph-live='twang'] .ph-live-tile .ph-carrier {
+            --ph-fly: ph-hole;
+            --ph-fly-out: ph-hole-out;
+        }
+
+        .ph-scene[data-ph-live='twang'] .ph-column .ph-carrier {
+            --ph-fly: ph-shiver;
+            --ph-fly-out: ph-shiver-out;
+        }
+
+        .ph-scene[data-ph-live='twang'] .ph-spark.ph-carrier {
+            --ph-fly: ph-none;
+            --ph-fly-out: ph-none-out;
+        }
+
+        /* Redrawn (the trend's pick): the line redraws in place at once and the
+           figure changes with no mark. */
+        .ph-scene[data-ph-live='redrawn'] {
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+        }
+    }
+
+    /* ── 10 Loading ───────────────────────────────────────────────────────
+       A tile, a panel, a menu entry, a month of days, a chart's plot and skeleton
+       lines, waiting. Every option loops at 1.5 s. */
+    .ph-waits {
+        position: relative;
+    }
+
+    .ph-load {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: none;
+        overflow: clip;
+        pointer-events: none;
+    }
+
+    .ph-scene .kp-kpi > .ph-load {
+        grid-column: auto;
+    }
+
+    .ph-load > * {
+        position: absolute;
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A screen that will not resolve: the part is its own halftone, dissolving
+           and resolving without landing (25, 50, 75, 50, 25 %), never solid; the
+           skeleton's lines are dot silhouettes doing the same. */
+        .ph-scene[data-ph-loading='screen'] .ph-waits {
+            mask-image: var(--ph-m25);
+            mask-size: var(--ph-dot) var(--ph-dot);
+            animation: ph-wait var(--ph-lap) linear calc(var(--i, 0) * var(--ph-step) * -1) infinite;
+        }
+    }
+
+    .ph-scene[data-ph-loading='screen'] .ph-waits {
+        mask-image: var(--ph-m50);
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    .ph-scene[data-ph-loading='screen'] .kp-skeleton {
+        background: var(--foreground);
+        mask-image: var(--ph-s50);
+        mask-size: 4px 4px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-loading='screen'] .kp-skeleton.ph-waits {
+            mask-image: var(--ph-s25);
+            mask-size: 4px 4px;
+            animation-name: ph-wait-fine;
+        }
+    }
+
+    .ph-scene[data-ph-loading='screen'] .kp-skeleton::after {
+        display: none;
+    }
+
+    /* The red slash (today): the register's skeleton, a halftone block with a red
+       parallelogram slash sweeping across it, 1.4 s. */
+    .ph-scene[data-ph-loading='slash'] .ph-load {
+        display: block;
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px,
+            var(--muted);
+    }
+
+    .ph-scene[data-ph-loading='slash'] .ph-load__slash {
+        display: block;
+        inset: 0;
+        background: var(--primary);
+        clip-path: polygon(0.8rem 0, 2.6rem 0, 1.8rem 100%, 0 100%);
+        translate: -2.8rem 0;
+    }
+
+    .ph-scene[data-ph-loading='slash'] .ph-plate .ph-load,
+    .ph-scene[data-ph-loading='slash'] .ph-plot .ph-load {
+        clip-path: var(--kp-paperclip);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-loading='slash'] .ph-load__slash {
+            translate: none;
+            animation: kp-sig-phantom-phantom-slash calc(1400ms * var(--ph-slow, 1)) cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+    }
+
+    /* The shuffle (the picks): the halftone shuffles left and right over the part
+       like a slipping photocopy. */
+    .ph-scene[data-ph-loading='shuffle'] .ph-load {
+        display: block;
+        background-image:
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.45) 0.8px, transparent 1.2px),
+            radial-gradient(circle at center, hsl(from var(--background) h s l / 0.55) 0.8px, transparent 1.2px);
+        background-size: 3px 3px;
+        background-position:
+            0 0,
+            1.5px 1.5px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-loading='shuffle'] .ph-load {
+            animation: ph-shuffle var(--ph-lap) linear infinite;
+        }
+    }
+
+    /* The stamp ring (the picks): a red ring stamped onto the part again and again. */
+    .ph-scene[data-ph-loading='stamp'] .ph-load {
+        display: block;
+    }
+
+    .ph-scene[data-ph-loading='stamp'] .ph-load__ring {
+        display: block;
+        inset-block-end: 0.6rem;
+        inset-inline-end: 0.9rem;
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        rotate: -12deg;
+    }
+
+    .ph-scene[data-ph-loading='stamp'] .ph-plot .ph-load__ring {
+        inset-block-end: auto;
+        inset-block-start: calc(50% - 0.7rem);
+        inset-inline-end: calc(50% - 0.7rem);
+    }
+
+    .ph-scene[data-ph-loading='stamp'] .ph-day .ph-load__ring {
+        inset-block-end: 0.15rem;
+        inset-inline-end: 0.15rem;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+    }
+
+    .ph-scene[data-ph-loading='stamp'] .kp-menu__item .ph-load__ring {
+        inset-block-end: 0.3rem;
+        inset-inline-end: 0.6rem;
+        inline-size: 1rem;
+        block-size: 1rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-loading='stamp'] .ph-load__ring {
+            animation: ph-stamp var(--ph-lap) linear infinite;
+        }
+    }
+
+    /* ── 11 The busy progress bar ─────────────────────────────────────────
+       Round one's bar stays (the skewed track, the black halftone well, the
+       deep-red second plate, the white shard head); only what the busy slab is
+       differs. */
+    .ph-sizes {
+        padding-block-end: 0.25rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The slab shoved across as a screen: the register's shove (1500 ms) with
+           the slab a silhouette of red dots that never resolves. */
+        .ph-scene[data-ph-busybar='screen'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+            mask-size: 4px 4px;
+        }
+    }
+
+    .ph-scene[data-ph-busybar='screen'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+        mask-size: 4px 4px;
+    }
+
+    /* The screen slides (the meter's pick): the halftone of the well slides sideways,
+       linear, and again; nothing crosses the track. */
+    .ph-scene[data-ph-busybar='slides'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        transform: none;
+        animation: none;
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.35) 0 0.8px, transparent 1.2px) 0 0 / 5px 5px,
+            hsl(from var(--primary) h s l / 0.28);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-busybar='slides'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: ph-slide calc(700ms * var(--ph-slow, 1)) linear infinite;
+        }
+    }
+
+    /* ── 12 The spinner ───────────────────────────────────────────────────
+       Three sizes, a busy button and a busy panel in every option; every option
+       loops at 1.2 s. The register's star: white over its red second plate. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The star snaps and resolves: 72 deg at a time (five cuts a turn); in the
+           air it is a screen, on each landing it resolves from dots to solid in one
+           cut. */
+        .ph-scene[data-ph-spinner='resolves'] .kp-spinner::before,
+        .ph-scene[data-ph-spinner='resolves'] .kp-spinner::after {
+            mask-image: none;
+            mask-size: 4px 4px;
+            animation:
+                ph-star-turn calc(1200ms * var(--ph-slow, 1)) linear infinite,
+                ph-star-dots calc(1200ms * var(--ph-slow, 1)) linear infinite;
+        }
+
+        /* A dotted star shoved round: the star as a screen, smoothly on the shove
+           curve, once a loop, never solid. */
+        .ph-scene[data-ph-spinner='shoved'] .kp-spinner::before,
+        .ph-scene[data-ph-spinner='shoved'] .kp-spinner::after {
+            mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+            mask-size: 4px 4px;
+            animation: ph-star-roll calc(1200ms * var(--ph-slow, 1)) linear infinite;
+        }
+    }
+
+    .ph-scene[data-ph-spinner='shoved'] .kp-spinner::before,
+    .ph-scene[data-ph-spinner='shoved'] .kp-spinner::after {
+        mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+        mask-size: 4px 4px;
+    }
+
+    /* ── 13 Leaving and arriving ──────────────────────────────────────────
+       An alert, a card and a key figure arrive and leave in every option; the
+       leave is the arrival backwards. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The wavering ghost (today): the register's leave, the part goes see-through
+           and wavers (skew, a red glow, a blur) and rises 9 px away; arriving is the
+           same backwards. */
+        .ph-scene[data-ph-leave='ghost'] .ph-arrives {
+            --ph-fly: ph-ghost;
+            --ph-fly-out: ph-ghost-out;
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+            --ph-land: 0deg;
+            --ph-L: calc(650ms * var(--ph-slow, 1));
+        }
+
+        /* Thrown solid, snatched solid: round one's throw, no screen, no cuts. */
+        .ph-scene[data-ph-leave='solid'] .ph-arrives {
+            --ph-res: ph-none;
+            --ph-res-out: ph-none-out;
+        }
+    }
+
+    /* ── 5 Where the colour goes ──────────────────────────────────────────
+       The same card, buttons, a switch, a month, a key figure, a meter and a
+       failed export in every option; only the colour rule differs. */
+
+    /* The month: a day is a white plate; today carries the red slash at its
+       corner, the picked day is the red plate with black ink. */
+    .ph-today::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 100% 100%);
+    }
+
+    .ph-picked {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .ph-days--month {
+        padding-block-end: 0.5rem;
+    }
+
+    /* Red is a plate, white and black print: the base. A red word is the register's
+       link (white, a red underline). */
+    .ph-scene[data-ph-colour='plate'] .ph-link {
+        text-decoration: underline 2px var(--primary);
+        text-underline-offset: 0.2em;
+    }
+
+    /* Red words too: a red title, a red figure, a red link, a red figure on the
+       picked day; the failed export is red words on black. */
+    .ph-scene[data-ph-colour='words'] :is(.kp-card .ph-title, .ph-link, .kp-kpi .kp-kpi__value, .ph-picked .ph-day__n, .ph-today .ph-day__n) {
+        color: var(--primary);
+    }
+
+    .ph-scene[data-ph-colour='words'] .ph-picked {
+        background: var(--ph-paper);
+        color: var(--primary);
+    }
+
+    .ph-scene[data-ph-colour='words'] .ph-link {
+        text-decoration: none;
+    }
+
+    .ph-scene[data-ph-colour='words'] .kp-alert--destructive {
+        border-color: var(--primary);
+        background: var(--background);
+        color: var(--primary);
+    }
+
+    .ph-scene[data-ph-colour='words'] .kp-button:not(.kp-button--primary) {
+        --kp-plate-ink: var(--primary);
+        --kp-plate-frame: var(--primary);
+    }
+
+    /* The evidence board's colours (the picks): a red string across the card with
+       its pin, a stamped ring and a target round the figure, a yellow staple tag
+       on the picked day, a bullet hole with its cracked halo on the failed export. */
+    .ph-scene[data-ph-colour='evidence'] .ph-colour-card .ph-tile::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 55%;
+        inset-inline: -4%;
+        block-size: 2px;
+        background: var(--primary);
+        rotate: -9deg;
+        pointer-events: none;
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .ph-colour-card .ph-tile::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.45rem;
+        inset-inline-end: 0.6rem;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 2px var(--ph-paper);
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .kp-kpi {
+        background-image: repeating-radial-gradient(circle at 82% 52%, transparent 0 7px, hsl(from var(--primary) h s l / 0.35) 7px 9px);
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .kp-kpi .kp-kpi__value {
+        inline-size: fit-content;
+        padding: 0.05em 0.45em;
+        border: 3px solid var(--primary);
+        border-radius: 50%;
+        rotate: -4deg;
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .ph-picked {
+        background: var(--ph-paper);
+        color: var(--ph-board);
+        overflow: visible;
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .ph-picked::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.3rem;
+        inset-inline-start: 0.35rem;
+        inline-size: 1.6rem;
+        block-size: 0.9rem;
+        background: var(--fx-signal);
+        box-shadow: inset 0 -2px 0 hsl(from var(--background) h s l / 0.35);
+        rotate: -6deg;
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .ph-today::after {
+        display: none;
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .kp-alert--destructive {
+        position: relative;
+        background: var(--ph-paper);
+        border-color: var(--ph-board);
+        color: var(--ph-board);
+    }
+
+    .ph-scene[data-ph-colour='evidence'] .kp-alert--destructive::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.35rem;
+        inset-inline-end: 0.7rem;
+        inline-size: 1.3rem;
+        block-size: 1.3rem;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--ph-board) 0 2.5px, transparent 3px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
+    }
+
+    /* ── 6 The corners ────────────────────────────────────────────────────
+       The same card, menu panel, key figure, button, tag, chip, tooltip and bar
+       head in every option; only the corners differ. Square, skewed, cut is the
+       register's own, the base of every other question. */
+
+    /* Square and level: radius 0, no skew, no cut, nothing askew. */
+    .ph-scene[data-ph-corners='level'] :is(.kp-card, .kp-kpi, .ph-pop, .ph-plate::before, .ph-day, .ph-column) {
+        clip-path: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .ph-plate::before {
+        clip-path: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] :is(.kp-button, .kp-badge, .kp-tag, .ph-state__dot, .kp-progressbar__track, .kp-meter) {
+        transform: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .kp-button__label {
+        transform: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .kp-progressbar {
+        --kp-ps-slant: 0px;
+        --kp-ps-shard: 0px;
+    }
+
+    .ph-scene[data-ph-corners='level'] .kp-progressbar__track,
+    .ph-scene[data-ph-corners='level'] .kp-progressbar__track::before {
+        clip-path: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .kp-progressbar__head {
+        clip-path: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .kp-tooltip {
+        rotate: none;
+    }
+
+    .ph-scene[data-ph-corners='level'] .ph-arrives {
+        rotate: none;
+    }
+
+    /* Torn edges (the picks): torn tickets, a notch bitten from each side and a
+       perforated dashed line. */
+    .ph-scene[data-ph-corners='torn'] :is(.kp-card, .kp-kpi, .ph-pop, .ph-day) {
+        --ph-ticket: polygon(0 0, 100% 0, 100% 38%, 97% 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 3% 50%, 0 38%);
+        border-inline-start: 0;
+        clip-path: var(--ph-ticket);
+    }
+
+    .ph-scene[data-ph-corners='torn'] .ph-plate::before {
+        clip-path: polygon(0 0, 100% 0, 100% 38%, 97% 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 3% 50%, 0 38%);
+    }
+
+    .ph-scene[data-ph-corners='torn'] :is(.kp-card, .kp-kpi) {
+        padding-inline-start: 1.9rem;
+        background-image: repeating-linear-gradient(to bottom, var(--ph-board) 0 5px, transparent 5px 10px);
+        background-size: 2px 100%;
+        background-position: 1.1rem 0;
+        background-repeat: no-repeat;
+    }
+
+    .ph-scene[data-ph-corners='torn'] .ph-pop {
+        border-inline-start: 2px solid var(--foreground);
+    }
+
+    /* ── 7 The surface ────────────────────────────────────────────────────
+       A dialog with its title, a key figure, a trend tile, a menu with headings
+       and the state word in every option; only the surface differs. */
+    .ph-pop--headed::before {
+        content: 'Incidents';
+        display: block;
+        inline-size: fit-content;
+        margin: 0.15rem 0 0.2rem;
+        padding: 0.05rem 0.7rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transform: skewX(var(--kp-skew));
+    }
+
+    /* Black under the screen, cards as plates, hard shadows: the base. The hero
+       carries the red slash, here as the dialog's corner. */
+    .ph-scene[data-ph-surface='screen'] .ph-dialog::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 2.2rem;
+        background: var(--primary);
+        clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+    /* The evidence board (the picks): a bullseye behind the key figure, red string
+       across the panel, stamped rings, a redaction bar before every heading, a
+       ransom note over the header. */
+    .ph-scene[data-ph-surface='board'] .kp-kpi {
+        background-image: repeating-radial-gradient(circle at 80% 55%, transparent 0 7px, hsl(from var(--primary) h s l / 0.35) 7px 9px);
+    }
+
+    .ph-scene[data-ph-surface='board'] .kp-kpi .kp-kpi__value {
+        inline-size: fit-content;
+        padding: 0.05em 0.45em;
+        border: 3px solid var(--primary);
+        border-radius: 50%;
+        rotate: -4deg;
+    }
+
+    .ph-scene[data-ph-surface='board'] .ph-chart::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 45%;
+        inset-inline: -3%;
+        block-size: 2px;
+        background: var(--primary);
+        rotate: -7deg;
+        pointer-events: none;
+    }
+
+    .ph-scene[data-ph-surface='board'] :is(.kp-card .ph-title, .ph-pop--headed::before)::before {
+        content: '';
+        display: inline-block;
+        inline-size: 1.1em;
+        block-size: 0.7em;
+        margin-inline-end: 0.35em;
+        background: var(--ph-board);
+    }
+
+    .ph-scene[data-ph-surface='board'] .ph-pop--headed::before {
+        background: var(--ph-board);
+        color: var(--ph-paper);
+        box-shadow: 0 0 0 1px var(--ph-paper);
+    }
+
+    .ph-scene[data-ph-surface='board'] .ph-dialog .kp-dialog__title {
+        inline-size: fit-content;
+        padding: 0.1rem 0.6rem;
+        background: var(--ph-paper);
+        color: var(--ph-board);
+        text-shadow: 3px 3px 0 var(--primary);
+        rotate: -2deg;
+    }
+
+    .ph-scene[data-ph-surface='board'] .ph-state__dot {
+        inline-size: 1em;
+        block-size: 1em;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--success-foreground) 0 30%, transparent 32%);
+        transform: none;
+    }
+
+    /* The ghost (the drawer's pick): a pale translucent panel, a soft inner shadow,
+       a feathered border, a pale halo, vapour. */
+    .ph-scene[data-ph-surface='ghost'] :is(.kp-card, .kp-kpi, .kp-dialog, .ph-pop) {
+        border: 1px solid hsl(from var(--foreground) h s l / 0.22);
+        background: hsl(from var(--foreground) h s l / 0.1);
+        color: var(--foreground);
+        clip-path: none;
+        box-shadow:
+            inset 0 0 22px hsl(from var(--foreground) h s l / 0.22),
+            0 0 26px hsl(from var(--foreground) h s l / 0.2);
+        backdrop-filter: blur(3px);
+    }
+
+    .ph-scene[data-ph-surface='ghost'] .kp-card .ph-title,
+    .ph-scene[data-ph-surface='ghost'] .kp-kpi :is(.kp-kpi__label, .kp-kpi__trend, .kp-kpi__value) {
+        color: var(--foreground);
+        text-shadow: 0 0 8px hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    .ph-scene[data-ph-surface='ghost'] .ph-plate::before {
+        display: none;
+    }
+
+    .ph-scene[data-ph-surface='ghost'] .ph-chart::after {
+        content: '';
+        position: absolute;
+        inset: -30% 0 auto;
+        block-size: 90%;
+        background: radial-gradient(ellipse at 30% 40%, hsl(from var(--foreground) h s l / 0.22), transparent 62%);
+        pointer-events: none;
+    }
+
+    /* ── 8 A warning ──────────────────────────────────────────────────────
+       A warning key figure, a failed trend tile, a destructive menu entry and a
+       warning alert in every option. */
+    .ph-scene[data-ph-warning] .kp-kpi[data-kp-tone] .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    .ph-scene[data-ph-warning] .kp-kpi[data-kp-tone] {
+        border-color: transparent;
+        border-inline-start: 5px solid var(--primary);
+        box-shadow: none;
+    }
+
+    .ph-scene[data-ph-warning] .ph-failed {
+        position: relative;
+    }
+
+    /* A destructive entry is a red plate with black ink. */
+    .ph-scene[data-ph-warning] .kp-menu__item.ph-bad {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    /* The yellow overprint: the change of a warning figure is stamped on a yellow
+       plate with black ink, 2 px off register on the figure; a failure's change is
+       on the red plate; the card stays its plate. The warning alert is the yellow
+       plate. */
+    .ph-scene[data-ph-warning='overprint'] .kp-kpi[data-kp-tone='warning'] .ph-note {
+        background: var(--ph-overprint);
+        color: var(--ph-board);
+        translate: 2px 2px;
+    }
+
+    .ph-scene[data-ph-warning='overprint'] .ph-failed .ph-note {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 2px 2px;
+    }
+
+    .ph-scene[data-ph-warning='overprint'] .kp-alert--warning {
+        border: 2px solid var(--ph-board);
+        border-inline-start: 5px solid var(--ph-board);
+        background: var(--ph-overprint);
+        color: var(--ph-board);
+    }
+
+    /* Stamped askew (the picks): the label stamped askew in the tone's colour with a
+       ruled border; the key figure's stamped ring. */
+    .ph-scene[data-ph-warning='stamped'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label {
+        inline-size: fit-content;
+        padding: 0.05rem 0.45rem;
+        border: 2px solid var(--warning);
+        color: var(--warning);
+        rotate: -4deg;
+    }
+
+    .ph-scene[data-ph-warning='stamped'] .kp-kpi[data-kp-tone='warning'] .ph-note {
+        background: none;
+        color: var(--warning);
+        box-shadow: 0 0 0 2px var(--warning);
+        border-radius: 50%;
+        rotate: -3deg;
+    }
+
+    .ph-scene[data-ph-warning='stamped'] .ph-failed .kp-card__title {
+        inline-size: fit-content;
+        padding: 0.05rem 0.45rem;
+        border: 2px solid var(--primary);
+        color: var(--primary-foreground);
+        background: var(--primary);
+        rotate: -3deg;
+    }
+
+    .ph-scene[data-ph-warning='stamped'] .ph-failed .ph-note {
+        background: none;
+        color: var(--ph-board);
+        box-shadow: 0 0 0 2px var(--primary);
+        rotate: -3deg;
+    }
+
+    .ph-scene[data-ph-warning='stamped'] .kp-menu__item.ph-bad {
+        background: none;
+        color: var(--foreground);
+        border: 2px solid var(--primary);
+        rotate: -2deg;
+    }
+
+    .ph-scene[data-ph-warning='stamped'] .kp-alert--warning {
+        border: 2px solid var(--warning);
+        border-inline-start: 5px solid var(--warning);
+        background: var(--background);
+        color: var(--foreground);
+        rotate: -1deg;
+    }
+
+    /* The red plate for both: warning and failure on the red plate with black ink; no
+       yellow. */
+    .ph-scene[data-ph-warning='redboth'] :is(.kp-kpi[data-kp-tone='warning'] .ph-note, .ph-failed .ph-note) {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-warning='redboth'] .kp-alert--warning {
+        border: 2px solid var(--ph-board);
+        border-inline-start: 5px solid var(--ph-board);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* ── 14 Buttons inside composites (State forces a state) ─────────────
+       One manner for every control, wherever it stands (G14): phantom's key cap.
+       Pointed at, the red bar is thrown in behind the label and resolves, the ink
+       flips to black; focused, the two rings; pressed, the cap drops onto its
+       shadow and the face resolves. A menu entry is the bar, a key figure that is a
+       link has it behind its label. */
+    .ph-scene[data-ph-composites] .kp-button:not(.kp-button--primary) {
+        --ph-ink-from: var(--foreground);
+    }
+
+    .ph-scene[data-ph-composites] .kp-button--primary {
+        --ph-ink-from: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-composites] .kp-button {
+        overflow: clip;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button::after {
+        width: calc(100% - 4px);
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button {
+        color: var(--primary-foreground);
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button--primary {
+        filter: drop-shadow(2px 2px 0 var(--kp-red-deep));
+        translate: 3px 3px;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-menu__item::before,
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) a.kp-kpi .kp-kpi__label::before {
+        translate: 0 0;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) :is(.kp-menu__item, a.kp-kpi .kp-kpi__label) {
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button::after,
+        .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-menu__item::before,
+        .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) a.kp-kpi .kp-kpi__label::before {
+            animation:
+                ph-bar-fly var(--ph-c) linear both,
+                ph-bar-res var(--ph-c) linear both;
+        }
+
+        .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button {
+            animation: ph-ink var(--ph-c) linear both;
+        }
+    }
+
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) :is(.kp-button, a.kp-kpi) {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            0 0 0 5px var(--focus-ring);
+    }
+
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-menu__item {
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring-contrast),
+            inset 0 0 0 4px var(--focus-ring);
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button {
+        translate: 3px 3px;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button--primary {
+        translate: 5px 5px;
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button::after {
+        width: calc(100% - 4px);
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button {
+        color: var(--primary-foreground);
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) :is(.kp-menu__item, a.kp-kpi) {
+        translate: 3px 3px;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-menu__item::before,
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) a.kp-kpi .kp-kpi__label::before {
+        translate: 0 0;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) :is(.kp-menu__item, a.kp-kpi .kp-kpi__label) {
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button::before,
+        .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites]:not([data-ph-composites='mix']) .kp-button::after {
+            animation: ph-face var(--ph-c) linear both;
+        }
+    }
+
+    /* Phantom's own on a card: the same manners, and the header's actions and the
+       drawer's buttons stand together on one white card askew with its hard shadow. */
+    .ph-scene[data-ph-composites='card'] .ph-actions-card {
+        position: relative;
+        isolation: isolate;
+        padding: 0.5rem 0.7rem;
+        background: var(--ph-paper);
+        box-shadow: 5px 5px 0 var(--ph-second);
+        rotate: var(--ph-land);
+    }
+
+    .ph-scene[data-ph-composites='card'] .ph-actions-card .kp-button {
+        --kp-plate-ink: var(--ph-board);
+        --kp-plate-frame: var(--ph-board);
+        color: var(--ph-board);
+    }
+
+    .ph-scene[data-ph-composites='card'] .ph-actions-card .kp-button--primary {
+        --kp-plate-ink: var(--primary-foreground);
+        --kp-plate-frame: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* As today: three manners on one page. The header's pick stamps a faint ring
+       round a hovered button, skews it when focused, flattens the stamp on press; the
+       tiles' Open fills solid red and the card jumps, a dashed ring on focus; the key
+       figure's red ring glints, a dashed outline on focus, the card tilts on press;
+       the menu's halftone shifts one step. */
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites='mix'] .ph-in-header {
+        outline: 2px solid hsl(from var(--primary) h s l / 0.55);
+        outline-offset: 4px;
+        border-radius: 50%;
+    }
+
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites='mix'] .ph-in-header {
+        outline: none;
+        transform: skewX(-18deg);
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            0 0 0 5px var(--focus-ring);
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites='mix'] .ph-in-header {
+        outline: 2px solid hsl(from var(--primary) h s l / 0.3);
+        outline-offset: 1px;
+        translate: 3px 3px;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites='mix'] .ph-tile-link {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites='mix'] .ph-in-tile {
+        translate: 0 -6px;
+        rotate: -1.2deg;
+    }
+
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites='mix'] .ph-tile-link {
+        outline: 3px dashed var(--primary);
+        outline-offset: 4px;
+        box-shadow: none;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites='mix'] .ph-tile-link {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 3px 3px;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites='mix'] a.kp-kpi {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+    }
+
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites='mix'] a.kp-kpi {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites='mix'] a.kp-kpi {
+        rotate: 2deg;
+    }
+
+    .ph-sec[data-ph-show='hover'] .ph-scene[data-ph-composites='mix'] .kp-menu__item,
+    .ph-sec[data-ph-show='focus'] .ph-scene[data-ph-composites='mix'] .kp-menu__item {
+        background-image: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 1px, transparent 1.4px);
+        background-size: 4px 4px;
+        background-position: 2px 0;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-composites='mix'] .kp-menu__item {
+        background-image: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 1px, transparent 1.4px);
+        background-size: 4px 4px;
+        background-position: 0 0;
+    }
+
+    /* ── 15 Pointing at something ─────────────────────────────────────────
+       A button, a menu's entries, a tile with its Open link, a link in running
+       text, two key figures and a month of days, the first of each pointed at (the
+       class is the pointer: the review dialog gives it and takes it away on a loop,
+       State: Hover holds it). */
+
+    /* The red bar thrown in and resolved: the register's red bar behind the label is
+       thrown in from the start edge as a screen and resolves solid in two cuts, the
+       ink flipping to black; a menu entry the same; a link's underline the same bar,
+       thin; a card does not move. Leaving, the bar dissolves and is snatched off. */
+    .ph-scene[data-ph-hover='bar'] .kp-button {
+        overflow: clip;
+        --ph-ink-from: var(--foreground);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-button--primary {
+        --ph-ink-from: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-button::after {
+        width: calc(100% - 4px);
+        translate: -105% 0;
+        mask-image: var(--ph-m25);
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-button:is(.ph-pointed, :hover)::after,
+    .ph-scene[data-ph-hover='bar'] .kp-menu__item:is(.ph-pointed, :hover)::before,
+    .ph-scene[data-ph-hover='bar'] .ph-day:is(.ph-pointed, :hover)::before,
+    .ph-scene[data-ph-hover='bar'] .ph-link:is(.ph-pointed, :hover)::after,
+    .ph-scene[data-ph-hover='bar'] a.kp-kpi:is(.ph-pointed, :hover) .kp-kpi__label::before {
+        translate: 0 0;
+        mask-image: none;
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-menu__item::before,
+    .ph-scene[data-ph-hover='bar'] .ph-day::before,
+    .ph-scene[data-ph-hover='bar'] .ph-link::after,
+    .ph-scene[data-ph-hover='bar'] a.kp-kpi .kp-kpi__label::before {
+        mask-image: var(--ph-m25);
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-button:is(.ph-pointed, :hover) {
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .kp-menu__item:is(.ph-pointed, :hover) {
+        background: none;
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-hover='bar'] .ph-day:is(.ph-pointed, :hover) {
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-hover='bar'] a.kp-kpi:is(.ph-pointed, :hover) .kp-kpi__label {
+        color: var(--primary-foreground);
+    }
+
+    /* The link is white with the thin bar under it; pointed, the bar is thrown in. */
+    .ph-scene[data-ph-hover] .ph-link:not(.ph-pointed):not(:hover) {
+        text-decoration: underline 2px var(--border-strong);
+        text-underline-offset: 0.2em;
+    }
+
+    .ph-scene[data-ph-hover='bar'] .ph-link:is(.ph-pointed, :hover) {
+        padding-inline: 0;
+        background: none;
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-hover='bar'] .kp-button::after,
+        .ph-scene[data-ph-hover='bar'] .kp-menu__item::before,
+        .ph-scene[data-ph-hover='bar'] .ph-day::before,
+        .ph-scene[data-ph-hover='bar'] .ph-link::after,
+        .ph-scene[data-ph-hover='bar'] a.kp-kpi .kp-kpi__label::before {
+            transition: translate calc(60ms * var(--ph-slow, 1)) cubic-bezier(1, 0, 0.19, 1) calc(30ms * var(--ph-slow, 1));
+        }
+
+        .ph-scene[data-ph-hover='bar'] .kp-button:is(.ph-pointed, :hover)::after,
+        .ph-scene[data-ph-hover='bar'] .kp-menu__item:is(.ph-pointed, :hover)::before,
+        .ph-scene[data-ph-hover='bar'] .ph-day:is(.ph-pointed, :hover)::before,
+        .ph-scene[data-ph-hover='bar'] .ph-link:is(.ph-pointed, :hover)::after,
+        .ph-scene[data-ph-hover='bar'] a.kp-kpi:is(.ph-pointed, :hover) .kp-kpi__label::before {
+            transition: none;
+            animation:
+                ph-bar-fly var(--ph-c) linear both,
+                ph-bar-res var(--ph-c) linear both;
+        }
+
+        .ph-scene[data-ph-hover='bar'] .kp-button:is(.ph-pointed, :hover) {
+            animation: ph-ink var(--ph-c) linear both;
+        }
+    }
+
+    /* The pin glints (the picks): the red ring round the figure glints; the header's
+       stamps a faint ring; the card tilts. No bar, no wash of ink. */
+    .ph-scene[data-ph-hover='glint'] .kp-button:is(.ph-pointed, :hover) {
+        color: var(--foreground);
+        box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.7);
+        border-radius: 50%;
+    }
+
+    .ph-scene[data-ph-hover='glint'] .kp-button--primary:is(.ph-pointed, :hover) {
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-hover='glint'] .kp-button:is(.ph-pointed, :hover)::after {
+        width: 0;
+    }
+
+    .ph-scene[data-ph-hover='glint'] .kp-button--primary:is(.ph-pointed, :hover) {
+        filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        translate: 0 0;
+    }
+
+    .ph-scene[data-ph-hover='glint'] a.kp-kpi:is(.ph-pointed, :hover) {
+        outline: 2px solid var(--primary);
+        outline-offset: -5px;
+    }
+
+    .ph-scene[data-ph-hover='glint'] .ph-in-tile:is(.ph-pointed-tile, :hover) {
+        rotate: 1.2deg;
+    }
+
+    .ph-scene[data-ph-hover='glint'] .ph-day:is(.ph-pointed, :hover) {
+        outline: 2px solid var(--primary);
+        outline-offset: -5px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-hover='glint'] a.kp-kpi:is(.ph-pointed, :hover),
+        .ph-scene[data-ph-hover='glint'] .ph-day:is(.ph-pointed, :hover) {
+            animation: ph-glint calc(600ms * var(--ph-slow, 1)) linear both;
+        }
+    }
+
+    /* Snatched off the board (the picks): the card jumps up hard on a bigger offset
+       shadow, Open fills solid red. */
+    .ph-scene[data-ph-hover='snatched'] .ph-in-tile:is(.ph-pointed-tile, :hover),
+    .ph-scene[data-ph-hover='snatched'] a.kp-kpi:is(.ph-pointed, :hover),
+    .ph-scene[data-ph-hover='snatched'] .ph-day:is(.ph-pointed, :hover),
+    .ph-scene[data-ph-hover='snatched'] .kp-button:is(.ph-pointed, :hover) {
+        translate: 0 -6px;
+        rotate: -1.2deg;
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .kp-button:is(.ph-pointed, :hover)::after {
+        width: 0;
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .kp-button:is(.ph-pointed, :hover) {
+        color: var(--foreground);
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .kp-button--primary:is(.ph-pointed, :hover) {
+        color: var(--primary-foreground);
+        filter: drop-shadow(8px 8px 0 var(--kp-red-deep));
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .ph-plate:has(.ph-pointed-tile, :hover) {
+        translate: 0 0;
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .ph-plate:has(.ph-pointed-tile)::before {
+        translate: 12px 12px;
+        background: var(--primary);
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .ph-tile-link:is(.ph-pointed, :hover) {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 0 0;
+        rotate: 0deg;
+    }
+
+    .ph-scene[data-ph-hover='snatched'] .ph-in-kpi.ph-pointed {
+        box-shadow: 6px 6px 0 0 var(--primary);
+    }
+
+    /* ── 16 The focus ring ────────────────────────────────────────────────
+       A button, a header action, a key figure as a link, a menu entry, a calendar
+       day and a tile's link, each focused (the class is the keyboard; State:
+       Focus on the composites). DI2 fixes the two-channel ring for every theme. */
+
+    /* The two rings (DI2, today): two rings outside the skewed plate, 2 px paper then
+       5 px red, skewed with it; on a part that is cut, inside it. */
+    .ph-scene[data-ph-focus='rings'] .kp-button.ph-focused,
+    .ph-scene[data-ph-focus='mix'] .kp-button.ph-focused {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--focus-ring-contrast),
+            0 0 0 5px var(--focus-ring);
+    }
+
+    .ph-scene[data-ph-focus='rings'] :is(.kp-menu__item, .ph-day, a.kp-kpi).ph-focused,
+    .ph-scene[data-ph-focus='mix'] :is(.kp-menu__item, .ph-day).ph-focused {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring-contrast),
+            inset 0 0 0 5px var(--focus-ring);
+    }
+
+    /* A dashed red ring (the picks): the dashed red outline round the control
+       instead of the two rings. */
+    .ph-scene[data-ph-focus='dashed'] .kp-button.ph-focused {
+        outline: 3px dashed var(--primary);
+        outline-offset: 4px;
+        box-shadow: none;
+    }
+
+    .ph-scene[data-ph-focus='dashed'] :is(.kp-menu__item, .ph-day, a.kp-kpi).ph-focused {
+        outline: 3px dashed var(--primary);
+        outline-offset: -6px;
+        box-shadow: none;
+    }
+
+    /* As today's mix: the register's rings plus the picks' dashed rings and skewed
+       focus where a pick drew them (the key figure, the tile's link, the header). */
+    .ph-scene[data-ph-focus='mix'] a.kp-kpi.ph-focused {
+        outline: 2px dashed var(--primary);
+        outline-offset: -6px;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring-contrast),
+            inset 0 0 0 5px var(--focus-ring);
+    }
+
+    .ph-scene[data-ph-focus='mix'] .ph-tile-link.ph-focused {
+        outline: 3px dashed var(--primary);
+        outline-offset: 7px;
+    }
+
+    .ph-scene[data-ph-focus='mix'] .ph-in-header.ph-focused {
+        transform: skewX(-18deg);
+    }
+
+    /* ── 17 The press ─────────────────────────────────────────────────────
+       A button, a primary button, a menu entry, a calendar day and a key figure as
+       a filter, each at rest and pressed: a loop of 3.2 s (at rest, the press at
+       0.83 s, held to 1.98 s, let go); State: Press holds the pressed picture. */
+    .ph-scene[data-ph-press] .ph-press {
+        --ph-ink-from: var(--foreground);
+        --ph-lap-press: calc(3200ms * var(--ph-slow, 1));
+    }
+
+    .ph-scene[data-ph-press] .kp-button--primary.ph-press {
+        --ph-ink-from: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-press] :is(.ph-day, .kp-kpi).ph-press {
+        --ph-ink-from: var(--ph-board);
+    }
+
+    .ph-scene[data-ph-press] :is(.kp-button, .kp-menu__item, .ph-day, .kp-kpi).ph-press {
+        overflow: clip;
+    }
+
+    /* The cap drops, the face resolves: the cap drops onto its shadow (3 px, the
+       primary 5 px with its shadow gone) and its face resolves from dots to solid in
+       two cuts; released it lifts and the face is solid. Nothing eases. The face is the
+       red bar behind the label (the primary's own red plate). */
+    .ph-scene[data-ph-press='drops'] .kp-button:not(.kp-button--primary).ph-press::after {
+        width: calc(100% - 4px);
+    }
+
+    .ph-scene[data-ph-press='drops'] .kp-button:not(.kp-button--primary).ph-press::after,
+    .ph-scene[data-ph-press='drops'] .kp-menu__item.ph-press::before,
+    .ph-scene[data-ph-press='drops'] .ph-day.ph-press::before,
+    .ph-scene[data-ph-press='drops'] .kp-kpi.ph-press .kp-kpi__label::before {
+        mask-image: var(--ph-m25);
+        mask-size: var(--ph-dot) var(--ph-dot);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-press='drops'] .kp-button:not(.kp-button--primary).ph-press {
+            animation:
+                ph-tap-d3 var(--ph-lap-press) linear infinite,
+                ph-tap-ink var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='drops'] .kp-button--primary.ph-press {
+            animation: ph-tap-d5 var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='drops'] .kp-button--primary.ph-press::before {
+            animation: ph-tap-face var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='drops'] .kp-button:not(.kp-button--primary).ph-press::after,
+        .ph-scene[data-ph-press='drops'] .kp-menu__item.ph-press::before,
+        .ph-scene[data-ph-press='drops'] .ph-day.ph-press::before,
+        .ph-scene[data-ph-press='drops'] .kp-kpi.ph-press .kp-kpi__label::before {
+            animation:
+                ph-tap-bar var(--ph-lap-press) linear infinite,
+                ph-tap-res var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='drops'] :is(.kp-menu__item, .ph-day, .kp-kpi).ph-press {
+            animation:
+                ph-tap-d3 var(--ph-lap-press) linear infinite,
+                ph-tap-ink var(--ph-lap-press) linear infinite;
+        }
+    }
+
+    /* The cap drops (today): the register's press, the cap drops onto its shadow; the
+       face stays solid, no dots. */
+    .ph-scene[data-ph-press='today'] .kp-button:not(.kp-button--primary).ph-press::after {
+        width: calc(100% - 4px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-press='today'] .kp-button:not(.kp-button--primary).ph-press {
+            animation:
+                ph-tap-d3 var(--ph-lap-press) linear infinite,
+                ph-tap-ink var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='today'] .kp-button--primary.ph-press {
+            animation: ph-tap-d5 var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='today'] .kp-button:not(.kp-button--primary).ph-press::after {
+            translate: -105% 0;
+            animation: ph-tap-bar var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='today'] :is(.kp-menu__item, .ph-day, .kp-kpi).ph-press {
+            animation: ph-tap-d3 var(--ph-lap-press) linear infinite;
+        }
+    }
+
+    /* The card tilts (the picks): the key figure tilts on press, the tile's Open fills,
+       the header's stamp flattens. */
+    @media (prefers-reduced-motion: no-preference) {
+        .ph-scene[data-ph-press='tilts'] :is(.kp-kpi, .ph-day, .kp-button--primary).ph-press {
+            animation: ph-tap-tilt var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='tilts'] .kp-button:not(.kp-button--primary).ph-press {
+            animation:
+                ph-tap-fill var(--ph-lap-press) linear infinite,
+                ph-tap-ink var(--ph-lap-press) linear infinite;
+        }
+
+        .ph-scene[data-ph-press='tilts'] .kp-menu__item.ph-press {
+            background-image: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 1px, transparent 1.4px);
+            background-size: 4px 4px;
+            animation: ph-tap-shift var(--ph-lap-press) linear infinite;
+        }
+    }
+
+    /* State: Press holds the pressed picture. */
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press] .ph-press {
+        animation: none;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press] .ph-press::before,
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press] .ph-press::after,
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press] .ph-press .kp-kpi__label::before {
+        animation: none;
+        mask-image: none;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press]:not([data-ph-press='tilts']) .ph-press {
+        translate: 3px 3px;
+        color: var(--primary-foreground);
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press] .kp-button--primary.ph-press {
+        translate: 5px 5px;
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press]:not([data-ph-press='tilts']) .kp-button:not(.kp-button--primary).ph-press::after {
+        width: calc(100% - 4px);
+        translate: 0 0;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press]:not([data-ph-press='tilts']) .kp-menu__item.ph-press::before,
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press]:not([data-ph-press='tilts']) .ph-day.ph-press::before,
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press]:not([data-ph-press='tilts']) .kp-kpi.ph-press .kp-kpi__label::before {
+        translate: 0 0;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press='tilts'] :is(.kp-kpi, .ph-day, .kp-button--primary).ph-press {
+        rotate: 2deg;
+    }
+
+    .ph-sec[data-ph-show='press'] .ph-scene[data-ph-press='tilts'] .kp-button:not(.kp-button--primary).ph-press {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* ── 18 The voice ─────────────────────────────────────────────────────
+       A tile with its title, a label, a figure, an identifier and a line of prose in
+       every option. Barlow Condensed 900 italic capitals shout (titles, labels,
+       buttons, tabs), Barlow speaks (prose and figures), the monospace files
+       (identifiers, help, errors). */
+    .ph-w {
+        display: inline;
+    }
+
+    /* Condensed everywhere: figures and prose in Barlow Condensed too, italic,
+       uppercase where it is a label. */
+    .ph-scene[data-ph-type='everywhere'] :is(.ph-type__prose, .ph-type__figure, .ph-type__table td, .ph-type__id, .kp-timestamp) {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+    }
+
+    .ph-scene[data-ph-type='everywhere'] .ph-type__prose {
+        font-size: 1.05rem;
+        line-height: 1.15;
+    }
+
+    /* The ransom note (the picks): labels as cut-out scraps, each word on its own
+       skewed paper, the figure with a red offset shadow. */
+    .ph-scene[data-ph-type='ransom'] .ph-w {
+        display: inline-block;
+        margin: 0.1rem 0.15rem;
+        padding: 0.05em 0.45em;
+        background: var(--ph-board);
+        color: var(--ph-paper);
+        box-shadow: 2px 2px 0 var(--ph-second);
+        rotate: -2deg;
+        transform: skewX(var(--kp-skew));
+    }
+
+    .ph-scene[data-ph-type='ransom'] .ph-w:nth-child(even) {
+        rotate: 2deg;
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .ph-scene[data-ph-type='ransom'] .ph-type__figure {
+        text-shadow: 3px 3px 0 var(--primary);
+    }
+
+    /* ── 19 Motifs ────────────────────────────────────────────────────────
+       A card with its title, a meter with its mark, a chart's events, a button and a
+       list, an empty state and a divider in every option; only the marks differ. */
+    .ph-list li {
+        position: relative;
+        list-style: none;
+        padding-inline-start: 0.4rem;
+    }
+
+    .ph-list {
+        padding-inline-start: 0.4rem;
+    }
+
+    /* The screen, the skew, the red plate, the second plate, the slash and the star,
+       nothing else: the card's slash corner, the star for a bullet, the register's torn
+       divider, no stamps, strings, pins, staples, bullet holes, targets or ransom cuts. */
+    .ph-scene[data-ph-motifs] .ph-list li::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.28em;
+        inset-inline-start: -0.9rem;
+        inline-size: 0.8rem;
+        block-size: 0.8rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    .ph-scene[data-ph-motifs] .ph-colour-card .ph-tile::after,
+    .ph-scene[data-ph-motifs] .ph-tile::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 1.6rem;
+        background: var(--primary);
+        clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+        opacity: 0.95;
+        pointer-events: none;
+    }
+
+    .ph-scene[data-ph-motifs] .ph-cap--inner {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    /* Plus the evidence board (the picks): the same six, and the picks' red string,
+       stamped rings, pins, staple tags, bullet holes, targets and redaction bars. */
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .ph-tile::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline: -4%;
+        block-size: 2px;
+        background: var(--primary);
+        rotate: -8deg;
+        pointer-events: none;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .ph-tile .ph-title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 1.1em;
+        block-size: 0.7em;
+        margin-inline-end: 0.35em;
+        background: var(--ph-board);
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .ph-events i {
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--ph-board) 0 2.5px, transparent 3px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
+        clip-path: none;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .ph-list li::before {
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 2px var(--foreground);
+        clip-path: none;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .kp-button--primary {
+        overflow: visible;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .kp-button--primary::before {
+        outline: 3px solid var(--fx-signal);
+        outline-offset: 3px;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .kp-empty__title {
+        inline-size: fit-content;
+        padding: 0.1rem 0.6rem;
+        border: 3px solid var(--primary);
+        border-radius: 50%;
+        rotate: -4deg;
+    }
+
+    .ph-scene:is([data-ph-motifs='evidence'], [data-ph-motifs='all']) .ph-meter {
+        background-image: repeating-radial-gradient(circle at 90% 50%, transparent 0 4px, hsl(from var(--primary) h s l / 0.45) 4px 5px);
+    }
+
+    /* As today (everything): the print, the board, the ghost's blur and glow, the
+       vapour. */
+    .ph-scene[data-ph-motifs='all'] .kp-card .ph-title,
+    .ph-scene[data-ph-motifs='all'] .kp-empty__title {
+        text-shadow: 0 0 10px var(--primary);
+    }
+
+    .ph-scene[data-ph-motifs='all'] .kp-empty {
+        filter: blur(0.6px);
+    }
+
+    .ph-scene[data-ph-motifs='all'] .ph-events {
+        filter: drop-shadow(0 0 6px var(--primary));
+    }
+
+    .ph-scene[data-ph-motifs='all'] .ph-tile {
+        box-shadow: 0 0 22px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* ── Question 1: the curves the options throw on ── */
+    @keyframes ph-fly-reg {
+        0% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-reg-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        100% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+        }
+    }
+
+    @keyframes ph-fly-eased {
+        0% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-eased-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        100% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+        }
+    }
+
+    @keyframes ph-fly-steps {
+        0% {
+            translate: calc(var(--ph-x0, -80cqi) * 1) calc(var(--ph-y0, 6cqi) * 1);
+            rotate: calc(var(--ph-r0, -22deg) * 1 + var(--ph-land, -1.5deg) * 0);
+            scale: calc(var(--ph-s0, 1.15) * 1 + 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        14.284286% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.75) calc(var(--ph-y0, 6cqi) * 0.75);
+            rotate: calc(var(--ph-r0, -22deg) * 0.75 + var(--ph-land, -1.5deg) * 0.25);
+            scale: calc(var(--ph-s0, 1.15) * 0.75 + 0.25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        28.57% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.5) calc(var(--ph-y0, 6cqi) * 0.5);
+            rotate: calc(var(--ph-r0, -22deg) * 0.5 + var(--ph-land, -1.5deg) * 0.5);
+            scale: calc(var(--ph-s0, 1.15) * 0.5 + 0.5);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        42.855714% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.25) calc(var(--ph-y0, 6cqi) * 0.25);
+            rotate: calc(var(--ph-r0, -22deg) * 0.25 + var(--ph-land, -1.5deg) * 0.75);
+            scale: calc(var(--ph-s0, 1.15) * 0.25 + 0.75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        57.141429% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-steps-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        42.858571% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        57.144286% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.25) calc(var(--ph-y0, 6cqi) * 0.25);
+            rotate: calc(var(--ph-r0, -22deg) * 0.25 + var(--ph-land, -1.5deg) * 0.75);
+            scale: calc(var(--ph-s0, 1.15) * 0.25 + 0.75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        71.43% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.5) calc(var(--ph-y0, 6cqi) * 0.5);
+            rotate: calc(var(--ph-r0, -22deg) * 0.5 + var(--ph-land, -1.5deg) * 0.5);
+            scale: calc(var(--ph-s0, 1.15) * 0.5 + 0.5);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        85.715714% {
+            translate: calc(var(--ph-x0, -80cqi) * 0.75) calc(var(--ph-y0, 6cqi) * 0.75);
+            rotate: calc(var(--ph-r0, -22deg) * 0.75 + var(--ph-land, -1.5deg) * 0.25);
+            scale: calc(var(--ph-s0, 1.15) * 0.75 + 0.25);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            translate: calc(var(--ph-x0, -80cqi) * 1) calc(var(--ph-y0, 6cqi) * 1);
+            rotate: calc(var(--ph-r0, -22deg) * 1 + var(--ph-land, -1.5deg) * 0);
+            scale: calc(var(--ph-s0, 1.15) * 1 + 0);
+        }
+    }
+
+    @keyframes ph-fly-lin {
+        0% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+            animation-timing-function: linear;
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-lin-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+        }
+    }
+
+    @keyframes ph-grow-reg {
+        0% {
+            --ph-r: 1.9747px;
+            animation-timing-function: linear;
+        }
+
+        57.142857% {
+            --ph-r: 1.9747px;
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        100% {
+            --ph-r: 5.4px;
+        }
+    }
+
+    @keyframes ph-grow-reg-out {
+        0% {
+            --ph-r: 5.4px;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        42.857143% {
+            --ph-r: 1.9747px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --ph-r: 1.9747px;
+        }
+    }
+
+    @keyframes ph-grow-eased {
+        0% {
+            --ph-r: 1.9747px;
+            animation-timing-function: linear;
+        }
+
+        57.142857% {
+            --ph-r: 1.9747px;
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        100% {
+            --ph-r: 5.4px;
+        }
+    }
+
+    @keyframes ph-grow-eased-out {
+        0% {
+            --ph-r: 5.4px;
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        42.857143% {
+            --ph-r: 1.9747px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --ph-r: 1.9747px;
+        }
+    }
+
+    /* ── Question 2: the direction ── */
+    @keyframes ph-cutin {
+        0% {
+            clip-path: inset(-8px 100% -8px -8px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        14.284286% {
+            clip-path: inset(-8px 75% -8px -8px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        28.57% {
+            clip-path: inset(-8px 50% -8px -8px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        42.855714% {
+            clip-path: inset(-8px 25% -8px -8px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        57.141429% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(-8px -8px -8px -8px);
+        }
+    }
+
+    @keyframes ph-cutin-out {
+        0% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: linear;
+        }
+
+        42.858571% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        57.144286% {
+            clip-path: inset(-8px 25% -8px -8px);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        71.43% {
+            clip-path: inset(-8px 50% -8px -8px);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        85.715714% {
+            clip-path: inset(-8px 75% -8px -8px);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            clip-path: inset(-8px 100% -8px -8px);
+        }
+    }
+
+    @keyframes ph-jump {
+        0% {
+            translate: calc(var(--ph-jx, 1.2rem) * 1) 0;
+            rotate: calc(2deg * 1 + var(--ph-land, -1.5deg) * 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.33% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0.666667) 0;
+            rotate: calc(2deg * 0.666667 + var(--ph-land, -1.5deg) * 0.333333);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.663333% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0.333333) 0;
+            rotate: calc(2deg * 0.333333 + var(--ph-land, -1.5deg) * 0.666667);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.996667% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0) 0;
+            rotate: calc(2deg * 0 + var(--ph-land, -1.5deg) * 1);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0) 0;
+            rotate: calc(2deg * 0 + var(--ph-land, -1.5deg) * 1);
+        }
+    }
+
+    @keyframes ph-jump-out {
+        0% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0) 0;
+            rotate: calc(2deg * 0 + var(--ph-land, -1.5deg) * 1);
+            animation-timing-function: linear;
+        }
+
+        0.003333% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0) 0;
+            rotate: calc(2deg * 0 + var(--ph-land, -1.5deg) * 1);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        33.336667% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0.333333) 0;
+            rotate: calc(2deg * 0.333333 + var(--ph-land, -1.5deg) * 0.666667);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        66.67% {
+            translate: calc(var(--ph-jx, 1.2rem) * 0.666667) 0;
+            rotate: calc(2deg * 0.666667 + var(--ph-land, -1.5deg) * 0.333333);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            translate: calc(var(--ph-jx, 1.2rem) * 1) 0;
+            rotate: calc(2deg * 1 + var(--ph-land, -1.5deg) * 0);
+        }
+    }
+
+    @keyframes ph-slash-end {
+        0% {
+            clip-path: inset(-8px -8px -8px 100%);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.33% {
+            clip-path: inset(-8px -8px -8px 66.666667%);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.663333% {
+            clip-path: inset(-8px -8px -8px 33.333333%);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.996667% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(-8px -8px -8px -8px);
+        }
+    }
+
+    @keyframes ph-slash-end-out {
+        0% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: linear;
+        }
+
+        0.003333% {
+            clip-path: inset(-8px -8px -8px -8px);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        33.336667% {
+            clip-path: inset(-8px -8px -8px 33.333333%);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        66.67% {
+            clip-path: inset(-8px -8px -8px 66.666667%);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            clip-path: inset(-8px -8px -8px 100%);
+        }
+    }
+
+    @keyframes ph-centre {
+        0% {
+            mask-image: var(--ph-e1);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        24.998571% {
+            mask-image: var(--ph-e2);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.998571% {
+            mask-image: var(--ph-e3);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.998571% {
+            mask-image: none;
+            mask-size: var(--ph-dot) var(--ph-dot);
+            mask-composite: add;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+            mask-size: var(--ph-dot) var(--ph-dot);
+            mask-composite: add;
+        }
+    }
+
+    @keyframes ph-centre-out {
+        0% {
+            mask-image: none;
+            mask-size: var(--ph-dot) var(--ph-dot);
+            mask-composite: add;
+            animation-timing-function: linear;
+        }
+
+        25.001429% {
+            mask-image: none;
+            mask-size: var(--ph-dot) var(--ph-dot);
+            mask-composite: add;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        50.001429% {
+            mask-image: var(--ph-e3);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        75.001429% {
+            mask-image: var(--ph-e2);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-e1);
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+            mask-composite: intersect;
+        }
+    }
+
+    /* ── Question 3: opening ── */
+    @keyframes ph-scale {
+        0% {
+            opacity: 0;
+            scale: 1.25;
+            rotate: -7deg;
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        100% {
+            opacity: 1;
+            scale: 1;
+            rotate: -1.5deg;
+        }
+    }
+
+    @keyframes ph-scale-out {
+        0% {
+            opacity: 1;
+            scale: 1;
+            rotate: -1.5deg;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        100% {
+            opacity: 0;
+            scale: 1.25;
+            rotate: -7deg;
+        }
+    }
+
+    @keyframes ph-pop {
+        0% {
+            opacity: 0;
+            scale: 0.4;
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        100% {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-pop-out {
+        0% {
+            opacity: 1;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        100% {
+            opacity: 0;
+            scale: 0.4;
+        }
+    }
+
+    @keyframes ph-slide {
+        0% {
+            opacity: 0;
+            transform: translateX(-48px) skewX(-14deg);
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        40% {
+            opacity: 1;
+            transform: translateX(-28.8px) skewX(-8.4deg);
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0) skewX(0deg);
+        }
+    }
+
+    @keyframes ph-slide-out {
+        0% {
+            opacity: 1;
+            transform: translateX(0) skewX(0deg);
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        60% {
+            opacity: 1;
+            transform: translateX(-28.8px) skewX(-8.4deg);
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateX(-48px) skewX(-14deg);
+        }
+    }
+
+    @keyframes ph-film {
+        0% {
+            opacity: 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.327778% {
+            opacity: 0.3333;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.661111% {
+            opacity: 0.6667;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.994444% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes ph-film-out {
+        0% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        0.005556% {
+            opacity: 1;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        33.338889% {
+            opacity: 0.6667;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        66.672222% {
+            opacity: 0.3333;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* ── Question 4: the contact ── */
+    @keyframes ph-drop {
+        0% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 3px 3px;
+        }
+    }
+
+    @keyframes ph-drop-out {
+        0% {
+            translate: 3px 3px;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-none {
+        from {
+        }
+        to {
+        }
+    }
+    @keyframes ph-fly-brisk {
+        0% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        56.521739% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-brisk-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        43.478261% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+        }
+    }
+
+    @keyframes ph-resolve-brisk {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        56.519565% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        71.012319% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        85.505072% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-resolve-brisk-out {
+        0% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        14.494928% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        28.987681% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        43.480435% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-m25);
+        }
+    }
+
+    @keyframes ph-fly-slow {
+        0% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-slow-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--ph-land, -1.5deg);
+            scale: 1;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: var(--ph-x0, -80cqi) var(--ph-y0, 6cqi);
+            rotate: var(--ph-r0, -22deg);
+            scale: var(--ph-s0, 1.15);
+        }
+    }
+
+    @keyframes ph-resolve-slow {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        57.141905% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        71.427619% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        85.713333% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-resolve-slow-out {
+        0% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        14.286667% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        28.572381% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        42.858095% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-m25);
+        }
+    }
+
+    @keyframes ph-wipe {
+        0% {
+            clip-path: inset(-100% -10% -100% 110%);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        100% {
+            clip-path: inset(-100% -10% -100% -10%);
+        }
+    }
+
+    @keyframes ph-wipe-out {
+        0% {
+            clip-path: inset(-100% -10% -100% -10%);
+            animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        100% {
+            clip-path: inset(-100% -10% -100% 110%);
+        }
+    }
+
+    @keyframes ph-none-out {
+        from {
+        }
+        to {
+        }
+    }
+    /* ── Question 9: a live update ── */
+    @keyframes ph-reprint {
+        0% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        24.9975% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.9975% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-reprint-out {
+        0% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        25.0025% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        50.0025% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        75.0025% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-m50);
+        }
+    }
+
+    @keyframes ph-twang {
+        0% {
+            translate: 0 -0.45rem;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.33% {
+            translate: 0 0.2rem;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-twang-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        33.335% {
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        66.67% {
+            translate: 0 0.2rem;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            translate: 0 -0.45rem;
+        }
+    }
+
+    @keyframes ph-hole {
+        0% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        24.9975% {
+            scale: 1.5;
+            box-shadow: 0 0 0 3px var(--primary);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            scale: 0.85;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.9975% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }
+
+    @keyframes ph-hole-out {
+        0% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: linear;
+        }
+
+        25.0025% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        50.0025% {
+            scale: 0.85;
+            box-shadow: 0 0 0 0 transparent;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        75.0025% {
+            scale: 1.5;
+            box-shadow: 0 0 0 3px var(--primary);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            scale: 1;
+            box-shadow: 0 0 0 0 transparent;
+        }
+    }
+
+    @keyframes ph-shiver {
+        0% {
+            translate: -0.5rem 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.9975% {
+            translate: 0.4rem 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.9975% {
+            translate: -0.2rem 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.9975% {
+            translate: 0.1rem 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.9975% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-shiver-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        20.0025% {
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        40.0025% {
+            translate: 0.1rem 0;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        60.0025% {
+            translate: -0.2rem 0;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        80.0025% {
+            translate: 0.4rem 0;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            translate: -0.5rem 0;
+        }
+    }
+
+    /* ── Question 10: loading ── */
+    @keyframes ph-wait {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.999333% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.999333% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.999333% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.999333% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: var(--ph-m25);
+        }
+    }
+
+    @keyframes ph-wait-out {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: linear;
+        }
+
+        20.000667% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        40.000667% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        60.000667% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        80.000667% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-m25);
+        }
+    }
+
+    @keyframes ph-wait-fine {
+        0% {
+            mask-image: var(--ph-s25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.999333% {
+            mask-image: var(--ph-s50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.999333% {
+            mask-image: var(--ph-s75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.999333% {
+            mask-image: var(--ph-s50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.999333% {
+            mask-image: var(--ph-s25);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: var(--ph-s25);
+        }
+    }
+
+    @keyframes ph-wait-fine-out {
+        0% {
+            mask-image: var(--ph-s25);
+            animation-timing-function: linear;
+        }
+
+        20.000667% {
+            mask-image: var(--ph-s25);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        40.000667% {
+            mask-image: var(--ph-s50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        60.000667% {
+            mask-image: var(--ph-s75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        80.000667% {
+            mask-image: var(--ph-s50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--ph-s25);
+        }
+    }
+
+    @keyframes ph-stamp {
+        0% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        44.999333% {
+            opacity: 1;
+            scale: 1;
+            rotate: -12deg;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        89.999333% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+        }
+    }
+
+    @keyframes ph-stamp-out {
+        0% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+            animation-timing-function: linear;
+        }
+
+        10.000667% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        55.000667% {
+            opacity: 1;
+            scale: 1;
+            rotate: -12deg;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            opacity: 0;
+            scale: 1.5;
+            rotate: -12deg;
+        }
+    }
+
+    @keyframes ph-shuffle {
+        0% {
+            background-position:
+                0 0,
+                1.5px 1.5px;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        24.999333% {
+            background-position:
+                2px 0,
+                3.5px 1.5px;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.999333% {
+            background-position:
+                0 0,
+                1.5px 1.5px;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.999333% {
+            background-position:
+                -2px 0,
+                -0.5px 1.5px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position:
+                -2px 0,
+                -0.5px 1.5px;
+        }
+    }
+
+    @keyframes ph-shuffle-out {
+        0% {
+            background-position:
+                -2px 0,
+                -0.5px 1.5px;
+            animation-timing-function: linear;
+        }
+
+        25.000667% {
+            background-position:
+                -2px 0,
+                -0.5px 1.5px;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        50.000667% {
+            background-position:
+                0 0,
+                1.5px 1.5px;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        75.000667% {
+            background-position:
+                2px 0,
+                3.5px 1.5px;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            background-position:
+                0 0,
+                1.5px 1.5px;
+        }
+    }
+
+    @keyframes ph-slide {
+        0% {
+            background-position:
+                0 0,
+                0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position:
+                5px 0,
+                0 0;
+        }
+    }
+
+    @keyframes ph-slide-out {
+        0% {
+            background-position:
+                5px 0,
+                0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position:
+                0 0,
+                0 0;
+        }
+    }
+
+    /* ── Question 12: the spinner ── */
+    @keyframes ph-star-turn {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        12% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        20% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        32% {
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        40% {
+            rotate: 144deg;
+            animation-timing-function: linear;
+        }
+
+        52% {
+            rotate: 144deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        60% {
+            rotate: 216deg;
+            animation-timing-function: linear;
+        }
+
+        72% {
+            rotate: 216deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        80% {
+            rotate: 288deg;
+            animation-timing-function: linear;
+        }
+
+        92% {
+            rotate: 288deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            rotate: 360deg;
+            animation-timing-function: linear;
+        }
+    }
+
+    @keyframes ph-star-dots {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        11.999167% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.999167% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        31.999167% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.999167% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        51.999167% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.999167% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        71.999167% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.999167% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        91.999167% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.999167% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-star-roll {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            rotate: 360deg;
+        }
+    }
+
+    /* ── Question 13: the wavering ghost, the register's leave and its arrival ── */
+    @keyframes ph-ghost {
+        0% {
+            opacity: 0;
+            transform: translateY(-9px) scaleX(0.94);
+            filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        25% {
+            opacity: 0.3;
+            transform: translateY(-6px) skewX(3deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        50% {
+            opacity: 0.55;
+            transform: translateY(-3px) skewX(-4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        75% {
+            opacity: 0.55;
+            transform: skewX(4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        100% {
+            opacity: 1;
+            filter: none;
+        }
+    }
+
+    @keyframes ph-ghost-out {
+        0% {
+            opacity: 1;
+            filter: none;
+            animation-timing-function: ease-in;
+        }
+
+        25% {
+            opacity: 0.55;
+            transform: skewX(4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: ease-in;
+        }
+
+        50% {
+            opacity: 0.55;
+            transform: translateY(-3px) skewX(-4deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: ease-in;
+        }
+
+        75% {
+            opacity: 0.3;
+            transform: translateY(-6px) skewX(3deg);
+            filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
+            animation-timing-function: ease-in;
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(-9px) scaleX(0.94);
+            filter: blur(6px) drop-shadow(0 0 12px var(--primary));
+        }
+    }
+
+    /* ── Questions 14 to 17: pointing and pressing ── */
+    @keyframes ph-bar-fly {
+        0% {
+            translate: -105% 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        50% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-bar-res {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-ink {
+        0% {
+            color: var(--ph-ink-from, var(--foreground));
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes ph-face {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-glint {
+        0% {
+            box-shadow: 0 0 0 2px var(--primary);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        24.998333% {
+            box-shadow: 0 0 0 4px var(--primary);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.998333% {
+            box-shadow: 0 0 0 2px var(--primary);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.998333% {
+            box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            box-shadow: 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
+        }
+    }
+
+    @keyframes ph-tap-d3 {
+        0% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        26% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        29.75% {
+            translate: 3px 3px;
+            animation-timing-function: linear;
+        }
+
+        62% {
+            translate: 3px 3px;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        65.75% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-tap-d5 {
+        0% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        26% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        29.75% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        62% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        65.75% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-tap-bar {
+        0% {
+            translate: -105% 0;
+            animation-timing-function: linear;
+        }
+
+        26% {
+            translate: -105% 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        27.875% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        62% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        63.875% {
+            translate: -105% 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: -105% 0;
+        }
+    }
+
+    @keyframes ph-tap-res {
+        0% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        27.874688% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        28.812188% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        61.999688% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: var(--ph-m25);
+        }
+    }
+
+    @keyframes ph-tap-face {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        25.999688% {
+            mask-image: var(--ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        27.874688% {
+            mask-image: var(--ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        28.812188% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-tap-ink {
+        0% {
+            color: var(--ph-ink-from, var(--foreground));
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        28.812188% {
+            color: var(--primary-foreground);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        61.999688% {
+            color: var(--ph-ink-from, var(--foreground));
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--ph-ink-from, var(--foreground));
+        }
+    }
+
+    @keyframes ph-tap-tilt {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        25.999688% {
+            rotate: 2deg;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        61.999688% {
+            rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes ph-tap-fill {
+        0% {
+            background-color: transparent;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        25.999688% {
+            background-color: var(--primary);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        61.999688% {
+            background-color: transparent;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes ph-tap-shift {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        25.999688% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        61.999688% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+}

@@ -1,0 +1,69 @@
+/* research/character-calendar, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 2, tone
+   2, loading 2, arrival 1, select 2.
+
+   - shape: daylight's pale sky behind the month is a wash, retired (G7):
+     the days are white cards on the white page, told apart by their soft
+     shadow;
+   - tone: the cards' fade into a lighter foot and today's ring of sunlight
+     (amber, glowing) are retired (G5, G7, G19): the tones paint their plain
+     plates and today wears the register's bead in the corner of its cell;
+   - loading: the band of daylight crossing each card is retired (G10): the
+     package draws the waiting picture itself (css/light-register.css): a
+     loading day keeps its cell and its number and count breathe out of
+     focus, a day later in the week a beat later;
+   - arrival: the iris (a scale and fade from the middle) is the exposure
+     (G2): every day comes out of the glare where it stands, in reading
+     order, a quarter of the group step (30 ms) apart, 700 ms on the settle;
+   - select: the hover ring is retired: pointing settles the day toward the
+     paper (css/light-register.css, G15) and the picked day keeps its ring
+     and its ink plate under the count. */
+@layer kp.signature {
+    /* Shape 2 · no wash behind the month. */
+    [data-theme='light'] [data-cl-shape='2'] .kp-calendar {
+        --cl-shadow: var(--kp-shadow-sm);
+        background: none;
+    }
+
+    /* Tone 2 · plain plates, today is the bead. */
+    [data-theme='light'] [data-cl-tone='2'] .kp-calendar {
+        --cl-ok-pat: none;
+        --cl-warn-pat: none;
+        --cl-muted-pat: none;
+        --cl-today: 0 0 0 0 transparent;
+    }
+
+    [data-theme='light'] [data-cl-tone='2'] .kp-calendar__day[data-kp-today] {
+        box-shadow: none;
+    }
+
+    /* Loading 2 · the band is retired; the cell stays, its words breathe. */
+    [data-theme='light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+        animation: none;
+    }
+
+    [data-theme='light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading'] {
+        animation: none;
+    }
+
+    /* Select 2 · pointing is the register's settle, not a ring. */
+    [data-theme='light'] [data-cl-select='2'] .kp-calendar__day:hover {
+        outline: 0;
+    }
+
+    /* Arrival 1 · the exposure, in reading order. The register exposes the
+       cell of a day; here the demo replays the day itself, so the cell stays. */
+    [data-theme='light'] [data-cl-arrival] .kp-calendar__grid td:has(> .kp-calendar__day) {
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease)
+                calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--kp-sig-light-step) / 4) backwards;
+        }
+    }
+}

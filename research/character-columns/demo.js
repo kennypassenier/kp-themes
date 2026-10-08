@@ -76,8 +76,8 @@ const IDEAS = {
                 text: 'A navy rule is written along the foot of every column, again and again, as the pen draws the total line.',
             },
             {
-                name: 'The dotted leader',
-                text: 'A leader of dots runs along the foot of every column, "to be entered".',
+                name: 'Ruling the lines',
+                text: 'Three navy rules are ruled across the foot of every column one after the other, held, lifted and ruled again.',
             },
         ],
         arrival: [
@@ -86,8 +86,8 @@ const IDEAS = {
                 text: 'Each figure is written in from the left, slowing as the pen lifts, one column after the other.',
             },
             {
-                name: 'Set in type',
-                text: 'Each figure rises into its line in four hard steps, as type set by hand, all at once.',
+                name: 'Ruled in',
+                text: 'Each figure is ruled in from its start to its end at an even pace, one column 60 ms after the other.',
             },
             {
                 name: 'The pages turned',
@@ -118,8 +118,8 @@ const IDEAS = {
                 text: 'The old figure is struck through, then the new one is written in from the left.',
             },
             {
-                name: 'The clerk’s stamp',
-                text: 'The new figure is stamped in: it lands from larger in two hard steps.',
+                name: 'Ruled again and closed',
+                text: 'A navy rule is ruled under the new figure, the second rule closes it, and both are lifted.',
             },
         ],
     },
@@ -135,13 +135,13 @@ const IDEAS = {
             },
             {
                 name: 'Separate cards',
-                text: 'Each figure its own small white card lifted on its own soft shadow, no border, the heads in sentence case, the figures bold.',
+                text: 'Each figure is a white card of 0.5 rem on a small shadow, the number in the regular face at 600.',
             },
         ],
         loading: [
             {
-                name: 'Morning light',
-                text: 'A soft band of daylight crosses every column, slowly.',
+                name: 'Out of focus',
+                text: 'The strip’s skeleton lines are pills out of focus, breathing between a dim and a dazzling exposure; a busy tile’s words breathe on its plate.',
             },
             {
                 name: 'Through the window',
@@ -162,8 +162,8 @@ const IDEAS = {
                 text: 'Each column pops up from a little smaller, overshooting softly, one after the other.',
             },
             {
-                name: 'Drawn by daylight',
-                text: 'All figures are drawn in from the left together, easing in and out.',
+                name: 'Out of the glare',
+                text: 'The columns come into focus where they stand, out of a blurred, too bright glare, one after the other in reading order, 120 ms apart.',
             },
         ],
         tone: [
@@ -176,8 +176,8 @@ const IDEAS = {
                 text: 'The change on a small tag with soft corners, with thin arrows ↑ and ↓.',
             },
             {
-                name: 'The lifted pill',
-                text: 'The change on a round pill lifted on a little shadow, with slanted arrows ↗ and ↘.',
+                name: 'The soft pill',
+                text: 'The change sits on a soft pill in the tone’s plate and ink, with an arrow; no shadow under it.',
             },
         ],
         live: [
@@ -186,8 +186,8 @@ const IDEAS = {
                 text: 'A ring of light opens around a figure that changed and is gone.',
             },
             {
-                name: 'Lifted in',
-                text: 'The new figure rises into its line, slowing as it lands.',
+                name: 'Re-exposed',
+                text: 'The changed figure goes into the glare for a beat and comes back into focus, 560 ms; it never moves.',
             },
             {
                 name: 'Underlined',

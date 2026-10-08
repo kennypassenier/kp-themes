@@ -71,8 +71,8 @@ const IDEAS = {
                 text: 'The menu unrolls down from the button like a scroll, slowing as it lands; it rolls back up the same way to close.',
             },
             {
-                name: 'Opened at the ribbon',
-                text: 'The menu drops open on a ruled hinge, the hinge line drawn first; it swings shut the same way in reverse.',
+                name: 'Ruled open',
+                text: 'The menu is ruled open under its button: its frame rule start to end, then each entry in turn, 60 ms apart; it closes as that played backwards.',
             },
             {
                 name: 'The ledger opens',
@@ -81,8 +81,8 @@ const IDEAS = {
         ],
         interactive: [
             {
-                name: 'The pressed plate',
-                text: 'A button’s rule thickens on hover, is boxed on focus, and the plate presses inward on press; the primary darkens one step.',
+                name: 'Formal’s own button',
+                text: 'A header’s button is formal’s own: a rule under its label on hover, the two-channel ring on focus, the rule doubled on a press.',
             },
             {
                 name: 'The wax seal',
@@ -98,7 +98,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The soft card',
-                text: 'A white card lifted on a soft shadow, a rounded title in bold, the description in a lighter grey, the buttons as soft pills.',
+                text: 'A white header of 0.5 rem on the small shadow, the title at 600, the actions as pills with a soft shadow.',
             },
             {
                 name: 'Daylight',
@@ -111,8 +111,8 @@ const IDEAS = {
         ],
         menu: [
             {
-                name: 'Unfolds',
-                text: 'The menu unfolds downward from the button, opening like a paper flap; it folds back up the same way to close.',
+                name: 'Out of the glare',
+                text: 'The panel comes into focus where it hangs under its button, out of a blurred, too bright glare, 700 ms on a long settle; it goes back into the glare to close.',
             },
             { name: 'Floats down', text: 'The menu drifts down and settles with a soft bounce; it drifts back up the same way to close.' },
             {
@@ -126,8 +126,8 @@ const IDEAS = {
                 text: 'A button lifts a little higher on hover, gets a soft outer ring on focus, and sinks back down on press.',
             },
             {
-                name: 'The warm glow',
-                text: 'Hover warms a button’s pill with a soft glow, focus adds a halo ring, press flattens the pill for a moment.',
+                name: 'Settles toward the paper',
+                text: 'A button in the header is light’s own: it settles 2 px and its shadow tightens when pointed at, wears the two-channel ring when focused, and lands flat and flashes when pressed.',
             },
             { name: 'The gentle press', text: 'Hover brightens a button’s fill, focus draws a dashed halo, press dents the pill softly inward.' },
         ],

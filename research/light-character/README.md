@@ -1,6 +1,6 @@
 # What makes light light
 
-**Decided (Kenny, 08/10/2026): all nineteen questions approved, every recommendation except How long things take = Unhurried: 200 · 700 (+120) · 3600 ms and The busy progress bar = The bead orbits the line** (research/light-character/decided.json; to be applied in css/light-register.css; see themes/light/CHARACTER.md §0). Round `2026-10-08-r1`.
+**Decided (Kenny, 08/10/2026): all nineteen questions approved, every recommendation except How long things take = Unhurried: 200 · 700 (+120) · 3600 ms and The busy progress bar = The bead orbits the line** (research/light-character/decided.json; applied in css/light-register.css and the research/character-* variants the same day; see themes/light/CHARACTER.md §0 and the Applied notes at the end of its §4). Round `2026-10-08-r1`.
 
 **Why.** Kenny decided the anchor of light on 2026-10-08 in [research/light-anchor](../light-anchor/README.md): **Overexposed: out of the
 glare**. A part is there as a glare first, blurred and too bright, and comes down into focus and into its own white; it never fades up from

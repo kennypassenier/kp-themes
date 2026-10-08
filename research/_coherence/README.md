@@ -11,18 +11,18 @@ below is on the branch `claude/eloquent-hamilton-37jler`, published at
 
 ## State per theme
 
-| Theme   | Step 1 anchor                                                                                                                         | Step 2 character demo                                                                                                                                                                      | Step 3 updates                            | Step 4 apply                        |
-| ------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- | ----------------------------------- |
-| formal  | decided: the double rule (research/formal-anchor/decided.json)                                                                        | decided in full, 2026-10-08 (research/formal-character/decided.json; hover = a rule under the label, motifs = plus the seal where picked)                                                  | none needed                               | **to do** (css/formal-register.css) |
-| light   | decided: the glare (research/light-anchor/decided.json)                                                                               | decided in full, 2026-10-08 (research/light-character/decided.json; durations = unhurried 200 · 700 (+120) · 3600, busy bar = the bead orbits the line)                                    | none needed                               | **to do** (css/light-register.css)  |
-| deco    | decided: the fan opens; the progress bar to be redone (research/deco-anchor/decided.json)                                             | built; **not approved on 13 of 19** (6 picks kept, see themes/deco/CHARACTER.md §0)                                                                                                        | **update 1 to do** (the direction, below) | after update 1                      |
-| dark    | decided after update 1: the line lays the film down, turning (research/dark-anchor/decided.json)                                      | **to do** (CHARACTER.md + aspects.js + build)                                                                                                                                              |                                           |                                     |
-| retro   | decided after attempt 1 of 3: the Copying dialog's flying sheet, with the 1995 desktop around it (research/retro-anchor/decided.json) | **to do** (CHARACTER.md + aspects.js + build); Kenny: "I like the windows environment with the task bar and desktop that you created around it" — the desktop is part of retro's world now |                                           |                                     |
-| phantom | decided after update 1: thrown as a screen, resolves at the slap (research/phantom-anchor/decided.json)                               | **to do** (CHARACTER.md + aspects.js + build)                                                                                                                                              |                                           |                                     |
-| pastel  | not started (in Kenny's THEME list, not in his named eight; ask before starting)                                                      |                                                                                                                                                                                            |                                           |                                     |
+| Theme   | Step 1 anchor                                                                                                                         | Step 2 character demo                                                                                                                                                                                      | Step 3 updates                                                        | Step 4 apply                                                                                                                                                                      |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| formal  | decided: the double rule (research/formal-anchor/decided.json)                                                                        | decided in full, 2026-10-08 (research/formal-character/decided.json; hover = a rule under the label, motifs = plus the seal where picked)                                                                  | none needed                                                           | **applied** 2026-10-08 (css/formal-register.css, research/character-\*/formal.css; notes in themes/formal/CHARACTER.md §4; findings under Formal in research/PACKAGE_FINDINGS.md) |
+| light   | decided: the glare (research/light-anchor/decided.json)                                                                               | decided in full, 2026-10-08 (research/light-character/decided.json; durations = unhurried 200 · 700 (+120) · 3600, busy bar = the bead orbits the line)                                                    | none needed                                                           | **applied** 2026-10-08 (css/light-register.css, research/character-\*/light.css; notes in themes/light/CHARACTER.md §4; findings under Light)                                     |
+| deco    | decided: the fan opens; the progress bar to be redone (research/deco-anchor/decided.json)                                             | built; **not approved on 13 of 19** (6 picks kept, see themes/deco/CHARACTER.md §0)                                                                                                                        | **update 1 published** 2026-10-08 (round r2), waiting for his verdict | after update 1: re-propose §1 of themes/deco/CHARACTER.md from the verdict, then apply                                                                                            |
+| dark    | decided after update 1: the line lays the film down, turning (research/dark-anchor/decided.json)                                      | **published** 2026-10-08 (themes/dark/CHARACTER.md, research/dark-character), waiting for his verdicts                                                                                                     |                                                                       |                                                                                                                                                                                   |
+| retro   | decided after attempt 1 of 3: the Copying dialog's flying sheet, with the 1995 desktop around it (research/retro-anchor/decided.json) | **published** 2026-10-08 (themes/retro/CHARACTER.md, research/retro-character), waiting for his verdicts; Kenny: "I like the windows environment with the task bar and desktop that you created around it" |                                                                       |                                                                                                                                                                                   |
+| phantom | decided after update 1: thrown as a screen, resolves at the slap (research/phantom-anchor/decided.json)                               | **published** 2026-10-08 (themes/phantom/CHARACTER.md, research/phantom-character), waiting for his verdicts                                                                                               |                                                                       |                                                                                                                                                                                   |
+| pastel  | not started (in Kenny's THEME list, not in his named eight; ask before starting)                                                      |                                                                                                                                                                                                            |                                                                       |                                                                                                                                                                                   |
 
-Nothing of this round has been applied to any register yet. Tests run only at
-a release (Kenny, 2026-09-30); no release is part of this round.
+Formal and light are applied to their registers (2026-10-08, no release); tests
+run only at a release (Kenny, 2026-09-30) and no release is part of this round.
 
 ## Kenny's rules for this round (binding, verbatim where it matters)
 
@@ -123,50 +123,21 @@ Kenny starts from `review-branch/catalogue/changed.html`.
 
 ## What remains, in order
 
-1. **Deco, update 1 of research/deco-character** (the highest value: his
-   direction is explicit). Thirteen questions not approved: curve, direction,
-   opening, colour, corners, warning, loading, the bar, leave, composites,
-   hover, press, motifs. His comment, verbatim, on each: "I don't like this
-   direction at all, you should take a look at what art deco represents again,
-   this should be the fancy, distinguished theme, with lots of gold accents and
-   fancy blue backgrounds (maybe even with a background wallpaper style like it
-   already has for most pages), it should exhume elegance without being too 'in
-   your face'". Six picks stay ticked (durations = one fan 160 · 480 (+160,
-   +80) · 2400; surface = lacquer, the double rule, one crest; live = gilded: a
-   flare; spinner = the sunburst rotates (today); focus = a double gold ring;
-   voice = Poiret capitals, Josefin figures). The direction: restrained
-   elegance — thin gold hairlines and small gold accents on deep blue lacquer
-   with the register's chevron wallpaper behind every plate, symmetry, generous
-   spacing, smooth graceful motion (a lady's fan unfolding, not twelve counted
-   steps), gilt that glints once rather than sunbursts, nothing large or
-   shouted. Five or more new options per rejected question, one recommended,
-   written in aspects.js; update.json with the comment and the reply;
-   `data-review-round` → `2026-10-08-r2`; remove the `rework:` flag in
-   catalogue/pages.js when it is in; §1 of themes/deco/CHARACTER.md re-proposed
-   from it.
-2. **Apply formal and light** (step 4): the decided grammars into
-   `css/formal-register.css` and `css/light-register.css` (every component the
-   questions name: curve and durations tokens, the opening, the warning, the live
-   update, loading, the busy bar, the spinner, the leave, hover/focus/press,
-   composites, type, motifs), the `research/character-*` variants of those
-   themes where a decided pick now differs, `themes/<theme>/CHARACTER.md`
-   "Applied" notes, research/PACKAGE_FINDINGS.md under a Formal / Light heading
-   for anything larger. Check 390 and 1280 px, gates, push, look at the live
-   site. The registers are shared with no other session (the one-session-per-
-   theme sessions are forest … terminal).
-3. **Dark, retro, phantom, step 2**: `themes/<theme>/CHARACTER.md` (§0 decided,
-   §1 grammar G1–G21 from the anchor, §2 picks vs grammar, §3 outliers, §4 the
-   nineteen questions, §5 distinct) and `research/<theme>-character/aspects.js`
-   on light's pattern, then the build by an agent from a prompt on
-   briefs/prompt-char-formal.md, listed under 'Research to look at' in
-   catalogue/pages.js. Retro's grammar departs from the Copying dialog AND the
-   1995 desktop Kenny liked (teal ground, taskbar, title-bar ramp, dotted
-   focus, whole frames, never eased). Phantom's departs from the card thrown as
-   a halftone screen that resolves at the slap (hard cuts, dot screens, red
-   plate with black ink, no glow). Dark's departs from the spectral line that
-   lays the film down, turning.
-4. Then the update rounds those bring, and their apply steps; retro's anchor
-   has two attempts left only if Kenny asks for them (he approved attempt 1).
+1. **Verdicts on the review site** for deco's update 1 (thirteen questions),
+   dark, retro and phantom (nineteen each). Then per theme: an update round
+   (research/_review/README.md; the rework flag; 5–10 new options where he is
+   unconvinced) or step 4, the apply, as briefs/prompt-apply.md describes it
+   (formal and light are the worked examples: `git log -- css/formal-register.css
+css/light-register.css`).
+2. **Deco's §1** in themes/deco/CHARACTER.md is still round one's grammar
+   (counted rays); once he answers update 1, re-propose G1–G21 from the
+   answers, then apply.
+3. **Package findings** under Formal and Light in research/PACKAGE_FINDINGS.md
+   (js/motion.js cannot replay a custom-property animation, a leave plays
+   element by element, the live update's time cannot be set by a register, a
+   menu's line count, the manners' selector list) go to the port session.
+4. **Pastel** only if Kenny asks; retro's two remaining anchor attempts only if
+   he asks (he approved attempt 1).
 
 ## Scratch output
 

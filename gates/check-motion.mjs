@@ -188,11 +188,10 @@ const OUT_OF_SCOPE = {
     // already own for their own, different mechanics).
     'kp-sharpen-in':
         "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
-    // The light register [S48, LIFT_PLAN, A1]: the lede mark's
-    // background-size sweep, one colour swap on an inline phrase, once —
-    // matches the shape of the retro selection bar's kp-drag-select below;
-    // under 341x256 px.
-    'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
+    // The light register [S48, LIFT_PLAN, A1]: the lede mark coming into
+    // focus out of the glare, one blur and brightness filter on an inline
+    // phrase, once and monotone; under 341x256 px.
+    'kp-mark-sweep': 'a blur and brightness filter resolving one inline phrase to none, once and monotone; under 341x256 px',
     // The forest register [TP1]: the contour trace beside the headline.
     'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
     // The Shade (light) register [SL2]: the lede mark's ink-fill is a
@@ -231,11 +230,38 @@ const OUT_OF_SCOPE = {
     'kp-sig-formal-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
     'kp-sig-formal-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-formal-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
-    'kp-sig-light-meter-day': 'a soft glint band translating across a loading meter a few px tall; a transform, the band keeps its colour',
-    'kp-sig-light-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-light-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-light-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-light-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
+    // Formal's grammar [themes/formal/CHARACTER.md §4, Kenny, 2026-10-08]: a
+    // registered custom property drives the extent of rules and of an arc (a
+    // clip, a background size, a mask angle); the rules keep their colour.
+    'kp-sig-formal-ruling':
+        "a registered custom property ruling a menu's or a popover's lines top down once; the lines keep their colour, only their extent changes",
+    'kp-sig-formal-loading':
+        'a registered custom property ruling three ledger lines under a waiting part, again and again; the lines keep their colour, only their extent changes',
+    'kp-sig-formal-update-closed':
+        'a registered custom property ruling the two lines under a changed figure once; the lines keep their colour, only their extent changes',
+    'kp-sig-formal-arc-outer':
+        'a registered custom property driving a mask angle: an arc ruled round the outer ring of the spinner, 2400 ms a loop; the arc keeps its colour',
+    'kp-sig-formal-arc-inner':
+        'a registered custom property driving a mask angle: an arc ruled round the inner ring of the spinner, 2400 ms a loop; the arc keeps its colour',
+    // Light's grammar [themes/light/CHARACTER.md §4, Kenny, 2026-10-08]: every
+    // one is a blur and brightness filter or a clip-path, none a change of
+    // opacity or a colour, so none can flash.
+    'kp-sig-light-reexpose':
+        'a changed figure going into the glare for a beat (a blur of 2px and brightness 1.4) and back to none, once per update; a filter on a figure, under 341x256 px',
+    'kp-sig-light-meter-expose-d':
+        'a meter a few px tall re-exposed once as it turns to the destructive tone (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-meter-expose-o': 'a meter a few px tall re-exposed once as its tone clears (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-meter-expose-w':
+        'a meter a few px tall re-exposed once as it turns to the warning tone (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-breathe':
+        'a waiting surface (a placeholder, a meter, the words on a busy card) breathing between blur 3px with brightness 1.3 and blur 5px with brightness 1.6 over 3.6 s, on ease-in-out: a slow filter swell of well under one change a second, never a flash',
+    'kp-sig-light-breathe-ink':
+        'the label of a busy button breathing between a 3px and a 5px blur of its own text shadow over 3.6 s on ease-in-out, its ink moving toward the paper by under a third; a slow swell of well under one change a second, never a flash',
+    'kp-sig-light-burn':
+        'the spinner bead (a few px) burning out and back into focus once a turn of 1.2 s, a filter on a dot far under 341x256 px, two changes a turn',
+    'kp-sig-light-flash': 'a pressed pill flashing once, brightness 1.25 for 200 ms and back; a filter on a control, one change, under 341x256 px',
+    'kp-sig-light-feed':
+        "a meter's share exposed from its start to its end once, out of the glare (a clip-path and a blur with brightness); one monotone change, under 341x256 px",
     'kp-sig-synthwave-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-synthwave-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',

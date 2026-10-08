@@ -1,0 +1,122 @@
+/* research/character-kpi, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 3,
+   loading 2, tone 3, interactive 2, live 2.
+
+   - shape: the paper sheet (a folded corner cut off the tile, its coloured
+     tab) is retired (G7, G19): a white card of 0.5 rem on its small shadow
+     and the seam;
+   - loading: daylight (a band of the primary crossing the tile) is retired
+     (G10): a busy tile's words breathe out of focus on its plate and its
+     skeleton lines are the register's placeholders;
+   - tone: the coloured tab keeps its band, now 3 px in the tone's own ink
+     along the top, with the figure on the white card in the ink and the
+     change as a soft pill, no shadow under it (G8);
+   - interactive: the warm glow (an amber sun brightening on hover, a warm
+     halo on focus) is retired (G5, G15 to G17): a tile that is a link or a
+     toggle settles 2 px toward the paper, wears DI2's two-channel ring, and
+     lands flat and flashes under a press, as in css/light-register.css;
+   - live: the soft swell (112 %) is the re-exposure (G9): the figure goes
+     into the glare for a beat and comes back into focus, never moving. */
+@layer kp.signature {
+    /* Shape 3 · a white card. */
+    [data-theme='light'] [data-kf-shape='3'] .kp-kpi {
+        --kf-frame: 1px solid var(--border);
+        --kf-radius: var(--radius, 0.5rem);
+        --kf-pat: none;
+        --kf-shadow: var(--kp-shadow-sm);
+        clip-path: none;
+    }
+
+    /* Loading 2 · no band; the words breathe. */
+    [data-theme='light'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        content: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-kf-loading='2'] .kp-kpi[data-kp-loading] > :not(.kp-skeleton, .kp-meter, .kp-kpi__meter) {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+        }
+    }
+
+    /* Tone 3 · the band along the top, the figure in the ink, the soft pill. */
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-shadow: none;
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-tone-shadow: inset 0 3px 0 var(--warning-foreground);
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--kf-ink);
+        --kf-tone-pad: 0;
+    }
+
+    [data-theme='light'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--kf-ink);
+        --kf-tone-pad: 0;
+    }
+
+    /* Interactive 2 · pointing settles, the ring is DI2's, a press lands. */
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle {
+        --kf-over: none;
+        --kf-transition: none;
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:hover,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:hover {
+        --kf-over: none;
+        --kf-hover-border: var(--border-strong);
+        translate: 0 2px;
+        box-shadow:
+            var(--kf-tone-shadow, 0 0 0 0 transparent),
+            0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
+        --kf-focus-outline: 2px solid var(--focus-ring-contrast);
+        --kf-focus-offset: 2px;
+        translate: 0 2px;
+        box-shadow:
+            var(--kf-tone-shadow, 0 0 0 0 transparent),
+            0 0 0 2px var(--focus-ring);
+    }
+
+    [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:active,
+    [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
+        --kf-over: none;
+        --kf-press-plate: var(--muted);
+        translate: 0 2px;
+        box-shadow: var(--kf-tone-shadow, 0 0 0 0 transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi,
+        [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle {
+            transition:
+                box-shadow var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='light'] [data-kf-interactive='2'] a.kp-kpi:active,
+        [data-theme='light'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
+            animation: kp-sig-light-flash var(--fx-duration) linear 1;
+        }
+    }
+
+    /* Live 2 · re-exposed. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
+            animation: kp-sig-light-reexpose calc(var(--kp-sig-light-time) * 0.8) linear;
+        }
+    }
+}

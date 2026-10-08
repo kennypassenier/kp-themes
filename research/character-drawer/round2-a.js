@@ -19,8 +19,8 @@ export default {
             },
             {
                 key: 'r2-light-oc-3',
-                name: 'Grows into the light',
-                text: 'The panel stays pinned to the end edge and grows outward from a narrow sliver to full width, as daylight spreading rather than something sliding over — echoing the chart’s "Grows into the light" and the columns’ "Drawn by daylight". Closing narrows it back down to that sliver at the edge, reversed.',
+                name: 'Out of the glare',
+                text: 'The panel comes into focus where it stands at the end edge, out of a blurred, too bright glare, 700 ms on a long settle; it never slides or grows. Closing is the same pair played the other way, back into the glare.',
             },
         ]),
     },

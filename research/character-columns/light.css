@@ -1,0 +1,46 @@
+/* research/character-columns, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 3,
+   loading 1, arrival 3, tone 3, live 2.
+
+   - shape: the separate cards take the plate's 0.5 rem (a card is read, G6)
+     and the small shadow of a card (G7); the figure is 600, not 700 (G18);
+   - loading: morning light (a glint crossing each tile) is retired (G10):
+     the strip's skeleton lines are the register's placeholders, out of
+     focus and breathing, and a busy tile's words breathe on its plate;
+   - arrival: drawn by daylight (a wipe over the figure) is the exposure
+     (G2): the columns come out of the glare where they stand, one after the
+     other in reading order, 120 ms apart, 700 ms on the settle;
+   - tone: the lifted pill loses its shadow (G8): a soft pill in the tone's
+     plate, no depth but the three soft shadows;
+   - live: lifted in (a rise of 8 px) is the re-exposure (G9): the changed
+     figure goes into the glare for a beat and comes back into focus, in
+     place. */
+@layer kp.signature {
+    [data-theme='light'] [data-cs-shape='3'] .kp-kpis {
+        --cl-radius: var(--radius, 0.5rem);
+        --cl-shadow: var(--kp-shadow-sm);
+        --cl-num-weight: 600;
+    }
+
+    [data-theme='light'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+    }
+
+    [data-theme='light'] [data-cs-arrival='3'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease);
+        --cl-arrive-stagger: var(--kp-sig-light-step);
+    }
+
+    [data-theme='light'] [data-cs-tone='3'] .kp-kpis {
+        --cl-delta-shadow: none;
+    }
+
+    [data-theme='light'] [data-cs-live='2'] .kp-kpis {
+        --cl-live-num: kp-sig-light-reexpose calc(var(--kp-sig-light-time) * 0.8) linear;
+        --cl-live-tile: none;
+    }
+}

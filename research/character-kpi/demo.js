@@ -85,8 +85,8 @@ const IDEAS = {
                 text: 'While the figure loads, four ledger rules are drawn across the card, left to right, and ruled again; it keeps moving until the reading is drawn.',
             },
             {
-                name: 'The seal is pressed',
-                text: 'While the figure loads, a navy seal ring is pressed onto the card, lifted and pressed again; it keeps moving until the reading is drawn.',
+                name: 'Ruling the lines',
+                text: 'While the figure loads, three navy rules are ruled across the card’s foot one after the other, held, lifted and ruled again; it keeps moving until the reading is drawn.',
             },
         ],
         tone: [
@@ -100,7 +100,7 @@ const IDEAS = {
             },
             {
                 name: 'The red-ink entry',
-                text: 'The change on a plate inside a hairline rule, square; a warning or destructive figure is ruled off in its colour along the left edge, the accountant’s red ink.',
+                text: 'The change on a square plate inside a hairline rule; a warning or destructive figure is ruled off in 3 px red ink along the start edge, its figure in red ink on paper.',
             },
         ],
         interactive: [
@@ -110,7 +110,7 @@ const IDEAS = {
             },
             {
                 name: 'The ledger opens',
-                text: 'As a link or a filter: a faint guilloche rises behind the number on hover, a navy outline on focus, the page turns a shade darker when pressed.',
+                text: 'As a link or a filter: formal’s own: a rule under the label on hover, the two-channel ring on focus, the rule doubled round the plate when pressed.',
             },
             {
                 name: 'The wax seal',
@@ -123,7 +123,10 @@ const IDEAS = {
                 name: 'The entry is carried forward',
                 text: 'A new reading: the old figure is ruled through and the new one entered beneath, slowing as it lands.',
             },
-            { name: 'Signed again', text: 'A new reading: the number is retraced in its own serif, easing in and out.' },
+            {
+                name: 'Ruled again and closed',
+                text: 'A new reading: a navy rule is ruled under the number, the second rule closes it, and both are lifted.',
+            },
         ],
     },
     light: {
@@ -137,8 +140,8 @@ const IDEAS = {
                 text: 'A pale sky wash behind the number, the sun a warm glow in the corner, the change as its own status plate.',
             },
             {
-                name: 'The coloured tab',
-                text: 'A sheet of paper on the page, a small radius, a lifted corner folded at the top right, the change as its own status plate.',
+                name: 'The white card',
+                text: 'A white card of 0.5 rem on its small shadow and a hairline seam; no folded corner.',
             },
         ],
         loading: [
@@ -147,8 +150,8 @@ const IDEAS = {
                 text: 'While the figure loads, a dashed line under the label drifts steadily to the right, looping at the edge; it keeps moving until the reading is drawn.',
             },
             {
-                name: 'Daylight',
-                text: 'While the figure loads, a slow diagonal band of daylight sweeps across the whole card from corner to corner and loops; it keeps moving until the reading is drawn.',
+                name: 'Out of focus',
+                text: 'The tile’s words breathe out of focus on its plate (blur and brightness up and back); nothing crosses it.',
             },
             {
                 name: 'A cloud passes',
@@ -162,8 +165,8 @@ const IDEAS = {
             },
             { name: 'The soft outline', text: 'The change as a pill drawn in a soft outline of its own ink over its plate.' },
             {
-                name: 'The coloured tab',
-                text: 'The change as a pill with a soft drop shadow; a warning or destructive figure shows a band of its colour along the top of the card.',
+                name: 'The band and the pill',
+                text: 'A warning or failed figure carries a 3 px band of the tone’s colour along its top, the card staying white and the figure in the ink; its change sits on a soft pill.',
             },
         ],
         interactive: [
@@ -172,8 +175,8 @@ const IDEAS = {
                 text: 'As a link or a filter: the card lifts on a wider soft shadow and its border warms a shade on hover, a 2px indigo ring appears outside the edge on focus, the lift settles flat again when pressed.',
             },
             {
-                name: 'The warm glow',
-                text: "As a link or a filter: the sun's corner glow widens and brightens on hover, a thick warm-amber halo rings the tile on focus, the glow narrows back when pressed.",
+                name: 'Settles toward the paper',
+                text: 'A tile that is a link or a toggle settles 2 px under the pointer with a tighter shadow, wears the two-channel ring when focused, and lands flat and flashes when pressed.',
             },
             {
                 name: 'The paper curls',
@@ -183,8 +186,8 @@ const IDEAS = {
         live: [
             { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
             {
-                name: 'A soft swell',
-                text: 'A new reading: the number swells to 112% and settles back to size over half a second, easing out like a breath.',
+                name: 'Re-exposed',
+                text: 'The changed figure goes into the glare for a beat and comes back into focus; it never swells.',
             },
             {
                 name: 'The page turns',
@@ -879,7 +882,10 @@ const IDEAS = {
                 name: 'The slab',
                 text: 'A concrete slab, a heavy black frame with a hard offset shadow, heavy capitals, the change as its own status plate.',
             },
-            { name: 'The sticker sheet', text: 'A white slab in the 3px line on a 6px hard shadow, flat full paint, the number huge and heavy, the change as its own status plate.' },
+            {
+                name: 'The sticker sheet',
+                text: 'A white slab in the 3px line on a 6px hard shadow, flat full paint, the number huge and heavy, the change as its own status plate.',
+            },
             {
                 name: 'The warning poster',
                 text: 'A poster block, a 3px frame with a hard offset shadow in the accent, the change as its own status plate.',
@@ -928,7 +934,10 @@ const IDEAS = {
             },
         ],
         live: [
-            { name: 'Slammed onto its yellow offset', text: 'A new reading: the number is slammed onto a yellow offset, three units of fall, twelve standing, struck off in one cut.' },
+            {
+                name: 'Slammed onto its yellow offset',
+                text: 'A new reading: the number is slammed onto a yellow offset, three units of fall, twelve standing, struck off in one cut.',
+            },
             {
                 name: 'Kicked',
                 text: 'A new reading: the number jolts straight up and lands, in two hard steps with no easing, as a needle hitting its stop.',

@@ -5,36 +5,45 @@
    Kenny has judged the nineteen questions, the per-component demos apply
    the answers from here, as forest's grammar.css is applied.
 
-   - the one idea is the FAN: a crest of gold rays folded to a point opens ray
-     by ray and folds back the same way. Twelve rays across 180 degrees (a
-     15 degree cell each, the ray 4 degrees wide and centred in its cell),
-     one ray per step, `steps(12, jump-end)` opening and
-     `steps(12, jump-start)` folding, 40 ms a ray (480 ms a fan); the plate
-     behind its fan follows in four steps (160 ms more); a group comes 80 ms
-     apart from its centre outward; a loop is 2400 ms. A colour change keeps
-     the register's 160 ms. Never a smooth sweep, never a spring, nothing
-     fades, nothing slides, nothing rises;
-   - what opens opens from a point: a menu from its button's base, a dialog
-     from the base of its crest, a tile and a day from their base, a tooltip
-     from its notch, a toast from its mark; it folds to that point, the same
-     steps backwards (a close is its open reversed: every keyframe pair
-     below is written `name` / `name-out`, the timing function written
-     literally inside the @keyframes, an eased open closing on the inverse
-     curve and `steps(n, jump-end)` on `steps(n, jump-start)`);
-   - gold is flat `--primary` and never a gradient (a fan is counted, never
-     smeared); emerald marks what is current or done, ruby warns on a plate
-     with ivory ink, ivory reads;
-   - plates have radius 0 and one corner bitten as a chevron, small parts end
-     in a lozenge point; the ground is lacquer with the lattice felt, one
-     double gold rule on what matters, one crest on a title;
-   - Poiret One capitals tracked 0.16 em for titles, Josefin Sans for the
-     rest, figures Josefin 600 tabular;
-   - the network graph is never a target (Kenny, 2026-10-07 02:54).
+   UPDATE 1 (2026-10-08). Kenny did not approve thirteen of the nineteen
+   ("this should be the fancy, distinguished theme, with lots of gold accents
+   and fancy blue backgrounds (maybe even with a background wallpaper style
+   like it already has for most pages), it should exhume elegance without
+   being too 'in your face'"). The direction this file now carries:
 
-   Colours come from the theme's tokens only; every animation sits under
-   prefers-reduced-motion: no-preference, and the reduced pose is the fan
-   open. The tokens hang on `.dc-page, .dc-scene` (the review dialog moves a
-   section into its stage, which is neither). */
+   - the grand lobby of 1925 after the lights go down: deep blue lacquer
+     (`--dc-lac`, the card's lacquer turned a few degrees toward blue) with the
+     register's chevron wallpaper behind every plate (the two
+     repeating-linear-gradients of css/_rules.css's deco texture in gold at
+     8 %, `--dc-wall-a`, on a 24 px tile), where the page has it felt at 5 %;
+   - gold is a THIN LINE and a SMALL MARK: a 1 px inlay line set
+     `--dc-inset` (6 px) inside a plate's edge with a stepped notch of
+     `--dc-notch` (6 px) at each corner, a `3px double` rule where something
+     matters, a lozenge jewel (a square turned 45 degrees) at a head, an end or
+     a divider's centre; gold is a fill only on the one primary button; ivory
+     reads, emerald is one jewel on what is on or done, ruby a hairline and a
+     word on a failure;
+   - symmetry: a plate's inlay draws from the middle of its top edge round both
+     ways and meets at the bottom (`--dc-draw`, 320 ms), then its lacquer,
+     wallpaper and words come up behind it (`--dc-up`, 160 ms);
+   - motion settles: `--dc-settle` cubic-bezier(0.22, 1, 0.36, 1) opening and
+     its point reflection `--dc-settle-out` cubic-bezier(0.64, 0, 0.78, 0)
+     closing, so a close is its open reversed frame for frame; the fan is kept
+     as the anchor but unfolds smoothly by angle (`--dc-a`), its ribs spreading
+     out of one bundle, never counted; a glint (a soft band of gold light,
+     blurred, 30 % of the width; `--dc-g` is its way across) passes once where
+     the eye should go;
+   - nothing rises, slides, jumps or flashes solid gold; no sunburst behind a
+     figure, no counted rays, no bulbs, no lamps, no curtain, no setbacks.
+
+   Kenny's six picks keep their round-one drawing and the keyframes below that
+   draw them (dcg-fan and dcg-plate for the durations, dcg-flash for the live
+   update's first option, dcg-ring for the spinner's first option).
+
+   Colours come from the theme's tokens only (relative colours allowed); every
+   animation sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished one. The tokens hang on `.dc-page, .dc-scene` (the
+   review dialog moves a section into its stage, which is neither). */
 
 /* The angle a fan has opened to (0 folded, 180 open; 360 for a ring of rays). */
 @property --dc-a {
@@ -57,6 +66,42 @@
     syntax: '<number>';
     inherits: true;
     initial-value: 1;
+}
+
+/* Update 1. How far a plate's inlay is drawn round from its start (0 none, 1
+   closed), how far its lacquer, wallpaper and words are up (0 away, 1 there),
+   how far a glint has crossed (0 before the start edge, 1 past the end: gone),
+   and the wallpaper's gold (8 %). The finished pose is every initial value. */
+@property --dc-draw {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-up {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-g {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-wall-a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.08;
+}
+
+/* How bright a control's gold hairline is (a control rests at 0.55 and is
+   full gold where the pointer is); a transition moves it. */
+@property --dc-line-a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.85;
 }
 
 @layer kp.signature {
@@ -89,6 +134,28 @@
         --dc-bite-poly: polygon(0 0, calc(100% - var(--dc-bite)) 0, 100% var(--dc-bite), 100% 100%, 0 100%);
         /* A lozenge end for small parts: pointed left and right. */
         --dc-lozenge-poly: polygon(0.5em 0, calc(100% - 0.5em) 0, 100% 50%, calc(100% - 0.5em) 100%, 0.5em 100%, 0 50%);
+        /* Update 1: the lobby. The curve and its point reflection (an eased
+           open closes on the inverse curve, so the close is the open
+           reversed); one arrival is the inlay drawn (320 ms) and the lacquer
+           up behind it (160 ms). */
+        --dc-settle: cubic-bezier(0.22, 1, 0.36, 1);
+        --dc-settle-out: cubic-bezier(0.64, 0, 0.78, 0);
+        --dc-arrive: 480ms;
+        --dc-draw-t: 320ms;
+        --dc-up-t: 160ms;
+        /* The lacquer: the card's, a few degrees toward blue. The inlay: 1 px
+           of gold set 6 px in, a 6 px stepped notch at each corner. */
+        --dc-lac: hsl(from var(--card) calc(h + 14) calc(s + 14) l);
+        --dc-inset: 6px;
+        --dc-notch: 6px;
+        /* The glint: a soft band of gold light, 30 % of the width, blurred. */
+        --dc-glint-ink: hsl(from var(--primary) h s 62% / 0.12);
+        --dc-glint-w: 30%;
+        --dc-glint-blur: 6px;
+        /* The pressed ground: the lacquer a shade darker. */
+        --dc-sunk: hsl(from var(--background) h s calc(l - 3));
+        /* Emerald as ink (the jewel's lighter cut, for an arrow or a word). */
+        --dc-emerald: var(--chart-2);
         /* Poiret One capitals for titles, Josefin for the rest (G18). */
         --dc-title-font: var(--theme-font-display);
         --dc-title-track: 0.16em;
@@ -141,29 +208,6 @@
         }
     }
 
-    /* A plate with no crest of its own is counted in vertical pleats from its
-       centre out, twelve of them, a fold line at each (the register's
-       scaleX fold, counted). */
-    @keyframes dcg-pleat {
-        from {
-            --dc-p: 0;
-            animation-timing-function: steps(12, jump-end);
-        }
-        to {
-            --dc-p: 1;
-        }
-    }
-
-    @keyframes dcg-pleat-out {
-        from {
-            --dc-p: 1;
-            animation-timing-function: steps(12, jump-start);
-        }
-        to {
-            --dc-p: 0;
-        }
-    }
-
     /* A live update: one flash of the fan behind the changed figure, 480 ms
        open and 480 ms folded; the same going and coming, so its close is its
        open reversed. */
@@ -195,73 +239,6 @@
         }
     }
 
-    /* A line lit from its start, as a fan from its first ray: twelve steps. */
-    @keyframes dcg-line {
-        from {
-            --dc-p: 0;
-            animation-timing-function: steps(12, jump-end);
-        }
-        to {
-            --dc-p: 1;
-        }
-    }
-
-    @keyframes dcg-line-out {
-        from {
-            --dc-p: 1;
-            animation-timing-function: steps(12, jump-start);
-        }
-        to {
-            --dc-p: 0;
-        }
-    }
-
-    /* Loading: a crest opens from the foot ray by ray (80 ms a ray), stands,
-       folds ray by ray, rests: one loop of 2400 ms. */
-    @keyframes dcg-load {
-        0% {
-            --dc-a: 0deg;
-            animation-timing-function: steps(12, jump-end);
-        }
-        40% {
-            --dc-a: 180deg;
-            animation-timing-function: linear;
-        }
-        56.67% {
-            --dc-a: 180deg;
-            animation-timing-function: steps(12, jump-start);
-        }
-        96.67% {
-            --dc-a: 0deg;
-        }
-        100% {
-            --dc-a: 0deg;
-        }
-    }
-
-    /* The same for a skeleton line: lit from its start, ray by ray, then
-       folded back. */
-    @keyframes dcg-load-line {
-        0% {
-            --dc-p: 0;
-            animation-timing-function: steps(12, jump-end);
-        }
-        40% {
-            --dc-p: 1;
-            animation-timing-function: linear;
-        }
-        56.67% {
-            --dc-p: 1;
-            animation-timing-function: steps(12, jump-start);
-        }
-        96.67% {
-            --dc-p: 0;
-        }
-        100% {
-            --dc-p: 0;
-        }
-    }
-
     /* The spinner: a crest of twelve rays round a centre dot, a ring of 30
        degree cells; opens, stands, folds, 2400 ms, never turning. */
     @keyframes dcg-ring {
@@ -285,26 +262,89 @@
         }
     }
 
-    /* The bar laid flat: rays lit across and folded back, 2400 ms, forty
-       rays to the track. */
-    @keyframes dcg-lay {
-        0% {
-            --dc-p: 0;
-            animation-timing-function: steps(40, jump-end);
+    /* ── Update 1: the lobby's motion, settled ──────────────────────────
+       A plate arrives: its inlay draws round from its start (dcg-draw), then
+       its lacquer and words come up (dcg-up). A fan unfolds by angle, its ribs
+       spreading out of one bundle (dcg-unfold). Each on the settle curve; the
+       `-out` twin is the same backwards on the inverse curve. A glint passes
+       once (dcg-pass), at an even ease in and out, which is its own inverse. */
+    @keyframes dcg-draw {
+        from {
+            --dc-draw: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
         }
-        40% {
-            --dc-p: 1;
-            animation-timing-function: linear;
+        to {
+            --dc-draw: 1;
         }
-        56.67% {
-            --dc-p: 1;
-            animation-timing-function: steps(40, jump-start);
+    }
+
+    @keyframes dcg-draw-out {
+        from {
+            --dc-draw: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
         }
-        96.67% {
-            --dc-p: 0;
+        to {
+            --dc-draw: 0;
         }
-        100% {
-            --dc-p: 0;
+    }
+
+    @keyframes dcg-up {
+        from {
+            --dc-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-up: 1;
+        }
+    }
+
+    @keyframes dcg-up-out {
+        from {
+            --dc-up: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-up: 0;
+        }
+    }
+
+    @keyframes dcg-unfold {
+        from {
+            --dc-a: 0deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dcg-unfold-out {
+        from {
+            --dc-a: 180deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-pass {
+        from {
+            --dc-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 1;
+        }
+    }
+
+    @keyframes dcg-pass-out {
+        from {
+            --dc-g: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 0;
         }
     }
 }
