@@ -3944,6 +3944,14 @@
             filter: none;
         }
     }
+
+    /* A menu and a popover open by the channel split, as the toast does (G3), and close as
+       it played backwards (js/motion.js playClose). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+    }
 }
 
 /* ── End of the signature ── */

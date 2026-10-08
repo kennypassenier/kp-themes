@@ -2711,5 +2711,18 @@
             scale: 1 1;
         }
     }
+
+    /* A menu and a popover are printed and their red plate falls into register on them, as
+       on the toast (G3, the plate); they close as the fall played backwards (js/motion.js
+       playClose). */
+    [data-theme='grotesk'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-gr-fall);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-grotesk-fall var(--kp-sig-dur) linear backwards;
+        }
+    }
 }
 /* ── End of the signature ── */

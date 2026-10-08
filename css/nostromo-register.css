@@ -3261,5 +3261,22 @@
             clip-path: inset(0);
         }
     }
+
+    /* A menu and a popover are drawn by the raster as the toast is, the beam riding the
+       edge as a background layer, 4 frames (G3); they close as the draw played backwards
+       (js/motion.js playClose). */
+    [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+    }
 }
 /* ── End of the signature ── */

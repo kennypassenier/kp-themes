@@ -1800,8 +1800,8 @@
         padding: 1.25rem 1rem 1.4rem;
         border: 1px solid var(--border);
         background:
-            radial-gradient(circle, var(--accent-foreground) 0 1.5px, transparent 2px 4px, var(--accent-foreground) 4px 5px, transparent 5.5px) calc(50% + 1.375rem) 1.75rem /
-                0.75rem 0.75rem no-repeat,
+            radial-gradient(circle, var(--accent-foreground) 0 1.5px, transparent 2px 4px, var(--accent-foreground) 4px 5px, transparent 5.5px)
+                calc(50% + 1.375rem) 1.75rem / 0.75rem 0.75rem no-repeat,
             var(--card);
     }
 
@@ -2482,8 +2482,7 @@
         --kp-fo-margin: calc((100% - var(--kp-fo-run)) / 2);
         --kp-fo-w: clamp(0, (var(--kp-fo-grow) - 0.12) / 0.88, 1);
         --kp-fo-edge: calc(
-            var(--kp-fo-margin) +
-                min(round(down, var(--kp-fo-w) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
+            var(--kp-fo-margin) + min(round(down, var(--kp-fo-w) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
         );
         --kp-fo-r1: clamp(0, var(--kp-fo-grow) / 0.45, 1);
         --kp-fo-r2: clamp(0, (var(--kp-fo-grow) - 0.1) / 0.45, 1);
@@ -2727,6 +2726,23 @@
 
     [data-theme='forest'] .kp-kpi__delta[data-kp-direction='down']::before {
         content: '↓\00a0';
+    }
+
+    /* A menu or a popover hangs from its button: it grows down out of the button's edge,
+       its far end first, like a root; placed above its button it grows up out of it (G3),
+       one growth (G4). It closes as the growth reversed (js/motion.js playClose). */
+    [data-theme='forest'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-menu-button > .kp-menu[data-kp-menu-side='above'] {
+            animation-name: kp-sig-forest-grow;
+        }
     }
 }
 /* ── End of the signature ── */

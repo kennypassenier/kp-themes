@@ -1928,7 +1928,10 @@
         --kp-sig-solstice-contact: 240ms;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ) {
         /* How far the sun stands above the foot line at noon: a small part
            keeps it under its words. */
         --kp-sig-solstice-rise: 0.4rem;
@@ -1938,57 +1941,99 @@
         contain: paint;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--sm, .kp-chart__source, .kp-chart__show-all, .kp-icon-button) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button--sm, .kp-chart__source, .kp-chart__show-all, .kp-icon-button) {
         --kp-sig-solstice-rise: 0.28rem;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(a.kp-kpi, .kp-kpi--toggle) {
         --kp-sig-solstice-rise: 0.9rem;
     }
 
     /* On an amber face the sun is the same amber lifted to 90 %: amber on
        amber is not seen, and a dark glow would darken the ground under the
        dark words. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--primary) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button--primary) {
         --kp-sig-solstice-sun: hsl(from var(--primary) h s 90%);
         --kp-sig-solstice-warm: 0.6;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--destructive) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button--destructive) {
         --kp-sig-solstice-held: hsl(from var(--destructive) h s l / 0.4);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--primary) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button--primary) {
         --kp-sig-solstice-held: var(--primary-active);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button:not(.kp-button--primary, .kp-button--destructive, .kp-button--ghost)) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button:not(.kp-button--primary, .kp-button--destructive, .kp-button--ghost)) {
         --kp-sig-solstice-held: var(--secondary-active);
         --kp-sig-solstice-ink: var(--secondary-foreground);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--ghost, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(
+            .kp-button--ghost,
+            .kp-icon-button,
+            .kp-menu__item,
+            .kp-calendar__day,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-chart__source,
+            .kp-chart__show-all
+        ) {
         --kp-sig-solstice-held: var(--muted);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-chart__source, .kp-chart__show-all) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-chart__source, .kp-chart__show-all) {
         --kp-sig-solstice-ink: var(--muted-foreground);
     }
 
     /* The two numbers: 1 under the real pointer, 1 while held. A disabled
        part answers to neither. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):hover:not(:disabled, [aria-disabled='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):hover:not(:disabled, [aria-disabled='true']) {
         --kp-sig-solstice-point: 1;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):active:not(:disabled, [aria-disabled='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):active:not(:disabled, [aria-disabled='true']) {
         --kp-sig-solstice-press: 1;
     }
 
     /* The sun climbs its arc: x is 1 - cos and y is sin of a quarter turn,
        so it rises along a circle's edge from the start side to the middle
        and stands above the foot line at the end. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *)::before {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        )::before {
         content: '';
         position: absolute;
         z-index: -1;
@@ -2005,7 +2050,10 @@
     }
 
     /* A dome of warm light grows round the sun and the foot edge lights. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *)::after {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        )::after {
         content: '';
         position: absolute;
         z-index: -1;
@@ -2029,7 +2077,10 @@
        half-way to its held face (the whole way was a pale flash on the amber
        one), all on the same number. A warm lift, not a flash: on the amber
        face the lifted sun is paler than the face, so it is held lower. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ) {
         background-image:
             linear-gradient(
                 hsl(from var(--kp-sig-solstice-sun) h s l / calc(var(--kp-sig-solstice-press) * 0.6)),
@@ -2038,7 +2089,8 @@
             radial-gradient(
                 ellipse 70% 105% at 50% 100%,
                 hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.16 * var(--kp-sig-solstice-warm, 1) * min(1, var(--kp-sig-solstice-press) * 3))),
-                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.055 * var(--kp-sig-solstice-warm, 1) * min(1, var(--kp-sig-solstice-press) * 3))) 42%,
+                hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.055 * var(--kp-sig-solstice-warm, 1) * min(1, var(--kp-sig-solstice-press) * 3)))
+                    42%,
                 transparent 72%
             ),
             linear-gradient(
@@ -2061,45 +2113,77 @@
        A part whose ink is a pair with its face (the primary and destructive
        buttons, a toned day) keeps it. A dusk-dark halo under the words keeps
        them clear of the brightest part of the light. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):not(.kp-button--primary, .kp-button--destructive, [data-kp-tone]) {
-        color: color-mix(in oklch, var(--kp-sig-solstice-ink, currentColor) calc((1 - var(--kp-sig-solstice-press)) * 100%), var(--kp-sig-solstice-cream));
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):not(.kp-button--primary, .kp-button--destructive, [data-kp-tone]) {
+        color: color-mix(
+            in oklch,
+            var(--kp-sig-solstice-ink, currentColor) calc((1 - var(--kp-sig-solstice-press)) * 100%),
+            var(--kp-sig-solstice-cream)
+        );
         text-shadow: 0 0 0.45rem hsl(from var(--background) h s l / calc(var(--kp-sig-solstice-press) * 0.85));
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle):not([data-kp-tone]) .kp-kpi__label {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(a.kp-kpi, .kp-kpi--toggle):not([data-kp-tone])
+        .kp-kpi__label {
         color: color-mix(in oklch, var(--muted-foreground) calc((1 - var(--kp-sig-solstice-press)) * 100%), var(--kp-sig-solstice-cream));
     }
 
     /* The grounds the base layer changes under a pointer or a finger go back
        to the part's rest: the register's pointing is the sun, not a face. A
        part keeps its rest border, its rest ground and does not lift. */
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
         translate: none;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button:is(:hover, :active):not(:disabled) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ).kp-button:is(:hover, :active):not(:disabled) {
         background-color: var(--secondary);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button--primary:is(:hover, :active):not(:disabled) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ).kp-button--primary:is(:hover, :active):not(:disabled) {
         background-color: var(--primary);
         border-color: var(--primary);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-button--ghost, .kp-icon-button, .kp-menu__item):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-button--ghost, .kp-icon-button, .kp-menu__item):is(:hover, :active):not(:disabled, [aria-disabled='true']) {
         background-color: transparent;
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *).kp-button--destructive:is(:hover, :active):not(:disabled) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ).kp-button--destructive:is(:hover, :active):not(:disabled) {
         background-color: transparent;
         border-color: var(--destructive);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(a.kp-kpi, .kp-kpi--toggle):hover:not([aria-pressed='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(a.kp-kpi, .kp-kpi--toggle):hover:not([aria-pressed='true']) {
         border-color: var(--border);
     }
 
-    [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *):is(.kp-chart__source, .kp-chart__show-all):hover:not(:focus-visible, [aria-pressed='true']) {
+    [data-theme='solstice']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(
+            .kp-alarm *
+        ):is(.kp-chart__source, .kp-chart__show-all):hover:not(:focus-visible, [aria-pressed='true']) {
         border-color: transparent;
         color: var(--muted-foreground);
     }
@@ -2107,10 +2191,28 @@
     @media (prefers-reduced-motion: no-preference) {
         /* The way back is the way there, per frame: one curve that is its
            own mirror for both directions. */
-        [data-theme='solstice'] :is(.kp-button, .kp-icon-button, .kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle, .kp-chart__source, .kp-chart__show-all):not(.kp-alarm *) {
+        [data-theme='solstice']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                .kp-calendar__day,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-chart__source,
+                .kp-chart__show-all
+            ):not(.kp-alarm *) {
             transition:
                 --kp-sig-solstice-point var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch),
                 --kp-sig-solstice-press var(--kp-sig-solstice-contact) var(--kp-sig-solstice-touch);
+        }
+    }
+
+    /* A menu and a popover rise into the light as the toast does (G3); they close as the
+       rise played backwards (js/motion.js playClose). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
         }
     }
 }

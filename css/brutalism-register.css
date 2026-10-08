@@ -1141,7 +1141,6 @@
         font-weight: 500;
     }
 
-
     /* The accordion [gap-12]: heavy capitals like its tabs, and open is struck under with its own line weight. */
     [data-theme='brutalism'] .kp-accordion__summary {
         font-size: 0.9rem;
@@ -1988,8 +1987,8 @@
         border: var(--br-line) solid var(--br-ink);
         border-radius: 0;
         background:
-            repeating-linear-gradient(90deg, transparent 0 calc(10% - 2 * var(--br-u)), var(--br-ink) calc(10% - 2 * var(--br-u)) 10%) 0 100% /
-                100% 40% no-repeat,
+            repeating-linear-gradient(90deg, transparent 0 calc(10% - 2 * var(--br-u)), var(--br-ink) calc(10% - 2 * var(--br-u)) 10%) 0 100% / 100%
+                40% no-repeat,
             var(--card);
         box-shadow: var(--br-drop) var(--br-drop) 0 0 var(--br-ink);
     }
@@ -2931,6 +2930,21 @@
 
         100% {
             translate: 0 0;
+        }
+    }
+
+    /* A menu and a popover are dropped onto their footprint as the toast is (G3), their
+       hard shadow on the page from the first frame; they are lifted off as the drop played
+       backwards (js/motion.js playClose). */
+    [data-theme='brutalism'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-br-time);
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation: kp-sig-brutalism-drop var(--kp-sig-dur) var(--kp-sig-br-fall) backwards;
         }
     }
 }
