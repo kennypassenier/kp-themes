@@ -61,3 +61,75 @@
 - **A register cannot say how many lines a panel has (found 2026-10-08).** The ruled opening of a menu or a popover needs the number of its entries to give it no dead time at its end; formal counts them with `:has(> :nth-child(k))` up to eight, and a menu of more than eight rules its ninth and later entries with the eighth. A `--kp-menu-count` set by js/menu-button.js (the same for the popover with a menu in it) would remove the cap.
 - **The manners (hover, focus, press) cover what the register names, not every control (applying formal, 2026-10-08).** The selector list is `.kp-button`, `.kp-icon-button`, `.kp-menu__item`, `a.kp-kpi`, `.kp-kpi--toggle`, `.kp-calendar__day`, `.kp-kpi__link`, `.kp-nav__link` and the text links; tabs, pagination, accordion summaries, tree rows, the sidenav, the chart's legend keys and the combobox options keep the package's own answer to the pointer. A grammar question for Kenny, not a missing hook.
 - **Research variants whose description text is shared by every theme (applying formal, 2026-10-08).** research/character-chart/demo.js builds the loading and arrival texts from one `KIND` table for all themes, so formal's two redrawn options carry a theme condition there (as light's already do); a table per theme would remove the conditions.
+
+## Release suite of 10.0.0 (2026-10-08): 67 failures, findings for 10.1.0
+
+Kenny released 10.0.0 with these open (form suite-red). Not triaged: some expect the look before the character rounds, five are timeouts while the screenshot check ran alongside. Keyboard and sideways-scroll ones first.
+
+- tests/auto-lazy.spec.mjs:188:5 › catalogue/chart.html ends up the same as with every module attached [scope-115] — Error: only in the lazy page
+- tests/auto-lazy.spec.mjs:188:5 › catalogue/feedback.html ends up the same as with every module attached [scope-115] — Error: only in the lazy page
+- tests/auto-lazy.spec.mjs:188:5 › catalogue/data.html ends up the same as with every module attached [scope-115] — Error: only in the lazy page
+- tests/auto-lazy.spec.mjs:188:5 › catalogue/overlays.html ends up the same as with every module attached [scope-115] — Error: only in the lazy page
+- tests/auto-lazy.spec.mjs:188:5 › catalogue/index.html ends up the same as with every module attached [scope-115] — Error: only in the lazy page
+- tests/button-notes.spec.mjs:56:5 › cyberpunk: the charge sweep on every variant [scope-80] › every variant runs the sweep, in a colour at least 3:1 from the face it cross — Error: Save changes runs no sweep
+- tests/button.spec.mjs:70:9 › the button › both halves of the focus ring reach .kp-button in every theme, framework-free [AR30] — Error: half a ring in:
+- tests/button.spec.mjs:70:9 › the button › both halves of the focus ring reach .kp-button in every theme, React [AR30] — Error: half a ring in:
+- tests/calendar.spec.mjs:40:1 › October back to February: six rows every month, all one height (I.1.7 1) [scope-143]; today's ring and a title on one line in 19 themes [fi — Error: locator.evaluate: Test timeout of 30000ms exceeded.
+- tests/catalogue-review-dialog.spec.mjs:44:1 › the review dialog keeps one size over every block, with the cursor in the note on each [scope-90] — Error: a block taller than the stage scrolls inside it
+- tests/catalogue-review-dialog.spec.mjs:492:1 › the review note stands before "Look at:" in the same scrolling frame, at its top when a block opens, in the look's font in — Error: the note shows
+- tests/catalogue-review-dialog.spec.mjs:525:1 › a long review note scrolls in the frame with the look, opens at the top on every block and moves no button [scope-92] — Error: a long note makes the frame scroll
+- tests/catalogue-review-dialog.spec.mjs:204:1 › a theme finished in the dialog walks on to the next theme, and the last one says the round is over [scope-113] — Error: expect(locator).toContainText(expected) failed
+- tests/catalogue-review.spec.mjs:173:1 › a note on one page and a verdict on the review page share one prompt on a third page, and Clear prompt empties it — Error: expect(locator).toContainText(expected) failed
+- tests/dark-themes-notes.spec.mjs:72:9 › titanium: a click is seen [Kenny's note, 2026-09-15] › every live button in Variants and States paints differently the moment it i — Error: Working…: hover settles
+- tests/dashboard.spec.mjs:255:5 › both halves of the focus ring reach the destructive item in the row menu, every theme — framework-free [W4, AR30, DI2] — Error: blueprint: the keyboard lost the menu item
+- tests/dashboard.spec.mjs:291:5 › the focus indicator PAINTS on the destructive item inside the menu, every theme — framework-free [W4, AR30] — Error: focus painted no ring in:
+- tests/dashboard.spec.mjs:322:5 › the confirmation's buttons carry both halves of the ring, every theme — framework-free [W4, TH107, DI2] — Error: blueprint: the keyboard is not on Cancel
+- tests/dashboard.spec.mjs:255:5 › both halves of the focus ring reach the destructive item in the row menu, every theme — React [W4, AR30, DI2] — Error: blueprint: the keyboard lost the menu item
+- tests/dashboard.spec.mjs:322:5 › the confirmation's buttons carry both halves of the ring, every theme — React [W4, TH107, DI2] — Error: blueprint: the keyboard is not on Cancel
+- tests/dashboard.spec.mjs:291:5 › the focus indicator PAINTS on the destructive item inside the menu, every theme — React [W4, AR30] — Error: focus painted no ring in:
+- tests/datatable-add-filter.spec.mjs:335:9 › datatable add-filter mode — framework-free › every theme draws the menu, the editor and its calendar where they can be reached — Error: expect(received).toEqual(expected) // deep equality
+- tests/datatable-more.spec.mjs:496:9 › datatable keyboard grid — framework-free › Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focu — Error: expect(received).toEqual(expected) // deep equality
+- tests/datatable-add-filter.spec.mjs:335:9 › datatable add-filter mode — React › every theme draws the menu, the editor and its calendar where they can be reached, inside — Error: expect(received).toEqual(expected) // deep equality
+- tests/datatable-more.spec.mjs:496:9 › datatable keyboard grid — React › Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focus ring sh — Error: expect(received).toEqual(expected) // deep equality
+- tests/datatable.spec.mjs:834:5 › datatable — a group folds as its open played backwards › nothing in a table arrives on load, its pager bar is settled from the first fram — Error: locator.click: Test timeout of 30000ms exceeded.
+- tests/fixtures.spec.mjs:43:9 › blueprint fixture › reflows at 320 px without sideways scrolling [DI11] — Error: the document scrolls horizontally at 320 px
+- tests/fixtures.spec.mjs:149:5 › formal paints no colour that is not its own [KT8] — Error: expect(received).toEqual(expected) // deep equality
+- tests/fixtures.spec.mjs:149:5 › light paints no colour that is not its own [KT8] — Error: expect(received).toEqual(expected) // deep equality
+- tests/fixtures.spec.mjs:149:5 › pastel paints no colour that is not its own [KT8] — Error: expect(received).toEqual(expected) // deep equality
+- tests/fixtures.spec.mjs:149:5 › forest paints no colour that is not its own [KT8] — Error: expect(received).toEqual(expected) // deep equality
+- tests/fixtures.spec.mjs:149:5 › solstice paints no colour that is not its own [KT8] — Error: expect(received).toEqual(expected) // deep equality
+- tests/focus-visible.spec.mjs:136:5 › cyberpunk: Tab to a button, a primary button, a field and a bar link, and a ring shows around each [fix-38] — Error: {"button":{"outside":0,"edge":0,"top":0,"bottom":0,"start":0,"end":0},"primary butt
+- tests/focus-visible.spec.mjs:136:5 › terminal: Tab to a button, a primary button, a field and a bar link, and a ring shows around each [fix-38] — Error: {"button":{"outside":452,"edge":0,"top":0.56,"bottom":0.56,"start":0.56,"end":0.56}
+- tests/kpi-columns.spec.mjs:82:1 › at 1280 px, every D7 row as the spec says, and the phone pane (D7) [scope-143] — Error: 4/600: row 2's heights
+- tests/kpi-columns.spec.mjs:115:1 › in 19 themes, at full width, at 700 px and in a 334 px pane: one height in every state and set, every label one line and uncut, the fra — Error: expect(received).toEqual(expected) // deep equality
+- tests/kpi-trend.spec.mjs:198:1 › in 19 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, th — Error: expect(received).toEqual(expected) // deep equality
+- tests/kpi-columns.spec.mjs:106:1 › at 390 px, every D7 row keeps the rules, with no sideways scroll (D7) [scope-143] — Error: locator.click: Test timeout of 30000ms exceeded.
+- tests/meter.spec.mjs:20:1 › the fill, the tick, past the end and the tone, through setMeter() (C7.1–C7.3) [scope-143] — Error: expect(received).toEqual(expected) // deep equality
+- tests/nav-ghost.spec.mjs:33:5 › solstice: a ghost and an icon button in the bar read against the bar [fix-77] — Error: ghost: oklch(0.929821 0.0138186 76.5791) on rgb(41, 34, 31)
+- tests/nav-ghost.spec.mjs:91:5 › solstice: a hovered or focused ghost and icon button in the bar still read against what is under them [fix-82] — TypeError: object null is not iterable (cannot read property Symbol(Symbol.iterator))
+- tests/nostromo-notes.spec.mjs:139:1 › bars in one group all start and end in the same column, in every theme [fix-64] — Error: three labelled bars stand in the group
+- tests/nostromo-notes.spec.mjs:89:1 › the progress label reads at 4.5:1 on what is behind it, in every theme [scope-60] — Error: locator.evaluate: Test timeout of 30000ms exceeded.
+- tests/nostromo-second-pass.spec.mjs:304:1 › a button hovered in a toast takes a shade of that toast’s own colour and reads at 4.5:1, in every theme [note 4] — Error: expect(received).toEqual(expected) // deep equality
+- tests/redaction-cover.spec.mjs:331:5 › every redaction covers its phrase at three widths and after a resize under synthwave [fix-33] — Error: locator.scrollIntoViewIfNeeded: Element is not attached to the DOM
+- tests/register-brutalism.spec.mjs:155:9 › the brutalism register, framework-free › the strip: a hovered item is the yellow plate with the line, and the cta lifts away fro — Error: expect(received).toBe(expected) // Object.is equality
+- tests/register-brutalism.spec.mjs:155:9 › the brutalism register, React › the strip: a hovered item is the yellow plate with the line, and the cta lifts away from its sha — Error: expect(received).toBe(expected) // Object.is equality
+- tests/register-grotesk.spec.mjs:227:9 › grotesk press label [grotesk-hover decision] › a pressed primary button's label reads at 4.5:1 or more on the press ground — Error: the grey press ground
+- tests/register-grotesk.spec.mjs:227:9 › grotesk press label [grotesk-hover decision] › a pressed destructive button's label reads at 4.5:1 or more on the press ground — Error: the grey press ground
+- tests/register-solstice.spec.mjs:215:9 › the solstice register, framework-free › a low sun rakes once across the touched control [scope-12] — Error: the sun rakes across
+- tests/register-solstice.spec.mjs:215:9 › the solstice register, React › a low sun rakes once across the touched control [scope-12] — Error: the sun rakes across
+- tests/register-terminal.spec.mjs:207:9 › the terminal register, framework-free › the shell line: a hovered item is inverse video, the cta is bracketed, the buttons are br — Error: expect(received).toBe(expected) // Object.is equality
+- tests/register-terminal.spec.mjs:207:9 › the terminal register, React › the shell line: a hovered item is inverse video, the cta is bracketed, the buttons are brackets an — Error: expect(received).toBe(expected) // Object.is equality
+- tests/registers.spec.mjs:95:9 › .kp-button--primary reacts to being pressed under blueprint [fix-12] — Error: blueprint: held down, the button paints exactly as it did hovered
+- tests/registers.spec.mjs:95:9 › .kp-button reacts to being pressed under blueprint [fix-12] — Error: blueprint: held down, the button paints exactly as it did hovered
+- tests/registers.spec.mjs:95:9 › .kp-button--destructive reacts to being pressed under blueprint [fix-12] — Error: blueprint: held down, the button paints exactly as it did hovered
+- tests/registers.spec.mjs:95:9 › .kp-button reacts to being pressed under cyberpunk [fix-12] — Error: cyberpunk: held down, the button paints exactly as it did hovered
+- tests/registers.spec.mjs:95:9 › .kp-button--primary reacts to being pressed under solstice [fix-12] — Error: solstice: held down, the button paints exactly as it did hovered
+- tests/registers.spec.mjs:95:9 › .kp-button--destructive reacts to being pressed under solstice [fix-12] — Error: solstice: held down, the button paints exactly as it did hovered
+- tests/site-more-examples.spec.mjs:34:1 › the table page shows its catalogue blocks beside its own examples — Error: expect(locator).toHaveCount(expected) failed
+- tests/site-more-examples.spec.mjs:11:1 › the data table page shows every catalogue block, loading and failed among them — Error: expect(locator).toHaveCount(expected) failed
+- tests/stamp-cards.spec.mjs:174:13 › sepia: the stamp lands on every labelled card, off its title [scope-98] › a plain labelled card of the package’s markup, at three widt — Error: expect(received).toEqual(expected) // deep equality
+- tests/site.spec.mjs:106:1 › no documentation page scrolls sideways at 360px [DI11] — Error: these pages make the reader scroll sideways
+- tests/surfaces.spec.mjs:163:9 › two surfaces in one theme [TH116] › every text on both surfaces clears its contrast floor under cyberpunk — Error: expect(received).toEqual(expected) // deep equality
+- tests/surfaces.spec.mjs:163:9 › two surfaces in one theme [TH116] › every text on both surfaces clears its contrast floor under solstice — Error: not a colour: oklch(0.899913 0.0162407 76.5606)
+- tests/tour.spec.mjs:40:1 › the tour end to end: an exact count, the card 12 px from its ringed target and following it, Esc, memory, decorate, ?tour (I.3.7 1-4, 6, 7) [sc — Error: expect(received).toEqual(expected) // deep equality
+- tests/tour.spec.mjs:87:1 › on a phone: the card 16 px from both edges, the drawer at the end edge at full height, Help gets the focus back, the tab bar toured (I.3.7 5) [ — Error: expect(received).toEqual(expected) // deep equality

@@ -22,6 +22,31 @@
   and the blueprint grid texture is off.
 - **Changed: the research demos' light picks** (busy, calendar, chart, columns, drawer, header, kpi, menu, meter, state, tiles,
   trend) are redrawn on the grammar in a `light.css` each.
+- **Removed: two more themes, `high-contrast` and `sepia`** [breaking, next
+  major release; Kenny, 2026-10-08, in the review dialog: "we are actually
+  not going further with high contrast, the theme can be removed from
+  everywhere" and "We are also stopping with Sepia, it may be deleted"].
+  Seventeen themes remain. Gone with them: their token sources
+  (`themes/<name>/`), their registers (`css/<name>-register.css` and the
+  `./css/<name>-register` and `/min` exports), their blocks in
+  `css/themes.css` and entries in `js/theme-registry.js` (and so in the
+  `ThemeName` type), their `kp-hc-*` and `kp-sig-<theme>-*` TIMINGS rows,
+  their hooks, the font family only high-contrast used (Atkinson
+  Hyperlegible), their showcase, compare and concept pages, their verdict
+  rows and their theme-specific tests. A page that stores one of the two
+  names falls back to the default theme. See MIGRATION.md.
+
+## 10.0.0 — 2026-10-08
+
+- **Released with open review pairs, on Kenny's word** [2026-10-08, forms open-blocks,
+  suite-red and approval-gate]. The screenshot check reopened 2515 block/theme pairs whose
+  look changed with the character rounds (1154 carried); they wait in the review dialog.
+  Three earlier rejections (`data--kpi-columns` in phantom, `motion--leave-options` in deco
+  and phantom) ship as they are: deco, dark, retro and phantom are being redrawn on the
+  branch `claude/eloquent-hamilton-37jler` for 10.1.0, with formal and light. The release
+  suite ran once: 1791 passed, 67 failed, 4 skipped (19 min 2 s); the 67 are findings for
+  10.1.0 in research/PACKAGE_FINDINGS.md.
+
 - **Fixed: a trend tile's label no longer runs under its "Charts ↗" link**: `.kp-kpi--trend > .kp-kpi__label` ends
   before the link (`margin-inline-end` 4.5 rem, 1.5 rem in a narrow tile) and a label that is still too long ends in an
   ellipsis (`overflow: hidden`, `text-overflow: ellipsis`), in every theme (css/components.css). Measured at 390 and
@@ -368,19 +393,6 @@
   Serif 4, Vazirmatn, Markazi Text), their showcase, compare and concept
   pages, and their theme-specific tests. A page that stores one of the
   three names falls back to the default theme. See MIGRATION.md.
-- **Removed: two more themes, `high-contrast` and `sepia`** [breaking, next
-  major release; Kenny, 2026-10-08, in the review dialog: "we are actually
-  not going further with high contrast, the theme can be removed from
-  everywhere" and "We are also stopping with Sepia, it may be deleted"].
-  Seventeen themes remain. Gone with them: their token sources
-  (`themes/<name>/`), their registers (`css/<name>-register.css` and the
-  `./css/<name>-register` and `/min` exports), their blocks in
-  `css/themes.css` and entries in `js/theme-registry.js` (and so in the
-  `ThemeName` type), their `kp-hc-*` and `kp-sig-<theme>-*` TIMINGS rows,
-  their hooks, the font family only high-contrast used (Atkinson
-  Hyperlegible), their showcase, compare and concept pages, their verdict
-  rows and their theme-specific tests. A page that stores one of the two
-  names falls back to the default theme. See MIGRATION.md.
 - **The meter draws itself each theme's way in all 22 registers** [feature,
   9.3.0; research/character-meter round 4, Kenny's picks of 2026-10-05]:
   cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2,

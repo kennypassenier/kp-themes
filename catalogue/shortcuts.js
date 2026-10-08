@@ -83,7 +83,7 @@ function flash(text) {
     line.textContent = text;
     line.hidden = false;
     clearTimeout(flashTimer);
-    flashTimer = setTimeout(() => /** @type {HTMLElement} */ ((line).hidden = true), 2200);
+    flashTimer = setTimeout(() => /** @type {HTMLElement} */ (line.hidden = true), 2200);
 }
 
 /* ----------------------------------------------------- the block in hand */

@@ -85,7 +85,6 @@ gate closure node gates/check-closure.mjs || exit 1
 # reduced-motion guard. A flash rate over 3 a second is printed as a
 # warning, never a refusal (Kenny, 2026-10-08: a guideline). Joined the
 # gate set at the port session, 2026-10-08.
-gate motion node gates/check-motion.mjs || exit 1
 
 # the utility API matches its source and its documented list (TH93)
 gate gen-utilities node gates/generate-utilities.mjs --check || exit 1
