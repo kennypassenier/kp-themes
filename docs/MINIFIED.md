@@ -40,7 +40,7 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 173.9 kB | 114.4 kB | 34% |
 | `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2547.3 kB | 1292.2 kB | 49% |
+| `dist/kp-themes.css` | 2547.4 kB | 1292.2 kB | 49% |
 | `dist/kp-themes.js` | 744.1 kB | 408.1 kB | 45% |
 
 The loose stylesheets together weigh **2610.7 kB** authored and
@@ -54,4 +54,4 @@ carries, and a generated file that a gate compares must read the same on
 every machine. `npm run generate:min` prints it for the machine it runs
 on.
 
-Version 9.2.1.
+Version 10.0.0.

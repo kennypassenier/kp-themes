@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 10.0.0 — 2026-10-08
+
+- **Released with open review pairs, on Kenny's word** [2026-10-08, forms open-blocks,
+  suite-red and approval-gate]. The screenshot check reopened 2515 block/theme pairs whose
+  look changed with the character rounds (1154 carried); they wait in the review dialog.
+  Three earlier rejections (`data--kpi-columns` in phantom, `motion--leave-options` in deco
+  and phantom) ship as they are: deco, dark, retro and phantom are being redrawn on the
+  branch `claude/eloquent-hamilton-37jler` for 10.1.0, with formal and light. The release
+  suite ran once: 1791 passed, 67 failed, 4 skipped (19 min 2 s); the 67 are findings for
+  10.1.0 in research/PACKAGE_FINDINGS.md.
 
 - **Fixed: a trend tile's label no longer runs under its "Charts ↗" link**: `.kp-kpi--trend > .kp-kpi__label` ends
   before the link (`margin-inline-end` 4.5 rem, 1.5 rem in a narrow tile) and a label that is still too long ends in an

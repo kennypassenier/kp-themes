@@ -194,8 +194,27 @@ async function main() {
     // A reading everywhere else; a refusal where the release asks for it
     // [scope-107]: 8.1.0 went out with 18 pairs open, because the rule
     // lived only in docs/RULES.md and nothing in the release refused.
-    if (process.argv.includes('--require-all')) {
-        console.error(`refusing: ${open.length} block/theme pair(s) not approved; a release waits until every one is [scope-107]`);
+    // Kenny may let named pairs ship open for one release, for themes whose
+    // rework lives on a work branch (2026-10-08, 10.0.0: deco and phantom).
+    // Pairs are `key:theme`, comma separated; anything else still refuses.
+    const accepted = new Set(
+        (process.env.KP_RELEASE_ACCEPT_OPEN ?? '')
+            .split(',')
+            .map((pair) => pair.trim())
+            .filter(Boolean),
+    );
+    const refused = open.filter((pair) => !accepted.has(`${pair.key}:${pair.theme}`));
+    if (refused.length < open.length) {
+        console.log(`  ${open.length - refused.length} open pair(s) accepted for this release by Kenny (KP_RELEASE_ACCEPT_OPEN)`);
+    }
+    // Kenny, 2026-10-08 (form approval-gate): 10.0.0 ships with the pairs the
+    // character rounds reopened; they wait in the review dialog afterwards.
+    if (process.env.KP_RELEASE_SKIP_APPROVALS === '1' && refused.length) {
+        console.log(`  ${refused.length} open pair(s) not enforced for this release by Kenny (KP_RELEASE_SKIP_APPROVALS)`);
+        return;
+    }
+    if (process.argv.includes('--require-all') && refused.length) {
+        console.error(`refusing: ${refused.length} block/theme pair(s) not approved; a release waits until every one is [scope-107]`);
         process.exitCode = 1;
     }
 }
