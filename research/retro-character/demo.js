@@ -43,9 +43,10 @@ const shareBar = (value = 0.62, label = 'Copied') =>
         value * 100,
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}">${barInner}</div>`;
 
-/** What a waiting part wears: the Copying dialog in small (two folders, a sheet, a short bar), the picks' blocks, the dither, the ants. */
+/** What a waiting box wears: the Copying dialog in small (two folders, a sheet, the short segmented bar). Each option of question 10
+ * places it on the part its own way: a plate in the box, the bar along the foot, the folders at the part's ends, or the bar alone. */
 const LOAD =
-    '<span class="rt-load" aria-hidden="true"><span class="rt-load__copy"><i class="rt-folder rt-load__from"></i><i class="rt-sheet rt-sheet--small rt-load__sheet"></i><i class="rt-folder rt-load__to"></i></span><span class="rt-load__bar"></span><span class="rt-load__dither"></span><span class="rt-load__ants"></span></span>';
+    '<span class="rt-load" aria-hidden="true"><span class="rt-load__copy"><i class="rt-folder rt-load__from"></i><i class="rt-sheet rt-sheet--small rt-load__sheet"></i><i class="rt-folder rt-load__to"></i></span><span class="rt-load__bar"></span></span>';
 
 /** The change under a key figure: the tone's mark. */
 const note = (text, dir = 'up', tone = 'good') =>
@@ -327,14 +328,24 @@ const LIVE = () =>
         `<div class="kp-card rt-tile rt-live-tile"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><p class="kp-card__body">4.2 bar · 412 m³/h</p><p class="rt-tile__foot"><span class="rt-carrier" data-rt-time>Updated 07:12</span></p></div>`,
     );
 
+/** A month of fourteen days waiting: each day with its one-block bar (option 2), the sheet that walks the days and the bar of
+ * fourteen blocks under them (option 1). */
+const waitDays = () =>
+    `<div class="rt-walk" aria-hidden="true"><div class="rt-days rt-days--grid">${[...Array(14).keys()]
+        .map((i) => `<span class="rt-day" style="--i: ${i}"><span class="rt-day__num">${i + 1}</span><i class="rt-day__blk"></i></span>`)
+        .join('')}</div><i class="rt-sheet rt-sheet--small rt-walk__sheet"></i></div><span class="rt-walk__bar" aria-hidden="true"></span>`;
+/** A skeleton line as a groove: the blocks gained in it, the sheet that hops along it. */
+const groove = (/** @type {number} */ i) =>
+    `<span class="kp-skeleton rt-groove" style="--i: ${i}"><span class="rt-groove__blocks"></span><i class="rt-sheet rt-sheet--small rt-groove__sheet"></i></span>`;
+
 const LOADING = () =>
     cell(
         'Tile',
-        `<div class="kp-card rt-tile rt-waits" aria-busy="true"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-waits__room">${LOAD}</div><p class="rt-tile__foot"><span>Reading…</span></p></div>`,
+        `<div class="kp-card rt-tile rt-waits rt-waits--box" aria-busy="true"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-waits__room">${LOAD}</div><p class="rt-tile__foot"><span>Reading…</span></p></div>`,
     ) +
     cell(
         'Panel',
-        `<div class="kp-card rt-panel rt-waits" aria-busy="true"><p class="rt-panel__words">Reading the pump houses…</p><div class="rt-waits__room">${LOAD}</div></div>`,
+        `<div class="kp-card rt-panel rt-waits rt-waits--box" aria-busy="true"><p class="rt-panel__words">Reading the pump houses…</p><div class="rt-waits__room">${LOAD}</div></div>`,
     ) +
     cell(
         'Menu, loading entry',
@@ -342,9 +353,19 @@ const LOADING = () =>
             ['Rename'],
         )}</ul></div>`,
     ) +
-    cell('Month days', `<div class="rt-well rt-month-wait rt-waits" aria-busy="true">${PART.days(1, 14, 'rt-days--grid')}${LOAD}</div>`) +
-    cell('Chart plot', `<div class="rt-well rt-plotwait rt-waits" aria-busy="true">${plot('rt-plot--ghost')}${LOAD}</div>`) +
-    cell('Skeleton lines', `<div class="rt-skelwrap rt-waits rt-waits--skel">${PART.skeleton()}${LOAD}</div>`);
+    cell('Month days', `<div class="rt-well rt-month-wait rt-waits" aria-busy="true">${waitDays()}${LOAD}</div>`) +
+    cell(
+        'Chart plot',
+        `<div class="rt-well rt-plotwait rt-waits" aria-busy="true">${plot(
+            'rt-plot--ghost',
+        )}<span class="rt-cross" aria-hidden="true"><span class="rt-cross__foot"></span><i class="rt-sheet rt-sheet--small rt-cross__sheet"></i></span>${LOAD}</div>`,
+    ) +
+    cell(
+        'Skeleton lines',
+        `<div class="rt-skelwrap rt-waits rt-waits--skel" aria-busy="true"><div class="rt-skel" aria-hidden="true">${[0, 1, 2]
+            .map(groove)
+            .join('')}</div>${LOAD}</div>`,
+    );
 
 const BUSYBAR = () =>
     cell(

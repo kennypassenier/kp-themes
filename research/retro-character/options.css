@@ -2577,11 +2577,17 @@
         }
     }
 
-    /* ── 10 Loading (a loop of 2.52 s) ───────────────────────────────────
-       Every waiting part wears the same four pictures (LOAD in demo.js);
-       each option shows one of them. The Copying dialog in small is a tiny
-       plate of the chrome: two folders, the sheet between them, the short
-       bar under them. ─────────────────────────────────────────────────── */
+    /* ── 10 Loading (a loop of 28 frames, 2.52 s) ───────────────────────
+       The Copying dialog is the pick; the options differ in how it fits
+       each kind of part. Every waiting part carries the pieces it may
+       need (demo.js): a box (tile, panel, menu entry) the dialog in small
+       (LOAD: two folders, the sheet, the short segmented bar); the month a
+       walking sheet, a bar of fourteen blocks and a one-block bar per day;
+       the plot a sheet on its baseline and a foot of blocks; each skeleton
+       line a groove with its blocks and its own sheet. Each option shows
+       the pieces its text names and hides the rest. Every pose is held for
+       a whole frame (steps); nothing eases. The reduced pose is the
+       finished picture: the bars full, the sheet landed. ───────────────── */
 
     .rt-scene .rt-waits {
         position: relative;
@@ -2617,6 +2623,8 @@
         line-height: 1;
     }
 
+    /* The Copying dialog in small: a raised plate of the chrome, the two
+       folders, the sheet between them, the short bar under them. */
     .rt-scene .rt-load {
         display: inline-grid;
         justify-items: center;
@@ -2655,8 +2663,11 @@
         inset-block-start: calc(100% - 12px);
     }
 
-    /* The short bar: a sunken well, three navy blocks, one per landing. */
-    .rt-scene .rt-load__bar {
+    /* Every segmented bar of this row: the anchor's sunken well (a dark
+       rim, the shade top-left, the light bottom-right), navy blocks with a
+       2 px gap; --rt-bn blocks. */
+    .rt-scene :is(.rt-load__bar, .rt-walk__bar) {
+        --rt-bn: 3;
         position: relative;
         display: block;
         box-sizing: border-box;
@@ -2668,57 +2679,18 @@
             inset 1px 1px 0 1px var(--border);
     }
 
-    .rt-scene .rt-load__bar::before {
+    .rt-scene :is(.rt-load__bar, .rt-walk__bar)::before {
         content: '';
         position: absolute;
         inset: 2px;
         background: repeating-linear-gradient(
             90deg,
-            var(--primary) 0 calc((100% + 2px) / 3 - 2px),
-            transparent calc((100% + 2px) / 3 - 2px) calc((100% + 2px) / 3)
+            var(--primary) 0 calc((100% + 2px) / var(--rt-bn) - 2px),
+            transparent calc((100% + 2px) / var(--rt-bn) - 2px) calc((100% + 2px) / var(--rt-bn))
         );
     }
 
-    .rt-scene :is(.rt-load__dither, .rt-load__ants) {
-        display: none;
-    }
-
-    .rt-scene .rt-month-wait > .rt-load,
-    .rt-scene .rt-plotwait > .rt-load {
-        position: absolute;
-        z-index: 2;
-        inset-inline-start: 50%;
-        translate: -50% 0;
-    }
-
-    .rt-scene .rt-month-wait > .rt-load {
-        inset-block-start: 50%;
-        translate: -50% -50%;
-    }
-
-    .rt-scene .rt-plotwait > .rt-load {
-        inset-block-end: 4px;
-    }
-
-    .rt-scene .rt-plotwait {
-        padding: 4px 5px 3.7rem;
-    }
-
-    .rt-scene .rt-plot--ghost {
-        color: var(--border);
-        block-size: 2rem;
-    }
-
-    .rt-scene .rt-plot--ghost polyline {
-        stroke-dasharray: 2 3;
-    }
-
-    .rt-scene .rt-month-wait .rt-day {
-        color: var(--border);
-        block-size: 1.6rem;
-    }
-
-    /* In a menu's row: the folders and the sheet beside the words, the
+    /* In a menu's row: the plate's folders and sheet beside the words, the
        bar under them, no plate. */
     .rt-scene .rt-pop .rt-waits--row {
         justify-content: space-between;
@@ -2741,8 +2713,255 @@
         block-size: 6px;
     }
 
-    /* Over the skeleton's lines: the dither stands, the sheet flies across. */
-    .rt-scene .rt-waits--skel .rt-load {
+    /* The month, the plot and the skeleton: their own pieces, hidden until
+       an option names them. */
+    .rt-scene :is(.rt-walk__sheet, .rt-walk__bar, .rt-day__blk, .rt-cross, .rt-groove__blocks, .rt-groove__sheet) {
+        display: none;
+    }
+
+    .rt-scene .rt-month-wait {
+        --rt-dh: 1.6rem;
+    }
+
+    .rt-scene .rt-walk {
+        position: relative;
+    }
+
+    .rt-scene .rt-month-wait .rt-day {
+        block-size: var(--rt-dh);
+        color: var(--border);
+    }
+
+    /* The skeleton's lines stand in one white well: the well is the part,
+       so whatever an option adds to it (a bar, the folders) is inside. */
+    .rt-scene .rt-waits--skel {
+        background: var(--rt-white);
+        box-shadow: var(--kp-sunken);
+    }
+
+    .rt-scene .rt-waits--skel .rt-skel {
+        background: none;
+        box-shadow: none;
+    }
+
+    .rt-scene .rt-plot--ghost {
+        color: var(--border);
+        block-size: 2rem;
+    }
+
+    .rt-scene .rt-plot--ghost polyline {
+        stroke-dasharray: 2 3;
+    }
+
+    /* The register's dither loop is not a loading option here: the lines
+       stand still under every option. */
+    .rt-scene[data-rt-loading] .rt-skel .kp-skeleton::after {
+        animation: none;
+    }
+
+    /* 1 The Copying dialog, fitted to each part. A box: the plate. The
+       month: the sheet walks the days, landing on one every second frame,
+       the day it lands on pressed in for that frame, a block per day on the
+       bar of fourteen under them. The plot: one sheet crosses it along its
+       baseline, the blocks filling the plot's foot behind it. A skeleton
+       line: a sunken groove, one sheet hopping along it in eight frames, a
+       block gained behind it each frame, the lines in turn. */
+    .rt-scene[data-rt-loading='fitted'] :is(.rt-month-wait, .rt-plotwait, .rt-waits--skel) > .rt-load {
+        display: none;
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-month-wait {
+        --rt-dh: 2.3rem;
+        padding-block-start: 6px;
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-month-wait .rt-day {
+        place-items: end center;
+        padding-block-end: 3px;
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-walk__sheet {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        inset-inline-start: calc(6.5 * (100% + 2px) / 7 - 5px);
+        inset-block-start: calc(1 * (var(--rt-dh) + 2px) + 5px);
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-walk__bar {
+        --rt-bn: 14;
+        display: block;
+        block-size: 10px;
+        margin-block-start: 5px;
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-plotwait {
+        padding: 4px 5px 1.9rem;
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-cross {
+        position: absolute;
+        inset: auto 5px 4px;
+        display: block;
+        block-size: 1.5rem;
+    }
+
+    /* The plot's foot: its baseline a dotted rule, twelve navy blocks
+       standing on the well's floor under it. */
+    .rt-scene[data-rt-loading='fitted'] .rt-cross__foot {
+        position: absolute;
+        inset: auto 0 0;
+        display: block;
+        block-size: 9px;
+        border-block-start: 1px dotted var(--border-strong);
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-cross__foot::before {
+        content: '';
+        position: absolute;
+        inset: 2px 0 0;
+        background: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0 calc((100% + 2px) / 12 - 2px),
+            transparent calc((100% + 2px) / 12 - 2px) calc((100% + 2px) / 12)
+        );
+    }
+
+    .rt-scene[data-rt-loading='fitted'] .rt-cross__sheet {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        inset-block-end: 12px;
+        inset-inline-start: calc(100% - 10px);
+    }
+
+    .rt-scene:is([data-rt-loading='fitted'], [data-rt-loading='bars']) .rt-waits--skel .rt-skel {
+        gap: 1.05rem;
+        padding: 1.15rem 0.6rem 0.6rem;
+    }
+
+    .rt-scene:is([data-rt-loading='fitted'], [data-rt-loading='bars']) .rt-groove::after {
+        display: none;
+    }
+
+    .rt-scene:is([data-rt-loading='fitted'], [data-rt-loading='bars']) .rt-groove__blocks {
+        --rt-bn: 8;
+        position: absolute;
+        inset: 3px;
+        display: block;
+        background: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0 calc((100% + 2px) / var(--rt-bn) - 2px),
+            transparent calc((100% + 2px) / var(--rt-bn) - 2px) calc((100% + 2px) / var(--rt-bn))
+        );
+    }
+
+    .rt-scene:is([data-rt-loading='fitted'], [data-rt-loading='bars']) .rt-groove__sheet {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        inset-block-start: -13px;
+        inset-inline-start: calc(100% - 10px);
+    }
+
+    /* At rest (reduced motion) the lines stand full and the sheet is in
+       none of them: it is drawn only while it hops. */
+    .rt-scene[data-rt-loading='fitted'] .rt-groove__sheet {
+        visibility: hidden;
+    }
+
+    /* 2 The Copying bar on every part: the dialog's own segmented bar
+       along the part's foot, one small sheet hopping ahead of the blocks;
+       a day's bar is one block under its number; a skeleton line is its
+       bar, the three a few frames apart; the plot has the bar under it. */
+    .rt-scene[data-rt-loading='bars'] :is(.rt-waits--box, .rt-waits--row, .rt-plotwait) .rt-load {
+        position: absolute;
+        inset: auto 6px 5px;
+        display: block;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .rt-scene[data-rt-loading='bars'] :is(.rt-month-wait, .rt-waits--skel) > .rt-load,
+    .rt-scene[data-rt-loading='bars'] .rt-load__copy .rt-folder {
+        display: none;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-load__copy {
+        inline-size: 100%;
+        block-size: 15px;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-load__sheet {
+        inset-block-start: 2px;
+        inset-inline-start: calc(1 * (100% - 10px));
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-load__bar {
+        --rt-bn: 12;
+        block-size: 10px;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-waits--row {
+        padding-block: 0.6rem 0.4rem;
+        padding-inline-end: 6.6rem;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-waits--row .rt-load {
+        inset: auto 0.6rem 4px auto;
+        inline-size: 5.4rem;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-waits--row .rt-load__bar {
+        --rt-bn: 6;
+        block-size: 7px;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-plotwait {
+        padding: 4px 5px 2.1rem;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-month-wait {
+        --rt-dh: 2.1rem;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-month-wait .rt-day {
+        place-items: start center;
+        padding-block-start: 4px;
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-day__blk {
+        position: absolute;
+        inset-block-end: 4px;
+        inset-inline-start: calc(50% - 8px);
+        display: block;
+        inline-size: 16px;
+        block-size: 7px;
+        background: var(--popover);
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 1px 1px 0 1px var(--border);
+    }
+
+    .rt-scene[data-rt-loading='bars'] .rt-day__blk::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: var(--primary);
+    }
+
+    /* 3 Folders at the part's ends: a folder at the start and one at the
+       end of every part, the sheet flying from one to the other over the
+       part (along the entry, over the days, across the plot, over the
+       lines; diagonally over a box), three flights of eight frames, the
+       short bar under the part gaining a block at each landing. */
+    .rt-scene[data-rt-loading='folders'] .rt-waits:not(.rt-waits--box) {
+        padding-inline: 1.6rem;
+        padding-block-end: 15px;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-load {
         position: absolute;
         inset: 0;
         display: block;
@@ -2751,42 +2970,96 @@
         box-shadow: none;
     }
 
-    .rt-scene .rt-waits--skel .rt-load__copy {
+    .rt-scene[data-rt-loading='folders'] .rt-load__copy {
         position: absolute;
-        inset: 0.35rem 0.6rem;
+        inset: 3px 4px 14px;
         inline-size: auto;
         block-size: auto;
     }
 
-    .rt-scene[data-rt-loading='copying'] .rt-waits--skel :is(.rt-load__copy .rt-folder, .rt-load__bar) {
-        display: none;
+    .rt-scene[data-rt-loading='folders'] .rt-load__from {
+        inset: calc(50% - 8px) auto auto 0;
     }
 
-    .rt-scene .rt-waits--skel .rt-load__sheet {
-        inline-size: 20px;
-        block-size: 24px;
-        inset-inline-start: calc(100% - 20px);
-        inset-block-start: calc(100% - 24px);
+    .rt-scene[data-rt-loading='folders'] .rt-load__to {
+        inset: calc(50% - 8px) 0 auto auto;
     }
 
-    .rt-scene .rt-waits--skel .rt-load__sheet::before {
-        font-size: 2px;
+    .rt-scene[data-rt-loading='folders'] .rt-load__sheet {
+        --rt-x0: 3px;
+        --rt-x1: calc(100% - 13px);
+        --rt-y0: calc(50% - 6px);
+        --rt-y1: calc(50% - 6px);
+        --rt-lift: calc(50% - 6px);
+        inset-inline-start: var(--rt-x1);
+        inset-block-start: var(--rt-y1);
     }
 
-    .rt-scene[data-rt-loading]:not([data-rt-loading='dither']) .rt-skel .kp-skeleton::after {
-        animation: none;
+    .rt-scene[data-rt-loading='folders'] .rt-load__bar {
+        position: absolute;
+        inset: auto 1.6rem 4px;
+        inline-size: auto;
+        block-size: 7px;
     }
 
-    /* The progress blocks (the picks): no sheet; navy blocks fill the
+    /* A box: from the top-left corner of its room to the bottom-right. */
+    .rt-scene[data-rt-loading='folders'] .rt-waits--box .rt-load__copy {
+        inset: 4px 4px 15px;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--box .rt-load__from {
+        inset: 0 auto auto 0;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--box .rt-load__to {
+        inset: auto 0 0 auto;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--box .rt-load__sheet {
+        --rt-y0: 2px;
+        --rt-y1: calc(100% - 13px);
+        --rt-lift: 0.55rem;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--box .rt-load__bar {
+        inset: auto 4px 4px;
+    }
+
+    /* The plot: the folders on its floor, the flight up over the line. */
+    .rt-scene[data-rt-loading='folders'] .rt-plotwait :is(.rt-load__from, .rt-load__to) {
+        inset-block: auto 0;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-plotwait .rt-load__sheet {
+        --rt-y0: calc(100% - 13px);
+        --rt-y1: calc(100% - 13px);
+        --rt-lift: calc(100% - 14px);
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-plotwait {
+        padding-block-start: 6px;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--row {
+        padding-block: 0.3rem calc(0.3rem + 9px);
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--row .rt-load__copy {
+        inset: 1px 2px 9px;
+    }
+
+    .rt-scene[data-rt-loading='folders'] .rt-waits--row .rt-load__bar {
+        inset-block-end: 3px;
+        block-size: 5px;
+    }
+
+    /* 4 The progress blocks (the picks): no sheet; navy blocks fill the
        part's foot block by block, clear, and restart. */
-    .rt-scene[data-rt-loading='blocks'] .rt-load,
-    .rt-scene[data-rt-loading='dither'] .rt-load,
-    .rt-scene[data-rt-loading='ants'] .rt-load {
+    .rt-scene[data-rt-loading='blocks'] .rt-load {
         display: contents;
     }
 
-    .rt-scene:is([data-rt-loading='blocks'], [data-rt-loading='dither'], [data-rt-loading='ants']) .rt-load__copy,
-    .rt-scene:is([data-rt-loading='dither'], [data-rt-loading='ants']) .rt-load__bar {
+    .rt-scene[data-rt-loading='blocks'] .rt-load__copy {
         display: none;
     }
 
@@ -2808,71 +3081,79 @@
         block-size: 6px;
     }
 
-    .rt-scene[data-rt-loading='blocks'] :is(.rt-month-wait, .rt-skelwrap) {
+    .rt-scene[data-rt-loading='blocks'] :is(.rt-month-wait, .rt-skelwrap, .rt-plotwait) {
         padding-block-end: 1.1rem;
     }
 
-    .rt-scene[data-rt-loading='blocks'] .rt-plotwait,
-    .rt-scene[data-rt-loading='dither'] .rt-plotwait,
-    .rt-scene[data-rt-loading='ants'] .rt-plotwait {
-        padding-block-end: 1.1rem;
-    }
-
-    /* The dither pulses (today): the register's skeleton, the 50 % brush
-       between 15 and 60 % in four steps, back and forth, over the part. */
-    .rt-scene[data-rt-loading='dither'] .rt-load__dither {
-        position: absolute;
-        z-index: 2;
-        inset: 3px;
-        display: block;
-        background-image: var(--kp-brush);
-        background-size: 2px 2px;
-        image-rendering: pixelated;
-        opacity: 0.45;
-    }
-
-    .rt-scene[data-rt-loading='dither'] .rt-waits--skel .rt-load__dither {
-        display: none;
-    }
-
-    /* Marching ants (the picks): the part's outline a dashed marquee, 4 px
-       dashes, marching in four steps (the graph's 700 ms). */
-    .rt-scene[data-rt-loading='ants'] .rt-load__ants {
-        position: absolute;
-        z-index: 2;
-        inset: 1px;
-        display: block;
-        background:
-            repeating-linear-gradient(90deg, var(--foreground) 0 4px, transparent 4px 8px) 0 0 / 100% 1px no-repeat,
-            repeating-linear-gradient(90deg, var(--foreground) 0 4px, transparent 4px 8px) 0 100% / 100% 1px no-repeat,
-            repeating-linear-gradient(0deg, var(--foreground) 0 4px, transparent 4px 8px) 0 0 / 1px 100% no-repeat,
-            repeating-linear-gradient(0deg, var(--foreground) 0 4px, transparent 4px 8px) 100% 0 / 1px 100% no-repeat;
-        pointer-events: none;
+    .rt-scene[data-rt-loading='blocks'] .rt-pop .rt-waits--row {
+        padding-inline-end: 6rem;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .rt-scene[data-rt-loading='copying'] .rt-load__sheet {
+        .rt-scene[data-rt-loading='fitted'] .rt-waits--box .rt-load__sheet,
+        .rt-scene[data-rt-loading='fitted'] .rt-waits--row .rt-load__sheet {
             animation: rt-load-sheet var(--rt-lap) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='copying'] .rt-waits--skel .rt-load__sheet {
-            animation-name: rt-skel-sheet;
+        .rt-scene:is([data-rt-loading='fitted'], [data-rt-loading='folders']) .rt-load__bar::before {
+            animation: rt-load-bar var(--rt-lap) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='copying'] .rt-load__bar::before {
-            animation: rt-load-bar var(--rt-lap) linear infinite;
+        .rt-scene[data-rt-loading='fitted'] .rt-walk__sheet {
+            animation: rt-fit-walk var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-month-wait .rt-day {
+            animation: rt-fit-day var(--rt-lap) linear calc(var(--i) * 2 * var(--rt-u)) infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-month-wait .rt-day__num {
+            animation: rt-fit-num var(--rt-lap) linear calc(var(--i) * 2 * var(--rt-u)) infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-walk__bar::before {
+            animation: rt-fit-walkbar var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-cross__sheet {
+            animation: rt-fit-cross var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-cross__foot::before {
+            animation: rt-fit-foot var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-groove__blocks {
+            animation: rt-fit-groove var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='fitted'] .rt-groove__sheet {
+            animation: rt-fit-hop var(--rt-lap) linear calc(var(--i) * 8 * var(--rt-u)) infinite;
+        }
+
+        .rt-scene[data-rt-loading='bars'] .rt-load__bar::before,
+        .rt-scene[data-rt-loading='bars'] .rt-groove__blocks {
+            animation: rt-bars-fill var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='bars'] :is(.rt-load__sheet, .rt-groove__sheet) {
+            animation: rt-bars-hop var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='bars'] :is(.rt-groove__blocks, .rt-groove__sheet) {
+            animation-delay: calc(var(--i) * -5 * var(--rt-u));
+        }
+
+        .rt-scene[data-rt-loading='bars'] .rt-day__blk::before {
+            animation: rt-bars-day var(--rt-lap) linear infinite;
+        }
+
+        .rt-scene[data-rt-loading='folders'] .rt-load__sheet {
+            animation: rt-fl-fly var(--rt-lap) linear infinite;
         }
 
         .rt-scene[data-rt-loading='blocks'] .rt-load__bar::before {
             animation: rt-blocks var(--rt-lap) linear infinite;
-        }
-
-        .rt-scene[data-rt-loading='dither'] .rt-load__dither {
-            animation: kp-sig-retro-dither calc(var(--rt-lap) / 2) steps(4, jump-none) infinite alternate;
-        }
-
-        .rt-scene[data-rt-loading='ants'] .rt-load__ants {
-            animation: rt-ants 700ms linear infinite;
         }
     }
 
@@ -6036,23 +6317,487 @@
         }
     }
 
-    /* 10: the marching ants, four steps of 2 px along every edge. */
-    @keyframes rt-ants {
+    /* Loading, folders: three flights of eight frames from the folder at the part’s start to the one at its end, four frames in the folder. */
+    @keyframes rt-fl-fly {
         0% {
-            background-position:
-                0 0,
-                0 100%,
-                0 0,
-                100% 0;
-            animation-timing-function: steps(4, jump-end);
+            inset-inline-start: calc(var(--rt-x0) + 0 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
         }
-
+        3.5714% {
+            inset-inline-start: calc(var(--rt-x0) + 0.07 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.07 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        7.1429% {
+            inset-inline-start: calc(var(--rt-x0) + 0.22 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.22 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        10.7143% {
+            inset-inline-start: calc(var(--rt-x0) + 0.4 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.4 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        14.2857% {
+            inset-inline-start: calc(var(--rt-x0) + 0.6 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.6 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        17.8571% {
+            inset-inline-start: calc(var(--rt-x0) + 0.78 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.78 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        21.4286% {
+            inset-inline-start: calc(var(--rt-x0) + 0.93 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.93 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            inset-inline-start: calc(var(--rt-x0) + 1 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 1 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        28.5714% {
+            inset-inline-start: calc(var(--rt-x0) + 0 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        32.1429% {
+            inset-inline-start: calc(var(--rt-x0) + 0.07 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.07 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        35.7143% {
+            inset-inline-start: calc(var(--rt-x0) + 0.22 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.22 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        39.2857% {
+            inset-inline-start: calc(var(--rt-x0) + 0.4 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.4 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        42.8571% {
+            inset-inline-start: calc(var(--rt-x0) + 0.6 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.6 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        46.4286% {
+            inset-inline-start: calc(var(--rt-x0) + 0.78 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.78 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            inset-inline-start: calc(var(--rt-x0) + 0.93 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.93 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        53.5714% {
+            inset-inline-start: calc(var(--rt-x0) + 1 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 1 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        57.1429% {
+            inset-inline-start: calc(var(--rt-x0) + 0 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        60.7143% {
+            inset-inline-start: calc(var(--rt-x0) + 0.07 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.07 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        64.2857% {
+            inset-inline-start: calc(var(--rt-x0) + 0.22 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.22 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        67.8571% {
+            inset-inline-start: calc(var(--rt-x0) + 0.4 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.4 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        71.4286% {
+            inset-inline-start: calc(var(--rt-x0) + 0.6 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.6 * (var(--rt-y1) - var(--rt-y0)) - 1 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            inset-inline-start: calc(var(--rt-x0) + 0.78 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.78 * (var(--rt-y1) - var(--rt-y0)) - 0.85 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        78.5714% {
+            inset-inline-start: calc(var(--rt-x0) + 0.93 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 0.93 * (var(--rt-y1) - var(--rt-y0)) - 0.5 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
+        82.1429% {
+            inset-inline-start: calc(var(--rt-x0) + 1 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 1 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+            animation-timing-function: steps(1, jump-end);
+        }
         100% {
-            background-position:
-                8px 0,
-                -8px 100%,
-                0 -8px,
-                100% 8px;
+            inset-inline-start: calc(var(--rt-x0) + 1 * (var(--rt-x1) - var(--rt-x0)));
+            inset-block-start: calc(var(--rt-y0) + 1 * (var(--rt-y1) - var(--rt-y0)) - 0 * var(--rt-lift));
+        }
+    }
+    /* Loading, bars: the blocks fill whole over 24 frames, stand full four, and empty. */
+    @keyframes rt-bars-fill {
+        0% {
+            clip-path: inset(0 calc(100% - round(down, 0 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        3.5714% {
+            clip-path: inset(0 calc(100% - round(down, 0.0417 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        7.1429% {
+            clip-path: inset(0 calc(100% - round(down, 0.0833 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        10.7143% {
+            clip-path: inset(0 calc(100% - round(down, 0.125 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        14.2857% {
+            clip-path: inset(0 calc(100% - round(down, 0.1667 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        17.8571% {
+            clip-path: inset(0 calc(100% - round(down, 0.2083 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        21.4286% {
+            clip-path: inset(0 calc(100% - round(down, 0.25 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            clip-path: inset(0 calc(100% - round(down, 0.2917 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        28.5714% {
+            clip-path: inset(0 calc(100% - round(down, 0.3333 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        32.1429% {
+            clip-path: inset(0 calc(100% - round(down, 0.375 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        35.7143% {
+            clip-path: inset(0 calc(100% - round(down, 0.4167 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        39.2857% {
+            clip-path: inset(0 calc(100% - round(down, 0.4583 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        42.8571% {
+            clip-path: inset(0 calc(100% - round(down, 0.5 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        46.4286% {
+            clip-path: inset(0 calc(100% - round(down, 0.5417 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            clip-path: inset(0 calc(100% - round(down, 0.5833 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        53.5714% {
+            clip-path: inset(0 calc(100% - round(down, 0.625 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        57.1429% {
+            clip-path: inset(0 calc(100% - round(down, 0.6667 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        60.7143% {
+            clip-path: inset(0 calc(100% - round(down, 0.7083 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        64.2857% {
+            clip-path: inset(0 calc(100% - round(down, 0.75 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        67.8571% {
+            clip-path: inset(0 calc(100% - round(down, 0.7917 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        71.4286% {
+            clip-path: inset(0 calc(100% - round(down, 0.8333 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            clip-path: inset(0 calc(100% - round(down, 0.875 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        78.5714% {
+            clip-path: inset(0 calc(100% - round(down, 0.9167 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        82.1429% {
+            clip-path: inset(0 calc(100% - round(down, 0.9583 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        85.7143% {
+            clip-path: inset(0 calc(100% - round(down, 1 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            clip-path: inset(0 calc(100% - round(down, 1 * (100% + 2px) + 0.5px, (100% + 2px) / var(--rt-bn)) + 2px) 0 0);
+        }
+    }
+    /* Loading, bars: the sheet hops ahead of the blocks, up one frame and down the next. */
+    @keyframes rt-bars-hop {
+        0% {
+            inset-inline-start: calc(0 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        3.5714% {
+            inset-inline-start: calc(0.0417 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        7.1429% {
+            inset-inline-start: calc(0.0833 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        10.7143% {
+            inset-inline-start: calc(0.125 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        14.2857% {
+            inset-inline-start: calc(0.1667 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        17.8571% {
+            inset-inline-start: calc(0.2083 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        21.4286% {
+            inset-inline-start: calc(0.25 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            inset-inline-start: calc(0.2917 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        28.5714% {
+            inset-inline-start: calc(0.3333 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        32.1429% {
+            inset-inline-start: calc(0.375 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        35.7143% {
+            inset-inline-start: calc(0.4167 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        39.2857% {
+            inset-inline-start: calc(0.4583 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        42.8571% {
+            inset-inline-start: calc(0.5 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        46.4286% {
+            inset-inline-start: calc(0.5417 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            inset-inline-start: calc(0.5833 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        53.5714% {
+            inset-inline-start: calc(0.625 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        57.1429% {
+            inset-inline-start: calc(0.6667 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        60.7143% {
+            inset-inline-start: calc(0.7083 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        64.2857% {
+            inset-inline-start: calc(0.75 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        67.8571% {
+            inset-inline-start: calc(0.7917 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        71.4286% {
+            inset-inline-start: calc(0.8333 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            inset-inline-start: calc(0.875 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        78.5714% {
+            inset-inline-start: calc(0.9167 * (100% - 10px));
+            translate: 0 -4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        82.1429% {
+            inset-inline-start: calc(0.9583 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        85.7143% {
+            inset-inline-start: calc(1 * (100% - 10px));
+            translate: 0 0;
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            inset-inline-start: calc(1 * (100% - 10px));
+            translate: 0 0;
+        }
+    }
+    /* Loading, bars, the month: each day’s one block filled in turn, a day every second frame (var(--i)). */
+    @keyframes rt-bars-day {
+        0% {
+            clip-path: inset(0 calc(100% - clamp(0, 1 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        3.5714% {
+            clip-path: inset(0 calc(100% - clamp(0, 2 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        7.1429% {
+            clip-path: inset(0 calc(100% - clamp(0, 3 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        10.7143% {
+            clip-path: inset(0 calc(100% - clamp(0, 4 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        14.2857% {
+            clip-path: inset(0 calc(100% - clamp(0, 5 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        17.8571% {
+            clip-path: inset(0 calc(100% - clamp(0, 6 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        21.4286% {
+            clip-path: inset(0 calc(100% - clamp(0, 7 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            clip-path: inset(0 calc(100% - clamp(0, 8 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        28.5714% {
+            clip-path: inset(0 calc(100% - clamp(0, 9 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        32.1429% {
+            clip-path: inset(0 calc(100% - clamp(0, 10 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        35.7143% {
+            clip-path: inset(0 calc(100% - clamp(0, 11 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        39.2857% {
+            clip-path: inset(0 calc(100% - clamp(0, 12 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        42.8571% {
+            clip-path: inset(0 calc(100% - clamp(0, 13 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        46.4286% {
+            clip-path: inset(0 calc(100% - clamp(0, 14 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            clip-path: inset(0 calc(100% - clamp(0, 15 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        53.5714% {
+            clip-path: inset(0 calc(100% - clamp(0, 16 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        57.1429% {
+            clip-path: inset(0 calc(100% - clamp(0, 17 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        60.7143% {
+            clip-path: inset(0 calc(100% - clamp(0, 18 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        64.2857% {
+            clip-path: inset(0 calc(100% - clamp(0, 19 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        67.8571% {
+            clip-path: inset(0 calc(100% - clamp(0, 20 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        71.4286% {
+            clip-path: inset(0 calc(100% - clamp(0, 21 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            clip-path: inset(0 calc(100% - clamp(0, 22 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        78.5714% {
+            clip-path: inset(0 calc(100% - clamp(0, 23 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        82.1429% {
+            clip-path: inset(0 calc(100% - clamp(0, 24 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        85.7143% {
+            clip-path: inset(0 calc(100% - clamp(0, 25 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        89.2857% {
+            clip-path: inset(0 calc(100% - clamp(0, 26 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        92.8571% {
+            clip-path: inset(0 calc(100% - clamp(0, 27 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        96.4286% {
+            clip-path: inset(0 calc(100% - clamp(0, 28 - 2 * var(--i), 1) * 100%) 0 0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            clip-path: inset(0 calc(100% - clamp(0, 28 - 2 * var(--i), 1) * 100%) 0 0);
         }
     }
 }

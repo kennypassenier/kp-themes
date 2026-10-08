@@ -32,7 +32,7 @@ decided demos' values, the ones named "today" the register's own.
 | 7   | The surface (G7)                      | the desktop behind, every surface a window part · the LED wells and scopes (the picks) · the woodgrain console (the drawer's pick)            |
 | 8   | A warning (G8)                        | the message box · the LED and the scope (the picks) · the tinted plate                                                                        |
 | 9   | A live update (G9)                    | a sheet copied over · the bevel pops (the picks) · repainted in jumps (the picks)                                                             |
-| 10  | Loading (G10)                         | the Copying dialog in small · the progress blocks (the picks) · the dither pulses (today) · marching ants (the picks)                         |
+| 10  | Loading (G10), update 1               | the Copying dialog fitted to each part · the Copying bar on every part · folders at the part’s ends · the progress blocks (the picks)         |
 | 11  | The busy progress bar (G11)           | the sheet hops ahead · the blocks stand in the dither (today) · the blocks fill and empty                                                     |
 | 12  | The spinner (G12)                     | the hourglass (today) · the sheet flies round · the Find flashlight                                                                           |
 | 13  | Leaving and arriving (G13)            | copied in, copied back out · flies to the Recycle Bin · shrunk to the centre (today) · the dissolve (the picks)                               |
@@ -53,7 +53,7 @@ decided demos' values, the ones named "today" the register's own.
   stacks, the ramp, the hard drop, the dither and the 4 % checker, the three voices) and the keyframes of the recommended options: the sheet
   copied in (`rt-fly-8`, `rt-land-8`), the anchor's own stage flight (`rt-stage-8`), the window zoom in outline frames (`rt-zoom`,
   `rt-zoom-win`), the menu dealt (`rt-deal`), the notice dropped from its edge (`rt-drop-edge`), the tip (`rt-tip`), a value copied over
-  (`rt-fly-5`, `rt-redraw`), the Copying dialog in small (`rt-load-sheet`, `rt-load-bar`, `rt-skel-sheet`), the sheet hopping ahead
+  (`rt-fly-5`, `rt-redraw`), the Copying dialog in small (`rt-load-sheet`, `rt-load-bar`) and fitted to the month, the plot and the skeleton's grooves (`rt-fit-walk`, `rt-fit-day`, `rt-fit-num`, `rt-fit-walkbar`, `rt-fit-cross`, `rt-fit-foot`, `rt-fit-groove`, `rt-fit-hop`), the sheet hopping ahead
   (`rt-hop`, `rt-hop-fill`), the hourglass in frames (`rt-glass-sand`, `rt-glass-turn`), the leave copied back out (the same
   `rt-fly-8` / `rt-land-8` pair backwards; the Bin option's `rt-bin-part`, `rt-bin-ghost`) and the press (`rt-tap-bevel`, `rt-tap-label`, `rt-tap`).
 - `options.css` (in `@layer kp.signature`) draws the world and every option, scoped by `data-rt-<question>="<key>"` on the scene. The

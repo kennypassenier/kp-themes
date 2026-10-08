@@ -93,7 +93,6 @@ export const PAGES = [
             {
                 href: 'research/retro-character/demo.html',
                 label: 'What makes retro retro',
-                rework: 'update 1: loading fitted to every waiting part, as Kenny asked',
             },
             {
                 href: 'research/phantom-character/demo.html',
