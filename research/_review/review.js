@@ -1119,6 +1119,19 @@ function setupFlip(step, pair) {
 }
 
 /** Shows only flipCells[flipAt], large; its number, name and one-line note once; plays and restarts its motion. */
+/** The option shown, counted in the head beside the step, so the reviewer sees
+ *  which one is up without scrolling to the words under the stage (Kenny,
+ *  2026-10-08). Cleared when no option is flipped. */
+function writeFlipPosition() {
+    const position = $('[data-rv-position]');
+    position.querySelector('[data-rv-flip-pos]')?.remove();
+    if (!flipChoice || !flipWrap.classList.contains('rv-flip--active')) return;
+    const span = document.createElement('span');
+    span.setAttribute('data-rv-flip-pos', '');
+    span.textContent = ` · option ${flipAt + 1}/${flipChoice.options.length}`;
+    position.append(span);
+}
+
 function paintFlip(step) {
     if (!flipRow) return;
     stopPointer();
@@ -1133,6 +1146,7 @@ function paintFlip(step) {
         shown.style.setProperty('--kp-graph-height', '26rem');
     }
     const option = flipChoice?.options[flipAt];
+    writeFlipPosition();
     flipLabel.replaceChildren();
     if (option) {
         const b = document.createElement('b');
@@ -1684,6 +1698,7 @@ async function show(at) {
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
+        writeFlipPosition();
         $('[data-rv-title]').textContent = step.title;
         const badge = $('[data-rv-state]');
         const rejected = step.pairs.filter((p) => verdictOf(p) === 'rejected').length;

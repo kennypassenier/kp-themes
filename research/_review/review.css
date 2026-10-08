@@ -544,9 +544,10 @@
 }
 
 [data-rv-flip-trio] > :not([hidden]) {
-    /* A demo of a full-width component (the page header) sets
-       --rv-flip-max: 100% on its section, so its title is not squeezed. */
-    inline-size: min(100%, var(--rv-flip-max, 48rem)) !important;
+    /* The whole width of the stage: the option's words run on one line
+       instead of four and its scene is as large as the stage allows (Kenny,
+       2026-10-08). A section may still narrow it with --rv-flip-max. */
+    inline-size: min(100%, var(--rv-flip-max, 100%)) !important;
     margin-inline: auto !important;
 }
 
